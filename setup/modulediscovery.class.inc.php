@@ -292,10 +292,10 @@ class ModuleDiscovery
 	 *
 	 * @param $aSearchDirs array of directories to search (absolute paths)
 	 *
-	 * @return array A big array moduleID => ModuleData
+	 * @return array<string, array> A big array moduleID => ModuleData
 	 * @throws \Exception
 	 */
-	public static function GetAllModules($aSearchDirs)
+	public static function GetAllModules(array $aSearchDirs): array
 	{
 		self::Init($aSearchDirs);
 

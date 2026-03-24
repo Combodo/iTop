@@ -18,7 +18,7 @@ class InstallationChoicesToModuleConverter
 	{
 	}
 
-	final public static function GetInstance(): InstallationChoicesToModuleConverter
+	public static function GetInstance(): InstallationChoicesToModuleConverter
 	{
 		if (!isset(self::$oInstance)) {
 			self::$oInstance = new InstallationChoicesToModuleConverter();
@@ -33,15 +33,16 @@ class InstallationChoicesToModuleConverter
 	}
 
 	/**
-	 * @param array $aInstallationChoices
-	 * @param array $aSearchDirs
+	 * @param array<string> $aInstallationChoices
+	 * @param array<string> $aSearchDirs
+	 * @param string|null $sInstallationFilePath
 	 *
-	 * @return array
+	 * @return array<string>
 	 * @throws \ModuleInstallationException
 	 */
 	public function GetModules(array $aInstallationChoices, array $aSearchDirs, ?string $sInstallationFilePath = null): array
 	{
-		$aPackageModules = ModuleDiscovery::GetAllModules($aSearchDirs);
+		$aPackageModules = $this->GetAllModules($aSearchDirs);
 
 		$bInstallationFileProvided = ! is_null($sInstallationFilePath) && is_file($sInstallationFilePath);
 
@@ -65,6 +66,20 @@ class InstallationChoicesToModuleConverter
 		}
 
 		return $aInstalledModules;
+	}
+
+	/**
+	 * Provide all modules used to compute in @see GetModules()
+	 *
+	 * @param $aSearchDirs array of directories to search (absolute paths)
+	 *
+	 * @return array<string, array> A big array moduleID => ModuleData
+	 * @throws \Exception
+	 */
+	protected function GetAllModules(array $aSearchDirs): array
+	{
+
+		return ModuleDiscovery::GetAllModules($aSearchDirs);
 	}
 
 	private function FindInstalledPackageModules(array $aPackageModules, array $aInstallationChoices, array $aInstallationDescription = null): array
