@@ -35,7 +35,7 @@
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkFunctionalCIToProviderContract' => 'Link FunctionalCI / ProviderContract',
-	'Class:lnkFunctionalCIToProviderContract+' => '',
+	'Class:lnkFunctionalCIToProviderContract+' => 'This link models the functional CIs that are supported by an external company through a provider contract.',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Provider contract',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
@@ -53,7 +53,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkFunctionalCIToService' => 'Link FunctionalCI / Service',
-	'Class:lnkFunctionalCIToService+' => '',
+	'Class:lnkFunctionalCIToService+' => 'This link models the functional CIs that are required to deliver a Service and whose malfunction would affect the quality of the Service.',
 	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Service',
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',

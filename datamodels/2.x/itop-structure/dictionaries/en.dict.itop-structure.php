@@ -315,7 +315,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkPersonToTeam' => 'Link Person / Team',
-	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam+' => 'This link indicates when a Person is a member of a Team.',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
 	'Class:lnkPersonToTeam/Name+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Team',

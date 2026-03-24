@@ -912,7 +912,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkSanToDatacenterDevice' => 'Lien Switch SAN / Matériel de Datacenter',
-	'Class:lnkSanToDatacenterDevice+' => 'Ce lien n:n modélise la connection réseau entre un Switch SAN et un Matériel de Datacenter (un Serveur, un Équipement réseau, etc..).',
+	'Class:lnkSanToDatacenterDevice+' => 'Ce lien n:n modélise la connection réseau entre un Switch SAN et un Matériel de datacenter (un Serveur, un Équipement réseau, etc..).',
 	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'Switch SAN',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '',
@@ -1617,7 +1617,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Lien Solution Applicative / CI Fonctionnel',
-	'Class:lnkApplicationSolutionToFunctionalCI+' => 'Modélise l\'appartenance d\'un équipment à une Solution Applicative. La signification de cette relation varie suivant les types de Solution Applicative.',
+	'Class:lnkApplicationSolutionToFunctionalCI+' => 'Modélise l\'appartenance d\'un équipment à une Solution Applicative. La signification de cette relation varie suivant les types de Solution applicative.',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Solution applicative',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
@@ -1635,7 +1635,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Lien Solution Applicative / Processus métier',
-	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess+' => 'Modélise la relation entre une Solution applicative et un Processus Métier.',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Processus métier',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
