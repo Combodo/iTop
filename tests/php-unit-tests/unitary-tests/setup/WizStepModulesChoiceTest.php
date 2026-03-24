@@ -971,7 +971,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					<div class="ibo-extension-details--information--label">
 						<label for="itop-ext-not-installed"><b>My extension</b></label>
 						
-						<span class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</span><span class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</span>
+						<div class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</div><div class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</div>
 					</div>
 					<div class="ibo-extension-details--information--metadata">
 						<span>v1.2.3</span><span>Local extensions folder</span>
@@ -1015,7 +1015,7 @@ HTML,
 					<div class="ibo-extension-details--information--label">
 						<label for="itop-ext-installed"><b>My extension</b></label>
 						
-						<span class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</span><span class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</span>
+						<div class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</div><div class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</div>
 					</div>
 					<div class="ibo-extension-details--information--metadata">
 						<span>v1.2.3</span><span>Local extensions folder</span>
@@ -1060,7 +1060,7 @@ HTML,
 					<div class="ibo-extension-details--information--label">
 						<label for="itop-ext-installed"><b>My extension</b></label>
 						
-						<span class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</span><span class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</span><span class="ibo-badge ibo-block ibo-is-orange" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</span>
+						<div class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</div><div class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</div><span class="ibo-badge ibo-block ibo-is-orange" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</span>
 					</div>
 					<div class="ibo-extension-details--information--metadata">
 						<span>v1.2.3</span><span>Local extensions folder</span>
@@ -1104,7 +1104,7 @@ HTML,
 					<div class="ibo-extension-details--information--label">
 						<label for="itop-ext-not-installed"><b>My extension</b></label>
 						
-						<span class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</span><span class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</span>
+						<div class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</div><div class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</div>
 					</div>
 					<div class="ibo-extension-details--information--metadata">
 						<span>v1.2.3</span><span>Local extensions folder</span>
@@ -1142,7 +1142,7 @@ HTML,
 					<div class="ibo-extension-details--information--label">
 						<label for="itop-alt-nothing"><b>No Change</b></label>
 						
-						<span class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</span><span class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</span>
+						<div class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</div><div class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</div>
 					</div>
 					<div class="ibo-extension-details--information--metadata">
 						
@@ -1188,7 +1188,7 @@ HTML,
 					<div class="ibo-extension-details--information--label">
 						<label for="itop-alt-something"><b>Change</b></label>
 						
-						<span class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</span><span class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</span>
+						<div class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</div><div class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</div>
 					</div>
 					<div class="ibo-extension-details--information--metadata">
 						
@@ -1209,7 +1209,7 @@ HTML,
 					<div class="ibo-extension-details--information--label">
 						<label for="itop-alt-nothing"><b>No Change</b></label>
 						
-						<span class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</span><span class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</span>
+						<div class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</div><div class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</div>
 					</div>
 					<div class="ibo-extension-details--information--metadata">
 						
@@ -1269,7 +1269,7 @@ HTML,
 					<div class="ibo-extension-details--information--label">
 						<label for="itop-alt-something"><b>Change</b></label>
 						
-						<span class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</span><span class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</span>
+						<div class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</div><div class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</div>
 					</div>
 					<div class="ibo-extension-details--information--metadata">
 						
@@ -1286,7 +1286,7 @@ HTML,
 					<div class="ibo-extension-details--information--label">
 						<label for="itop-ext-not-installed"><b>My extension</b></label>
 						
-						<span class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</span><span class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</span>
+						<div class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</div><div class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</div>
 					</div>
 					<div class="ibo-extension-details--information--metadata">
 						
@@ -1311,7 +1311,7 @@ HTML,
 					<div class="ibo-extension-details--information--label">
 						<label for="itop-alt-nothing"><b>No Change</b></label>
 						
-						<span class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</span><span class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</span>
+						<div class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</div><div class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</div>
 					</div>
 					<div class="ibo-extension-details--information--metadata">
 						

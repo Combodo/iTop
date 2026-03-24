@@ -796,18 +796,18 @@ EOF
 
 		$sTooltip = '';
 		if ($aFlags['missing']) {
-			$sTooltip .= '<span class="ibo-badge ibo-block ibo-is-red" title="The local extension folder has been removed from the disk. This will force the uninstallation of this extension." >source removed</span>';
+			$sTooltip .= '<div class="ibo-badge ibo-block ibo-is-red" title="The local extension folder has been removed from the disk. This will force the uninstallation of this extension." >source removed</div>';
 		}
 		if ($aFlags['installed']) {
-			$sTooltip .= '<span class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</span>';
+			$sTooltip .= '<div class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</div>';
 
-			$sTooltip .= '<span class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</span>';
+			$sTooltip .= '<div class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</div>';
 		} else {
-			$sTooltip .= '<span class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</span>';
-			$sTooltip .= '<span class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</span>';
+			$sTooltip .= '<div class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</div>';
+			$sTooltip .= '<div class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</div>';
 		}
 		if (!$aFlags['uninstallable']) {
-			$sTooltip .= '<span class="ibo-badge ibo-block ibo-is-orange" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</span>';
+			$sTooltip .= '<div class="ibo-badge ibo-block ibo-is-orange" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</div>';
 		}
 
 		$sMetadata = '';
