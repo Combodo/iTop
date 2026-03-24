@@ -1283,7 +1283,39 @@
           </items>
         </summary>
       </presentation>
-      <methods/>
+      <methods>
+        <method id="GetIcon">
+          <comment>	/**
+            * Overrides the GetIcon method to return the logo of the associated NetworkDeviceType if any, otherwise the default icon of the class will be returned
+            *
+            */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Custom</type>
+          <code><![CDATA[	public function GetIcon($bImgTag = true)
+	{
+	   $sIconClass = 'NetworkDeviceType'; // the class storing the image which will be used as icon for the current object
+	   $sExtKeyCode = 'networkdevicetype_id'; // the external key attribute code pointing to the class storing the image attribute
+	   $sIconAttCode = 'logo'; // the attribute code of the image in the IconClass
+
+		 $iObj = $this->Get($sExtKeyCode);
+		 if ($iObj > 0) {
+		    $oObj = MetaModel::GetObject($sIconClass, $iObj, true, true);
+        $oImage = $oObj->Get($sIconAttCode);
+    		$sIconUrl = $oImage->IsEmpty() ? '' : $oImage->GetDisplayURL($sIconClass, $iObj, $sIconAttCode);
+    		if (strlen($sIconUrl) > 0) {
+    			 if ($bImgTag) {
+    				  return "<img src=\"$sIconUrl\" alt=''/>";
+    			 } else {
+    				  return $sIconUrl;
+    			 }
+    		}
+		 }
+		 // Return the default image
+	   return parent::GetIcon($bImgTag);
+	}]]></code>
+        </method>
+      </methods>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -5313,6 +5345,13 @@
         </reconciliation>
       </properties>
       <fields>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="networkdevicesdevices_list" xsi:type="AttributeLinkedSet">
           <linked_class>NetworkDevice</linked_class>
           <ext_key_to_me>networkdevicetype_id</ext_key_to_me>
@@ -5329,6 +5368,9 @@
             <item id="name">
               <rank>10</rank>
             </item>
+            <item id="logo">
+              <rank>20</rank>
+            </item>
             <item id="networkdevicesdevices_list">
               <rank>20</rank>
             </item>
@@ -5343,7 +5385,7 @@
         </search>
         <list>
           <items>
-            <item id="name">
+            <item id="logo">
               <rank>10</rank>
             </item>
           </items>

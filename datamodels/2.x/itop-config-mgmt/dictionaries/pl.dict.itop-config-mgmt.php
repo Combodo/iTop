@@ -1158,6 +1158,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:NetworkDeviceType' => 'Typ urządzenia sieciowego',
 	'Class:NetworkDeviceType+' => '',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Urządzenia sieciowe',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Wszystkie urządzenia sieciowe odpowiadające temu typowi',
 ]);

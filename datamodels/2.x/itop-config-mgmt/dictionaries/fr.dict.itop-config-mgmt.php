@@ -1312,6 +1312,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:NetworkDeviceType' => 'Type d\'équipement réseau',
 	'Class:NetworkDeviceType+' => 'Typologie. Valeurs possibles pour le type d’un équipement réseau (ex : Routeur, Switch, Firewall, etc.).',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Utilisé comme icône pour les équipement réseau de ce Type lors de leur affichage (détails, aperçu et graphe d\'analyse d\'impact)',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Equipements réseaux',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Tous les équipements réseaux correspondant à ce type',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list/UI:Links:Create:Button+' => 'Créer un %4$s',

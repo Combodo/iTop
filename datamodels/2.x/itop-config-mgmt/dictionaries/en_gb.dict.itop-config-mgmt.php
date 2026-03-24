@@ -1158,6 +1158,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:NetworkDeviceType' => 'Network Device Type',
 	'Class:NetworkDeviceType+' => '',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Network devices',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'All the network devices corresponding to this type',
 ]);

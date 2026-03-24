@@ -1175,6 +1175,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:NetworkDeviceType' => '网络设备类型',
 	'Class:NetworkDeviceType+' => '',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => '网络设备',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => '此类型的所有网络设备',
 ]);

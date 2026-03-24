@@ -1160,6 +1160,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:NetworkDeviceType' => 'Soort netwerkapparaat',
 	'Class:NetworkDeviceType+' => '',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Netwerkapparaten',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Alle netwerkapparaten van deze soort',
 ]);

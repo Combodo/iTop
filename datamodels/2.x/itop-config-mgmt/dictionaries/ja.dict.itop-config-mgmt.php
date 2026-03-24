@@ -1158,6 +1158,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:NetworkDeviceType' => 'ネットワークデバイスタイプ',
 	'Class:NetworkDeviceType+' => '',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'ネットワークデバイス',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'All the network devices corresponding to this type~~',
 ]);

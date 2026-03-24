@@ -1158,6 +1158,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:NetworkDeviceType' => 'Hálózati eszköz típus',
 	'Class:NetworkDeviceType+' => '~~',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Hálózati eszközök',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Ilyen típusú hálózati eszközök',
 ]);
