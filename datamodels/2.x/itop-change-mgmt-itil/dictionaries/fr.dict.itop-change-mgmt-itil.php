@@ -178,7 +178,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:RoutineChange' => 'Changement de Routine',
+	'Class:RoutineChange' => 'Changement de routine',
 	'Class:RoutineChange+' => 'Changement standard à faible risque, sans nécessité d\'autorisation supplémentaire, et pour lequel une procédure validée existe et doit être appliquée.',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Valider',
 	'Class:RoutineChange/Stimulus:ev_validate+' => '',
@@ -244,7 +244,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:NormalChange' => 'Changement Normal',
+	'Class:NormalChange' => 'Changement normal',
 	'Class:NormalChange+' => 'Type de Changement. A planifier, à évaluer et à autoriser avant son déploiement. Utilisé pour les changements à risque moyen ou fort, non standardisé et non urgent',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Date d\'acceptation',
 	'Class:NormalChange/Attribute:acceptance_date+' => '',

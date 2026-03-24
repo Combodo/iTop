@@ -236,7 +236,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:DocumentFile' => 'Document Fichier',
+	'Class:DocumentFile' => 'Document fichier',
 	'Class:DocumentFile+' => 'Type de document qui inclut un fichier téléchargé (tout format : Word, PDF, tableur, etc.).',
 	'Class:DocumentFile/Attribute:file' => 'Fichier',
 	'Class:DocumentFile/Attribute:file+' => '',
@@ -247,7 +247,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:DocumentNote' => 'Document Note',
+	'Class:DocumentNote' => 'Document note',
 	'Class:DocumentNote+' => 'Utilisé pour stocker un document texte. Le formatage HTML est pris en charge via l\'éditeur WYSIWYG. Une recherche peut être effectuer sur son contenu.',
 	'Class:DocumentNote/Attribute:text' => 'Texte',
 	'Class:DocumentNote/Attribute:text+' => '',
@@ -258,7 +258,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:DocumentWeb' => 'Document Web',
+	'Class:DocumentWeb' => 'Document web',
 	'Class:DocumentWeb+' => '',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',

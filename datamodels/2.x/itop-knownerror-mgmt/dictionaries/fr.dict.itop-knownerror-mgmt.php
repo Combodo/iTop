@@ -60,7 +60,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkErrorToFunctionalCI' => 'Lien Erreur / CI',
+	'Class:lnkErrorToFunctionalCI' => 'Lien Erreur connue / CI fonctionnel',
 	'Class:lnkErrorToFunctionalCI+' => 'Lien entre une erreur et un ci',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',

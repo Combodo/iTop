@@ -198,7 +198,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:ServiceFamily' => 'Famille de service',
+	'Class:ServiceFamily' => 'Famille de services',
 	'Class:ServiceFamily+' => 'Premier niveau dans la hiérarchie des Services. Obligatoire pour qu\'un Service soit proposé dans le Portail Utilisateur.',
 	'Class:ServiceFamily/Attribute:name' => 'Nom',
 	'Class:ServiceFamily/Attribute:name+' => '',
@@ -305,7 +305,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:ServiceSubcategory' => 'Sous catégorie de service',
+	'Class:ServiceSubcategory' => 'Sous-catégorie de service',
 	'Class:ServiceSubcategory+' => 'Dernier niveau dans la hiérarchie des Services. Chaque Demande utilisateur se réfère à une Sous-catégorie de service.',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
 	'Class:ServiceSubcategory/Attribute:name' => 'Nom',

@@ -822,7 +822,7 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:lnkServerToVolume' => 'Link Server / Volume',
+	'Class:lnkServerToVolume' => 'Link Server / LogicalVolume',
 	'Class:lnkServerToVolume+' => 'This many-to-many link indicates that a Server uses a Logical Volume (a storage unit managed inside a Storage System). Several Servers can use the same Logical Volume.',
 	'Class:lnkServerToVolume/Name' => '%1$s / %2$s',
 	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume',
@@ -842,7 +842,7 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:lnkVirtualDeviceToVolume' => 'Link Virtual Device / Logical Volume',
+	'Class:lnkVirtualDeviceToVolume' => 'Link VirtualDevice / LogicalVolume',
 	'Class:lnkVirtualDeviceToVolume+' => 'This many-to-many link indicates that a Virtual Device uses a Logical Volume (a storage unit managed inside a Storage System). Several Virtual Devices can use the same Logical Volume.',
 	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume',
@@ -862,7 +862,7 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:lnkSanToDatacenterDevice' => 'Link SAN Switch / Datacenter Device',
+	'Class:lnkSanToDatacenterDevice' => 'Link SANSwitch / DatacenterDevice',
 	'Class:lnkSanToDatacenterDevice+' => 'This many-to-many link models the network connection between a SAN Switch and a Datacenter Device (a Server, a Network Device, etc.).',
 	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN switch',
@@ -1534,7 +1534,7 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:lnkGroupToCI' => 'Link Group / CI',
+	'Class:lnkGroupToCI' => 'Link Group / FunctionalCI',
 	'Class:lnkGroupToCI+' => 'This link indicates when a Functional CI is part of a Group.',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'Group',

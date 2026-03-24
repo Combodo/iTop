@@ -467,7 +467,7 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:lnkProviderContractToService' => 'Link Provider Contract / Service',
+	'Class:lnkProviderContractToService' => 'Link ProviderContract / Service',
 	'Class:lnkProviderContractToService+' => 'This link can model that a provider contract enables the delivery of a Service.',
 	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s',
 	'Class:lnkProviderContractToService/Attribute:service_id' => 'Service',
@@ -507,7 +507,7 @@ Each client Organization must have a defined Delivery Model.',
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:lnkDeliveryModelToContact' => 'Link Delivery Model / Contact',
+	'Class:lnkDeliveryModelToContact' => 'Link DeliveryModel / Contact',
 	'Class:lnkDeliveryModelToContact+' => 'This link specifies the role of a Team (more rarely a Person) within a Delivery Model.',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Delivery model',

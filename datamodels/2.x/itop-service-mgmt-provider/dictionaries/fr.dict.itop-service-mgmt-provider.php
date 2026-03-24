@@ -196,7 +196,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkFunctionalCIToProviderContract' => 'Lien CI / Contrat fournisseur',
+	'Class:lnkFunctionalCIToProviderContract' => 'Lien CI fonctionnel / Contrat fournisseur',
 	'Class:lnkFunctionalCIToProviderContract+' => 'Ce lien modélise les équipments (CI fonctionnel) qui sont supportés par une société externe à travers un Contrat fournisseur.',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Contrat fournisseur',
@@ -214,7 +214,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:ServiceFamily' => 'Famille de service',
+	'Class:ServiceFamily' => 'Famille de services',
 	'Class:ServiceFamily+' => 'Premier niveau dans la hiérarchie des Services. Obligatoire pour qu\'un Service soit proposé dans le Portail Utilisateur.',
 	'Class:ServiceFamily/Attribute:name' => 'Nom',
 	'Class:ServiceFamily/Attribute:name+' => '',
@@ -317,7 +317,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:ServiceSubcategory' => 'Sous catégorie de service',
+	'Class:ServiceSubcategory' => 'Sous-catégorie de service',
 	'Class:ServiceSubcategory+' => 'Dernier niveau dans la hiérarchie des Services. Chaque Demande utilisateur se réfère à une Sous-catégorie de service.',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
 	'Class:ServiceSubcategory/Attribute:name' => 'Nom',
@@ -482,7 +482,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkCustomerContractToFunctionalCI' => 'Lien Contrat client / CI',
+	'Class:lnkCustomerContractToFunctionalCI' => 'Lien Contrat client / CI fonctionnel',
 	'Class:lnkCustomerContractToFunctionalCI+' => 'Ce lien permet de modéliser les équipments (CI fonctionnel) qui sont couverts par un Contrat client.',
 	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id' => 'Contrat client',
