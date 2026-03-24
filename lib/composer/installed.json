@@ -1654,17 +1654,17 @@
         },
         {
             "name": "scssphp/scssphp",
-            "version": "v1.13.0",
-            "version_normalized": "1.13.0.0",
+            "version": "dev-combodo/1.x",
+            "version_normalized": "dev-combodo/1.x",
             "source": {
                 "type": "git",
-                "url": "https://github.com/scssphp/scssphp.git",
-                "reference": "63d1157457e5554edf00b0c1fabab4c1511d2520"
+                "url": "https://github.com/combodo-itop-libs/scssphp.git",
+                "reference": "dde81c0a39d02e8e6fc81b70269747734e16d526"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/scssphp/scssphp/zipball/63d1157457e5554edf00b0c1fabab4c1511d2520",
-                "reference": "63d1157457e5554edf00b0c1fabab4c1511d2520",
+                "url": "https://api.github.com/repos/combodo-itop-libs/scssphp/zipball/dde81c0a39d02e8e6fc81b70269747734e16d526",
+                "reference": "dde81c0a39d02e8e6fc81b70269747734e16d526",
                 "shasum": ""
             },
             "require": {
@@ -1687,15 +1687,15 @@
                 "ext-iconv": "Can be used as fallback when ext-mbstring is not available",
                 "ext-mbstring": "For best performance, mbstring should be installed as it is faster than ext-iconv"
             },
-            "time": "2024-08-17T21:02:11+00:00",
+            "time": "2026-03-23T15:26:59+00:00",
             "bin": [
                 "bin/pscss"
             ],
             "type": "library",
             "extra": {
                 "bamarni-bin": {
-                    "bin-links": false,
-                    "forward-command": false
+                    "forward-command": false,
+                    "bin-links": false
                 }
             },
             "installation-source": "dist",
@@ -1704,7 +1704,11 @@
                     "ScssPhp\\ScssPhp\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "ScssPhp\\ScssPhp\\Tests\\": "tests/"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -1730,8 +1734,7 @@
                 "stylesheet"
             ],
             "support": {
-                "issues": "https://github.com/scssphp/scssphp/issues",
-                "source": "https://github.com/scssphp/scssphp/tree/v1.13.0"
+                "source": "https://github.com/combodo-itop-libs/scssphp/tree/combodo/1.x"
             },
             "install-path": "../scssphp/scssphp"
         },
