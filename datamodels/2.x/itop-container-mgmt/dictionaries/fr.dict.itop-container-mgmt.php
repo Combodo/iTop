@@ -24,8 +24,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerImage/Name' => '%1$s %2$s',
 	'Class:ContainerImage/ComplementaryName' => '%1$s - %2$s',
-	'Class:ContainerImage' => 'Image pour Conteneur',
-	'Class:ContainerImage+' => 'L\'image d\'un logiciel, constituant d\'une Application Conteneurisée',
+	'Class:ContainerImage' => 'Image pour conteneur',
+	'Class:ContainerImage+' => 'L\'image d\'un logiciel, constituant d\'une Application conteneurisée',
 	'Class:ContainerImage/Attribute:name' => 'Nom',
 	'Class:ContainerImage/Attribute:name+' => '',
 	'Class:ContainerImage/Attribute:version' => 'Version',
@@ -51,8 +51,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerApplication/Name' => '%1$s',
 	'Class:ContainerApplication/ComplementaryName' => '%1$s',
-	'Class:ContainerApplication' => 'Application Conteneurisée',
-	'Class:ContainerApplication+' => 'Une application déployée sur une Plateforme de Conteneurisation',
+	'Class:ContainerApplication' => 'Application conteneurisée',
+	'Class:ContainerApplication+' => 'Une application déployée sur une Plateforme de conteneurisation',
 	'Class:ContainerApplication/Attribute:descriptor' => 'Fichier de déploiement',
 	'Class:ContainerApplication/Attribute:descriptor+' => 'Fichier décrivant la manière de déployer l\'application sur la plateforme de conteneurisation (par exemple, Docker Compose, Helm Chart, etc.)',
 	'Class:ContainerApplication/Attribute:containervirtualhost_id' => 'Hôte',
@@ -70,7 +70,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkContainerApplicationToImage' => 'Lien Application / Image pour Conteneur',
+	'Class:lnkContainerApplicationToImage' => 'Lien Application conteneurisée / Image pour conteneur',
 	'Class:lnkContainerApplicationToImage+' => '',
 	'Class:lnkContainerApplicationToImage/Name' => '%1$s / %2$s',
 	'Class:lnkContainerApplicationToImage/Name+' => '',
@@ -87,7 +87,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerVirtualHost/Name' => '%1$s',
 	'Class:ContainerVirtualHost/ComplementaryName' => '',
-	'Class:ContainerVirtualHost' => 'Plateforme de Conteneurisation',
+	'Class:ContainerVirtualHost' => 'Plateforme de conteneurisation',
 	'Class:ContainerVirtualHost+' => 'Plateforme sur laquelle des applications s\'exécutent dans des conteneurs',
 	'Class:ContainerVirtualHost/Attribute:containertype_id' => 'Type de plateforme',
 	'Class:ContainerVirtualHost/Attribute:containertype_id+' => 'Technologie de conteneurisation utilisée',
@@ -106,8 +106,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerHost/Name' => '%1$s',
 	'Class:ContainerHost/ComplementaryName' => '%1$s-%2$s',
-	'Class:ContainerHost' => 'Hôte pour Conteneurs',
-	'Class:ContainerHost+' => 'Logiciel hôte dédié à l\'exécution de conteneurs. C\'est l\'élément de base d\'une Plateforme de Conteneurisation',
+	'Class:ContainerHost' => 'Hôte pour conteneurs',
+	'Class:ContainerHost+' => 'Logiciel hôte dédié à l\'exécution de conteneurs. C\'est l\'élément de base d\'une Plateforme de conteneurisation',
 	'Class:ContainerHost/Attribute:containercluster_id' => 'Grappe pour conteneurs',
 	'Class:ContainerHost/Attribute:containercluster_id+' => 'Grappe d\'hôtes pour conteneurs',
 	'Class:ContainerHost/Attribute:role' => 'Rôle',
@@ -116,7 +116,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerHost/Attribute:role/Value:worker' => 'Esclave',
 	'Class:ContainerHost/Attribute:role/Value:standalone' => 'Autonome',
 	'Class:ContainerHost/Attribute:system_id' => 'Système',
-	'Class:ContainerHost/Attribute:system_id+' => 'Le système sur lequel cet hôte tourne. Cela peut être un Serveur, une Machine Virtuelle ou un Nuage',
+	'Class:ContainerHost/Attribute:system_id+' => 'Le système sur lequel cet hôte tourne. Cela peut être un Serveur, une Machine virtuelle ou un Nuage',
 ]);
 
 //
@@ -126,8 +126,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerCluster/Name' => '%1$s',
 	'Class:ContainerCluster/ComplementaryName' => '',
-	'Class:ContainerCluster' => 'Grappe pour Conteneurs',
-	'Class:ContainerCluster+' => 'Plateforme de Conteneurisation constituée d\'une grappe d\'Hôtes pour Conteneurs',
+	'Class:ContainerCluster' => 'Grappe pour conteneurs',
+	'Class:ContainerCluster+' => 'Plateforme de conteneurisation constituée d\'une grappe d\'Hôtes pour conteneurs',
 	'Class:ContainerCluster/Attribute:redundancy' => 'Configuration de la redondance',
 	'Class:ContainerCluster/Attribute:redundancy/disabled' => 'La grappe est opérationnelle si tous les hôtes qui la composent sont opérationnels',
 	'Class:ContainerCluster/Attribute:redundancy/count' => 'Nombre minimal d\'hôtes pour que la grappe soit opérationnelle : %1$s',

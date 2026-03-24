@@ -36,7 +36,7 @@
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkFunctionalCIToTicket' => 'Link FunctionalCI / Ticket',
-	'Class:lnkFunctionalCIToTicket+' => '',
+	'Class:lnkFunctionalCIToTicket+' => 'This link models the functional CIs that are concerned by a Ticket (such as a User Request, an Incident, a Change, ...)',
 	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
