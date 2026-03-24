@@ -340,8 +340,10 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$aClassAliases = $oSet->GetFilter()->GetSelectedClasses();
 		$aAuthorizedClasses = [];
 		foreach ($aClassAliases as $sAlias => $sClassName) {
-			if ((UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO) &&
-				((count($aDisplayAliases) == 0) || (in_array($sAlias, $aDisplayAliases)))) {
+			if (
+				((UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) !== UR_ALLOWED_NO) || ($aExtraParams['display_unauthorized_objects'] ?? false) === true)
+				&& ((count($aDisplayAliases) == 0) || (in_array($sAlias, $aDisplayAliases)))
+			) {
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
 		}
@@ -520,6 +522,14 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 				if ($aData['checked']) {
 					if ($sAttCode == '_key_') {
 						if ($bViewLink) {
+							$sRenderLink = "return row['".$sClassAlias."/hyperlink'];";
+							if (
+								($aExtraParams['display_unauthorized_objects'] ?? false) === true
+								&& UserRights::IsActionAllowed($sClassName, UR_ACTION_READ) !== UR_ALLOWED_YES
+							) {
+								$sRenderLink = "return row['".$sClassAlias."/friendlyname'];";
+							}
+
 							$aColumnDefinition[] = [
 								'description' => $aData['label'],
 								'object_class' => $sClassName,
@@ -527,7 +537,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 								'attribute_code' => $sAttCode,
 								'attribute_type' => '_key_',
 								'attribute_label' => MetaModel::GetName($sClassName),
-								'render' => "return row['".$sClassAlias."/hyperlink'];",
+								'render' => $sRenderLink,
 							];
 
 						}
@@ -972,6 +982,8 @@ JS;
 			/** Handler to call when trying to create a new object in modal */
 			'creation_disallowed',
 			/** Don't provide the standard object creation feature */
+			'display_unauthorized_objects',
+			/** bool Display objects for which the user has no read rights */
 		];
 	}
 }

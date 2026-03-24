@@ -1455,6 +1455,12 @@ class utils
 
 			case iPopupMenuExtension::MENU_OBJLIST_TOOLKIT:
 				/** @var \DBObjectSet $param */
+
+				// Check if the user has the right to read the objects of this list, otherwise do not propose any action (eg. configure this list, export, etc.)
+				if (UserRights::IsActionAllowed($param->GetFilter()->GetClass(), UR_ACTION_READ, $param) !== UR_ALLOWED_YES) {
+					break;
+				}
+
 				$oAppContext = new ApplicationContext();
 				$sContext = $oAppContext->GetForLink(true);
 				$sDataTableId = is_null($sDataTableId) ? '' : $sDataTableId;

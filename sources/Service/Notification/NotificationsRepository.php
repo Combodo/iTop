@@ -117,6 +117,7 @@ class NotificationsRepository
 	protected function PrepareSearchForNotificationsByContact(int $iContactId, array $aNotificationIds = []): DBSearch
 	{
 		$oSearch = DBObjectSearch::FromOQL("SELECT EventNotificationNewsroom WHERE contact_id = :contact_id");
+		$oSearch->AllowAllData();
 		$aParams = [
 			"contact_id" => $iContactId,
 		];
