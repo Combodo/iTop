@@ -21,7 +21,6 @@ class DBSearchFilterJoinTest extends ItopDataTestCase
 	{
 		parent::setUp();
 		$this->RequireOnceItopFile('application/startup.inc.php');
-		$this->BackupConfiguration();
 		$this->aData = $this->CreateDBSearchFilterTestData();
 		DBSearch::EnableQueryCache(false, false);
 		$this->LoginRestrictedUser($this->aData['allowed_org_id'], self::RESTRICTED_PROFILE);
