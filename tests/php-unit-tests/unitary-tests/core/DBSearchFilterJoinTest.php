@@ -35,12 +35,11 @@ class DBSearchFilterJoinTest extends ItopDataTestCase
 	/**
 	 * @dataProvider JoinedAndNestedOqlProvider
 	 */
-	public function testDBSearchFilterAppliedToJoinsWhenEnabled(string $sOqlTemplate, int $iExpectedCount): void
+	public function testDBSearchFilterAppliedToJoinsWhenEnabled(string $sOql, int $iExpectedCount): void
 	{
 		$this->EnableJoinFilterConfig(true);
 
-		$sOql = sprintf($sOqlTemplate, $this->aData['denied_org_name'], $this->aData['allowed_org_name']);
-		$oSearch = DBObjectSearch::FromOQL($sOql);
+		$oSearch = DBObjectSearch::FromOQL($sOql, ['denied_org' => $this->aData['denied_org_name'], 'allowed_org' => $this->aData['allowed_org_name']]);
 		$oSet = new \DBObjectSet($oSearch);
 		CMDBSource::TestQuery($oSearch->MakeSelectQuery());
 		$this->assertEquals($iExpectedCount, $oSet->Count());
@@ -49,12 +48,11 @@ class DBSearchFilterJoinTest extends ItopDataTestCase
 	/**
 	 * @dataProvider JoinedAndNestedOqlProvider
 	 */
-	public function testDBSearchFilterAppliedToJoinsWhenDisabled(string $sOqlTemplate, int $iExpectedCount, int $iExpectedDisabledCount): void
+	public function testDBSearchFilterAppliedToJoinsWhenDisabled(string $sOql, int $iExpectedCount, int $iExpectedDisabledCount): void
 	{
 		$this->EnableJoinFilterConfig(false);
 
-		$sOql = sprintf($sOqlTemplate, $this->aData['denied_org_name'], $this->aData['allowed_org_name']);
-		$oSearch = DBObjectSearch::FromOQL($sOql);
+		$oSearch = DBObjectSearch::FromOQL($sOql, ['denied_org' => $this->aData['denied_org_name'], 'allowed_org' => $this->aData['allowed_org_name']]);
 		$oSet = new \DBObjectSet($oSearch);
 		CMDBSource::TestQuery($oSearch->MakeSelectQuery());
 		$this->assertEquals($iExpectedDisabledCount, $oSet->Count());
@@ -63,12 +61,11 @@ class DBSearchFilterJoinTest extends ItopDataTestCase
 	/**
 	 * @dataProvider JoinedAndNestedOqlProvider
 	 */
-	public function testAllowAllDataBypassesDBSearchFilterWhenEnabled(string $sOqlTemplate, int $iExpectedCount, int $iExpectedDisabledCount): void
+	public function testAllowAllDataBypassesDBSearchFilterWhenEnabled(string $sOql, int $iExpectedCount, int $iExpectedDisabledCount): void
 	{
 		$this->EnableJoinFilterConfig(true);
 
-		$sOql = sprintf($sOqlTemplate, $this->aData['denied_org_name'], $this->aData['allowed_org_name']);
-		$oSearch = DBObjectSearch::FromOQL($sOql);
+		$oSearch = DBObjectSearch::FromOQL($sOql, ['denied_org' => $this->aData['denied_org_name'], 'allowed_org' => $this->aData['allowed_org_name']]);
 		$oSearch->AllowAllData();
 		$oSet = new \DBObjectSet($oSearch);
 		CMDBSource::TestQuery($oSearch->MakeSelectQuery());
@@ -78,12 +75,11 @@ class DBSearchFilterJoinTest extends ItopDataTestCase
 	/**
 	 * @dataProvider JoinedAndNestedOqlProvider
 	 */
-	public function testAllowAllDataBypassesDBSearchFilterWhenDisabled(string $sOqlTemplate, int $iExpectedCount, int $iExpectedDisabledCount): void
+	public function testAllowAllDataBypassesDBSearchFilterWhenDisabled(string $sOql, int $iExpectedCount, int $iExpectedDisabledCount): void
 	{
 		$this->EnableJoinFilterConfig(false);
 
-		$sOql = sprintf($sOqlTemplate, $this->aData['denied_org_name'], $this->aData['allowed_org_name']);
-		$oSearch = DBObjectSearch::FromOQL($sOql);
+		$oSearch = DBObjectSearch::FromOQL($sOql, ['denied_org' => $this->aData['denied_org_name'], 'allowed_org' => $this->aData['allowed_org_name']]);
 		$oSearch->AllowAllData();
 		$oSet = new \DBObjectSet($oSearch);
 		CMDBSource::TestQuery($oSearch->MakeSelectQuery());
@@ -94,23 +90,23 @@ class DBSearchFilterJoinTest extends ItopDataTestCase
 	{
 		return [
 			'join-filter-on-org' => [
-				'oql' => "SELECT OSF FROM OSFamily AS OSF JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF.id JOIN Organization AS O ON VM.org_id = O.id WHERE O.name = '%s'",
+				'oql' => "SELECT OSF FROM OSFamily AS OSF JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF.id JOIN Organization AS O ON VM.org_id = O.id WHERE O.name = :denied_org",
 				'expected_filtered_count' => 0,
 				'expected_unfiltered_count' => 1,
 			],
 			'nested-in-select' => [
-				'oql' => "SELECT OSF FROM OSFamily AS OSF WHERE OSF.id IN (SELECT OSF1 FROM OSFamily AS OSF1 JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF1.id JOIN Organization AS O ON VM.org_id = O.id WHERE O.name = '%s')",
+				'oql' => "SELECT OSF FROM OSFamily AS OSF WHERE OSF.id IN (SELECT OSF1 FROM OSFamily AS OSF1 JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF1.id JOIN Organization AS O ON VM.org_id = O.id WHERE O.name = :denied_org)",
 				'expected_filtered_count' => 0,
 				'expected_unfiltered_count' => 1,
 
 			],
 			'userrequest-join-person-org' => [
-				'oql' => "SELECT OSF FROM OSFamily AS OSF JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF.id JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = VM.id JOIN UserRequest AS UR ON L.ticket_id = UR.id  JOIN Person AS P ON UR.caller_id = P.id JOIN Organization AS O ON P.org_id = O.id WHERE O.name = '%s'",
+				'oql' => "SELECT OSF FROM OSFamily AS OSF JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF.id JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = VM.id JOIN UserRequest AS UR ON L.ticket_id = UR.id  JOIN Person AS P ON UR.caller_id = P.id JOIN Organization AS O ON P.org_id = O.id WHERE O.name = :denied_org",
 				'expected_filtered_count' => 0,
 				'expected_unfiltered_count' => 1,
 			],
 			'union-join-filter-on-org' => [
-				'oql' => "SELECT OSF FROM OSFamily AS OSF JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF.id JOIN Organization AS O ON VM.org_id = O.id WHERE O.name = '%s' UNION SELECT OSF2 FROM OSFamily AS OSF2 JOIN VirtualMachine AS VM2 ON VM2.osfamily_id = OSF2.id JOIN Organization AS O2 ON VM2.org_id = O2.id WHERE O2.name = '%s'",
+				'oql' => "SELECT OSF FROM OSFamily AS OSF JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF.id JOIN Organization AS O ON VM.org_id = O.id WHERE O.name = :denied_org UNION SELECT OSF2 FROM OSFamily AS OSF2 JOIN VirtualMachine AS VM2 ON VM2.osfamily_id = OSF2.id JOIN Organization AS O2 ON VM2.org_id = O2.id WHERE O2.name = :allowed_org",
 				'expected_filtered_count' => 1,
 				'expected_unfiltered_count' => 2,
 			],
