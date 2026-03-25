@@ -1386,13 +1386,7 @@ class ObjectController extends BrickController
 				if ($oField instanceof DateTimeField) {
 					$oField->SetDateTimePickerWidgetParent($sDateTimePickerWidgetParent);
 				}
-				$sFieldRendererClass = BsLinkedSetFieldRenderer::GetFieldRendererClass($oField);
 				$sValue = $oAttDef->GetAsHTML($oNewLink->Get($sAttCode));
-				if ($sFieldRendererClass !== null) {
-					$oFieldRenderer = new $sFieldRendererClass($oField);
-					$oFieldOutput = $oFieldRenderer->Render();
-					$sValue = $oFieldOutput->GetHtml();
-				}
 				$aObjectData['attributes']['lnk__'.$sAttCode] = [
 					'object_class'   => $sLinkClass,
 					'object_id'      => $oNewLink->GetKey(),
@@ -1400,9 +1394,17 @@ class ObjectController extends BrickController
 					'attribute_code' => $sAttCode,
 					'attribute_type' => get_class($oAttDef),
 					'value_html'     => $sValue,
-					'css_inline' => $oFieldOutput->GetCss(),
-					'js_inline'  => $oFieldOutput->GetJs(),
+					'css_inline'     => '',
+					'js_inline'      => '',
 				];
+				$sFieldRendererClass = BsLinkedSetFieldRenderer::GetFieldRendererClass($oField);
+				if ($sFieldRendererClass !== null) {
+					$oFieldRenderer = new $sFieldRendererClass($oField);
+					$oFieldOutput = $oFieldRenderer->Render();
+					$aObjectData['attributes']['lnk__'.$sAttCode]['value_html'] = $oFieldOutput->GetHtml();
+					$aObjectData['attributes']['lnk__'.$sAttCode]['css_inline'] = $oFieldOutput->GetCss();
+					$aObjectData['attributes']['lnk__'.$sAttCode]['js_inline'] = $oFieldOutput->GetJs();
+				}
 			}
 
 			$aData['items'][] = $aObjectData;
