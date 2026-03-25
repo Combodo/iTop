@@ -154,11 +154,16 @@ class DBSearchFilterJoinTest extends ItopDataTestCase
 			'virtualhost_id' => 1,
 		]);
 
+		$iVirtualHostId = $this->GivenObjectInDB('Hypervisor', [
+			'name'   => 'DBSearchFilterVHost-'.$sSuffix,
+			'org_id' => $iAllowedOrgId,
+		]);
+
 		$this->GivenObjectInDB('VirtualMachine', [
 			'name' => 'DBSearchFilterVmAllowed-'.$sSuffix,
 			'org_id' => $iAllowedOrgId,
 			'osfamily_id' => $iAllowedOsFamilyId,
-			'virtualhost_id' => 1,
+			'virtualhost_id' => $iVirtualHostId,
 		]);
 
 		$oDeniedPerson = $this->CreatePerson('Denied-'.$sSuffix, $iDeniedOrgId);
