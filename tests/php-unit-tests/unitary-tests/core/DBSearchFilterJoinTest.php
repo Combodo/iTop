@@ -94,24 +94,25 @@ class DBSearchFilterJoinTest extends ItopDataTestCase
 	{
 		return [
 			'join-filter-on-org' => [
-				"SELECT OSF FROM OSFamily AS OSF JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF.id JOIN Organization AS O ON VM.org_id = O.id WHERE O.name = '%s'",
-				0,
-				1,
+				'oql' => "SELECT OSF FROM OSFamily AS OSF JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF.id JOIN Organization AS O ON VM.org_id = O.id WHERE O.name = '%s'",
+				'expected_filtered_count' => 0,
+				'expected_unfiltered_count' => 1,
 			],
 			'nested-in-select' => [
-				"SELECT OSF FROM OSFamily AS OSF WHERE OSF.id IN (SELECT OSF1 FROM OSFamily AS OSF1 JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF1.id JOIN Organization AS O ON VM.org_id = O.id WHERE O.name = '%s')",
-				0,
-				1,
+				'oql' => "SELECT OSF FROM OSFamily AS OSF WHERE OSF.id IN (SELECT OSF1 FROM OSFamily AS OSF1 JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF1.id JOIN Organization AS O ON VM.org_id = O.id WHERE O.name = '%s')",
+				'expected_filtered_count' => 0,
+				'expected_unfiltered_count' => 1,
+
 			],
 			'userrequest-join-person-org' => [
-				"SELECT OSF FROM OSFamily AS OSF JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF.id JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = VM.id JOIN UserRequest AS UR ON L.ticket_id = UR.id  JOIN Person AS P ON UR.caller_id = P.id JOIN Organization AS O ON P.org_id = O.id WHERE O.name = '%s'",
-				0,
-				1,
+				'oql' => "SELECT OSF FROM OSFamily AS OSF JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF.id JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = VM.id JOIN UserRequest AS UR ON L.ticket_id = UR.id  JOIN Person AS P ON UR.caller_id = P.id JOIN Organization AS O ON P.org_id = O.id WHERE O.name = '%s'",
+				'expected_filtered_count' => 0,
+				'expected_unfiltered_count' => 1,
 			],
 			'union-join-filter-on-org' => [
-				"SELECT OSF FROM OSFamily AS OSF JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF.id JOIN Organization AS O ON VM.org_id = O.id WHERE O.name = '%s' UNION SELECT OSF2 FROM OSFamily AS OSF2 JOIN VirtualMachine AS VM2 ON VM2.osfamily_id = OSF2.id JOIN Organization AS O2 ON VM2.org_id = O2.id WHERE O2.name = '%s'",
-				1,
-				2,
+				'oql' => "SELECT OSF FROM OSFamily AS OSF JOIN VirtualMachine AS VM ON VM.osfamily_id = OSF.id JOIN Organization AS O ON VM.org_id = O.id WHERE O.name = '%s' UNION SELECT OSF2 FROM OSFamily AS OSF2 JOIN VirtualMachine AS VM2 ON VM2.osfamily_id = OSF2.id JOIN Organization AS O2 ON VM2.org_id = O2.id WHERE O2.name = '%s'",
+				'expected_filtered_count' => 1,
+				'expected_unfiltered_count' => 2,
 			],
 		];
 	}
