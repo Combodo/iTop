@@ -60,7 +60,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 //
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:lnkErrorToFunctionalCI' => 'Link Error / FunctionalCI~~',
+	'Class:lnkErrorToFunctionalCI' => 'Link KnownError / FunctionalCI~~',
 	'Class:lnkErrorToFunctionalCI+' => 'Infra related to a known error~~',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI~~',
