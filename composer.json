@@ -15,38 +15,38 @@
     "apereo/phpcas": "dev-master",
     "guzzlehttp/guzzle": "^7.5.1",
     "league/oauth2-google": "^4.0.1",
-    "nikic/php-parser": "dev-master",
+    "nikic/php-parser": "^4.14.0",
     "pear/archive_tar": "~1.4.14",
     "pelago/emogrifier": "^7.2.0",
     "psr/log": "^3.0.0",
-    "scssphp/scssphp": "^1.12.1",
-    "soundasleep/html2text": "~2.1",
+    "scssphp/scssphp": "dev-combodo/1.x",
     "symfony/console": "~6.4.0",
     "symfony/dotenv": "~6.4.0",
-    "symfony/form": "^6.4",
     "symfony/framework-bundle": "~6.4.0",
     "symfony/http-foundation": "~6.4.0",
     "symfony/http-kernel": "~6.4.0",
-    "symfony/mailer": "^6.4",
-    "symfony/security-csrf": "^6.4",
+    "symfony/runtime": "~6.4.0",
     "symfony/twig-bundle": "~6.4.0",
-    "symfony/validator" : "^6.4",
+    "symfony/var-dumper": "~6.4.0",
     "symfony/yaml": "~6.4.0",
+    "symfony/mailer": "~6.4.0",
     "tecnickcom/tcpdf": "^6.6.0",
-    "thenetworg/oauth2-azure": "^2.0"
+    "thenetworg/oauth2-azure": "^2.0",
+    "soundasleep/html2text": "~2.1"
   },
   "require-dev": {
+    "symfony/debug-bundle": "~6.4.0",
     "symfony/stopwatch": "~6.4.0",
     "symfony/web-profiler-bundle": "~6.4.0"
   },
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/Combodo/PHP-Parser"
+      "url": "https://github.com/EsupPortail/phpCAS"
     },
     {
       "type": "vcs",
-      "url": "https://github.com/EsupPortail/phpCAS"
+      "url": "https://github.com/combodo-itop-libs/scssphp"
     }
   ],
   "suggest": {
@@ -68,7 +68,10 @@
     },
     "sort-packages": true,
     "classmap-authoritative": true,
-    "platform-check": true
+    "platform-check": true,
+    "allow-plugins": {
+      "symfony/runtime": true
+    }
   },
   "autoload": {
     "classmap": [
@@ -77,6 +80,7 @@
       "sources"
     ],
     "exclude-from-classmap": [
+      "application/twigextension.class.inc.php",
       "core/oql/build/PHP/",
       "core/apc-emulation.php",
       "application/startup.inc.php",
@@ -96,7 +100,7 @@
   "extra": {
     "symfony": {
       "allow-contrib": false,
-      "require": "6.4.*"
+      "require": "3.4.*"
     },
     "runtime": {
       "dotenv_path": "resources/symfony/.env"
