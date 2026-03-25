@@ -49,7 +49,7 @@
         {% endfor %}
     {% endblock %}
 </head>
-<body data-gui-type="backoffice">
+<body data-gui-type="{{ aPage.sBodyDataGuiType|default('backoffice') }}">
 {% if aPage.isPrintable %}<div class="printable-content" style="width: 27.7cm;">{% endif %}
     {% block iboPageBodyHtml %}
         <div id="ibo-page-container">

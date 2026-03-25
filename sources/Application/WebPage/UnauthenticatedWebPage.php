@@ -172,6 +172,7 @@ class UnauthenticatedWebPage extends NiceWebPage
 			'aJsInlineLive'       => $this->a_scripts,
 			'aJsInlineOnDomReady' => $this->GetReadyScripts(),
 			'aJsInlineOnInit'     => $this->a_init_scripts,
+			'sBodyDataGuiType'    => static::BODY_DATA_GUI_TYPE,
 
 			// TODO 3.0.0: TEMP, used while developing, remove it.
 			'sCapturedOutput'     => utils::FilterXSS($s_captured_output),
