@@ -87,12 +87,14 @@ abstract class ModuleInstallerAPI
 	{
 		try {
 			if (!MetaModel::IsStandaloneClass($sTo)) {
-				$sRootClass = MetaModel::GetRootClass($sTo);
-				$sTableName = MetaModel::DBGetTable($sRootClass);
-				$sFinalClassCol = MetaModel::DBGetClassField($sRootClass);
-				$sRepair = "UPDATE `$sTableName` SET `$sFinalClassCol` = '$sTo' WHERE `$sFinalClassCol` = BINARY '$sFrom'";
-				CMDBSource::Query($sRepair);
-				$iAffectedRows = CMDBSource::AffectedRows();
+				$sClass = $sTo;
+				foreach (MetaModel::EnumParentClasses($Class) as $sParentClass) {
+					$sTableName = MetaModel::DBGetTable($sParentClass);
+					$sFinalClassCol = MetaModel::DBGetClassField($sParentClass);
+					$sRepair = "UPDATE `$sTableName` SET `$sFinalClassCol` = '$sTo' WHERE `$sFinalClassCol` = BINARY '$sFrom'";
+					CMDBSource::Query($sRepair);
+					$iAffectedRows += CMDBSource::AffectedRows();
+				}
 				SetupLog::Info("Renaming class in DB - final class from '$sFrom' to '$sTo': $iAffectedRows rows affected");
 			}
 		} catch (Exception $e) {
