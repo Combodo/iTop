@@ -542,7 +542,7 @@ $sMessage
 HTML;
 
 				$sIcon = $oMessage->Get('icon') !== null ?
-					$oMessage->Get('icon')->GetDisplayURL('EventNotificationNewsroom', $oMessage->GetKey(), 'icon') :
+					$oMessage->Get('icon')->GetDisplayURL(EventNotificationNewsroom::class, $oMessage->GetKey(), 'icon') :
 					Branding::GetCompactMainLogoAbsoluteUrl();
 				$aMessages[] = [
 					'id'         => $oMessage->GetKey(),
@@ -609,7 +609,7 @@ HTML;
 		$sEventId = utils::ReadParam('event_id', 0);
 		if ($sEventId > 0) {
 			try {
-				$oEvent = MetaModel::GetObject('EventNotificationNewsroom', $sEventId, true, true);
+				$oEvent = MetaModel::GetObject(EventNotificationNewsroom::class, $sEventId, true, true);
 				if ($oEvent !== null && $oEvent->Get('contact_id') === UserRights::GetContactId()) {
 					$oEvent->Set('read', 'yes');
 					$oEvent->SetCurrentDate('read_date');
