@@ -87,8 +87,7 @@ abstract class ModuleInstallerAPI
 	{
 		try {
 			if (!MetaModel::IsStandaloneClass($sTo)) {
-				$sClass = $sTo;
-				foreach (MetaModel::EnumParentClasses($Class) as $sParentClass) {
+				foreach (MetaModel::EnumParentClasses($sTo) as $sParentClass) {
 					$sTableName = MetaModel::DBGetTable($sParentClass);
 					$sFinalClassCol = MetaModel::DBGetClassField($sParentClass);
 					$sRepair = "UPDATE `$sTableName` SET `$sFinalClassCol` = '$sTo' WHERE `$sFinalClassCol` = BINARY '$sFrom'";
