@@ -19,7 +19,7 @@
     "pear/archive_tar": "~1.4.14",
     "pelago/emogrifier": "^7.2.0",
     "psr/log": "^3.0.0",
-    "scssphp/scssphp": "^1.12.1",
+    "scssphp/scssphp": "dev-combodo/1.x",
     "symfony/console": "~6.4.0",
     "symfony/dotenv": "~6.4.0",
     "symfony/framework-bundle": "~6.4.0",
@@ -43,6 +43,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/EsupPortail/phpCAS"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/combodo-itop-libs/scssphp"
     }
   ],
   "suggest": {
