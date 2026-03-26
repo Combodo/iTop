@@ -46,7 +46,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Location' => 'Poloha',
-	'Class:Location+' => 'Any type of location: Region, Country, City, Site, Building, Floor, Room, Rack,...~~',
+	'Class:Location+' => 'Any type of location: Region, Country, City, Site, Building, Floor, Room,...~~',
 	'Class:Location/Attribute:name' => 'Názov',
 	'Class:Location/Attribute:name+' => '~~',
 	'Class:Location/Attribute:status' => 'Stav',

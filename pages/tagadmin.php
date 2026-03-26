@@ -106,6 +106,7 @@ try {
 
 		// Menu node
 		$sFilter = $oFilter->ToOQL();
+		$sFilter = utils::EscapeHtml($sFilter);
 		$oP->add("\n<!-- $sFilter -->\n");
 	} else {
 		$oP->add("<p>");

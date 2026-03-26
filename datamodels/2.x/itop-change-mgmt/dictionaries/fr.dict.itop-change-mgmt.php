@@ -51,8 +51,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:Change' => 'Ticket de Changement',
-	'Class:Change+' => '',
+	'Class:Change' => 'Ticket de changement',
+	'Class:Change+' => 'Une catégorie de Ticket pour gérer les Changements qui peuvent avoir un effet sur les Services délivrés.',
 	'Class:Change/Attribute:status' => 'Etat',
 	'Class:Change/Attribute:status+' => '',
 	'Class:Change/Attribute:status/Value:new' => 'Nouveau',

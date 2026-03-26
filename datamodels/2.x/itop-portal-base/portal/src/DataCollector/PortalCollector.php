@@ -27,7 +27,7 @@ class PortalCollector extends AbstractDataCollector
 	}
 
 	/** @inheritdoc  */
-	public function collect(Request $request, Response $response, Throwable $exception = null): void
+	public function collect(Request $request, Response $response, ?Throwable $exception = null): void
 	{
 		$oRegister = $this->oTemplatesProviderService->GetRegister();
 		$aTemplatesDefinitions = $oRegister->GetTemplatesDefinitions();

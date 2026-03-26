@@ -28,8 +28,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:ServiceSubcategory+' => 'Podkategorie služeb',
 	'Menu:Service' => 'Služby',
 	'Menu:Service+' => 'Služby',
-	'Menu:ServiceElement' => 'Prvky služby',
-	'Menu:ServiceElement+' => 'Prvky služby',
 	'Menu:SLA' => 'SLA - dohody o úrovních služeb',
 	'Menu:SLA+' => 'Dohody o úrovních služeb',
 	'Menu:SLT' => 'SLT - cíle úrovní služeb',
@@ -38,19 +36,21 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:DeliveryModel+' => 'Modely poskytování služeb',
 	'Menu:ServiceFamily' => 'Balíčky (kategorie) služeb',
 	'Menu:ServiceFamily+' => 'Balíčky (kategorie) služeb',
+	'Menu:ServiceCatalog' => 'Service catalog~~',
+	'Menu:ServiceCatalog+' => 'Define the service elements of your offering~~',
+	'UI-ServiceCatalogMenu-Title' => 'Service catalog~~',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal~~',
+	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'Only Service and Subcategory on production are visible in User Portal~~',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers~~',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal~~',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
+
 	'Contract:baseinfo' => 'Obecné informace',
 	'Contract:moreinfo' => 'Smluvní informace',
 	'Contract:cost' => 'Informace o nákladech',
 ]);
-
-/*
-	'UI:ServiceManagementMenu' => 'Gestion des Services',
-	'UI:ServiceManagementMenu+' => 'Gestion des Services',
-	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
-*/
 
 //
 // Class: Organization

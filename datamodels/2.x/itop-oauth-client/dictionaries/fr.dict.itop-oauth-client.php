@@ -35,7 +35,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:OAuthClient' => 'Client OAuth pour l\'Accès Mail',
+	'Class:OAuthClient' => 'Client OAuth pour l\'accès mail',
 	'Class:OAuthClient/Attribute:provider' => 'Fournisseur',
 	'Class:OAuthClient/Attribute:provider+' => '',
 	'Class:OAuthClient/Attribute:name' => 'Login',

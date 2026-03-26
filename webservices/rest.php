@@ -91,10 +91,8 @@ if (empty($sJsonString)) {
 
 $sProvider = '';
 
-$oKPI = new ExecutionKPI();
 try {
-	utils::UseParamFile();
-
+	$oKPI = new ExecutionKPI();
 	$oKPI->ComputeAndReport('Data model loaded');
 
 	// N°6358 - force credentials for REST calls

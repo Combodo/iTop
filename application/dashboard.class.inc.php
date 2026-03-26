@@ -1029,7 +1029,7 @@ EOF
 			    var dashboard = $('.ibo-dashboard#$sDivId')
 				dashboard.block();
 				$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-				   { operation: 'toggle_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: $sExtraParams, reload_url: '$sReloadURL' },
+				   { operation: 'toggle_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: $sExtraParams, reload_url: $sReloadURL },
 				   function(data) {
 					 dashboard.html(data);
 					 dashboard.unblock();

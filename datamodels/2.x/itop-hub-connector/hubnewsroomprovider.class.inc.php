@@ -18,7 +18,7 @@ class HubNewsroomProvider extends NewsroomProviderBase
 	 * {@inheritDoc}
 	 * @see NewsroomProviderBase::IsApplicable()
 	 */
-	public function IsApplicable(User $oUser = null)
+	public function IsApplicable(?User $oUser = null)
 	{
 		if ($oUser !== null) {
 			return UserRights::IsAdministrator($oUser);

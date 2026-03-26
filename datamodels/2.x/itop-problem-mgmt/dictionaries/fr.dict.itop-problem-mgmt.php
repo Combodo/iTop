@@ -40,7 +40,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Problem' => 'Problème',
-	'Class:Problem+' => '',
+	'Class:Problem+' => 'Un incident devient un problème lorsqu\'il n\'est pas résolu dans un délai raisonnable ou lorsqu\'il se répète fréquemment.',
 	'Class:Problem/Attribute:status' => 'Etat',
 	'Class:Problem/Attribute:status+' => '',
 	'Class:Problem/Attribute:status/Value:new' => 'Nouveau',

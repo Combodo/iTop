@@ -1,0 +1,1425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
+  <classes>
+    <class id="ContainerImage" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>containerimage</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="version"/>
+          </attributes>
+          <complementary_attributes>
+            <attribute id="publisher"/>
+            <attribute id="image"/>
+          </complementary_attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="image"/>
+            <attribute id="name"/>
+            <attribute id="version"/>
+            <attribute id="publisher"/>
+          </attributes>
+        </reconciliation>
+        <style>
+          <icon>images/icons8-image-container.svg</icon>
+        </style>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="publisher"/>
+              <attribute id="image"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="publisher" xsi:type="AttributeString">
+          <sql>publisher</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="version" xsi:type="AttributeString">
+          <sql>version</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="type_id" xsi:type="AttributeExternalKey">
+          <sql>containerimagetype_id</sql>
+          <target_class>ContainerImageType</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="software_id" xsi:type="AttributeExternalKey">
+          <sql>software_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>Software</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="image" xsi:type="AttributeString">
+          <sql>image</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <target/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="containerapplications_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContainerApplicationToImage</linked_class>
+          <ext_key_to_me>containerimage_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>containerapplication_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="version">
+              <rank>20</rank>
+            </item>
+            <item id="publisher">
+              <rank>30</rank>
+            </item>
+            <item id="image">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="version">
+              <rank>20</rank>
+            </item>
+            <item id="publisher">
+              <rank>30</rank>
+            </item>
+            <item id="image">
+              <rank>40</rank>
+            </item>
+            <item id="type_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </search>
+        <summary>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="version">
+              <rank>20</rank>
+            </item>
+            <item id="publisher">
+              <rank>30</rank>
+            </item>
+            <item id="type_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
+        <details>
+          <items>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:Container:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="version">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Container:moreinfo">
+                  <items>
+                    <item id="publisher">
+                      <rank>10</rank>
+                    </item>
+                    <item id="image">
+                      <rank>20</rank>
+                    </item>
+                    <item id="type_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="software_id">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Container:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+            <item id="containerapplications_list">
+              <rank>50</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="publisher">
+              <rank>30</rank>
+            </item>
+            <item id="image">
+              <rank>40</rank>
+            </item>
+            <item id="type_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="containerapplication">
+              <attribute>containerapplications_list</attribute>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+    </class>
+    <class id="SoftwareInstance" _delta="must_exist">
+      <fields>
+        <field id="system_id" _delta="must_exist" xsi:type="AttributeExternalKey">
+          <filter _delta="redefine">SELECT FunctionalCI WHERE IF(:this->finalclass = 'ContainerApplication', finalclass = 'ContainerVirtualHost', finalclass IN ('Server','VirtualMachine','PC'))</filter>
+        </field>
+      </fields>
+    </class>
+    <class id="ContainerApplication" _delta="define">
+      <parent>SoftwareInstance</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>containerapplication</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+          <complementary_attributes>
+            <attribute id="containervirtualhost_id_friendlyname"/>
+          </complementary_attributes>
+        </naming>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+          <image_attribute>logo</image_attribute>
+        </fields_semantic>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+             <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+        <style>
+          <icon>images/icons8-application-container.svg</icon>
+        </style>
+      </properties>
+      <fields>
+        <field id="descriptor" xsi:type="AttributeBlob">
+          <sql>descriptor</sql>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="containervirtualhost_id" xsi:type="AttributeExternalKey">
+          <sql>containervirtualhost_id</sql>
+          <filter/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>ContainerVirtualHost</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="containerimages_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContainerApplicationToImage</linked_class>
+          <ext_key_to_me>containerapplication_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>containerimage_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
+      <methods>
+        <method id="EvtComputeSystemId">
+          <static>false</static>
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[	public function EvtComputeSystemId(?Combodo\iTop\Service\Events\EventData $oEventData = null)
+	{
+			$this->Set('system_id', $this->Get('containervirtualhost_id'));
+	}]]></code>
+        </method>
+      </methods>
+      <event_listeners>
+        <event_listener id="EVENT_DB_BEFORE_WRITE">
+          <event>EVENT_DB_BEFORE_WRITE</event>
+          <callback>EvtComputeSystemId</callback>
+          <rank>0</rank>
+        </event_listener>
+      </event_listeners>
+      <presentation>
+        <list>
+          <items>
+            <item id="containervirtualhost_id">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="move2production">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="move2production">
+              <rank>40</rank>
+            </item>
+          </items>
+        </search>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="containervirtualhost_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
+        <details>
+          <items>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:Container:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Container:moreinfo">
+                  <items>
+                    <item id="containervirtualhost_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="descriptor">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Container:otherinfo">
+                  <items>
+                    <item id="move2production">
+                      <rank>50</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>60</rank>
+                    </item>
+                    <item id="description">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+            <item id="containerimages_list">
+              <rank>30</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>40</rank>
+            </item>
+            <item id="documents_list">
+              <rank>50</rank>
+            </item>
+            <item id="applicationsolution_list">
+              <rank>60</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>70</rank>
+            </item>
+            <item id="services_list">
+              <rank>80</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="friendlyname">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="containervirtualhost_id">
+              <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+    </class>
+    <class id="lnkContainerApplicationToImage" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkcontainerapplicationtoimage</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="containerapplication_id_friendlyname"/>
+            <attribute id="containerimage_id_friendlyname"/>
+          </attributes>
+        </naming>
+        <style>
+          <icon/>
+        </style>
+        <reconciliation>
+          <attributes>
+            <attribute id="containerapplication_id"/>
+            <attribute id="containerimage_id"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="containerapplication_id"/>
+              <attribute id="containerimage_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+      </properties>
+      <fields>
+        <field id="containerapplication_id" xsi:type="AttributeExternalKey">
+          <sql>containerapplication_id</sql>
+          <target_class>ContainerApplication</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="containerimage_id" xsi:type="AttributeExternalKey">
+          <sql>containerimage_id</sql>
+          <target_class>ContainerImage</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="containerapplication_id">
+              <rank>10</rank>
+            </item>
+            <item id="containerimage_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="containerapplication_id">
+              <rank>10</rank>
+            </item>
+            <item id="containerimage_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="containerapplication_id">
+              <rank>10</rank>
+            </item>
+            <item id="containerimage_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="ContainerVirtualHost" _delta="define">
+      <parent>FunctionalCI</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>true</abstract>
+        <db_table>containervirtualhost</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_id_friendlyname"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+        <obsolescence>
+          <condition>status='obsolete'</condition>
+        </obsolescence>
+      </properties>
+      <fields>
+        <field id="containerapplications_list" xsi:type="AttributeLinkedSet">
+          <linked_class>ContainerApplication</linked_class>
+          <ext_key_to_me>containervirtualhost_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode/>
+          <with_php_constraint>false</with_php_constraint>
+          <with_php_computation>false</with_php_computation>
+          <edit_when/>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <sql>status</sql>
+          <values>
+            <value id="implementation">
+              <code>implementation</code>
+              <rank>10</rank>
+              <style>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="production">
+              <code>production</code>
+              <rank>20</rank>
+              <style>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="obsolete">
+              <code>obsolete</code>
+              <rank>30</rank>
+              <style>
+                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+          </values>
+          <default_style>
+            <main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+            <complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
+            <decoration_classes/>
+          </default_style>
+          <sort_type/>
+          <default_value>implementation</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="containertype_id" xsi:type="AttributeExternalKey">
+          <sql>containertype_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>ContainerType</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="move2production">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="move2production">
+              <rank>40</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:Container:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Container:moreinfo">
+                  <items>
+                    <item id="system_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="containertype_id">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Container:otherinfo">
+                  <items>
+                    <item id="move2production">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>30</rank>
+            </item>
+            <item id="documents_list">
+              <rank>40</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>50</rank>
+            </item>
+            <item id="containerapplications_list">
+              <rank>60</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="friendlyname">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="containerapplications">
+              <attribute>containerapplications_list</attribute>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+    </class>
+    <class id="ContainerHost" _delta="define">
+      <parent>ContainerVirtualHost</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>containerhost</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+          <complementary_attributes>
+            <attribute id="role"/>
+            <attribute id="system_id_friendlyname"/>
+          </complementary_attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="organization_name"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+        <style>
+          <icon>images/icons8-host-container.svg</icon>
+        </style>
+      </properties>
+      <fields>
+        <field id="containercluster_id" xsi:type="AttributeExternalKey">
+          <sql>containercluster_id</sql>
+          <filter>SELECT ContainerCluster WHERE org_id= :this-&gt;org_id</filter>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>ContainerCluster</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+        </field>
+        <field id="role" xsi:type="AttributeEnum">
+          <sql>role</sql>
+          <values>
+            <value id="master">
+              <code>master</code>
+              <rank>10</rank>
+            </value>
+            <value id="worker">
+              <code>worker</code>
+              <rank>20</rank>
+            </value>
+            <value id="standalone">
+              <code>standalone</code>
+              <rank>30</rank>
+            </value>
+          </values>
+          <sort_type/>
+          <default_value>standalone</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="system_id" xsi:type="AttributeExternalKey">
+          <sql>system_id</sql>
+          <filter>SELECT FunctionalCI WHERE finalclass IN ('Server','VirtualMachine','Cloud')</filter>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>FunctionalCI</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods>
+        <method id="EvtBeforeWrite">
+          <comment>	/**
+            * Event Listener for EVENT_DB_BEFORE_WRITE
+            * An object is about to be written into the database.
+            * The object can be modified.
+            *
+            * @param  Combodo\iTop\Service\Events\EventData $oEventData Event data object
+            *
+            */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[	public function EvtBeforeWrite(Combodo\iTop\Service\Events\EventData $oEventData)
+{
+    if ($this->Get('containercluster_id') == 0)  {
+        $this->Set('role', 'standalone');
+    } else if ($this->Get('role') == 'standalone') {
+        $this->Set('role', 'worker');
+    }
+}]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <list>
+          <items>
+            <item id="role">
+              <rank>10</rank>
+            </item>
+            <item id="containercluster_id">
+              <rank>20</rank>
+            </item>
+            <item id="system_id">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="move2production">
+              <rank>40</rank>
+            </item>
+          </items>
+        </search>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="system_id">
+              <rank>20</rank>
+            </item>
+            <item id="containertype_id">
+              <rank>30</rank>
+            </item>
+            <item id="containercluster_id">
+              <rank>40</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>50</rank>
+            </item>
+            <item id="description">
+              <rank>60</rank>
+            </item>
+          </items>
+        </summary>
+        <details>
+          <items>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:Container:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Container:moreinfo">
+                  <items>
+                    <item id="system_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="containertype_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="containercluster_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="role">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Container:otherinfo">
+                  <items>
+                    <item id="move2production">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>30</rank>
+            </item>
+            <item id="documents_list">
+              <rank>40</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>50</rank>
+            </item>
+            <item id="containerapplications_list">
+              <rank>60</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="friendlyname">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="role">
+              <rank>30</rank>
+            </item>
+            <item id="containertype_id">
+              <rank>40</rank>
+            </item>
+            <item id="system_id">
+              <rank>50</rank>
+            </item>
+            <item id="status">
+              <rank>60</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="containercluster">
+              <attribute>containercluster_id</attribute>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+      <event_listeners>
+        <event_listener id="EVENT_DB_BEFORE_WRITE">
+          <event>EVENT_DB_BEFORE_WRITE</event>
+          <callback>EvtBeforeWrite</callback>
+          <rank>0</rank>
+        </event_listener>
+      </event_listeners>
+    </class>
+    <class id="ContainerCluster" _delta="define">
+      <parent>ContainerVirtualHost</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>containercluster</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="organization_name"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+        <style>
+          <icon>images/icons8-cluster-container.svg</icon>
+        </style>
+      </properties>
+      <fields>
+        <field id="redundancy" xsi:type="AttributeRedundancySettings">
+          <sql>redundancy</sql>
+          <relation_code>impacts</relation_code>
+          <from_class>ContainerHost</from_class>
+          <neighbour_id>containercluster</neighbour_id>
+          <enabled>true</enabled>
+          <min_up>50</min_up>
+          <min_up_type>percent</min_up_type>
+          <min_up_mode>user</min_up_mode>
+          <enabled_mode>user</enabled_mode>
+        </field>
+        <field id="containerhosts_list" xsi:type="AttributeLinkedSet">
+          <linked_class>ContainerHost</linked_class>
+          <ext_key_to_me>containercluster_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode/>
+          <with_php_constraint>false</with_php_constraint>
+          <with_php_computation>false</with_php_computation>
+          <edit_when>on_host_display</edit_when>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="move2production">
+              <rank>40</rank>
+            </item>
+          </items>
+        </search>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="containertype_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
+        <details>
+          <items>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:Container:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Container:moreinfo">
+                  <items>
+                    <item id="containertype_id">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Container:otherinfo">
+                  <items>
+                    <item id="move2production">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>30</rank>
+            </item>
+            <item id="documents_list">
+              <rank>40</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>50</rank>
+            </item>
+            <item id="containerhosts_list">
+              <rank>60</rank>
+            </item>
+            <item id="containerapplications_list">
+              <rank>70</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="friendlyname">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="containertype_id">
+              <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+    </class>
+    <class id="ContainerType" _delta="define">
+      <parent>Typology</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>containertype</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields/>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="ContainerImageType" _delta="define">
+      <parent>Typology</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>containerimagetype</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields/>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="Cloud" _delta="must_exist">
+      <fields>
+        <field id="containerhosts_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>ContainerHost</linked_class>
+          <ext_key_to_me>system_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode/>
+          <with_php_constraint>false</with_php_constraint>
+          <with_php_computation>false</with_php_computation>
+          <edit_when/>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="containerhosts_list" _delta="define">
+              <rank>40</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <relations>
+        <relation id="impacts" _delta="merge">
+          <neighbours>
+            <neighbour id="containerhosts" _delta="define">
+              <attribute>containerhosts_list</attribute>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+    </class>
+    <class id="Server" _delta="must_exist">
+      <fields>
+        <field id="containerhosts_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>ContainerHost</linked_class>
+          <ext_key_to_me>system_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode/>
+          <with_php_constraint>false</with_php_constraint>
+          <with_php_computation>false</with_php_computation>
+          <edit_when/>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="containerhosts_list" _delta="define">
+              <rank>140</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <relations>
+        <relation id="impacts" _delta="merge">
+          <neighbours>
+            <neighbour id="containerhosts" _delta="define">
+              <attribute>containerhosts_list</attribute>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+    </class>
+    <class id="VirtualMachine" _delta="must_exist">
+      <fields>
+        <field id="containerhosts_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>ContainerHost</linked_class>
+          <ext_key_to_me>system_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode/>
+          <with_php_constraint>false</with_php_constraint>
+          <with_php_computation>false</with_php_computation>
+          <edit_when/>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="containerhosts_list" _delta="define">
+              <rank>140</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <relations>
+        <relation id="impacts" _delta="merge">
+          <neighbours>
+            <neighbour id="containerhosts" _delta="define">
+              <attribute>containerhosts_list</attribute>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+    </class>
+  </classes>
+  <menus>
+    <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
+      <definition>
+        <cells>
+          <cell id="1" _delta="must_exist">
+            <rank>1</rank>
+            <dashlets>
+              <dashlet id="container_43" xsi:type="DashletBadge" _delta="define">
+                <rank>5</rank>
+                <class>ContainerApplication</class>
+              </dashlet>
+              <dashlet id="container_44" xsi:type="DashletBadge" _delta="define">
+                <rank>6</rank>
+                <class>ContainerHost</class>
+              </dashlet>
+              <dashlet id="container_45" xsi:type="DashletBadge" _delta="define">
+                <rank>7</rank>
+                <class>ContainerCluster</class>
+              </dashlet>
+              <dashlet id="container_46" xsi:type="DashletBadge" _delta="define">
+                <rank>8</rank>
+                <class>ContainerImage</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+    <menu id="Typology" xsi:type="DashboardMenuNode" _delta="must_exist">
+      <definition>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="container_21" xsi:type="DashletBadge" _delta="define">
+                <rank>21</rank>
+                <class>ContainerType</class>
+              </dashlet>
+              <dashlet id="container_22" xsi:type="DashletBadge" _delta="define">
+                <rank>22</rank>
+                <class>ContainerImageType</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+  </menus>
+</itop_design>

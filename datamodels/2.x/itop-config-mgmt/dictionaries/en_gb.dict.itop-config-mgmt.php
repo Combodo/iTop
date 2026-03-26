@@ -59,26 +59,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 //////////////////////////////////////////////////////////////////////
 //
 
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
 //
 // Class: lnkContactToFunctionalCI
 //
@@ -511,6 +491,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'All the configuration items that compose this application solution',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Business processes',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'All the business processes depending on this application solution',
+	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
+	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Status',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'active',
@@ -532,6 +514,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Application solutions',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'All the application solutions that impact this business process',
+	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
+	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:BusinessProcess/Attribute:status' => 'Status',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'active',
@@ -596,7 +580,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 //
 
 Dict::Add('EN GB', 'British English', 'British English', [
-	'Class:WebServer' => 'Web server',
+	'Class:WebServer' => 'Web Server',
 	'Class:WebServer+' => '',
 	'Class:WebServer/Attribute:webapp_list' => 'Web applications',
 	'Class:WebServer/Attribute:webapp_list+' => 'All the web applications available on this web server',
@@ -628,6 +612,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:MiddlewareInstance' => 'Middleware Instance',
 	'Class:MiddlewareInstance+' => '',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Middleware name',
@@ -660,6 +646,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => 'Web server name',
 	'Class:WebApplication/Attribute:webserver_name+' => '',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '',
 ]);
@@ -907,6 +895,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => 'Documents',
 	'Class:Software/Attribute:documents_list+' => 'All the documents linked to this software',
+	'Class:Software/Attribute:logo' => 'Logo~~',
+	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs~~',
 	'Class:Software/Attribute:type' => 'Type',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'DB Server',
@@ -1372,6 +1362,10 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Device name',
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization',
+	'Class:PhysicalInterface/Attribute:org_id+' => '',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location',
+	'Class:PhysicalInterface/Attribute:location_id+' => '',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLANs',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
 ]);
@@ -1554,10 +1548,16 @@ Dict::Add('EN GB', 'British English', 'British English', [
 // Add translation for Fieldsets
 
 Dict::Add('EN GB', 'British English', 'British English', [
-	'Server:baseinfo' => 'General information',
+	'ConfigMgmt:baseinfo' => 'General',
+	'ConfigMgmt:moreinfo' => 'CI specifics',
+	'ConfigMgmt:otherinfo' => 'Dates and description',
+	'Storage:moreinfo' => 'Storage specifics',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
+	'Server:baseinfo' => 'General',
+	'Server:moreinfo' => 'Device specifics',
 	'Server:Date' => 'Dates',
-	'Server:moreinfo' => 'More information',
-	'Server:otherinfo' => 'Other information',
+	'Server:otherinfo' => 'Description',
 	'Server:power' => 'Power supply',
 	'Class:Subnet/Tab:IPUsage' => 'IP Usage',
 	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not',

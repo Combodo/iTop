@@ -494,6 +494,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Všechny konfigurační položky, které tvoří toto aplikační řešení',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Obchodní procesy',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Všechny obchodní procesy závisející na tomto aplikačním řešení',
+	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
+	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Stav',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'aktivní',
@@ -515,6 +517,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Aplikační řešení',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Všechna aplikační řešení, která ovlivňují tento proces',
+	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
+	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:BusinessProcess/Attribute:status' => 'Stav',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'aktivní',
@@ -579,7 +583,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 //
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'Class:WebServer' => 'Web server',
+	'Class:WebServer' => 'Web Server',
 	'Class:WebServer+' => '',
 	'Class:WebServer/Attribute:webapp_list' => 'Web aplikace',
 	'Class:WebServer/Attribute:webapp_list+' => 'Všechny webové aplikace dostupné na tomto web serveru',
@@ -611,6 +615,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:MiddlewareInstance' => 'Instance middlewaru',
 	'Class:MiddlewareInstance+' => '',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Název middlewaru',
@@ -643,6 +649,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => 'Název web serveru',
 	'Class:WebApplication/Attribute:webserver_name+' => '',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '',
 ]);
@@ -890,6 +898,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => 'Dokumenty',
 	'Class:Software/Attribute:documents_list+' => 'Všechny dokumenty spojené s tímto software',
+	'Class:Software/Attribute:logo' => 'Logo~~',
+	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs~~',
 	'Class:Software/Attribute:type' => 'Typ',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'DB Server',
@@ -1534,6 +1544,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 // Add translation for Fieldsets
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Obecné informace',
 	'Server:Date' => 'Data',
 	'Server:moreinfo' => 'Více informací',
@@ -1622,8 +1638,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 //
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
 	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location id~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
 	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 ]);

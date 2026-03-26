@@ -73,6 +73,9 @@ iTop development is sponsored, led, and supported by [Combodo][0].
 
 [0]: https://www.combodo.com
 
+## Developers
+
+You can find information and instructions about our quality tools and how to run them [here](.doc/developers.md).
 
 ## Contributors
 

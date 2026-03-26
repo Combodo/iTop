@@ -67,7 +67,7 @@ class ButtonURL extends Button
 	public function __construct(
 		string $sLabel,
 		string $sURL,
-		string $sId = null,
+		?string $sId = null,
 		string $sTarget = self::DEFAULT_TARGET,
 		string $sTooltip = '',
 		string $sIconClass = '',

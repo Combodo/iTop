@@ -578,7 +578,10 @@ class AttributeStopWatch extends AttributeDefinition
 						switch ($sThresholdCode) {
 							case 'deadline':
 								if ($value) {
-									if (is_int($value)) {
+									if (is_numeric($value)) {
+										if (!is_int($value)) {
+											$value = intval($value);
+										}
 										$sDate = date(AttributeDateTime::GetInternalFormat(), $value);
 										$sRet = AttributeDeadline::FormatDeadline($sDate);
 									} else {

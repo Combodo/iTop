@@ -370,7 +370,7 @@ class ormCaseLog
 	/**
 	 * Produces an HTML representation, aimed at being used within the iTop framework
 	 */
-	public function GetAsHTML(WebPage $oP = null, $bEditMode = false, $aTransfoHandler = null)
+	public function GetAsHTML(?WebPage $oP = null, $bEditMode = false, $aTransfoHandler = null)
 	{
 		$bPrintableVersion = (utils::ReadParam('printable', '0') == '1');
 

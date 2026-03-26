@@ -929,6 +929,7 @@ HTML;
 				'aJsInlineOnInit' => $this->a_init_scripts,
 				'aJsInlineOnDomReady' => $this->GetReadyScripts(),
 				'aJsInlineLive' => $this->a_scripts,
+				'sBodyDataGuiType' => static::BODY_DATA_GUI_TYPE,
 				// TODO 3.0.0: TEMP, used while developping, remove it.
 				'sSanitizedContent' => utils::FilterXSS($this->s_content),
 				'sDeferredContent' => utils::FilterXSS($this->s_deferred_content),
@@ -950,7 +951,7 @@ HTML;
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function AddTabContainer($sTabContainer, $sPrefix = '', iUIContentBlock $oParentBlock = null)
+	public function AddTabContainer($sTabContainer, $sPrefix = '', ?iUIContentBlock $oParentBlock = null)
 	{
 		if (is_null($oParentBlock)) {
 			$oParentBlock = PanelUIBlockFactory::MakeNeutral('');

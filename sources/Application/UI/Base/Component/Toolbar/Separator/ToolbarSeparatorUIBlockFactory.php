@@ -31,7 +31,7 @@ class ToolbarSeparatorUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator\VerticalSeparator
 	 */
-	public static function MakeVertical(string $sId = null)
+	public static function MakeVertical(?string $sId = null)
 	{
 		return new VerticalSeparator($sId);
 	}

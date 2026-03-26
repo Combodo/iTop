@@ -32,8 +32,9 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
+//
 // Menu, fieldsets, UI, messages translations
-
+//
 Dict::Add('EN US', 'English', 'English', [
 	'Menu:ServiceManagement' => 'Service management',
 	'Menu:ServiceManagement+' => 'Service management overview',
@@ -42,27 +43,36 @@ Dict::Add('EN US', 'English', 'English', [
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracts by service level',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracts by status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less than 30 days',
+
 	'Menu:ProviderContract' => 'Provider contracts',
-	'Menu:ProviderContract+' => 'Provider contracts',
+	'Menu:ProviderContract+' => 'What is bought to external companies',
 	'Menu:CustomerContract' => 'Customer contracts',
-	'Menu:CustomerContract+' => 'Customer contracts',
+	'Menu:CustomerContract+' => 'Who is buying the services',
 	'Menu:ServiceSubcategory' => 'Service subcategories',
-	'Menu:ServiceSubcategory+' => 'Service subcategories',
+	'Menu:ServiceSubcategory+' => 'Lowest level in service hierarchy',
 	'Menu:Service' => 'Services',
-	'Menu:Service+' => 'Services',
-	'Menu:ServiceElement' => 'Sevice elements',
-	'Menu:ServiceElement+' => 'Sevice elements',
+	'Menu:Service+' => 'Second level in service hierarchy',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => 'Service Level Agreements',
 	'Menu:SLT' => 'SLTs',
 	'Menu:SLT+' => 'Service Level Targets',
 	'Menu:DeliveryModel' => 'Delivery models',
-	'Menu:DeliveryModel+' => 'Delivery models',
+	'Menu:DeliveryModel+' => 'Teams handling tickets',
 	'Menu:ServiceFamily' => 'Service families',
-	'Menu:ServiceFamily+' => 'Service families',
+	'Menu:ServiceFamily+' => 'Top level in service hierarchy',
+	'Menu:ServiceCatalog' => 'Service catalog',
+	'Menu:ServiceCatalog+' => 'Define the service elements of your offering',
+	'UI-ServiceCatalogMenu-Title' => 'Service catalog',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal',
+	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'Only Service and Subcategory on production are visible in User Portal',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA',
+
 	'Menu:Procedure' => 'Procedures catalog',
 	'Menu:Procedure+' => 'All procedures catalog',
-
 	'Contract:baseinfo' => 'General information',
 	'Contract:moreinfo' => 'Contractual information',
 	'Contract:cost'     => 'Cost information',
@@ -85,7 +95,7 @@ The delivery model specifies the teams to which tickets can be assigned.',
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:ContractType' => 'Contract Type',
-	'Class:ContractType+' => '',
+	'Class:ContractType+' => 'Typology for categorizing Customer and Provider Contracts.',
 ]);
 
 //
@@ -94,7 +104,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Contract' => 'Contract',
-	'Class:Contract+' => '',
+	'Class:Contract+' => 'Abstract class to handle fields common to the different contract sub-classes.',
 	'Class:Contract/Attribute:name' => 'Name',
 	'Class:Contract/Attribute:name+' => '',
 	'Class:Contract/Attribute:org_id' => 'Customer',
@@ -148,7 +158,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:CustomerContract' => 'Customer Contract',
-	'Class:CustomerContract+' => '',
+	'Class:CustomerContract+' => 'Agreement between a client and a provider for the delivery of services with an optional level of commitment (SLA, Coverage Window).',
 	'Class:CustomerContract/Attribute:services_list' => 'Services',
 	'Class:CustomerContract/Attribute:services_list+' => 'All the services purchased for this contract',
 ]);
@@ -159,7 +169,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:ProviderContract' => 'Provider Contract',
-	'Class:ProviderContract+' => '',
+	'Class:ProviderContract+' => 'Agreement between an external provider and an internal organization.',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CIs',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this provider contract',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
@@ -180,7 +190,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkContactToContract' => 'Link Contact / Contract',
-	'Class:lnkContactToContract+' => '',
+	'Class:lnkContactToContract+' => 'Manages key contacts on each customer or provider contract.',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Contract',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '',
@@ -198,7 +208,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkContractToDocument' => 'Link Contract / Document',
-	'Class:lnkContractToDocument+' => '',
+	'Class:lnkContractToDocument+' => 'Link used when a Document is applicable to a Contract.',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Contract',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
@@ -216,7 +226,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:ServiceFamily' => 'Service Family',
-	'Class:ServiceFamily+' => '',
+	'Class:ServiceFamily+' => 'Top level of Service hierarchy. Required for Services to be proposed in User Portal.',
 	'Class:ServiceFamily/Attribute:name' => 'Name',
 	'Class:ServiceFamily/Attribute:name+' => '',
 	'Class:ServiceFamily/Attribute:icon' => 'Icon',
@@ -231,7 +241,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Service' => 'Service',
-	'Class:Service+' => '',
+	'Class:Service+' => 'A Service is delivered by an organization and subscribed to through a Contract Client. It must contain at least one Service Subcategory.',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s',
 	'Class:Service/Attribute:name' => 'Name',
 	'Class:Service/Attribute:name+' => '',
@@ -275,7 +285,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkDocumentToService' => 'Link Document / Service',
-	'Class:lnkDocumentToService+' => '',
+	'Class:lnkDocumentToService+' => 'Link used when a Document is applicable to a Service.',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Service',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '',
@@ -293,7 +303,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkContactToService' => 'Link Contact / Service',
-	'Class:lnkContactToService+' => '',
+	'Class:lnkContactToService+' => 'Ideal for defining the team to which Tickets created on the related Service will be assigned (automatically or manually).',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s',
 	'Class:lnkContactToService/Attribute:service_id' => 'Service',
 	'Class:lnkContactToService/Attribute:service_id+' => '',
@@ -311,7 +321,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:ServiceSubcategory' => 'Service Subcategory',
-	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory+' => 'Lowest level in Service hierarchy. User Request are usually associated to one Service Subcategory.',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
 	'Class:ServiceSubcategory/Attribute:name' => 'Name',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
@@ -343,7 +353,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:SLA' => 'SLA',
-	'Class:SLA+' => '',
+	'Class:SLA+' => 'Service Level Agreement (SLA) applicable to a Service subscribed by a customer and measured using SLTs.',
 	'Class:SLA/Attribute:name' => 'Name',
 	'Class:SLA/Attribute:name+' => '',
 	'Class:SLA/Attribute:description' => 'description',
@@ -365,7 +375,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:SLT' => 'SLT',
-	'Class:SLT+' => '',
+	'Class:SLT+' => 'Service Level Target under a Service Level Agreement (SLA). Defines a maximum time for a metric (TTO or TTR), a request type (Incident or Request) and a priority.',
 	'Class:SLT/Attribute:name' => 'Name',
 	'Class:SLT/Attribute:name+' => '',
 	'Class:SLT/Attribute:priority' => 'Priority',
@@ -408,7 +418,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkSLAToSLT' => 'Link SLA / SLT',
-	'Class:lnkSLAToSLT+' => '',
+	'Class:lnkSLAToSLT+' => 'This link indicates that an SLT is included in the Service Level Agreement (SLA). An SLA usually contains several SLTs. An SLT can be reused as is by several SLAs (seldom).',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '',
@@ -436,7 +446,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkCustomerContractToService' => 'Link Customer Contract / Service',
-	'Class:lnkCustomerContractToService+' => '',
+	'Class:lnkCustomerContractToService+' => 'A single line of a customer contract, specifying the Service provided and, for this service, the subscribed commitment levels (Service Level Aggrement and Coverage Window).',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Customer contract',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
@@ -457,8 +467,8 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:lnkProviderContractToService' => 'Link Provider Contract / Service',
-	'Class:lnkProviderContractToService+' => '',
+	'Class:lnkProviderContractToService' => 'Link ProviderContract / Service',
+	'Class:lnkProviderContractToService+' => 'This link can model that a provider contract enables the delivery of a Service.',
 	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s',
 	'Class:lnkProviderContractToService/Attribute:service_id' => 'Service',
 	'Class:lnkProviderContractToService/Attribute:service_id+' => '',
@@ -476,7 +486,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DeliveryModel' => 'Delivery Model',
-	'Class:DeliveryModel+' => '',
+	'Class:DeliveryModel+' => 'The Delivery Model specifies the Teams that can be assigned to Tickets; it must contain at least one Team in the Contacts tab.
+Each client Organization must have a defined Delivery Model.',
 	'Class:DeliveryModel/Attribute:name' => 'Name',
 	'Class:DeliveryModel/Attribute:name+' => 'Don\'t forget to add teams to this delivery model',
 	'Class:DeliveryModel/Attribute:org_id' => 'Organization',
@@ -496,8 +507,8 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:lnkDeliveryModelToContact' => 'Link Delivery Model / Contact',
-	'Class:lnkDeliveryModelToContact+' => '',
+	'Class:lnkDeliveryModelToContact' => 'Link DeliveryModel / Contact',
+	'Class:lnkDeliveryModelToContact+' => 'This link specifies the role of a Team (more rarely a Person) within a Delivery Model.',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Delivery model',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '',

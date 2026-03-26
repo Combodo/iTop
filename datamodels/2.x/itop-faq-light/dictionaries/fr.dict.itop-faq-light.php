@@ -19,7 +19,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:FAQ/Attribute:summary+' => '',
 	'Class:FAQ/Attribute:description' => 'Description',
 	'Class:FAQ/Attribute:description+' => '',
-	'Class:FAQ/Attribute:category_id' => 'Categorie',
+	'Class:FAQ/Attribute:category_id' => 'Catégorie',
 	'Class:FAQ/Attribute:category_id+' => '',
 	'Class:FAQ/Attribute:category_name' => 'Nom catégorie',
 	'Class:FAQ/Attribute:category_name+' => '',
@@ -36,7 +36,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:FAQCategory' => 'Catégorie de FAQ',
-	'Class:FAQCategory+' => 'Catégorie de FAQ',
+	'Class:FAQCategory+' => 'Typologie. Segmentation des Questions fréquement posées (FAQ)',
 	'Class:FAQCategory/Attribute:name' => 'Nom',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',

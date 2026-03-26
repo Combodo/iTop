@@ -40,7 +40,7 @@ class DOMFormatException extends Exception
 	 * @param $previous
 	 * @param DesignElement|null $node DOMNode causing the DOMFormatException
 	 */
-	public function __construct($message, $code = 0, $previous = null, DesignElement $node = null)
+	public function __construct($message, $code = 0, $previous = null, ?DesignElement $node = null)
 	{
 		if ($node !== null) {
 			$message .= ' ('.MFDocument::GetItopNodePath($node).' at line '.$node->getLineNo().')';
@@ -936,7 +936,7 @@ EOF
 	 *
 	 * @since 3.0.0 Add param. $bAddQuotes to be equivalent to {@see self::GetMandatoryPropString} and allow retrieving property without surrounding single quotes
 	 */
-	protected function GetPropString($oNode, string $sTag, string $sDefault = null, bool $bAddQuotes = true)
+	protected function GetPropString($oNode, string $sTag, ?string $sDefault = null, bool $bAddQuotes = true)
 	{
 		$val = $oNode->GetChildText($sTag);
 		if (is_null($val)) {

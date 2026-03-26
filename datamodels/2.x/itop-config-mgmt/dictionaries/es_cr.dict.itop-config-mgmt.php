@@ -490,6 +490,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'ECs',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Procesos de Negocio',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Procesos de Negocio',
+	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
+	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Estatus',
 	'Class:ApplicationSolution/Attribute:status+' => 'Estatus',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Activo',
@@ -511,6 +513,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:BusinessProcess+' => 'Proceso de Negocio',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Soluciones Aplicativas',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Soluciones Aplicativas',
+	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
+	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:BusinessProcess/Attribute:status' => 'Estatus',
 	'Class:BusinessProcess/Attribute:status+' => 'Estatus',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'Activo',
@@ -607,6 +611,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:MiddlewareInstance' => 'Instalación de Middleware',
 	'Class:MiddlewareInstance+' => 'Instalación de Middleware',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Middleware',
@@ -639,6 +645,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:WebApplication/Attribute:webserver_id+' => 'Servidor Web',
 	'Class:WebApplication/Attribute:webserver_name' => 'Servidor Web',
 	'Class:WebApplication/Attribute:webserver_name+' => 'Servidor Web',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => 'URL de Uso',
 ]);
@@ -886,6 +894,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Software/Attribute:version+' => 'Versión',
 	'Class:Software/Attribute:documents_list' => 'Documentos',
 	'Class:Software/Attribute:documents_list+' => 'Documentos',
+	'Class:Software/Attribute:logo' => 'Logo~~',
+	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs~~',
 	'Class:Software/Attribute:type' => 'Tipo',
 	'Class:Software/Attribute:type+' => 'Tipo',
 	'Class:Software/Attribute:type/Value:DBServer' => 'Servidor de BD',
@@ -1530,6 +1540,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 // Add translation for Fieldsets
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Información General',
 	'Server:Date' => 'Fecha',
 	'Server:moreinfo' => 'Más Información',
@@ -1618,8 +1634,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
 	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location id~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
 	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 ]);

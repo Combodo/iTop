@@ -41,6 +41,11 @@ SetupWebPage::AddModule(
 		'doc.manual_setup' => '',
 		'doc.more_information' => '',
 
+		// Security
+		'delegated_authentication_endpoints' => [
+			'ajax.backup.php',
+		],
+
 		// Default settings
 		//
 		'settings' => [

@@ -30,7 +30,7 @@ class FormUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Form\Form An HTML form in which you can add UIBlocks
 	 */
-	public static function MakeStandard(string $sId = null)
+	public static function MakeStandard(?string $sId = null)
 	{
 		return new Form($sId);
 	}

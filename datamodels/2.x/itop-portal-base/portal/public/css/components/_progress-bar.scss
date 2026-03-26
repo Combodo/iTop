@@ -10,8 +10,6 @@ $ipb-progress--bar--border-radius: $ipb-progress--border-radius !default;
 }
 
 .ipb-progress--bar, .progress-bar {
-  background-color: $ipb-color-primary-600;
-  color: #ffffff;
   line-height: $ipb-progress--bar--line-height;
   border-radius: $ipb-progress--bar--border-radius;
   

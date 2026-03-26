@@ -26,7 +26,7 @@ class FileSelect extends UIBlock
 	/** @var bool */
 	private $bShowFilename;
 
-	public function __construct(string $sName, string $sId = null)
+	public function __construct(string $sName, ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->sName = $sName;

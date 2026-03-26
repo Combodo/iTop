@@ -49,7 +49,7 @@ class LinkSetDataTransformer
 	 *
 	 * @return array
 	 */
-	public static function Decode(iDBObjectSetIterator $oDbObjectSet, string $sTargetClass, string $sTargetField = null): array
+	public static function Decode(iDBObjectSetIterator $oDbObjectSet, string $sTargetClass, ?string $sTargetField = null): array
 	{
 		try {
 			// Prepare result
@@ -96,7 +96,7 @@ class LinkSetDataTransformer
 	 *
 	 * @return array{to_be_created: array, to_be_deleted: array, to_be_added: array, to_be_removed: array}
 	 */
-	public static function Encode(array $aElements, string $sLinkClass, string $sExtKeyToRemote = null): array
+	public static function Encode(array $aElements, string $sLinkClass, ?string $sExtKeyToRemote = null): array
 	{
 		// Result arrays
 		$aToBeCreate = [];

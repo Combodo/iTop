@@ -1,0 +1,9 @@
+{
+  "name": "combodo/combodo-db-tools",
+  "license": "AGPL-3.0-only",
+  "autoload": {
+    "psr-4": {
+      "Combodo\\iTop\\DBTools\\": "src/"
+    }
+  }
+}

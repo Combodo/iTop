@@ -93,7 +93,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @param DBObjectSet|null $oOriginalSet
 	 * @throws Exception
 	 */
-	public function __construct($sHostClass, $sAttCode, DBObjectSet $oOriginalSet = null)
+	public function __construct($sHostClass, $sAttCode, ?DBObjectSet $oOriginalSet = null)
 	{
 		$this->sHostClass = $sHostClass;
 		$this->sAttCode = $sAttCode;

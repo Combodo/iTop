@@ -650,7 +650,7 @@ abstract class DBSearch
 	 *
 	 * @throws OQLException
 	 */
-	public static function FromOQL($sQuery, $aParams = null, ModelReflection $oMetaModel = null)
+	public static function FromOQL($sQuery, $aParams = null, ?ModelReflection $oMetaModel = null)
 	{
 		if (empty($sQuery)) {
 			return null;

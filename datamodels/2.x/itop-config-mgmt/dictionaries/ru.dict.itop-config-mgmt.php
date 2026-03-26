@@ -493,6 +493,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Конфигурационные единицы в составе прикладного решения',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Бизнес-процессы',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Бизнес-процессы, зависящие от прикладного решения',
+	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
+	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Статус',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Активный',
@@ -514,6 +516,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Прикладные решения',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Прикладные решения, влияющие на бизнес-процесс',
+	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
+	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:BusinessProcess/Attribute:status' => 'Статус',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'Активный',
@@ -610,6 +614,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:MiddlewareInstance' => 'Экземпляр промежуточного ПО',
 	'Class:MiddlewareInstance+' => 'Экземпляр промежуточного ПО',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Промежуточное ПО',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Промежуточное ПО',
@@ -642,6 +648,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => 'Веб-сервер',
 	'Class:WebApplication/Attribute:webserver_name+' => '',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '',
 ]);
@@ -889,6 +897,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => 'Документы',
 	'Class:Software/Attribute:documents_list+' => 'Все документы, связанные с этим ПО',
+	'Class:Software/Attribute:logo' => 'Logo~~',
+	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs~~',
 	'Class:Software/Attribute:type' => 'Тип',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'Сервер БД',
@@ -1533,6 +1543,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 // Add translation for Fieldsets
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Основное',
 	'Server:Date' => 'Даты',
 	'Server:moreinfo' => 'Спецификация',
@@ -1621,8 +1637,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
 	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location id~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
 	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 ]);

@@ -51,8 +51,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:Change' => 'Ticket de Changement',
-	'Class:Change+' => '',
+	'Class:Change' => 'Ticket de changement',
+	'Class:Change+' => 'Classe abstraite. Une catégorie de Ticket pour gérer les Changements qui peuvent avoir un effet sur les Services délivrés.',
 	'Class:Change/Attribute:status' => 'Etat',
 	'Class:Change/Attribute:status+' => '',
 	'Class:Change/Attribute:status/Value:new' => 'Nouveau',
@@ -178,8 +178,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:RoutineChange' => 'Changement de Routine',
-	'Class:RoutineChange+' => '',
+	'Class:RoutineChange' => 'Changement de routine',
+	'Class:RoutineChange+' => 'Changement standard à faible risque, sans nécessité d\'autorisation supplémentaire, et pour lequel une procédure validée existe et doit être appliquée.',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Valider',
 	'Class:RoutineChange/Stimulus:ev_validate+' => '',
 	'Class:RoutineChange/Stimulus:ev_reject' => 'Refuser',
@@ -209,8 +209,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:ApprovedChange' => 'Changement pré-approuvé',
-	'Class:ApprovedChange+' => '',
+	'Class:ApprovedChange' => 'Changement à approuver',
+	'Class:ApprovedChange+' => 'Classe abstraite. Changement normal ou Changement urgent qui nécessite une approbation.',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Date d\'approbation',
 	'Class:ApprovedChange/Attribute:approval_date+' => '',
 	'Class:ApprovedChange/Attribute:approval_comment' => 'Commentaire sur l\'approbation',
@@ -244,8 +244,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:NormalChange' => 'Changement Normal',
-	'Class:NormalChange+' => '',
+	'Class:NormalChange' => 'Changement normal',
+	'Class:NormalChange+' => 'Type de Changement. A planifier, à évaluer et à autoriser avant son déploiement. Utilisé pour les changements à risque moyen ou fort, non standardisé et non urgent',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Date d\'acceptation',
 	'Class:NormalChange/Attribute:acceptance_date+' => '',
 	'Class:NormalChange/Attribute:acceptance_comment' => 'Commentaire sur l\'acceptation',
@@ -280,7 +280,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:EmergencyChange' => 'Changement urgent',
-	'Class:EmergencyChange+' => '',
+	'Class:EmergencyChange+' => 'Ticket de Changement pour gérer les cas d\'urgence (dysfonctionnement, sécurité). Le processus d\'approbation est accéléré. Le Changement urgent est effectué dès que possible.',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Valider',
 	'Class:EmergencyChange/Stimulus:ev_validate+' => '',
 	'Class:EmergencyChange/Stimulus:ev_reject' => 'Rejeter',

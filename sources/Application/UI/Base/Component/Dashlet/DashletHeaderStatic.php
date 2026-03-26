@@ -33,7 +33,7 @@ class DashletHeaderStatic extends DashletContainer
 	 * @param string $sIconUrl
 	 * @param string|null $sId
 	 */
-	public function __construct(string $sTitle, string $sIconUrl, string $sId = null)
+	public function __construct(string $sTitle, string $sIconUrl, ?string $sId = null)
 	{
 		parent::__construct($sId);
 

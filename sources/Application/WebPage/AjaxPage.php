@@ -90,7 +90,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function AddTabContainer($sTabContainer, $sPrefix = '', iUIContentBlock $oParentBlock = null)
+	public function AddTabContainer($sTabContainer, $sPrefix = '', ?iUIContentBlock $oParentBlock = null)
 	{
 		if (is_null($oParentBlock)) {
 			$oParentBlock = PanelUIBlockFactory::MakeNeutral('');
@@ -218,6 +218,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 			'aJsInlineLive'       => $this->a_scripts,
 			'aJsInlineOnDomReady' => $this->GetReadyScripts(),
 			'aJsInlineOnInit'     => $this->a_init_scripts,
+			'sBodyDataGuiType'    => static::BODY_DATA_GUI_TYPE,
 			'bEscapeContent'      => ($this->sContentType == 'text/html') && ($this->sContentDisposition == 'inline'),
 			// TODO 3.0.0: TEMP, used while developping, remove it.
 			'sSanitizedContent'   => utils::FilterXSS($this->s_content),

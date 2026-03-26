@@ -220,7 +220,7 @@ class TabManager
 	 * @param string $sTabCode
 	 * @param string|null $sTabContainer
 	 */
-	public function RemoveTab(string $sTabCode, string $sTabContainer = null)
+	public function RemoveTab(string $sTabCode, ?string $sTabContainer = null)
 	{
 		if ($sTabContainer == null) {
 			$sTabContainer = $this->m_sCurrentTabContainer;
@@ -244,7 +244,7 @@ class TabManager
 	 *
 	 * @return mixed The actual name of the tab (as a string) or false if not found
 	 */
-	public function FindTab(string $sPattern, string $sTabContainer = null)
+	public function FindTab(string $sPattern, ?string $sTabContainer = null)
 	{
 		$result = false;
 		if ($sTabContainer == null) {

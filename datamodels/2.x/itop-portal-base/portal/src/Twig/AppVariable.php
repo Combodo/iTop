@@ -40,7 +40,7 @@ class AppVariable implements ArrayAccess
 	/** @var DecoratedAppVariable */
 	private $decorated;
 
-	public function __construct(DecoratedAppVariable $decorated, ContainerInterface $container = null)
+	public function __construct(DecoratedAppVariable $decorated, ?ContainerInterface $container = null)
 	{
 		$this->decorated = $decorated;
 		$this->container = $container;

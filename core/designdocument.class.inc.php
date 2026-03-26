@@ -453,7 +453,7 @@ class DesignElement extends \DOMElement
 	 * @throws Exception
 	 * @since 3.1.2 3.2.0 N°6974
 	 */
-	public static function _FindNode(DOMNode $oParent, DesignElement $oRefNode, string $sSearchId = null): ?DesignElement
+	public static function _FindNode(DOMNode $oParent, DesignElement $oRefNode, ?string $sSearchId = null): ?DesignElement
 	{
 		$oNodes = self::_FindNodes($oParent, $oRefNode, $sSearchId);
 		if ($oNodes instanceof DOMNodeList) {
@@ -477,7 +477,7 @@ class DesignElement extends \DOMElement
 	 * @return \DOMNodeList|false|mixed
 	 * @since 3.1.2 3.2.0 N°6974
 	 */
-	public static function _FindNodes(DOMNode $oParent, DesignElement $oRefNode, string $sSearchId = null)
+	public static function _FindNodes(DOMNode $oParent, DesignElement $oRefNode, ?string $sSearchId = null)
 	{
 		if ($oParent instanceof DOMDocument) {
 			$oDoc = $oParent->firstChild->ownerDocument;

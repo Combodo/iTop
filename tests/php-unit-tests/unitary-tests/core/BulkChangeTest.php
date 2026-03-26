@@ -80,7 +80,7 @@ class BulkChangeTest extends ItopDataTestCase
 	 * @param $aExtKeys
 	 * @param $aReconcilKeys
 	 */
-	public function testBulkChangeWithoutInitData($aCSVData, $aAttributes, $aExtKeys, $aReconcilKeys, $aResult, array $aResultHTML = null)
+	public function testBulkChangeWithoutInitData($aCSVData, $aAttributes, $aExtKeys, $aReconcilKeys, $aResult, ?array $aResultHTML = null)
 	{
 		$this->debug("aReconcilKeys:".$aReconcilKeys[0]);
 		$oBulk = new BulkChange(

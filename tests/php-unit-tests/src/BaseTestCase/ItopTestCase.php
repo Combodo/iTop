@@ -153,6 +153,17 @@ abstract class ItopTestCase extends KernelTestCase
 	{
 		parent::setUp();
 
+		// Check globals
+		global $fItopStarted;
+		if (is_null($fItopStarted)) {
+			$fItopStarted = microtime(true);
+		}
+
+		global $iItopInitialMemory;
+		if (is_null($iItopInitialMemory)) {
+			$iItopInitialMemory = memory_get_usage(true);
+		}
+
 		// Hack - Required the first time the Portal kernel is booted on a newly installed iTop
 		$_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'] = __DIR__.'/../../../../../env-production/itop-portal-base/portal/public/';
 
