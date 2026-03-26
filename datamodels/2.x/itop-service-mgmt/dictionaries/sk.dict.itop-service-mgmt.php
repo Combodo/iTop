@@ -306,7 +306,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ServiceSubcategory/Attribute:service_name' => 'Názov služby',
 	'Class:ServiceSubcategory/Attribute:service_name+' => '~~',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Typ požiadavky',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '~~',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user selects this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Incident',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'incident~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Požiadavka',

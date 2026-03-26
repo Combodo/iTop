@@ -599,7 +599,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Middleware' => 'Middleware',
-	'Class:Middleware+' => 'Software Instance offering services to other software (like: Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere or Lotus Domino) installed on a particular system (PC, Server or Virtual Machine).',
+	'Class:Middleware+' => 'Software Instance offering services to other software (like: Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere or Lotus Domino) installed on a specific system (PC, Server or Virtual Machine).',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware instances',
 	'Class:Middleware/Attribute:middlewareinstance_list+' => 'All the middleware instances provided by this middleware',
 ]);
@@ -885,7 +885,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Tape' => 'Tape',
-	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is removable piece of storage part of a Tape Library. ',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library',
 	'Class:Tape/Attribute:name' => 'Name',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => 'Description',
@@ -1064,13 +1064,10 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'OS family name',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
-<<<<<<< feature/9086-UniquenessRulesOnTypology
-	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family',
-	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family',
-=======
 	'Class:OSVersion/Attribute:ospatches_list' => 'OS patches',
 	'Class:OSVersion/Attribute:ospatches_list+' => 'All the OS patches for this OS version',
->>>>>>> develop
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family',
 ]);
 
 //
@@ -1079,15 +1076,11 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:OSFamily' => 'OS Family',
-<<<<<<< feature/9086-UniquenessRulesOnTypology
-	'Class:OSFamily+' => '',
-	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique',
-	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists',
-=======
 	'Class:OSFamily+' => 'Typology. List of the possible values for the "OS Family" attribute of Servers, Virtual Machines and PCs.',
 	'Class:OSFamily/Attribute:osversions_list' => 'OS versions',
 	'Class:OSFamily/Attribute:osversions_list+' => 'All the OS versions for this OS family',
->>>>>>> develop
+	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique',
+	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists',
 ]);
 
 //
@@ -1189,13 +1182,10 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Brand name',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
-<<<<<<< feature/9086-UniquenessRulesOnTypology
-	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand',
-	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand',
-=======
 	'Class:IOSVersion/Attribute:networkdevices_list' => 'Network devices',
 	'Class:IOSVersion/Attribute:networkdevices_list+' => 'All the network devices running this IOS version',
->>>>>>> develop
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand',
 ]);
 
 //

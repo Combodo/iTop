@@ -846,7 +846,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 
 Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Tape' => 'Taśma',
-	'Class:Tape+' => '',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
 	'Class:Tape/Attribute:name' => 'Nazwa',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => 'Opis',

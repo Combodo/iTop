@@ -847,7 +847,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 
 Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Tape' => 'Bånd',
-	'Class:Tape+' => '',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
 	'Class:Tape/Attribute:name' => 'Navn',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => 'Beskrivelse',

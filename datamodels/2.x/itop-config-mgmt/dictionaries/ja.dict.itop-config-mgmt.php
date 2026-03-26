@@ -846,7 +846,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 
 Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Tape' => 'テープ',
-	'Class:Tape+' => '',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
 	'Class:Tape/Attribute:name' => '名前',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => '説明',

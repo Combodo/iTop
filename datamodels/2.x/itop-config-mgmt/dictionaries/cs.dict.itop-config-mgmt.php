@@ -848,7 +848,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Tape' => 'Páska',
-	'Class:Tape+' => '',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
 	'Class:Tape/Attribute:name' => 'Název',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => 'Popis',

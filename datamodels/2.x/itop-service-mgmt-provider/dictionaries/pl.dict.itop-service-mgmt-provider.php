@@ -249,7 +249,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Service/Attribute:contacts_list' => 'Kontakty',
 	'Class:Service/Attribute:contacts_list+' => 'Wszystkie kontakty do tej usługi',
 	'Class:Service/Attribute:status' => 'Status',
-	'Class:Service/Attribute:status+' => '',
+	'Class:Service/Attribute:status+' => 'By default only Service in production are visible by Portal users~~',
 	'Class:Service/Attribute:status/Value:implementation' => 'wdrażane',
 	'Class:Service/Attribute:status/Value:implementation+' => 'wdrażane',
 	'Class:Service/Attribute:status/Value:obsolete' => 'wycofane',
@@ -325,7 +325,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'użytkowane',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'użytkowane',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Typ zgłoszenia',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user selects this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'incydent',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'incydent',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'zgłoszenie serwisowe',
@@ -445,6 +445,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'Nazwa umowy SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);
 
 //
@@ -546,13 +548,4 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);

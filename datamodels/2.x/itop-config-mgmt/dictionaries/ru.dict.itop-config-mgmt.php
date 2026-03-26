@@ -847,7 +847,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Tape' => 'Лента',
-	'Class:Tape+' => 'Лента',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
 	'Class:Tape/Attribute:name' => 'Название',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => 'Описание',

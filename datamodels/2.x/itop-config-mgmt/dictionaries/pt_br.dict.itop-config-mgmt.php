@@ -846,7 +846,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Tape' => 'Fita',
-	'Class:Tape+' => '',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
 	'Class:Tape/Attribute:name' => 'Nome',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => 'Descrição',

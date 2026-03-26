@@ -467,7 +467,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Enclosure' => 'Enclosure',
-	'Class:Enclosure+' => 'Enclosure',
+	'Class:Enclosure+' => '',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Enclosure/Attribute:rack_id' => 'Rack',
 	'Class:Enclosure/Attribute:rack_id+' => 'Rack',
@@ -558,7 +558,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Middleware' => 'Middleware',
-	'Class:Middleware+' => 'Middleware',
+	'Class:Middleware+' => '',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Instalaciones de Middleware',
 	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Instalaciones de Middleware',
 ]);
@@ -844,7 +844,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Tape' => 'Cinta',
-	'Class:Tape+' => 'Cinta',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
 	'Class:Tape/Attribute:name' => 'Nombre',
 	'Class:Tape/Attribute:name+' => 'Nombre de la Cinta',
 	'Class:Tape/Attribute:description' => 'Descripción',
