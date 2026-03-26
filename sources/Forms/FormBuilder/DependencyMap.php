@@ -171,7 +171,7 @@ class DependencyMap
 	 *
 	 * @return array|null
 	 */
-	public function GetBlocksImpactedBy(string $sBlockName, callable $oFilter = null): ?array
+	public function GetBlocksImpactedBy(string $sBlockName, ?callable $oFilter = null): ?array
 	{
 		if (!array_key_exists($sBlockName, $this->aBlocksImpactedBy)) {
 			return null;

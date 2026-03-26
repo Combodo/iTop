@@ -875,7 +875,7 @@ abstract class AttributeDefinition
 		return null;
 	}
 
-	abstract public function GetDefaultValue(DBObject $oHostObject = null);
+	abstract public function GetDefaultValue(?DBObject $oHostObject = null);
 
 	//
 	// To be overloaded in subclasses

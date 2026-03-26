@@ -53,7 +53,7 @@ abstract class AbstractTypeFormBlock extends AbstractFormBlock
 	 * @return bool
 	 * @throws FormBlockException
 	 */
-	public function IsVisible(string $sEventType = null): bool
+	public function IsVisible(?string $sEventType = null): bool
 	{
 		$oInput = $this->GetInput(self::INPUT_VISIBLE);
 		if (!$oInput->IsBound()) {
@@ -68,7 +68,7 @@ abstract class AbstractTypeFormBlock extends AbstractFormBlock
 	/**
 	 * @return true
 	 */
-	public function AllowAdd(string $sEventType = null): bool
+	public function AllowAdd(?string $sEventType = null): bool
 	{
 		return true;
 	}

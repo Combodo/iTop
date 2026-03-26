@@ -31,7 +31,7 @@ class TurboStreamUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\TurboUpdate\TurboStream An HTML form in which you can add UIBlocks
 	 */
-	public static function MakeUpdate(string $sTarget, string $sId = null): TurboStream
+	public static function MakeUpdate(string $sTarget, ?string $sId = null): TurboStream
 	{
 		return new TurboStream($sTarget, 'update', $sId);
 	}
@@ -44,7 +44,7 @@ class TurboStreamUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\TurboUpdate\TurboStream An HTML form in which you can add UIBlocks
 	 */
-	public static function MakeReplace(string $sTarget, string $sId = null): TurboStream
+	public static function MakeReplace(string $sTarget, ?string $sId = null): TurboStream
 	{
 		return new TurboStream($sTarget, 'replace', $sId);
 	}
@@ -57,7 +57,7 @@ class TurboStreamUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\TurboUpdate\TurboStream An HTML form in which you can add UIBlocks
 	 */
-	public static function MakePrepend(string $sTarget, string $sId = null): TurboStream
+	public static function MakePrepend(string $sTarget, ?string $sId = null): TurboStream
 	{
 		return new TurboStream($sTarget, 'prepend', $sId);
 	}
@@ -70,7 +70,7 @@ class TurboStreamUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\TurboUpdate\TurboStream An HTML form in which you can add UIBlocks
 	 */
-	public static function MakeAppend(string $sTarget, string $sId = null): TurboStream
+	public static function MakeAppend(string $sTarget, ?string $sId = null): TurboStream
 	{
 		return new TurboStream($sTarget, 'append', $sId);
 	}

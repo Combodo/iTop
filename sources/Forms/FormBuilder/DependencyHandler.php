@@ -161,7 +161,7 @@ class DependencyHandler
 	 * @return void
 	 * @throws FormBlockException
 	 */
-	private function CheckDependencies(FormInterface|FormBuilderInterface $oForm, string $sOutputBlock = null, string $sEventType = null): void
+	private function CheckDependencies(FormInterface|FormBuilderInterface $oForm, ?string $sOutputBlock = null, ?string $sEventType = null): void
 	{
 		$aImpactedBlocks = $this->aDependentBlocks;
 		if ($sOutputBlock !== null) {

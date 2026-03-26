@@ -22,7 +22,7 @@ class TurboForm extends UIContentBlock
 	protected ?string $sAction;
 	private FormView $oFormView;
 
-	public function __construct(FormView $oFormView, string $sId = null)
+	public function __construct(FormView $oFormView, ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->oFormView = $oFormView;

@@ -64,7 +64,7 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 		return true;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return "";
 	}

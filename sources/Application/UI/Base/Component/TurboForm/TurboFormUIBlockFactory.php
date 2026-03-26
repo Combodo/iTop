@@ -36,7 +36,7 @@ class TurboFormUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\TurboForm\TurboForm An HTML form in which you can add UIBlocks
 	 */
-	public static function MakeStandard(FormView $oFormView, string $sAction = null, string $sId = null): TurboForm
+	public static function MakeStandard(FormView $oFormView, ?string $sAction = null, ?string $sId = null): TurboForm
 	{
 		$oTurboForm = new TurboForm($oFormView, $sId);
 		if (!is_null($sAction)) {
@@ -57,7 +57,7 @@ class TurboFormUIBlockFactory extends AbstractUIBlockFactory
 	 * @return \Combodo\iTop\Application\UI\Base\Component\TurboForm\TurboForm
 	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
 	 */
-	public static function MakeForDashletConfiguration(string $sDashletId, array $aData = [], string $sId = null): TurboForm
+	public static function MakeForDashletConfiguration(string $sDashletId, array $aData = [], ?string $sId = null): TurboForm
 	{
 		$oBlockForm = FormBlockService::GetInstance()->GetFormBlockById($sDashletId, 'Dashlet');
 		$oController = new FormsController();

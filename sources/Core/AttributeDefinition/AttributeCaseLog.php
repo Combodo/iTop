@@ -121,7 +121,7 @@ class AttributeCaseLog extends AttributeLongText
 		}
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return new ormCaseLog();
 	}

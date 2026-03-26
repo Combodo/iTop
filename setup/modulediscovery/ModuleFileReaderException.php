@@ -14,7 +14,7 @@ class ModuleFileReaderException extends Exception
 	 * @param int $iHttpCode
 	 * @param Exception|null $oPrevious
 	 */
-	public function __construct($sMessage, $iHttpCode = 0, Exception $oPrevious = null, $sModuleFile = null)
+	public function __construct($sMessage, $iHttpCode = 0, ?Exception $oPrevious = null, $sModuleFile = null)
 	{
 		$e = new Exception("");
 

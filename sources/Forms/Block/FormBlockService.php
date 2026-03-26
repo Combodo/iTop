@@ -20,12 +20,12 @@ class FormBlockService
 {
 	private static FormBlockService $oInstance;
 
-	protected function __construct(ModelReflection $oModelReflection = null)
+	protected function __construct(?ModelReflection $oModelReflection = null)
 	{
 		ServiceLocator::GetInstance()->RegisterService('ModelReflection', $oModelReflection ?? new ModelReflectionRuntime());
 	}
 
-	final public static function GetInstance(ModelReflection $oModelReflection = null): FormBlockService
+	final public static function GetInstance(?ModelReflection $oModelReflection = null): FormBlockService
 	{
 		if (!isset(static::$oInstance)) {
 			static::$oInstance = new FormBlockService($oModelReflection);

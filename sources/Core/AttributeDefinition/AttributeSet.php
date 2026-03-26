@@ -131,7 +131,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 		return true;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return null;
 	}

@@ -52,7 +52,7 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 		return "INT(11)".($bFullSpec ? " DEFAULT 0" : "");
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return 0;
 	}

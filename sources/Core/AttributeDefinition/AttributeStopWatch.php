@@ -72,7 +72,7 @@ class AttributeStopWatch extends AttributeDefinition
 		return true;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return $this->NewStopWatch();
 	}

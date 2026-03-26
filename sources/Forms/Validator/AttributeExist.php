@@ -38,7 +38,7 @@ class AttributeExist extends Constraint
 	 * @param array|null $aGroups
 	 * @param mixed|null $oPayload
 	 */
-	public function __construct(string $sOqlPropertyPath = null, string $sFilter = null, array $aOptions = [], ?array $aGroups = null, mixed $oPayload = null)
+	public function __construct(?string $sOqlPropertyPath = null, ?string $sFilter = null, array $aOptions = [], ?array $aGroups = null, mixed $oPayload = null)
 	{
 		if ($sOqlPropertyPath === null) {
 			throw new InvalidArgumentException('The argument "sOqlPropertyPath" must be set.');
