@@ -1064,6 +1064,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_name' => 'OS Aile Adı',
 	'Class:OSVersion/Attribute:osfamily_name+' => '~~',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
 ]);
 
 //
@@ -1073,6 +1075,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:OSFamily' => 'OS ailesi',
 	'Class:OSFamily+' => '~~',
+	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
+	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
 ]);
 
 //
@@ -1170,6 +1174,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:IOSVersion/Attribute:brand_id+' => '~~',
 	'Class:IOSVersion/Attribute:brand_name' => 'Marka Adı',
 	'Class:IOSVersion/Attribute:brand_name+' => '~~',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
 ]);
 
 //

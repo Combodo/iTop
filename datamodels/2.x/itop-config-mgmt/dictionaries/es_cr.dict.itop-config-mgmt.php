@@ -1061,6 +1061,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:OSVersion/Attribute:osfamily_id+' => 'Familia de SO',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Familia de SO',
 	'Class:OSVersion/Attribute:osfamily_name+' => 'Familia de SO',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
 ]);
 
 //
@@ -1070,6 +1072,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:OSFamily' => 'Familia de SO',
 	'Class:OSFamily+' => 'Familia de SO',
+	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
+	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
 ]);
 
 //
@@ -1167,6 +1171,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:IOSVersion/Attribute:brand_id+' => 'Marca',
 	'Class:IOSVersion/Attribute:brand_name' => 'Marca',
 	'Class:IOSVersion/Attribute:brand_name+' => 'Marca',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
 ]);
 
 //

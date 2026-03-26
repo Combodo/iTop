@@ -1197,6 +1197,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Nom Famille OS',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Le nom doit être unique au sein de cette famille d\'OS',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'cette version d\'OS existe déjà dans cette famille',
 	'Class:OSVersion/Attribute:ospatches_list' => 'Patchs OS',
 	'Class:OSVersion/Attribute:ospatches_list+' => 'Tous les patchs de cette version OS',
 ]);
@@ -1209,7 +1211,9 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSFamily' => 'Famille d\'OS',
 	'Class:OSFamily+' => 'Typologie. Liste des valeurs possibles pour l\'attribut "Famille d\'OS" des serveurs, machines virtuelles et PC.',
 	'Class:OSFamily/Attribute:osversions_list' => 'Versions OS',
-	'Class:OSFamily/Attribute:osversions_list+' => 'Toutes les versions OS pour cette famille',
+	'Class:OSFamily/Attribute:osversions_list+' => 'Toutes les versions OS pour cette famille', 
+	'Class:OSFamily/UniquenessRule:name+' => 'Le nom doit être unique',
+	'Class:OSFamily/UniquenessRule:name' => 'cette famille d\'OS existe déjà',
 ]);
 
 //
@@ -1329,6 +1333,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Nom Marque',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Le nom doit être unique pour cette marque',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'cette version d\'IOS existe déja sur cette marque',
 	'Class:IOSVersion/Attribute:networkdevices_list' => 'Equipements réseaux',
 	'Class:IOSVersion/Attribute:networkdevices_list+' => 'Tous les équipements réseaux utilisant cette version IOS',
 ]);

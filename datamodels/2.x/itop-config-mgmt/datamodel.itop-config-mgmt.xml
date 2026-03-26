@@ -4843,6 +4843,17 @@
             <attribute id="osfamily_name"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="name_osfamily">
+            <attributes>
+              <attribute id="name"/>
+              <attribute id="osfamily_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="osfamily_id" xsi:type="AttributeExternalKey">
@@ -4920,6 +4931,16 @@
             <attribute id="name"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="name">
+            <attributes>
+              <attribute id="name"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="logo" xsi:type="AttributeImage">
@@ -5354,6 +5375,15 @@
             <attribute id="brand_name"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="name_brand">
+            <attributes>
+              <attribute id="name"/>
+              <attribute id="brand_id"/>
+            </attributes>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="brand_id" xsi:type="AttributeExternalKey">
