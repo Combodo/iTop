@@ -847,7 +847,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Tape' => 'Лента',
-	'Class:Tape+' => 'Лента',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
 	'Class:Tape/Attribute:name' => 'Название',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => 'Описание',
@@ -1064,6 +1064,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Семейство ОС',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
 ]);
 
 //
@@ -1073,6 +1075,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:OSFamily' => 'Семейство ОС',
 	'Class:OSFamily+' => '',
+	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
+	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
 ]);
 
 //
@@ -1170,6 +1174,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Бренд',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
 ]);
 
 //

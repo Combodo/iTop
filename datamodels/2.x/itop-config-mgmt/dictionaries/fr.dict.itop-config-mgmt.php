@@ -368,7 +368,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SANSwitch' => 'Switch SAN',
-	'Class:SANSwitch+' => 'Matériel de Datacenter. C\'est un switch utilisé par les réseaux de stockage (Storage Area Network). Il support le protocole Fibre Channel.',
+	'Class:SANSwitch+' => 'Matériel de Datacenter. C\'est un switch utilisé par les réseaux de stockage (Storage Area Network). Il supporte le protocole Fibre Channel.',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Matériels connectés',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Tous les matériels connectés à ce switch SAN',
@@ -612,7 +612,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Middleware' => 'Middleware',
-	'Class:Middleware+' => 'Instance logicielle offrant des services à d\'autres logiciels (ex : Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere ou Lotus Domino) installée sur un système particulier (PC, serveur ou machine virtuelle).',
+	'Class:Middleware+' => 'Instance logicielle offrant des services à d\'autres logiciels (ex : Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere ou Lotus Domino) installée sur un système spécifique (PC, Serveur ou Machine virtuelle).',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Instance Middleware',
 	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Toutes les instances de middleware fournies par ce middleware',
 	'Class:Middleware/Attribute:middlewareinstance_list/UI:Links:Create:Button+' => 'Créer une %4$s',
@@ -646,7 +646,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:WebServer' => 'Serveur web',
-	'Class:WebServer+' => 'Instance logicielle offrant des services Web (comme Apache 2.4, Nginx 1.29.4, IIS 7.0) installée sur un système spécifique (PC, serveur ou machine virtuelle).',
+	'Class:WebServer+' => 'Instance logicielle offrant des services Web (comme Apache 2.4, Nginx 1.29.4, IIS 7.0) installée sur un système spécifique (PC, Serveur ou Machine virtuelle).',
 	'Class:WebServer/Attribute:webapp_list' => 'Application Web',
 	'Class:WebServer/Attribute:webapp_list+' => 'Toutes les applications Web disponibles sur ce serveur',
 	'Class:WebServer/Attribute:webapp_list/UI:Links:Create:Button+' => 'Créer une %4$s',
@@ -711,7 +711,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:WebApplication' => 'Application web',
-	'Class:WebApplication+' => 'Instance d’une application accessible via un navigateur web et s’exécutant sur un serveur web donné. Par exemple cet iTop.',
+	'Class:WebApplication+' => 'Instance d’une application accessible via un navigateur web et s’exécutant sur un Serveur web donné. Par exemple cet iTop.',
 	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
 	'Class:WebApplication/Attribute:webserver_id' => 'Serveur Web',
 	'Class:WebApplication/Attribute:webserver_id+' => '',
@@ -784,7 +784,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Farm' => 'vCluster',
-	'Class:Farm+' => 'Hôte virtuel. Une ferme (ou vCluster) est un groupe d\'hyperviseurs mutualisés partageant des ressources de stockage afin de fournir un système tolérant aux pannes pour héberger des machines virtuelles.',
+	'Class:Farm+' => 'Hôte virtuel. Une ferme (ou vCluster) est un groupe d\'hyperviseurs mutualisés partageant des ressources de stockage afin de fournir un système tolérant aux pannes pour héberger des Machines virtuelles.',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hyperviseurs',
 	'Class:Farm/Attribute:hypervisor_list+' => 'Tous les hyperviseurs qui composent ce vCluster',
 	'Class:Farm/Attribute:hypervisor_list/UI:Links:Create:Button+' => 'Créer un %4$s',
@@ -805,7 +805,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:VirtualMachine' => 'Machine virtuelle',
-	'Class:VirtualMachine+' => 'Équivalent virtuel d\'un serveur, hébergé soit sur un hyperviseur soit sur une ferme.',
+	'Class:VirtualMachine+' => 'Équivalent virtuel d\'un serveur, hébergé soit sur un Hyperviseur soit sur une ferme (ou vCluster).',
 	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s',
 	'Class:VirtualMachine/Attribute:virtualhost_id' => 'vCluster / Hyperviseur',
 	'Class:VirtualMachine/Attribute:virtualhost_id+' => '',
@@ -934,7 +934,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Tape' => 'Bande',
-	'Class:Tape+' => '',
+	'Class:Tape+' => 'Une Bande (ou cartouche) dans '.ITOP_APPLICATION_SHORT.' est un élément de stockage amovible au sein d\'une Bandothèque.',
 	'Class:Tape/Attribute:name' => 'Nom',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => 'Description',
@@ -1197,6 +1197,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Nom Famille OS',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Le nom doit être unique au sein de cette famille d\'OS',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'cette version d\'OS existe déjà dans cette famille',
 	'Class:OSVersion/Attribute:ospatches_list' => 'Patchs OS',
 	'Class:OSVersion/Attribute:ospatches_list+' => 'Tous les patchs de cette version OS',
 ]);
@@ -1210,6 +1212,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSFamily+' => 'Typologie. Liste des valeurs possibles pour l\'attribut "Famille d\'OS" des serveurs, machines virtuelles et PC.',
 	'Class:OSFamily/Attribute:osversions_list' => 'Versions OS',
 	'Class:OSFamily/Attribute:osversions_list+' => 'Toutes les versions OS pour cette famille',
+	'Class:OSFamily/UniquenessRule:name+' => 'Le nom doit être unique',
+	'Class:OSFamily/UniquenessRule:name' => 'cette famille d\'OS existe déjà',
 ]);
 
 //
@@ -1329,6 +1333,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Nom Marque',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Le nom doit être unique pour cette marque',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'cette version d\'IOS existe déja sur cette marque',
 	'Class:IOSVersion/Attribute:networkdevices_list' => 'Equipements réseaux',
 	'Class:IOSVersion/Attribute:networkdevices_list+' => 'Tous les équipements réseaux utilisant cette version IOS',
 ]);

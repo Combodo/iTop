@@ -1980,6 +1980,22 @@ public function PrefillSearchForm(&$aContextParam)
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="priority">
+              <rank>20</rank>
+            </item>
+            <item id="request_type">
+              <rank>30</rank>
+            </item>
+            <item id="metric">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">

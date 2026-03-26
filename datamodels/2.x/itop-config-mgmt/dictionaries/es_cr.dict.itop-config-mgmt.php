@@ -467,7 +467,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Enclosure' => 'Enclosure',
-	'Class:Enclosure+' => 'Enclosure',
+	'Class:Enclosure+' => '',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Enclosure/Attribute:rack_id' => 'Rack',
 	'Class:Enclosure/Attribute:rack_id+' => 'Rack',
@@ -558,7 +558,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Middleware' => 'Middleware',
-	'Class:Middleware+' => 'Middleware',
+	'Class:Middleware+' => '',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Instalaciones de Middleware',
 	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Instalaciones de Middleware',
 ]);
@@ -844,7 +844,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Tape' => 'Cinta',
-	'Class:Tape+' => 'Cinta',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
 	'Class:Tape/Attribute:name' => 'Nombre',
 	'Class:Tape/Attribute:name+' => 'Nombre de la Cinta',
 	'Class:Tape/Attribute:description' => 'Descripción',
@@ -1061,6 +1061,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:OSVersion/Attribute:osfamily_id+' => 'Familia de SO',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Familia de SO',
 	'Class:OSVersion/Attribute:osfamily_name+' => 'Familia de SO',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
 ]);
 
 //
@@ -1070,6 +1072,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:OSFamily' => 'Familia de SO',
 	'Class:OSFamily+' => 'Familia de SO',
+	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
+	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
 ]);
 
 //
@@ -1167,6 +1171,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:IOSVersion/Attribute:brand_id+' => 'Marca',
 	'Class:IOSVersion/Attribute:brand_name' => 'Marca',
 	'Class:IOSVersion/Attribute:brand_name+' => 'Marca',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
 ]);
 
 //
