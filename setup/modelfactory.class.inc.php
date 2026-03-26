@@ -2148,8 +2148,8 @@ EOF;
 	}
 
 	/**
-	 * Combination of AddChildNode or RedefineChildNode... it depends
-	 * This should become the preferred way of doing things (instead of implementing a test + the call to one of the APIs!
+	 * Combination of AddChildNode or RedefineChildNode... it depends on existing nodes
+	 * This should become the preferred way of doing things (instead of implementing a test and the call to one of the APIs!)
 	 *
 	 * @param MFElement $oNode The node (including all subnodes) to set
 	 * @param string $sSearchId Optional Id of the node to SearchMenuNode
