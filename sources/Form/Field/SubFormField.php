@@ -34,7 +34,7 @@ class SubFormField extends Field
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct(string $sId, Closure $onFinalizeCallback = null)
+	public function __construct(string $sId, ?Closure $onFinalizeCallback = null)
 	{
 		$this->oForm = new Form('subform_'.$sId);
 		parent::__construct($sId, $onFinalizeCallback);

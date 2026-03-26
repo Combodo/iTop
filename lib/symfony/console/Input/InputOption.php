@@ -53,7 +53,7 @@ class InputOption
     private string $name;
     private string|array|null $shortcut;
     private int $mode;
-    private string|int|bool|array|null|float $default;
+    private string|int|bool|array|float|null $default;
     private array|\Closure $suggestedValues;
     private string $description;
 
@@ -65,7 +65,7 @@ class InputOption
      *
      * @throws InvalidArgumentException If option mode is invalid or incompatible
      */
-    public function __construct(string $name, string|array $shortcut = null, int $mode = null, string $description = '', string|bool|int|float|array $default = null, array|\Closure $suggestedValues = [])
+    public function __construct(string $name, string|array|null $shortcut = null, ?int $mode = null, string $description = '', string|bool|int|float|array|null $default = null, array|\Closure $suggestedValues = [])
     {
         if (str_starts_with($name, '--')) {
             $name = substr($name, 2);
@@ -75,7 +75,7 @@ class InputOption
             throw new InvalidArgumentException('An option name cannot be empty.');
         }
 
-        if (empty($shortcut)) {
+        if ('' === $shortcut || [] === $shortcut || false === $shortcut) {
             $shortcut = null;
         }
 
@@ -84,10 +84,10 @@ class InputOption
                 $shortcut = implode('|', $shortcut);
             }
             $shortcuts = preg_split('{(\|)-?}', ltrim($shortcut, '-'));
-            $shortcuts = array_filter($shortcuts);
+            $shortcuts = array_filter($shortcuts, 'strlen');
             $shortcut = implode('|', $shortcuts);
 
-            if (empty($shortcut)) {
+            if ('' === $shortcut) {
                 throw new InvalidArgumentException('An option shortcut cannot be empty.');
             }
         }
@@ -95,7 +95,7 @@ class InputOption
         if (null === $mode) {
             $mode = self::VALUE_NONE;
         } elseif ($mode >= (self::VALUE_NEGATABLE << 1) || $mode < 1) {
-            throw new InvalidArgumentException(sprintf('Option mode "%s" is not valid.', $mode));
+            throw new InvalidArgumentException(\sprintf('Option mode "%s" is not valid.', $mode));
         }
 
         $this->name = $name;
@@ -181,7 +181,7 @@ class InputOption
     /**
      * @return void
      */
-    public function setDefault(string|bool|int|float|array $default = null)
+    public function setDefault(string|bool|int|float|array|null $default = null)
     {
         if (1 > \func_num_args()) {
             trigger_deprecation('symfony/console', '6.2', 'Calling "%s()" without any arguments is deprecated, pass null explicitly instead.', __METHOD__);
@@ -231,7 +231,7 @@ class InputOption
     {
         $values = $this->suggestedValues;
         if ($values instanceof \Closure && !\is_array($values = $values($input))) {
-            throw new LogicException(sprintf('Closure for option "%s" must return an array. Got "%s".', $this->name, get_debug_type($values)));
+            throw new LogicException(\sprintf('Closure for option "%s" must return an array. Got "%s".', $this->name, get_debug_type($values)));
         }
         if ($values) {
             $suggestions->suggestValues($values);

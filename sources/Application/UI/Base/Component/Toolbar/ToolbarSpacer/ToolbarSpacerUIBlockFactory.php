@@ -30,7 +30,7 @@ class ToolbarSpacerUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarSpacer\ToolbarSpacer
 	 */
-	public static function MakeStandard(string $sId = null)
+	public static function MakeStandard(?string $sId = null)
 	{
 		return new ToolbarSpacer($sId);
 	}

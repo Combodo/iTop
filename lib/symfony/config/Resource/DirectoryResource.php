@@ -29,13 +29,13 @@ class DirectoryResource implements SelfCheckingResourceInterface
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(string $resource, string $pattern = null)
+    public function __construct(string $resource, ?string $pattern = null)
     {
         $resolvedResource = realpath($resource) ?: (file_exists($resource) ? $resource : false);
         $this->pattern = $pattern;
 
         if (false === $resolvedResource || !is_dir($resolvedResource)) {
-            throw new \InvalidArgumentException(sprintf('The directory "%s" does not exist.', $resource));
+            throw new \InvalidArgumentException(\sprintf('The directory "%s" does not exist.', $resource));
         }
 
         $this->resource = $resolvedResource;

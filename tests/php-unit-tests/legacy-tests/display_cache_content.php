@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -24,19 +25,15 @@
 require_once('../../../approot.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
 
-
 $sEnvironment = MetaModel::GetEnvironmentId();
-$aEntries = array();
+$aEntries = [];
 $aCacheUserData = apc_cache_info_compat();
-if (is_array($aCacheUserData) && isset($aCacheUserData['cache_list']))
-{
+if (is_array($aCacheUserData) && isset($aCacheUserData['cache_list'])) {
 	$sPrefix = 'itop-'.$sEnvironment.'-query-cache-';
 
-	foreach($aCacheUserData['cache_list'] as $i => $aEntry)
-	{
+	foreach ($aCacheUserData['cache_list'] as $i => $aEntry) {
 		$sEntryKey = array_key_exists('info', $aEntry) ? $aEntry['info'] : $aEntry['key'];
-		if (strpos($sEntryKey, $sPrefix) === 0)
-		{
+		if (strpos($sEntryKey, $sPrefix) === 0) {
 			$aEntries[] = $sEntryKey;
 		}
 	}
@@ -44,52 +41,39 @@ if (is_array($aCacheUserData) && isset($aCacheUserData['cache_list']))
 
 echo "<pre>";
 
-if (empty($aEntries))
-{
+if (empty($aEntries)) {
 	echo "No Data";
 	return;
 }
 
 $sKey = $aEntries[0];
 $result = apc_fetch($sKey);
-if (!is_object($result))
-{
+if (!is_object($result)) {
 	return;
 }
 $oSQLQuery = $result;
 
 echo "NB Tables before;NB Tables after;";
-foreach($oSQLQuery->m_aContextData as $sField => $oValue)
-{
+foreach ($oSQLQuery->m_aContextData as $sField => $oValue) {
 	echo $sField.';';
 }
 echo "\n";
 
 sort($aEntries);
 
-foreach($aEntries as $sKey)
-{
+foreach ($aEntries as $sKey) {
 	$result = apc_fetch($sKey);
-	if (is_object($result))
-	{
+	if (is_object($result)) {
 		$oSQLQuery = $result;
-		if (isset($oSQLQuery->m_aContextData))
-		{
+		if (isset($oSQLQuery->m_aContextData)) {
 			echo $oSQLQuery->m_iOriginalTableCount.";".$oSQLQuery->CountTables().';';
-			foreach($oSQLQuery->m_aContextData as $oValue)
-			{
-				if (is_array($oValue))
-				{
+			foreach ($oSQLQuery->m_aContextData as $oValue) {
+				if (is_array($oValue)) {
 					$sVal = json_encode($oValue);
-				}
-				else
-				{
-					if (empty($oValue))
-					{
+				} else {
+					if (empty($oValue)) {
 						$sVal = '';
-					}
-					else
-					{
+					} else {
 						$sVal = $oValue;
 					}
 				}
@@ -101,4 +85,3 @@ foreach($aEntries as $sKey)
 }
 
 echo "</pre>";
-

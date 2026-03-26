@@ -266,6 +266,9 @@ class InlineImage extends DBObject
 	 */
 	public static function FixUrls($sHtml)
 	{
+		// N°8681 - Ensure to have a string value
+		$sHtml = $sHtml ?? '';
+
 		$aNeedles = [];
 		$aReplacements = [];
 		// Find img tags with an attribute data-img-id
@@ -291,6 +294,46 @@ class InlineImage extends DBObject
 			$sHtml = str_replace($aNeedles, $aReplacements, $sHtml);
 		}
 		return $sHtml;
+	}
+
+	/**
+	 * Replace <img> tags with a data-img-id attribute by the actual image in base64 representation
+	 * so that the image can be displayed even if the download URL is not accessible (e.g. in unauthenticated approval templates)
+	 *
+	 * @param string $sHtml The HTML fragment to process
+	 *
+	 * @return String The modified HTML
+	 * @since 3.2.3
+	 */
+	public static function ReplaceInlineImagesWithBase64Representation(string $sHtml): String
+	{
+		return preg_replace_callback(
+			'/<img\s+[^>]*'.static::DOM_ATTR_ID.'="(\d+)"[^>]*>/i',
+			function ($matches) {
+
+				// Extract inline image ID from the tag
+				$id = $matches[1];
+
+				try {
+					// Retrieve inline image
+					$oInline = MetaModel::GetObject(InlineImage::class, $id, true, true);
+					$oOrmDocument = $oInline->Get('contents');
+
+					// Replace src image by the base64 representation
+					$sInlineImageAsBase64 = base64_encode($oOrmDocument->GetData());
+					$sDataUri = 'data:'.$oOrmDocument->GetMimeType().';base64,'.$sInlineImageAsBase64;
+					$sImage = preg_replace('/src=["\'][^"\']+["\']/', 'src="'.$sDataUri.'"', $matches[0]);
+
+					// Remove sensitive information (the image ID and secret) from the tag
+					$sImage = preg_replace('/'.static::DOM_ATTR_ID.'="\d+"\s+'.static::DOM_ATTR_SECRET.'="\w+"/', '', $sImage);
+				} catch (Exception $e) {
+					$sImage = '<img src="" alt="'.Dict::S('UI:MissingInlineImage').'">';
+				}
+
+				return $sImage;
+			},
+			$sHtml
+		);
 	}
 
 	/**

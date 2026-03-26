@@ -57,7 +57,7 @@ class TemplatesTwigExtension extends AbstractExtension
 	 * @return string the template path
 	 * @throws \ReflectionException
 	 */
-	public function GetTemplate(string $sId, string $sProviderClass = self::DEFAULT_PROVIDER_CLASS, object $oProviderInstance = null): string
+	public function GetTemplate(string $sId, string $sProviderClass = self::DEFAULT_PROVIDER_CLASS, ?object $oProviderInstance = null): string
 	{
 		if ($oProviderInstance === null) {
 			return $this->oTemplatesService->GetTemplatePath($sProviderClass, $sId);

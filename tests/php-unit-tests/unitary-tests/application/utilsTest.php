@@ -834,6 +834,11 @@ HTML,
 			'good element_identifier' => [utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER, 'AD05nb', 'AD05nb'],
 			'bad element_identifier' => [utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER, 'AD05nb+', 'AD05nb'],
 			'array' => [utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER, ['AD05nb+','apply_modify'], ['AD05nb','apply_modify']],
+			'good module code' => [utils::ENUM_SANITIZATION_FILTER_MODULE_CODE, 'some-module-code', 'some-module-code'],
+			'good module code with capitalized letters' => [utils::ENUM_SANITIZATION_FILTER_MODULE_CODE, 'SOME-module-code', 'SOME-module-code'],
+			'good module code with dot' => [utils::ENUM_SANITIZATION_FILTER_MODULE_CODE, 'some-module-code-for-3.2-version', 'some-module-code-for-3.2-version'],
+			'bad module code with underscores' => [utils::ENUM_SANITIZATION_FILTER_MODULE_CODE, 'some_module_code', null],
+			'bad module code with slashes' => [utils::ENUM_SANITIZATION_FILTER_MODULE_CODE, 'some-module/code', null],
 			'good url' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://www.w3schools.com', 'https://www.w3schools.com'],
 			'bad url' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https//www.w3schools.com', null],
 			'url with injection' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://demo.combodo.com/simple/pages/UI.php?operation=full_text&text=<img zzz src=x onerror=alert(1) //>', 'https://demo.combodo.com/simple/pages/UI.php?operation=full_text&text=<imgzzzsrc=xonerror=alert(1)//>'],
@@ -995,5 +1000,47 @@ HTML,
 				'Format: Hello 42 Hello %3$s 42',
 			],
 		];
+	}
+
+	public function testLoadParamFile()
+	{
+		$sTmpFileInsideItop = APPROOT.'data/test/testLoadParamFile.params';
+		$sDir = dirname($sTmpFileInsideItop);
+		if (!is_dir($sDir)) {
+			mkdir($sDir, 0777, true);
+		}
+		$sParamName = 'IP1';
+		$sParamValue = 'IV1';
+		$sParams = <<<INI
+# comment
+$sParamName = $sParamValue
+INI;
+		file_put_contents($sTmpFileInsideItop, $sParams);
+
+		try {
+			$this->expectException(\Exception::class);
+			$this->expectExceptionMessage("File '$sTmpFileInsideItop' should be outside iTop");
+			self::InvokeNonPublicStaticMethod(utils::class, 'LoadParamFile', [$sTmpFileInsideItop]);
+			self::assertNotEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() should NOT have loaded the file: $sTmpFileInsideItop");
+		} finally {
+			if (file_exists($sTmpFileInsideItop)) {
+				unlink($sTmpFileInsideItop);
+			}
+		}
+
+		$sParamName = 'OP2';
+		$sParamValue = 'OV2';
+
+		$sTmpFileOutsideItop = tempnam(sys_get_temp_dir(), 'utils-test');
+		$sParams = <<<INI
+# comment
+$sParamName = $sParamValue
+INI;
+
+		file_put_contents($sTmpFileOutsideItop, $sParams);
+		self::InvokeNonPublicStaticMethod(utils::class, 'LoadParamFile', [$sTmpFileOutsideItop]);
+		self::assertEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() should have loaded the file: $sTmpFileOutsideItop");
+
+		unlink($sTmpFileOutsideItop);
 	}
 }

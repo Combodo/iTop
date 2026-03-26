@@ -61,7 +61,7 @@ EOF
         $io = new SymfonyStyle($input, $output);
 
         $kernel = $this->getApplication()->getKernel();
-        $io->comment(sprintf('Warming up the cache for the <info>%s</info> environment with debug <info>%s</info>', $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
+        $io->comment(\sprintf('Warming up the cache for the <info>%s</info> environment with debug <info>%s</info>', $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
 
         if (!$input->getOption('no-optional-warmers')) {
             $this->cacheWarmer->enableOptionalWarmers();
@@ -72,14 +72,15 @@ EOF
             $kernel->warmUp($cacheDir);
         }
 
-        $preload = $this->cacheWarmer->warmUp($cacheDir);
-
         $buildDir = $kernel->getContainer()->getParameter('kernel.build_dir');
+
+        $preload = $this->cacheWarmer->warmUp($cacheDir, $buildDir);
+
         if ($preload && $cacheDir === $buildDir && file_exists($preloadFile = $buildDir.'/'.$kernel->getContainer()->getParameter('kernel.container_class').'.preload.php')) {
             Preloader::append($preloadFile, $preload);
         }
 
-        $io->success(sprintf('Cache for the "%s" environment (debug=%s) was successfully warmed.', $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
+        $io->success(\sprintf('Cache for the "%s" environment (debug=%s) was successfully warmed.', $kernel->getEnvironment(), var_export($kernel->isDebug(), true)));
 
         return 0;
     }

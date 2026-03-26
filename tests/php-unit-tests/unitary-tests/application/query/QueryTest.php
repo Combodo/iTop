@@ -73,7 +73,7 @@ class QueryTest extends ItopDataTestCase
 	 * @param string $sOql query oql phrase
 	 * @param string|null $sFields fields to export
 	 */
-	private function CreateQueryOQL(string $sName, string $sDescription, string $sOql, string $sFields = null): QueryOQL
+	private function CreateQueryOQL(string $sName, string $sDescription, string $sOql, ?string $sFields = null): QueryOQL
 	{
 		$oQuery = new QueryOQL();
 		$oQuery->Set('name', $sName);
@@ -172,34 +172,12 @@ class QueryTest extends ItopDataTestCase
 	{
 		// compute request url
 		$url = 	$oQuery->GetExportUrl();
+		$aCurlOptions = [
+			CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+			CURLOPT_USERPWD => self::USER.':'.self::PASSWORD,
+		];
 
-		// open curl
-		$curl = curl_init();
-
-		// curl options
-		curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_setopt($curl, CURLOPT_USERPWD, self::USER.':'.self::PASSWORD);
-		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		// Force disable of certificate check as most of dev / test env have a self-signed certificate
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-
-		// execute curl
-		$result = curl_exec($curl);
-		if (curl_errno($curl)) {
-			$info = curl_getinfo($curl);
-			var_export($info);
-			var_dump([
-				'url' => $url,
-				'app_root_url:' => MetaModel::GetConfig()->Get('app_root_url'),
-				'GetAbsoluteUrlAppRoot:' => \utils::GetAbsoluteUrlAppRoot(),
-			]);
-		}
-		// close curl
-		curl_close($curl);
-
-		return $result;
+		return $this->CallUrl($url, [], $aCurlOptions);
 	}
 
 	/** @inheritDoc */

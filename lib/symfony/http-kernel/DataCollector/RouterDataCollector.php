@@ -34,13 +34,13 @@ class RouterDataCollector extends DataCollector
     /**
      * @final
      */
-    public function collect(Request $request, Response $response, \Throwable $exception = null): void
+    public function collect(Request $request, Response $response, ?\Throwable $exception = null): void
     {
         if ($response instanceof RedirectResponse) {
             $this->data['redirect'] = true;
             $this->data['url'] = $response->getTargetUrl();
 
-            if ($this->controllers->contains($request)) {
+            if ($this->controllers->offsetExists($request)) {
                 $this->data['route'] = $this->guessRoute($request, $this->controllers[$request]);
             }
         }

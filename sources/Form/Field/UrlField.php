@@ -39,7 +39,7 @@ class UrlField extends StringField
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct(string $sId, Closure $onFinalizeCallback = null)
+	public function __construct(string $sId, ?Closure $onFinalizeCallback = null)
 	{
 		parent::__construct($sId, $onFinalizeCallback);
 

@@ -64,7 +64,7 @@ class LinkedSetField extends AbstractSimpleField
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct(string $sId, Closure $onFinalizeCallback = null)
+	public function __construct(string $sId, ?Closure $onFinalizeCallback = null)
 	{
 		$this->sTargetClass = null;
 		$this->sExtKeyToRemote = null;

@@ -173,10 +173,9 @@ try {
 			case 'ShowModalSearchForeignKeys':
 				$oPage->SetContentType('text/html');
 				$iInputId = utils::ReadParam('iInputId', '');
-				$sTitle = utils::ReadParam('sTitle', '', false, 'raw_data');
 				$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 				$oWidget = new UISearchFormForeignKeys($sTargetClass, $iInputId);
-				$oWidget->ShowModalSearchForeignKeys($oPage, $sTitle);
+				$oWidget->ShowModalSearchForeignKeys($oPage);
 				break;
 
 				// ui.searchformforeignkeys
@@ -185,16 +184,6 @@ try {
 				$oWidget = new UISearchFormForeignKeys($sClass);
 				$oFullSetFilter = new DBObjectSearch($sClass);
 				$oWidget->GetFullListForeignKeysFromSelection($oPage, $oFullSetFilter);
-				break;
-
-				// ui.searchformforeignkeys
-			case 'ListResultsSearchForeignKeys':
-				$oPage->SetContentType('text/html');
-				$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
-				$iInputId = utils::ReadParam('iInputId', '');
-				$sRemoteClass = utils::ReadParam('sRemoteClass', '', false, 'class');
-				$oWidget = new UISearchFormForeignKeys($sTargetClass, $iInputId);
-				$oWidget->ListResultsSearchForeignKeys($oPage, $sRemoteClass);
 				break;
 
 				// ui.linkswidget
@@ -980,11 +969,13 @@ try {
 JS
 					);
 				} else {
+					$sDashboardIdEncoded = json_encode($sDashboardId);
+					$sReloadURLEncoded = json_encode($sReloadURL);
 					$oPage->add_script(
 						<<<JS
 			$('.ibo-dashboard#{$sDashboardDivId}').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			   { operation: 'reload_dashboard', dashboard_id: '{$sDashboardId}', file: '{$sDashboardFile}', extra_params: {$sJSExtraParams}, reload_url: '{$sReloadURL}'},
+			   { operation: 'reload_dashboard', dashboard_id: {$sDashboardIdEncoded}, file: '{$sDashboardFile}', extra_params: {$sJSExtraParams}, reload_url: {$sReloadURLEncoded}},
 			   function(data){
 				 $('.ibo-dashboard#{$sDashboardDivId}').html(data);
 				 $('.ibo-dashboard#{$sDashboardDivId}').unblock();
@@ -996,7 +987,7 @@ JS
 				break;
 
 			case 'revert_dashboard':
-				$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+				$sDashboardId = utils::ReadParam('dashboard_id', '', false, utils::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM);
 				$sReloadURL = utils::ReadParam('reload_url', '', false, utils::ENUM_SANITIZATION_FILTER_URL);
 				appUserPreferences::UnsetPref('display_original_dashboard_'.$sDashboardId);
 				$oDashboard = new RuntimeDashboard($sDashboardId);
@@ -1004,11 +995,13 @@ JS
 				$sFile = addslashes($oDashboard->GetDefinitionFile());
 				$sDivId = utils::Sanitize($sDashboardId, '', 'element_identifier');
 				// trigger a reload of the current page since the dashboard just changed
+				$sDashboardIdEncoded = json_encode($sDashboardId);
+				$sReloadURLEncoded = json_encode($sReloadURL);
 				$oPage->add_script(
 					<<<EOF
 			$('.ibo-dashboard#$sDivId').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sFile', reload_url: '$sReloadURL'},
+			   { operation: 'reload_dashboard', dashboard_id: $sDashboardIdEncoded, file: '$sFile', reload_url: $sReloadURLEncoded},
 			   function(data){
 				 $('.ibo-dashboard#$sDivId').html(data);
 				 $('.ibo-dashboard#$sDivId').unblock();
@@ -2043,6 +2036,17 @@ EOF
 				$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
 				$iObjKey = (int)utils::ReadParam('obj_key', 0, false, 'integer');
 
+				// Check user has access to the object before trying to acquire the lock
+				$oSearch = new DBObjectSearch($sObjClass);
+				$oSearch->AddCondition(MetaModel::DBGetKey($sObjClass), $iObjKey, '=');
+				$oSet = new CMDBObjectSet($oSearch);
+				if (
+					false === $oSet->CountExceeds(0) ||
+					UserRights::IsActionAllowed($sObjClass, UR_ACTION_MODIFY, $oSet) !== UR_ALLOWED_YES
+				) {
+					throw new SecurityException(Dict::S('UI:ObjectDoesNotExist'));
+				}
+
 				$aResult = iTopOwnershipLock::AcquireLock($sObjClass, $iObjKey);
 				if (false === $aResult['success']) {
 					$aLockData = iTopOwnershipLock::IsLocked($sObjClass, $iObjKey);
@@ -2136,7 +2140,7 @@ EOF
 							$oAttachment->Set('item_class', $sObjClass);
 							$oAttachment->SetDefaultOrgId();
 							$oAttachment->Set('contents', $oDoc);
-							$oAttachment->Set('secret', sprintf('%06x', mt_rand(0, 0xFFFFFF))); // something not easy to guess
+							$oAttachment->Set('secret', bin2hex(random_bytes(16))); // 128 bits of entropy, cryptographically secure
 							$iAttId = $oAttachment->DBInsert();
 
 							$aResult['uploaded'] = 1;
@@ -2194,7 +2198,7 @@ EOF
 						$oAttachment->Set('item_class', $sObjClass);
 						$oAttachment->SetDefaultOrgId();
 						$oAttachment->Set('contents', $oDoc);
-						$oAttachment->Set('secret', sprintf('%06x', mt_rand(0, 0xFFFFFF))); // something not easy to guess
+						$oAttachment->Set('secret', bin2hex(random_bytes(16))); // 128 bits of entropy, cryptographically secure
 						$iAttId = $oAttachment->DBInsert();
 
 						IssueLog::Trace('InlineImage created', LogChannels::INLINE_IMAGE, [
@@ -2498,8 +2502,7 @@ EOF
 	$oKPI->ComputeAndReport('Data fetch and format');
 	$oPage->output();
 } catch (Exception $e) {
-	// note: transform to cope with XSS attacks
-	echo utils::EscapeHtml($e->GetMessage());
+	echo utils::EscapeHtml(Dict::S('UI:PageTitle:FatalError'));
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
 

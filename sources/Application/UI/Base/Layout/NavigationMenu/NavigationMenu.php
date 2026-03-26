@@ -107,7 +107,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	public function __construct(
 		ApplicationContext $oAppContext,
 		PopoverMenu $oUserMenu,
-		NewsroomMenu $oNewsroomMenu = null,
+		?NewsroomMenu $oNewsroomMenu = null,
 		?string $sId = null
 	) {
 		parent::__construct($sId);

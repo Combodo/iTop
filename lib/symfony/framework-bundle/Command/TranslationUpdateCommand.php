@@ -19,7 +19,6 @@ use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -60,9 +59,13 @@ class TranslationUpdateCommand extends Command
     private array $codePaths;
     private array $enabledLocales;
 
-    public function __construct(TranslationWriterInterface $writer, TranslationReaderInterface $reader, ExtractorInterface $extractor, string $defaultLocale, string $defaultTransPath = null, string $defaultViewsPath = null, array $transPaths = [], array $codePaths = [], array $enabledLocales = [])
+    public function __construct(TranslationWriterInterface $writer, TranslationReaderInterface $reader, ExtractorInterface $extractor, string $defaultLocale, ?string $defaultTransPath = null, ?string $defaultViewsPath = null, array $transPaths = [], array $codePaths = [], array $enabledLocales = [])
     {
         parent::__construct();
+
+        if (!method_exists($writer, 'getFormats')) {
+            throw new \InvalidArgumentException(\sprintf('The writer class "%s" does not implement the "getFormats()" method.', $writer::class));
+        }
 
         $this->writer = $writer;
         $this->reader = $reader;
@@ -81,14 +84,14 @@ class TranslationUpdateCommand extends Command
             ->setDefinition([
                 new InputArgument('locale', InputArgument::REQUIRED, 'The locale'),
                 new InputArgument('bundle', InputArgument::OPTIONAL, 'The bundle name or directory where to load the messages'),
-                new InputOption('prefix', null, InputOption::VALUE_OPTIONAL, 'Override the default prefix', '__'),
-                new InputOption('format', null, InputOption::VALUE_OPTIONAL, 'Override the default output format', 'xlf12'),
+                new InputOption('prefix', null, InputOption::VALUE_REQUIRED, 'Override the default prefix', '__'),
+                new InputOption('format', null, InputOption::VALUE_REQUIRED, 'Override the default output format', 'xlf12'),
                 new InputOption('dump-messages', null, InputOption::VALUE_NONE, 'Should the messages be dumped in the console'),
                 new InputOption('force', null, InputOption::VALUE_NONE, 'Should the extract be done'),
                 new InputOption('clean', null, InputOption::VALUE_NONE, 'Should clean not found messages'),
-                new InputOption('domain', null, InputOption::VALUE_OPTIONAL, 'Specify the domain to extract'),
+                new InputOption('domain', null, InputOption::VALUE_REQUIRED, 'Specify the domain to extract'),
                 new InputOption('sort', null, InputOption::VALUE_OPTIONAL, 'Return list of messages sorted alphabetically (only works with --dump-messages)', 'asc'),
-                new InputOption('as-tree', null, InputOption::VALUE_OPTIONAL, 'Dump the messages as a tree-like structure: The given value defines the level where to switch to inline YAML'),
+                new InputOption('as-tree', null, InputOption::VALUE_REQUIRED, 'Dump the messages as a tree-like structure: The given value defines the level where to switch to inline YAML'),
             ])
             ->setHelp(<<<'EOF'
 The <info>%command.name%</info> command extracts translation strings from templates
@@ -124,13 +127,6 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
-        $errorIo = $output instanceof ConsoleOutputInterface ? new SymfonyStyle($input, $output->getErrorOutput()) : $io;
-
-        if ('translation:update' === $input->getFirstArgument()) {
-            $errorIo->caution('Command "translation:update" is deprecated since version 5.4 and will be removed in Symfony 6.0. Use "translation:extract" instead.');
-        }
-
         $io = new SymfonyStyle($input, $output);
         $errorIo = $io->getErrorStyle();
 
@@ -187,13 +183,13 @@ EOF
                 $codePaths = [$path.'/templates'];
 
                 if (!is_dir($transPaths[0])) {
-                    throw new InvalidArgumentException(sprintf('"%s" is neither an enabled bundle nor a directory.', $transPaths[0]));
+                    throw new InvalidArgumentException(\sprintf('"%s" is neither an enabled bundle nor a directory.', $transPaths[0]));
                 }
             }
         }
 
         $io->title('Translation Messages Extractor and Dumper');
-        $io->comment(sprintf('Generating "<info>%s</info>" translation files for "<info>%s</info>"', $input->getArgument('locale'), $currentName));
+        $io->comment(\sprintf('Generating "<info>%s</info>" translation files for "<info>%s</info>"', $input->getArgument('locale'), $currentName));
 
         $io->comment('Parsing templates...');
         $extractedCatalogue = $this->extractMessages($input->getArgument('locale'), $codePaths, $input->getOption('prefix'));
@@ -232,8 +228,8 @@ EOF
 
                 $list = array_merge(
                     array_diff($allKeys, $newKeys),
-                    array_map(fn ($id) => sprintf('<fg=green>%s</>', $id), $newKeys),
-                    array_map(fn ($id) => sprintf('<fg=red>%s</>', $id), array_keys($operation->getObsoleteMessages($domain)))
+                    array_map(fn ($id) => \sprintf('<fg=green>%s</>', $id), $newKeys),
+                    array_map(fn ($id) => \sprintf('<fg=red>%s</>', $id), array_keys($operation->getObsoleteMessages($domain)))
                 );
 
                 $domainMessagesCount = \count($list);
@@ -253,17 +249,17 @@ EOF
                     }
                 }
 
-                $io->section(sprintf('Messages extracted for domain "<info>%s</info>" (%d message%s)', $domain, $domainMessagesCount, $domainMessagesCount > 1 ? 's' : ''));
+                $io->section(\sprintf('Messages extracted for domain "<info>%s</info>" (%d message%s)', $domain, $domainMessagesCount, $domainMessagesCount > 1 ? 's' : ''));
                 $io->listing($list);
 
                 $extractedMessagesCount += $domainMessagesCount;
             }
 
             if ('xlf' === $format) {
-                $io->comment(sprintf('Xliff output version is <info>%s</info>', $xliffVersion));
+                $io->comment(\sprintf('Xliff output version is <info>%s</info>', $xliffVersion));
             }
 
-            $resultMessage = sprintf('%d message%s successfully extracted', $extractedMessagesCount, $extractedMessagesCount > 1 ? 's were' : ' was');
+            $resultMessage = \sprintf('%d message%s successfully extracted', $extractedMessagesCount, $extractedMessagesCount > 1 ? 's were' : ' was');
         }
 
         // save the files

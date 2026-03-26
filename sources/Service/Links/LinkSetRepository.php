@@ -36,7 +36,7 @@ class LinkSetRepository
 	 *
 	 * @return array|null
 	 */
-	public static function LinksDbSetToTargetObjectArray(iDBObjectSetIterator $oDbObjectSet, bool $bForce, array &$aInitialOptions, string $sTargetClass, string $sTargetField = null): ?array
+	public static function LinksDbSetToTargetObjectArray(iDBObjectSetIterator $oDbObjectSet, bool $bForce, array &$aInitialOptions, string $sTargetClass, ?string $sTargetField = null): ?array
 	{
 		try {
 

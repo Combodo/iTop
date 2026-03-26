@@ -306,7 +306,7 @@ JS
 					$sBefore = substr($sExpression, 0, $e->GetColumn());
 					$sAfter = substr($sExpression, $e->GetColumn() + strlen($sWrongWord));
 					$sFixedExpression = $sBefore.$sSuggestedWord.$sAfter;
-					$sFixedExpressionHtml = $sBefore.'<span class="ibo-run-query--highlight">'.$sSuggestedWord.'</span>'.$sAfter;
+					$sFixedExpressionHtml = $sBefore.'<span class="ibo-run-query--highlight">'.$sSuggestedWord.'</span>'.utils::EscapeHtml($sAfter);
 					$sSyntaxErrorText .= "<p>Suggesting: $sFixedExpressionHtml</p>";
 					$oSyntaxErrorPanel->AddSubBlock(new Html($sSyntaxErrorText));
 

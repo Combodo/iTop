@@ -22,7 +22,7 @@
         },
         {
             "name": "Jake Hotson",
-            "email": "jake@qzdesign.co.uk"
+            "email": "jake.github@qzdesign.co.uk"
         },
         {
             "name": "Cameron Brooks"
@@ -37,15 +37,19 @@
         "source": "https://github.com/MyIntervals/emogrifier"
     },
     "require": {
-        "php": "~7.3.0 || ~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0",
+        "php": "~7.3.0 || ~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
         "ext-dom": "*",
         "ext-libxml": "*",
-        "sabberworm/php-css-parser": "^8.4.0",
+        "sabberworm/php-css-parser": "^8.7.0",
         "symfony/css-selector": "^4.4.23 || ^5.4.0 || ^6.0.0 || ^7.0.0"
     },
     "require-dev": {
-        "php-parallel-lint/php-parallel-lint": "1.3.2",
-        "phpunit/phpunit": "9.6.11",
+        "php-parallel-lint/php-parallel-lint": "1.4.0",
+        "phpstan/extension-installer": "1.4.3",
+        "phpstan/phpstan": "1.12.7",
+        "phpstan/phpstan-phpunit": "1.4.0",
+        "phpstan/phpstan-strict-rules": "1.6.1",
+        "phpunit/phpunit": "9.6.21",
         "rawr/cross-data-providers": "2.4.0"
     },
     "prefer-stable": true,
@@ -60,6 +64,9 @@
         }
     },
     "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        },
         "preferred-install": {
             "*": "dist"
         },
@@ -80,28 +87,26 @@
             "@ci:tests"
         ],
         "ci:php:fixer": "\"./.phive/php-cs-fixer\" --config=config/php-cs-fixer.php fix --dry-run -v --show-progress=dots config/ src/ tests/",
-        "ci:php:lint": "\"./vendor/bin/parallel-lint\" config src tests",
+        "ci:php:lint": "parallel-lint config src tests",
         "ci:php:md": "\"./.phive/phpmd\" src text config/phpmd.xml",
-        "ci:php:psalm": "\"./.phive/psalm\" --show-info=false",
-        "ci:php:sniff": "\"./.phive/phpcs\" config src tests",
+        "ci:php:stan": "phpstan --no-progress  --error-format=github",
         "ci:static": [
             "@ci:composer:normalize",
             "@ci:php:lint",
-            "@ci:php:sniff",
             "@ci:php:fixer",
             "@ci:php:md",
-            "@ci:php:psalm"
+            "@ci:php:stan"
         ],
         "ci:tests": [
             "@ci:tests:unit"
         ],
-        "ci:tests:sof": "@php \"./vendor/bin/phpunit\" --stop-on-failure --do-not-cache-result",
-        "ci:tests:unit": "@php \"./vendor/bin/phpunit\" --do-not-cache-result",
+        "ci:tests:coverage": "phpunit --do-not-cache-result --coverage-clover=coverage.xml",
+        "ci:tests:sof": "phpunit --stop-on-failure --do-not-cache-result",
+        "ci:tests:unit": "phpunit --do-not-cache-result",
         "composer:normalize": "\"./.phive/composer-normalize\" --no-check-lock",
         "php:fix": "\"./.phive/php-cs-fixer\" --config=config/php-cs-fixer.php fix config/ src/ tests/",
         "php:version": "@php -v | grep -Po 'PHP\\s++\\K(?:\\d++\\.)*+\\d++(?:-\\w++)?+'",
-        "psalm:baseline": "\"./.phive/psalm\" --set-baseline=psalm.baseline.xml",
-        "psalm:cc": "\"./.phive/psalm\" --clear-cache"
+        "phpstan:baseline": "phpstan --generate-baseline --allow-empty-baseline"
     },
     "scripts-descriptions": {
         "ci": "Runs all dynamic and static code checks.",
@@ -110,16 +115,15 @@
         "ci:php:fixer": "Checks the code style with PHP CS Fixer.",
         "ci:php:lint": "Lints the PHP files for syntax errors.",
         "ci:php:md": "Checks the code complexity with PHPMD.",
-        "ci:php:psalm": "Checks the types with Psalm.",
-        "ci:php:sniff": "Checks the code style with PHP_CodeSniffer.",
+        "ci:php:stan": "Checks the PHP types using PHPStan.",
         "ci:static": "Runs all static code analysis checks for the code and the composer.json.",
         "ci:tests": "Runs all dynamic tests (i.e., currently, the unit tests).",
+        "ci:tests:coverage": "Runs the unit tests with code coverage.",
         "ci:tests:sof": "Runs the unit tests and stops at the first failure.",
         "ci:tests:unit": "Runs all unit tests.",
         "composer:normalize": "Reformats and sorts the composer.json file.",
         "php:fix": "Reformats the code with php-cs-fixer.",
         "php:version": "Outputs the installed PHP version.",
-        "psalm:baseline": "Updates the Psalm baseline file to match the code.",
-        "psalm:cc": "Clears the Psalm cache."
+        "phpstan:baseline": "Updates the PHPStan baseline file to match the code."
     }
 }

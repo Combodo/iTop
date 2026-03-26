@@ -43,10 +43,12 @@ const EXIT_CODE_ERROR = -1;
 const EXIT_CODE_FATAL = -2;
 
 try {
-	// Do this before loging, in order to allow setting user credentials from within the file
-	utils::UseParamFile();
+	if (utils::IsModeCLI()) {
+		// Do this before logging, in order to allow setting user credentials from within the file
+		utils::UseParamFile();
+	}
 } catch (Exception $e) {
-	echo "Error: ".$e->GetMessage()."<br/>\n";
+	echo "Error: ".$e->GetMessage()."\n";
 	exit(EXIT_CODE_FATAL);
 }
 

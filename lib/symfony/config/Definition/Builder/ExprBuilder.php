@@ -42,7 +42,7 @@ class ExprBuilder
      *
      * @return $this
      */
-    public function always(\Closure $then = null): static
+    public function always(?\Closure $then = null): static
     {
         $this->ifPart = static fn () => true;
         $this->allowedTypes = self::TYPE_ANY;
@@ -61,7 +61,7 @@ class ExprBuilder
      *
      * @return $this
      */
-    public function ifTrue(\Closure $closure = null): static
+    public function ifTrue(?\Closure $closure = null): static
     {
         $this->ifPart = $closure ?? static fn ($v) => true === $v;
         $this->allowedTypes = self::TYPE_ANY;
@@ -196,7 +196,7 @@ class ExprBuilder
      */
     public function thenInvalid(string $message): static
     {
-        $this->thenPart = static fn ($v) => throw new \InvalidArgumentException(sprintf($message, json_encode($v)));
+        $this->thenPart = static fn ($v) => throw new \InvalidArgumentException(\sprintf($message, json_encode($v)));
 
         return $this;
     }

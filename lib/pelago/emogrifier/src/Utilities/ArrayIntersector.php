@@ -17,7 +17,7 @@ namespace Pelago\Emogrifier\Utilities;
  *
  * @internal
  */
-class ArrayIntersector
+final class ArrayIntersector
 {
     /**
      * the array with which the object was constructed, with all its keys exchanged with their associated values

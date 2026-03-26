@@ -17,6 +17,7 @@ use Twig\Environment;
 use Twig\Extension\EscaperExtension;
 use Twig\Extension\ProfilerExtension;
 use Twig\Profiler\Profile;
+use Twig\Runtime\EscaperRuntime;
 use Twig\TwigFunction;
 
 /**
@@ -37,7 +38,7 @@ class WebProfilerExtension extends ProfilerExtension
 
     private int $stackLevel = 0;
 
-    public function __construct(HtmlDumper $dumper = null)
+    public function __construct(?HtmlDumper $dumper = null)
     {
         $this->dumper = $dumper ?? new HtmlDumper();
         $this->dumper->setOutput($this->output = fopen('php://memory', 'r+'));
@@ -77,7 +78,7 @@ class WebProfilerExtension extends ProfilerExtension
         return str_replace("\n</pre", '</pre', rtrim($dump));
     }
 
-    public function dumpLog(Environment $env, string $message, Data $context = null): string
+    public function dumpLog(Environment $env, string $message, ?Data $context = null): string
     {
         $message = self::escape($env, $message);
         $message = preg_replace('/&quot;(.*?)&quot;/', '&quot;<b>$1</b>&quot;', $message);
@@ -108,6 +109,12 @@ class WebProfilerExtension extends ProfilerExtension
 
     private static function escape(Environment $env, string $s): string
     {
+        // Twig 3.10 and above
+        if (class_exists(EscaperRuntime::class)) {
+            return $env->getRuntime(EscaperRuntime::class)->escape($s);
+        }
+
+        // Twig 3.9
         if (method_exists(EscaperExtension::class, 'escape')) {
             return EscaperExtension::escape($env, $s);
         }

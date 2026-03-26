@@ -34,7 +34,7 @@ class TwigRendererEngine extends AbstractRendererEngine
     {
         $cacheKey = $view->vars[self::CACHE_KEY_VAR];
 
-        $context = $this->environment->mergeGlobals($variables);
+        $context = $variables + $this->environment->getGlobals();
 
         ob_start();
 
@@ -71,6 +71,7 @@ class TwigRendererEngine extends AbstractRendererEngine
             // $this->resources[$cacheKey][$block] is not set. Since the themes are
             // already loaded, it can only be a non-existing block.
             $this->resources[$cacheKey][$blockName] = false;
+            $this->setResourceInheritability($cacheKey, $blockName, true);
 
             return false;
         }
@@ -108,8 +109,9 @@ class TwigRendererEngine extends AbstractRendererEngine
 
             // EAGER CACHE POPULATION (see doc comment)
             foreach ($this->resources[$parentCacheKey] as $nestedBlockName => $resource) {
-                if (!isset($this->resources[$cacheKey][$nestedBlockName])) {
+                if (!isset($this->resources[$cacheKey][$nestedBlockName]) && $this->isResourceInheritable($parentCacheKey, $nestedBlockName)) {
                     $this->resources[$cacheKey][$nestedBlockName] = $resource;
+                    $this->setResourceInheritability($cacheKey, $nestedBlockName, true);
                 }
             }
         }
@@ -119,6 +121,7 @@ class TwigRendererEngine extends AbstractRendererEngine
         if (!isset($this->resources[$cacheKey][$blockName])) {
             // Cache that we didn't find anything to speed up further accesses
             $this->resources[$cacheKey][$blockName] = false;
+            $this->setResourceInheritability($cacheKey, $blockName, true);
         }
 
         return false !== $this->resources[$cacheKey][$blockName];
@@ -151,7 +154,7 @@ class TwigRendererEngine extends AbstractRendererEngine
         // theme is a reference and we don't want to change it.
         $currentTheme = $theme;
 
-        $context = $this->environment->mergeGlobals([]);
+        $context = $this->environment->getGlobals();
 
         // The do loop takes care of template inheritance.
         // Add blocks from all templates in the inheritance tree, but avoid
@@ -162,6 +165,7 @@ class TwigRendererEngine extends AbstractRendererEngine
                     // The resource given back is the key to the bucket that
                     // contains this block.
                     $this->resources[$cacheKey][$block] = $blockData;
+                    $this->setResourceInheritability($cacheKey, $block, true);
                 }
             }
         } while (false !== $currentTheme = $currentTheme->getParent($context));

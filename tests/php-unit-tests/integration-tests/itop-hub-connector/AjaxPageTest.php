@@ -28,14 +28,14 @@ class AjaxPageTest extends ItopDataTestCase
 		$iLastCompilation = filemtime(APPROOT.'env-production');
 
 		// When
-		$sOutput = $this->CallItopUrl(
-			"/pages/exec.php?exec_module=itop-hub-connector&exec_page=ajax.php",
+		$sOutput = $this->CallItopUri(
+			"pages/exec.php?exec_module=itop-hub-connector&exec_page=ajax.php",
 			[
 				'auth_user' => $sLogin,
 				'auth_pwd' => self::AUTHENTICATION_PASSWORD,
 				'operation' => 	"compile",
 				'authent' => self::AUTHENTICATION_TOKEN,
-			]
+			],
 		);
 
 		// Then
@@ -52,27 +52,5 @@ class AjaxPageTest extends ItopDataTestCase
 
 		clearstatcache();
 		$this->assertGreaterThan($iLastCompilation, filemtime(APPROOT.'env-production'), 'The env-production directory should have been rebuilt');
-	}
-
-	protected function CallItopUrl($sUri, ?array $aPostFields = null, bool $bXDebugEnabled = false)
-	{
-		$ch = curl_init();
-		if ($bXDebugEnabled) {
-			curl_setopt($ch, CURLOPT_COOKIE, 'XDEBUG_SESSION=phpstorm');
-		}
-
-		$sUrl = \MetaModel::GetConfig()->Get('app_root_url')."/$sUri";
-		var_dump($sUrl);
-		curl_setopt($ch, CURLOPT_URL, $sUrl);
-		curl_setopt($ch, CURLOPT_POST, 1);// set post data to true
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $aPostFields);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-		$sOutput = curl_exec($ch);
-		//echo "$sUrl error code:".curl_error($ch);
-		curl_close($ch);
-
-		return $sOutput;
 	}
 }

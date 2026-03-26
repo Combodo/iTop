@@ -362,8 +362,7 @@ class ormDocument
 					throw new Exception("Invalid id ($id) for class '$sClass' - the object does not exist or you are not allowed to view it");
 				}
 			}
-			if (($sSecretField != null) && ($oObj->Get($sSecretField) != $sSecretValue)) {
-				usleep(200);
+			if (($sSecretField != null) && !hash_equals($oObj->Get($sSecretField), $sSecretValue)) {
 				throw new Exception("Invalid secret for class '$sClass' - the object does not exist or you are not allowed to view it");
 			}
 			/** @var \ormDocument $oDocument */

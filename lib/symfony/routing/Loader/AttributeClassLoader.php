@@ -94,7 +94,7 @@ abstract class AttributeClassLoader implements LoaderInterface
         } elseif ($env instanceof \Stringable || \is_scalar($env)) {
             $this->env = (string) $env;
         } else {
-            throw new \TypeError(__METHOD__.sprintf(': Parameter $env was expected to be a string or null, "%s" given.', get_debug_type($env)));
+            throw new \TypeError(__METHOD__.\sprintf(': Parameter $env was expected to be a string or null, "%s" given.', get_debug_type($env)));
         }
     }
 
@@ -111,15 +111,15 @@ abstract class AttributeClassLoader implements LoaderInterface
     /**
      * @throws \InvalidArgumentException When route can't be parsed
      */
-    public function load(mixed $class, string $type = null): RouteCollection
+    public function load(mixed $class, ?string $type = null): RouteCollection
     {
         if (!class_exists($class)) {
-            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+            throw new \InvalidArgumentException(\sprintf('Class "%s" does not exist.', $class));
         }
 
         $class = new \ReflectionClass($class);
         if ($class->isAbstract()) {
-            throw new \InvalidArgumentException(sprintf('Attributes from class "%s" cannot be read as it is abstract.', $class->getName()));
+            throw new \InvalidArgumentException(\sprintf('Attributes from class "%s" cannot be read as it is abstract.', $class->getName()));
         }
 
         $this->hasDeprecatedAnnotations = false;
@@ -144,7 +144,7 @@ abstract class AttributeClassLoader implements LoaderInterface
 
                 if (1 === $collection->count() - \count($routeNamesBefore)) {
                     $newRouteName = current(array_diff(array_keys($collection->all()), $routeNamesBefore));
-                    if ($newRouteName !== $aliasName = sprintf('%s::%s', $class->name, $method->name)) {
+                    if ($newRouteName !== $aliasName = \sprintf('%s::%s', $class->name, $method->name)) {
                         $collection->addAlias($aliasName, $newRouteName);
                     }
                 }
@@ -162,7 +162,7 @@ abstract class AttributeClassLoader implements LoaderInterface
                     $collection->addAlias($class->name, $invokeRouteName);
                 }
 
-                if ($invokeRouteName !== $aliasName = sprintf('%s::__invoke', $class->name)) {
+                if ($invokeRouteName !== $aliasName = \sprintf('%s::__invoke', $class->name)) {
                     $collection->addAlias($aliasName, $invokeRouteName);
                 }
             }
@@ -195,7 +195,7 @@ abstract class AttributeClassLoader implements LoaderInterface
 
         foreach ($requirements as $placeholder => $requirement) {
             if (\is_int($placeholder)) {
-                throw new \InvalidArgumentException(sprintf('A placeholder name must be a string (%d given). Did you forget to specify the placeholder key for the requirement "%s" of route "%s" in "%s::%s()"?', $placeholder, $requirement, $name, $class->getName(), $method->getName()));
+                throw new \InvalidArgumentException(\sprintf('A placeholder name must be a string (%d given). Did you forget to specify the placeholder key for the requirement "%s" of route "%s" in "%s::%s()"?', $placeholder, $requirement, $name, $class->getName(), $method->getName()));
             }
         }
 
@@ -219,11 +219,11 @@ abstract class AttributeClassLoader implements LoaderInterface
                     $paths[$locale] = $prefix.$localePath;
                 }
             } elseif ($missing = array_diff_key($prefix, $path)) {
-                throw new \LogicException(sprintf('Route to "%s" is missing paths for locale(s) "%s".', $class->name.'::'.$method->name, implode('", "', array_keys($missing))));
+                throw new \LogicException(\sprintf('Route to "%s" is missing paths for locale(s) "%s".', $class->name.'::'.$method->name, implode('", "', array_keys($missing))));
             } else {
                 foreach ($path as $locale => $localePath) {
                     if (!isset($prefix[$locale])) {
-                        throw new \LogicException(sprintf('Route to "%s" with locale "%s" is missing a corresponding prefix in class "%s".', $method->name, $locale, $class->name));
+                        throw new \LogicException(\sprintf('Route to "%s" with locale "%s" is missing a corresponding prefix in class "%s".', $method->name, $locale, $class->name));
                     }
 
                     $paths[$locale] = $prefix[$locale].$localePath;
@@ -242,7 +242,7 @@ abstract class AttributeClassLoader implements LoaderInterface
                 continue;
             }
             foreach ($paths as $locale => $path) {
-                if (preg_match(sprintf('/\{%s(?:<.*?>)?\}/', preg_quote($param->name)), $path)) {
+                if (preg_match(\sprintf('/\{%s(?:<.*?>)?\}/', preg_quote($param->name)), $path)) {
                     if (\is_scalar($defaultValue = $param->getDefaultValue()) || null === $defaultValue) {
                         $defaults[$param->name] = $defaultValue;
                     } elseif ($defaultValue instanceof \BackedEnum) {
@@ -267,7 +267,7 @@ abstract class AttributeClassLoader implements LoaderInterface
         }
     }
 
-    public function supports(mixed $resource, string $type = null): bool
+    public function supports(mixed $resource, ?string $type = null): bool
     {
         if ('annotation' === $type) {
             trigger_deprecation('symfony/routing', '6.4', 'The "annotation" route type is deprecated, use the "attribute" route type instead.');
@@ -360,7 +360,7 @@ abstract class AttributeClassLoader implements LoaderInterface
 
             foreach ($globals['requirements'] as $placeholder => $requirement) {
                 if (\is_int($placeholder)) {
-                    throw new \InvalidArgumentException(sprintf('A placeholder name must be a string (%d given). Did you forget to specify the placeholder key for the requirement "%s" in "%s"?', $placeholder, $requirement, $class->getName()));
+                    throw new \InvalidArgumentException(\sprintf('A placeholder name must be a string (%d given). Did you forget to specify the placeholder key for the requirement "%s" in "%s"?', $placeholder, $requirement, $class->getName()));
                 }
             }
         }

@@ -63,7 +63,7 @@ class ConsoleSectionOutput extends StreamOutput
      *
      * @return void
      */
-    public function clear(int $lines = null)
+    public function clear(?int $lines = null)
     {
         if (empty($this->content) || !$this->isDecorated()) {
             return;
@@ -229,7 +229,7 @@ class ConsoleSectionOutput extends StreamOutput
 
         if ($numberOfLinesToClear > 0) {
             // move cursor up n lines
-            parent::doWrite(sprintf("\x1b[%dA", $numberOfLinesToClear), false);
+            parent::doWrite(\sprintf("\x1b[%dA", $numberOfLinesToClear), false);
             // erase to end of screen
             parent::doWrite("\x1b[0J", false);
         }

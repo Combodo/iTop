@@ -27,6 +27,9 @@ require_once(APPROOT.'/application/displayblock.class.inc.php');
 
 class UISearchFormForeignKeys
 {
+	private $m_sRemoteClass;
+	private $m_iInputId;
+
 	public function __construct($sTargetClass, $iInputId = null)
 	{
 		$this->m_sRemoteClass = $sTargetClass;
@@ -40,7 +43,7 @@ class UISearchFormForeignKeys
 	 *
 	 * @throws \Exception
 	 */
-	public function ShowModalSearchForeignKeys($oPage, $sTitle)
+	public function ShowModalSearchForeignKeys($oPage)
 	{
 
 		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
@@ -60,8 +63,6 @@ class UISearchFormForeignKeys
 			]
 		));
 		$sEmptyList = Dict::S('UI:Message:EmptyList:UseSearchForm');
-		$sCancel = Dict::S('UI:Button:Cancel');
-		$sAdd = Dict::S('UI:Button:Add');
 
 		$oPage->add(
 			<<<HTML
@@ -72,39 +73,6 @@ class UISearchFormForeignKeys
     <input type="hidden" id="count_{$this->m_iInputId}" value="0"/>
 </form>
 HTML
-		);
-
-		$oPage->add_ready_script(
-			<<<JS
- $('#dlg_{$this->m_iInputId}').dialog({ 
- 			width: $(window).width()*0.8, 
- 			height: $(window).height()*0.8, 
- 			autoOpen: false, 
- 			modal: true, 
- 			resizeStop: oForeignKeysWidget{$this->m_iInputId}.UpdateSizes,
-            buttons: [
-				{
-					text: Dict.S('UI:Button:Cancel'),
-					class: "cancel ibo-is-alternative ibo-is-neutral",
-					click: function() {
-						$('#dlg_{$this->m_iInputId}').dialog('close');
-					}
-				},
-				{
-					text:  Dict.S('UI:Button:Add'),
-					id: 'btn_ok_{$this->m_iInputId}',
-					class: "ok ibo-is-regular ibo-is-primary",
-					click: function() {
-						oForeignKeysWidget{$this->m_iInputId}.DoAddObjects(this.id);							
-					}
-				},
-			],
-
- });
-$('#dlg_{$this->m_iInputId}').dialog('option', {title:'$sTitle'});
-$('#SearchFormToAdd_{$this->m_iInputId} form').on('submit.uilinksWizard', oForeignKeysWidget{$this->m_iInputId}.SearchObjectsToAdd);
-$('#SearchFormToAdd_{$this->m_iInputId}').on('resize', oForeignKeysWidget{$this->m_iInputId}.UpdateSizes);
-JS
 		);
 	}
 
@@ -119,31 +87,4 @@ JS
 			IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 		}
 	}
-
-	/**
-	 * Search for objects to be linked to the current object (i.e "remote" objects)
-	 *
-	 * @param WebPage $oP The page used for the output (usually an AjaxWebPage)
-	 * @param string $sRemoteClass Name of the "remote" class to perform the search on, must be a derived class of m_sRemoteClass
-	 *
-	 * @throws \Exception
-	 */
-	public function ListResultsSearchForeignKeys(WebPage $oP, $sRemoteClass = '')
-	{
-		if ($sRemoteClass != '') {
-			// assert(MetaModel::IsParentClass($this->m_sRemoteClass, $sRemoteClass));
-			$oFilter = new DBObjectSearch($sRemoteClass);
-		} else {
-			// No remote class specified use the one defined in the linkedset
-			$oFilter = new DBObjectSearch($this->m_sRemoteClass);
-		}
-
-		$oBlock = new DisplayBlock($oFilter, 'list', false);
-		$oBlock->Display(
-			$oP,
-			"ResultsToAdd_{$this->m_iInputId}",
-			['menu' => false, 'cssCount' => "#count_{$this->m_iInputId}", 'selection_mode' => true, 'table_id' => "add_{$this->m_iInputId}"]
-		);
-	}
-
 }

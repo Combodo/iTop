@@ -40,11 +40,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class RequestPayloadValueResolver implements ValueResolverInterface, EventSubscriberInterface
 {
     /**
-     * @see \Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT
      * @see DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS
      */
     private const CONTEXT_DENORMALIZE = [
-        'disable_type_enforcement' => true,
         'collect_denormalization_errors' => true,
     ];
 
@@ -73,7 +71,7 @@ class RequestPayloadValueResolver implements ValueResolverInterface, EventSubscr
         }
 
         if ($argument->isVariadic()) {
-            throw new \LogicException(sprintf('Mapping variadic argument "$%s" is not supported.', $argument->getName()));
+            throw new \LogicException(\sprintf('Mapping variadic argument "$%s" is not supported.', $argument->getName()));
         }
 
         $attribute->metadata = $argument;
@@ -98,7 +96,7 @@ class RequestPayloadValueResolver implements ValueResolverInterface, EventSubscr
             $request = $event->getRequest();
 
             if (!$type = $argument->metadata->getType()) {
-                throw new \LogicException(sprintf('Could not resolve the "$%s" controller argument: argument should be typed.', $argument->metadata->getName()));
+                throw new \LogicException(\sprintf('Could not resolve the "$%s" controller argument: argument should be typed.', $argument->metadata->getName()));
             }
 
             if ($this->validator) {
@@ -108,11 +106,15 @@ class RequestPayloadValueResolver implements ValueResolverInterface, EventSubscr
                 } catch (PartialDenormalizationException $e) {
                     $trans = $this->translator ? $this->translator->trans(...) : fn ($m, $p) => strtr($m, $p);
                     foreach ($e->getErrors() as $error) {
-                        $parameters = ['{{ type }}' => implode('|', $error->getExpectedTypes())];
+                        $parameters = [];
+                        $template = 'This value was of an unexpected type.';
+                        if ($expectedTypes = $error->getExpectedTypes()) {
+                            $template = 'This value should be of type {{ type }}.';
+                            $parameters['{{ type }}'] = implode('|', $expectedTypes);
+                        }
                         if ($error->canUseMessageForUser()) {
                             $parameters['hint'] = $error->getMessage();
                         }
-                        $template = 'This value should be of type {{ type }}.';
                         $message = $trans($template, $parameters, 'validators');
                         $violations->add(new ConstraintViolation($message, $template, $parameters, null, $error->getPath(), null));
                     }
@@ -138,7 +140,7 @@ class RequestPayloadValueResolver implements ValueResolverInterface, EventSubscr
                 $payload = match (true) {
                     $argument->metadata->hasDefaultValue() => $argument->metadata->getDefaultValue(),
                     $argument->metadata->isNullable() => null,
-                    default => throw new HttpException($validationFailedCode)
+                    default => throw new HttpException($validationFailedCode),
                 };
             }
 
@@ -161,25 +163,25 @@ class RequestPayloadValueResolver implements ValueResolverInterface, EventSubscr
             return null;
         }
 
-        return $this->serializer->denormalize($data, $type, null, $attribute->serializationContext + self::CONTEXT_DENORMALIZE);
+        return $this->serializer->denormalize($data, $type, 'csv', $attribute->serializationContext + self::CONTEXT_DENORMALIZE);
     }
 
     private function mapRequestPayload(Request $request, string $type, MapRequestPayload $attribute): ?object
     {
+        if ('' === $data = $request->request->all() ?: $request->getContent()) {
+            return null;
+        }
+
         if (null === $format = $request->getContentTypeFormat()) {
             throw new HttpException(Response::HTTP_UNSUPPORTED_MEDIA_TYPE, 'Unsupported format.');
         }
 
         if ($attribute->acceptFormat && !\in_array($format, (array) $attribute->acceptFormat, true)) {
-            throw new HttpException(Response::HTTP_UNSUPPORTED_MEDIA_TYPE, sprintf('Unsupported format, expects "%s", but "%s" given.', implode('", "', (array) $attribute->acceptFormat), $format));
+            throw new HttpException(Response::HTTP_UNSUPPORTED_MEDIA_TYPE, \sprintf('Unsupported format, expects "%s", but "%s" given.', implode('", "', (array) $attribute->acceptFormat), $format));
         }
 
-        if ($data = $request->request->all()) {
-            return $this->serializer->denormalize($data, $type, null, $attribute->serializationContext + self::CONTEXT_DENORMALIZE);
-        }
-
-        if ('' === $data = $request->getContent()) {
-            return null;
+        if (\is_array($data)) {
+            return $this->serializer->denormalize($data, $type, 'csv', $attribute->serializationContext + self::CONTEXT_DENORMALIZE);
         }
 
         if ('form' === $format) {
@@ -189,9 +191,9 @@ class RequestPayloadValueResolver implements ValueResolverInterface, EventSubscr
         try {
             return $this->serializer->deserialize($data, $type, $format, self::CONTEXT_DESERIALIZE + $attribute->serializationContext);
         } catch (UnsupportedFormatException $e) {
-            throw new HttpException(Response::HTTP_UNSUPPORTED_MEDIA_TYPE, sprintf('Unsupported format: "%s".', $format), $e);
+            throw new HttpException(Response::HTTP_UNSUPPORTED_MEDIA_TYPE, \sprintf('Unsupported format: "%s".', $format), $e);
         } catch (NotEncodableValueException $e) {
-            throw new HttpException(Response::HTTP_BAD_REQUEST, sprintf('Request payload contains invalid "%s" data.', $format), $e);
+            throw new HttpException(Response::HTTP_BAD_REQUEST, \sprintf('Request payload contains invalid "%s" data.', $format), $e);
         }
     }
 }

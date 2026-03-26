@@ -238,6 +238,11 @@
               <action id="action:bulk delete">allow</action>
             </actions>
           </group>
+          <group id="Ticketing">
+            <actions>
+              <action id="stimulus:ev_close">allow</action>
+            </actions>
+          </group>
           <group id="UserRequest">
             <actions>
               <action id="stimulus:ev_approve">allow</action>
@@ -254,8 +259,10 @@
           <group id="Incident">
             <actions>
               <action id="stimulus:ev_assign">allow</action>
+              <action id="stimulus:ev_dispatch">allow</action>
               <action id="stimulus:ev_reassign">allow</action>
               <action id="stimulus:ev_resolve">allow</action>
+              <action id="stimulus:ev_reopen">allow</action>
               <action id="stimulus:ev_close">allow</action>
               <action id="stimulus:ev_pending">allow</action>
             </actions>

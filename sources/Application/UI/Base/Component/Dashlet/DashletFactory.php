@@ -22,12 +22,12 @@ class DashletFactory
 		return new DashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel, $sCreateActionUrl, $sCreateActionLabel, $aRefreshParams);
 	}
 
-	public static function MakeForDashletHeaderStatic(string $sTitle, string $sIconUrl, string $sId = null): DashletHeaderStatic
+	public static function MakeForDashletHeaderStatic(string $sTitle, string $sIconUrl, ?string $sId = null): DashletHeaderStatic
 	{
 		return new DashletHeaderStatic($sTitle, $sIconUrl, $sId);
 	}
 
-	public static function MakeForDashletPlainText(string $sText, string $sId = null): DashletPlainText
+	public static function MakeForDashletPlainText(string $sText, ?string $sId = null): DashletPlainText
 	{
 		return new DashletPlainText($sText, $sId);
 	}

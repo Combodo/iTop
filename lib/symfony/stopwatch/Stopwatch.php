@@ -61,12 +61,12 @@ class Stopwatch implements ResetInterface
      *
      * @throws \LogicException When the section to re-open is not reachable
      */
-    public function openSection(string $id = null)
+    public function openSection(?string $id = null)
     {
         $current = end($this->activeSections);
 
         if (null !== $id && null === $current->get($id)) {
-            throw new \LogicException(sprintf('The section "%s" has been started at an other level and cannot be opened.', $id));
+            throw new \LogicException(\sprintf('The section "%s" has been started at an other level and cannot be opened.', $id));
         }
 
         $this->start('__section__.child', 'section');
@@ -100,7 +100,7 @@ class Stopwatch implements ResetInterface
     /**
      * Starts an event.
      */
-    public function start(string $name, string $category = null): StopwatchEvent
+    public function start(string $name, ?string $category = null): StopwatchEvent
     {
         return end($this->activeSections)->startEvent($name, $category);
     }

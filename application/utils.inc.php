@@ -123,6 +123,11 @@ class utils
 	 */
 	public const ENUM_SANITIZATION_FILTER_VARIABLE_NAME = 'variable_name';
 	/**
+	 * @var string For module codes (e.g. `itop-portal-base`, `combodo-webhook-integration`, `some-module-code-x.y`, ...)
+	 * @since 3.2.3 3.3.0 N°8554
+	 */
+	public const ENUM_SANITIZATION_FILTER_MODULE_CODE = 'module_code';
+	/**
 	 * @var string
 	 * @since 2.7.10 3.0.0
 	 */
@@ -181,6 +186,9 @@ class utils
 
 	protected static function LoadParamFile($sParamFile)
 	{
+		if (utils::RealPath($sParamFile, APPROOT) !== false) {
+			throw new Exception("File '".utils::HtmlEntities($sParamFile)."' should be outside iTop");
+		}
 		if (!file_exists($sParamFile)) {
 			throw new Exception("Could not find the parameter file: '".utils::HtmlEntities($sParamFile)."'");
 		}
@@ -390,6 +398,7 @@ class utils
 	 * @since 2.7.10 N°6606 use the utils::ENUM_SANITIZATION_* const
 	 * @since 2.7.10 N°6606 new case for ENUM_SANITIZATION_FILTER_PHP_CLASS
 	 * @since 3.2.1-1 N°8242 Allow value to be an array for every filter
+	 * @since 3.2.3 3.3.0 N°8554 new case for ENUM_SANITIZATION_FILTER_MODULE_CODE
 	 *
 	 * @link https://www.php.net/manual/en/filter.filters.sanitize.php PHP sanitization filters
 	 */
@@ -477,7 +486,7 @@ class utils
 				);
 				break;
 
-				// For XML / HTML node id selector
+				// For XML / HTML node selector
 			case static::ENUM_SANITIZATION_FILTER_ELEMENT_SELECTOR:
 				$retValue = filter_var(
 					$value,
@@ -488,6 +497,15 @@ class utils
 
 			case static::ENUM_SANITIZATION_FILTER_VARIABLE_NAME:
 				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
+				break;
+
+			case static::ENUM_SANITIZATION_FILTER_MODULE_CODE:
+				// Module codes allow all alphabets letters, numbers, dash and dot characters
+				$retValue = filter_var(
+					$value,
+					FILTER_VALIDATE_REGEXP,
+					['options' => ['regexp' => '/^[\p{L}\d.-]+$/u']]
+				);
 				break;
 
 				// For URL
@@ -1284,7 +1302,7 @@ class utils
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	public static function ExecITopScript(string $sScriptName, array $aArguments, string $sAuthUser = null, string $sAuthPwd = null)
+	public static function ExecITopScript(string $sScriptName, array $aArguments, ?string $sAuthUser = null, ?string $sAuthPwd = null)
 	{
 		$aDisabled = explode(', ', ini_get('disable_functions'));
 		if (in_array('exec', $aDisabled)) {
@@ -1374,7 +1392,7 @@ class utils
 	 * @return string A path to a folder into which any module can store cache data
 	 * The corresponding folder is created or cleaned upon code compilation
 	 */
-	public static function GetCachePath(string $sEnvironment = null): string
+	public static function GetCachePath(?string $sEnvironment = null): string
 	{
 		if (is_null($sEnvironment)) {
 			$sEnvironment = MetaModel::GetEnvironment();
@@ -2078,7 +2096,9 @@ SQL;
 			}
 
 			// Remove any remaining nulls (for positions that weren't referenced)
-			$aReplacements = array_filter($aReplacements, static function ($val) { return $val !== null; });
+			$aReplacements = array_filter($aReplacements, static function ($val) {
+				return $val !== null;
+			});
 		} else {
 			// For non-positional, we need to map each position
 			$aReplacements = [];

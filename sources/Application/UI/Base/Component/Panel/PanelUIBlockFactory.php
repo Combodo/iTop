@@ -48,7 +48,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeNeutral(string $sTitle, string $sSubTitle = null)
+	public static function MakeNeutral(string $sTitle, ?string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
 		if (!is_null($sSubTitle)) {
@@ -68,7 +68,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeForInformation(string $sTitle, string $sSubTitle = null)
+	public static function MakeForInformation(string $sTitle, ?string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
 		if (!is_null($sSubTitle)) {
@@ -88,7 +88,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeForSuccess(string $sTitle, string $sSubTitle = null)
+	public static function MakeForSuccess(string $sTitle, ?string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
 		if (!is_null($sSubTitle)) {
@@ -108,7 +108,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeForWarning(string $sTitle, string $sSubTitle = null)
+	public static function MakeForWarning(string $sTitle, ?string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
 		if (!is_null($sSubTitle)) {
@@ -128,7 +128,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeForDanger(string $sTitle, string $sSubTitle = null)
+	public static function MakeForDanger(string $sTitle, ?string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
 		if (!is_null($sSubTitle)) {
@@ -148,7 +148,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeForFailure(string $sTitle, string $sSubTitle = null)
+	public static function MakeForFailure(string $sTitle, ?string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
 		if (!is_null($sSubTitle)) {
@@ -168,7 +168,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeWithBrandingPrimaryColor(string $sTitle, string $sSubTitle = null)
+	public static function MakeWithBrandingPrimaryColor(string $sTitle, ?string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
 		if (!is_null($sSubTitle)) {
@@ -188,7 +188,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeWithBrandingSecondaryColor(string $sTitle, string $sSubTitle = null)
+	public static function MakeWithBrandingSecondaryColor(string $sTitle, ?string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
 		if (!is_null($sSubTitle)) {
@@ -209,7 +209,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeForClass(string $sClass, string $sTitle, string $sSubTitle = null)
+	public static function MakeForClass(string $sClass, string $sTitle, ?string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
 		if (!is_null($sSubTitle)) {

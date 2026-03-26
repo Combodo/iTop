@@ -9,8 +9,8 @@ namespace Combodo\iTop\Core\Kpi;
 
 class KpiLogData
 {
-	public const TYPE_REPORT = 'report';
-	public const TYPE_STATS = 'stats';
+	public const TYPE_REPORT  = 'report';
+	public const TYPE_STATS   = 'stats';
 	public const TYPE_REQUEST = 'request';
 
 	/** @var string */
@@ -33,6 +33,8 @@ class KpiLogData
 	public $iPeakMemory;
 	/** @var array */
 	public $aData;
+	// Computed
+	public string $sDuration;
 
 	/**
 	 * @param string $sType
@@ -43,9 +45,10 @@ class KpiLogData
 	 * @param string $sExtension
 	 * @param int $iInitialMemory
 	 * @param int $iCurrentMemory
+	 * @param int $iPeakMemory
 	 * @param array $aData
 	 */
-	public function __construct($sType, $sOperation, $sArguments, $fStartTime, $fStopTime, $sExtension, $iInitialMemory = 0, $iCurrentMemory = 0, $iPeakMemory = 0, $aData = [])
+	public function __construct($sType, $sOperation, $sArguments, float $fStartTime, float $fStopTime, $sExtension, $iInitialMemory = 0, $iCurrentMemory = 0, $iPeakMemory = 0, $aData = [])
 	{
 		$this->sType = $sType;
 		$this->sOperation = $sOperation;
@@ -57,6 +60,7 @@ class KpiLogData
 		$this->iCurrentMemory = $iCurrentMemory;
 		$this->iPeakMemory = $iPeakMemory;
 		$this->aData = $aData;
+		$this->sDuration = sprintf('%01.3f', $fStopTime - $fStartTime);
 	}
 
 	/**
@@ -66,21 +70,22 @@ class KpiLogData
 	 */
 	public static function GetCSVHeader()
 	{
-		return "Type,Operation,Arguments,StartTime,StopTime,Duration,Extension,InitialMemory,CurrentMemory,PeakMemory";
+		return 'Type,Operation,Arguments,StartTime,StopTime,Duration,Extension,InitialMemory,CurrentMemory,PeakMemory';
 	}
 
 	/**
 	 * Return the CSV line for the values
+	 *
 	 * @return string
 	 */
 	public function GetCSV()
 	{
-		$fDuration = sprintf('%01.4f', $this->fStopTime - $this->fStartTime);
 		$sType = $this->RemoveQuotes($this->sType);
 		$sOperation = $this->RemoveQuotes($this->sOperation);
 		$sArguments = $this->RemoveQuotes($this->sArguments);
 		$sExtension = $this->RemoveQuotes($this->sExtension);
-		return "\"$sType\",\"$sOperation\",\"$sArguments\",$this->fStartTime,$this->fStopTime,$fDuration,\"$sExtension\",$this->iInitialMemory,$this->iCurrentMemory,$this->iPeakMemory";
+
+		return "\"$sType\",\"$sOperation\",\"$sArguments\",$this->fStartTime,$this->fStopTime,$this->sDuration,\"$sExtension\",$this->iInitialMemory,$this->iCurrentMemory,$this->iPeakMemory";
 	}
 
 	private function RemoveQuotes(string $sEntry): string
@@ -98,6 +103,7 @@ class KpiLogData
 		if ($oOther->fStartTime > $this->fStartTime) {
 			return -1;
 		}
+
 		return 1;
 	}
 

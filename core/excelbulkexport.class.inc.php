@@ -5,13 +5,13 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\ExportHelper;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
-use Combodo\iTop\Application\Helper\ExportHelper;
 use Combodo\iTop\Application\WebPage\Page;
 use Combodo\iTop\Application\WebPage\WebPage;
 
@@ -63,6 +63,8 @@ class ExcelBulkExport extends TabularBulkExport
 				// Export from the command line (or scripted) => default format is SQL, as in previous versions of iTop, unless specified otherwise
 				$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetSQLFormat(), true, 'raw_data');
 		}
+
+		$this->aStatusInfo['ignore_excel_sanitization'] = (bool)utils::ReadParam('ignore_excel_sanitization', 0, true, utils::ENUM_SANITIZATION_FILTER_INTEGER);
 	}
 
 	public function EnumFormParts()
@@ -120,6 +122,10 @@ class ExcelBulkExport extends TabularBulkExport
 				$oRadioCustom->SetBeforeInput(false);
 				$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioCustom);
+
+				$oFieldSetSecurity = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:Security'));
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetSecurity));
+				$oFieldSetSecurity->AddSubBlock(ExportHelper::GetInputForSanitizeExcelExport());
 
 				$oP->add_ready_script(
 					<<<EOF
@@ -216,6 +222,12 @@ EOF
 					}
 				}
 		}
+
+		// If the option to ignore Excel sanitization is not set or absent, sanitize the field
+		if (!(array_key_exists('ignore_excel_sanitization', $this->aStatusInfo)) || $this->aStatusInfo['ignore_excel_sanitization'] === false) {
+			return ExportHelper::SanitizeField($sRet, '');
+		}
+
 		return $sRet;
 	}
 

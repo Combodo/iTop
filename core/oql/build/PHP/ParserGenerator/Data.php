@@ -1656,7 +1656,7 @@ class PHP_ParserGenerator_Data
     function emit_code($out, PHP_ParserGenerator_Rule $rp, &$lineno)
     {
         $linecnt = 0;
-        
+
         /* Generate code to do the reduce action */
         if ($rp->code) {
             $this->tplt_linedir($out, $rp->line, $this->filename);

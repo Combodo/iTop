@@ -23,7 +23,13 @@ use Symfony\Component\Dotenv\Dotenv;
 /**
  * A console command to compile .env files into a PHP-optimized file called .env.local.php.
  *
- * @internal
+ * To use this command, first register it explicitly as a service, e.g in your services.yaml file:
+ *
+ *     ```yaml
+ *     services:
+ *         # [...]
+ *         Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~
+ *     ```
  */
 #[Autoconfigure(bind: ['$projectDir' => '%kernel.project_dir%', '$defaultEnv' => '%kernel.environment%'])]
 #[AsCommand(name: 'dotenv:dump', description: 'Compile .env files to .env.local.php')]
@@ -32,7 +38,7 @@ final class DotenvDumpCommand extends Command
     private string $projectDir;
     private ?string $defaultEnv;
 
-    public function __construct(string $projectDir, string $defaultEnv = null)
+    public function __construct(string $projectDir, ?string $defaultEnv = null)
     {
         $this->projectDir = $projectDir;
         $this->defaultEnv = $defaultEnv;
@@ -88,16 +94,17 @@ return $vars;
 EOF;
         file_put_contents($dotenvPath.'.local.php', $vars, \LOCK_EX);
 
-        $output->writeln(sprintf('Successfully dumped .env files in <info>.env.local.php</> for the <info>%s</> environment.', $env));
+        $output->writeln(\sprintf('Successfully dumped .env files in <info>.env.local.php</> for the <info>%s</> environment.', $env));
 
         return 0;
     }
 
     private function loadEnv(string $dotenvPath, string $env, array $config): array
     {
-        $dotenv = new Dotenv();
         $envKey = $config['env_var_name'] ?? 'APP_ENV';
         $testEnvs = $config['test_envs'] ?? ['test'];
+
+        $dotenv = new Dotenv($envKey);
 
         $globalsBackup = [$_SERVER, $_ENV];
         unset($_SERVER[$envKey]);
