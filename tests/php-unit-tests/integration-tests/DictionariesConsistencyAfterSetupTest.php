@@ -65,6 +65,8 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 
 		if (! is_null($sTemplate)) {
 			$aDictByLang[$sLangCode][$sDictKey] = $sTemplate;
+		} else if (isset($aDictByLang[$sLangCode][$sDictKey])) {
+			unset($aDictByLang[$sLangCode][$sDictKey]);
 		}
 
 		$this->SetNonPublicStaticProperty(\Dict::class, 'm_aData', $aDictByLang);
