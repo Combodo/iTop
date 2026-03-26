@@ -1928,8 +1928,9 @@ class DBObjectSearch extends DBSearch
 
 	/**
 	 * @inheritDoc
+	 * @return DBObjectSearch
 	 */
-	protected function ApplyDataFilters()
+	protected function ApplyDataFilters(): DBObjectSearch
 	{
 		if ($this->IsAllDataAllowed() || $this->IsDataFiltered()) {
 			return $this;
