@@ -164,7 +164,7 @@ class AbstractFormIO
 	 *
 	 * @return mixed
 	 */
-	public function GetValue(string $sEventType = null): mixed
+	public function GetValue(?string $sEventType = null): mixed
 	{
 		if ($sEventType === null) {
 			return $this->Value();
@@ -190,7 +190,7 @@ class AbstractFormIO
 	 *
 	 * @return bool
 	 */
-	public function HasEventValue(string $sEventType = null): bool
+	public function HasEventValue(?string $sEventType = null): bool
 	{
 		if ($sEventType === null) {
 			return $this->HasValue();

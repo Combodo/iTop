@@ -738,7 +738,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @param string $sCode Code of the tab
 	 */
-	public function AddAjaxTab(string $sCode, string $sURL, bool $bCache = true, string $sLabel = null): void
+	public function AddAjaxTab(string $sCode, string $sURL, bool $bCache = true, ?string $sLabel = null): void
 	{
 		if (is_null($sLabel)) {
 			$sLabel = Dict::S($sCode);

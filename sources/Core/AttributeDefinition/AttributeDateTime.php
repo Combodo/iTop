@@ -244,7 +244,7 @@ class AttributeDateTime extends AttributeDBField
 		return $iUnixSeconds;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		$sDefaultValue = $this->Get('default_value');
 		if (utils::IsNotNullOrEmptyString($sDefaultValue)) {

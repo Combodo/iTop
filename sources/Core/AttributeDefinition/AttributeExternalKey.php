@@ -112,7 +112,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $this->GetOptional('display_style', 'select');
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return 0;
 	}

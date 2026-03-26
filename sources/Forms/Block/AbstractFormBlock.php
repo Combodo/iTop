@@ -253,7 +253,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @throws FormBlockIOException
 	 * @throws RegisterException
 	 */
-	public function AddOutput(string $sName, string $sType, bool $bIsArray = false, AbstractConverter $oConverter = null): AbstractFormBlock
+	public function AddOutput(string $sName, string $sType, bool $bIsArray = false, ?AbstractConverter $oConverter = null): AbstractFormBlock
 	{
 		$this->oIORegister->AddOutput($sName, $sType, $bIsArray, $oConverter);
 		return $this;
@@ -413,7 +413,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 *
 	 * @return bool
 	 */
-	public function IsInputsDataReady(string $sType = null): bool
+	public function IsInputsDataReady(?string $sType = null): bool
 	{
 		return $this->oIORegister->IsInputsDataReady($sType);
 	}

@@ -67,12 +67,12 @@ class AttributeBlob extends AttributeDefinition
 		return true;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return new ormDocument('', '', '');
 	}
 
-	public function IsNullAllowed(DBObject $oHostObject = null)
+	public function IsNullAllowed(?DBObject $oHostObject = null)
 	{
 		return $this->GetOptional("is_null_allowed", false);
 	}

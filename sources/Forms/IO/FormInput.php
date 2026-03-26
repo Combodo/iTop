@@ -28,7 +28,7 @@ class FormInput extends AbstractFormIO
 	 *
 	 * @return bool
 	 */
-	public function IsEventDataReady(string $sEventType = null): bool
+	public function IsEventDataReady(?string $sEventType = null): bool
 	{
 		return $this->HasEventValue($sEventType);
 	}

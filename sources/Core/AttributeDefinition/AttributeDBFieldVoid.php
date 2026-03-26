@@ -83,7 +83,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 		return $this->Get("sql");
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return $this->MakeRealValue("", $oHostObject);
 	}

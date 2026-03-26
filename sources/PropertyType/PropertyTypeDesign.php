@@ -18,7 +18,7 @@ use utils;
  */
 class PropertyTypeDesign extends DesignDocument
 {
-	public function __construct(string $sDesignSourceId = null, string $sType = 'Default')
+	public function __construct(?string $sDesignSourceId = null, string $sType = 'Default')
 	{
 		parent::__construct();
 

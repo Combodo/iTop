@@ -32,7 +32,7 @@ class AttributeClass extends AttributeString
 		parent::__construct($sCode, $aParams);
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		$sDefault = parent::GetDefaultValue($oHostObject);
 		if (!$this->IsNullAllowed() && $this->IsNull($sDefault)) {

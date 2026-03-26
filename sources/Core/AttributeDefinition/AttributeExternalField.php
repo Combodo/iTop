@@ -326,7 +326,7 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->GetSQLExpr();
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
 
