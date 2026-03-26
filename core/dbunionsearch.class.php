@@ -676,8 +676,9 @@ class DBUnionSearch extends DBSearch
 
 	/**
 	 * @inheritDoc
+	 * @return DBUnionSearch
 	 */
-	protected function ApplyDataFilters()
+	protected function ApplyDataFilters(): DBUnionSearch
 	{
 		if ($this->IsAllDataAllowed() || $this->IsDataFiltered()) {
 			return $this;
