@@ -847,7 +847,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Tape' => 'Teyp',
-	'Class:Tape+' => '~~',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
 	'Class:Tape/Attribute:name' => 'İsim',
 	'Class:Tape/Attribute:name+' => '~~',
 	'Class:Tape/Attribute:description' => 'Açıklama',

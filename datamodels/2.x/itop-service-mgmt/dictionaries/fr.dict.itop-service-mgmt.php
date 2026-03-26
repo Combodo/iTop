@@ -239,7 +239,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Service/Attribute:contacts_list' => 'Contacts',
 	'Class:Service/Attribute:contacts_list+' => 'Tous les contacts liés à ce service',
 	'Class:Service/Attribute:status' => 'Etat',
-	'Class:Service/Attribute:status+' => 'Les services sans état et ceux obsolètes ne sont pas visibles dans le portail utilisateur.',
+	'Class:Service/Attribute:status+' => 'Seuls les services en production sont visibles des utilisateurs du portail.',
 	'Class:Service/Attribute:status/Value:implementation' => 'Implémentation',
 	'Class:Service/Attribute:status/Value:implementation+' => '',
 	'Class:Service/Attribute:status/Value:obsolete' => 'Obsolète',
