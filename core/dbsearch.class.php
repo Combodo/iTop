@@ -1601,7 +1601,7 @@ abstract class DBSearch
 	 * @return $this|DBSearch
 	 * @throws CoreException
 	 */
-	protected function ApplyDataFilters()
+	protected function ApplyDataFilters(): DBSearch
 	{
 		if ($this->IsAllDataAllowed() || $this->IsDataFiltered()) {
 			return $this;
