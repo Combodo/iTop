@@ -108,7 +108,7 @@
     <finalclass>Type d&apos;équipement réseau</finalclass>
     <friendlyname>Load Balancer</friendlyname>
   </NetworkDeviceType>
-  <NetworkDeviceType alias="NetworkDeviceType" id="3">
+  <NetworkDeviceType alias="NetworkDeviceType" id="10">
     <name>Router</name>
     <logo><mimetype>image/png</mimetype><filename>icons8-collect-96.png</filename><data>iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAAAsTAAALEwEAmpwYAAAFoklEQVR4nO1c
       y27bRhQlcul8jLM0lZWCGl3FyKJB2yRrR/JLEh/9i6bpD7RetXZaoKvKjpM6ji1SEkUVyDJA06YpGjt7k6a0FKYYynEcVxJJkZyhyXuAAwgCgbn3HHKoGR1SEBAIBAKBSDlA694CtfsOtC6ZTOsIVGuBd72ZA1BhfcU/pWod8q43
@@ -202,7 +202,7 @@
     <finalclass>Type d&apos;équipement réseau</finalclass>
     <friendlyname>Router 4G</friendlyname>
   </NetworkDeviceType>
-  <NetworkDeviceType alias="NetworkDeviceType" id="5">
+  <NetworkDeviceType alias="NetworkDeviceType" id="11">
     <name>Switch</name>
     <logo><mimetype>image/svg+xml</mimetype><filename>icons8-switch.svg</filename><data>PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3
       Qm94PSIwIDAgNDggNDgiIHdpZHRoPSIyNDBweCIgaGVpZ2h0PSIyNDBweCI+PGxpbmVhckdyYWRpZW50IGlkPSJGcnRMVXlMNHo1VUU5blBZQV9HelFhIiB4MT0iMTEuMjM1IiB4Mj0iNDIuNzIxIiB5MT0iNDEuMjk3IiB5Mj0i
@@ -242,7 +242,7 @@
     <finalclass>Type d&apos;équipement réseau</finalclass>
     <friendlyname>Switch</friendlyname>
   </NetworkDeviceType>
-  <NetworkDeviceType alias="NetworkDeviceType" id="6">
+  <NetworkDeviceType alias="NetworkDeviceType" id="12">
     <name>Wireless Access Point</name>
     <logo><mimetype>image/png</mimetype><filename>icons8-wi-fi-router-96.png</filename><data>iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAACXBIWXMAAAsTAAALEwEAmpwYAAAIXUlEQVR
       4nO1af3ATVR5/WBR1bkA5HWJrmdO7Ob3zZA4snbkRb+6PE8VqkxbK6D/3D3OcowKXhutuEmA3FGkibZOg2NCCDtzNKYwO6nj+GKu0OKMz/vinuwntAf2RJqlQ2iTciW2B+968xcBm+yO7yW7S3b7PzGemk7zse+/zee/78nkNQgQ

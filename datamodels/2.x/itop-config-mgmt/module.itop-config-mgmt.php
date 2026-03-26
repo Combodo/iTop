@@ -31,7 +31,6 @@ SetupWebPage::AddModule(
 			'data/en_us.data.itop-osversion.xml',
 		],
 		'data.sample' => [
-			'data.sample.brand.xml',
 			'data.sample.model.xml',
 			'data.sample.networkdevicetype.xml',
 			'data.sample.servers.xml',
