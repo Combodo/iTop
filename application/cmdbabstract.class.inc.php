@@ -810,6 +810,7 @@ HTML
 				foreach ($aNotificationClasses as $sNotifClass) {
 					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN (:triggers) AND Ev.object_id = :id");
 					$aNotifSearches[$sNotifClass]->SetInternalParams($aParams);
+					$aNotifSearches[$sNotifClass]->AllowAllData();
 					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], []);
 					$iNotifsCount += $oNotifSet->Count();
 				}
@@ -823,6 +824,7 @@ HTML
 						'menu' => false,
 						'panel_title' => MetaModel::GetName($sNotifClass),
 						'panel_icon' => MetaModel::GetClassIcon($sNotifClass, false),
+						'display_unauthorized_objects' => true,
 					]);
 				}
 			}

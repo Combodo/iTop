@@ -724,6 +724,10 @@ class DisplayBlock
 				}
 			}
 
+			if (!$this->m_oFilter->IsAllDataAllowed() && ($aExtraParams['display_unauthorized_objects'] ?? false) === true) {
+				$this->m_oFilter->AllowAllData();
+			}
+
 			$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
 			$this->m_oSet = new CMDBObjectSet($this->m_oFilter, $aOrderBy, $aQueryParams);
 		}
@@ -1381,7 +1385,10 @@ JS
 
 		// Check the classes that can be read (i.e authorized) by this user...
 		foreach ($aClasses as $sAlias => $sClassName) {
-			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $this->m_oSet) != UR_ALLOWED_NO) {
+			if (
+				(UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $this->m_oSet) !== UR_ALLOWED_NO)
+				|| ($aExtraParams['display_unauthorized_objects'] ?? false) === true
+			) {
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
 		}

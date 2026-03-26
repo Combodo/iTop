@@ -26,7 +26,7 @@ class Event extends DBObject implements iDisplay
 	{
 		$aParams =
 		[
-			"category" => "core/cmdb,view_in_gui",
+			"category" => "core/cmdb,grant_by_profile,silo",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
@@ -120,7 +120,7 @@ class EventNotification extends Event
 	{
 		$aParams =
 		[
-			"category" => "core/cmdb,view_in_gui",
+			"category" => "core/cmdb,grant_by_profile,silo",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
@@ -154,7 +154,7 @@ class EventNotificationEmail extends EventNotification
 	{
 		$aParams =
 		[
-			"category" => "core/cmdb,view_in_gui",
+			"category" => "core/cmdb,grant_by_profile,silo",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
@@ -190,7 +190,7 @@ class EventIssue extends Event
 	{
 		$aParams =
 		[
-			"category" => "core/cmdb,view_in_gui",
+			"category" => "core/cmdb,grant_by_profile,silo",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
@@ -284,7 +284,7 @@ class EventWebService extends Event
 	{
 		$aParams =
 		[
-			"category" => "core/cmdb,view_in_gui",
+			"category" => "core/cmdb,grant_by_profile,silo",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
@@ -319,7 +319,7 @@ class EventRestService extends Event
 	{
 		$aParams =
 		[
-			"category" => "core/cmdb,view_in_gui",
+			"category" => "core/cmdb,grant_by_profile,silo",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
@@ -354,7 +354,7 @@ class EventLoginUsage extends Event
 	{
 		$aParams =
 		[
-			"category" => "core/cmdb,view_in_gui",
+			"category" => "core/cmdb,grant_by_profile,silo",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
@@ -392,7 +392,7 @@ class EventOnObject extends Event
 	{
 		$aParams =
 		[
-			"category" => "core/cmdb,view_in_gui",
+			"category" => "core/cmdb,grant_by_profile,silo",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
