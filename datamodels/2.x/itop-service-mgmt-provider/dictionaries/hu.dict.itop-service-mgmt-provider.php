@@ -325,7 +325,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Bevezetve',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'production~~',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Kérelem típus',
-	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user choose this service subcategory.~~',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user selects this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Incidens',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => '',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Szolgáltatáskérés',
