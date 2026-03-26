@@ -764,6 +764,29 @@
                   </action>
                 </actions>
               </transition>
+              <transition id="ev_autoresolve">
+                <target>resolved</target>
+                <actions>
+                  <action>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="attcode">resolution_date</param>
+                    </params>
+                  </action>
+                  <action>
+                    <verb>SetElapsedTime</verb>
+                    <params>
+                      <param xsi:type="attcode">time_spent</param>
+                      <param xsi:type="attcode">start_date</param>
+                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                    </params>
+                  </action>
+                  <action>
+                    <verb>ResolveChildTickets</verb>
+                    <params/>
+                  </action>
+                </actions>
+              </transition>
             </transitions>
           </state>
           <state id="assigned">
@@ -963,6 +986,29 @@
               <transition id="ev_reject">
                 <target>rejected</target>
                 <actions/>
+              </transition>
+              <transition id="ev_autoresolve">
+                <target>resolved</target>
+                <actions>
+                  <action>
+                    <verb>SetCurrentDate</verb>
+                    <params>
+                      <param xsi:type="attcode">resolution_date</param>
+                    </params>
+                  </action>
+                  <action>
+                    <verb>SetElapsedTime</verb>
+                    <params>
+                      <param xsi:type="attcode">time_spent</param>
+                      <param xsi:type="attcode">start_date</param>
+                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                    </params>
+                  </action>
+                  <action>
+                    <verb>ResolveChildTickets</verb>
+                    <params/>
+                  </action>
+                </actions>
               </transition>
             </transitions>
           </state>
@@ -1172,29 +1218,6 @@
                 <target>assigned</target>
                 <actions>
 								</actions>
-              </transition>
-              <transition id="ev_autoresolve">
-                <target>resolved</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">resolution_date</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>SetElapsedTime</verb>
-                    <params>
-                      <param xsi:type="attcode">time_spent</param>
-                      <param xsi:type="attcode">start_date</param>
-                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>ResolveChildTickets</verb>
-                    <params/>
-                  </action>
-                </actions>
               </transition>
             </transitions>
           </state>
