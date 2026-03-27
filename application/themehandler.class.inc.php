@@ -936,15 +936,18 @@ CSS;
 	public static function CloneThemeParameterAndIncludeVersion($aThemeParameters, $bSetupCompilationTimestamp, $aImportsPaths)
 	{
 		$aThemeParametersVariable = [];
-		if (array_key_exists('variables', $aThemeParameters)) {
-			if (is_array($aThemeParameters['variables'])) {
-				$aThemeParametersVariable = array_merge([], $aThemeParameters['variables']);
-			}
-		}
 
 		if (array_key_exists('variable_imports', $aThemeParameters)) {
 			if (is_array($aThemeParameters['variable_imports'])) {
 				$aThemeParametersVariable = array_merge($aThemeParametersVariable, static::GetVariablesFromFile($aThemeParameters['variable_imports'], $aImportsPaths));
+			}
+		}
+
+		// Variables defined in theme XML have the priority over variables defined in XML imports files
+		// They're defined after so they overwrite previous parameters
+		if (array_key_exists('variables', $aThemeParameters)) {
+			if (is_array($aThemeParameters['variables'])) {
+				$aThemeParametersVariable = array_merge($aThemeParametersVariable, $aThemeParameters['variables']);
 			}
 		}
 
