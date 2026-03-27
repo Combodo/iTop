@@ -150,6 +150,7 @@ Autre usage : l\'appelant d\'une demande utilisateur est une personne, tout comm
 	'Class:Person/Attribute:team_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
 	'Class:Person/Attribute:tickets_list+' => 'Tous les tickets dont cette personne est le bénéficiaire',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Créer un %4$s pour %2$s',
 	'Class:Person/Attribute:user_list' => 'Utilisateurs',
 	'Class:Person/Attribute:user_list+' => 'Les comptes utilisateurs associés à cette personne',
 	'Class:Person/Attribute:user_list/UI:Links:Create:Button+' => 'Créer un %4$s',

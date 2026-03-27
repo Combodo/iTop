@@ -42,6 +42,12 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerImage/Attribute:software_id+' => '',
 	'Class:ContainerImage/Attribute:containerapplications_list' => 'Applications conteneurisées',
 	'Class:ContainerImage/Attribute:containerapplications_list+' => 'Les applications qui utilisent cette image',
+	'Class:ContainerImage/Attribute:containerapplications_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:ContainerImage/Attribute:containerapplications_list/UI:Links:Create:Modal:Title' => 'Ajouter %2$s à une nouvelle %4$s',
+	'Class:ContainerImage/Attribute:containerapplications_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:ContainerImage/Attribute:containerapplications_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:ContainerImage/Attribute:containerapplications_list/UI:Links:Remove:Button+' => 'Retirer %2$s de cette %4$s',
+	'Class:ContainerImage/Attribute:containerapplications_list/UI:Links:Remove:Modal:Title' => 'Retirer %1$s de cette %4$s',
 ]);
 
 //
@@ -63,6 +69,12 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerApplication/Attribute:containertype_id+' => 'Typologie de plateforme de conteneurisation',
 	'Class:ContainerApplication/Attribute:containerimages_list' => 'Images',
 	'Class:ContainerApplication/Attribute:containerimages_list+' => 'Images des conteneurs constitutifs de cette application',
+	'Class:ContainerApplication/Attribute:containerimages_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:ContainerApplication/Attribute:containerimages_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:ContainerApplication/Attribute:containerimages_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:ContainerApplication/Attribute:containerimages_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:ContainerApplication/Attribute:containerimages_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:ContainerApplication/Attribute:containerimages_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 ]);
 
 //
@@ -95,6 +107,13 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerVirtualHost/Attribute:status+' => 'État de la plateforme de conteneurisation',
 	'Class:ContainerVirtualHost/Attribute:containerapplications_list' => 'Applications',
 	'Class:ContainerVirtualHost/Attribute:containerapplications_list+' => 'Applications qui sont déployées sur cette plateforme',
+	'Class:ContainerVirtualHost/Attribute:containerapplications_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:ContainerVirtualHost/Attribute:containerapplications_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:ContainerVirtualHost/Attribute:containerapplications_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:ContainerVirtualHost/Attribute:containerapplications_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:ContainerVirtualHost/Attribute:containerapplications_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:ContainerVirtualHost/Attribute:containerapplications_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s',
+
 	'ContainerVirtualHost:baseinfo' => 'Informations générales',
 	'ContainerVirtualHost:moreinfo' => 'Spécificités de la conteneurisation',
 ]);
@@ -165,10 +184,36 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Cloud/Attribute:containerhosts_list' => 'Hôtes pour conteneurs',
 	'Class:Cloud/Attribute:containerhosts_list+' => 'Liste des hôtes hébergés dans ce nuage',
+	'Class:Cloud/Attribute:containerhosts_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Cloud/Attribute:containerhosts_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Cloud/Attribute:containerhosts_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Cloud/Attribute:containerhosts_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Cloud/Attribute:containerhosts_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Cloud/Attribute:containerhosts_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+
 	'Class:Server/Attribute:containerhosts_list' => 'Hôtes pour conteneurs',
 	'Class:Server/Attribute:containerhosts_list+' => 'Liste des hôtes pour conteneurs hébergés sur ce serveur',
+	'Class:Server/Attribute:containerhosts_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Server/Attribute:containerhosts_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Server/Attribute:containerhosts_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Server/Attribute:containerhosts_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Server/Attribute:containerhosts_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Server/Attribute:containerhosts_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+
 	'Class:VirtualMachine/Attribute:containerhosts_list' => 'Hôtes pour conteneurs',
 	'Class:VirtualMachine/Attribute:containerhosts_list+' => 'Liste des hôtes pour conteneurs hébergés sur cette machine virtuelle',
+	'Class:VirtualMachine/Attribute:containerhosts_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:VirtualMachine/Attribute:containerhosts_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:VirtualMachine/Attribute:containerhosts_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:VirtualMachine/Attribute:containerhosts_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:VirtualMachine/Attribute:containerhosts_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:VirtualMachine/Attribute:containerhosts_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de sa %1$s',
+
 	'Class:Software/Attribute:containerimages_list' => 'Images pour conteneurs',
 	'Class:Software/Attribute:containerimages_list+' => 'Liste des images pour conteneurs qui tournent ce Logiciel',
+	'Class:Software/Attribute:containerimages_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Software/Attribute:containerimages_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Software/Attribute:containerimages_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:Software/Attribute:containerimages_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Software/Attribute:containerimages_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 ]);

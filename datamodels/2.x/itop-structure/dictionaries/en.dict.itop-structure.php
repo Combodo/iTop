@@ -175,6 +175,7 @@ Other usage: the caller of a User request is a Person as well as the agent assig
 	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
 	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Create a %4$s for %2$s',
 	'Class:Person/Attribute:user_list' => 'Users',
 	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager friendly name',
