@@ -74,7 +74,10 @@ class AjaxRenderController
 		$oSet->SetShowObsoleteData($bShowObsoleteData);
 
 		// N°8606 : Check user permissions on the main class
-		if (UserRights::IsActionAllowed($oSet->GetClass(), UR_ACTION_READ, $oSet) !== UR_ALLOWED_YES) {
+		if (
+			UserRights::IsActionAllowed($oSet->GetClass(), UR_ACTION_READ, $oSet) !== UR_ALLOWED_YES
+			&& ($aExtraParams['display_unauthorized_objects'] ?? false) === false
+		) {
 			throw new Exception(Dict::Format('UI:Error:ReadNotAllowedOn_Class', $oSet->GetClass()));
 		}
 
@@ -103,7 +106,10 @@ class AjaxRenderController
 					}
 
 					// N°8606 : Check user permissions on the current class
-					if (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) !== UR_ALLOWED_YES) {
+					if (
+						UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) !== UR_ALLOWED_YES
+						&& ($aExtraParams['display_unauthorized_objects'] ?? false) === false
+					) {
 						throw new Exception(Dict::Format('UI:Error:ReadNotAllowedOn_Class', $sClass));
 					}
 
