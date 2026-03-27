@@ -259,7 +259,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DocumentWeb' => 'Document web',
-	'Class:DocumentWeb+' => '',
+	'Class:DocumentWeb+' => 'Hyperliens vers des applications ou des documents externes, servant de pointeurs vers des ressources externes. Vous ne pouvez pas effectuer de recherche sur leur contenu depuis '.ITOP_APPLICATION_SHORT,
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
 ]);

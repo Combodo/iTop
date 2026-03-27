@@ -398,7 +398,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:NAS' => 'NAS',
-	'Class:NAS+' => 'Matériel connecté et rackable fournissant un stockage de haute capacité. Dans '.ITOP_APPLICATION_SHORT.', un NAS (Network-attached storage) est lié à des systèmes de fichiers NAS.',
+	'Class:NAS+' => 'Matériel connecté et rackable fournissant un stockage de haute capacité. Dans '.ITOP_APPLICATION_SHORT.', un NAS (Network-attached storage) contient des Systèmes de fichiers NAS.',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Systèmes de fichier NAS',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'Tous les systèmes de fichier dans ce NAS',
@@ -511,7 +511,7 @@ Par exemple : disques durs externes, scanners, dispositifs d\'entrée (trackball
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Enclosure' => 'Châssis',
-	'Class:Enclosure+' => '',
+	'Class:Enclosure+' => 'Une armoire permettant d\'installer des équipements informatiques garantissant un flux d\'air optimisé et une alimentaion sécurisée. Dans '.ITOP_APPLICATION_SHORT.', un châssis peut être montée à l\'intérieur d\'une Baie ou fixée directement au mur d\'un centre de données.',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Enclosure/Attribute:rack_id' => 'Rack',
 	'Class:Enclosure/Attribute:rack_id+' => '',
@@ -583,7 +583,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SoftwareInstance' => 'Instance logiciel',
-	'Class:SoftwareInstance+' => 'Classe abstraite représentant le déploiement d’un logiciel sur un équipement (serveur, PC, machine virtuelle). Dans iTop, il existe différents types d’instances logicielles.',
+	'Class:SoftwareInstance+' => 'Classe abstraite représentant le déploiement d’un Logiciel sur un équipement (Serveur, PC, Machine virtuelle). Dans '.ITOP_APPLICATION_SHORT.', il existe différents types d’instances logicielles : Serveur de base de données, Middleware, Logiciel PC, Serveur web ou Autre logiciel.',
 	'Class:SoftwareInstance/Attribute:system_id' => 'Système',
 	'Class:SoftwareInstance/Attribute:system_id+' => '',
 	'Class:SoftwareInstance/Attribute:system_name' => 'Nom du système',
@@ -974,7 +974,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Software' => 'Logiciel',
-	'Class:Software+' => 'Un logiciel est un élément générique du catalogue logiciel. Il possède une version particulière. Dans iTop, un logiciel appartient à une catégorie : serveur de BDD, middleware, logiciel PC, serveur web ou autre.',
+	'Class:Software+' => 'Un logiciel est un élément générique du catalogue logiciel. Il possède une version particulière. Dans '.ITOP_APPLICATION_SHORT.', un logiciel appartient à une catégorie : Serveur de BDD, Middleware, Logiciel PC, Serveur web ou autre.',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s',
 	'Class:Software/Attribute:name' => 'Nom',
 	'Class:Software/Attribute:name+' => '',

@@ -369,7 +369,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:NAS' => 'NAS',
-	'Class:NAS+' => 'Datacenter Device. High-capacity storage device connected to a network. In '.ITOP_APPLICATION_SHORT.' a NAS (Network-attached storage) is linked to NAS File Systems.',
+	'Class:NAS+' => 'High-capacity storage device racked in a datacenter and connected to a network. In '.ITOP_APPLICATION_SHORT.' a NAS (Network-attached storage) is hosting NAS File Systems.',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Filesystems',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'All the file systems in this NAS',
@@ -470,7 +470,7 @@ For example: external hard drives, scanners, input devices (trackballs, bar code
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Enclosure' => 'Enclosure',
-	'Class:Enclosure+' => 'Physical Device. Cabinet containing baffles, fans... which can be mounted inside a Rack or directly fitted on the wall of a datacenter.',
+	'Class:Enclosure+' => 'Cabinet is a physical structure in which to mount IT equipment such as Servers, Network Device... In  '.ITOP_APPLICATION_SHORT.' an Enclosure can be mounted inside a Rack or directly fitted on the wall of a datacenter.',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Enclosure/Attribute:rack_id' => 'Rack',
 	'Class:Enclosure/Attribute:rack_id+' => '',
