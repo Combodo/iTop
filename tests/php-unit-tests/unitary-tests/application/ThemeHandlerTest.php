@@ -645,4 +645,54 @@ SCSS;
 			[ '/var/www/html/iTop/css/ui-lightness/images/ui-icons_222222_256x240.png', '/var/www/html/iTop/env-production//branding/themes/light-grey//../../../../css/ui-lightness/images/ui-icons_222222_256x240.png' ],
 		];
 	}
+
+	/**
+	 * @param $aThemeParameters
+	 * @param $bSetupCompilationTimestamp
+	 * @param $aExpectedClonedParameters
+	 * @dataProvider CloneParameterParameterOverloadProvider
+	 */
+	public function testCloneParameterParameterOverload($aThemeParameters, $bSetupCompilationTimestamp, $aExpectedClonedParameters)
+	{
+		$aClonedParameters = ThemeHandler::CloneThemeParameterAndIncludeVersion($aThemeParameters, $bSetupCompilationTimestamp, [APPROOT.'tests/php-unit-tests/unitary-tests/application/theme-handler/imports/']);
+		$this->assertEquals($aExpectedClonedParameters, $aClonedParameters);
+	}
+
+	public function CloneParameterParameterOverloadProvider()
+	{
+		return [
+			"empty parameters" => [
+				'parameters' => [],
+				'timestamp' => '1',
+				'expected' => [
+					'$version' => '1',
+				],
+			],
+			"parameters without variables" => [
+				'parameters' => [
+					'variable_imports' => ['file1' => 'variable_imports.scss'],
+					'utility_imports' => ['util1' => 'path2'],
+					'stylesheets' => ['style1' => 'path3'],
+				],
+				'timestamp' =>  '2',
+				'expected' => [
+					'var1' => 'value1',
+					'var2' => 'value2',
+					'$version' => '2',
+				],
+			],
+			"parameters with variables overload" => [
+				'parameters' => [
+					'variables' => ['var1' => 'value2'],
+					'variable_imports' => ['file1' => 'variable_imports.scss'],
+				],
+				'timestamp' => '3',
+				'expected' => [
+					'var1' => 'value2',
+					'var2' => 'value2',
+					'$version' => '3',
+				],
+			],
+		];
+	}
 }
