@@ -1341,6 +1341,28 @@
         </relation>
       </relations>
     </class>
+    <class id="Software" _delta="must_exist">
+      <fields>
+        <field id="containerimages_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>ContainerImage</linked_class>
+          <ext_key_to_me>software_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode>add_only</edit_mode>
+          <with_php_constraint>false</with_php_constraint>
+          <with_php_computation>false</with_php_computation>
+          <edit_when/>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="containerimages_list" _delta="define">
+              <rank>150</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
     <class id="VirtualMachine" _delta="must_exist">
       <fields>
         <field id="containerhosts_list" xsi:type="AttributeLinkedSet" _delta="define">

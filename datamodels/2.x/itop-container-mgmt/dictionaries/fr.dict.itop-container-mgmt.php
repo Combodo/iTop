@@ -169,4 +169,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Server/Attribute:containerhosts_list+' => 'Liste des hôtes pour conteneurs hébergés sur ce serveur',
 	'Class:VirtualMachine/Attribute:containerhosts_list' => 'Hôtes pour conteneurs',
 	'Class:VirtualMachine/Attribute:containerhosts_list+' => 'Liste des hôtes pour conteneurs hébergés sur cette machine virtuelle',
+	'Class:Software/Attribute:containerimages_list' => 'Images pour conteneurs',
+	'Class:Software/Attribute:containerimages_list+' => 'Liste des images pour conteneurs qui tournent ce Logiciel',
 ]);

@@ -168,4 +168,6 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:Server/Attribute:containerhosts_list+' => 'List of container hosts running on this server',
 	'Class:VirtualMachine/Attribute:containerhosts_list' => 'Container Hosts',
 	'Class:VirtualMachine/Attribute:containerhosts_list+' => 'List of container hosts running on this virtual machine',
+	'Class:Software/Attribute:containerimages_list' => 'Container Images',
+	'Class:Software/Attribute:containerimages_list+' => 'List of container images running this Software',
 ]);
