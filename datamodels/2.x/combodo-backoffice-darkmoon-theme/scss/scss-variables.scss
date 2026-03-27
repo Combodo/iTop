@@ -130,7 +130,7 @@ $ibo-datatable--toolbar--text-color: $ibo-color-grey-300 !default;
 $ibo-vendors-datatables--pagination-button--background-color--on-hover: $ibo-color-grey-700 !default;
 $ibo-vendors-datatables--pagination-button--text-color--is-active: $ibo-color-grey-200 !default;
 $ibo-vendors-datatables--pagination-button--background-color--is-active: $ibo-color-grey-900 !default;
-$ibo-vendors-datatables--pagination-button--box-shadow--is-active: inset 0px 1px 0px rgba(0, 0, 0, 0.15);
+$ibo-vendors-datatables--pagination-button--box-shadow--is-active: inset 0px 1px 0px rgba(0, 0, 0, 0.15) !default;
 $ibo-vendors-datatables--pagination-button--text-color--is-disabled: $ibo-color-grey-600 !default;
 
 $ibo-vendors-datatables--page-length-selector--text-color: $ibo-color-grey-100 !default;
@@ -150,7 +150,7 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-800 !default;
 $ibo-table-preview--header-cell--background-color: $ibo-color-grey-500 !default;
 
 $ibo-field--value--color: $ibo-body-text-color !default;
-$ibo-title--text-color: $ibo-body-text-color!default;
+$ibo-title--text-color: $ibo-body-text-color !default;
 
 $ibo-hyperlink-color: $ibo-color-primary-200 !default;
 $ibo-hyperlink-color--on-hover: $ibo-color-primary-400 !default;
@@ -201,7 +201,7 @@ $ibo-activity-panel--header--background-color: $ibo-color-grey-400 !default;
 $ibo-activity-panel--tab-toggler--is-active--background-color: $ibo-color-grey-200 !default;
 $ibo-activity-panel--tab-toolbar--background-color: $ibo-activity-panel--tab-toggler--is-active--background-color !default;
 $ibo-activity-panel--load-entries-button--background-color: $ibo-color-grey-500 !default;
-$ibo-caselog-entry-form--background-color: $ibo-activity-panel--tab-toolbar--background-color;
+$ibo-caselog-entry-form--background-color: $ibo-activity-panel--tab-toolbar--background-color !default;
 $ibo-object-details--tag--separator--background-color: $ibo-color-grey-300 !default;
 
 $ibo-skeleton-start-color: $ibo-color-grey-500 !default;
