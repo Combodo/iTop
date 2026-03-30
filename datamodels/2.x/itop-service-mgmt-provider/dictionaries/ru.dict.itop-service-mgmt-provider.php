@@ -27,8 +27,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:ServiceSubcategory+' => 'Подкатегории услуг',
 	'Menu:Service' => 'Услуги',
 	'Menu:Service+' => 'Услуги',
-	'Menu:ServiceElement' => 'Элементы услуг',
-	'Menu:ServiceElement+' => 'Элементы услуг',
 	'Menu:SLA' => 'SLA',
 	'Menu:SLA+' => 'Соглашения об уровне услуг',
 	'Menu:SLT' => 'SLT',
@@ -37,19 +35,21 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:DeliveryModel+' => 'Модели предоставления услуг (Delivery Models)',
 	'Menu:ServiceFamily' => 'Пакеты услуг',
 	'Menu:ServiceFamily+' => 'Пакеты услуг',
+	'Menu:ServiceCatalog' => 'Service catalog~~',
+	'Menu:ServiceCatalog+' => 'Define the service elements of your offering~~',
+	'UI-ServiceCatalogMenu-Title' => 'Service catalog~~',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal~~',
+	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'Only Service and Subcategory on production are visible in User Portal~~',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers~~',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal~~',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
+
 	'Contract:baseinfo' => 'General information~~',
 	'Contract:moreinfo' => 'Contractual information~~',
 	'Contract:cost' => 'Cost information~~',
 ]);
-
-/*
-	'UI:ServiceManagementMenu' => 'Gestion des Services',
-	'UI:ServiceManagementMenu+' => 'Gestion des Services',
-	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
-*/
 
 //
 // Class: Organization
@@ -250,7 +250,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Service/Attribute:contacts_list' => 'Контакты',
 	'Class:Service/Attribute:contacts_list+' => 'Связанные контакты',
 	'Class:Service/Attribute:status' => 'Статус',
-	'Class:Service/Attribute:status+' => '',
+	'Class:Service/Attribute:status+' => 'By default only Service in production are visible by Portal users~~',
 	'Class:Service/Attribute:status/Value:implementation' => 'Внедрение',
 	'Class:Service/Attribute:status/Value:implementation+' => 'Внедрение',
 	'Class:Service/Attribute:status/Value:obsolete' => 'Устаревший',
@@ -326,7 +326,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Эксплуатация',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'Эксплуатация',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Тип запроса',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user selects this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Инцидент',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'Инцидент',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Запрос на обслуживание',
@@ -446,6 +446,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);
 
 //
@@ -547,13 +549,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);

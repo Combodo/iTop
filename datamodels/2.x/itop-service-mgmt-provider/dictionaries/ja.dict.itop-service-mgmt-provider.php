@@ -19,36 +19,36 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'UI-ServiceManagementMenu-ContractsByStatus' => '状態別の契約',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30日以内に終わる契約',
 	'Menu:ProviderContract' => 'プロバイダー契約',
-	'Menu:ProviderContract+' => '',
+	'Menu:ProviderContract+' => 'What is bought to external companies~~',
 	'Menu:CustomerContract' => '顧客契約',
-	'Menu:CustomerContract+' => '',
+	'Menu:CustomerContract+' => 'Who is buying the services~~',
 	'Menu:ServiceSubcategory' => 'サービスサブカテゴリ',
-	'Menu:ServiceSubcategory+' => '',
+	'Menu:ServiceSubcategory+' => 'Lowest level in service hierarchy~~',
 	'Menu:Service' => 'サービス',
-	'Menu:Service+' => '',
-	'Menu:ServiceElement' => 'サービス要素',
-	'Menu:ServiceElement+' => '',
+	'Menu:Service+' => 'Second level in service hierarchy~~',
 	'Menu:SLA' => 'SLA',
 	'Menu:SLA+' => '',
 	'Menu:SLT' => 'SLT',
 	'Menu:SLT+' => '',
 	'Menu:DeliveryModel' => '提供モデル',
-	'Menu:DeliveryModel+' => '',
+	'Menu:DeliveryModel+' => 'Teams handling tickets~~',
 	'Menu:ServiceFamily' => 'サービスファミリ',
 	'Menu:ServiceFamily+' => 'サービスファミリ',
+	'Menu:ServiceCatalog' => 'Service catalog~~',
+	'Menu:ServiceCatalog+' => 'Define the service elements of your offering~~',
+	'UI-ServiceCatalogMenu-Title' => 'Service catalog~~',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal~~',
+	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'Only Service and Subcategory on production are visible in User Portal~~',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers~~',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal~~',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
+
 	'Contract:baseinfo' => 'General information~~',
 	'Contract:moreinfo' => 'Contractual information~~',
 	'Contract:cost' => 'Cost information~~',
 ]);
-
-/*
-	'UI:ServiceManagementMenu' => 'Gestion des Services',
-	'UI:ServiceManagementMenu+' => 'Gestion des Services',
-	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
-*/
 
 //
 // Class: Organization
@@ -249,7 +249,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Service/Attribute:contacts_list' => '連絡先',
 	'Class:Service/Attribute:contacts_list+' => 'All the contacts for this service~~',
 	'Class:Service/Attribute:status' => '状態',
-	'Class:Service/Attribute:status+' => '',
+	'Class:Service/Attribute:status+' => 'By default only Service in production are visible by Portal users~~',
 	'Class:Service/Attribute:status/Value:implementation' => '実装',
 	'Class:Service/Attribute:status/Value:implementation+' => '',
 	'Class:Service/Attribute:status/Value:obsolete' => '廃止',
@@ -325,7 +325,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => '稼働',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => '',
 	'Class:ServiceSubcategory/Attribute:request_type' => '要求タイプ',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user selects this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'インシデント',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => '',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'サービス要求',
@@ -445,6 +445,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA名',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);
 
 //
@@ -546,13 +548,4 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);

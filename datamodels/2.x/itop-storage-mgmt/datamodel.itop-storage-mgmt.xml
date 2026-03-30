@@ -873,7 +873,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:moreinfo">
+                <item id="fieldset:Storage:moreinfo">
                   <rank>20</rank>
                   <items>
                     <item id="brand_id">
@@ -1212,26 +1212,51 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
               <rank>10</rank>
+              <items>
+                <item id="fieldset:Server:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Storage:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="nas_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="raid_level">
+                      <rank>60</rank>
+                    </item>
+                    <item id="size">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
-            <item id="nas_id">
+            <item id="col:col2">
               <rank>20</rank>
-            </item>
-            <item id="location_id">
-              <rank>30</rank>
-            </item>
-            <item id="org_id">
-              <rank>40</rank>
-            </item>
-            <item id="description">
-              <rank>50</rank>
-            </item>
-            <item id="raid_level">
-              <rank>60</rank>
-            </item>
-            <item id="size">
-              <rank>70</rank>
+              <items>
+                <item id="fieldset:Server:otherinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
           </items>
         </details>
@@ -1350,26 +1375,41 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
               <rank>10</rank>
-            </item>
-            <item id="datacenterdevice_id">
-              <rank>20</rank>
-            </item>
-            <item id="location_id">
-              <rank>30</rank>
-            </item>
-            <item id="org_id">
-              <rank>40</rank>
-            </item>
-            <item id="speed">
-              <rank>50</rank>
-            </item>
-            <item id="topology">
-              <rank>60</rank>
-            </item>
-            <item id="wwn">
-              <rank>70</rank>
+              <items>
+                <item id="fieldset:Server:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Storage:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="datacenterdevice_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="speed">
+                      <rank>50</rank>
+                    </item>
+                    <item id="topology">
+                      <rank>60</rank>
+                    </item>
+                    <item id="wwn">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
           </items>
         </details>
@@ -1521,29 +1561,54 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
               <rank>10</rank>
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Storage:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="lun_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="storagesystem_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="raid_level">
+                      <rank>70</rank>
+                    </item>
+                    <item id="size">
+                      <rank>80</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
-            <item id="lun_id">
+            <item id="col:col2">
               <rank>20</rank>
-            </item>
-            <item id="storagesystem_id">
-              <rank>30</rank>
-            </item>
-            <item id="location_id">
-              <rank>40</rank>
-            </item>
-            <item id="org_id">
-              <rank>50</rank>
-            </item>
-            <item id="description">
-              <rank>60</rank>
-            </item>
-            <item id="raid_level">
-              <rank>70</rank>
-            </item>
-            <item id="size">
-              <rank>80</rank>
+              <items>
+                <item id="fieldset:Server:otherinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
             <item id="servers_list">
               <rank>90</rank>

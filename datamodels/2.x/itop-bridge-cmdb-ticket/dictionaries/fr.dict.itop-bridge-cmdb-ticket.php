@@ -12,8 +12,8 @@
  *
  */
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkFunctionalCIToTicket' => 'Lien CI / Ticket',
-	'Class:lnkFunctionalCIToTicket+' => '',
+	'Class:lnkFunctionalCIToTicket' => 'Lien CI fonctionnel / Ticket',
+	'Class:lnkFunctionalCIToTicket+' => 'Ce lien modélise les équipments (CI fonctionnel) qui sont concernés par un Ticket (comme une Demande utilisateur, un Incident, un Changement,...)',
 	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',

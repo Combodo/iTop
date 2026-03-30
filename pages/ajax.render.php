@@ -173,10 +173,9 @@ try {
 			case 'ShowModalSearchForeignKeys':
 				$oPage->SetContentType('text/html');
 				$iInputId = utils::ReadParam('iInputId', '');
-				$sTitle = utils::ReadParam('sTitle', '', false, 'raw_data');
 				$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 				$oWidget = new UISearchFormForeignKeys($sTargetClass, $iInputId);
-				$oWidget->ShowModalSearchForeignKeys($oPage, $sTitle);
+				$oWidget->ShowModalSearchForeignKeys($oPage);
 				break;
 
 				// ui.searchformforeignkeys
@@ -185,16 +184,6 @@ try {
 				$oWidget = new UISearchFormForeignKeys($sClass);
 				$oFullSetFilter = new DBObjectSearch($sClass);
 				$oWidget->GetFullListForeignKeysFromSelection($oPage, $oFullSetFilter);
-				break;
-
-				// ui.searchformforeignkeys
-			case 'ListResultsSearchForeignKeys':
-				$oPage->SetContentType('text/html');
-				$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
-				$iInputId = utils::ReadParam('iInputId', '');
-				$sRemoteClass = utils::ReadParam('sRemoteClass', '', false, 'class');
-				$oWidget = new UISearchFormForeignKeys($sTargetClass, $iInputId);
-				$oWidget->ListResultsSearchForeignKeys($oPage, $sRemoteClass);
 				break;
 
 				// ui.linkswidget
@@ -1928,6 +1917,17 @@ EOF
 				$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
 				$iObjKey = (int)utils::ReadParam('obj_key', 0, false, 'integer');
 
+				// Check user has access to the object before trying to acquire the lock
+				$oSearch = new DBObjectSearch($sObjClass);
+				$oSearch->AddCondition(MetaModel::DBGetKey($sObjClass), $iObjKey, '=');
+				$oSet = new CMDBObjectSet($oSearch);
+				if (
+					false === $oSet->CountExceeds(0) ||
+					UserRights::IsActionAllowed($sObjClass, UR_ACTION_MODIFY, $oSet) !== UR_ALLOWED_YES
+				) {
+					throw new SecurityException(Dict::S('UI:ObjectDoesNotExist'));
+				}
+
 				$aResult = iTopOwnershipLock::AcquireLock($sObjClass, $iObjKey);
 				if (false === $aResult['success']) {
 					$aLockData = iTopOwnershipLock::IsLocked($sObjClass, $iObjKey);
@@ -2376,8 +2376,7 @@ EOF
 	$oKPI->ComputeAndReport('Data fetch and format');
 	$oPage->output();
 } catch (Exception $e) {
-	// note: transform to cope with XSS attacks
-	echo utils::EscapeHtml($e->GetMessage());
+	echo utils::EscapeHtml(Dict::S('UI:PageTitle:FatalError'));
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
 

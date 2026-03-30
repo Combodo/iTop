@@ -1100,7 +1100,6 @@ class DBObjectTest extends ItopDataTestCase
 				'fixed',
 				[
 					'ev_reopen',
-					'ev_autoresolve',
 					'ev_close',
 				],
 			],
@@ -1122,7 +1121,6 @@ class DBObjectTest extends ItopDataTestCase
 				'resolved',
 				'relative',
 				[
-					'ev_autoresolve',
 					'ev_close',
 					'ev_reopen',
 				],

@@ -152,6 +152,8 @@ class WebPage implements Page
 	 */
 	public const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/webpage/layout';
 
+	protected const BODY_DATA_GUI_TYPE = 'backoffice';
+
 	protected $s_title;
 	protected $s_content;
 	protected $s_deferred_content;
@@ -1566,6 +1568,7 @@ JS;
 			'aJsInlineLive'       => $this->a_scripts,
 			'aJsInlineOnDomReady' => $this->GetReadyScripts(),
 			'aJsInlineOnInit'     => $this->a_init_scripts,
+			'sBodyDataGuiType'    => static::BODY_DATA_GUI_TYPE,
 
 			// TODO 3.0.0: TEMP, used while developing, remove it.
 			'sCapturedOutput'     => utils::FilterXSS($s_captured_output),

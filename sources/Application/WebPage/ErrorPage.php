@@ -51,7 +51,7 @@ class ErrorPage extends NiceWebPage
 		$this->log_warning($sText);
 	}
 
-	public function error($sText, \Throwable $oException = null)
+	public function error($sText, ?\Throwable $oException = null)
 	{
 		$this->add("<div class=\"message message-error\">$sText</div>");
 		if (utils::IsEasterEggAllowed()) {

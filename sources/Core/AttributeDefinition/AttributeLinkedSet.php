@@ -122,7 +122,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	 * @throws CoreException
 	 * @throws CoreWarning
 	 */
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		if ($oHostObject === null) {
 			return null;

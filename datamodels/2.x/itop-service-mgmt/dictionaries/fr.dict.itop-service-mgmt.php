@@ -19,25 +19,34 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats, par état',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins d\'un mois',
 	'Menu:ProviderContract' => 'Contrats fournisseurs',
-	'Menu:ProviderContract+' => 'Contrats fournisseurs',
+	'Menu:ProviderContract+' => 'Ce qui est acheté à des sociétés externes',
 	'Menu:CustomerContract' => 'Contrats clients',
-	'Menu:CustomerContract+' => 'Contrats clients',
-	'Menu:ServiceSubcategory' => 'Sous catégories de service',
-	'Menu:ServiceSubcategory+' => 'Sous catégories de service',
+	'Menu:CustomerContract+' => 'Qui achète quels services',
+	'Menu:ServiceSubcategory' => 'Sous-catégories de service',
+	'Menu:ServiceSubcategory+' => 'Dernier niveau dans la hiérarchie des services',
 	'Menu:Service' => 'Services',
-	'Menu:Service+' => 'Services',
-	'Menu:ServiceElement' => 'Eléments de service',
-	'Menu:ServiceElement+' => 'Eléments de service',
+	'Menu:Service+' => 'Second niveau dans la hiérarchie des services',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => 'Accords de niveau de service (SLA)',
 	'Menu:SLT' => 'SLTs',
 	'Menu:SLT+' => 'Objectifs de niveau de service (SLT)',
 	'Menu:DeliveryModel' => 'Modèles de support',
-	'Menu:DeliveryModel+' => 'Modèles de support',
+	'Menu:DeliveryModel+' => 'Les équipes gérant les tickets',
 	'Menu:ServiceFamily' => 'Familles de service',
-	'Menu:ServiceFamily+' => 'Familles de service',
+	'Menu:ServiceFamily+' => 'Plus haut niveau dans la hiérarchie des services',
+	'Menu:ServiceCatalog' => 'Catalogue de services',
+	'Menu:ServiceCatalog+' => 'Définir les éléments des offres de service',
+	'UI-ServiceCatalogMenu-Title' => 'Catalogue de services',
+	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'Seuls les Services et Sous-catégories en production sont affichés dans le portail utilisateur',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Services en production sans contrat client',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Non affichés dans le portail utilisateur',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Les services sans famille de service sont invisibles dans le portail utilisateur',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Nombre de SLTs par SLA',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Nombre de contrats clients utilisant ce service',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Nombre de contrats clients utilisant ce SLA',
+
 	'Menu:Procedure' => 'Catalogue des procédures',
-	'Menu:Procedure+' => 'Catalogue des procédures',
+	'Menu:Procedure+' => '',
 	'Contract:baseinfo' => 'Information générale',
 	'Contract:moreinfo' => 'Aspects contractuels',
 	'Contract:cost' => 'Coûts',
@@ -59,7 +68,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContractType' => 'Type de contrat',
-	'Class:ContractType+' => '',
+	'Class:ContractType+' => 'Typologie pour catégoriser les Contrats Client et Fournisseur.',
 ]);
 
 //
@@ -68,7 +77,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Contract' => 'Contrat',
-	'Class:Contract+' => '',
+	'Class:Contract+' => 'Classe abstraite qui gére les caractéristiques communes aux différents types de contrat.',
 	'Class:Contract/Attribute:name' => 'Nom',
 	'Class:Contract/Attribute:name+' => '',
 	'Class:Contract/Attribute:org_id' => 'Client',
@@ -102,11 +111,11 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Contract/Attribute:cost_unit' => 'Unité de coût',
 	'Class:Contract/Attribute:cost_unit+' => '',
 	'Class:Contract/Attribute:provider_id' => 'Fournisseur',
-	'Class:Contract/Attribute:provider_id+' => '',
+	'Class:Contract/Attribute:provider_id+' => 'Fournisseur du contrat. Parfois différent du fournisseur des services liés à ce contrat.',
 	'Class:Contract/Attribute:provider_name' => 'Nom Fournisseur',
 	'Class:Contract/Attribute:provider_name+' => '',
 	'Class:Contract/Attribute:status' => 'Etat',
-	'Class:Contract/Attribute:status+' => '',
+	'Class:Contract/Attribute:status+' => 'L\'état du contrat n\'est pas calculé en fonction des dates de début et de fin. Il doit être mis à jour indépendamment.',
 	'Class:Contract/Attribute:status/Value:implementation' => 'Implémentation',
 	'Class:Contract/Attribute:status/Value:implementation+' => '',
 	'Class:Contract/Attribute:status/Value:obsolete' => 'Obsolète',
@@ -122,7 +131,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:CustomerContract' => 'Contrat client',
-	'Class:CustomerContract+' => '',
+	'Class:CustomerContract+' => 'Accord entre un client et un fournisseur pour la délivrance de Services associés éventuellement à des niveaux d\'engagement (Niveau de service, Fenêtre de couverture).',
 	'Class:CustomerContract/Attribute:services_list' => 'Services',
 	'Class:CustomerContract/Attribute:services_list+' => 'Tous les services achetés pour ce contrat',
 ]);
@@ -133,13 +142,13 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ProviderContract' => 'Contrat fournisseur',
-	'Class:ProviderContract+' => '',
+	'Class:ProviderContract+' => 'Accord entre un fournisseur externe et une organisation interne.',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CIs',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Tous les éléments de configuration couverts par ce contrat fournisseur',
 	'Class:ProviderContract/Attribute:sla' => 'Niveau de service',
 	'Class:ProviderContract/Attribute:sla+' => 'Accord de niveau de service (SLA)',
 	'Class:ProviderContract/Attribute:coverage' => 'Couverture',
-	'Class:ProviderContract/Attribute:coverage+' => '',
+	'Class:ProviderContract/Attribute:coverage+' => 'Fenêtre de couverture temporelle pour ce contrat fournisseur',
 	'Class:ProviderContract/Attribute:contracttype_id' => 'Type de contrat',
 	'Class:ProviderContract/Attribute:contracttype_id+' => '',
 	'Class:ProviderContract/Attribute:contracttype_name' => 'Nom Type de contrat',
@@ -154,7 +163,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkContactToContract' => 'Lien Contact / Contrat',
-	'Class:lnkContactToContract+' => '',
+	'Class:lnkContactToContract+' => 'Gère les contacts clés sur chaque contract client ou fournisseur.',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Contrat',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '',
@@ -172,7 +181,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkContractToDocument' => 'Lien Contrat / Document',
-	'Class:lnkContractToDocument+' => '',
+	'Class:lnkContractToDocument+' => 'Lien utilisé lorsqu\'un Document est applicable à un Contract.',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Contrat',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
@@ -189,8 +198,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:ServiceFamily' => 'Famille de service',
-	'Class:ServiceFamily+' => '',
+	'Class:ServiceFamily' => 'Famille de services',
+	'Class:ServiceFamily+' => 'Premier niveau dans la hiérarchie des Services. Obligatoire pour qu\'un Service soit proposé dans le Portail Utilisateur.',
 	'Class:ServiceFamily/Attribute:name' => 'Nom',
 	'Class:ServiceFamily/Attribute:name+' => '',
 	'Class:ServiceFamily/Attribute:icon' => 'Icône',
@@ -205,7 +214,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Service' => 'Service',
-	'Class:Service+' => '',
+	'Class:Service+' => 'Un Service est délivré par une organisation et souscrit par le biais de Contract Client. Il doit au moins contenir une Sous catégorie de Service.',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s',
 	'Class:Service/Attribute:name' => 'Nom',
 	'Class:Service/Attribute:name+' => '',
@@ -230,7 +239,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Service/Attribute:contacts_list' => 'Contacts',
 	'Class:Service/Attribute:contacts_list+' => 'Tous les contacts liés à ce service',
 	'Class:Service/Attribute:status' => 'Etat',
-	'Class:Service/Attribute:status+' => '',
+	'Class:Service/Attribute:status+' => 'Seuls les services en production sont visibles des utilisateurs du portail.',
 	'Class:Service/Attribute:status/Value:implementation' => 'Implémentation',
 	'Class:Service/Attribute:status/Value:implementation+' => '',
 	'Class:Service/Attribute:status/Value:obsolete' => 'Obsolète',
@@ -244,9 +253,9 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Service/Attribute:providercontracts_list' => 'Contrats fournisseur',
 	'Class:Service/Attribute:providercontracts_list+' => 'Tous les contrats fournisseurs qui offrent du support pour ce service',
 	'Class:Service/Attribute:functionalcis_list' => 'CIs',
-	'Class:Service/Attribute:functionalcis_list+' => 'Tous les éléments de configuration utilsiés pour fournir ce service',
-	'Class:Service/Attribute:servicesubcategories_list' => 'Sous catégories de service',
-	'Class:Service/Attribute:servicesubcategories_list+' => 'Toutes les sous catégories de service pour ce service',
+	'Class:Service/Attribute:functionalcis_list+' => 'Tous les éléments de configuration utilisés pour fournir ce service',
+	'Class:Service/Attribute:servicesubcategories_list' => 'Sous-catégories de service',
+	'Class:Service/Attribute:servicesubcategories_list+' => 'Toutes les sous-catégories de service pour ce service',
 	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Create:Button+' => 'Créer une %4$s',
 	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
 	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
@@ -261,7 +270,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkDocumentToService' => 'Lien Document / Service',
-	'Class:lnkDocumentToService+' => '',
+	'Class:lnkDocumentToService+' => 'Lien utilisé lorsqu\'un Document est applicable à un Service.',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Service',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '',
@@ -279,7 +288,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkContactToService' => 'Lien Contact / Service',
-	'Class:lnkContactToService+' => '',
+	'Class:lnkContactToService+' => 'Idéal pour définir l\'équipe à laquelle on affectera (automatiquement ou manuellement) les Tickets créés sur le Service lié.',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s',
 	'Class:lnkContactToService/Attribute:service_id' => 'Service',
 	'Class:lnkContactToService/Attribute:service_id+' => '',
@@ -296,8 +305,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:ServiceSubcategory' => 'Sous catégorie de service',
-	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory' => 'Sous-catégorie de service',
+	'Class:ServiceSubcategory+' => 'Dernier niveau dans la hiérarchie des Services. Chaque Demande utilisateur se réfère à une Sous-catégorie de service.',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
 	'Class:ServiceSubcategory/Attribute:name' => 'Nom',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
@@ -308,13 +317,13 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ServiceSubcategory/Attribute:service_name' => 'Nom Service',
 	'Class:ServiceSubcategory/Attribute:service_name+' => '',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Type de requête',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Définit le type de Ticket (Incident ou Demande de service) qui sera créé lorsqu\'un utilisateur du Portail sélectionne cette sous-catégorie de service',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'incident',
-	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'incident',
+	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => '',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'demande de service',
-	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'demande de service',
+	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => '',
 	'Class:ServiceSubcategory/Attribute:status' => 'Etat',
-	'Class:ServiceSubcategory/Attribute:status+' => '',
+	'Class:ServiceSubcategory/Attribute:status+' => 'L\'état d\'une sous-catégorie de service conditionne sa visibilité dans le portail utilisateur.',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation' => 'Implémentation',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation+' => '',
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete' => 'Obsolète',
@@ -329,7 +338,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SLA' => 'Niveau de service',
-	'Class:SLA+' => '',
+	'Class:SLA+' => 'Accord de niveau de service (SLA) applicable à un Service souscrit par un client et mesuré à l\'aide de SLTs.',
 	'Class:SLA/Attribute:name' => 'Nom',
 	'Class:SLA/Attribute:name+' => '',
 	'Class:SLA/Attribute:description' => 'Description',
@@ -357,39 +366,39 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SLT' => 'SLT',
-	'Class:SLT+' => 'Objectif de niveau de service (SLT)',
+	'Class:SLT+' => 'Objectif mesurable au sein d\'un Niveau de service (SLA). Défini un délai maximum pour une métrique (TTO ou TTR), un type de requête (Incident ou Demande) et une priorité.',
 	'Class:SLT/Attribute:name' => 'Nom',
 	'Class:SLT/Attribute:name+' => '',
 	'Class:SLT/Attribute:priority' => 'Priorité',
-	'Class:SLT/Attribute:priority+' => '',
+	'Class:SLT/Attribute:priority+' => 'Priorité du ticket pour laquelle cet objectif est applicable',
 	'Class:SLT/Attribute:priority/Value:1' => 'critique',
-	'Class:SLT/Attribute:priority/Value:1+' => 'critique',
+	'Class:SLT/Attribute:priority/Value:1+' => '',
 	'Class:SLT/Attribute:priority/Value:2' => 'haute',
-	'Class:SLT/Attribute:priority/Value:2+' => 'haute',
+	'Class:SLT/Attribute:priority/Value:2+' => '',
 	'Class:SLT/Attribute:priority/Value:3' => 'moyenne',
-	'Class:SLT/Attribute:priority/Value:3+' => 'moyenne',
+	'Class:SLT/Attribute:priority/Value:3+' => '',
 	'Class:SLT/Attribute:priority/Value:4' => 'basse',
-	'Class:SLT/Attribute:priority/Value:4+' => 'basse',
+	'Class:SLT/Attribute:priority/Value:4+' => '',
 	'Class:SLT/Attribute:request_type' => 'Type de requête',
-	'Class:SLT/Attribute:request_type+' => '',
+	'Class:SLT/Attribute:request_type+' => 'Type de requête pour laquelle cet objectif est applicable',
 	'Class:SLT/Attribute:request_type/Value:incident' => 'incident',
-	'Class:SLT/Attribute:request_type/Value:incident+' => 'incident',
+	'Class:SLT/Attribute:request_type/Value:incident+' => '',
 	'Class:SLT/Attribute:request_type/Value:service_request' => 'demande de service',
-	'Class:SLT/Attribute:request_type/Value:service_request+' => 'demande de service',
+	'Class:SLT/Attribute:request_type/Value:service_request+' => '',
 	'Class:SLT/Attribute:metric' => 'Métrique',
-	'Class:SLT/Attribute:metric+' => '',
+	'Class:SLT/Attribute:metric+' => 'Délai contrôlé par cet objectif (temps de prise en charge ou temps de résolution)',
 	'Class:SLT/Attribute:metric/Value:tto' => 'TTO',
-	'Class:SLT/Attribute:metric/Value:tto+' => 'TTO',
+	'Class:SLT/Attribute:metric/Value:tto+' => 'Délai de prise en charge',
 	'Class:SLT/Attribute:metric/Value:ttr' => 'TTR',
-	'Class:SLT/Attribute:metric/Value:ttr+' => 'TTR',
+	'Class:SLT/Attribute:metric/Value:ttr+' => 'Délai de résolution',
 	'Class:SLT/Attribute:value' => 'Valeur',
-	'Class:SLT/Attribute:value+' => '',
+	'Class:SLT/Attribute:value+' => 'Valeur à ne pas dépasser pour la métrique et le type de requête définis',
 	'Class:SLT/Attribute:unit' => 'Unité',
-	'Class:SLT/Attribute:unit+' => '',
+	'Class:SLT/Attribute:unit+' => 'Unité à appliquer à la valeur',
 	'Class:SLT/Attribute:unit/Value:hours' => 'heures',
-	'Class:SLT/Attribute:unit/Value:hours+' => 'heures',
+	'Class:SLT/Attribute:unit/Value:hours+' => '',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'minutes',
-	'Class:SLT/Attribute:unit/Value:minutes+' => 'minutes',
+	'Class:SLT/Attribute:unit/Value:minutes+' => '',
 	'Class:SLT/Attribute:slas_list' => 'SLAs',
 	'Class:SLT/Attribute:slas_list+' => 'Tous les niveaux de service utilisant cet objectif',
 ]);
@@ -400,7 +409,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkSLAToSLT' => 'Lien SLA / SLT',
-	'Class:lnkSLAToSLT+' => '',
+	'Class:lnkSLAToSLT+' => 'Ce lien indique qu\'un SLT est inclus dans le Niveau de service (SLA). Un SLA contient le plus souvent plusieurs SLTs. Un SLT peut être réutilisé à l\'identique par plusieurs Niveau de service (rare).',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '',
@@ -428,20 +437,22 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkCustomerContractToService' => 'Lien Contrat client / Service',
-	'Class:lnkCustomerContractToService+' => '',
+	'Class:lnkCustomerContractToService+' => 'Un ligne unitaire d\'un Contract client, qui spécifie le Service fourni et pour ce service les niveaux d\'engagement souscrits (Niveau de service et fenêtre de couverture).',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Contrat client',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Nom contrat client',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '',
 	'Class:lnkCustomerContractToService/Attribute:service_id' => 'Service',
-	'Class:lnkCustomerContractToService/Attribute:service_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:service_id+' => 'Toutes les sous-catégories de service liées à ce service sont aussi incluses dans ce contrat client',
 	'Class:lnkCustomerContractToService/Attribute:service_name' => 'Nom service',
 	'Class:lnkCustomerContractToService/Attribute:service_name+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_id' => 'SLA',
-	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:sla_id+' => 'Niveau d\'engagement pour ce service dans le cadre de ce contrat client',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'Nom SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Fournisseur',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '',
 ]);
 
 //
@@ -450,7 +461,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkProviderContractToService' => 'Lien Contrat fournisseur / Service',
-	'Class:lnkProviderContractToService+' => '',
+	'Class:lnkProviderContractToService+' => 'Ce lien peut modéliser qu\'un Contrat fournisseur permet la délivrance d\'un Service.',
 	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s',
 	'Class:lnkProviderContractToService/Attribute:service_id' => 'Service',
 	'Class:lnkProviderContractToService/Attribute:service_id+' => '',
@@ -460,6 +471,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Nom contrat fournisseur',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '',
+	'Class:lnkProviderContractToService/Attribute:provider_id' => 'Fournisseur',
+	'Class:lnkProviderContractToService/Attribute:provider_id+' => '',
 ]);
 
 //
@@ -468,7 +481,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DeliveryModel' => 'Modèle de support',
-	'Class:DeliveryModel+' => '',
+	'Class:DeliveryModel+' => 'Le Modèle de support spécifie les équipes pouvant être affectées aux Tickets, il doit contenir au minimum une Équipe dans l\'onglet Contacts.
+	Chaque Organisation cliente doit avoir un Modèle de support défini.',
 	'Class:DeliveryModel/Attribute:name' => 'Nom du modèle de support',
 	'Class:DeliveryModel/Attribute:name+' => 'Attachez à ce modèle les équipes qui géreront les tickets',
 	'Class:DeliveryModel/Attribute:org_id' => 'Organisation',
@@ -495,7 +509,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkDeliveryModelToContact' => 'Lien Modèle de support / Contact',
-	'Class:lnkDeliveryModelToContact+' => '',
+	'Class:lnkDeliveryModelToContact+' => 'Ce lien spécifie le rôle d\'une équipe (plus rarement d\'une Personne) dans le cadre d\'un Modèle de support.',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Modèle de support',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '',
@@ -531,22 +545,4 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Fournisseur',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Fournisseur',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '',
-]);
-
-//
-// Class: lnkProviderContractToService
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkProviderContractToService/Attribute:provider_id' => 'Fournisseur',
-	'Class:lnkProviderContractToService/Attribute:provider_id+' => '',
 ]);

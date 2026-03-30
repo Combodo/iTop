@@ -492,6 +492,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Tutti gli elementi di configurazione che compongono questa soluzione applicativa',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Processi aziendali',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Tutti i processi aziendali dipendenti da questa soluzione applicativa',
+	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
+	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Stato',
 	'Class:ApplicationSolution/Attribute:status+' => '~~',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'attivo',
@@ -513,6 +515,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Soluzioni applicative',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Tutte le soluzioni applicative che influenzano questo processo aziendale',
+	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
+	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:BusinessProcess/Attribute:status' => 'Stato',
 	'Class:BusinessProcess/Attribute:status+' => '~~',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'attivo',
@@ -577,7 +581,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:WebServer' => 'Web server',
+	'Class:WebServer' => 'Web Server',
 	'Class:WebServer+' => '~~',
 	'Class:WebServer/Attribute:webapp_list' => 'Applicazioni web',
 	'Class:WebServer/Attribute:webapp_list+' => 'Tutte le applicazioni web disponibili su questo server web',
@@ -609,6 +613,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:MiddlewareInstance' => 'Istanza Middleware',
 	'Class:MiddlewareInstance+' => '~~',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Nome Middleware',
@@ -641,6 +647,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:WebApplication/Attribute:webserver_id+' => '~~',
 	'Class:WebApplication/Attribute:webserver_name' => 'Nome del web server',
 	'Class:WebApplication/Attribute:webserver_name+' => '~~',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '~~',
 ]);
@@ -838,7 +846,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 
 Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Tape' => 'Nastro',
-	'Class:Tape+' => '~~',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
 	'Class:Tape/Attribute:name' => 'Nome',
 	'Class:Tape/Attribute:name+' => '~~',
 	'Class:Tape/Attribute:description' => 'Descrizione',
@@ -888,6 +896,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Software/Attribute:version+' => '~~',
 	'Class:Software/Attribute:documents_list' => 'Documenti',
 	'Class:Software/Attribute:documents_list+' => 'Tutti i documenti collegati a questo software',
+	'Class:Software/Attribute:logo' => 'Logo~~',
+	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs~~',
 	'Class:Software/Attribute:type' => 'Tipo',
 	'Class:Software/Attribute:type+' => '~~',
 	'Class:Software/Attribute:type/Value:DBServer' => 'DB Server',
@@ -1052,7 +1062,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OSVersion/Attribute:osfamily_id' => 'Famiglia del Sistema Operativo',
 	'Class:OSVersion/Attribute:osfamily_id+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Nome della Famiglia del Sistema Operativo',
-	'Class:OSVersion/Attribute:osfamily_name+' => '~~',
+	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
 ]);
 
 //
@@ -1061,7 +1073,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 
 Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OSFamily' => 'Famiglia del Sistema Operativo',
-	'Class:OSFamily+' => '~~',
+	'Class:OSFamily+' => '',
+	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
+	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
 ]);
 
 //
@@ -1180,6 +1194,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:IOSVersion/Attribute:brand_id+' => '~~',
 	'Class:IOSVersion/Attribute:brand_name' => 'Nome della marca',
 	'Class:IOSVersion/Attribute:brand_name+' => '~~',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
 ]);
 
 //
@@ -1547,6 +1563,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 // Add translation for Fieldsets
 
 Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Informazioni generali',
 	'Server:Date' => 'Date',
 	'Server:moreinfo' => 'Ulteriori informazioni',

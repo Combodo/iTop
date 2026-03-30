@@ -135,7 +135,7 @@ class IORegister
 	 * @throws FormBlockIOException
 	 * @throws RegisterException
 	 */
-	public function AddOutput(string $sName, string $sType, bool $bIsArray = false, AbstractConverter $oConverter = null): void
+	public function AddOutput(string $sName, string $sType, bool $bIsArray = false, ?AbstractConverter $oConverter = null): void
 	{
 		$oFormOutput = new FormOutput($sName, $sType, $bIsArray, $oConverter);
 		$oFormOutput->SetOwnerBlock($this->oFormBlock);
@@ -349,7 +349,7 @@ class IORegister
 	 *
 	 * @return bool
 	 */
-	public function IsInputsDataReady(string $sType = null): bool
+	public function IsInputsDataReady(?string $sType = null): bool
 	{
 		foreach ($this->aInputs as $oFormInput) {
 			if ($oFormInput->IsBound()) {

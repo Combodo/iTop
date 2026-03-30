@@ -691,7 +691,7 @@ abstract class LogAPI
 		static::$m_oMockMetaModelConfig = $oMetaModelConfig;
 	}
 
-	public static function Exception(string $sMessage, throwable $oException, string $sChannel = null, array $aContext = []): void
+	public static function Exception(string $sMessage, throwable $oException, ?string $sChannel = null, array $aContext = []): void
 	{
 		$aErrorLogs = [];
 		$aErrorLogs[] = static::PrepareErrorLog($sMessage, $oException, $aContext);

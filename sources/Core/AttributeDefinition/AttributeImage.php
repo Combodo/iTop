@@ -74,7 +74,7 @@ class AttributeImage extends AttributeBlob
 		return $oDoc;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return new ormDocument('', '', '');
 	}

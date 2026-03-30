@@ -37,23 +37,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 // Class:<class_name>/UniquenessRule:<rule_code>+
 
 //////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
@@ -66,8 +49,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkContactToFunctionalCI' => 'Lien Contact / CI Fonctionnel',
-	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI' => 'Lien Contact / CI fonctionnel',
+	'Class:lnkContactToFunctionalCI+' => 'Gère les Contacts liés à des CI Fonctionnels. Ca peut être une équipe responsable de l\'équipment, de façon à lui affecter les Tickets liés à cet équipment ou la personne à laquelle un équipment individuel comme un PC ou un téléphone est affecté, de façon à gérer le parc.',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
@@ -84,8 +67,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:FunctionalCI' => 'CI Fonctionnel',
-	'Class:FunctionalCI+' => '',
+	'Class:FunctionalCI' => 'CI fonctionnel',
+	'Class:FunctionalCI+' => 'Classe abstraite regroupant la plupart des types d’éléments de configuration de la CMDB.',
 	'Class:FunctionalCI/Attribute:name' => 'Nom',
 	'Class:FunctionalCI/Attribute:name+' => '',
 	'Class:FunctionalCI/Attribute:description' => 'Description',
@@ -134,7 +117,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PhysicalDevice' => 'Matériel physique',
-	'Class:PhysicalDevice+' => '',
+	'Class:PhysicalDevice+' => 'Classe abstraite regroupant les types physiques d’éléments de configuration. Un Matériel physique peut être localisé. Il possède généralement une Marque et un Modèle.',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'Numéro de série',
 	'Class:PhysicalDevice/Attribute:serialnumber+' => '',
@@ -173,8 +156,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:Rack' => 'Rack',
-	'Class:Rack+' => '',
+	'Class:Rack' => 'Baie',
+	'Class:Rack+' => 'Conteneur physique pour Matériel de datacenter et Châssis.',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s',
 	'Class:Rack/Attribute:nb_u' => 'NB Unité',
 	'Class:Rack/Attribute:nb_u+' => '',
@@ -201,8 +184,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:TelephonyCI' => 'CI Téléphonie',
-	'Class:TelephonyCI+' => '',
+	'Class:TelephonyCI' => 'Équipement de téléphonie',
+	'Class:TelephonyCI+' => 'Classe abstraite regroupant les équipements de téléphonie.',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Numéro',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '',
 ]);
@@ -213,7 +196,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Phone' => 'Téléphone',
-	'Class:Phone+' => '',
+	'Class:Phone+' => 'Équipement individuel. Téléphone filaire classique.',
 ]);
 
 //
@@ -222,7 +205,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:MobilePhone' => 'Téléphone mobile',
-	'Class:MobilePhone+' => '',
+	'Class:MobilePhone+' => 'Équipement individuel. Téléphone portable.',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
 	'Class:MobilePhone/Attribute:imei+' => '',
 	'Class:MobilePhone/Attribute:hw_pin' => 'PIN',
@@ -235,7 +218,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:IPPhone' => 'Téléphone IP',
-	'Class:IPPhone+' => '',
+	'Class:IPPhone+' => 'Équipement individuel. Équipement physique dédié aux appels téléphoniques, connecté à un réseau.',
 ]);
 
 //
@@ -244,7 +227,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Tablet' => 'Tablette',
-	'Class:Tablet+' => '',
+	'Class:Tablet+' => 'Équipement individuel. Par exemple iPad, Galaxy Note/Tab Nexus, Kindle...',
 ]);
 
 //
@@ -252,8 +235,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:ConnectableCI' => 'CI connecté',
-	'Class:ConnectableCI+' => '',
+	'Class:ConnectableCI' => 'Matériel connecté',
+	'Class:ConnectableCI+' => 'Matériel physique pouvant être connecté à un réseau.',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Equipements réseaux',
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Tous les équipements réseaux connectés à ce matériel',
@@ -272,8 +255,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:DatacenterDevice' => 'Matériel Datacenter',
-	'Class:DatacenterDevice+' => '',
+	'Class:DatacenterDevice' => 'Matériel de datacenter',
+	'Class:DatacenterDevice+' => 'Un équipement physique, connecté au réseau et installé dans un datacenter, généralement dans une Baie ou un Châssis. Il peut s’agir de Serveurs, d\'Équipement réseau, de Systèmes de Stockage, de Switchs SAN, de Bandothèques, de NAS…',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'Rack',
 	'Class:DatacenterDevice/Attribute:rack_id+' => '',
@@ -316,8 +299,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:NetworkDevice' => 'Equipement réseau',
-	'Class:NetworkDevice+' => '',
+	'Class:NetworkDevice' => 'Équipement réseau',
+	'Class:NetworkDevice+' => 'Tout type d’équipement réseau : routeur, switch, hub, load balancer, firewall…',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Type',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
@@ -339,7 +322,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Server' => 'Serveur',
-	'Class:Server+' => '',
+	'Class:Server+' => 'Matériel de Datacenter qui fournit des ressources de calcul, de stockage ou de connectivité. Il tourne sous une Version d\'OS et héberge des Applications Logicielles.',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s',
 	'Class:Server/Attribute:osfamily_id' => 'Famille OS',
 	'Class:Server/Attribute:osfamily_id+' => '',
@@ -367,7 +350,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:StorageSystem' => 'Système de stockage',
-	'Class:StorageSystem+' => '',
+	'Class:StorageSystem+' => 'Système de stockage pouvant être connecté à un SAN ou à un réseau Ethernet. L\'unité logique de stockage gérée par un Système de stockage est un Volume logique.',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Volumes logiques',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Tous les volumes logiques dans ce système de stockage',
@@ -385,7 +368,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SANSwitch' => 'Switch SAN',
-	'Class:SANSwitch+' => '',
+	'Class:SANSwitch+' => 'Matériel de Datacenter. C\'est un switch utilisé par les réseaux de stockage (Storage Area Network). Il supporte le protocole Fibre Channel.',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Matériels connectés',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Tous les matériels connectés à ce switch SAN',
@@ -397,7 +380,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TapeLibrary' => 'Bandothèque',
-	'Class:TapeLibrary+' => '',
+	'Class:TapeLibrary+' => 'Matériel connecté et rackable hébergeant plusieurs bandes magnétiques (ou cartouches). Utilisé pour la sauvegarde ou l’archivage.',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Bandes',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'Toutes les bandes dans cette bandothèque',
@@ -415,7 +398,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:NAS' => 'NAS',
-	'Class:NAS+' => '',
+	'Class:NAS+' => 'Matériel connecté et rackable fournissant un stockage de haute capacité. Dans '.ITOP_APPLICATION_SHORT.', un NAS (Network-attached storage) contient des Systèmes de fichiers NAS.',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Systèmes de fichier NAS',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'Tous les systèmes de fichier dans ce NAS',
@@ -433,7 +416,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PC' => 'PC',
-	'Class:PC+' => '',
+	'Class:PC+' => 'Elément de configuration (CI), un ordinateur personnel (PC) est un matériel physique, de bureau ou portable, tournant avec une version d\'OS et conçu pour exécuter des instances logicielles.',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s',
 	'Class:PC/Attribute:osfamily_id' => 'Famille OS',
 	'Class:PC/Attribute:osfamily_id+' => '',
@@ -461,7 +444,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Printer' => 'Imprimante',
-	'Class:Printer+' => '',
+	'Class:Printer+' => 'Elément de configuration (CI) connectable. Matériel physique connecté au réseau ou à un PC.',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s',
 ]);
 
@@ -471,7 +454,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PowerConnection' => 'Connexion électrique',
-	'Class:PowerConnection+' => '',
+	'Class:PowerConnection+' => 'Classe abstraite regroupant les équipements physiques utilisés pour l\'alimentation électrique.',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s',
 ]);
 
@@ -481,7 +464,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PowerSource' => 'Arrivée électrique',
-	'Class:PowerSource+' => '',
+	'Class:PowerSource+' => 'Connexion électrique physique. Utilisée dans un datacenter pour documenter toute source d\'alimentation (arrivée principale, disjoncteur…) qui n\'est pas une PDU.',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
 	'Class:PowerSource/Attribute:pdus_list+' => 'Toutes les PDUs de cette arrivée électrique',
@@ -499,7 +482,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PDU' => 'PDU',
-	'Class:PDU+' => '',
+	'Class:PDU+' => 'Connexion électrique. Une PDU (Power Distribution Unit) est un équipement doté de multiples sorties conçu pour distribuer l\'alimentation électrique, notamment vers les racks d\'ordinateurs et équipements réseau d\'un datacenter.',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s',
 	'Class:PDU/Attribute:rack_id' => 'Rack',
 	'Class:PDU/Attribute:rack_id+' => '',
@@ -517,7 +500,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Peripheral' => 'Périphérique',
-	'Class:Peripheral+' => '',
+	'Class:Peripheral+' => 'Périphérique physique, utilisé pour documenter tout type de périphérique informatique.
+Par exemple : disques durs externes, scanners, dispositifs d\'entrée (trackballs, lecteurs de codes-barres), etc…',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s',
 ]);
 
@@ -526,8 +510,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:Enclosure' => 'Chassis',
-	'Class:Enclosure+' => '',
+	'Class:Enclosure' => 'Châssis',
+	'Class:Enclosure+' => 'Une armoire permettant d\'installer des équipements informatiques garantissant un flux d\'air optimisé et une alimentaion sécurisée. Dans '.ITOP_APPLICATION_SHORT.', un châssis peut être montée à l\'intérieur d\'une Baie ou fixée directement au mur d\'un centre de données.',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Enclosure/Attribute:rack_id' => 'Rack',
 	'Class:Enclosure/Attribute:rack_id+' => '',
@@ -551,11 +535,13 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ApplicationSolution' => 'Solution applicative',
-	'Class:ApplicationSolution+' => '',
+	'Class:ApplicationSolution+' => 'Les solutions applicatives décrivent des applications complexes composées de plusieurs composants de base. L’information principale est la liste de ses relations. Elle peut aussi être utilisée pour modéliser la relation entre un ou plusieurs controlleurs et les équipements qu\'il(s) gérent (par exemple des applicatifs de supervision, de gestion de configuration ou d\'analyse de performance).',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Tous les éléments de configuration qui composent cette solution applicative',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Processus métiers',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Tous les processus métiers dépendants de cette solution applicative',
+	'Class:ApplicationSolution/Attribute:logo' => 'Logo',
+	'Class:ApplicationSolution/Attribute:logo+' => 'Utilisé comme icône de l\'objet dans les graphes d\'analyse d\'impact',
 	'Class:ApplicationSolution/Attribute:status' => 'Etat',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Actif',
@@ -563,7 +549,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'Inactif',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => '',
 	'Class:ApplicationSolution/Attribute:redundancy' => 'Analyse d\'impact : configuration de la redondance',
-	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'La solution est opérationelle si tous les CIs qui la composent sont opérationnels',
+	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'La solution est opérationnelle si tous les CIs qui la composent sont opérationnels',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'Nombre minimal de CIs pour que la solution soit opérationnelle : %1$s',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'Pourcentage minimal de CIs pour que la solution soit opérationnelle : %1$s %%',
 ]);
@@ -574,13 +560,15 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:BusinessProcess' => 'Processus métier',
-	'Class:BusinessProcess+' => '',
+	'Class:BusinessProcess+' => 'Un processus métier sert à documenter un processus de haut niveau ou une application importante pour les opérations. Similaire à une solution applicative mais pour des applications ou processus d’organisation de plus haut niveau.',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Solutions applicatives',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Toutes les solutions applicatives qui impactent ce processus métier',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
+	'Class:BusinessProcess/Attribute:logo' => 'Logo',
+	'Class:BusinessProcess/Attribute:logo+' => 'Utilisé comme icône de l\'objet dans les graphes d\'analyse d\'impact',
 	'Class:BusinessProcess/Attribute:status' => 'Etat',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'Actif',
@@ -595,7 +583,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SoftwareInstance' => 'Instance logiciel',
-	'Class:SoftwareInstance+' => '',
+	'Class:SoftwareInstance+' => 'Classe abstraite représentant le déploiement d’un Logiciel sur un équipement (Serveur, PC, Machine virtuelle). Dans '.ITOP_APPLICATION_SHORT.', il existe différents types d’instances logicielles : Serveur de base de données, Middleware, Logiciel PC, Serveur web ou Autre logiciel.',
 	'Class:SoftwareInstance/Attribute:system_id' => 'Système',
 	'Class:SoftwareInstance/Attribute:system_id+' => '',
 	'Class:SoftwareInstance/Attribute:system_name' => 'Nom du système',
@@ -624,7 +612,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Middleware' => 'Middleware',
-	'Class:Middleware+' => '',
+	'Class:Middleware+' => 'Instance logicielle offrant des services à d\'autres logiciels (ex : Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere ou Lotus Domino) installée sur un système spécifique (PC, Serveur ou Machine virtuelle).',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Instance Middleware',
 	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Toutes les instances de middleware fournies par ce middleware',
 	'Class:Middleware/Attribute:middlewareinstance_list/UI:Links:Create:Button+' => 'Créer une %4$s',
@@ -641,7 +629,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DBServer' => 'Serveur de base de données',
-	'Class:DBServer+' => '',
+	'Class:DBServer+' => 'Instance logicielle offrant des services de base de données (comme MySQL 8.0, Oracle, SQL Server, DB2…) installée sur un système spécifique (PC, Serveur ou Machine virtuelle).',
 	'Class:DBServer/Attribute:dbschema_list' => 'Instances de base de données',
 	'Class:DBServer/Attribute:dbschema_list+' => 'Toutes les instances de base de données pour ce serveur',
 	'Class:DBServer/Attribute:dbschema_list/UI:Links:Create:Button+' => 'Créer une %4$s',
@@ -657,8 +645,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:WebServer' => 'Serveur Web',
-	'Class:WebServer+' => '',
+	'Class:WebServer' => 'Serveur web',
+	'Class:WebServer+' => 'Instance logicielle offrant des services Web (comme Apache 2.4, Nginx 1.29.4, IIS 7.0) installée sur un système spécifique (PC, Serveur ou Machine virtuelle).',
 	'Class:WebServer/Attribute:webapp_list' => 'Application Web',
 	'Class:WebServer/Attribute:webapp_list+' => 'Toutes les applications Web disponibles sur ce serveur',
 	'Class:WebServer/Attribute:webapp_list/UI:Links:Create:Button+' => 'Créer une %4$s',
@@ -675,7 +663,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PCSoftware' => 'Logiciel PC',
-	'Class:PCSoftware+' => 'Application logicielle sur PC',
+	'Class:PCSoftware+' => 'Instance logicielle pour des logiciels (ex : MS Office, Photoshop, Filezilla) installés sur un PC.',
 ]);
 
 //
@@ -684,7 +672,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OtherSoftware' => 'Autre logiciel',
-	'Class:OtherSoftware+' => '',
+	'Class:OtherSoftware+' => 'Tout type d\'instance logicielle qui ne rentre pas dans les autres catégories : Logiciel PC, Middleware, Serveur de base de données ou Serveur Web.',
 ]);
 
 //
@@ -692,9 +680,11 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:MiddlewareInstance' => 'Instance Middleware',
-	'Class:MiddlewareInstance+' => '',
+	'Class:MiddlewareInstance' => 'Instance de middleware',
+	'Class:MiddlewareInstance+' => 'CI fonctionnel représentant un service délivré par un Middleware.',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Utilisé comme icône de l\'objet dans les graphes d\'analyse d\'impact',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Nom Middleware',
@@ -707,7 +697,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DatabaseSchema' => 'Instance de base de données',
-	'Class:DatabaseSchema+' => '',
+	'Class:DatabaseSchema+' => 'Instance de base de données géré par un Serveur de base de données.',
 	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s',
 	'Class:DatabaseSchema/Attribute:dbserver_id' => 'Serveur de base de données',
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
@@ -720,13 +710,15 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:WebApplication' => 'Application Web',
-	'Class:WebApplication+' => '',
+	'Class:WebApplication' => 'Application web',
+	'Class:WebApplication+' => 'Instance d’une application accessible via un navigateur web et s’exécutant sur un Serveur web donné. Par exemple cet iTop.',
 	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
 	'Class:WebApplication/Attribute:webserver_id' => 'Serveur Web',
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => 'Nom Serveur Web',
 	'Class:WebApplication/Attribute:webserver_name+' => '',
+	'Class:WebApplication/Attribute:logo' => 'Logo',
+	'Class:WebApplication/Attribute:logo+' => 'Utilisé comme icône de l\'objet dans les graphes d\'analyse d\'impact',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '',
 ]);
@@ -736,8 +728,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:VirtualDevice' => 'Equipement Virtuel',
-	'Class:VirtualDevice+' => '',
+	'Class:VirtualDevice' => 'Équipement virtuel',
+	'Class:VirtualDevice+' => 'Classe abstraite utilisée pour la virtualisation de serveurs (Hôte virtuel et Machine virtuelle).',
 	'Class:VirtualDevice/Attribute:status' => 'Etat',
 	'Class:VirtualDevice/Attribute:status+' => '',
 	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Implémentation',
@@ -757,8 +749,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:VirtualHost' => 'Hôte Virtuel',
-	'Class:VirtualHost+' => '',
+	'Class:VirtualHost' => 'Hôte virtuel',
+	'Class:VirtualHost+' => 'Classe abstraite pour les Équipements virtuels (Hyperviseur, vCluster,...) hébergeant des Machines virtuelles.',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Machines virtuelles',
 	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Toutes les machiens virtuelles hébergées par cet hôte',
 	'Class:VirtualHost/Attribute:virtualmachine_list/UI:Links:Create:Button+' => 'Créer une %4$s',
@@ -775,7 +767,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Hypervisor' => 'Hyperviseur',
-	'Class:Hypervisor+' => '',
+	'Class:Hypervisor+' => 'Hôte virtuel. Logiciel de virtualisation (MS Hyper-V, VMWare ESX, Xen, etc.) s\'exécutant sur un serveur physique et permettant la création de machines virtuelles.',
 	'Class:Hypervisor/Attribute:farm_id' => 'vCluster',
 	'Class:Hypervisor/Attribute:farm_id+' => '',
 	'Class:Hypervisor/Attribute:farm_name' => 'Nom vCluster',
@@ -792,7 +784,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Farm' => 'vCluster',
-	'Class:Farm+' => '',
+	'Class:Farm+' => 'Hôte virtuel. Une ferme (ou vCluster) est un groupe d\'hyperviseurs mutualisés partageant des ressources de stockage afin de fournir un système tolérant aux pannes pour héberger des Machines virtuelles.',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hyperviseurs',
 	'Class:Farm/Attribute:hypervisor_list+' => 'Tous les hyperviseurs qui composent ce vCluster',
 	'Class:Farm/Attribute:hypervisor_list/UI:Links:Create:Button+' => 'Créer un %4$s',
@@ -813,7 +805,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:VirtualMachine' => 'Machine virtuelle',
-	'Class:VirtualMachine+' => '',
+	'Class:VirtualMachine+' => 'Équivalent virtuel d\'un serveur, hébergé soit sur un Hyperviseur soit sur une ferme (ou vCluster).',
 	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s',
 	'Class:VirtualMachine/Attribute:virtualhost_id' => 'vCluster / Hyperviseur',
 	'Class:VirtualMachine/Attribute:virtualhost_id+' => '',
@@ -853,7 +845,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:LogicalVolume' => 'Volume logique',
-	'Class:LogicalVolume+' => '',
+	'Class:LogicalVolume+' => 'Unité de stockage gérée à l’intérieur d’un Système de stockage. Elle peut être utilisée par plusieurs Serveurs et Équipement virtuels.',
 	'Class:LogicalVolume/Attribute:name' => 'Nom',
 	'Class:LogicalVolume/Attribute:name+' => '',
 	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
@@ -879,8 +871,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkServerToVolume' => 'Lien Serveur / Volume',
-	'Class:lnkServerToVolume+' => '',
+	'Class:lnkServerToVolume' => 'Lien Serveur / Volume  logique',
+	'Class:lnkServerToVolume+' => 'Ce lien n:n indique qu\'un Serveur utilise un Volume logique (une unité de stockage gérée à l’intérieur d’un Système de stockage). Plusieurs Serveurs peuvent utiliser le même Volume logique.',
 	'Class:lnkServerToVolume/Name' => '%1$s / %2$s',
 	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume logique',
 	'Class:lnkServerToVolume/Attribute:volume_id+' => '',
@@ -899,8 +891,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkVirtualDeviceToVolume' => 'Lien Device virtuel / Volume',
-	'Class:lnkVirtualDeviceToVolume+' => '',
+	'Class:lnkVirtualDeviceToVolume' => 'Lien Équipement virtuel / Volume logique',
+	'Class:lnkVirtualDeviceToVolume+' => 'Ce lien n:n indique qu\'un Équipement virtuel utilise un Volume logique (une unité de stockage gérée à l’intérieur d’un Système de stockage). Plusieurs Équipements virtuels peuvent utiliser le même Volume logique.',
 	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume logique',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '',
@@ -919,8 +911,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkSanToDatacenterDevice' => 'Lien San / Device',
-	'Class:lnkSanToDatacenterDevice+' => '',
+	'Class:lnkSanToDatacenterDevice' => 'Lien Switch SAN / Matériel de datacenter',
+	'Class:lnkSanToDatacenterDevice+' => 'Ce lien n:n modélise la connection réseau entre un Switch SAN et un Matériel de datacenter (un Serveur, un Équipement réseau, etc..).',
 	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'Switch SAN',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '',
@@ -942,7 +934,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Tape' => 'Bande',
-	'Class:Tape+' => '',
+	'Class:Tape+' => 'Une Bande (ou cartouche) dans '.ITOP_APPLICATION_SHORT.' est un élément de stockage amovible au sein d\'une Bandothèque.',
 	'Class:Tape/Attribute:name' => 'Nom',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => 'Description',
@@ -961,7 +953,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:NASFileSystem' => 'Système de fichier NAS',
-	'Class:NASFileSystem+' => '',
+	'Class:NASFileSystem+' => 'Représente un système de fichiers partagé hébergé dans un NAS donné (Network Attached Storage).',
 	'Class:NASFileSystem/Attribute:name' => 'Nom',
 	'Class:NASFileSystem/Attribute:name+' => '',
 	'Class:NASFileSystem/Attribute:description' => 'Description',
@@ -982,7 +974,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Software' => 'Logiciel',
-	'Class:Software+' => '',
+	'Class:Software+' => 'Un logiciel est un élément générique du catalogue logiciel. Il possède une version particulière. Dans '.ITOP_APPLICATION_SHORT.', un logiciel appartient à une catégorie : Serveur de BDD, Middleware, Logiciel PC, Serveur web ou autre.',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s',
 	'Class:Software/Attribute:name' => 'Nom',
 	'Class:Software/Attribute:name+' => '',
@@ -992,6 +984,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => 'Documents',
 	'Class:Software/Attribute:documents_list+' => 'Tous les documents liés à ce logiciel',
+	'Class:Software/Attribute:logo' => 'Logo',
+	'Class:Software/Attribute:logo+' => 'Utilisé comme icône des Instances qui utilisent ce Logiciel, lors de leur affichage dans les graphes d\'analyse d\'impact',
 	'Class:Software/Attribute:type' => 'Type',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'Serveur de base de données',
@@ -1036,7 +1030,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Patch' => 'Patch',
-	'Class:Patch+' => '',
+	'Class:Patch+' => 'Classe abstraite pour les patchs, hotfixes, correctifs de sécurité ou service packs pour un OS ou un logiciel.',
 	'Class:Patch/Attribute:name' => 'Nom',
 	'Class:Patch/Attribute:name+' => '',
 	'Class:Patch/Attribute:documents_list' => 'Documents',
@@ -1053,7 +1047,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSPatch' => 'Patch OS',
-	'Class:OSPatch+' => '',
+	'Class:OSPatch+' => 'Patch, hotfix, correctif de sécurité ou pack de services pour un système d\'exploitation donné.',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Systèmes',
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'Tous les systèmes où ce patch est installé',
 	'Class:OSPatch/Attribute:osversion_id' => 'Version OS',
@@ -1067,8 +1061,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:SoftwarePatch' => 'Patch Logiciel',
-	'Class:SoftwarePatch+' => '',
+	'Class:SoftwarePatch' => 'Patch logiciel',
+	'Class:SoftwarePatch+' => 'Patch, hotfix, correctif de sécurité ou pack de services pour un logiciel donné.',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Logiciel',
 	'Class:SoftwarePatch/Attribute:software_id+' => '',
 	'Class:SoftwarePatch/Attribute:software_name' => 'Nom logiciel',
@@ -1086,8 +1080,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:Licence' => 'License',
-	'Class:Licence+' => '',
+	'Class:Licence' => 'Licence',
+	'Class:Licence+' => 'Classe abstraite. Contrat de licence pour une version d\'OS ou un logiciel particulier.',
 	'Class:Licence/Attribute:name' => 'Nom',
 	'Class:Licence/Attribute:name+' => '',
 	'Class:Licence/Attribute:documents_list' => 'Documents',
@@ -1118,7 +1112,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Licence/Attribute:perpetual/Value:no+' => 'non',
 	'Class:Licence/Attribute:perpetual/Value:yes' => 'oui',
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'oui',
-	'Class:Licence/Attribute:finalclass' => 'Sous-classe de License',
+	'Class:Licence/Attribute:finalclass' => 'Sous-classe de Licence',
 	'Class:Licence/Attribute:finalclass+' => 'Nom de la classe instanciable',
 ]);
 
@@ -1128,7 +1122,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSLicence' => 'Licence OS',
-	'Class:OSLicence+' => '',
+	'Class:OSLicence+' => 'Contrat de licence pour un système d’exploitation particulier. Le contrat peut couvrir le système d\'exploitation de plusieurs serveurs et machines virtuelles.',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:OSLicence/Attribute:osversion_id' => 'Version OS',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
@@ -1157,8 +1151,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:SoftwareLicence' => 'Licence Logiciel',
-	'Class:SoftwareLicence+' => '',
+	'Class:SoftwareLicence' => 'Licence logiciel',
+	'Class:SoftwareLicence+' => 'Contrat de licence pour un logiciel particulier. La licence est liée à un logiciel (par exemple MS Office 2010) et peut être associée à plusieurs instances de ce logiciel.',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Logiciel',
 	'Class:SoftwareLicence/Attribute:software_id+' => '',
@@ -1180,7 +1174,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkDocumentToLicence' => 'Lien Document / Licence',
-	'Class:lnkDocumentToLicence+' => '',
+	'Class:lnkDocumentToLicence+' => 'Lien utilisé lorsqu\'un Document est applicable à une Licence.',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licence',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
@@ -1197,12 +1191,14 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:OSVersion' => 'Version OS',
-	'Class:OSVersion+' => '',
+	'Class:OSVersion' => 'Version d\'OS',
+	'Class:OSVersion+' => 'Typologie. Liste des valeurs possibles pour la « Version d\'OS » d\'un ordinateur (serveur, machine virtuelle ou PC). Les versions d\'OS sont organisées par famille d\'OS.',
 	'Class:OSVersion/Attribute:osfamily_id' => 'Famille OS',
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Nom Famille OS',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Le nom doit être unique au sein de cette famille d\'OS',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'cette version d\'OS existe déjà dans cette famille',
 	'Class:OSVersion/Attribute:ospatches_list' => 'Patchs OS',
 	'Class:OSVersion/Attribute:ospatches_list+' => 'Tous les patchs de cette version OS',
 ]);
@@ -1212,10 +1208,12 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:OSFamily' => 'Famille OS',
-	'Class:OSFamily+' => '',
+	'Class:OSFamily' => 'Famille d\'OS',
+	'Class:OSFamily+' => 'Typologie. Liste des valeurs possibles pour l\'attribut "Famille d\'OS" des serveurs, machines virtuelles et PC.',
 	'Class:OSFamily/Attribute:osversions_list' => 'Versions OS',
 	'Class:OSFamily/Attribute:osversions_list+' => 'Toutes les versions OS pour cette famille',
+	'Class:OSFamily/UniquenessRule:name+' => 'Le nom doit être unique',
+	'Class:OSFamily/UniquenessRule:name' => 'cette famille d\'OS existe déjà',
 ]);
 
 //
@@ -1224,7 +1222,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Brand' => 'Marque',
-	'Class:Brand+' => '',
+	'Class:Brand+' => 'Typologie. Liste des valeurs possibles pour l\'attribut « Marque » d\'un matériel physique.',
 	'Class:Brand/Attribute:iosversions_list' => 'Versions IOS',
 	'Class:Brand/Attribute:iosversions_list+' => 'Toutes les versions IOS pour cette marque',
 	'Class:Brand/Attribute:logo' => 'Logo',
@@ -1249,7 +1247,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Model' => 'Modèle de matériel',
-	'Class:Model+' => '',
+	'Class:Model+' => 'Typologie. Liste des valeurs possibles pour le modèle d\'un matériel physique. Chaque Modèle appartient à une seule Marque et s\'applique généralement à un seul type de Matériel physique.',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s',
 	'Class:Model/Attribute:brand_id' => 'Marque',
 	'Class:Model/Attribute:brand_id+' => '',
@@ -1313,7 +1311,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:NetworkDeviceType' => 'Type d\'équipement réseau',
-	'Class:NetworkDeviceType+' => '',
+	'Class:NetworkDeviceType+' => 'Typologie. Valeurs possibles pour le type d’un équipement réseau (ex : Routeur, Switch, Firewall, etc.).',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Equipements réseaux',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Tous les équipements réseaux correspondant à ce type',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list/UI:Links:Create:Button+' => 'Créer un %4$s',
@@ -1329,12 +1327,14 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:IOSVersion' => 'Version IOS',
-	'Class:IOSVersion+' => '',
+	'Class:IOSVersion' => 'Version d\'IOS',
+	'Class:IOSVersion+' => 'Typologie. Valeurs possibles des versions de systèmes d’exploitation pour équipements réseau.',
 	'Class:IOSVersion/Attribute:brand_id' => 'Marque',
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Nom Marque',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Le nom doit être unique pour cette marque',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'cette version d\'IOS existe déja sur cette marque',
 	'Class:IOSVersion/Attribute:networkdevices_list' => 'Equipements réseaux',
 	'Class:IOSVersion/Attribute:networkdevices_list+' => 'Tous les équipements réseaux utilisant cette version IOS',
 ]);
@@ -1345,7 +1345,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkDocumentToPatch' => 'Lien Document / Patch',
-	'Class:lnkDocumentToPatch+' => '',
+	'Class:lnkDocumentToPatch+' => 'Lien utilisé lorsqu\'un Document est applicable à un Patch',
 	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch',
 	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
@@ -1363,7 +1363,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Lien Instance logiciel / Patch logiciel',
-	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch+' => 'Ce lien indique qu\'un Patch logiciel a été appliqué sur une Instance logiciel',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Patch logiciel',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '',
@@ -1380,8 +1380,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkFunctionalCIToOSPatch' => 'Lien CI Fonctionnel / Patch OS',
-	'Class:lnkFunctionalCIToOSPatch+' => '',
+	'Class:lnkFunctionalCIToOSPatch' => 'Lien CI fonctionnel / Patch OS',
+	'Class:lnkFunctionalCIToOSPatch+' => 'Modélise le déploiement d\'un Patch d\'OS sur un équipment',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'Patch OS',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '',
@@ -1399,7 +1399,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkDocumentToSoftware' => 'Lien Document / Logiciel',
-	'Class:lnkDocumentToSoftware+' => '',
+	'Class:lnkDocumentToSoftware+' => 'Lien utilisé lorsqu\'un Document est applicable à un Logiciel.',
 	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Logiciel',
 	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
@@ -1417,7 +1417,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Subnet' => 'Subnet',
-	'Class:Subnet+' => '',
+	'Class:Subnet+' => 'Segment d\'un réseau IP, défini par une adresse IP et un masque.',
 	'Class:Subnet/Name' => '%1$s/%2$s',
 	'Class:Subnet/ComplementaryName' => '%1$s - %2$s',
 	'Class:Subnet/Attribute:description' => 'Description',
@@ -1442,7 +1442,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:VLAN' => 'VLAN',
-	'Class:VLAN+' => '',
+	'Class:VLAN+' => 'Un VLAN est utilisé pour regrouper de manière logique des réseaux, sous-réseaux et interfaces physiques participant au même VLAN.',
 	'Class:VLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:VLAN/Attribute:vlan_tag+' => '',
 	'Class:VLAN/Attribute:description' => 'Description',
@@ -1467,7 +1467,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkSubnetToVLAN' => 'Lien Subnet / VLAN',
-	'Class:lnkSubnetToVLAN+' => '',
+	'Class:lnkSubnetToVLAN+' => 'Ce lien n:n indique qu\'un VLAN est présent sur un Subnet. Plusieurs VLAN peuvent être présents sur le même Subnet et un VLAN peut s\'étendre sur plusieurs Subnets.',
 	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Subnet',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '',
@@ -1486,8 +1486,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:NetworkInterface' => 'Interface Réseau',
-	'Class:NetworkInterface+' => '',
+	'Class:NetworkInterface' => 'Interface réseau',
+	'Class:NetworkInterface+' => 'Classe abstraite pour tous les types d\'interfaces réseau.',
 	'Class:NetworkInterface/Attribute:name' => 'Nom',
 	'Class:NetworkInterface/Attribute:name+' => '',
 	'Class:NetworkInterface/Attribute:finalclass' => 'Sous-classe d\'Interface Réseau',
@@ -1500,7 +1500,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:IPInterface' => 'Interface IP',
-	'Class:IPInterface+' => '',
+	'Class:IPInterface+' => 'Classe abstraite. Type d’interface réseau avec une adresse IP.',
 	'Class:IPInterface/Attribute:ipaddress' => 'Adresse IP',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
 	'Class:IPInterface/Attribute:macaddress' => 'Adresse MAC',
@@ -1521,12 +1521,16 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PhysicalInterface' => 'Interface physique',
-	'Class:PhysicalInterface+' => '',
+	'Class:PhysicalInterface+' => 'Type d’interface IP représentant une interface réseau physique (ex : carte Ethernet).',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Matériel',
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Nom matériel',
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
+	'Class:PhysicalInterface/Attribute:org_id+' => '',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Site',
+	'Class:PhysicalInterface/Attribute:location_id+' => '',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLANs',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
 ]);
@@ -1536,8 +1540,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkPhysicalInterfaceToVLAN' => 'Lien Interface réseau / VLAN',
-	'Class:lnkPhysicalInterfaceToVLAN+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN' => 'Lien Interface physique / VLAN',
+	'Class:lnkPhysicalInterfaceToVLAN+' => 'Ce lien indique lorsqu\'une Interface réseau fait partie d\'un VLAN (Virtual Local Area Network).',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Interface réseau',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '',
@@ -1559,7 +1563,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:LogicalInterface' => 'Interface logique',
-	'Class:LogicalInterface+' => '',
+	'Class:LogicalInterface+' => 'Interface IP qui n\'est pas associée de façon permanente à un port physique, l\'association est dynamique. Elle peut être utilisée pour une machine virtuelle.',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Machine virtuelle',
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Nom Machine virtuelle',
@@ -1571,8 +1575,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:FiberChannelInterface' => 'Interface Fibre',
-	'Class:FiberChannelInterface+' => '',
+	'Class:FiberChannelInterface' => 'Interface fibre',
+	'Class:FiberChannelInterface+' => 'Interface réseau vers une technologie haut débit principalement utilisée pour connecter des systèmes de stockage.',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Vitesse',
 	'Class:FiberChannelInterface/Attribute:speed+' => '',
 	'Class:FiberChannelInterface/Attribute:topology' => 'Topologie',
@@ -1590,8 +1594,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkConnectableCIToNetworkDevice' => 'Lien Device / Equipement réseau',
-	'Class:lnkConnectableCIToNetworkDevice+' => '',
+	'Class:lnkConnectableCIToNetworkDevice' => 'Lien Device / Équipement réseau',
+	'Class:lnkConnectableCIToNetworkDevice+' => 'Définit sur quel équipment réseau un matériel est connecté. ',
 	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Equipement réseau',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '',
@@ -1618,8 +1622,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkApplicationSolutionToFunctionalCI' => 'Lien Solution Applicative / CI Fonctionnel',
-	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI' => 'Lien Solution applicative / CI fonctionnel',
+	'Class:lnkApplicationSolutionToFunctionalCI+' => 'Modélise l\'appartenance d\'un équipment à une Solution Applicative. La signification de cette relation varie suivant les types de Solution applicative.',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Solution applicative',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
@@ -1636,8 +1640,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkApplicationSolutionToBusinessProcess' => 'Lien Solution Applicative / Processus métier',
-	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess' => 'Lien Solution applicative / Processus métier',
+	'Class:lnkApplicationSolutionToBusinessProcess+' => 'Modélise la relation entre une Solution applicative et un Processus Métier.',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Processus métier',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
@@ -1655,7 +1659,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Group' => 'Groupe',
-	'Class:Group+' => '',
+	'Class:Group+' => 'Le groupe est conçu pour définir des ensembles explicites d\'éléments de configuration pour tout projet. Contrairement à une solution applicative, un groupe n\'est impacté par aucun de ses composants et ne les impacte pas. Par exemple, lors d\'une migration d\'OS, un groupe peut être pratique pour rassembler les « serveurs à migrer ». Les serveurs migrés sont retirés du groupe au fur et à mesure de la migration.',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s',
 	'Class:Group/Attribute:name' => 'Nom',
 	'Class:Group/Attribute:name+' => '',
@@ -1690,8 +1694,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkGroupToCI' => 'Lien Groupe / CI',
-	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI' => 'Lien Groupe / CI fonctionnel',
+	'Class:lnkGroupToCI+' => 'Ce lien indique lorsqu\'un équipment (CI fonctionnel) fait partie d\'un Groupe.',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'Groupe',
 	'Class:lnkGroupToCI/Attribute:group_id+' => '',
@@ -1705,30 +1709,13 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
 ]);
 
-// Add translation for Fieldsets
-
-Dict::Add('FR FR', 'French', 'Français', [
-	'Server:baseinfo' => 'Informations générales',
-	'Server:Date' => 'Dates',
-	'Server:moreinfo' => 'Informations complémentaires',
-	'Server:otherinfo' => 'Autres informations',
-	'Server:power' => 'Alimentation électrique',
-	'Class:Subnet/Tab:IPUsage' => 'IP utilisées',
-	'Class:Subnet/Tab:IPUsage+' => 'Utilisation des IPs de ce subnet',
-	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces ayant une IP dans la plage: <em>%1$s</em> à <em>%2$s</em>',
-	'Class:Subnet/Tab:FreeIPs' => 'IP disponibles',
-	'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',
-	'Class:Subnet/Tab:FreeIPs-explain' => 'Voici un échantillon de dix addresses IP disponibles',
-	'Class:Document:PreviewTab' => 'Aperçu',
-]);
-
 //
 // Class: lnkDocumentToFunctionalCI
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkDocumentToFunctionalCI' => 'Lien Document / CI Fonctionnel',
-	'Class:lnkDocumentToFunctionalCI+' => '',
+	'Class:lnkDocumentToFunctionalCI' => 'Lien Document / CI fonctionnel',
+	'Class:lnkDocumentToFunctionalCI+' => 'Lien utilisé lorsqu\'un Document est applicable à un CI fonctionnel.',
 	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
@@ -1738,6 +1725,29 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Nom Document',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
+]);
+
+// Add translation for Fieldsets
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'ConfigMgmt:baseinfo' => 'Informations générales',
+	'Server:baseinfo' => 'Informations générales',
+	'ConfigMgmt:moreinfo' => 'Item spécifique',
+	'Server:moreinfo' => 'Matériel spécifique',
+	'Storage:moreinfo' => 'Stockage spécifique',
+	'Software:moreinfo' => 'Logiciel spécifique',
+	'Phone:moreinfo' => 'Téléphone spécifique',
+	'ConfigMgmt:otherinfo' => 'Dates et description',
+	'Server:Date' => 'Dates',
+	'Server:otherinfo' => 'Description',
+	'Server:power' => 'Alimentation électrique',
+	'Class:Subnet/Tab:IPUsage' => 'IP utilisées',
+	'Class:Subnet/Tab:IPUsage+' => 'Utilisation des IPs de ce subnet',
+	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces ayant une IP dans la plage: <em>%1$s</em> à <em>%2$s</em>',
+	'Class:Subnet/Tab:FreeIPs' => 'IP disponibles',
+	'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',
+	'Class:Subnet/Tab:FreeIPs-explain' => 'Voici un échantillon de dix addresses IP disponibles',
+	'Class:Document:PreviewTab' => 'Aperçu',
 ]);
 
 //
@@ -1789,15 +1799,4 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:OSVersion+' => '',
 	'Menu:Software' => 'Catalogue des logiciels de références',
 	'Menu:Software+' => 'Catalogue des logiciels de références',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
-	'Class:PhysicalInterface/Attribute:org_id+' => '',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Site',
-	'Class:PhysicalInterface/Attribute:location_id+' => '',
 ]);

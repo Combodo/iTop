@@ -63,8 +63,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:UserRequest' => 'Demande Utilisateur',
-	'Class:UserRequest+' => '',
+	'Class:UserRequest' => 'Demande utilisateur',
+	'Class:UserRequest+' => 'Type de Ticket qui couvre les incidents et les demandes de service.',
 	'Class:UserRequest/Attribute:status' => 'Etat',
 	'Class:UserRequest/Attribute:status+' => '',
 	'Class:UserRequest/Attribute:status/Value:new' => 'Nouveau',
@@ -143,9 +143,9 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:UserRequest/Attribute:service_id+' => '',
 	'Class:UserRequest/Attribute:service_name' => 'Nom du service',
 	'Class:UserRequest/Attribute:service_name+' => '',
-	'Class:UserRequest/Attribute:servicesubcategory_id' => 'Sous catégorie de service',
+	'Class:UserRequest/Attribute:servicesubcategory_id' => 'Sous-catégorie de service',
 	'Class:UserRequest/Attribute:servicesubcategory_id+' => '',
-	'Class:UserRequest/Attribute:servicesubcategory_name' => 'Nom Sous catégorie de service',
+	'Class:UserRequest/Attribute:servicesubcategory_name' => 'Nom Sous-catégorie de service',
 	'Class:UserRequest/Attribute:servicesubcategory_name+' => '',
 	'Class:UserRequest/Attribute:escalation_flag' => 'Ticket à surveiller',
 	'Class:UserRequest/Attribute:escalation_flag+' => '',

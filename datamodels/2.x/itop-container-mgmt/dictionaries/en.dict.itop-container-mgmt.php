@@ -57,6 +57,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:ContainerApplication/Attribute:descriptor+' => 'File describing how to deploy the application on the container platform (e.g., Docker Compose, Helm Chart, etc.)',
 	'Class:ContainerApplication/Attribute:containervirtualhost_id' => 'Container Host',
 	'Class:ContainerApplication/Attribute:containervirtualhost_id+' => 'Container Platform on which the application is running',
+	'Class:ContainerApplication/Attribute:logo' => 'Logo',
+	'Class:ContainerApplication/Attribute:logo+' => 'Used as object icon when this ContainerApplication is displayed within impact analysis graphs',
 	'Class:ContainerApplication/Attribute:containertype_id' => 'Container type',
 	'Class:ContainerApplication/Attribute:containertype_id+' => 'Technology used for containerization',
 	'Class:ContainerApplication/Attribute:containerimages_list' => 'Container images',
@@ -153,4 +155,19 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:ContainerImageType/ComplementaryName' => '',
 	'Class:ContainerImageType' => 'Container Image Type',
 	'Class:ContainerImageType+' => 'Typology of container images',
+]);
+
+//
+// Class Cloud, Server and Virtual Machine
+//
+
+Dict::Add('EN US', 'English', 'English', [
+	'Class:Cloud/Attribute:containerhosts_list' => 'Container Hosts',
+	'Class:Cloud/Attribute:containerhosts_list+' => 'List of container hosts running in this cloud',
+	'Class:Server/Attribute:containerhosts_list' => 'Container Hosts',
+	'Class:Server/Attribute:containerhosts_list+' => 'List of container hosts running on this server',
+	'Class:VirtualMachine/Attribute:containerhosts_list' => 'Container Hosts',
+	'Class:VirtualMachine/Attribute:containerhosts_list+' => 'List of container hosts running on this virtual machine',
+	'Class:Software/Attribute:containerimages_list' => 'Container Images',
+	'Class:Software/Attribute:containerimages_list+' => 'List of container images running this Software',
 ]);

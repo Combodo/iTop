@@ -55,7 +55,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:UserRequest' => 'User Request',
-	'Class:UserRequest+' => '',
+	'Class:UserRequest+' => 'Ticket type to handle only service requests and not Incidents.',
 	'Class:UserRequest/Attribute:status' => 'Status',
 	'Class:UserRequest/Attribute:status+' => '',
 	'Class:UserRequest/Attribute:status/Value:new' => 'New',

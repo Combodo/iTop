@@ -20,36 +20,36 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Verträge nach Status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Verträge, die in weniger als 30 Tagen auslaufen',
 	'Menu:ProviderContract' => 'Provider-Verträge',
-	'Menu:ProviderContract+' => 'Provider-Verträge',
+	'Menu:ProviderContract+' => 'What is bought to external companies~~',
 	'Menu:CustomerContract' => 'Kundenverträge',
-	'Menu:CustomerContract+' => 'Kundenverträge',
+	'Menu:CustomerContract+' => 'Who is buying the services~~',
 	'Menu:ServiceSubcategory' => 'Service-Unterkategorien',
-	'Menu:ServiceSubcategory+' => 'Service-Unterkategorien',
+	'Menu:ServiceSubcategory+' => 'Lowest level in service hierarchy~~',
 	'Menu:Service' => 'Services',
-	'Menu:Service+' => 'Services',
-	'Menu:ServiceElement' => 'Service-Elemente',
-	'Menu:ServiceElement+' => 'Service-Elemente',
+	'Menu:Service+' => 'Second level in service hierarchy~~',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => 'Service Level Agreements (SLAs)',
 	'Menu:SLT' => 'SLTs',
 	'Menu:SLT+' => 'Service Level Targets (SLTs)',
 	'Menu:DeliveryModel' => 'Delivery-Modelle',
-	'Menu:DeliveryModel+' => 'Delivery-Modelle',
+	'Menu:DeliveryModel+' => 'Teams handling tickets~~',
 	'Menu:ServiceFamily' => 'Service-Familien',
-	'Menu:ServiceFamily+' => 'Service-Familien',
+	'Menu:ServiceFamily+' => 'Top level in service hierarchy~~',
+	'Menu:ServiceCatalog' => 'Service catalog~~',
+	'Menu:ServiceCatalog+' => 'Define the service elements of your offering~~',
+	'UI-ServiceCatalogMenu-Title' => 'Service catalog~~',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal~~',
+	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'Only Service and Subcategory on production are visible in User Portal~~',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers~~',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal~~',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
+
 	'Contract:baseinfo' => 'Allgemeine Informationen',
 	'Contract:moreinfo' => 'Vertragliche Informationen',
 	'Contract:cost' => 'Kosteninformation',
 ]);
-
-/*
-	'UI:ServiceManagementMenu' => 'Gestion des Services',
-	'UI:ServiceManagementMenu+' => 'Gestion des Services',
-	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
-*/
 
 //
 // Class: Organization
@@ -250,7 +250,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Service/Attribute:contacts_list' => 'Kontakte',
 	'Class:Service/Attribute:contacts_list+' => 'Alle mit dem Service verknüpften Kontakte',
 	'Class:Service/Attribute:status' => 'Status',
-	'Class:Service/Attribute:status+' => '',
+	'Class:Service/Attribute:status+' => 'By default only Service in production are visible by Portal users~~',
 	'Class:Service/Attribute:status/Value:implementation' => 'Implementierung',
 	'Class:Service/Attribute:status/Value:implementation+' => '',
 	'Class:Service/Attribute:status/Value:obsolete' => 'Obsolet (Veraltet)',
@@ -326,7 +326,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Produktion',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => '',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Request-Typ',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user selects this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Incident',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => '',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Service-Request',
@@ -446,6 +446,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA-Name',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);
 
 //
@@ -547,13 +549,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);

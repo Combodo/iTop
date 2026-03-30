@@ -83,11 +83,11 @@
                             // N°4662 - Surround tooltip with div to ensure text retrival
 							if( (data.tooltip !== undefined) && ($('<div>'+data.tooltip+'</div>').text() !== ''))
 							{
-								cellElem.html( $('<span></span>').attr('data-tooltip-content', data.tooltip).attr('data-tooltip-html-enabled', true).html(data.name).prop('outerHTML') );
+								cellElem.html( $('<span></span>').attr('data-tooltip-content', data.tooltip).attr('data-tooltip-html-enabled', true).text(data.name).prop('outerHTML') );
 							}
 							else
 							{
-								cellElem.html(data.name);
+								cellElem.text(data.name);
 							}
 
 							// Building actions

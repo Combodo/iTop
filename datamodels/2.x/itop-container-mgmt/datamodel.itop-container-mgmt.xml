@@ -92,7 +92,40 @@
           <duplicates/>
         </field>
       </fields>
-      <methods/>
+      <methods>
+        <method id="GetIcon">
+          <comment>	/**
+            * Overrides the GetIcon method to return the logo of the associated Software if any, otherwise the default icon of the class will be returned
+            *
+            */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Custom</type>
+          <code><![CDATA[	public function GetIcon($bImgTag = true)
+    {
+        // If there is an image defined on the associated Software, we use it
+        $sIconClass = 'Software'; // the class storing the image which will be used as icon for the current object
+        $sExtKeyCode = 'software_id'; // the attribute code pointing to the class having the image to display
+        $sIconAttCode = 'logo'; // the attribute code of the image to display on the IconClass
+
+        $iObj = $this->Get($sExtKeyCode);
+        if ($iObj > 0) {
+            $oObj = MetaModel::GetObject($sIconClass, $iObj, true, true);
+            $oImage = $oObj->Get($sIconAttCode);
+            $sIconUrl = $oImage->IsEmpty() ? '' : $oImage->GetDisplayURL($sIconClass, $iObj, $sIconAttCode);
+            if (strlen($sIconUrl) > 0) {
+                if ($bImgTag) {
+                    return "<img src=\"$sIconUrl\" alt=''/>";
+                } else {
+                    return $sIconUrl;
+                }
+            }
+        }
+        // Return the default image
+        return parent::GetIcon($bImgTag);
+    }]]></code>
+        </method>
+      </methods>
       <presentation>
         <list>
           <items>
@@ -129,6 +162,22 @@
             </item>
           </items>
         </search>
+        <summary>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="version">
+              <rank>20</rank>
+            </item>
+            <item id="publisher">
+              <rank>30</rank>
+            </item>
+            <item id="type_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="col:col1">
@@ -228,6 +277,10 @@
             <attribute id="containervirtualhost_id_friendlyname"/>
           </complementary_attributes>
         </naming>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+          <image_attribute>logo</image_attribute>
+        </fields_semantic>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -235,9 +288,6 @@
              <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
-        <fields_semantic>
-          <state_attribute>status</state_attribute>
-        </fields_semantic>
         <style>
           <icon>images/icons8-application-container.svg</icon>
         </style>
@@ -254,6 +304,13 @@
           <target_class>ContainerVirtualHost</target_class>
           <on_target_delete>DEL_AUTO</on_target_delete>
           <tracking_level>all</tracking_level>
+        </field>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="containerimages_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkContainerApplicationToImage</linked_class>
@@ -315,6 +372,22 @@
             </item>
           </items>
         </search>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="containervirtualhost_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="col:col1">
@@ -357,8 +430,11 @@
                     <item id="move2production">
                       <rank>50</rank>
                     </item>
-                    <item id="description">
+                    <item id="logo">
                       <rank>60</rank>
+                    </item>
+                    <item id="description">
+                      <rank>70</rank>
                     </item>
                   </items>
                   <rank>10</rank>
@@ -740,6 +816,9 @@
           <target_class>ContainerCluster</target_class>
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <tracking_level>all</tracking_level>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
         </field>
         <field id="role" xsi:type="AttributeEnum">
           <sql>role</sql>
@@ -761,9 +840,6 @@
           <default_value>standalone</default_value>
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
-          <dependencies>
-            <attribute id="containercluster_id"/>
-          </dependencies>
           <tracking_level>all</tracking_level>
         </field>
         <field id="system_id" xsi:type="AttributeExternalKey">
@@ -834,6 +910,28 @@
             </item>
           </items>
         </search>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="system_id">
+              <rank>20</rank>
+            </item>
+            <item id="containertype_id">
+              <rank>30</rank>
+            </item>
+            <item id="containercluster_id">
+              <rank>40</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>50</rank>
+            </item>
+            <item id="description">
+              <rank>60</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="col:col1">
@@ -1025,6 +1123,22 @@
             </item>
           </items>
         </search>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="containertype_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="col:col1">
@@ -1213,6 +1327,92 @@
           <items>
             <item id="containerhosts_list" _delta="define">
               <rank>40</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <relations>
+        <relation id="impacts" _delta="merge">
+          <neighbours>
+            <neighbour id="containerhosts" _delta="define">
+              <attribute>containerhosts_list</attribute>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+    </class>
+    <class id="Server" _delta="must_exist">
+      <fields>
+        <field id="containerhosts_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>ContainerHost</linked_class>
+          <ext_key_to_me>system_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode/>
+          <with_php_constraint>false</with_php_constraint>
+          <with_php_computation>false</with_php_computation>
+          <edit_when/>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="containerhosts_list" _delta="define">
+              <rank>140</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <relations>
+        <relation id="impacts" _delta="merge">
+          <neighbours>
+            <neighbour id="containerhosts" _delta="define">
+              <attribute>containerhosts_list</attribute>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+    </class>
+    <class id="Software" _delta="must_exist">
+      <fields>
+        <field id="containerimages_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>ContainerImage</linked_class>
+          <ext_key_to_me>software_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode>add_only</edit_mode>
+          <with_php_constraint>false</with_php_constraint>
+          <with_php_computation>false</with_php_computation>
+          <edit_when/>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="containerimages_list" _delta="define">
+              <rank>150</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="VirtualMachine" _delta="must_exist">
+      <fields>
+        <field id="containerhosts_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>ContainerHost</linked_class>
+          <ext_key_to_me>system_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode/>
+          <with_php_constraint>false</with_php_constraint>
+          <with_php_computation>false</with_php_computation>
+          <edit_when/>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="containerhosts_list" _delta="define">
+              <rank>140</rank>
             </item>
           </items>
         </details>

@@ -492,6 +492,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Todos os Itens de configuração (IC) que compõem esta Solução de aplicação',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Processos de negócio',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Todos os Processos de negócio dependentes desta Solução de aplicação',
+	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
+	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Status',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Ativo',
@@ -513,6 +515,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Soluções de aplicação',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Todas as soluções de aplicação que impactam este processo de negócio',
+	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
+	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:BusinessProcess/Attribute:status' => 'Status',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'Ativo',
@@ -609,6 +613,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:MiddlewareInstance' => 'Instância Middleware',
 	'Class:MiddlewareInstance+' => '',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Nome do middleware',
@@ -641,6 +647,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => 'Nome do servidor Web',
 	'Class:WebApplication/Attribute:webserver_name+' => '',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '',
 ]);
@@ -838,7 +846,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Tape' => 'Fita',
-	'Class:Tape+' => '',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
 	'Class:Tape/Attribute:name' => 'Nome',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => 'Descrição',
@@ -888,6 +896,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => 'Documentos',
 	'Class:Software/Attribute:documents_list+' => 'Todos os Documentos associados a este Software',
+	'Class:Software/Attribute:logo' => 'Logo~~',
+	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs~~',
 	'Class:Software/Attribute:type' => 'Tipo',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'Servidor de DB',
@@ -1053,6 +1063,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Nome da família do SO',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
 ]);
 
 //
@@ -1062,6 +1074,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:OSFamily' => 'Família do OS',
 	'Class:OSFamily+' => '',
+	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
+	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
 ]);
 
 //
@@ -1159,6 +1173,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Nome do fabricante',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
 ]);
 
 //
@@ -1526,6 +1542,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 // Add translation for Fieldsets
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Informações gerais',
 	'Server:Date' => 'Data',
 	'Server:moreinfo' => 'Mais informações',
@@ -1614,8 +1636,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
 	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location id~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
 	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 ]);

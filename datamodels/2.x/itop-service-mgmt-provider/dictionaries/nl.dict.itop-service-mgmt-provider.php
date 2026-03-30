@@ -27,9 +27,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:ServiceSubcategory' => 'Subcategorieën services',
 	'Menu:ServiceSubcategory+' => 'Subcategorieën services',
 	'Menu:Service' => 'Services',
-	'Menu:Service+' => 'Services',
-	'Menu:ServiceElement' => 'Service-elementen',
-	'Menu:ServiceElement+' => 'Service-elementen',
+	'Menu:Service+' => 'Second level in service hierarchy~~',
 	'Menu:SLA' => 'SLA\'s',
 	'Menu:SLA+' => 'Service Level Agreements',
 	'Menu:SLT' => 'SLT\'s',
@@ -38,19 +36,21 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:DeliveryModel+' => 'Leveringsmodellen',
 	'Menu:ServiceFamily' => 'Servicecategorieën',
 	'Menu:ServiceFamily+' => 'Servicecategorieën',
+	'Menu:ServiceCatalog' => 'Service catalog~~',
+	'Menu:ServiceCatalog+' => 'Define the service elements of your offering~~',
+	'UI-ServiceCatalogMenu-Title' => 'Service catalog~~',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal~~',
+	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'Only Service and Subcategory on production are visible in User Portal~~',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers~~',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal~~',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
+
 	'Contract:baseinfo' => 'Algemene informatie',
 	'Contract:moreinfo' => 'Contractuele informatie',
 	'Contract:cost' => 'Financiële informatie',
 ]);
-
-/*
-	'UI:ServiceManagementMenu' => 'Gestion des Services',
-	'UI:ServiceManagementMenu+' => 'Gestion des Services',
-	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
-*/
 
 //
 // Class: Organization
@@ -251,7 +251,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Service/Attribute:contacts_list' => 'Contacten',
 	'Class:Service/Attribute:contacts_list+' => 'Alle contacten voor deze service',
 	'Class:Service/Attribute:status' => 'Status',
-	'Class:Service/Attribute:status+' => '',
+	'Class:Service/Attribute:status+' => 'By default only Service in production are visible by Portal users~~',
 	'Class:Service/Attribute:status/Value:implementation' => 'Implementatie',
 	'Class:Service/Attribute:status/Value:implementation+' => 'Implementatie',
 	'Class:Service/Attribute:status/Value:obsolete' => 'Buiten gebruik',
@@ -327,7 +327,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Productie',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'Productie',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Soort verzoek',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user selects this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Incident',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'Incident',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Serviceverzoek',
@@ -447,6 +447,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'Naam SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);
 
 //
@@ -548,13 +550,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);

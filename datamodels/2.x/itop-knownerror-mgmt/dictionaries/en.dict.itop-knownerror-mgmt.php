@@ -53,7 +53,7 @@
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:KnownError' => 'Known Error',
-	'Class:KnownError+' => 'Error documented for a known issue',
+	'Class:KnownError+' => 'Error with multiple occurrences, documented during a Problem management, to ease troubleshooting.',
 	'Class:KnownError/Attribute:name' => 'Name',
 	'Class:KnownError/Attribute:name+' => 'This is expected to be a unique identifier within the Known Errors of this organization',
 	'Class:KnownError/Attribute:org_id' => 'Organization',
@@ -101,7 +101,7 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:lnkErrorToFunctionalCI' => 'Link Error / FunctionalCI',
+	'Class:lnkErrorToFunctionalCI' => 'Link KnownError / FunctionalCI',
 	'Class:lnkErrorToFunctionalCI+' => 'Infra related to a known error',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
@@ -121,8 +121,8 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:lnkDocumentToError' => 'Link Documents / Errors',
-	'Class:lnkDocumentToError+' => 'A link between a document and a known error',
+	'Class:lnkDocumentToError' => 'Link Document / Known Error',
+	'Class:lnkDocumentToError+' => 'Used when a Document is pertinent for a Known Error',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Document',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',

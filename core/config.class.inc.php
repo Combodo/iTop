@@ -928,7 +928,7 @@ class Config
 			'type' => 'string',
 			'description' => 'Actions that are available as direct buttons next to the "Actions" menu',
 			// examples... not used
-			'default' => 'UI:Menu:Modify,UI:Menu:New',
+			'default' => 'UI:Menu:Modify,UI:Menu:New,UI:Menu:impacts_down,UI:Menu:impacts_up',
 			'value' => 'UI:Menu:Modify',
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
@@ -1745,6 +1745,14 @@ class Config
 			'description'         => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',
 			'default'             => true,
 			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'security.force_login_when_no_delegated_authentication_endpoints_list' => [
+			'type'                => 'bool',
+			'description'         => 'If true, when no execution policy is defined, the user will be forced to log in (instead of being automatically logged in with the default profile)',
+			'default'             => false,
+			'value'               => false,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],

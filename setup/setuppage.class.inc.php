@@ -36,6 +36,8 @@ class SetupPage extends NiceWebPage
 {
 	public const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/setuppage/layout';
 
+	protected const BODY_DATA_GUI_TYPE = 'setup';
+
 	public function __construct($sTitle)
 	{
 		parent::__construct($sTitle);

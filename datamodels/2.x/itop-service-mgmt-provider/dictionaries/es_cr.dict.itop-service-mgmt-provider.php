@@ -17,36 +17,36 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por Estatus',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos Finalizando en menos de 30 días',
 	'Menu:ProviderContract' => 'Contratos con Proveedores',
-	'Menu:ProviderContract+' => 'Contratos con Proveedores',
+	'Menu:ProviderContract+' => 'What is bought to external companies~~',
 	'Menu:CustomerContract' => 'Acuerdos con Clientes',
-	'Menu:CustomerContract+' => 'Acuerdos con Clientes',
+	'Menu:CustomerContract+' => 'Who is buying the services~~',
 	'Menu:ServiceSubcategory' => 'Subcategorías de Servicio',
-	'Menu:ServiceSubcategory+' => 'Subcategorías de Servicio',
+	'Menu:ServiceSubcategory+' => 'Lowest level in service hierarchy~~',
 	'Menu:Service' => 'Servicios',
-	'Menu:Service+' => 'Servicios',
-	'Menu:ServiceElement' => 'Elementos del Servicio',
-	'Menu:ServiceElement+' => 'Elementos del Servicio',
+	'Menu:Service+' => 'Second level in service hierarchy~~',
 	'Menu:SLA' => 'SLAs - Acuerdos de Nivel de Servicio',
 	'Menu:SLA+' => 'Acuerdos de Nivel de Servicio',
 	'Menu:SLT' => 'SLTs - Objetivos de Nivel de Servicio',
 	'Menu:SLT+' => 'Objetivos de Nivel de Servicio',
 	'Menu:DeliveryModel' => 'Modelos de Entrega',
-	'Menu:DeliveryModel+' => 'Modelos de Entrega',
+	'Menu:DeliveryModel+' => 'Teams handling tickets~~',
 	'Menu:ServiceFamily' => 'Familias de Servicio',
-	'Menu:ServiceFamily+' => 'Familias de Servicio',
+	'Menu:ServiceFamily+' => 'Top level in service hierarchy~~',
+	'Menu:ServiceCatalog' => 'Service catalog~~',
+	'Menu:ServiceCatalog+' => 'Define the service elements of your offering~~',
+	'UI-ServiceCatalogMenu-Title' => 'Service catalog~~',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal~~',
+	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'Only Service and Subcategory on production are visible in User Portal~~',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers~~',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal~~',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
+
 	'Contract:baseinfo' => 'Información General',
 	'Contract:moreinfo' => 'Información Contractual',
 	'Contract:cost' => 'Información de Costos',
 ]);
-
-/*
-	'UI:ServiceManagementMenu' => 'Gestion des Services',
-	'UI:ServiceManagementMenu+' => 'Gestion des Services',
-	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
-*/
 
 //
 // Class: Organization
@@ -213,13 +213,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:ServiceFamily' => 'Familia de Servicios',
-	'Class:ServiceFamily+' => 'Familia de Servicios',
+	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Nombre',
 	'Class:ServiceFamily/Attribute:name+' => 'Nombre de la Familia de Servicios',
 	'Class:ServiceFamily/Attribute:icon' => 'Icono',
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Servicios',
-	'Class:ServiceFamily/Attribute:services_list+' => 'Servicios',
+	'Class:ServiceFamily/Attribute:services_list+' => '',
 ]);
 
 //
@@ -228,16 +228,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Service' => 'Servicio',
-	'Class:Service+' => 'Servicio',
+	'Class:Service+' => '',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s',
 	'Class:Service/Attribute:name' => 'Nombre',
 	'Class:Service/Attribute:name+' => 'Nombre del Servicio',
 	'Class:Service/Attribute:org_id' => 'Proveedor',
-	'Class:Service/Attribute:org_id+' => 'Proveedor',
+	'Class:Service/Attribute:org_id+' => '',
 	'Class:Service/Attribute:organization_name' => 'Proveedor',
 	'Class:Service/Attribute:organization_name+' => 'Proveedor',
 	'Class:Service/Attribute:description' => 'Descripción',
-	'Class:Service/Attribute:description+' => 'Descripción',
+	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Familia de Servicios',
 	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Familia de Servicios',
@@ -247,7 +247,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Service/Attribute:contacts_list' => 'Contactos',
 	'Class:Service/Attribute:contacts_list+' => 'Contactos',
 	'Class:Service/Attribute:status' => 'Estatus',
-	'Class:Service/Attribute:status+' => 'Estatus',
+	'Class:Service/Attribute:status+' => 'By default only Service in production are visible by Portal users~~',
 	'Class:Service/Attribute:status/Value:implementation' => 'No Productivo',
 	'Class:Service/Attribute:status/Value:implementation+' => 'No Productivo',
 	'Class:Service/Attribute:status/Value:obsolete' => 'Obsoleto',
@@ -255,11 +255,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Service/Attribute:status/Value:production' => 'Productivo',
 	'Class:Service/Attribute:status/Value:production+' => 'Productivo',
 	'Class:Service/Attribute:icon' => 'Icono',
-	'Class:Service/Attribute:icon+' => 'Icono',
+	'Class:Service/Attribute:icon+' => '',
 	'Class:Service/Attribute:customercontracts_list' => 'Acuerdos con Clientes',
 	'Class:Service/Attribute:customercontracts_list+' => 'Acuerdos con Clientes',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Subcategorias de Servicio',
-	'Class:Service/Attribute:servicesubcategories_list+' => 'Subcategorias de Servicio',
+	'Class:Service/Attribute:servicesubcategories_list+' => '',
 ]);
 
 //
@@ -309,13 +309,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:ServiceSubcategory/Attribute:name' => 'Nombre',
 	'Class:ServiceSubcategory/Attribute:name+' => 'Nombre de Subcategoría',
 	'Class:ServiceSubcategory/Attribute:description' => 'Descripción',
-	'Class:ServiceSubcategory/Attribute:description+' => 'Descripción',
+	'Class:ServiceSubcategory/Attribute:description+' => '',
 	'Class:ServiceSubcategory/Attribute:service_id' => 'Servicio',
-	'Class:ServiceSubcategory/Attribute:service_id+' => 'Servicio',
+	'Class:ServiceSubcategory/Attribute:service_id+' => '',
 	'Class:ServiceSubcategory/Attribute:service_name' => 'Servicio',
 	'Class:ServiceSubcategory/Attribute:service_name+' => 'Servicio',
 	'Class:ServiceSubcategory/Attribute:status' => 'Estatus',
-	'Class:ServiceSubcategory/Attribute:status+' => 'Estatus',
+	'Class:ServiceSubcategory/Attribute:status+' => '',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation' => 'No Productivo',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation+' => 'No Productivo',
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete' => 'Obsoleto',
@@ -323,7 +323,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Productivo',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'Productivo',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Tipo de Reporte',
-	'Class:ServiceSubcategory/Attribute:request_type+' => 'Tipo de Reporte',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user selects this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Incidente',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'Incidente',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Requerimiento de Servicio',
@@ -338,19 +338,19 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:SLA' => 'SLA - Acuerdo de Nivel de Servicio',
-	'Class:SLA+' => 'SLA - Acuerdo de Nivel de Servicio',
+	'Class:SLA+' => '',
 	'Class:SLA/Attribute:name' => 'Nombre',
 	'Class:SLA/Attribute:name+' => 'Nombre de SLA',
 	'Class:SLA/Attribute:description' => 'Descripción',
-	'Class:SLA/Attribute:description+' => 'Descripción',
+	'Class:SLA/Attribute:description+' => '',
 	'Class:SLA/Attribute:org_id' => 'Proveedor',
-	'Class:SLA/Attribute:org_id+' => 'Proveedor',
+	'Class:SLA/Attribute:org_id+' => '',
 	'Class:SLA/Attribute:organization_name' => 'Proveedor',
 	'Class:SLA/Attribute:organization_name+' => 'Proveedor',
 	'Class:SLA/Attribute:slts_list' => 'SLTs - Objetivos de Nivel de Servicio',
-	'Class:SLA/Attribute:slts_list+' => 'Objetivos de Nivel de Servicio',
+	'Class:SLA/Attribute:slts_list+' => '',
 	'Class:SLA/Attribute:customercontracts_list' => 'Acuerdos con Clientes',
-	'Class:SLA/Attribute:customercontracts_list+' => 'Acuerdos con Clientes',
+	'Class:SLA/Attribute:customercontracts_list+' => '',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'No se puede guardar la relación entre Acuerdo con Cliente %1$s y Servicio %2$s : El SLA ya existe',
 ]);
 
@@ -360,11 +360,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:SLT' => 'SLT - Objetivos de Nivel de Servicio',
-	'Class:SLT+' => 'SLT - Objetivos de Nivel de Servicio',
+	'Class:SLT+' => '',
 	'Class:SLT/Attribute:name' => 'Nombre',
 	'Class:SLT/Attribute:name+' => 'Nombre de SLT',
 	'Class:SLT/Attribute:priority' => 'Prioridad',
-	'Class:SLT/Attribute:priority+' => 'Prioridad',
+	'Class:SLT/Attribute:priority+' => '',
 	'Class:SLT/Attribute:priority/Value:1' => 'Crítico',
 	'Class:SLT/Attribute:priority/Value:1+' => 'Crítico',
 	'Class:SLT/Attribute:priority/Value:2' => 'Alto',
@@ -374,21 +374,21 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:SLT/Attribute:priority/Value:4' => 'Bajo',
 	'Class:SLT/Attribute:priority/Value:4+' => 'Bajo',
 	'Class:SLT/Attribute:request_type' => 'Tipo de Reporte',
-	'Class:SLT/Attribute:request_type+' => 'Tipo de Reporte',
+	'Class:SLT/Attribute:request_type+' => '',
 	'Class:SLT/Attribute:request_type/Value:incident' => 'Incidente',
 	'Class:SLT/Attribute:request_type/Value:incident+' => 'Incidente',
 	'Class:SLT/Attribute:request_type/Value:service_request' => 'Requerimiento de Servicio',
 	'Class:SLT/Attribute:request_type/Value:service_request+' => 'Requerimiento de Servicio',
 	'Class:SLT/Attribute:metric' => 'Métrica',
-	'Class:SLT/Attribute:metric+' => 'Métrica',
+	'Class:SLT/Attribute:metric+' => '',
 	'Class:SLT/Attribute:metric/Value:tto' => 'TDA - Tiempo de Asignación',
 	'Class:SLT/Attribute:metric/Value:tto+' => 'Tiempo de Asignación',
 	'Class:SLT/Attribute:metric/Value:ttr' => 'TDS - Tiempo de Solución',
 	'Class:SLT/Attribute:metric/Value:ttr+' => 'Tiempo de Solución',
 	'Class:SLT/Attribute:value' => 'Valor',
-	'Class:SLT/Attribute:value+' => 'Valor',
+	'Class:SLT/Attribute:value+' => '',
 	'Class:SLT/Attribute:unit' => 'Unidad',
-	'Class:SLT/Attribute:unit+' => 'Unidad',
+	'Class:SLT/Attribute:unit+' => '',
 	'Class:SLT/Attribute:unit/Value:hours' => 'Horas',
 	'Class:SLT/Attribute:unit/Value:hours+' => 'Horas',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'Minutos',
@@ -443,6 +443,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => 'SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => 'SLA',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);
 
 //
@@ -544,13 +546,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);

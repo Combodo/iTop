@@ -47,7 +47,7 @@ or ask your '.ITOP_APPLICATION_SHORT.' administrator if the '.ITOP_APPLICATION_S
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Attachment' => 'Attachment',
-	'Class:Attachment+' => '',
+	'Class:Attachment+' => 'File: text or image, linked to a single object. It can\'t be modified, only deleted. Attachment can\'t be created outside of its object edition.',
 	'Class:Attachment/Attribute:expire' => 'Expire',
 	'Class:Attachment/Attribute:expire+' => '',
 	'Class:Attachment/Attribute:temp_id' => 'Temporary id',

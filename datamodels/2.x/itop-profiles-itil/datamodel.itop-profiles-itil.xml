@@ -30,6 +30,8 @@
           <class id="TagSetFieldData"/>
           <class id="Tape"/>
           <class id="VLAN"/>
+          <class id="DataFlow"/>
+          <class id="ContainerImage"/>
         </classes>
       </group>
       <group id="Incident" _delta="define">

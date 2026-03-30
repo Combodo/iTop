@@ -63,7 +63,7 @@ class AttributeDashboard extends AttributeDefinition
 		return "";
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return null;
 	}

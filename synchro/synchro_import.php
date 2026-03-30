@@ -301,7 +301,7 @@ try {
 	//
 	// Read parameters
 	//
-	$iDataSourceId = ReadMandatoryParam($oP, 'data_source_id', 'raw_data');
+	$iDataSourceId = ReadMandatoryParam($oP, 'data_source_id', utils::ENUM_SANITIZATION_FILTER_INTEGER);
 	$sSynchronize = ReadParam($oP, 'synchronize');
 	$sSep = ReadParam($oP, 'separator', 'raw_data');
 	$sQualifier = ReadParam($oP, 'qualifier', 'raw_data');

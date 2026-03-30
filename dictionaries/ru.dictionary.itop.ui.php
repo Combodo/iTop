@@ -1404,6 +1404,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:SelectInlineImageToUpload' => 'Выберите изображение для загрузки',
 	'UI:AvailableInlineImagesLegend' => 'Доступные изображения',
 	'UI:NoInlineImage' => 'На сервере нет доступных изображений. С помощью кнопки "Обзор..." выше выберите изображение на вашем компьютере, чтобы загрузить его на сервер.',
+	'UI:MissingInlineImage' => 'Отсутствует изображение',
 	'UI:ToggleFullScreen' => 'Развернуть / Свернуть',
 	'UI:Button:ResetImage' => 'Восстановить предыдущее изображение',
 	'UI:Button:RemoveImage' => 'Удалить изображение',

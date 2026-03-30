@@ -93,7 +93,7 @@ class AttributeRedundancySettings extends AttributeDBField
 		return 20;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		$sRet = 'disabled';
 		if ($this->Get('enabled')) {

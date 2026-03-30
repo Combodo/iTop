@@ -117,7 +117,7 @@ class AttributeSubItem extends AttributeDefinition
 		return false;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return null;
 	}

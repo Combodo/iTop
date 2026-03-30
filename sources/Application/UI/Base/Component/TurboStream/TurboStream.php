@@ -16,7 +16,7 @@ class TurboStream extends UIContentBlock
 	private string $sTarget;
 	private string $sAction;
 
-	public function __construct(string $sTarget, string $sAction, string $sId = null)
+	public function __construct(string $sTarget, string $sAction, ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->sTarget = $sTarget;
