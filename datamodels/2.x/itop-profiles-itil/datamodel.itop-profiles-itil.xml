@@ -188,6 +188,7 @@
       <group id="AdminSysReadOnly" _delta="define">
         <classes>
           <class id="ItopFenceLogin"/>
+          <class id="ModuleInstallation"/>
         </classes>
       </group>
       <group id="AdminSys" _delta="define">
@@ -195,6 +196,11 @@
           <class id="ResourceDesignerConnectorMenu"/>
           <class id="ResourceSystemMenu"/>
           <class id="RessourceHybridAuthMenu"/>
+        </classes>
+      </group>
+      <group id="Event" _delta="define">
+        <classes>
+          <class id="Event"/>
         </classes>
       </group>
     </groups>
@@ -290,6 +296,16 @@
               <action id="stimulus:ev_assign">allow</action>
               <action id="stimulus:ev_resolve">allow</action>
               <action id="stimulus:ev_close">allow</action>
+            </actions>
+          </group>
+          <group id="Event">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:bulk delete">allow</action>
             </actions>
           </group>
         </groups>

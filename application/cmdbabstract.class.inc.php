@@ -819,6 +819,7 @@ HTML
 				foreach ($aNotificationClasses as $sNotifClass) {
 					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev WHERE Ev.object_id = :id AND Ev.object_class = :class");
 					$aNotifSearches[$sNotifClass]->SetInternalParams($aParams);
+					$aNotifSearches[$sNotifClass]->AllowAllData();
 					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], []);
 					$iNotifsCount += $oNotifSet->Count();
 				}
@@ -832,6 +833,7 @@ HTML
 						'menu' => false,
 						'panel_title' => MetaModel::GetName($sNotifClass),
 						'panel_icon' => MetaModel::GetClassIcon($sNotifClass, false),
+						'display_unauthorized_objects' => true,
 					]);
 				}
 			}
