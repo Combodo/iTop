@@ -372,7 +372,6 @@ EOF
 	function DoAdvanced()
 	{
 		UpdateClassesSelect();
-		DoMapping();
 	}
 	
 	function CSVGoBack()
@@ -460,6 +459,7 @@ EOF
 		   function(data) {
 				$('#select_class_name').replaceWith($(data));
 				$('#select_class_name').on('change', function(ev) { DoMapping(); } );
+				DoMapping();
 			}
 		 );
 	 }
