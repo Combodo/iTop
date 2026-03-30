@@ -350,15 +350,18 @@ class ormDocument
 			if (!is_object($oObj)) {
 				// If access to the document is not granted, check if the access to the host object is allowed
 				$oObj = MetaModel::GetObject($sClass, $id, false, true);
+				$bHasHostRights = false;
 				if ($oObj instanceof Attachment) {
 					$sItemClass = $oObj->Get('item_class');
 					$sItemId = $oObj->Get('item_id');
 					$oHost = MetaModel::GetObject($sItemClass, $sItemId, false, false);
-					if (!is_object($oHost)) {
-						$oObj = null;
+					if (is_object($oHost)) {
+						$bHasHostRights = true;
 					}
 				}
-				if (!is_object($oObj)) {
+
+				// We could neither read the object nor get a host object matching our rights
+				if ($bHasHostRights !== true) {
 					throw new Exception("Invalid id ($id) for class '$sClass' - the object does not exist or you are not allowed to view it");
 				}
 			}
