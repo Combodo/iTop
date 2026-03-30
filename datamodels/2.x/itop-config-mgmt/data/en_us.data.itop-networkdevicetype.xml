@@ -6,8 +6,6 @@
       4NRaNryg80phGtBPz71S7cHRVPz9z/+RiinDfEvSl9npAAeIwXwGOFl6Imj5r7Yy2ZzOD88gmuTUxW/b1ha3xd4uJryq+UwNDyCa5NfVPrtWIsdXZ1QLbxXuBUELRuLpuUw9MElYZOu3QGRiIqd3duqfl+s7wsuKU37VUPY0VXtN
       2Yn+WWxLhdLOKwi1tUpbNrVjZhufT8cciXx5TYjOom28kat3KaZWPT81sJRAZxanzpVs7EXhPGIdwpHBGikxNuOpU6JL2FbgK9MlbLOiS9hWQCZeGcQFkAm3lnsPwMEH4IihTLbNgzsep34EvYEcGMF4nLibdtxGPGNGGHC7CZKt
       75vVOI1WNmIJE3Ph1af+v64aAdhARjDSQATtc6b0zQMvl9dZx8aHq1O0DKCWklYVsvhPd36/iW36/vjxOmkmw4kEolEIpFIJBKJRCKRSCTNzf8B9DlMYsFrhfAAAAAASUVORK5CYII=</data><downloads_count>0</downloads_count></logo>
-    <finalclass>Type d&apos;équipement réseau</finalclass>
-    <friendlyname>Firewall</friendlyname>
   </NetworkDeviceType>
   <NetworkDeviceType alias="NetworkDeviceType" id="2">
     <name>Load Balancer</name>
@@ -105,8 +103,6 @@
       NzYzMjM1IDUxLjI0MDExMiwyOS4zMDEzNjUgNTAuNDMwMiwyOS4zMDIyMyBsIC00LjM5NjgzOCwwLjAwNDcgYyAtMC44MDk5MTIsOC42NGUtNCAtMS42NDk0NDcsMC40NTI4NjkgLTEuNjQ5NSwxLjI2Mjc4MSBsIC0wLjAwMzks
       NTkuNjM0ODg3IGMgLTJlLTUsMC4zMTAwMzkgMC4xMTgwMDUsMC42MTkzNDUgMC4zNTQ3NDksMC44NTUzNTYgbCAyLjQ1NDY2LDIuNDU0NjYgYyAwLjQ3MjAyMiwwLjQ3Mjc1NSAxLjIzODY5MSwwLjQ3Mjc1NSAxLjcxMTQ0NSww
       IHoiIGlkPSJwYXRoOC0zLTUiIHN0eWxlPSJmaWxsOnVybCgjbGluZWFyR3JhZGllbnQyNSk7c3Ryb2tlLXdpZHRoOjAuNzMyOTUzIiBzb2RpcG9kaTpub2RldHlwZXM9InNzc2Nzc3Nzc2NjcyIvPjwvc3ZnPgo=</data><downloads_count>0</downloads_count></logo>
-    <finalclass>Type d&apos;équipement réseau</finalclass>
-    <friendlyname>Load Balancer</friendlyname>
   </NetworkDeviceType>
   <NetworkDeviceType alias="NetworkDeviceType" id="10">
     <name>Router</name>
@@ -122,8 +118,6 @@
       LfAGy5Ty3AsyQzfW6N4O/W1/ulhz6Wf6Hf21Q49hmcoWeANWn5ExzERQVvRS2bvuuD551yfkIaUsTkhl865NyEtKWRyTyuZdl3CWUM5BSlm8mMpe2kmBAaXtAZS3CZS3elDazn44t7Q97/VKey5tpyCcW6pvQqn+r7i4xTSePqP9
       fg3U7jol/cxybNor3K+/hVL9RyGPEL3Q1PmUcrZT2SkXv4smsBXfcrMeCE4lxIBZTTSBq/gWmsBffAtNiDWfr0ZJrE2fys49xMjiowkcz/wOmpAe8Ts4HfEXv4Mm+IvfKrJJKU9OZecSIjPx0YT/iy/jq4u5AuT2IbtXFl+g3MaX
       d4Pc2gC5OWCbym7RnOYA5OYPfE+/SwSIOwSLCGtAuFcVo74xA0KGYdGAuA2ohntrLhrAJwRMUhOazRqgsk/CkHe9mQOs7ZEw5F1v5gCruyQMedebOcDKUxKGvOvNHOB8BjUAedebOUBp62iYQQ1E/6cRESENWNxagPv1IyjViQ8PoVSP/2lEBAKBQCCEePEfD3q/JRB0b7YAAAAASUVORK5CYII=</data><downloads_count>0</downloads_count></logo>
-    <finalclass>Type d&apos;équipement réseau</finalclass>
-    <friendlyname>Router</friendlyname>
   </NetworkDeviceType>
   <NetworkDeviceType alias="NetworkDeviceType" id="4">
     <name>Router 4G</name>
@@ -199,8 +193,6 @@
       jUsMTguNTY5MzQ5IDI2LjA5OTM0MywxNy42NTAzMDkgMjYuNTY4NzM5LDE2Ljk4Njg3OSAzMS41MzkyMjQsOS45NzQ5ODM1IDM5Ljc2NzYsNS42NzcyMiA0OC4zOTIxNzMsNS42NzcyMiBjIDguNjI0NTc2LDAgMTYuODUyOTUsN
       C4yOTc3NjM1IDIxLjgyNTc2MiwxMS4zMDk2NTkgeiIgaWQ9InBhdGg1LTciIHN0eWxlPSJzdHJva2Utd2lkdGg6MS4xNjE4NyIvPjxwYXRoIGZpbGw9IiMzNWMxZjEiIGQ9Im0gNjEuMTkzNjc3LDI0LjM4Njg0MSAtNC45MjE2O
       DksMy4wODU5MyBjIC0zLjc1MDUyMSwtNS45MTc0MTMgLTEyLjE3NTI1NSwtNS42MjQ2MjEgLTE1Ljc1OTYyOSwwIGwgLTQuOTIxNjg3LC0zLjA4NTkzIDAuMDAyNCwtMC4wMDM0IGMgNS44MTA1MjEsLTkuMjExMzIgMTkuNTMxMDY0LC05LjU2OTE3NiAyNS41OTYwMzQsLTAuMDAzNCB6IiBpZD0icGF0aDYiIHN0eWxlPSJzdHJva2Utd2lkdGg6MS4xNjE4NyIvPjwvc3ZnPgo=</data><downloads_count>0</downloads_count></logo>
-    <finalclass>Type d&apos;équipement réseau</finalclass>
-    <friendlyname>Router 4G</friendlyname>
   </NetworkDeviceType>
   <NetworkDeviceType alias="NetworkDeviceType" id="11">
     <name>Switch</name>
@@ -239,8 +231,6 @@
       OCwxLjEzMXMtMC4xNzEsMC44My0wLjQ4LDEuMTNsLTQuMTgxLDQuMDU3IEMzMy42MzEsMjAuMzg5LDMzLjM1NywyMC41LDMzLjA3LDIwLjVMMzMuMDcsMjAuNXoiIG9wYWNpdHk9Ii4wNyIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9
       Ik0zMi40NjYsMTAuNTgzVjEzSDI2Ljc1QzI2LjMzNiwxMywyNiwxMy4zMjYsMjYsMTMuNzI4djIuNTQ0QzI2LDE2LjY3NCwyNi4zMzYsMTcsMjYuNzUsMTdoNS43MTYgdjIuNDE3YzAsMC41MTksMC42NDYsMC43NzgsMS4wMjQs
       MC40MTJsNC4xOC00LjA1NmMwLjQzOS0wLjQyNiwwLjQzOS0xLjExOCwwLTEuNTQ0bC00LjE4LTQuMDU2IEMzMy4xMTIsOS44MDUsMzIuNDY2LDEwLjA2NSwzMi40NjYsMTAuNTgzeiIvPjwvc3ZnPgo=</data><downloads_count>0</downloads_count></logo>
-    <finalclass>Type d&apos;équipement réseau</finalclass>
-    <friendlyname>Switch</friendlyname>
   </NetworkDeviceType>
   <NetworkDeviceType alias="NetworkDeviceType" id="12">
     <name>Wireless Access Point</name>
@@ -262,7 +252,5 @@
       vDdcGr44BzyvsR+v2eTFgd/M+EHOq7YpXCR6o9Fdr+DX8nhrlyKqwH63bpyjVJ+8G4DqJtypeMdKBV/Ukhfdwm1wN2KywH63b582AF5teATGnFyY+aeDV3XENDIjL6kfr9ilK9VHfgMaXQczJpWHHtFu35s0PVSxBOxT1o3X7awZ
       I9FHdgF2NL4OYU4mTfnjF83QIxxUequq3x5Tqo74Be/aCmFOLM3e/hu6S6KO6AfV79oKYmcpEfoLYDoXBSrv2Un3UN+AlP4iplag2nVKqj+oG7HzJD2IWesK2WUapPqob4HL7Luz0+IDQl1EDl8eXUN+AhuZjLrcXCL0ZNWAbvEd
       UN2Cnx3sf624eJQZ4Zxbf3XyecfvvRlqgvr6xlGloPso2NCXZhmYgbBZp0JRkdzcd0Ux8AgICAgICAgICAgICAgICAgKkd/wfA+F5ouAmxqQAAAAASUVORK5CYII=</data><downloads_count>0</downloads_count></logo>
-    <finalclass>Type d&apos;équipement réseau</finalclass>
-    <friendlyname>Wireless Access Point</friendlyname>
   </NetworkDeviceType>
 </Set>
