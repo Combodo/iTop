@@ -5,6 +5,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\ImportHelper;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSectionUIBlockFactory;
@@ -14,7 +15,6 @@ use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\FileSelect\FileSelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\Select\Select;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
@@ -30,7 +30,6 @@ use Combodo\iTop\Application\WebPage\AjaxPage;
 use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
-use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Service\Import\CSVImportPageProcessor;
 
 try {
@@ -51,67 +50,6 @@ try {
 
 	$oPage = new iTopWebPage(Dict::S('UI:Title:BulkImport'));
 	$oPage->SetBreadCrumbEntry('ui-tool-bulkimport', Dict::S('Menu:CSVImportMenu'), Dict::S('UI:Title:BulkImport+'), '', 'fas fa-file-import', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
-
-	/**
-	 * Helper function to build a select from the list of valid classes for a given action
-	 *
-	 * @deprecated 3.0.0 use GetClassesSelectUIBlock
-	 *
-	 * @param $sDefaultValue
-	 * @param integer $iWidthPx The width (in pixels) of the drop-down list
-	 * @param integer $iActionCode The ActionCode (from UserRights) to check for authorization for the classes
-	 *
-	 * @param string $sName The name of the select in the HTML form
-	 *
-	 * @return string The HTML fragment corresponding to the select tag
-	 */
-	function GetClassesSelect($sName, $sDefaultValue, $iWidthPx, $iActionCode = null)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use GetClassesSelectUIBlock');
-		$oSelectBlock = GetClassesSelectUIBlock($sName, $sDefaultValue, $iActionCode);
-
-		return BlockRenderer::RenderBlockTemplates($oSelectBlock);
-	}
-
-	/**
-	 * Helper function to build a select from the list of valid classes for a given action
-	 *
-	 * @param string $sName The name of the select in the HTML form
-	 * @param $sDefaultValue
-	 * @param integer $iWidthPx The width (in pixels) of the drop-down list
-	 * @param integer $iActionCode The ActionCode (from UserRights) to check for authorization for the classes
-	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Select\
-	 */
-	function GetClassesSelectUIBlock(string $sName, $sDefaultValue, int $iActionCode, bool $bAdvanced = false): Select
-	{
-		$oSelectBlock = SelectUIBlockFactory::MakeForSelect($sName, 'select_'.$sName);
-		$oOption = SelectOptionUIBlockFactory::MakeForSelectOption("", Dict::S('UI:CSVImport:ClassesSelectOne'), false);
-		$oSelectBlock->AddSubBlock($oOption);
-		$aValidClasses = [];
-		$aClassCategories = ['bizmodel', 'addon/authentication'];
-		if ($bAdvanced) {
-			$aClassCategories[] = 'grant_by_profile';
-		}
-		if (UserRights::IsAdministrator()) {
-			$aClassCategories[] = 'application';
-		}
-		foreach ($aClassCategories as $sClassCategory) {
-			foreach (MetaModel::GetClasses($sClassCategory) as $sClassName) {
-				if ((is_null($iActionCode) || UserRights::IsActionAllowed($sClassName, $iActionCode)) &&
-					(!MetaModel::IsAbstract($sClassName))) {
-					$sDisplayName = ($bAdvanced) ? MetaModel::GetName($sClassName)." ($sClassName)" : MetaModel::GetName($sClassName);
-					$aValidClasses[$sDisplayName] = SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, $sDisplayName, ($sClassName == $sDefaultValue));
-				}
-			}
-		}
-		ksort($aValidClasses);
-		foreach ($aValidClasses as $sValue => $oBlock) {
-			$oSelectBlock->AddSubBlock($oBlock);
-		}
-
-		return $oSelectBlock;
-	}
 
 	/**
 	 * Helper to 'check' an input in an HTML form if the current value equals the value given
@@ -351,7 +289,7 @@ try {
 			$oClassesSelect->AddSubBlock($oDefaultSelect);
 			$aSynchroUpdate = utils::ReadParam('synchro_update', []);
 		} else {
-			$oClassesSelect = GetClassesSelectUIBlock('class_name', $sClassName, UR_ACTION_BULK_MODIFY, (bool)$bAdvanced);
+			$oClassesSelect = ImportHelper::GetClassesSelectUIBlock('class_name', $sClassName, UR_ACTION_BULK_MODIFY, (bool)$bAdvanced);
 		}
 		$oPanel = TitleUIBlockFactory::MakeForPage(Dict::S('UI:Title:CSVImportStep3'));
 		$oPage->AddSubBlock($oPanel);
@@ -375,10 +313,8 @@ try {
 		$oAdvancedMode->GetInput()->SetIsChecked(($bAdvanced == 1));
 		$oAdvancedMode->SetBeforeInput(false);
 		$oAdvancedMode->GetInput()->AddCSSClass('ibo-input-checkbox');
+		$oAdvancedMode->SetDescription(utils::EscapeHtml(Dict::S('UI:CSVImport:AdvancedMode+')));
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oAdvancedMode));
-
-		$oDivAdvancedHelp = UIContentBlockUIBlockFactory::MakeStandard("advanced_help")->AddCSSClass('ibo-is-hidden');
-		$oForm->AddSubBlock($oDivAdvancedHelp);
 
 		$oDivMapping = UIContentBlockUIBlockFactory::MakeStandard("mapping")->AddCSSClass('mt-5');
 		$oMessage = AlertUIBlockFactory::MakeForInformation(Dict::S('UI:CSVImport:SelectAClassFirst'))->SetIsClosable(false)->SetIsCollapsible(false);
@@ -416,7 +352,7 @@ try {
 		$oPage->add_ready_script(
 			<<<EOF
 	$('#select_class_name').on('change', function(ev) { DoMapping(); } );
-	$('#advanced').on('click', function(ev) { DoReload(); } );
+	$('#advanced').on('click', function(ev) { DoAdvanced(); } );
 EOF
 		);
 		if ($sClassName != '') {
@@ -429,15 +365,14 @@ EOF
 		}
 
 		$oPage->add_script(
-			<<<EOF
+			<<<JS
 	var aDefaultKeys = new Array();
 	var aReadOnlyKeys = new Array();
 	
-	function DoReload()
+	function DoAdvanced()
 	{
-		$('input[name=step]').val(3);
-		$('#wizForm').removeAttr('onsubmit'); // No need to perform validation checks when going back
-		$('#wizForm').submit();
+		UpdateClassesSelect();
+		DoMapping();
 	}
 	
 	function CSVGoBack()
@@ -462,14 +397,7 @@ EOF
 	{
 		var class_name = $('select[name=class_name]').val();
 		var advanced = $('input[name=advanced]:checked').val();
-		if (advanced != 1)
-		{
-			$('#advanced_help').hide();
-		}
-		else
-		{
-			$('#advanced_help').show();
-		}
+		
 		if (class_name != '')
 		{
 			var separator = $('input[name=separator]').val();
@@ -516,6 +444,25 @@ EOF
 				 );
 		}
 	}
+	
+	function UpdateClassesSelect()
+	{
+		const aParams = { 
+			operation: 'display_classes_select', 
+			class_name: $('#select_class_name').val(),
+			advanced: $('#advanced').is(':checked'),
+	    };
+		
+		$('#select_class_name').block();
+					
+		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.csvimport.php',
+		   aParams,
+		   function(data) {
+				$('#select_class_name').replaceWith($(data));
+				$('#select_class_name').on('change', function(ev) { DoMapping(); } );
+			}
+		 );
+	 }
 	
 	function CheckValues()
 	{
@@ -647,7 +594,7 @@ EOF
 			}
 		}
 	}
-EOF
+JS
 		);
 	}
 
@@ -1065,7 +1012,7 @@ EOF
 			}*/
 		//Tab:Template
 		$oTabTemplate = $oTabContainer->AddTab('tabsTemplate', Dict::S('UI:CSVImport:Tab:Templates'));
-		$oFieldTemplate = FieldUIBlockFactory::MakeFromObject(Dict::S('UI:CSVImport:PickClassForTemplate'), GetClassesSelectUIBlock('template_class', '', UR_ACTION_BULK_MODIFY));
+		$oFieldTemplate = FieldUIBlockFactory::MakeFromObject(Dict::S('UI:CSVImport:PickClassForTemplate'), ImportHelper::GetClassesSelectUIBlock('template_class', '', UR_ACTION_BULK_MODIFY));
 		$oTabTemplate->AddSubBlock($oFieldTemplate);
 		$oDivTemplate = UIContentBlockUIBlockFactory::MakeStandard("template")->AddCSSClass("ibo-is-visible");
 		$oTabTemplate->AddSubBlock($oDivTemplate);
