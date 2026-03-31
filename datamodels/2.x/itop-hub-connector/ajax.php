@@ -279,11 +279,24 @@ try {
 			$oRuntimeEnv = new RunTimeEnvironment('production', true);
 
 			try {
-				SetupLog::Info('Move to production starts...');
 				$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
 				if (!file_exists(APPROOT.'data/hub/compile_authent') || $sAuthent !== file_get_contents(APPROOT.'data/hub/compile_authent')) {
 					throw new SecurityException(Dict::S('iTopHub:FailAuthent'));
 				}
+			} catch (Exception $e) {
+				if (file_exists(APPROOT.'data/hub/compile_authent')) {
+					unlink(APPROOT.'data/hub/compile_authent');
+				}
+				// Note: at this point, the dictionnary is not necessarily loaded
+				SetupLog::Error(get_class($e).': '.Dict::S('iTopHub:ConfigurationSafelyReverted')."\n".$e->getMessage());
+				SetupLog::Error('Debug trace: '.$e->getTraceAsString());
+				ReportError($e->getMessage(), $e->getCode());
+				break;
+			}
+
+			try {
+				SetupLog::Info('Move to production starts...');
+
 				unlink(APPROOT.'data/hub/compile_authent');
 				// Load the "production" config file to clone & update it
 				$oConfig = new Config(APPCONF.'production/'.ITOP_CONFIG_FILE);
