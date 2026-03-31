@@ -270,7 +270,6 @@ class ormDocumentTest extends ItopDataTestCase
 		$this->assertGreaterThanOrEqual($iMaxHeight, $aActualDimensions['height'], 'The new height should not be 0');
 	}
 
-
 	/**
 	 * Test that DownloadDocument enforces rights for documents
 	 *
