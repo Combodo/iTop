@@ -358,6 +358,7 @@ class ormDocumentTest extends ItopDataTestCase
 			return $this->GivenObjectInDB('Attachment', [
 				'item_class' => $sHostClass,
 				'item_id' => $iHostId,
+				'item_org_id' => $iOrgId,
 				$sAttCode => new ormDocument($sData, 'text/plain', $sFileName),
 			]);
 		}
