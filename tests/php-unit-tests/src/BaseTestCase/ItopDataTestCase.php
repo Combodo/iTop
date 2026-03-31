@@ -1470,4 +1470,19 @@ abstract class ItopDataTestCase extends ItopTestCase
 		@chmod($sConfigPath, 0440);
 		@unlink($this->sConfigTmpBackupFile);
 	}
+	protected function AddLoginModeAndSaveConfiguration(string $sLoginMode): void
+	{
+		$aAllowedLoginTypes = $this->oiTopConfig->GetAllowedLoginTypes();
+		if (!in_array($sLoginMode, $aAllowedLoginTypes)) {
+			$aAllowedLoginTypes[] = $sLoginMode;
+			$this->oiTopConfig->SetAllowedLoginTypes($aAllowedLoginTypes);
+			$this->SaveItopConfFile();
+		}
+	}
+	protected function SaveItopConfFile(): void
+	{
+		@chmod($this->oiTopConfig->GetLoadedFile(), 0770);
+		$this->oiTopConfig->WriteToFile();
+		@chmod($this->oiTopConfig->GetLoadedFile(), 0440);
+	}
 }
