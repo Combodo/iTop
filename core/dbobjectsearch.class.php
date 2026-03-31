@@ -1925,4 +1925,37 @@ class DBObjectSearch extends DBSearch
 	{
 		return $this->GetCriteria()->ListParameters();
 	}
+
+	/**
+	 * @inheritDoc
+	 * @return DBObjectSearch
+	 */
+	protected function ApplyDataFilters(): DBObjectSearch
+	{
+		if ($this->IsAllDataAllowed() || $this->IsDataFiltered()) {
+			return $this;
+		}
+
+		$oSearch = $this;
+		$aClassesToFilter = $this->GetSelectedClasses();
+
+		// Opt-in for joined classes filtering, otherwise only filter the selected class(es)
+		if (MetaModel::GetConfig()->Get('security.disable_joined_classes_filter') === false) {
+			$aClassesToFilter = $this->GetJoinedClasses();
+		}
+
+		// Apply filter (this is similar to the one in DBSearch but the factorization could make it less readable)
+		foreach ($aClassesToFilter as $sClassAlias => $sClass) {
+			$oVisibleObjects = UserRights::GetSelectFilter($sClass, $this->GetModifierProperties('UserRightsGetSelectFilter'));
+			if ($oVisibleObjects === false) {
+				$oVisibleObjects = DBObjectSearch::FromEmptySet($sClass);
+			}
+			if (is_object($oVisibleObjects)) {
+				$oVisibleObjects->AllowAllData();
+				$oSearch = $oSearch->Filter($sClassAlias, $oVisibleObjects);
+				$oSearch->SetDataFiltered();
+			}
+		}
+		return $oSearch;
+	}
 }

@@ -673,4 +673,30 @@ class DBUnionSearch extends DBSearch
 
 		return $aVariableCriteria;
 	}
+
+	/**
+	 * @inheritDoc
+	 * @return DBUnionSearch
+	 */
+	protected function ApplyDataFilters(): DBUnionSearch
+	{
+		if ($this->IsAllDataAllowed() || $this->IsDataFiltered()) {
+			return $this;
+		}
+
+		// Opt-in for joined classes filtering, otherwise fallback on DBSearch filtering
+		if (MetaModel::GetConfig()->Get('security.disable_joined_classes_filter') === true) {
+			return parent::ApplyDataFilters();
+		}
+
+		// Apply filters per sub-search
+		$aFilteredSearches = [];
+		foreach ($this->GetSearches() as $oSubSearch) {
+			// Recursively call ApplyDataFilters on sub-searches
+			$aFilteredSearches[] = $oSubSearch->ApplyDataFilters();
+		}
+
+		$oSearch = new DBUnionSearch($aFilteredSearches);
+		return $oSearch;
+	}
 }

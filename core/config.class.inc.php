@@ -1730,6 +1730,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'security.disable_joined_classes_filter' => [
+			'type'                => 'bool',
+			'description'         => 'If true, scope filters aren\'t applied to joined classes or union classes not directly listed in the SELECT clause.',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 		'security.hide_administrators' => [
 			'type'                => 'bool',
 			'description'         => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',

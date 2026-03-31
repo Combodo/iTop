@@ -1122,21 +1122,7 @@ abstract class DBSearch
 	 */
 	protected function GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null, $aSelectExpr = null)
 	{
-		$oSearch = $this;
-		if (!$this->IsAllDataAllowed() && !$this->IsDataFiltered()) {
-			foreach ($this->GetSelectedClasses() as $sClassAlias => $sClass) {
-				$oVisibleObjects = UserRights::GetSelectFilter($sClass, $this->GetModifierProperties('UserRightsGetSelectFilter'));
-				if ($oVisibleObjects === false) {
-					// Make sure this is a valid search object, saying NO for all
-					$oVisibleObjects = DBObjectSearch::FromEmptySet($sClass);
-				}
-				if (is_object($oVisibleObjects)) {
-					$oVisibleObjects->AllowAllData();
-					$oSearch = $oSearch->Filter($sClassAlias, $oVisibleObjects);
-					$oSearch->SetDataFiltered();
-				}
-			}
-		}
+		$oSearch = $this->ApplyDataFilters();
 
 		if (is_array($aGroupByExpr)) {
 			foreach ($aGroupByExpr as $sAlias => $oGroupByExp) {
@@ -1608,4 +1594,33 @@ abstract class DBSearch
 	 * @return array{\VariableExpression}
 	 */
 	abstract public function GetExpectedArguments(): array;
+
+	/**
+	 * Apply data filters to the search, if needed
+	 *
+	 * @return DBSearch
+	 * @throws CoreException
+	 */
+	protected function ApplyDataFilters(): DBSearch
+	{
+		if ($this->IsAllDataAllowed() || $this->IsDataFiltered()) {
+			return $this;
+		}
+
+		$oSearch = $this;
+		$aClassesToFilter = $this->GetSelectedClasses();
+
+		foreach ($aClassesToFilter as $sClassAlias => $sClass) {
+			$oVisibleObjects = UserRights::GetSelectFilter($sClass, $this->GetModifierProperties('UserRightsGetSelectFilter'));
+			if ($oVisibleObjects === false) {
+				$oVisibleObjects = DBObjectSearch::FromEmptySet($sClass);
+			}
+			if (is_object($oVisibleObjects)) {
+				$oVisibleObjects->AllowAllData();
+				$oSearch = $oSearch->Filter($sClassAlias, $oVisibleObjects);
+				$oSearch->SetDataFiltered();
+			}
+		}
+		return $oSearch;
+	}
 }
