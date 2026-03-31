@@ -1598,7 +1598,7 @@ abstract class DBSearch
 	/**
 	 * Apply data filters to the search, if needed
 	 *
-	 * @return $this|DBSearch
+	 * @return DBSearch
 	 * @throws CoreException
 	 */
 	protected function ApplyDataFilters(): DBSearch
