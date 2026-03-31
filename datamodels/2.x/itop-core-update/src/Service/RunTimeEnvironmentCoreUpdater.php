@@ -29,28 +29,28 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 	{
 		parent::__construct($sEnvironment, $bAutoCommit);
 
-		if ($sEnvironment != $this->sTargetEnv) {
-			if (is_dir(APPROOT.'/env-'.$this->sTargetEnv)) {
-				SetupUtils::rrmdir(APPROOT.'/env-'.$this->sTargetEnv);
+		if ($sEnvironment != $this->sBuildEnv) {
+			if (is_dir(APPROOT.'/env-'.$this->sBuildEnv)) {
+				SetupUtils::rrmdir(APPROOT.'/env-'.$this->sBuildEnv);
 			}
-			if (is_dir(APPROOT.'/data/'.$this->sTargetEnv.'-modules')) {
-				SetupUtils::rrmdir(APPROOT.'/data/'.$this->sTargetEnv.'-modules');
+			if (is_dir(APPROOT.'/data/'.$this->sBuildEnv.'-modules')) {
+				SetupUtils::rrmdir(APPROOT.'/data/'.$this->sBuildEnv.'-modules');
 			}
-			SetupUtils::copydir(APPROOT.'/data/'.$sEnvironment.'-modules', APPROOT.'/data/'.$this->sTargetEnv.'-modules');
+			SetupUtils::copydir(APPROOT.'/data/'.$sEnvironment.'-modules', APPROOT.'/data/'.$this->sBuildEnv.'-modules');
 		}
 	}
 
 	/**
-	 * @param $sTargetEnv
+	 * @param $sBuildEnv
 	 *
 	 * @throws \Exception
 	 */
-	public function CheckDirectories($sTargetEnv)
+	public function CheckDirectories($sBuildEnv)
 	{
-		$sTargetDir = APPROOT.'env-'.$sTargetEnv;
-		$sBuildDir = $sTargetDir.'-build';
+		$sBuildDir = APPROOT.'env-'.$sBuildEnv;
+		$sBuildDir = $sBuildDir.'-build';
 
-		self::CheckDirectory($sTargetDir);
+		self::CheckDirectory($sBuildDir);
 		self::CheckDirectory($sBuildDir);
 	}
 
@@ -85,10 +85,10 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 		//
 		$oConfig = clone($this->GetConfig('production'));
 
-		$oConfig->UpdateIncludes('env-'.$this->sTargetEnv);
+		$oConfig->UpdateIncludes('env-'.$this->sBuildEnv);
 
 		if (is_null($sEnvironmentLabel)) {
-			$sEnvironmentLabel = $this->sTargetEnv;
+			$sEnvironmentLabel = $this->sBuildEnv;
 		}
 		$oConfig->Set('app_env_label', $sEnvironmentLabel, 'application updater');
 
@@ -104,7 +104,7 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 	protected function GetConfig($sEnvironment = null)
 	{
 		if (is_null($sEnvironment)) {
-			$sEnvironment = $this->sTargetEnv;
+			$sEnvironment = $this->sBuildEnv;
 		}
 		$sFile = APPCONF.$sEnvironment.'/'.ITOP_CONFIG_FILE;
 		if (file_exists($sFile)) {

@@ -17,6 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'setup/sequencers/ApplicationInstallSequencer.php');
@@ -122,6 +123,7 @@ JS);
 		$sStep = $aParameters['installer_step'];
 		$sJSONParameters = $aParameters['installer_config'];
 		$oParameters->LoadFromHash(json_decode($sJSONParameters, true /* bAssoc */));
+		/** @var StepSequencer $oInstaller */
 		$oInstaller = new (static::SequencerClass)($oParameters);
 		$aRes = $oInstaller->ExecuteStep($sStep);
 		if (($aRes['status'] != $oInstaller::ERROR) && ($aRes['next-step'] != '')) {

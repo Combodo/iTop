@@ -19,29 +19,29 @@ class HubRunTimeEnvironment extends RunTimeEnvironment
 	{
 		parent::__construct($sEnvironment, $bAutoCommit);
 
-		if ($sEnvironment != $this->sTargetEnv) {
-			if (is_dir(APPROOT.'/env-'.$this->sTargetEnv)) {
-				SetupUtils::rrmdir(APPROOT.'/env-'.$this->sTargetEnv);
+		if ($sEnvironment != $this->sBuildEnv) {
+			if (is_dir(APPROOT.'/env-'.$this->sBuildEnv)) {
+				SetupUtils::rrmdir(APPROOT.'/env-'.$this->sBuildEnv);
 			}
-			if (is_dir(APPROOT.'/data/'.$this->sTargetEnv.'-modules')) {
-				SetupUtils::rrmdir(APPROOT.'/data/'.$this->sTargetEnv.'-modules');
+			if (is_dir(APPROOT.'/data/'.$this->sBuildEnv.'-modules')) {
+				SetupUtils::rrmdir(APPROOT.'/data/'.$this->sBuildEnv.'-modules');
 			}
-			SetupUtils::copydir(APPROOT.'/data/'.$sEnvironment.'-modules', APPROOT.'/data/'.$this->sTargetEnv.'-modules');
+			SetupUtils::copydir(APPROOT.'/data/'.$sEnvironment.'-modules', APPROOT.'/data/'.$this->sBuildEnv.'-modules');
 		}
 	}
 
 	/**
-	 * Update the includes for the target environment
+	 * Update the includes for the build environment
 	 *
 	 * @param Config $oConfig
 	 */
 	public function UpdateIncludes(Config $oConfig)
 	{
-		$oConfig->UpdateIncludes('env-'.$this->sTargetEnv); // TargetEnv != FinalEnv
+		$oConfig->UpdateIncludes('env-'.$this->sBuildEnv); // BuildEnv != FinalEnv
 	}
 
 	/**
-	 * Move an extension (path to folder of this extension) to the target environment
+	 * Move an extension (path to folder of this extension) to the build environment
 	 *
 	 * @param string $sExtensionDirectory The folder of the extension
 	 *
@@ -49,12 +49,12 @@ class HubRunTimeEnvironment extends RunTimeEnvironment
 	 */
 	public function MoveExtension($sExtensionDirectory)
 	{
-		if (!is_dir(APPROOT.'/data/'.$this->sTargetEnv.'-modules')) {
-			if (!mkdir(APPROOT.'/data/'.$this->sTargetEnv.'-modules')) {
-				throw new Exception("ERROR: failed to create directory:'".(APPROOT.'/data/'.$this->sTargetEnv.'-modules')."'");
+		if (!is_dir(APPROOT.'/data/'.$this->sBuildEnv.'-modules')) {
+			if (!mkdir(APPROOT.'/data/'.$this->sBuildEnv.'-modules')) {
+				throw new Exception("ERROR: failed to create directory:'".(APPROOT.'/data/'.$this->sBuildEnv.'-modules')."'");
 			}
 		}
-		$sDestinationPath = APPROOT.'/data/'.$this->sTargetEnv.'-modules/';
+		$sDestinationPath = APPROOT.'/data/'.$this->sBuildEnv.'-modules/';
 
 		// Make sure that the destination directory of the extension does not already exist
 		if (is_dir($sDestinationPath.basename($sExtensionDirectory))) {
@@ -67,7 +67,7 @@ class HubRunTimeEnvironment extends RunTimeEnvironment
 	}
 
 	/**
-	 * Move the selected extensions located in the given directory in data/<target-env>-modules
+	 * Move the selected extensions located in the given directory in data/<build-env>-modules
 	 *
 	 * @param string $sDownloadedExtensionsDir The directory to scan
 	 * @param string[] $aSelectedExtensionDirs The list of folders to move

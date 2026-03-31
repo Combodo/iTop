@@ -55,9 +55,9 @@ class RunTimeEnvironment
 
 	/**
 	 * Environment into which the build will be performed
-	 * @var string sTargetEnv
+	 * @var string sBuildEnv
 	 */
-	protected $sTargetEnv;
+	protected $sBuildEnv;
 
 	/**
 	 * Extensions map of the source environment
@@ -72,12 +72,12 @@ class RunTimeEnvironment
 
 	public function InitExtensionMap($aExtraDirs, $oSourceConfig)
 	{
-		// Actually read the modules available for the target environment,
+		// Actually read the modules available for the build environment,
 		// but get the selection from the source environment and finally
 		// mark as (automatically) chosen alll the "remote" modules present in the
-		// target environment (data/<target-env>-modules)
+		// build environment (data/<build-env>-modules)
 		// The actual choices will be recorded by RecordInstallation below
-		$this->oExtensionsMap = new iTopExtensionsMap($this->sTargetEnv, $aExtraDirs);
+		$this->oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv, $aExtraDirs);
 		$this->oExtensionsMap->LoadChoicesFromDatabase($oSourceConfig);
 	}
 
@@ -85,17 +85,17 @@ class RunTimeEnvironment
 	 * Toolset for building a run-time environment
 	 *
 	 * @param string $sEnvironment (e.g. 'test')
-	 * @param bool $bAutoCommit (make the target environment directly, or build a temporary one)
+	 * @param bool $bAutoCommit (make the final environment directly, or build a temporary one)
 	 */
 	public function __construct($sEnvironment = 'production', $bAutoCommit = true)
 	{
 		$this->sFinalEnv = $sEnvironment;
 		if ($bAutoCommit) {
 			// Build directly onto the requested environment
-			$this->sTargetEnv = $sEnvironment;
+			$this->sBuildEnv = $sEnvironment;
 		} else {
-			// Build into a temporary target
-			$this->sTargetEnv = $sEnvironment.'-build';
+			// Build into a temporary dir
+			$this->sBuildEnv = $sEnvironment.'-build';
 		}
 		$this->oExtensionsMap = null;
 	}
@@ -106,7 +106,7 @@ class RunTimeEnvironment
 	 */
 	public function GetBuildDir()
 	{
-		return APPROOT.'env-'.$this->sTargetEnv;
+		return APPROOT.'env-'.$this->sBuildEnv;
 	}
 
 	/**
@@ -141,20 +141,20 @@ class RunTimeEnvironment
 
 		if (!$bUseCache) {
 			// Reset the cache for the first use !
-			MetaModel::ResetAllCaches($this->sTargetEnv);
+			MetaModel::ResetAllCaches($this->sBuildEnv);
 		}
 
-		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache, false /* $bTraceSourceFiles */, $this->sTargetEnv);
+		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache, false /* $bTraceSourceFiles */, $this->sBuildEnv);
 
 		if ($this->oExtensionsMap === null) {
-			$this->oExtensionsMap = new iTopExtensionsMap($this->sTargetEnv);
+			$this->oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv);
 		}
 	}
 
 	/**
 	 * Analyzes the current installation and the possibilities
 	 *
-	 * @param null|Config $oConfig Defines the target environment (DB)
+	 * @param null|Config $oConfig Defines the build environment (DB)
 	 * @param mixed $modulesPath Either a single string or an array of absolute paths
 	 * @param bool $bAbortOnMissingDependency ...
 	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
@@ -196,14 +196,14 @@ class RunTimeEnvironment
 	public function WriteConfigFileSafe($oConfig)
 	{
 		self::MakeDirSafe(APPCONF);
-		self::MakeDirSafe(APPCONF.$this->sTargetEnv);
+		self::MakeDirSafe(APPCONF.$this->sBuildEnv);
 
-		$sTargetConfigFile = APPCONF.$this->sTargetEnv.'/'.ITOP_CONFIG_FILE;
+		$sBuildConfigFile = APPCONF.$this->sBuildEnv.'/'.ITOP_CONFIG_FILE;
 
 		// Write the config file
-		@chmod($sTargetConfigFile, 0770); // In case it exists: RWX for owner and group, nothing for others
-		$oConfig->WriteToFile($sTargetConfigFile);
-		@chmod($sTargetConfigFile, 0440); // Read-only for owner and group, nothing for others
+		@chmod($sBuildConfigFile, 0770); // In case it exists: RWX for owner and group, nothing for others
+		$oConfig->WriteToFile($sBuildConfigFile);
+		@chmod($sBuildConfigFile, 0440); // Read-only for owner and group, nothing for others
 	}
 
 	/**
@@ -237,7 +237,7 @@ class RunTimeEnvironment
 		if (is_dir(APPROOT.'extensions')) {
 			$aDirsToCompile[] = APPROOT.'extensions';
 		}
-		$sExtraDir = utils::GetDataPath().$this->sTargetEnv.'-modules/';
+		$sExtraDir = utils::GetDataPath().$this->sBuildEnv.'-modules/';
 		if (is_dir($sExtraDir)) {
 			$aDirsToCompile[] = $sExtraDir;
 		}
@@ -258,7 +258,7 @@ class RunTimeEnvironment
 		if (is_dir(APPROOT.'extensions')) {
 			$aDirsToCompile[] = APPROOT.'extensions';
 		}
-		$sExtraDir = utils::GetDataPath().$this->sTargetEnv.'-modules/';
+		$sExtraDir = utils::GetDataPath().$this->sBuildEnv.'-modules/';
 		if (is_dir($sExtraDir)) {
 			$aDirsToCompile[] = $sExtraDir;
 		}
@@ -271,10 +271,10 @@ class RunTimeEnvironment
 		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
 		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile);
 
-		// Actually read the modules available for the target environment,
+		// Actually read the modules available for the build environment,
 		// but get the selection from the source environment and finally
 		// mark as (automatically) chosen all the "remote" modules present in the
-		// target environment (data/<target-env>-modules)
+		// build environment (data/<build-env>-modules)
 		// The actual choices will be recorded by RecordInstallation below
 		$this->InitExtensionMap($aExtraDirs, $oSourceConfig);
 		$this->GetExtensionMap()->LoadChoicesFromDatabase($oSourceConfig);
@@ -336,7 +336,7 @@ class RunTimeEnvironment
 			}
 		} while ($bModuleAdded);
 
-		$sDeltaFile = utils::GetDataPath().$this->sTargetEnv.'.delta.xml';
+		$sDeltaFile = utils::GetDataPath().$this->sBuildEnv.'.delta.xml';
 		if (file_exists($sDeltaFile)) {
 			$oDelta = new MFDeltaModule($sDeltaFile);
 			$aRet[$oDelta->GetName()] = $oDelta;
@@ -347,9 +347,9 @@ class RunTimeEnvironment
 
 	/**
 	 * Compile the data model by imitating the given environment
-	 * The list of modules to be installed in the target environment is:
+	 * The list of modules to be installed in the build environment is:
 	 *  - the list of modules present in the "source_dir" (defined by the source environment) which are marked as "installed" in the source environment's database
-	 *  - plus the list of modules present in the "extra" directory of the target environment: data/<target_environment>-modules/
+	 *  - plus the list of modules present in the "extra" directory of the build environment: data/<build_environment>-modules/
 	 *
 	 * @param string $sSourceEnv The name of the source environment to 'imitate'
 	 * @param bool $bUseSymLinks Whether to create symbolic links instead of copies
@@ -371,26 +371,26 @@ class RunTimeEnvironment
 			if ($oModule instanceof MFDeltaModule) {
 				// Just before loading the delta, let's save an image of the datamodel
 				// in case there is no delta the operation will be done after the end of the loop
-				$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sTargetEnv.'.xml');
+				$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'.xml');
 			}
 			$oFactory->LoadModule($oModule);
 		}
 
 		if (!is_null($oModule) && ($oModule instanceof MFDeltaModule)) {
 			// A delta was loaded, let's save a second copy of the datamodel
-			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sTargetEnv.'-with-delta.xml');
+			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'-with-delta.xml');
 		} else {
 			// No delta was loaded, let's save the datamodel now
-			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sTargetEnv.'.xml');
+			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'.xml');
 		}
 
-		$sTargetDir = APPROOT.'env-'.$this->sTargetEnv;
-		self::MakeDirSafe($sTargetDir);
-		$bSkipTempDir = ($this->sFinalEnv != $this->sTargetEnv); // No need for a temporary directory if sTargetEnv is already a temporary directory
+		$sBuildDir = APPROOT.'env-'.$this->sBuildEnv;
+		self::MakeDirSafe($sBuildDir);
+		$bSkipTempDir = ($this->sFinalEnv != $this->sBuildEnv); // No need for a temporary directory if sBuildEnv is already a temporary directory
 		$oMFCompiler = new MFCompiler($oFactory, $this->sFinalEnv);
-		$oMFCompiler->Compile($sTargetDir, null, $bUseSymLinks, $bSkipTempDir);
+		$oMFCompiler->Compile($sBuildDir, null, $bUseSymLinks, $bSkipTempDir);
 
-		MetaModel::ResetAllCaches($this->sTargetEnv);
+		MetaModel::ResetAllCaches($this->sBuildEnv);
 
 		return array_keys($aModulesToCompile);
 	}
@@ -752,8 +752,8 @@ class RunTimeEnvironment
 
 	public function Commit()
 	{
-		if ($this->sFinalEnv != $this->sTargetEnv) {
-			if (file_exists(utils::GetDataPath().$this->sTargetEnv.'.delta.xml')) {
+		if ($this->sFinalEnv != $this->sBuildEnv) {
+			if (file_exists(utils::GetDataPath().$this->sBuildEnv.'.delta.xml')) {
 				if (file_exists(utils::GetDataPath().$this->sFinalEnv.'.delta.xml')) {
 					// Make a "previous" file
 					copy(
@@ -762,31 +762,31 @@ class RunTimeEnvironment
 					);
 				}
 				$this->CommitFile(
-					utils::GetDataPath().$this->sTargetEnv.'.delta.xml',
+					utils::GetDataPath().$this->sBuildEnv.'.delta.xml',
 					utils::GetDataPath().$this->sFinalEnv.'.delta.xml'
 				);
 			}
 			$this->CommitFile(
-				utils::GetDataPath().'datamodel-'.$this->sTargetEnv.'.xml',
+				utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'.xml',
 				utils::GetDataPath().'datamodel-'.$this->sFinalEnv.'.xml'
 			);
 			$this->CommitFile(
-				utils::GetDataPath().'datamodel-'.$this->sTargetEnv.'-with-delta.xml',
+				utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'-with-delta.xml',
 				utils::GetDataPath().'datamodel-'.$this->sFinalEnv.'-with-delta.xml',
 				false
 			);
 			$this->CommitDir(
-				utils::GetDataPath().$this->sTargetEnv.'-modules/',
+				utils::GetDataPath().$this->sBuildEnv.'-modules/',
 				utils::GetDataPath().$this->sFinalEnv.'-modules/',
 				false
 			);
 			$this->CommitDir(
-				utils::GetDataPath().'cache-'.$this->sTargetEnv,
+				utils::GetDataPath().'cache-'.$this->sBuildEnv,
 				utils::GetDataPath().'cache-'.$this->sFinalEnv,
 				false
 			);
 			$this->CommitDir(
-				APPROOT.'env-'.$this->sTargetEnv,
+				APPROOT.'env-'.$this->sBuildEnv,
 				APPROOT.'env-'.$this->sFinalEnv,
 				true,
 				false
@@ -794,12 +794,12 @@ class RunTimeEnvironment
 
 			// Move the config file
 			//
-			$sTargetConfig = APPCONF.$this->sTargetEnv.'/config-itop.php';
+			$sBuildConfig = APPCONF.$this->sBuildEnv.'/config-itop.php';
 			$sFinalConfig = APPCONF.$this->sFinalEnv.'/config-itop.php';
 			@chmod($sFinalConfig, 0770); // In case it exists: RWX for owner and group, nothing for others
-			$this->CommitFile($sTargetConfig, $sFinalConfig);
+			$this->CommitFile($sBuildConfig, $sFinalConfig);
 			@chmod($sFinalConfig, 0440); // Read-only for owner and group, nothing for others
-			@rmdir(dirname($sTargetConfig)); // Cleanup the temporary build dir if empty
+			@rmdir(dirname($sBuildConfig)); // Cleanup the temporary build dir if empty
 
 			MetaModel::ResetAllCaches($this->sFinalEnv);
 		}
@@ -868,8 +868,8 @@ class RunTimeEnvironment
 
 	public function Rollback()
 	{
-		if ($this->sFinalEnv != $this->sTargetEnv) {
-			SetupUtils::tidydir(APPROOT.'env-'.$this->sTargetEnv);
+		if ($this->sFinalEnv != $this->sBuildEnv) {
+			SetupUtils::tidydir(APPROOT.'env-'.$this->sBuildEnv);
 		}
 	}
 
@@ -953,7 +953,7 @@ class RunTimeEnvironment
 				continue;
 			}
 
-			$sRelativePath = 'env-'.$this->sTargetEnv.'/'.basename($aModule['root_dir']);
+			$sRelativePath = 'env-'.$this->sBuildEnv.'/'.basename($aModule['root_dir']);
 			// Load data only for selected AND newly installed modules
 			if (is_null($aSelectedModules) || in_array($sModuleId, $aSelectedModules)) {
 				if ($aModule['installed_version'] != '') {

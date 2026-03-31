@@ -25,20 +25,20 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 	{
 		parent::__construct($sSourceEnv, false);
 		$this->aExtensionsByCode = $aExtensionCodesToRemove;
-		$this->Prepare($sSourceEnv, $this->sTargetEnv);
+		$this->Prepare($sSourceEnv, $this->sBuildEnv);
 	}
 
 	/**
 	* @param string $sSourceEnv
-	* @param string $sTargetEnv
+	* @param string $sBuildEnv
 	* @return void
 	* @throws \MissingDependencyException
 	 */
-	private function Prepare(string $sSourceEnv, string $sTargetEnv)
+	private function Prepare(string $sSourceEnv, string $sBuildEnv)
 	{
 		$this->Cleanup();
-		SetupUtils::copydir(APPROOT."/data/$sSourceEnv-modules", APPROOT."/data/$sTargetEnv-modules");
-		SetupUtils::copydir(APPROOT."/conf/$sSourceEnv", APPROOT."/conf/$sTargetEnv");
+		SetupUtils::copydir(APPROOT."/data/$sSourceEnv-modules", APPROOT."/data/$sBuildEnv-modules");
+		SetupUtils::copydir(APPROOT."/conf/$sSourceEnv", APPROOT."/conf/$sBuildEnv");
 
 		$this->DeclareExtensionAsRemoved($this->aExtensionsByCode);
 
@@ -57,7 +57,7 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 
 	private function DeclareExtensionAsRemoved(array $aExtensionCodes): void
 	{
-		$oExtensionsMap = new iTopExtensionsMap($this->sTargetEnv);
+		$oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv);
 		$oExtensionsMap->DeclareExtensionAsRemoved($aExtensionCodes);
 	}
 
@@ -84,7 +84,7 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 
 	public function Cleanup(): void
 	{
-		$sEnv = $this->sTargetEnv;
+		$sEnv = $this->sBuildEnv;
 
 		//keep this folder empty
 		SetupUtils::tidydir(APPROOT."/env-$sEnv");

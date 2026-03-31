@@ -50,7 +50,7 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 
 	public function CompileFrom($sSourceEnv, $bUseSymLinks = null)
 	{
-		$sDestModulesDir = APPROOT.'data/'.$this->sTargetEnv.'-modules/';
+		$sDestModulesDir = APPROOT.'data/'.$this->sBuildEnv.'-modules/';
 		if (is_dir($sDestModulesDir)) {
 			SetupUtils::rrmdir($sDestModulesDir);
 		}
