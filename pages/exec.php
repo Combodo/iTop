@@ -105,7 +105,7 @@ if ($sTargetPage === false || $sModule === 'core' || $sModule === 'dictionaries'
 $aModuleDelegatedAuthenticationEndpointsList = GetModuleDelegatedAuthenticationEndpoints($sModule);
 // If module doesn't have the delegated authentication endpoints list defined, we rely on the conf. param. to decide if we force login or not.
 if (is_null($aModuleDelegatedAuthenticationEndpointsList)) {
-	$bForceLoginWhenNoDelegatedAuthenticationEndpoints = utils::GetConfig()->Get('security.force_login_when_no_delegated_authentication_endpoints_list');
+	$bForceLoginWhenNoDelegatedAuthenticationEndpoints = !utils::GetConfig()->Get('security.disable_exec_forced_login_for_all_enpoints');
 	if ($bForceLoginWhenNoDelegatedAuthenticationEndpoints) {
 		require_once(APPROOT.'/application/startup.inc.php');
 		LoginWebPage::DoLoginEx();
