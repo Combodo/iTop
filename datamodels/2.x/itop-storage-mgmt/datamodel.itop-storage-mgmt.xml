@@ -642,7 +642,7 @@
             <item id="col:col2">
               <rank>110</rank>
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">

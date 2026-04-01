@@ -20,7 +20,7 @@
           </complementary_attributes>
         </naming>
         <style>
-          <icon>../../images/icons/icons8-rack.svg</icon>
+          <icon>../../images/icons/icons8-enclosure-for-servers.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -105,7 +105,7 @@
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
@@ -249,7 +249,7 @@
           </complementary_attributes>
         </naming>
         <style>
-          <icon>../../images/icons/icons8-enclosure-for-servers.svg</icon>
+          <icon>../../images/icons/icons8-rack.svg</icon>
         </style>
         <reconciliation>
           <attributes>

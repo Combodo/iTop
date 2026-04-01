@@ -163,7 +163,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Rack' => 'Rack',
-	'Class:Rack+' => 'A physical container for Datacenter Devices and Enclosures.',
+	'Class:Rack+' => 'A physical cabinet for Datacenter Devices and Chassis.',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s',
 	'Class:Rack/Attribute:nb_u' => 'Rack units',
 	'Class:Rack/Attribute:nb_u+' => '',
@@ -470,7 +470,7 @@ For example: external hard drives, scanners, input devices (trackballs, bar code
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Enclosure' => 'Enclosure',
-	'Class:Enclosure+' => 'Cabinet is a physical structure in which to mount IT equipment such as Servers, Network Device... In  '.ITOP_APPLICATION_SHORT.' an Enclosure can be mounted inside a Rack or directly fitted on the wall of a datacenter.',
+	'Class:Enclosure+' => 'An open-frame chassis mounted inside a Rack, in which to mount IT equipment such as Blade Servers, Network Device...',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Enclosure/Attribute:rack_id' => 'Rack',
 	'Class:Enclosure/Attribute:rack_id+' => '',

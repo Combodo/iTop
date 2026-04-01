@@ -1324,7 +1324,7 @@
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                <item id="fieldset:ConfigMgmt:datee">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
