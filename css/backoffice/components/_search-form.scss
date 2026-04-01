@@ -21,6 +21,8 @@ $ibo-search-form-panel--more-criteria--color: $ibo-color-blue-grey-800 !default;
 $ibo-search-form-panel--more-criteria--background-color: $ibo-color-white-100 !default;
 $ibo-search-form-panel--more-criteria--icon--color: $ibo-color-primary-600 !default;
 $ibo-search-form-panel--more-criteria--border-color: $ibo-search-form-panel--criteria--border-color !default;
+// calc is redundant but avoid SCSS min() from being used instead of CSS min()
+$ibo-search-form-panel--criteria--max-height: calc(min(#{$ibo-size-750}, 50vh)) !default;
 
 $ibo-search-form-panel--items--hover--color: $ibo-color-grey-200 !default;
 
@@ -278,9 +280,10 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 				}
 
 				.sfc_form_group {
-          display: block;
-          margin-top: -1px;
-          z-index: -1;
+                  display: flex;
+                  flex-direction: column;
+                  margin-top: -1px;
+                  z-index: -1;
         }
 			}
 
@@ -346,11 +349,14 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
         display: none;
         max-width: 450px;
         width: max-content;
-        max-height: 520px;
+        max-height: $ibo-search-form-panel--criteria--max-height;
         overflow-x: auto;
         overflow-y: hidden;
 
 				.sfc_fg_operators {
+                    display: flex;
+                    flex-direction: column;
+                    overflow: auto;
 					font-size: 12px;
 
 					.sfc_fg_operator {
@@ -387,6 +393,9 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 						}
 
 						.sfc_opc_multichoices {
+                            display: flex;
+                            flex-direction: column;
+                            height: 100%;
 							label > input {
 								vertical-align: text-top;
 								margin-left: $ibo-spacing-0;
@@ -398,7 +407,6 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 							}
 
 							.sfc_opc_mc_items_wrapper {
-								max-height: 415px; /* Must be less than .sfc_form_group:max-height - .sfc_opc_mc_toggler:height - .sfc_opc_mc_filter:height */
 								overflow-y: auto;
 								margin: $ibo-spacing-0 -8px; /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
 
@@ -560,8 +568,14 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 			&.search_form_criteria_enum {
 				.sfc_form_group {
 					.sfc_fg_operator_in {
+                        display: flex;
+                        flex-direction: column;
+                        height: 100%;
+                        min-height: 0;
 						> label {
-							display: inline-block;
+							display: flex;
+                            height: 100%;
+                            min-height: 0;
 							width: 100%;
 							line-height: initial;
 							white-space: nowrap;
