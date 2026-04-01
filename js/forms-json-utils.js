@@ -301,88 +301,95 @@ function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue, origi
 	return true; // Do not stop propagation ??
 }
 
-function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue)
+function EvaluateCKEditorValidation(oOptions)
 {
-	let oField = $('#'+sFieldId);
+	let oField = $('#'+oOptions.sFieldId);
 	if (oField.length === 0) {
 		return false;
 	}
 
-	let oCKEditor = CombodoCKEditorHandler.GetInstanceSynchronous('#'+sFieldId);
+	let oCKEditor = CombodoCKEditorHandler.GetInstanceSynchronous('#'+oOptions.sFieldId);
+	let bValid = true;
+	let sExplain = '';
+	let sTextContent;
+	let sTextOriginalContents;
 
-	var bValid;
-	var sExplain = '';
 	if (oField.prop('disabled')) {
 		bValid = true; // disabled fields are not checked
 	} else {
 		// If the CKEditor is not yet loaded, we need to wait for it to be ready
 		// but as we need this function to be synchronous, we need to call it again when the CKEditor is ready
 		if (oCKEditor === undefined){
-			CombodoCKEditorHandler.GetInstance('#'+sFieldId).then((oCKEditor) => {
-				ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue);
+			CombodoCKEditorHandler.GetInstance('#'+oOptions.sFieldId).then((oCKEditor) => {
+				oOptions.onRetry();
 			});
-			return;
+			return false;
 		}
-		let sTextContent;
-		let sFormattedContent = oCKEditor.getData();
 
-		// Get the contents without the tags
-		// Check if we have a formatted content that is HTML, otherwise we just have plain text, and we can use it directly
+		let sFormattedContent = oCKEditor.getData();
 		sTextContent = $(sFormattedContent).length > 0 ? $(sFormattedContent).text() : sFormattedContent;
 
-		if (sTextContent === '') {
+		if (sTextContent === '')
+		{
 			// No plain text, maybe there is just an image
-			let oImg = $(sFormattedContent).find("img");
-			if (oImg.length !== 0) {
+			let oImg = $(sFormattedContent).find('img');
+			if (oImg.length !== 0)
+			{
 				sTextContent = 'image';
 			}
 		}
 
-		// Get the original value without the tags
-		let oFormattedOriginalContents = (originalValue !== undefined) ? $('<div></div>').html(originalValue) : undefined;
-		let sTextOriginalContents = (oFormattedOriginalContents !== undefined) ? oFormattedOriginalContents.text() : undefined;
+		let oFormattedOriginalContents = (oOptions.sOriginalValue !== undefined) ? $('<div></div>').html(oOptions.sOriginalValue) : undefined;
+		sTextOriginalContents = (oFormattedOriginalContents !== undefined) ? oFormattedOriginalContents.text() : undefined;
 
-		if (bMandatory && (sTextContent === nullValue)) {
-			bValid = false;
-			sExplain = Dict.S('UI:ValueMustBeSet');
-		} else if ((sTextOriginalContents !== undefined) && (sTextContent === sTextOriginalContents)) {
-			bValid = false;
-			if (sTextOriginalContents === nullValue) {
-				sExplain = Dict.S('UI:ValueMustBeSet');
-			} else {
-				// Note: value change check is not working well yet as the HTML to Text conversion is not exactly the same when done from the PHP value or the CKEditor value.
-				sExplain = Dict.S('UI:ValueMustBeChanged');
-			}
-		} else {
-			bValid = true;
+		if (oOptions.validate !== undefined) {
+			let oValidation = oOptions.validate(sTextContent, sTextOriginalContents);
+			bValid = oValidation.bValid;
+			sExplain = oValidation.sExplain;
 		}
-		
-		// Put and event to check the field when the content changes, remove the event right after as we'll call this same function again, and we don't want to call the event more than once (especially not ^2 times on each call)
+
+		// Put an event to check the field when the content changes, remove the event right after as we'll call this same function again, and we don't want to call the event more than once (especially not ^2 times on each call)
 		oCKEditor.model.document.once('change:data', (event) => {
-			ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue);
+			oOptions.onChange();
 		});
 	}
-	
-	ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain);
+
+	ReportFieldValidationStatus(oOptions.sFieldId, oOptions.sFormId, bValid, sExplain);
 	return bValid;
 }
 
-function ResetPwd(id)
+function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue)
 {
-	// Reset the values of the password fields
-	$('#'+id).val('*****');
-	$('#'+id+'_confirm').val('*****');
-	// And reset the flag, to tell it that the password remains unchanged
-	$('#'+id+'_changed').val(0);
-	// Visual feedback, None when it's Ok
-	$('#v_'+id).html('');
-}
-
-// Called whenever the content of a one way encrypted password changes
-function PasswordFieldChanged(id)
-{
-	// Set the flag, to tell that the password changed
-	$('#'+id+'_changed').val(1);
+	return EvaluateCKEditorValidation({
+		sFieldId: sFieldId,
+		sFormId: sFormId,
+        sOriginalValue: originalValue,
+		onRetry: function() {
+			ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue);
+		},
+		onChange: function() {
+			ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue);
+		},
+		validate: function(sTextContent, sTextOriginalContents) {
+			var bValid;
+			var sExplain = '';
+			if (bMandatory && (sTextContent === nullValue)) {
+				bValid = false;
+				sExplain = Dict.S('UI:ValueMustBeSet');
+			} else if ((sTextOriginalContents !== undefined) && (sTextContent === sTextOriginalContents)) {
+				bValid = false;
+				if (sTextOriginalContents === nullValue) {
+					sExplain = Dict.S('UI:ValueMustBeSet');
+				} else {
+					// Note: value change check is not working well yet as the HTML to Text conversion is not exactly the same when done from the PHP value or the CKEditor value.
+					sExplain = Dict.S('UI:ValueMustBeChanged');
+				}
+			} else {
+				bValid = true;
+			}
+			return {bValid: bValid, sExplain: sExplain};
+		}
+	});
 }
 
 // Special validation function for one way encrypted password fields
@@ -415,37 +422,48 @@ function ValidatePasswordField(id, sFormId)
 // to determine if the field is empty or not
 function ValidateCaseLogField(sFieldId, bMandatory, sFormId, nullValue, originalValue)
 {
-	var bValid = true;
-	var sExplain = '';
-	var sTextContent;
-	
-	if ($('#'+sFieldId).prop('disabled'))
-	{
-		bValid = true; // disabled fields are not checked
-	}
-	else
-	{
-		// Get the contents (with tags)
-		// Note: For CaseLog we can't retrieve the formatted contents from CKEditor (unlike in ValidateCKEditorField() method) because of the place holder.
-		sTextContent = $('#' + sFieldId).val();
-		var count = $('#'+sFieldId+'_count').val();
+	return EvaluateCKEditorValidation({
+		sFieldId: sFieldId,
+		sFormId: sFormId,
+		originalValue: originalValue,
+		onRetry: function() {
+			ValidateCaseLogField(sFieldId, bMandatory, sFormId, nullValue, originalValue);
+		},
+		onChange: function() {
+			ValidateCaseLogField(sFieldId, bMandatory, sFormId, nullValue, originalValue);
+		},
+		validate: function(sTextContent, sTextOriginalContents) {
+			var bValid;
+			var sExplain = '';
+			// CaseLog is special: history count matters when deciding if the field is empty
+			var count = $('#'+sFieldId+'_count').val();
 
-		if (bMandatory && (count == 0) && (sTextContent == nullValue))
-		{
-			// No previous entry and no content typed
-			bValid = false;
-			sExplain = Dict.S('UI:ValueMustBeSet');
+			if (bMandatory && (count == 0) && (sTextContent === nullValue))
+			{
+				// No previous entry and no content typed
+				bValid = false;
+				sExplain = Dict.S('UI:ValueMustBeSet');
+			}
+			else if ((sTextOriginalContents !== undefined) && (sTextContent === sTextOriginalContents))
+			{
+				bValid = false;
+				if (sTextOriginalContents === nullValue)
+				{
+					sExplain = Dict.S('UI:ValueMustBeSet');
+				}
+				else
+				{
+					// Note: value change check is not working well yet as the HTML to Text conversion is not exactly the same when done from the PHP value or the CKEditor value.
+					sExplain = Dict.S('UI:ValueMustBeChanged');
+				}
+			}
+			else
+			{
+				bValid = true;
+			}
+			return {bValid: bValid, sExplain: sExplain};
 		}
-		else if ((originalValue != undefined) && (sTextContent == originalValue))
-		{
-			bValid = false;
-			sExplain = Dict.S('UI:ValueMustBeChanged');
-		}
-	}
-	ReportFieldValidationStatus(sFieldId, sFormId, bValid, '' /* sExplain */);
-
-	// We need to check periodically as CKEditor doesn't trigger our events. More details in UIHTMLEditorWidget::Display() @ line 92
-	setTimeout(function(){ValidateCaseLogField(sFieldId, bMandatory, sFormId, nullValue, originalValue);}, 500);
+	});
 }
 
 // Validate the inputs depending on the current setting
