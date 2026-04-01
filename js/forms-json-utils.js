@@ -442,7 +442,7 @@ function ValidateCaseLogField(sFieldId, bMandatory, sFormId, nullValue, original
 	return EvaluateCKEditorValidation({
 		sFieldId: sFieldId,
 		sFormId: sFormId,
-		originalValue: originalValue,
+		sOriginalValue: originalValue,
 		onRetry: function() {
 			ValidateCaseLogField(sFieldId, bMandatory, sFormId, nullValue, originalValue);
 		},
