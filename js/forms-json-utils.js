@@ -391,6 +391,23 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue,
 		}
 	});
 }
+function ResetPwd(id)
+{
+    // Reset the values of the password fields
+    $('#'+id).val('*****');
+    $('#'+id+'_confirm').val('*****');
+    // And reset the flag, to tell it that the password remains unchanged
+    $('#'+id+'_changed').val(0);
+    // Visual feedback, None when it's Ok
+    $('#v_'+id).html('');
+}
+
+// Called whenever the content of a one way encrypted password changes
+function PasswordFieldChanged(id)
+{
+    // Set the flag, to tell that the password changed
+    $('#'+id+'_changed').val(1);
+}
 
 // Special validation function for one way encrypted password fields
 function ValidatePasswordField(id, sFormId)
