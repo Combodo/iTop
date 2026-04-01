@@ -152,6 +152,7 @@ class ActivityPanelFactory
 				if (false === empty($aRelatedTriggersIDs)) {
 					// - Prepare query to retrieve events
 					$oNotifEventsSearch = DBObjectSearch::FromOQL('SELECT EN FROM EventNotification AS EN JOIN Action AS A ON EN.action_id = A.id WHERE EN.trigger_id IN (:triggers_ids) AND EN.object_id = :object_id');
+					$oNotifEventsSearch->AllowAllData();
 					$oNotifEventsSet = new DBObjectSet($oNotifEventsSearch, ['id' => false], ['triggers_ids' => $aRelatedTriggersIDs, 'object_id' => $sObjId]);
 					$oNotifEventsSet->SetLimit(MetaModel::GetConfig()->Get('max_history_length'));
 
