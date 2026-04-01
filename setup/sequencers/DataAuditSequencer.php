@@ -25,9 +25,6 @@ require_once APPROOT.'setup/feature_removal/SetupAudit.php';
 require_once(APPROOT.'setup/sequencers/StepSequencer.php');
 require_once(APPROOT.'setup/sequencers/ApplicationInstallSequencer.php');
 
-use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
-use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
-
 class DataAuditSequencer extends ApplicationInstallSequencer
 {
 	public const DATA_AUDIT_FAILED = 100;
@@ -35,12 +32,14 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 	protected function GetTempEnv()
 	{
 		$sTargetEnv = $this->GetTargetEnv();
+
 		return $sTargetEnv.'-build';
 	}
 
 	protected function GetTargetDir()
 	{
 		$sTargetEnv = $this->GetTempEnv();
+
 		return 'env-'.$sTargetEnv;
 	}
 
@@ -56,102 +55,56 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 	public function ExecuteStep($sStep = '', $sInstallComment = null)
 	{
 		try {
+			/**
+			 * @since 3.2.0 move the ContextTag init at the very beginning of the method
+			 * @noinspection PhpUnusedLocalVariableInspection
+			 */
+			$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 			$fStart = microtime(true);
 			SetupLog::Info("##### STEP {$sStep} start");
 			switch ($sStep) {
 				case '':
-					$this->DoLogParameters('data-audit-', 'Data Audit');
+					return $this->GetNextStep('copy', 'Copying data model files', 5);
 
-					$aResult = [
-						'status' => self::OK,
-						'message' => '',
-						'percentage-completed' => 20,
-						'next-step' => 'compile',
-						'next-step-label' => 'Compiling the data model',
-					];
-
-					break;
+				case 'copy':
+					$this->oRunTimeEnvironment->CopySetupFiles();
+					return $this->GetNextStep('compile', 'Compiling the data model', 20, 'Copying...');
 
 				case 'compile':
 					$aSelectedModules = $this->oParams->Get('selected_modules');
 					$sSourceDir = $this->oParams->Get('source_dir', 'datamodels/latest');
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
+					$aMiscOptions = $this->oParams->Get('options', []);
 					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', []);
-
-					$this->DoCompile(
+					$bUseSymbolicLinks = $aMiscOptions['symlinks'] ?? false;
+					$sMessage = $bUseSymbolicLinks ? '' : 'Using symbolic links instead of copying data model files (for developers only!)';
+					$this->oRunTimeEnvironment->DoCompile(
 						$aRemovedExtensionCodes,
 						$aSelectedModules,
 						$sSourceDir,
 						$sExtensionDir,
-						false,
-						false
+						$bUseSymbolicLinks
 					);
+					return $this->GetNextStep('setup-audit', 'Checking data consistency with the new data model', 70, $sMessage);
 
-					$aResult = [
-						'status' => self::OK,
-						'message' => '',
-						'next-step' => 'write-config',
-						'next-step-label' => 'Writing audit config',
-						'percentage-completed' => 40,
-					];
-					break;
-				case 'write-config':
-					$this->DoWriteConfig();
-					$aResult = [
-						'status' => self::OK,
-						'message' => '',
-						'next-step' => 'setup-audit',
-						'next-step-label' => 'Checking data consistency with the new data model',
-						'percentage-completed' => 60,
-					];
-					break;
 				case 'setup-audit':
-					$this->DoSetupAudit();
-					$aResult = [
-						'status' => self::OK,
-						'message' => '',
-						'next-step' => 'cleanup',
-						'next-step-label' => 'Temporary folders cleanup',
-						'percentage-completed' => 80,
-					];
-					break;
-				case 'cleanup' :
-					$this->DoCleanup();
-					$aResult = [
-						'status' => self::OK,
-						'message' => '',
-						'next-step' => '',
-						'next-step-label' => 'Completed',
-						'percentage-completed' => 100,
-					];
-					break;
-				default:
-					$aResult = [
-						'status' => self::ERROR,
-						'message' => '',
-						'next-step' => '',
-						'next-step-label' => "Unknown setup step '$sStep'.",
-						'percentage-completed' => 100,
-					];
-					break;
-			}
-		} catch (Exception $e) {
-			$aResult = [
-				'status' => self::ERROR,
-				'message' => $e->getMessage(),
-				'next-step' => '',
-				'next-step-label' => '',
-				'percentage-completed' => 100,
-				'error_code' => $e->getCode(),
-			];
+					$this->oRunTimeEnvironment->DataToCleanupAudit();
+					return $this->GetNextStep('', 'Completed', 100);
 
+				default:
+					return $this->GetNextStep('', "Unknown setup step '$sStep'.", 100, '', self::ERROR);
+			}
+		}
+		catch (Exception $e) {
 			$this->ReportException($e);
-		} finally {
+			$aResult = $this->GetNextStep('', '', 100, $e->getMessage(), self::ERROR);
+			$aResult['error_code'] = $e->getCode();
+			return $aResult;
+		}
+		finally {
 			$fDuration = round(microtime(true) - $fStart, 2);
 			SetupLog::Info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
-
-		return $aResult;
 	}
 
 	protected function DoWriteConfig()
@@ -167,57 +120,7 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 
 			return $oConfig->WriteToFile($sTempConfigFileName);
 		}
+
 		return false;
-	}
-
-	protected function DoSetupAudit()
-	{
-		/**
-		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
-		 * @noinspection PhpUnusedLocalVariableInspection
-		 */
-		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
-
-		$sPreviousEnvironment = $this->GetTargetEnv();
-
-		$oSetupAudit = new SetupAudit($sPreviousEnvironment);
-
-		//Make sure the MetaModel is started before analysing for issues
-		$sConfFile = utils::GetConfigFilePath($sPreviousEnvironment);
-		MetaModel::Startup($sConfFile, false /* $bModelOnly */, false /* $bAllowCache */, false /* $bTraceSourceFiles */, $sPreviousEnvironment);
-		$oSetupAudit->GetIssues(true);
-		$iCount = $oSetupAudit->GetDataToCleanupCount();
-
-		if ($iCount > 0) {
-			throw new Exception("$iCount elements require data adjustments or cleanup in the backoffice prior to upgrading iTop", static::DATA_AUDIT_FAILED);
-		}
-	}
-
-	protected function DoCleanup()
-	{
-		$sEnv = $this->GetTempEnv();
-
-		//keep this folder empty
-		SetupUtils::tidydir(APPROOT."/env-$sEnv");
-
-		$aFolders = [
-			APPROOT."/data/$sEnv-modules",
-			APPROOT."/data/cache-$sEnv",
-			APPROOT."/conf/$sEnv",
-		];
-		foreach ($aFolders as $sFolder) {
-			SetupUtils::tidydir($sFolder);
-			SetupUtils::rmdir_safe($sFolder);
-		}
-
-		$sFiles = [
-			APPROOT."/data/datamodel-$sEnv.xml",
-			APPROOT."/data/$sEnv.delta.prev.xml",
-		];
-		foreach ($sFiles as $sFile) {
-			if (is_file($sFile)) {
-				@unlink($sFile);
-			}
-		}
 	}
 }

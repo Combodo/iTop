@@ -102,5 +102,37 @@ abstract class StepSequencer
 		return ($iOverallStatus == self::OK);
 	}
 
+	protected function GetNextStep(string $sNextStep, string $sNextStepLabel, int $iPercentComplete, string $sMessage = '', int $iStatus = self::OK): array
+	{
+		return [
+			'status' => $iStatus,
+			'message' => $sMessage,
+			'next-step' => $sNextStep,
+			'next-step-label' => $sNextStepLabel,
+			'percentage-completed' => $iPercentComplete,
+		];
+	}
+
+	protected function DoLogParameters($sPrefix = 'install-', $sOperation = 'Installation')
+	{
+		// Log the parameters...
+		$oDoc = new DOMDocument('1.0', 'UTF-8');
+		$oDoc->preserveWhiteSpace = false;
+		$oDoc->formatOutput = true;
+		$this->oParams->ToXML($oDoc, null, 'installation');
+		$sXML = $oDoc->saveXML();
+		$sSafeXml = preg_replace('|<pwd>([^<]*)</pwd>|', '<pwd>**removed**</pwd>', $sXML);
+		SetupLog::Info('======= '.$sOperation." starts =======\nParameters:\n$sSafeXml\n");
+
+		// Save the response file as a stand-alone file as well
+		$sFileName = $sPrefix.date('Y-m-d');
+		$index = 0;
+		while (file_exists(APPROOT.'log/'.$sFileName.'.xml')) {
+			$index++;
+			$sFileName = $sPrefix.date('Y-m-d').'-'.$index;
+		}
+		file_put_contents(APPROOT.'log/'.$sFileName.'.xml', $sSafeXml);
+	}
+
 	abstract public function ExecuteStep($sStep = '', $sComment = null);
 }

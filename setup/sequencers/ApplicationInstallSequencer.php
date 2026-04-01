@@ -45,14 +45,22 @@ class ApplicationInstallSequencer extends StepSequencer
 
 	protected Config $oConfig;
 
+	protected RunTimeEnvironment $oRunTimeEnvironment;
+
 	/**
 	 * @param \Parameters $oParams
 	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
-	public function __construct(Parameters $oParams)
+	public function __construct(Parameters $oParams, ?RunTimeEnvironment $oRunTimeEnvironment = null)
 	{
+		if (is_null($oRunTimeEnvironment)) {
+			$sEnvironment = $oParams->Get('target_env', 'production');
+			$oRunTimeEnvironment = new RunTimeEnvironment($sEnvironment, false);
+		}
+		$this->oRunTimeEnvironment = $oRunTimeEnvironment;
+
 		$this->oParams = $oParams;
 
 		$aParamValues = $oParams->GetParamForConfigArray();
@@ -99,26 +107,7 @@ class ApplicationInstallSequencer extends StepSequencer
 		return $oConfig;
 	}
 
-	protected function DoLogParameters($sPrefix = 'install-', $sOperation = 'Installation')
-	{
-		// Log the parameters...
-		$oDoc = new DOMDocument('1.0', 'UTF-8');
-		$oDoc->preserveWhiteSpace = false;
-		$oDoc->formatOutput = true;
-		$this->oParams->ToXML($oDoc, null, 'installation');
-		$sXML = $oDoc->saveXML();
-		$sSafeXml = preg_replace("|<pwd>([^<]*)</pwd>|", "<pwd>**removed**</pwd>", $sXML);
-		SetupLog::Info("======= ".$sOperation." starts =======\nParameters:\n$sSafeXml\n");
 
-		// Save the response file as a stand-alone file as well
-		$sFileName = $sPrefix.date('Y-m-d');
-		$index = 0;
-		while (file_exists(APPROOT.'log/'.$sFileName.'.xml')) {
-			$index++;
-			$sFileName = $sPrefix.date('Y-m-d').'-'.$index;
-		}
-		file_put_contents(APPROOT.'log/'.$sFileName.'.xml', $sSafeXml);
-	}
 
 	/**
 	 * Executes the next step of the installation and reports about the progress
@@ -137,6 +126,14 @@ class ApplicationInstallSequencer extends StepSequencer
 			$this->EnterReadOnlyMode();
 			switch ($sStep) {
 				case '':
+					if (in_array('log-parameters', $this->oParams->Get('optional_steps', []))) {
+						return $this->GetNextStep('log-parameters', 'Log parameters', 0);
+					}
+					return $this->GetNextStep('copy', 'Copying data model files', 5);
+
+				case 'log-parameters':
+					$this->DoLogParameters('data-audit-', 'Data Audit');
+					return $this->GetNextStep('copy', 'Copying data model files', 5);
 
 					$this->DoLogParameters();
 
@@ -374,26 +371,6 @@ class ApplicationInstallSequencer extends StepSequencer
 		SetupUtils::ExitReadOnlyMode();
 	}
 
-	protected function DoCopy($aCopies)
-	{
-		$aReports = [];
-		foreach ($aCopies as $aCopy) {
-			$sSource = $aCopy['source'];
-			$sDestination = APPROOT.$aCopy['destination'];
-
-			SetupUtils::builddir($sDestination);
-			SetupUtils::tidydir($sDestination);
-			SetupUtils::copydir($sSource, $sDestination);
-			$aReports[] = "'{$aCopy['source']}' to '{$aCopy['destination']}' (OK)";
-		}
-		if (count($aReports) > 0) {
-			$sReport = "Copies: ".count($aReports).': '.implode('; ', $aReports);
-		} else {
-			$sReport = "No file copy";
-		}
-		return $sReport;
-	}
-
 	/**
 	 * @param string $sBackupFileFormat
 	 * @param string $sSourceConfigFile
@@ -414,160 +391,6 @@ class ApplicationInstallSequencer extends StepSequencer
 
 		CMDBSource::InitFromConfig($this->oConfig);
 		$oBackup->CreateCompressedBackup($sTargetFile, $sSourceConfigFile);
-	}
-
-	/**
-	 * @param array $aRemovedExtensionCodes
-	 * @param array $aSelectedModules
-	 * @param string $sSourceDir
-	 * @param string $sExtensionDir
-	 * @param boolean $bUseSymbolicLinks
-	 *
-	 * @return void
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 *
-	 * @since 3.1.0 N°2013 added the aParamValues param
-	 */
-	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, $bUseSymbolicLinks = null, $bEnterMaintenanceMode = true)
-	{
-		/**
-		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
-		 * @noinspection PhpUnusedLocalVariableInspection
-		 */
-		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
-
-		SetupLog::Info("Compiling data model.");
-
-		require_once(APPROOT.'setup/modulediscovery.class.inc.php');
-		require_once(APPROOT.'setup/modelfactory.class.inc.php');
-		require_once(APPROOT.'setup/compiler.class.inc.php');
-
-		$aParamValues = $this->oParams->GetParamForConfigArray();
-		$sEnvironment = $this->GetTargetEnv();
-		$sTargetDir = $this->GetTargetDir();
-
-		if (empty($sSourceDir) || empty($sTargetDir)) {
-			throw new Exception("missing parameter source_dir and/or target_dir");
-		}
-
-		$sSourcePath = APPROOT.$sSourceDir;
-		$aDirsToScan = [$sSourcePath];
-		$sExtensionsPath = APPROOT.$sExtensionDir;
-		if (is_dir($sExtensionsPath)) {
-			// if the extensions dir exists, scan it for additional modules as well
-			$aDirsToScan[] = $sExtensionsPath;
-		}
-		$sExtraPath = APPROOT.'/data/'.$sEnvironment.'-modules/';
-		if (is_dir($sExtraPath)) {
-			// if the extra dir exists, scan it for additional modules as well
-			$aDirsToScan[] = $sExtraPath;
-		}
-		$sTargetPath = APPROOT.$sTargetDir;
-
-		if (!is_dir($sSourcePath)) {
-			throw new Exception("Failed to find the source directory '$sSourcePath', please check the rights of the web server");
-		}
-
-		$bIsAlreadyInMaintenanceMode = SetupUtils::IsInMaintenanceMode();
-
-		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
-			$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
-			if (is_file($sConfigFilePath)) {
-				$oConfig = new Config($sConfigFilePath);
-				$oConfig->UpdateFromParams($aParamValues);
-				if ($bEnterMaintenanceMode) {
-					SetupUtils::EnterMaintenanceMode($oConfig);
-				}
-			}
-		}
-		try {
-			if (!is_dir($sTargetPath)) {
-				if (!mkdir($sTargetPath)) {
-					throw new Exception("Failed to create directory '$sTargetPath', please check the rights of the web server");
-				} else {
-					// adjust the rights if and only if the directory was just created
-					// owner:rwx user/group:rx
-					chmod($sTargetPath, 0755);
-				}
-			} elseif (substr($sTargetPath, 0, strlen(APPROOT)) == APPROOT) {
-				// If the directory is under the root folder - as expected - let's clean-it before compiling
-				SetupUtils::tidydir($sTargetPath);
-			}
-
-			$oExtensionsMap = new iTopExtensionsMap('production', $aDirsToScan);
-			$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
-
-			$oFactory = new ModelFactory($aDirsToScan);
-
-			$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
-			$oFactory->LoadModule($oDictModule);
-
-			$sDeltaFile = APPROOT.'core/datamodel.core.xml';
-			if (file_exists($sDeltaFile)) {
-				$oCoreModule = new MFCoreModule('core', 'Core Module', $sDeltaFile);
-				$oFactory->LoadModule($oCoreModule);
-			}
-			$sDeltaFile = APPROOT.'application/datamodel.application.xml';
-			if (file_exists($sDeltaFile)) {
-				$oApplicationModule = new MFCoreModule('application', 'Application Module', $sDeltaFile);
-				$oFactory->LoadModule($oApplicationModule);
-			}
-
-			$aModules = $oFactory->FindModules();
-
-			foreach ($aModules as $oModule) {
-				$sModule = $oModule->GetName();
-				if (in_array($sModule, $aSelectedModules)) {
-					$oFactory->LoadModule($oModule);
-				}
-			}
-			// Dump the "reference" model, just before loading any actual delta
-			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$sEnvironment.'.xml');
-
-			$sDeltaFile = utils::GetDataPath().$sEnvironment.'.delta.xml';
-			if (file_exists($sDeltaFile)) {
-				$oDelta = new MFDeltaModule($sDeltaFile);
-				$oFactory->LoadModule($oDelta);
-				$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$sEnvironment.'-with-delta.xml');
-			}
-
-			$oMFCompiler = new MFCompiler($oFactory, $sEnvironment);
-			$oMFCompiler->Compile($sTargetPath, null, $bUseSymbolicLinks, false, $bEnterMaintenanceMode);
-			//$aCompilerLog = $oMFCompiler->GetLog();
-			//SetupLog::Info(implode("\n", $aCompilerLog));
-			SetupLog::Info("Data model successfully compiled to '$sTargetPath'.");
-
-			$sCacheDir = APPROOT.'/data/cache-'.$sEnvironment.'/';
-			SetupUtils::builddir($sCacheDir);
-			SetupUtils::tidydir($sCacheDir);
-		} catch (Exception $e) {
-			if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
-				SetupUtils::ExitMaintenanceMode();
-			}
-			throw $e;
-		}
-
-		// Special case to patch a ugly patch in itop-config-mgmt
-		$sFileToPatch = $sTargetPath.'/itop-config-mgmt-1.0.0/model.itop-config-mgmt.php';
-		if (file_exists($sFileToPatch)) {
-			$sContent = file_get_contents($sFileToPatch);
-
-			$sContent = str_replace("require_once(APPROOT.'modules/itop-welcome-itil/model.itop-welcome-itil.php');", "//\n// The line below is no longer needed in iTop 2.0 -- patched by the setup program\n// require_once(APPROOT.'modules/itop-welcome-itil/model.itop-welcome-itil.php');", $sContent);
-
-			file_put_contents($sFileToPatch, $sContent);
-		}
-
-		// Set an "Instance UUID" identifying this machine based on a file located in the data directory
-		$sInstanceUUIDFile = utils::GetDataPath().'instance.txt';
-		SetupUtils::builddir(utils::GetDataPath());
-		if (!file_exists($sInstanceUUIDFile)) {
-			$sIntanceUUID = utils::CreateUUID('filesystem');
-			file_put_contents($sInstanceUUIDFile, $sIntanceUUID);
-		}
-		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
-			SetupUtils::ExitMaintenanceMode();
-		}
 	}
 
 	protected function GetModelInfoPath(string $sEnv): string

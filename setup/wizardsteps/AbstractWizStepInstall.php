@@ -67,6 +67,10 @@ abstract class AbstractWizStepInstall extends WizardStep
 				'copies' => $aCopies,
 				// 'backup' => see below
 			],
+			'optional_steps' => [
+				''
+				// 'backup' => see below
+			],
 			'source_dir' => str_replace(APPROOT, '', $sSourceDir),
 			'datamodel_version' => $this->oWizard->GetParameter('datamodel_version'), //TODO: let the installer compute this automatically...
 			'previous_configuration_file' => $sPreviousConfigurationFile,

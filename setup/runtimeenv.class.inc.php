@@ -25,6 +25,7 @@
  */
 
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
@@ -308,7 +309,7 @@ class RunTimeEnvironment
 			$sModule = $oModule->GetName();
 			$bIsExtra = $this->GetExtensionMap()->ModuleIsChosenAsPartOfAnExtension($sModule, iTopExtension::SOURCE_REMOTE);
 			if (array_key_exists($sModule, $aAvailableModules)) {
-				if (($aAvailableModules[$sModule]['installed_version'] != '') ||  $bIsExtra && !$oModule->IsAutoSelect()) { //Extra modules are always unless they are 'AutoSelect'
+				if (($aAvailableModules[$sModule]['installed_version'] != '') || $bIsExtra && !$oModule->IsAutoSelect()) { //Extra modules are always unless they are 'AutoSelect'
 					$aRet[$oModule->GetName()] = $oModule;
 				}
 			}
@@ -327,9 +328,10 @@ class RunTimeEnvironment
 						$bSelected = $oPhpExpressionEvaluator->ParseAndEvaluateBooleanExpression($oModule->GetAutoSelect());
 						if ($bSelected) {
 							$aRet[$oModule->GetName()] = $oModule; // store the Id of the selected module
-							$bModuleAdded  = true;
+							$bModuleAdded = true;
 						}
-					} catch (ModuleFileReaderException $e) {
+					}
+					catch (ModuleFileReaderException $e) {
 						//do nothing. logged already
 					}
 				}
@@ -343,56 +345,6 @@ class RunTimeEnvironment
 		}
 
 		return $aRet;
-	}
-
-	/**
-	 * Compile the data model by imitating the given environment
-	 * The list of modules to be installed in the build environment is:
-	 *  - the list of modules present in the "source_dir" (defined by the source environment) which are marked as "installed" in the source environment's database
-	 *  - plus the list of modules present in the "extra" directory of the build environment: data/<build_environment>-modules/
-	 *
-	 * @param string $sSourceEnv The name of the source environment to 'imitate'
-	 * @param bool $bUseSymLinks Whether to create symbolic links instead of copies
-	 *
-	 * @return string[]
-	 */
-	public function CompileFrom($sSourceEnv, $bUseSymLinks = null)
-	{
-		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
-		$sSourceDir = $oSourceConfig->Get('source_dir');
-
-		$sSourceDirFull = APPROOT.$sSourceDir;
-		// Do load the required modules
-		//
-		$oFactory = new ModelFactory($sSourceDirFull);
-		$aModulesToCompile = $this->GetMFModulesToCompile($sSourceEnv, $sSourceDir);
-		$oModule = null;
-		foreach ($aModulesToCompile as $oModule) {
-			if ($oModule instanceof MFDeltaModule) {
-				// Just before loading the delta, let's save an image of the datamodel
-				// in case there is no delta the operation will be done after the end of the loop
-				$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'.xml');
-			}
-			$oFactory->LoadModule($oModule);
-		}
-
-		if (!is_null($oModule) && ($oModule instanceof MFDeltaModule)) {
-			// A delta was loaded, let's save a second copy of the datamodel
-			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'-with-delta.xml');
-		} else {
-			// No delta was loaded, let's save the datamodel now
-			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'.xml');
-		}
-
-		$sBuildDir = APPROOT.'env-'.$this->sBuildEnv;
-		self::MakeDirSafe($sBuildDir);
-		$bSkipTempDir = ($this->sFinalEnv != $this->sBuildEnv); // No need for a temporary directory if sBuildEnv is already a temporary directory
-		$oMFCompiler = new MFCompiler($oFactory, $this->sFinalEnv);
-		$oMFCompiler->Compile($sBuildDir, null, $bUseSymLinks, $bSkipTempDir);
-
-		MetaModel::ResetAllCaches($this->sBuildEnv);
-
-		return array_keys($aModulesToCompile);
 	}
 
 	/**
@@ -509,7 +461,7 @@ class RunTimeEnvironment
 					}
 				}
 				foreach ($aPredefinedObjects as $iRefId => $aObjValues) {
-					if (! array_key_exists($iRefId, $aDBIds)) {
+					if (!array_key_exists($iRefId, $aDBIds)) {
 						$oNewObj = MetaModel::NewObject($sClass);
 						$oNewObj->SetKey($iRefId);
 						foreach ($aObjValues as $sAttCode => $value) {
@@ -650,7 +602,8 @@ class RunTimeEnvironment
 	{
 		try {
 			$aSelectInstall = ModuleInstallationRepository::GetInstance()->ReadFromDB($oConfig);
-		} catch (MySQLException $e) {
+		}
+		catch (MySQLException $e) {
 			// No database or erroneous information
 			$this->log_error('Can not connect to the database: host: '.$oConfig->Get('db_host').', user:'.$oConfig->Get('db_user').', pwd:'.$oConfig->Get('db_pwd').', db name:'.$oConfig->Get('db_name'));
 			$this->log_error('Exception '.$e->getMessage());
@@ -708,14 +661,17 @@ class RunTimeEnvironment
 	{
 		SetupLog::Error($sText);
 	}
+
 	protected function log_warning($sText)
 	{
 		SetupLog::Warning($sText);
 	}
+
 	protected function log_info($sText)
 	{
 		SetupLog::Info($sText);
 	}
+
 	protected function log_ok($sText)
 	{
 		SetupLog::Ok($sText);
@@ -747,10 +703,16 @@ class RunTimeEnvironment
 		if ($oLatestDM == null) {
 			return '0.0.0';
 		}
+
 		return $oLatestDM->Get('version');
 	}
 
-	public function Commit()
+	/**
+	 * Move the build env to the final env if all the steps went ok
+	 *
+	 * @return void
+	 */
+	public function Commit(): void
 	{
 		if ($this->sFinalEnv != $this->sBuildEnv) {
 			if (file_exists(utils::GetDataPath().$this->sBuildEnv.'.delta.xml')) {
@@ -808,12 +770,13 @@ class RunTimeEnvironment
 	/**
 	 * Overwrite or create the destination file
 	 *
-	 * @param $sSource
-	 * @param $sDest
+	 * @param string $sSource
+	 * @param string $sDest
 	 * @param bool $bSourceMustExist
-	 * @throws Exception
+	 *
+	 * @throws \Exception
 	 */
-	protected function CommitFile($sSource, $sDest, $bSourceMustExist = true)
+	protected function CommitFile(string $sSource, string $sDest, bool $bSourceMustExist = true): void
 	{
 		if (file_exists($sSource)) {
 			SetupUtils::builddir(dirname($sDest));
@@ -847,6 +810,7 @@ class RunTimeEnvironment
 	 * @param $sDest
 	 * @param boolean $bSourceMustExist
 	 * @param boolean $bRemoveSource If true $sSource will be removed, otherwise $sSource will just be emptied
+	 *
 	 * @throws Exception
 	 */
 	protected function CommitDir($sSource, $sDest, $bSourceMustExist = true, $bRemoveSource = true)
@@ -875,9 +839,11 @@ class RunTimeEnvironment
 
 	/**
 	 * Call the given handler method for all selected modules having an installation handler
+	 *
 	 * @param array[] $aAvailableModules
 	 * @param string $sHandlerName
-	 *  @param string[]|null $aSelectedModules
+	 * @param string[]|null $aSelectedModules
+	 *
 	 * @throws CoreException
 	 */
 	public function CallInstallerHandlers($aAvailableModules, $sHandlerName, $aSelectedModules = null)
@@ -915,15 +881,16 @@ class RunTimeEnvironment
 		if (is_callable($aCallSpec)) {
 			try {
 				call_user_func_array($aCallSpec, $aArgs);
-			} catch (Exception $e) {
+			}
+			catch (Exception $e) {
 				$sModuleId = $aModuleInfo[ModuleFileReader::MODULE_INFO_ID] ?? "";
 				$sErrorMessage = "Module $sModuleId : error when calling module installer class $sModuleInstallerClass for $sHandlerName handler";
 				$aExceptionContextData = [
-					'ModulelId' => $sModuleId,
-					'ModuleInstallerClass' => $sModuleInstallerClass,
+					'ModulelId'              => $sModuleId,
+					'ModuleInstallerClass'   => $sModuleInstallerClass,
 					'ModuleInstallerHandler' => $sHandlerName,
-					'ExceptionClass' => get_class($e),
-					'ExceptionMessage' => $e->getMessage(),
+					'ExceptionClass'         => get_class($e),
+					'ExceptionMessage'       => $e->getMessage(),
 				];
 				throw new CoreException($sErrorMessage, $aExceptionContextData, '', $e);
 			}
@@ -932,9 +899,10 @@ class RunTimeEnvironment
 
 	/**
 	 * Load data from XML files for the selected modules (structural data and/or sample data)
+	 *
 	 * @param array[] $aAvailableModules All available modules and their definition
 	 * @param bool $bSampleData Wether or not to load sample data
-	 *  @param null|string[] $aSelectedModules List of selected modules
+	 * @param null|string[] $aSelectedModules List of selected modules
 	 */
 	public function LoadData($aAvailableModules, $bSampleData, $aSelectedModules = null)
 	{
@@ -1011,9 +979,11 @@ class RunTimeEnvironment
 
 	/**
 	 * Merge two arrays of file names, adding the relative path to the files provided in the array to merge
+	 *
 	 * @param string[] $aSourceArray
 	 * @param string $sBaseDir
 	 * @param string[] $aFilesToMerge
+	 *
 	 * @return string[]
 	 */
 	protected static function MergeWithRelativeDir($aSourceArray, $sBaseDir, $aFilesToMerge)
@@ -1022,14 +992,16 @@ class RunTimeEnvironment
 		foreach ($aFilesToMerge as $sFile) {
 			$aToMerge[] = $sBaseDir.'/'.$sFile;
 		}
+
 		return array_merge($aSourceArray, $aToMerge);
 	}
 
 	/**
 	 * Check the MetaModel for some common pitfall (class name too long, classes requiring too many joins...)
 	 * The check takes about 900 ms for 200 classes
-	 * @throws Exception
+	 *
 	 * @return string
+	 * @throws Exception
 	 */
 	public function CheckMetaModel()
 	{
@@ -1043,7 +1015,7 @@ class RunTimeEnvironment
 
 			$oSearch = new DBObjectSearch($sClass);
 			$oSearch->SetShowObsoleteData(false);
-			$oSQLQuery = $oSearch->GetSQLQueryStructure(null, false);
+			$oSQLQuery = $oSearch->GetSQLQueryStructure([], false);
 			$sViewName = MetaModel::DBGetView($sClass);
 			if (strlen($sViewName) > 64) {
 				throw new Exception("Class name too long for class: '$sClass'. The name of the corresponding view ($sViewName) would exceed MySQL's limit for the name of a table (64 characters).");
@@ -1062,4 +1034,226 @@ class RunTimeEnvironment
 
 		return sprintf("Checked %d classes in %.1f ms. No error found.\n", $iCount, $fDuration * 1000.0);
 	}
-} // End of class
+
+	public function DataToCleanupAudit()
+	{
+		$oSetupAudit = new SetupAudit('production', $this->sBuildEnv);
+
+		//Make sure the MetaModel is started before analysing for issues
+		$sConfFile = utils::GetConfigFilePath($this->sBuildEnv);
+		MetaModel::Startup($sConfFile, false, false, false, $this->sBuildEnv);
+		$oSetupAudit->GetIssues(true);
+		$iCount = $oSetupAudit->GetDataToCleanupCount();
+
+		if ($iCount > 0) {
+			throw new Exception("$iCount elements require data adjustments or cleanup in the backoffice prior to upgrading iTop", DataAuditSequencer::DATA_AUDIT_FAILED);
+		}
+	}
+
+	public function CopySetupFiles(): void
+	{
+		$sSourceEnv = 'production';
+		$sDestinationEnv = $this->sBuildEnv;
+
+		if ($sDestinationEnv != $sSourceEnv) {
+			SetupUtils::CopyFile(utils::GetDataPath().$sSourceEnv.'.delta.xml', utils::GetDataPath().$sDestinationEnv.'.delta.xml');
+			SetupUtils::copydir(utils::GetDataPath().$sSourceEnv.'-modules/', utils::GetDataPath().$sDestinationEnv.'-modules/');
+
+			// Copy the config file
+			//
+			$sFinalConfig = APPCONF.$sDestinationEnv.'/config-itop.php';
+			if (is_file($sFinalConfig)) {
+				chmod($sFinalConfig, 0770); // In case it exists: RWX for owner and group, nothing for others
+			}
+			SetupUtils::copydir(APPCONF.$sSourceEnv, APPCONF.$sDestinationEnv);
+			if (is_file($sFinalConfig)) {
+				chmod($sFinalConfig, 0440); // Read-only for owner and group, nothing for others
+			}
+
+			MetaModel::ResetAllCaches($sDestinationEnv);
+		}
+	}
+
+	/**
+	 * Compile the data model by imitating the given environment
+	 * The list of modules to be installed in the build environment is:
+	 *  - the list of modules present in the "source_dir" (defined by the source environment) which are marked as "installed" in the source environment's database
+	 *  - plus the list of modules present in the "extra" directory of the build environment: data/<build_environment>-modules/
+	 *
+	 * @param string $sSourceEnv The name of the source environment to 'imitate'
+	 * @param null $bUseSymLinks Whether to create symbolic links instead of copies
+	 *
+	 * @return string[]
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
+	public function CompileFrom($sSourceEnv, $bUseSymLinks = null)
+	{
+		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
+		$sSourceDir = $oSourceConfig->Get('source_dir');
+
+		$sSourceDirFull = APPROOT.$sSourceDir;
+		// Do load the required modules
+		//
+		$oFactory = new ModelFactory($sSourceDirFull);
+		$aModulesToCompile = $this->GetMFModulesToCompile($sSourceEnv, $sSourceDir);
+		$oModule = null;
+		foreach ($aModulesToCompile as $oModule) {
+			if ($oModule instanceof MFDeltaModule) {
+				// Just before loading the delta, let's save an image of the datamodel
+				// in case there is no delta the operation will be done after the end of the loop
+				$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'.xml');
+			}
+			$oFactory->LoadModule($oModule);
+		}
+
+		if (!is_null($oModule) && ($oModule instanceof MFDeltaModule)) {
+			// A delta was loaded, let's save a second copy of the datamodel
+			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'-with-delta.xml');
+		} else {
+			// No delta was loaded, let's save the datamodel now
+			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'.xml');
+		}
+
+		$sBuildDir = APPROOT.'env-'.$this->sBuildEnv;
+		self::MakeDirSafe($sBuildDir);
+		$bSkipTempDir = ($this->sFinalEnv != $this->sBuildEnv); // No need for a temporary directory if sBuildEnv is already a temporary directory
+		$oMFCompiler = new MFCompiler($oFactory, $this->sFinalEnv);
+		$oMFCompiler->Compile($sBuildDir, null, $bUseSymLinks, $bSkipTempDir);
+
+		MetaModel::ResetAllCaches($this->sBuildEnv);
+
+		return array_keys($aModulesToCompile);
+	}
+
+
+	/**
+	 * @param array $aRemovedExtensionCodes
+	 * @param array $aSelectedModules
+	 * @param string $sSourceDir
+	 * @param string $sExtensionDir
+	 * @param boolean $bUseSymbolicLinks
+	 *
+	 * @return void
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 *
+	 */
+	public function DoCompile(array $aRemovedExtensionCodes, array $aSelectedModules, string $sSourceDir, string $sExtensionDir, bool $bUseSymbolicLinks = false): void
+	{
+		SetupLog::Info('Compiling data model.');
+
+		$sEnvironment = $this->sBuildEnv;
+		$sBuildPath = $this->GetBuildDir();
+
+		$sSourcePath = APPROOT.$sSourceDir;
+		$aDirsToScan = [$sSourcePath];
+		$sExtensionsPath = APPROOT.$sExtensionDir;
+		if (is_dir($sExtensionsPath)) {
+			// if the extensions dir exists, scan it for additional modules as well
+			$aDirsToScan[] = $sExtensionsPath;
+		}
+		$sExtraPath = APPROOT.'/data/'.$sEnvironment.'-modules/';
+		if (is_dir($sExtraPath)) {
+			// if the extra dir exists, scan it for additional modules as well
+			$aDirsToScan[] = $sExtraPath;
+		}
+
+		if (!is_dir($sSourcePath)) {
+			throw new Exception("Failed to find the source directory '$sSourcePath', please check the rights of the web server");
+		}
+
+		if (!is_dir($sBuildPath)) {
+			if (!mkdir($sBuildPath)) {
+				throw new Exception("Failed to create directory '$sBuildPath', please check the rights of the web server");
+			} else {
+				// adjust the rights if and only if the directory was just created
+				// owner:rwx user/group:rx
+				chmod($sBuildPath, 0755);
+			}
+		} elseif ($this->IsInItop($sBuildPath)) {
+			// If the directory is under the root folder - as expected - let's clean-it before compiling
+			SetupUtils::tidydir($sBuildPath);
+		}
+
+		$oExtensionsMap = new iTopExtensionsMap('production', $aDirsToScan);
+		// Removed modules are stored as static for FindModules()
+		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
+
+		$oFactory = new ModelFactory($aDirsToScan);
+
+		$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
+		$oFactory->LoadModule($oDictModule);
+
+		$sDeltaFile = APPROOT.'core/datamodel.core.xml';
+		if (file_exists($sDeltaFile)) {
+			$oCoreModule = new MFCoreModule('core', 'Core Module', $sDeltaFile);
+			$oFactory->LoadModule($oCoreModule);
+		}
+		$sDeltaFile = APPROOT.'application/datamodel.application.xml';
+		if (file_exists($sDeltaFile)) {
+			$oApplicationModule = new MFCoreModule('application', 'Application Module', $sDeltaFile);
+			$oFactory->LoadModule($oApplicationModule);
+		}
+
+		$aModules = $oFactory->FindModules();
+
+		foreach ($aModules as $oModule) {
+			$sModule = $oModule->GetName();
+			if (in_array($sModule, $aSelectedModules)) {
+				$oFactory->LoadModule($oModule);
+			}
+		}
+
+		// Dump the "reference" model, just before loading any actual delta
+		$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$sEnvironment.'.xml');
+
+		$sDeltaFile = utils::GetDataPath().$sEnvironment.'.delta.xml';
+		if (file_exists($sDeltaFile)) {
+			$oDelta = new MFDeltaModule($sDeltaFile);
+			$oFactory->LoadModule($oDelta);
+			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$sEnvironment.'-with-delta.xml');
+		}
+
+		$oMFCompiler = new MFCompiler($oFactory, $sEnvironment);
+		$oMFCompiler->Compile($sBuildPath, null, $bUseSymbolicLinks, false, false);
+		SetupLog::Info("Data model successfully compiled to '$sBuildPath'.");
+
+		$sCacheDir = APPROOT.'/data/cache-'.$sEnvironment.'/';
+		SetupUtils::builddir($sCacheDir);
+		SetupUtils::tidydir($sCacheDir);
+
+
+		// Set an "Instance UUID" identifying this machine based on a file located in the data directory
+		$sInstanceUUIDFile = utils::GetDataPath().'instance.txt';
+		SetupUtils::builddir(utils::GetDataPath());
+		if (!file_exists($sInstanceUUIDFile)) {
+			$sInstanceUUID = utils::CreateUUID('filesystem');
+			file_put_contents($sInstanceUUIDFile, $sInstanceUUID);
+		}
+	}
+
+	protected function IsInItop(string $sPath): bool
+	{
+		$sFileRealPath = realpath($sPath);
+		if ($sFileRealPath === false) {
+			return false;
+		}
+
+		$sRealBasePath = realpath(APPROOT); // avoid problems when having '/' on Windows for example
+		if (!self::StartsWith($sFileRealPath, $sRealBasePath)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	protected static function StartsWith(string $sHaystack, string $sNeedle): bool
+	{
+		if (strlen($sNeedle) > strlen($sHaystack)) {
+			return false;
+		}
+
+		return substr_compare($sHaystack, $sNeedle, 0, strlen($sNeedle)) === 0;
+	}
+}

@@ -817,6 +817,11 @@ class SetupUtils
 		}
 	}
 
+	public static function CopyFile(string $sSource, string $sDest, bool $bUseSymbolicLinks = false): bool
+	{
+		return self::copydir($sSource, $sDest, $bUseSymbolicLinks);
+	}
+
 	/**
 	 * Helper to copy a directory to a target directory, skipping .SVN files (for developer's comfort!)
 	 * Returns true if successful
@@ -826,11 +831,13 @@ class SetupUtils
 	 * @return bool
 	 * @throws Exception
 	 */
-	public static function copydir($sSource, $sDest, $bUseSymbolicLinks = false)
+	public static function copydir(string $sSource, string $sDest, bool $bUseSymbolicLinks = false): bool
 	{
 		if (is_dir($sSource)) {
 			if (!is_dir($sDest)) {
 				mkdir($sDest, 0777 /* Default */, true);
+			} else {
+				SetupUtils::tidydir($sDest);
 			}
 			$aFiles = scandir($sSource);
 			if (sizeof($aFiles) > 0) {
@@ -839,24 +846,13 @@ class SetupUtils
 						// Skip
 						continue;
 					}
-
 					if (is_dir($sSource.'/'.$sFile)) {
 						// Recurse
 						self::copydir($sSource.'/'.$sFile, $sDest.'/'.$sFile, $bUseSymbolicLinks);
 					} else {
 						if ($bUseSymbolicLinks) {
-							if (function_exists('symlink')) {
-								if (file_exists($sDest.'/'.$sFile)) {
-									unlink($sDest.'/'.$sFile);
-								}
-								symlink($sSource.'/'.$sFile, $sDest.'/'.$sFile);
-							} else {
-								throw(new Exception("Error, cannot *copy* '$sSource/$sFile' to '$sDest/$sFile' using symbolic links, 'symlink' is not supported on this system."));
-							}
+							symlink($sSource.'/'.$sFile, $sDest.'/'.$sFile);
 						} else {
-							if (is_link($sDest.'/'.$sFile)) {
-								unlink($sDest.'/'.$sFile);
-							}
 							copy($sSource.'/'.$sFile, $sDest.'/'.$sFile);
 						}
 					}
@@ -865,11 +861,7 @@ class SetupUtils
 			return true;
 		} elseif (is_file($sSource)) {
 			if ($bUseSymbolicLinks) {
-				if (function_exists('symlink')) {
-					return symlink($sSource, $sDest);
-				} else {
-					throw(new Exception("Error, cannot *copy* '$sSource' to '$sDest' using symbolic links, 'symlink' is not supported on this system."));
-				}
+				return symlink($sSource, $sDest);
 			} else {
 				return copy($sSource, $sDest);
 			}

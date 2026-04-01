@@ -10,11 +10,11 @@ class SetupAudit extends AbstractSetupAudit
 	private string $sEnvBefore;
 	private string $sEnvAfter;
 
-	public function __construct(string $sEnvBefore)
+	public function __construct(string $sEnvBefore, ?string $sEnvAfter = null)
 	{
 		parent::__construct();
 		$this->sEnvBefore = $sEnvBefore;
-		$this->sEnvAfter = "$sEnvBefore-build";
+		$this->sEnvAfter = $sEnvAfter ?? "$sEnvBefore-build";
 	}
 
 	public function ComputeClasses(): void
