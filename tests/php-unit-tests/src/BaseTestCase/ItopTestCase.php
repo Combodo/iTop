@@ -676,7 +676,7 @@ abstract class ItopTestCase extends KernelTestCase
 		curl_setopt_array($ch, $aCurlOptions);
 		if ($this->IsArrayOfArray($aPostFields)) {
 			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($aPostFields));
-		} elseif (!empty($aPostFields)) {
+		} else {
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $aPostFields);
 		}
 
