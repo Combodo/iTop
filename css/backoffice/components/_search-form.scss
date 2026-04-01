@@ -357,6 +357,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
                     display: flex;
                     flex-direction: column;
                     overflow: auto;
+                    min-height: 0;
 					font-size: 12px;
 
 					.sfc_fg_operator {
