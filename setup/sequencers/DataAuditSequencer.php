@@ -64,7 +64,10 @@ class DataAuditSequencer extends StepSequencer
 						$sExtensionDir,
 						$bUseSymbolicLinks
 					);
-					return $this->GetNextStep('setup-audit', 'Checking data consistency with the new data model', 70, $sMessage);
+					if ($this->IsDataAuditRequired()) {
+						return $this->GetNextStep('setup-audit', 'Checking data consistency with the new data model', 70, $sMessage);
+					}
+					return $this->GetNextStep('', 'Completed', 100);
 
 				case 'setup-audit':
 					$this->oRunTimeEnvironment->DataToCleanupAudit();
@@ -73,16 +76,24 @@ class DataAuditSequencer extends StepSequencer
 				default:
 					return $this->GetNextStep('', "Unknown setup step '$sStep'.", 100, '', self::ERROR);
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$this->ReportException($e);
 			$aResult = $this->GetNextStep('', '', 100, $e->getMessage(), self::ERROR);
 			$aResult['error_code'] = $e->getCode();
 			return $aResult;
-		}
-		finally {
+		} finally {
 			$fDuration = round(microtime(true) - $fStart, 2);
 			SetupLog::Info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
+	}
+
+	protected function IsDataAuditRequired(): bool
+	{
+		if ('install' === $this->oParams->Get('mode')) {
+			return false;
+		}
+
+		$sFinalEnvDir = APPROOT.'env-'.$this->oRunTimeEnvironment->GetFinalEnv();
+		return is_dir($sFinalEnvDir);
 	}
 }
