@@ -109,7 +109,7 @@ class ApplicationInstallSequencer extends StepSequencer
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
 					$bSampleData = ($this->oParams->Get('sample_data', 0) == 1);
 
-					$this->oRunTimeEnvironment->DoLoadData($this->GetConfig(),$bSampleData, $aSelectedModules);
+					$this->oRunTimeEnvironment->DoLoadData($this->GetConfig(), $bSampleData, $aSelectedModules);
 
 					return $this->GetNextStep('create-config', 'Creating the configuration File', 80, 'All data loaded');
 
@@ -118,7 +118,8 @@ class ApplicationInstallSequencer extends StepSequencer
 					$aSelectedModuleCodes = $this->oParams->Get('selected_modules', []);
 					$aSelectedExtensionCodes = $this->oParams->Get('selected_extensions', []);
 
-					$this->oRunTimeEnvironment->DoCreateConfig($this->GetConfig(),
+					$this->oRunTimeEnvironment->DoCreateConfig(
+						$this->GetConfig(),
 						$sDataModelVersion,
 						$aSelectedModuleCodes,
 						$aSelectedExtensionCodes,
@@ -134,18 +135,16 @@ class ApplicationInstallSequencer extends StepSequencer
 				default:
 					return $this->GetNextStep('', "Unknown setup step '$sStep'.", 100, '', self::ERROR);
 			}
+		} catch (Exception $e) {
+			$this->ReportException($e);
+			$aResult = $this->GetNextStep('', '', 100, $e->getMessage(), self::ERROR);
+			$aResult['error_code'] = $e->getCode();
+			return $aResult;
+		} finally {
+			$this->ExitReadOnlyMode();
+			$fDuration = round(microtime(true) - $fStart, 2);
+			SetupLog::Info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
-		catch (Exception $e) {
-				$this->ReportException($e);
-				$aResult = $this->GetNextStep('', '', 100, $e->getMessage(), self::ERROR);
-				$aResult['error_code'] = $e->getCode();
-				return $aResult;
-			}
-		finally {
-				$this->ExitReadOnlyMode();
-				$fDuration = round(microtime(true) - $fStart, 2);
-				SetupLog::Info("##### STEP {$sStep} duration: {$fDuration}s");
-			}
 
 	}
 

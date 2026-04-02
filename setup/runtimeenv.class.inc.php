@@ -24,6 +24,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
@@ -165,7 +166,12 @@ class RunTimeEnvironment
 			MetaModel::ResetAllCaches($this->sBuildEnv);
 		}
 
-		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache, false /* $bTraceSourceFiles */, $this->sBuildEnv);
+		if (! isset($_SESSION)) {
+			$_SESSION = [];
+		}
+		Session::Set('itop_env', $this->sBuildEnv);
+
+		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache, false, $this->sBuildEnv);
 		self::$bMetamodelStarted = true;
 
 		if ($this->oExtensionsMap === null) {
@@ -630,7 +636,7 @@ class RunTimeEnvironment
 	 */
 	public function UpdateDBSchema(Config $oConfig, string $sMode, ?array $aSelectedModules = null): void
 	{
-		$this->InitDataModel($oConfig, true);  // load data model only
+		$this->InitDataModel($oConfig);  // load data model only
 
 		// Module specific actions (migrate the data)
 		$aAvailableModules = $this->AnalyzeInstallation($oConfig, $this->GetBuildDir());
@@ -1018,6 +1024,7 @@ class RunTimeEnvironment
 			@rmdir(dirname($sBuildConfig)); // Cleanup the temporary build dir if empty
 
 			MetaModel::ResetAllCaches($this->sFinalEnv);
+			Session::Set('itop_env', $this->sFinalEnv);
 		}
 	}
 
