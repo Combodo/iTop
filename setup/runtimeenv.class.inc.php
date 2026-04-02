@@ -149,9 +149,9 @@ class RunTimeEnvironment
 	 */
 	public function InitDataModel($oConfig, $bModelOnly = true, $bUseCache = false): void
 	{
-//		if (self::$bMetamodelStarted && $bModelOnly) {
-//			return;
-//		}
+		//		if (self::$bMetamodelStarted && $bModelOnly) {
+		//			return;
+		//		}
 
 		$sConfigFile = $oConfig->GetLoadedFile();
 		if (strlen($sConfigFile) > 0) {
@@ -190,7 +190,6 @@ class RunTimeEnvironment
 		// In 2.6.0 the 'fields' attribute has been moved from Query to QueryOQL for dependencies reasons
 		ModuleInstallerAPI::MoveColumnInDB($sDBPrefix.'priv_query', 'fields', $sDBPrefix.'priv_query_oql', 'fields');
 
-
 		// Migrate application data format
 		//
 		// priv_internalUser caused troubles because MySQL transforms table names to lower case under Windows
@@ -204,8 +203,7 @@ class RunTimeEnvironment
 			try {
 				$sRepair = "RENAME TABLE `{$sDBPrefix}priv_internalUser` TO `{$sDBPrefix}priv_internaluser_other`, `{$sDBPrefix}priv_internaluser_other` TO `{$sDBPrefix}priv_internaluser`";
 				CMDBSource::Query($sRepair);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				SetupLog::Info("Renaming '{$sDBPrefix}priv_internalUser' failed (already done in a previous upgrade?)");
 			}
 
@@ -233,8 +231,7 @@ class RunTimeEnvironment
 				} else {
 					SetupLog::Info('Ok, nothing to cleanup.');
 				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				SetupLog::Info("Cleanup of orphan records in `{$sDBPrefix}priv_change` failed: ".$e->getMessage());
 			}
 		}
@@ -242,6 +239,8 @@ class RunTimeEnvironment
 
 	public function MigrateDataAfterUpdateStructure(string $sMode, Config $oConfig): void
 	{
+		$this->InitDataModel($oConfig);
+
 		$sDBName = $oConfig->Get('db_name');
 		$sDBPrefix = $oConfig->Get('db_subname');
 
@@ -286,8 +285,7 @@ class RunTimeEnvironment
 			} else {
 				SetupLog::Info("'{$sDBPrefix}priv_change.origin' already initialized, nothing to do.");
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			SetupLog::Error("Initializing '{$sDBPrefix}priv_change.origin' failed: ".$e->getMessage());
 		}
 
@@ -310,8 +308,7 @@ class RunTimeEnvironment
 			} else {
 				SetupLog::Info("'{$sDBPrefix}priv_async_task.status' already initialized, nothing to do.");
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			SetupLog::Error("Initializing '{$sDBPrefix}priv_async_task.status' failed: ".$e->getMessage());
 		}
 	}
@@ -524,8 +521,7 @@ class RunTimeEnvironment
 							$aRet[$oModule->GetName()] = $oModule; // store the Id of the selected module
 							$bModuleAdded = true;
 						}
-					}
-					catch (ModuleFileReaderException $e) {
+					} catch (ModuleFileReaderException $e) {
 						//do nothing. logged already
 					}
 				}
@@ -665,7 +661,6 @@ class RunTimeEnvironment
 		$this->CallInstallerHandlers($aAvailableModules, 'AfterDatabaseCreation', $aSelectedModules);
 
 		$this->UpdatePredefinedObjects();
-
 
 		if ($sMode == 'install') {
 			SetupLog::Info('CreateAdminAccount');
@@ -862,8 +857,7 @@ class RunTimeEnvironment
 	{
 		try {
 			$aSelectInstall = ModuleInstallationRepository::GetInstance()->ReadFromDB($oConfig);
-		}
-		catch (MySQLException $e) {
+		} catch (MySQLException $e) {
 			// No database or erroneous information
 			$this->log_error('Can not connect to the database: host: '.$oConfig->Get('db_host').', user:'.$oConfig->Get('db_user').', pwd:'.$oConfig->Get('db_pwd').', db name:'.$oConfig->Get('db_name'));
 			$this->log_error('Exception '.$e->getMessage());
@@ -1141,8 +1135,7 @@ class RunTimeEnvironment
 		if (is_callable($aCallSpec)) {
 			try {
 				call_user_func_array($aCallSpec, $aArgs);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				$sModuleId = $aModuleInfo[ModuleFileReader::MODULE_INFO_ID] ?? "";
 				$sErrorMessage = "Module $sModuleId : error when calling module installer class $sModuleInstallerClass for $sHandlerName handler";
 				$aExceptionContextData = [
@@ -1402,7 +1395,6 @@ class RunTimeEnvironment
 		return array_keys($aModulesToCompile);
 	}
 
-
 	/**
 	 * @param array $aRemovedExtensionCodes
 	 * @param array $aSelectedModules
@@ -1498,7 +1490,6 @@ class RunTimeEnvironment
 		$sCacheDir = APPROOT.'/data/cache-'.$sEnvironment.'/';
 		SetupUtils::builddir($sCacheDir);
 		SetupUtils::tidydir($sCacheDir);
-
 
 		// Set an "Instance UUID" identifying this machine based on a file located in the data directory
 		$sInstanceUUIDFile = utils::GetDataPath().'instance.txt';
