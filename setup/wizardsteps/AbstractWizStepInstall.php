@@ -63,12 +63,10 @@ abstract class AbstractWizStepInstall extends WizardStep
 
 		$aInstallParams =  [
 			'mode' => $sMode,
-			'preinstall' =>  [
-				'copies' => $aCopies,
-				// 'backup' => see below
-			],
 			'optional_steps' => [
-				''
+				'log-parameters' => true,
+				'migrate-before' => true,
+				'migrate-after' => true,
 				// 'backup' => see below
 			],
 			'source_dir' => str_replace(APPROOT, '', $sSourceDir),
@@ -103,7 +101,7 @@ abstract class AbstractWizStepInstall extends WizardStep
 		];
 
 		if ($sBackupDestination != '') {
-			$aInstallParams['preinstall']['backup'] =  [
+			$aInstallParams['optional_steps']['backup'] =  [
 				'destination' => $sBackupDestination,
 				'configuration_file' => $sPreviousConfigurationFile,
 			];

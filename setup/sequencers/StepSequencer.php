@@ -24,6 +24,31 @@ abstract class StepSequencer
 	public const WARNING = 3;
 	public const INFO = 4;
 	protected array $aStepsHistory = [];
+	protected Parameters $oParams;
+	protected Config $oConfig;
+	protected RunTimeEnvironment $oRunTimeEnvironment;
+
+	/**
+	 * @param \Parameters $oParams
+	 * @param \RunTimeEnvironment|null $oRunTimeEnvironment
+	 *
+	 * @throws \CoreException
+	 */
+	public function __construct(Parameters $oParams, ?RunTimeEnvironment $oRunTimeEnvironment = null)
+	{
+		if (is_null($oRunTimeEnvironment)) {
+			$sEnvironment = $oParams->Get('target_env', 'production');
+			$oRunTimeEnvironment = new RunTimeEnvironment($sEnvironment, false);
+		}
+		$this->oRunTimeEnvironment = $oRunTimeEnvironment;
+
+		$this->oParams = $oParams;
+
+		$aParamValues = $oParams->GetParamForConfigArray();
+		$this->oConfig = new Config();
+		$this->oConfig->UpdateFromParams($aParamValues);
+		utils::SetConfig($this->oConfig);
+	}
 
 	public function LogStep($sStep, $aResult)
 	{
@@ -134,5 +159,48 @@ abstract class StepSequencer
 		file_put_contents(APPROOT.'log/'.$sFileName.'.xml', $sSafeXml);
 	}
 
-	abstract public function ExecuteStep($sStep = '', $sComment = null);
+	protected function ReportException(Exception $e)
+	{
+		SetupLog::Error('An exception occurred: '.$e->getMessage().' at line '.$e->getLine().' in file '.$e->getFile());
+		$idx = 0;
+		// Log the call stack, but not the parameters since they may contain passwords or other sensitive data
+		SetupLog::Ok('Call stack:');
+		foreach ($e->getTrace() as $aTrace) {
+			$sLine = empty($aTrace['line']) ? '' : $aTrace['line'];
+			$sFile = empty($aTrace['file']) ? '' : $aTrace['file'];
+			$sClass = empty($aTrace['class']) ? '' : $aTrace['class'];
+			$sType = empty($aTrace['type']) ? '' : $aTrace['type'];
+			$sFunction = empty($aTrace['function']) ? '' : $aTrace['function'];
+			$sVerb = empty($sClass) ? $sFunction : "$sClass{$sType}$sFunction";
+			SetupLog::Ok("#$idx $sFile($sLine): $sVerb(...)");
+			$idx++;
+		}
+	}
+
+	protected function GetConfig()
+	{
+		$sTargetEnvironment = $this->oRunTimeEnvironment->GetBuildEnv();
+		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
+		try {
+			$oConfig = new Config($sConfigFile);
+		} catch (Exception $e) {
+			return null;
+		}
+
+		$aParamValues = $this->oParams->GetParamForConfigArray();
+		$oConfig->UpdateFromParams($aParamValues);
+
+		return $oConfig;
+	}
+
+	/**
+	 * Executes the next step of the installation and reports about the progress
+	 * and the next step to perform
+	 *
+	 * @param string $sStep The identifier of the step to execute
+	 * @param string|null $sInstallComment
+	 *
+	 * @return array (status => , message => , percentage-completed => , next-step => , next-step-label => )
+	 */
+	abstract public function ExecuteStep($sStep = '', $sInstallComment = null): array;
 }

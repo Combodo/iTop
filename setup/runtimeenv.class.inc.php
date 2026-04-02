@@ -35,6 +35,7 @@ require_once APPROOT.'setup/compiler.class.inc.php';
 require_once APPROOT.'setup/extensionsmap.class.inc.php';
 require_once APPROOT.'setup/moduleinstallation/AnalyzeInstallation.php';
 require_once APPROOT.'/setup/moduleinstallation/InstallationChoicesToModuleConverter.php';
+require_once APPROOT.'/setup/moduleinstallation/moduleinstallation.class.inc.php';
 
 define('MODULE_ACTION_OPTIONAL', 1);
 define('MODULE_ACTION_MANDATORY', 2);
@@ -47,6 +48,8 @@ class RunTimeEnvironment
 	public const STATIC_CALL_AUTOSELECT_WHITELIST = [
 		"SetupInfo::ModuleIsSelected",
 	];
+
+	private static bool $bMetamodelStarted = false;
 
 	/**
 	 * The name of the environment that the caller wants to build
@@ -75,7 +78,7 @@ class RunTimeEnvironment
 	{
 		// Actually read the modules available for the build environment,
 		// but get the selection from the source environment and finally
-		// mark as (automatically) chosen alll the "remote" modules present in the
+		// mark as (automatically) chosen all the "remote" modules present in the
 		// build environment (data/<build-env>-modules)
 		// The actual choices will be recorded by RecordInstallation below
 		$this->oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv, $aExtraDirs);
@@ -105,9 +108,18 @@ class RunTimeEnvironment
 	 * Return the full path to the compiled code (do not use after commit)
 	 * @return string
 	 */
-	public function GetBuildDir()
+	public function GetBuildDir(): string
 	{
 		return APPROOT.'env-'.$this->sBuildEnv;
+	}
+
+	/**
+	 * Return the full path to the compiled code (do not use after commit)
+	 * @return string
+	 */
+	public function GetBuildEnv(): string
+	{
+		return $this->sBuildEnv;
 	}
 
 	/**
@@ -126,12 +138,20 @@ class RunTimeEnvironment
 	/**
 	 * Helper function to initialize the ORM and load the data model
 	 * from the given file
+	 *
 	 * @param $oConfig object The configuration (volatile, not necessarily already on disk)
 	 * @param $bModelOnly boolean Whether or not to allow loading a data model with no corresponding DB
+	 * @param bool $bUseCache
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MySQLException
 	 */
 	public function InitDataModel($oConfig, $bModelOnly = true, $bUseCache = false): void
 	{
-		require_once APPROOT.'/setup/moduleinstallation/moduleinstallation.class.inc.php';
+//		if (self::$bMetamodelStarted && $bModelOnly) {
+//			return;
+//		}
 
 		$sConfigFile = $oConfig->GetLoadedFile();
 		if (strlen($sConfigFile) > 0) {
@@ -146,9 +166,153 @@ class RunTimeEnvironment
 		}
 
 		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache, false /* $bTraceSourceFiles */, $this->sBuildEnv);
+		self::$bMetamodelStarted = true;
 
 		if ($this->oExtensionsMap === null) {
 			$this->oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv);
+		}
+	}
+
+	/**
+	 * @param string $sMode
+	 * @param \Config $oConfig
+	 *
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
+	public function MigrateDataBeforeUpdateStructure(string $sMode, Config $oConfig): void
+	{
+		$this->InitDataModel($oConfig);
+		$sDBName = $oConfig->Get('db_name');
+		$sDBPrefix = $oConfig->Get('db_subname');
+
+		// In 2.6.0 the 'fields' attribute has been moved from Query to QueryOQL for dependencies reasons
+		ModuleInstallerAPI::MoveColumnInDB($sDBPrefix.'priv_query', 'fields', $sDBPrefix.'priv_query_oql', 'fields');
+
+
+		// Migrate application data format
+		//
+		// priv_internalUser caused troubles because MySQL transforms table names to lower case under Windows
+		// This becomes an issue when moving your installation data to/from Windows
+		// Starting 2.0, all table names must be lowercase
+		if ($sMode != 'install') {
+			SetupLog::Info("Renaming '{$sDBPrefix}priv_internalUser' into '{$sDBPrefix}priv_internaluser' (lowercase)");
+			// This command will have no effect under Windows...
+			// and it has been written in two steps so as to make it work under windows!
+			CMDBSource::SelectDB($sDBName);
+			try {
+				$sRepair = "RENAME TABLE `{$sDBPrefix}priv_internalUser` TO `{$sDBPrefix}priv_internaluser_other`, `{$sDBPrefix}priv_internaluser_other` TO `{$sDBPrefix}priv_internaluser`";
+				CMDBSource::Query($sRepair);
+			}
+			catch (Exception $e) {
+				SetupLog::Info("Renaming '{$sDBPrefix}priv_internalUser' failed (already done in a previous upgrade?)");
+			}
+
+			// let's remove the records in priv_change which have no counterpart in priv_changeop
+			SetupLog::Info("Cleanup of '{$sDBPrefix}priv_change' to remove orphan records");
+			CMDBSource::SelectDB($sDBName);
+			try {
+				$sTotalCount = "SELECT COUNT(*) FROM `{$sDBPrefix}priv_change`";
+				$iTotalCount = (int)CMDBSource::QueryToScalar($sTotalCount);
+				SetupLog::Info("There is a total of $iTotalCount records in {$sDBPrefix}priv_change.");
+
+				$sOrphanCount = "SELECT COUNT(c.id) FROM `{$sDBPrefix}priv_change` AS c left join `{$sDBPrefix}priv_changeop` AS o ON c.id = o.changeid WHERE o.id IS NULL";
+				$iOrphanCount = (int)CMDBSource::QueryToScalar($sOrphanCount);
+				SetupLog::Info("There are $iOrphanCount useless records in {$sDBPrefix}priv_change (".sprintf('%.2f', ((100.0 * $iOrphanCount) / $iTotalCount)).'%)');
+				if ($iOrphanCount > 0) {
+					//N°3793
+					if ($iOrphanCount > 100000) {
+						SetupLog::Info("There are too much useless records ($iOrphanCount) in {$sDBPrefix}priv_change. Cleanup cannot be done during setup.");
+					} else {
+						SetupLog::Info('Removing the orphan records...');
+						$sCleanup = "DELETE FROM `{$sDBPrefix}priv_change` USING `{$sDBPrefix}priv_change` LEFT JOIN `{$sDBPrefix}priv_changeop` ON `{$sDBPrefix}priv_change`.id = `{$sDBPrefix}priv_changeop`.changeid WHERE `{$sDBPrefix}priv_changeop`.id IS NULL;";
+						CMDBSource::Query($sCleanup);
+						SetupLog::Info('Cleanup completed successfully.');
+					}
+				} else {
+					SetupLog::Info('Ok, nothing to cleanup.');
+				}
+			}
+			catch (Exception $e) {
+				SetupLog::Info("Cleanup of orphan records in `{$sDBPrefix}priv_change` failed: ".$e->getMessage());
+			}
+		}
+	}
+
+	public function MigrateDataAfterUpdateStructure(string $sMode, Config $oConfig): void
+	{
+		$sDBName = $oConfig->Get('db_name');
+		$sDBPrefix = $oConfig->Get('db_subname');
+
+		// priv_change now has an 'origin' field to distinguish between the various input sources
+		// Let's initialize the field with 'interactive' for all records where it's null
+		// Then check if some records should hold a different value, based on a pattern matching in the userinfo field
+		CMDBSource::SelectDB($sDBName);
+		try {
+			$sCount = "SELECT COUNT(*) FROM `{$sDBPrefix}priv_change` WHERE `origin` IS NULL";
+			$iCount = (int)CMDBSource::QueryToScalar($sCount);
+			if ($iCount > 0) {
+				SetupLog::Info("Initializing '{$sDBPrefix}priv_change.origin' ($iCount records to update)");
+
+				// By default all uninitialized values are considered as 'interactive'
+				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'interactive' WHERE `origin` IS NULL";
+				CMDBSource::Query($sInit);
+
+				// CSV Import was identified by the comment at the end
+				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'csv-import.php' WHERE `userinfo` LIKE '%Web Service (CSV)'";
+				CMDBSource::Query($sInit);
+
+				// CSV Import was identified by the comment at the end
+				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'csv-interactive' WHERE `userinfo` LIKE '%(CSV)' AND origin = 'interactive'";
+				CMDBSource::Query($sInit);
+
+				// Syncho data sources were identified by the comment at the end
+				// Unfortunately the comment is localized, so we have to search for all possible patterns
+				$sCurrentLanguage = Dict::GetUserLanguage();
+				$aSuffixes = [];
+				foreach (array_keys(Dict::GetLanguages()) as $sLangCode) {
+					Dict::SetUserLanguage($sLangCode);
+					$sSuffix = CMDBSource::Quote('%'.Dict::S('Core:SyncDataExchangeComment'));
+					$aSuffixes[$sSuffix] = true;
+				}
+				Dict::SetUserLanguage($sCurrentLanguage);
+				$sCondition = '`userinfo` LIKE '.implode(' OR `userinfo` LIKE ', array_keys($aSuffixes));
+
+				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'synchro-data-source' WHERE ($sCondition)";
+				CMDBSource::Query($sInit);
+
+				SetupLog::Info("Initialization of '{$sDBPrefix}priv_change.origin' completed.");
+			} else {
+				SetupLog::Info("'{$sDBPrefix}priv_change.origin' already initialized, nothing to do.");
+			}
+		}
+		catch (Exception $e) {
+			SetupLog::Error("Initializing '{$sDBPrefix}priv_change.origin' failed: ".$e->getMessage());
+		}
+
+		// priv_async_task now has a 'status' field to distinguish between the various statuses rather than just relying on the date columns
+		// Let's initialize the field with 'planned' or 'error' for all records were it's null
+		CMDBSource::SelectDB($sDBName);
+		try {
+			$sCount = "SELECT COUNT(*) FROM `{$sDBPrefix}priv_async_task` WHERE `status` IS NULL";
+			$iCount = (int)CMDBSource::QueryToScalar($sCount);
+			if ($iCount > 0) {
+				SetupLog::Info("Initializing '{$sDBPrefix}priv_async_task.status' ($iCount records to update)");
+
+				$sInit = "UPDATE `{$sDBPrefix}priv_async_task` SET `status` = 'planned' WHERE (`status` IS NULL) AND (`started` IS NULL)";
+				CMDBSource::Query($sInit);
+
+				$sInit = "UPDATE `{$sDBPrefix}priv_async_task` SET `status` = 'error' WHERE (`status` IS NULL) AND (`started` IS NOT NULL)";
+				CMDBSource::Query($sInit);
+
+				SetupLog::Info("Initialization of '{$sDBPrefix}priv_async_task.status' completed.");
+			} else {
+				SetupLog::Info("'{$sDBPrefix}priv_async_task.status' already initialized, nothing to do.");
+			}
+		}
+		catch (Exception $e) {
+			SetupLog::Error("Initializing '{$sDBPrefix}priv_async_task.status' failed: ".$e->getMessage());
 		}
 	}
 
@@ -187,6 +351,36 @@ class RunTimeEnvironment
 	public function AnalyzeInstallation($oConfig, $modulesPath, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		return AnalyzeInstallation::GetInstance()->AnalyzeInstallation($oConfig, $modulesPath, $bAbortOnMissingDependency, $aModulesToLoad);
+	}
+
+	/**
+	 * @param \Config $oConfig
+	 * @param string $sDataModelVersion
+	 * @param array $aSelectedModuleCodes
+	 * @param array $aSelectedExtensionCodes
+	 * @param string|null $sInstallComment
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MySQLException
+	 * @throws \Exception
+	 */
+	public function DoCreateConfig(Config $oConfig, string $sDataModelVersion, array $aSelectedModuleCodes, array $aSelectedExtensionCodes, ?string $sInstallComment = null)
+	{
+		$oConfig->Set('access_mode', ACCESS_FULL);
+
+		// Record which modules are installed...
+		$this->InitDataModel($oConfig, true);  // load data model and connect to the database
+
+		if (!$this->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sInstallComment)) {
+			throw new Exception('Failed to record the installation information');
+		}
+
+		$this->WriteConfigFileSafe($oConfig);
+
+		// Ready to go !!
+		require_once(APPROOT.'core/dict.class.inc.php');
+		MetaModel::ResetAllCaches();
 	}
 
 	/**
@@ -424,6 +618,72 @@ class RunTimeEnvironment
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * @param \Config $oConfig
+	 * @param string $sMode
+	 * @param array|null $aSelectedModules null means all
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function UpdateDBSchema(Config $oConfig, string $sMode, ?array $aSelectedModules = null): void
+	{
+		$this->InitDataModel($oConfig, true);  // load data model only
+
+		// Module specific actions (migrate the data)
+		$aAvailableModules = $this->AnalyzeInstallation($oConfig, $this->GetBuildDir());
+		$this->CallInstallerHandlers($aAvailableModules, 'BeforeDatabaseCreation', $aSelectedModules);
+
+		if (!$this->CreateDatabaseStructure(MetaModel::GetConfig(), $sMode)) {
+			throw new Exception("Failed to create/upgrade the database structure for environment");
+		}
+	}
+
+	/**
+	 * @param \Config $oConfig
+	 * @param array|null $aSelectedModules null means all
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MySQLException
+	 * @throws \Exception
+	 */
+	public function AfterDBCreate(Config $oConfig, string $sMode, ?array $aSelectedModules = null, array $aAdminParams = []): void
+	{
+		$this->InitDataModel($oConfig);  // load data model and connect to the database
+
+		// Perform here additional DB setup... profiles, etc...
+		//
+		$aAvailableModules = $this->AnalyzeInstallation($oConfig, $this->GetBuildDir());
+		$this->CallInstallerHandlers($aAvailableModules, 'AfterDatabaseCreation', $aSelectedModules);
+
+		$this->UpdatePredefinedObjects();
+
+
+		if ($sMode == 'install') {
+			SetupLog::Info('CreateAdminAccount');
+
+			$sAdminUser = $aAdminParams['user'];
+			$sAdminPwd = $aAdminParams['pwd'];
+			$sAdminLanguage = $aAdminParams['language'];
+
+			if (!UserRights::CreateAdministrator($sAdminUser, $sAdminPwd, $sAdminLanguage)) {
+				throw(new Exception("Failed to create the administrator account '$sAdminUser'"));
+			} else {
+				SetupLog::Info("Administrator account '$sAdminUser' created.");
+			}
+		}
+
+		// Perform final setup tasks here
+		//
+		$this->CallInstallerHandlers($aAvailableModules, 'AfterDatabaseSetup', $aSelectedModules);
 	}
 
 	public function UpdatePredefinedObjects()
@@ -897,12 +1157,28 @@ class RunTimeEnvironment
 		}
 	}
 
+	public function DoLoadData(Config $oConfig, bool $bSampleData = false, $aSelectedModules = null)
+	{
+		$this->InitDataModel($oConfig, false);  // load data model and connect to the database
+
+		// Perform here additional DB setup... profiles, etc...
+		//
+		$aAvailableModules = $this->AnalyzeInstallation($oConfig, $this->GetBuildDir());
+
+		$this->LoadData($aAvailableModules, $bSampleData, $aSelectedModules);
+
+		$this->CallInstallerHandlers($aAvailableModules, 'AfterDataLoad', $aSelectedModules);
+
+	}
+
 	/**
 	 * Load data from XML files for the selected modules (structural data and/or sample data)
 	 *
-	 * @param array[] $aAvailableModules All available modules and their definition
-	 * @param bool $bSampleData Wether or not to load sample data
-	 * @param null|string[] $aSelectedModules List of selected modules
+	 * @param array $aAvailableModules
+	 * @param bool $bSampleData Whether or not to load sample data
+	 * @param null $aSelectedModules List of selected modules
+	 *
+	 * @throws \CoreException
 	 */
 	public function LoadData($aAvailableModules, $bSampleData, $aSelectedModules = null)
 	{
@@ -1231,6 +1507,34 @@ class RunTimeEnvironment
 			$sInstanceUUID = utils::CreateUUID('filesystem');
 			file_put_contents($sInstanceUUIDFile, $sInstanceUUID);
 		}
+	}
+
+	/**
+	 * @param \Config $oConfig
+	 * @param string $sBackupFileFormat
+	 * @param string $sSourceConfigFile
+	 * @param string|null $sMySQLBinDir
+	 *
+	 * @throws \BackupException
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @since 2.5.0 uses a {@link Config} object to store DB parameters
+	 */
+	public function Backup(Config $oConfig, string $sBackupFileFormat, string $sSourceConfigFile, ?string $sMySQLBinDir = null): void
+	{
+		$oBackup = new SetupDBBackup($oConfig);
+		$sTargetFile = $oBackup->MakeName($sBackupFileFormat);
+		if (!empty($sMySQLBinDir)) {
+			$oBackup->SetMySQLBinDir($sMySQLBinDir);
+		}
+
+		CMDBSource::InitFromConfig($oConfig);
+		$oBackup->CreateCompressedBackup($sTargetFile, $sSourceConfigFile);
+	}
+
+	public function GetFinalEnv(): string
+	{
+		return $this->sFinalEnv;
 	}
 
 	protected function IsInItop(string $sPath): bool

@@ -40,314 +40,118 @@ require_once(APPROOT.'setup/SetupDBBackup.php');
  */
 class ApplicationInstallSequencer extends StepSequencer
 {
-	protected Parameters $oParams;
-	protected static bool $bMetaModelStarted = false;
-
-	protected Config $oConfig;
-
-	protected RunTimeEnvironment $oRunTimeEnvironment;
-
 	/**
-	 * @param \Parameters $oParams
-	 *
-	 * @throws \ConfigException
-	 * @throws \CoreException
+	 * @inherit
 	 */
-	public function __construct(Parameters $oParams, ?RunTimeEnvironment $oRunTimeEnvironment = null)
-	{
-		if (is_null($oRunTimeEnvironment)) {
-			$sEnvironment = $oParams->Get('target_env', 'production');
-			$oRunTimeEnvironment = new RunTimeEnvironment($sEnvironment, false);
-		}
-		$this->oRunTimeEnvironment = $oRunTimeEnvironment;
-
-		$this->oParams = $oParams;
-
-		$aParamValues = $oParams->GetParamForConfigArray();
-		$this->oConfig = new Config();
-		$this->oConfig->UpdateFromParams($aParamValues);
-		utils::SetConfig($this->oConfig);
-	}
-
-	/**
-	 * @return string
-	 */
-	protected function GetTargetEnv()
-	{
-		$sTargetEnvironment = $this->oParams->Get('target_env', '');
-		if ($sTargetEnvironment !== '') {
-			return $sTargetEnvironment;
-		}
-
-		return 'production';
-	}
-
-	/**
-	 * @return string
-	 */
-	protected function GetTargetDir()
-	{
-		$sTargetEnv = $this->GetTargetEnv();
-		return 'env-'.$sTargetEnv;
-	}
-
-	protected function GetConfig()
-	{
-		$sTargetEnvironment = $this->GetTargetEnv();
-		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
-		try {
-			$oConfig = new Config($sConfigFile);
-		} catch (Exception $e) {
-			return null;
-		}
-
-		$aParamValues = $this->oParams->GetParamForConfigArray();
-		$oConfig->UpdateFromParams($aParamValues);
-
-		return $oConfig;
-	}
-
-
-
-	/**
-	 * Executes the next step of the installation and reports about the progress
-	 * and the next step to perform
-	 *
-	 * @param string $sStep The identifier of the step to execute
-	 * @param string|null $sInstallComment
-	 *
-	 * @return array (status => , message => , percentage-completed => , next-step => , next-step-label => )
-	 */
-	public function ExecuteStep($sStep = '', $sInstallComment = null)
+	public function ExecuteStep($sStep = '', $sInstallComment = null): array
 	{
 		try {
+			/**
+			 * @since 3.2.0 move the ContextTag init at the very beginning of the method
+			 * @noinspection PhpUnusedLocalVariableInspection
+			 */
+			$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 			$fStart = microtime(true);
 			SetupLog::Info("##### STEP {$sStep} start");
 			$this->EnterReadOnlyMode();
 			switch ($sStep) {
 				case '':
-					if (in_array('log-parameters', $this->oParams->Get('optional_steps', []))) {
-						return $this->GetNextStep('log-parameters', 'Log parameters', 0);
-					}
-					return $this->GetNextStep('copy', 'Copying data model files', 5);
+					return $this->GetNextStep('log-parameters', 'Log parameters', 0);
 
 				case 'log-parameters':
-					$this->DoLogParameters('data-audit-', 'Data Audit');
-					return $this->GetNextStep('copy', 'Copying data model files', 5);
-
-					$this->DoLogParameters();
-
-					$aResult = [
-						'status' => self::OK,
-						'message' => '',
-						'percentage-completed' => 0,
-						'next-step' => 'copy',
-						'next-step-label' => 'Copying data model files',
-					];
-					break;
-
-				case 'copy':
-					$aPreinstall = $this->oParams->Get('preinstall');
-					$aCopies = $aPreinstall['copies'] ?? [];
-
-					$this->DoCopy($aCopies);
-					$sReport = "Copying...";
-
-					$aResult = [
-						'status' => self::OK,
-						'message' => $sReport,
-					];
-					if (isset($aPreinstall['backup'])) {
-						$aResult['next-step'] = 'backup';
-						$aResult['next-step-label'] = 'Performing a backup of the database';
-						$aResult['percentage-completed'] = 20;
-					} else {
-						$aResult['next-step'] = 'compile';
-						$aResult['next-step-label'] = 'Compiling the data model';
-						$aResult['percentage-completed'] = 20;
+					if (array_key_exists('log-parameters', $this->oParams->Get('optional_steps', []))) {
+						$this->DoLogParameters();
 					}
-					break;
+
+					return $this->GetNextStep('backup', 'Performing a backup of the database', 20);
 
 				case 'backup':
-					$aPreinstall = $this->oParams->Get('preinstall');
-					// __DB__-%Y-%m-%d
-					$sDestination = $aPreinstall['backup']['destination'];
-					$sSourceConfigFile = $aPreinstall['backup']['configuration_file'];
-					$sMySQLBinDir = $this->oParams->Get('mysql_bindir', null);
-					$this->DoBackup($sDestination, $sSourceConfigFile, $sMySQLBinDir);
+					if (array_key_exists('backup', $this->oParams->Get('optional_steps', []))) {
 
-					$aResult = [
-						'status' => self::OK,
-						'message' => "Created backup",
-						'next-step' => 'compile',
-						'next-step-label' => 'Compiling the data model',
-						'percentage-completed' => 20,
-					];
-					break;
-
-				case 'compile':
-					$aSelectedModules = $this->oParams->Get('selected_modules');
-					$sSourceDir = $this->oParams->Get('source_dir', 'datamodels/latest');
-					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
-					$aMiscOptions = $this->oParams->Get('options', []);
-					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', []);
-
-					$bUseSymbolicLinks = null;
-					if ((isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'])) {
-						if (function_exists('symlink')) {
-							$bUseSymbolicLinks = true;
-							SetupLog::Info("Using symbolic links instead of copying data model files (for developers only!)");
-						} else {
-							SetupLog::Info("Symbolic links (function symlinks) does not seem to be supported on this platform (OS/PHP version).");
-						}
+						$aBackupOptions = $this->oParams->Get('optional_steps')['backup'];
+						// __DB__-%Y-%m-%d
+						$sDestination = $aBackupOptions['destination'];
+						$sSourceConfigFile = $aBackupOptions['configuration_file'];
+						$sMySQLBinDir = $this->oParams->Get('mysql_bindir', null);
+						$this->oRunTimeEnvironment->Backup($this->oConfig, $sDestination, $sSourceConfigFile, $sMySQLBinDir);
 					}
 
-					$this->DoCompile(
-						$aRemovedExtensionCodes,
-						$aSelectedModules,
-						$sSourceDir,
-						$sExtensionDir,
-						$bUseSymbolicLinks
-					);
+					return $this->GetNextStep('migrate-before', 'Migrate data before database upgrade', 30);
 
-					$sNextStep = 'db-schema';
-					$sNextStepLabel = 'Updating database schema';
-
-					$aResult = [
-						'status' => self::OK,
-						'message' => '',
-						'next-step' => $sNextStep,
-						'next-step-label' => $sNextStepLabel,
-						'percentage-completed' => 40,
-					];
-					break;
+				case 'migrate-before':
+					if (array_key_exists('migrate-before', $this->oParams->Get('optional_steps', []))) {
+						$this->oRunTimeEnvironment->MigrateDataBeforeUpdateStructure($this->oParams->Get('mode'), $this->GetConfig());
+					}
+					return $this->GetNextStep('db-schema', 'Updating database schema', 40);
 
 				case 'db-schema':
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
+					$this->DoUpdateDBSchema($this->GetConfig(), $aSelectedModules);
 
-					$this->DoUpdateDBSchema(
-						$aSelectedModules
-					);
+					return $this->GetNextStep('migrate-after', 'Migrate data after database upgrade', 50);
 
-					$aResult = [
-						'status' => self::OK,
-						'message' => '',
-						'next-step' => 'after-db-create',
-						'next-step-label' => 'Creating profiles',
-						'percentage-completed' => 60,
-					];
-					break;
+				case 'migrate-after':
+					if (array_key_exists('migrate-after', $this->oParams->Get('optional_steps', []))) {
+						$this->oRunTimeEnvironment->MigrateDataAfterUpdateStructure($this->oParams->Get('mode'), $this->GetConfig());
+					}
+					return $this->GetNextStep('after-db-create', 'Load data after database create', 60);
 
 				case 'after-db-create':
 					$aAdminParams = $this->oParams->Get('admin_account');
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
+					$sMode = $this->oParams->Get('mode');
 
-					$this->AfterDBCreate(
-						$aAdminParams,
-						$aSelectedModules
-					);
+					$this->oRunTimeEnvironment->AfterDBCreate($this->GetConfig(), $sMode, $aSelectedModules, $aAdminParams);
 
-					$aResult = [
-						'status' => self::OK,
-						'message' => '',
-						'next-step' => 'load-data',
-						'next-step-label' => 'Loading data',
-						'percentage-completed' => 80,
-					];
-					break;
+					return $this->GetNextStep('load-data', 'Loading data', 70);
 
 				case 'load-data':
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
 					$bSampleData = ($this->oParams->Get('sample_data', 0) == 1);
 
-					$this->DoLoadFiles(
-						$aSelectedModules,
-						$bSampleData
-					);
+					$this->oRunTimeEnvironment->DoLoadData($this->GetConfig(),$bSampleData, $aSelectedModules);
 
-					$aResult = [
-						'status' => self::INFO,
-						'message' => 'All data loaded',
-						'next-step' => 'create-config',
-						'next-step-label' => 'Creating the configuration File',
-						'percentage-completed' => 99,
-					];
-					break;
+					return $this->GetNextStep('create-config', 'Creating the configuration File', 80, 'All data loaded');
 
 				case 'create-config':
-					$sPreviousConfigFile = $this->oParams->Get('previous_configuration_file', '');
 					$sDataModelVersion = $this->oParams->Get('datamodel_version', '0.0.0');
 					$aSelectedModuleCodes = $this->oParams->Get('selected_modules', []);
 					$aSelectedExtensionCodes = $this->oParams->Get('selected_extensions', []);
 
-					$this->DoCreateConfig(
-						$sPreviousConfigFile,
+					$this->oRunTimeEnvironment->DoCreateConfig($this->GetConfig(),
 						$sDataModelVersion,
 						$aSelectedModuleCodes,
 						$aSelectedExtensionCodes,
 						$sInstallComment
 					);
 
-					$aResult = [
-						'status' => self::INFO,
-						'message' => 'Configuration file created',
-						'next-step' => '',
-						'next-step-label' => 'Completed',
-						'percentage-completed' => 100,
-					];
-					break;
+					return $this->GetNextStep('commit', 'Finalize', 95);
+
+				case 'commit':
+					$this->oRunTimeEnvironment->Commit();
+					return $this->GetNextStep('', 'Completed', 100);
 
 				default:
-					$aResult = [
-						'status' => self::ERROR,
-						'message' => '',
-						'next-step' => '',
-						'next-step-label' => "Unknown setup step '$sStep'.",
-						'percentage-completed' => 100,
-					];
-					break;
+					return $this->GetNextStep('', "Unknown setup step '$sStep'.", 100, '', self::ERROR);
 			}
-			$this->ExitReadOnlyMode();
-		} catch (Exception $e) {
-			$aResult = [
-				'status' => self::ERROR,
-				'message' => $e->getMessage(),
-				'next-step' => '',
-				'next-step-label' => '',
-				'percentage-completed' => 100,
-				'error_code' => $e->getCode(),
-			];
-
-			$this->ReportException($e);
-		} finally {
-			$fDuration = round(microtime(true) - $fStart, 2);
-			SetupLog::Info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
+		catch (Exception $e) {
+				$this->ReportException($e);
+				$aResult = $this->GetNextStep('', '', 100, $e->getMessage(), self::ERROR);
+				$aResult['error_code'] = $e->getCode();
+				return $aResult;
+			}
+		finally {
+				$this->ExitReadOnlyMode();
+				$fDuration = round(microtime(true) - $fStart, 2);
+				SetupLog::Info("##### STEP {$sStep} duration: {$fDuration}s");
+			}
 
-		return $aResult;
-	}
-
-	protected function ReportException(Exception $e)
-	{
-		SetupLog::Error('An exception occurred: '.$e->getMessage().' at line '.$e->getLine().' in file '.$e->getFile());
-		$idx = 0;
-		// Log the call stack, but not the parameters since they may contain passwords or other sensitive data
-		SetupLog::Ok("Call stack:");
-		foreach ($e->getTrace() as $aTrace) {
-			$sLine = empty($aTrace['line']) ? "" : $aTrace['line'];
-			$sFile = empty($aTrace['file']) ? "" : $aTrace['file'];
-			$sClass = empty($aTrace['class']) ? "" : $aTrace['class'];
-			$sType = empty($aTrace['type']) ? "" : $aTrace['type'];
-			$sFunction = empty($aTrace['function']) ? "" : $aTrace['function'];
-			$sVerb = empty($sClass) ? $sFunction : "$sClass{$sType}$sFunction";
-			SetupLog::Ok("#$idx $sFile($sLine): $sVerb(...)");
-			$idx++;
-		}
 	}
 
 	protected function EnterReadOnlyMode()
 	{
-		if ($this->GetTargetEnv() != 'production') {
+		if ($this->oRunTimeEnvironment->GetFinalEnv() != 'production') {
 			return;
 		}
 
@@ -360,7 +164,7 @@ class ApplicationInstallSequencer extends StepSequencer
 
 	protected function ExitReadOnlyMode()
 	{
-		if ($this->GetTargetEnv() != 'production') {
+		if ($this->oRunTimeEnvironment->GetFinalEnv() != 'production') {
 			return;
 		}
 
@@ -372,165 +176,21 @@ class ApplicationInstallSequencer extends StepSequencer
 	}
 
 	/**
-	 * @param string $sBackupFileFormat
-	 * @param string $sSourceConfigFile
-	 * @param string $sMySQLBinDir
-	 *
-	 * @throws \BackupException
-	 * @throws \CoreException
-	 * @throws \MySQLException
-	 * @since 2.5.0 uses a {@link Config} object to store DB parameters
-	 */
-	protected function DoBackup($sBackupFileFormat, $sSourceConfigFile, $sMySQLBinDir = null)
-	{
-		$oBackup = new SetupDBBackup($this->oConfig);
-		$sTargetFile = $oBackup->MakeName($sBackupFileFormat);
-		if (!empty($sMySQLBinDir)) {
-			$oBackup->SetMySQLBinDir($sMySQLBinDir);
-		}
-
-		CMDBSource::InitFromConfig($this->oConfig);
-		$oBackup->CreateCompressedBackup($sTargetFile, $sSourceConfigFile);
-	}
-
-	protected function GetModelInfoPath(string $sEnv): string
-	{
-		return APPROOT."data/beforecompilation_".$sEnv."_modelinfo.json";
-	}
-
-	protected function SaveModelInfo(string $sEnvironment): bool
-	{
-		$sModelInfoPath = $this->GetModelInfoPath($sEnvironment);
-		try {
-			$aModelInfo = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($sEnvironment);
-		} catch (Exception $e) {
-			//logged already
-			return is_file($sModelInfoPath);
-		}
-
-		return (bool) file_put_contents($sModelInfoPath, json_encode($aModelInfo));
-	}
-
-	protected function GetPreviousModelInfo(string $sEnvironment): array
-	{
-		$sContent = file_get_contents($this->GetModelInfoPath($sEnvironment));
-		$aModelInfo = json_decode($sContent, true);
-
-		if (false === $aModelInfo) {
-			throw new Exception("Could not read (before compilation) previous model to audit data");
-		}
-
-		return $aModelInfo;
-	}
-
-	protected function IsSetupDataAuditEnabled($sSkipDataAudit, array $aParamValues): bool
-	{
-		if ($sSkipDataAudit === "checked") {
-			SetupLog::Info("Setup data audit disabled", null, ['skip-data-audit' => $sSkipDataAudit]);
-			return false;
-		}
-
-		$sMode = $aParamValues['mode'];
-		if ($sMode !== "upgrade") {
-			//first install
-			return false;
-		}
-
-		$sPath = APPROOT.$this->GetTargetDir();
-		if (!is_dir($sPath)) {
-			SetupLog::Info("Reinstallation of an iTop from a backup (No ".$this->GetTargetDir()." found). Setup data audit disabled", null, ['skip-data-audit' => $sSkipDataAudit]);
-
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * @param $aSelectedModules
 	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 * @throws \MySQLException
 	 */
-	protected function DoUpdateDBSchema($aSelectedModules)
+	protected function DoUpdateDBSchema(Config $oConfig, $aSelectedModules)
 	{
-		$sTargetEnvironment = $this->GetTargetEnv();
-		$sModulesDir = $this->GetTargetDir();
+		$sTargetEnvironment = $this->oRunTimeEnvironment->GetBuildEnv();
 		$aParamValues = $this->oParams->GetParamForConfigArray();
-		/**
-		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
-		 * @noinspection PhpUnusedLocalVariableInspection
-		 */
-		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
+
 		SetupLog::Info("Update Database Schema for environment '$sTargetEnvironment'.");
 		$sMode = $aParamValues['mode'];
-		$sDBPrefix = $aParamValues['db_prefix'];
-		$sDBName = $aParamValues['db_name'];
 
-		$oConfig = new Config();
-		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
-
-		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
-		$oProductionEnv->InitDataModel($oConfig, true);  // load data model only
-
-		// Migrate columns
-		self::MoveColumns($sDBPrefix);
-
-		// Migrate application data format
-		//
-		// priv_internalUser caused troubles because MySQL transforms table names to lower case under Windows
-		// This becomes an issue when moving your installation data to/from Windows
-		// Starting 2.0, all table names must be lowercase
-		if ($sMode != 'install') {
-			SetupLog::Info("Renaming '{$sDBPrefix}priv_internalUser' into '{$sDBPrefix}priv_internaluser' (lowercase)");
-			// This command will have no effect under Windows...
-			// and it has been written in two steps so as to make it work under windows!
-			CMDBSource::SelectDB($sDBName);
-			try {
-				$sRepair = "RENAME TABLE `{$sDBPrefix}priv_internalUser` TO `{$sDBPrefix}priv_internaluser_other`, `{$sDBPrefix}priv_internaluser_other` TO `{$sDBPrefix}priv_internaluser`";
-				CMDBSource::Query($sRepair);
-			} catch (Exception $e) {
-				SetupLog::Info("Renaming '{$sDBPrefix}priv_internalUser' failed (already done in a previous upgrade?)");
-			}
-
-			// let's remove the records in priv_change which have no counterpart in priv_changeop
-			SetupLog::Info("Cleanup of '{$sDBPrefix}priv_change' to remove orphan records");
-			CMDBSource::SelectDB($sDBName);
-			try {
-				$sTotalCount = "SELECT COUNT(*) FROM `{$sDBPrefix}priv_change`";
-				$iTotalCount = (int)CMDBSource::QueryToScalar($sTotalCount);
-				SetupLog::Info("There is a total of $iTotalCount records in {$sDBPrefix}priv_change.");
-
-				$sOrphanCount = "SELECT COUNT(c.id) FROM `{$sDBPrefix}priv_change` AS c left join `{$sDBPrefix}priv_changeop` AS o ON c.id = o.changeid WHERE o.id IS NULL";
-				$iOrphanCount = (int)CMDBSource::QueryToScalar($sOrphanCount);
-				SetupLog::Info("There are $iOrphanCount useless records in {$sDBPrefix}priv_change (".sprintf('%.2f', ((100.0 * $iOrphanCount) / $iTotalCount))."%)");
-				if ($iOrphanCount > 0) {
-					//N°3793
-					if ($iOrphanCount > 100000) {
-						SetupLog::Info("There are too much useless records ($iOrphanCount) in {$sDBPrefix}priv_change. Cleanup cannot be done during setup.");
-					} else {
-						SetupLog::Info("Removing the orphan records...");
-						$sCleanup = "DELETE FROM `{$sDBPrefix}priv_change` USING `{$sDBPrefix}priv_change` LEFT JOIN `{$sDBPrefix}priv_changeop` ON `{$sDBPrefix}priv_change`.id = `{$sDBPrefix}priv_changeop`.changeid WHERE `{$sDBPrefix}priv_changeop`.id IS NULL;";
-						CMDBSource::Query($sCleanup);
-						SetupLog::Info("Cleanup completed successfully.");
-					}
-				} else {
-					SetupLog::Info("Ok, nothing to cleanup.");
-				}
-			} catch (Exception $e) {
-				SetupLog::Info("Cleanup of orphan records in `{$sDBPrefix}priv_change` failed: ".$e->getMessage());
-			}
-
-		}
-
-		// Module specific actions (migrate the data)
-		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
-		$oProductionEnv->CallInstallerHandlers($aAvailableModules, 'BeforeDatabaseCreation', $aSelectedModules);
-
-		if (!$oProductionEnv->CreateDatabaseStructure(MetaModel::GetConfig(), $sMode)) {
-			throw new Exception("Failed to create/upgrade the database structure for environment '$sTargetEnvironment'");
-		}
+		$this->oRunTimeEnvironment->UpdateDBSchema($oConfig, $sMode, $aSelectedModules);
 
 		// Set a DBProperty with a unique ID to identify this instance of iTop
 		$sUUID = DBProperty::GetProperty('database_uuid', '');
@@ -539,267 +199,6 @@ class ApplicationInstallSequencer extends StepSequencer
 			DBProperty::SetProperty('database_uuid', $sUUID, 'Installation/upgrade of '.ITOP_APPLICATION, 'Unique ID of this '.ITOP_APPLICATION.' Database');
 		}
 
-		// priv_change now has an 'origin' field to distinguish between the various input sources
-		// Let's initialize the field with 'interactive' for all records were it's null
-		// Then check if some records should hold a different value, based on a pattern matching in the userinfo field
-		CMDBSource::SelectDB($sDBName);
-		try {
-			$sCount = "SELECT COUNT(*) FROM `{$sDBPrefix}priv_change` WHERE `origin` IS NULL";
-			$iCount = (int)CMDBSource::QueryToScalar($sCount);
-			if ($iCount > 0) {
-				SetupLog::Info("Initializing '{$sDBPrefix}priv_change.origin' ($iCount records to update)");
-
-				// By default all uninitialized values are considered as 'interactive'
-				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'interactive' WHERE `origin` IS NULL";
-				CMDBSource::Query($sInit);
-
-				// CSV Import was identified by the comment at the end
-				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'csv-import.php' WHERE `userinfo` LIKE '%Web Service (CSV)'";
-				CMDBSource::Query($sInit);
-
-				// CSV Import was identified by the comment at the end
-				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'csv-interactive' WHERE `userinfo` LIKE '%(CSV)' AND origin = 'interactive'";
-				CMDBSource::Query($sInit);
-
-				// Syncho data sources were identified by the comment at the end
-				// Unfortunately the comment is localized, so we have to search for all possible patterns
-				$sCurrentLanguage = Dict::GetUserLanguage();
-				$aSuffixes = [];
-				foreach (array_keys(Dict::GetLanguages()) as $sLangCode) {
-					Dict::SetUserLanguage($sLangCode);
-					$sSuffix = CMDBSource::Quote('%'.Dict::S('Core:SyncDataExchangeComment'));
-					$aSuffixes[$sSuffix] = true;
-				}
-				Dict::SetUserLanguage($sCurrentLanguage);
-				$sCondition = "`userinfo` LIKE ".implode(" OR `userinfo` LIKE ", array_keys($aSuffixes));
-
-				$sInit = "UPDATE `{$sDBPrefix}priv_change` SET `origin` = 'synchro-data-source' WHERE ($sCondition)";
-				CMDBSource::Query($sInit);
-
-				SetupLog::Info("Initialization of '{$sDBPrefix}priv_change.origin' completed.");
-			} else {
-				SetupLog::Info("'{$sDBPrefix}priv_change.origin' already initialized, nothing to do.");
-			}
-		} catch (Exception $e) {
-			SetupLog::Error("Initializing '{$sDBPrefix}priv_change.origin' failed: ".$e->getMessage());
-		}
-
-		// priv_async_task now has a 'status' field to distinguish between the various statuses rather than just relying on the date columns
-		// Let's initialize the field with 'planned' or 'error' for all records were it's null
-		CMDBSource::SelectDB($sDBName);
-		try {
-			$sCount = "SELECT COUNT(*) FROM `{$sDBPrefix}priv_async_task` WHERE `status` IS NULL";
-			$iCount = (int)CMDBSource::QueryToScalar($sCount);
-			if ($iCount > 0) {
-				SetupLog::Info("Initializing '{$sDBPrefix}priv_async_task.status' ($iCount records to update)");
-
-				$sInit = "UPDATE `{$sDBPrefix}priv_async_task` SET `status` = 'planned' WHERE (`status` IS NULL) AND (`started` IS NULL)";
-				CMDBSource::Query($sInit);
-
-				$sInit = "UPDATE `{$sDBPrefix}priv_async_task` SET `status` = 'error' WHERE (`status` IS NULL) AND (`started` IS NOT NULL)";
-				CMDBSource::Query($sInit);
-
-				SetupLog::Info("Initialization of '{$sDBPrefix}priv_async_task.status' completed.");
-			} else {
-				SetupLog::Info("'{$sDBPrefix}priv_async_task.status' already initialized, nothing to do.");
-			}
-		} catch (Exception $e) {
-			SetupLog::Error("Initializing '{$sDBPrefix}priv_async_task.status' failed: ".$e->getMessage());
-		}
-
 		SetupLog::Info("Database Schema Successfully Updated for environment '$sTargetEnvironment'.");
-	}
-
-	/**
-	 * @param string $sDBPrefix
-	 *
-	 * @throws \CoreException
-	 * @throws \MySQLException
-	 */
-	protected static function MoveColumns($sDBPrefix)
-	{
-		// In 2.6.0 the 'fields' attribute has been moved from Query to QueryOQL for dependencies reasons
-		ModuleInstallerAPI::MoveColumnInDB($sDBPrefix.'priv_query', 'fields', $sDBPrefix.'priv_query_oql', 'fields');
-	}
-
-	protected function AfterDBCreate(
-		$aAdminParams,
-		$aSelectedModules
-	) {
-
-		$sAdminUser = $aAdminParams['user'];
-		$sAdminPwd = $aAdminParams['pwd'];
-		$sAdminLanguage = $aAdminParams['language'];
-
-		$aParamValues = $this->oParams->GetParamForConfigArray();
-		$sTargetEnvironment = $this->GetTargetEnv();
-		$sModulesDir = $this->GetTargetDir();
-
-		/**
-		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
-		 * @noinspection PhpUnusedLocalVariableInspection
-		 */
-		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
-		SetupLog::Info('After Database Creation');
-
-		$sMode = $aParamValues['mode'];
-		$oConfig = new Config();
-		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
-
-		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
-		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
-		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
-		self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously
-
-		// Perform here additional DB setup... profiles, etc...
-		//
-		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
-		$oProductionEnv->CallInstallerHandlers($aAvailableModules, 'AfterDatabaseCreation', $aSelectedModules);
-
-		$oProductionEnv->UpdatePredefinedObjects();
-
-		if ($sMode == 'install') {
-			if (!self::CreateAdminAccount(MetaModel::GetConfig(), $sAdminUser, $sAdminPwd, $sAdminLanguage)) {
-				throw(new Exception("Failed to create the administrator account '$sAdminUser'"));
-			} else {
-				SetupLog::Info("Administrator account '$sAdminUser' created.");
-			}
-		}
-
-		// Perform final setup tasks here
-		//
-		$oProductionEnv->CallInstallerHandlers($aAvailableModules, 'AfterDatabaseSetup', $aSelectedModules);
-	}
-
-	/**
-	 * Helper function to create and administrator account for iTop
-	 * @return boolean true on success, false otherwise
-	 */
-	protected static function CreateAdminAccount(Config $oConfig, $sAdminUser, $sAdminPwd, $sLanguage)
-	{
-		SetupLog::Info('CreateAdminAccount');
-
-		if (UserRights::CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	protected function DoLoadFiles(
-		$aSelectedModules,
-		$bSampleData = false
-	) {
-		$aParamValues = $this->oParams->GetParamForConfigArray();
-		$sTargetEnvironment = $this->GetTargetEnv();
-		$sModulesDir = $this->GetTargetDir();
-
-		/**
-		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
-		 * @noinspection PhpUnusedLocalVariableInspection
-		 */
-		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
-
-		$oConfig = new Config();
-		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
-
-		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
-
-		//Load the MetaModel if needed (asynchronous mode)
-		if (!self::$bMetaModelStarted) {
-			$oProductionEnv->InitDataModel($oConfig, false);  // load data model and connect to the database
-
-			self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously
-		}
-
-		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, APPROOT.$sModulesDir);
-		$oProductionEnv->LoadData($aAvailableModules, $bSampleData, $aSelectedModules);
-
-		// Perform after dbload setup tasks here
-		//
-		$oProductionEnv->CallInstallerHandlers($aAvailableModules, 'AfterDataLoad', $aSelectedModules);
-	}
-
-	/**
-	 * @param string $sPreviousConfigFile
-	 * @param string $sDataModelVersion
-	 * @param array $aSelectedModuleCodes
-	 * @param array $aSelectedExtensionCodes
-	 * @param string|null $sInstallComment
-	 *
-	 * @param null $sInstallComment
-	 *
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 * @throws \Exception
-	 */
-	protected function DoCreateConfig(
-		$sPreviousConfigFile,
-		$sDataModelVersion,
-		$aSelectedModuleCodes,
-		$aSelectedExtensionCodes,
-		$sInstallComment = null
-	) {
-		$aParamValues = $this->oParams->GetParamForConfigArray();
-		$sTargetEnvironment = $this->GetTargetEnv();
-		$sModulesDir = $this->GetTargetDir();
-
-		/**
-		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
-		 * @noinspection PhpUnusedLocalVariableInspection
-		 */
-		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
-
-		$aParamValues['selected_modules'] = implode(',', $aSelectedModuleCodes);
-		$sMode = $aParamValues['mode'];
-
-		if ($sMode == 'upgrade') {
-			try {
-				$oOldConfig = new Config($sPreviousConfigFile);
-				$oConfig = clone($oOldConfig);
-			} catch (Exception $e) {
-				// In case the previous configuration is corrupted... start with a blank new one
-				$oConfig = new Config();
-			}
-		} else {
-			$oConfig = new Config();
-			// To preserve backward compatibility while upgrading to 2.0.3 (when tracking_level_linked_set_default has been introduced)
-			// the default value on upgrade differs from the default value at first install
-			$oConfig->Set('tracking_level_linked_set_default', LINKSET_TRACKING_NONE, 'first_install');
-		}
-
-		$oConfig->Set('access_mode', ACCESS_FULL);
-		// Final config update: add the modules
-		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
-
-		// Record which modules are installed...
-		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
-		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
-
-		if (!$oProductionEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sInstallComment)) {
-			throw new Exception("Failed to record the installation information");
-		}
-
-		// Make sure the root configuration directory exists
-		if (!file_exists(APPCONF)) {
-			mkdir(APPCONF);
-			chmod(APPCONF, 0770); // RWX for owner and group, nothing for others
-			SetupLog::Info("Created configuration directory: ".APPCONF);
-		}
-
-		// Write the final configuration file
-		$sConfigFile = APPCONF.(($sTargetEnvironment == '') ? 'production' : $sTargetEnvironment).'/'.ITOP_CONFIG_FILE;
-		$sConfigDir = dirname($sConfigFile);
-		@mkdir($sConfigDir);
-		@chmod($sConfigDir, 0770); // RWX for owner and group, nothing for others
-
-		$oConfig->WriteToFile($sConfigFile);
-
-		// try to make the final config file read-only
-		@chmod($sConfigFile, 0440); // Read-only for owner and group, nothing for others
-
-		// Ready to go !!
-		require_once(APPROOT.'core/dict.class.inc.php');
-		MetaModel::ResetAllCaches();
 	}
 }

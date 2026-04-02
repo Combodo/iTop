@@ -23,36 +23,15 @@ require_once(APPROOT.'setup/xmldataloader.class.inc.php');
 require_once APPROOT.'setup/feature_removal/SetupAudit.php';
 
 require_once(APPROOT.'setup/sequencers/StepSequencer.php');
-require_once(APPROOT.'setup/sequencers/ApplicationInstallSequencer.php');
 
-class DataAuditSequencer extends ApplicationInstallSequencer
+class DataAuditSequencer extends StepSequencer
 {
 	public const DATA_AUDIT_FAILED = 100;
 
-	protected function GetTempEnv()
-	{
-		$sTargetEnv = $this->GetTargetEnv();
-
-		return $sTargetEnv.'-build';
-	}
-
-	protected function GetTargetDir()
-	{
-		$sTargetEnv = $this->GetTempEnv();
-
-		return 'env-'.$sTargetEnv;
-	}
-
 	/**
-	 * Executes the next step of the installation and reports about the progress
-	 * and the next step to perform
-	 *
-	 * @param string $sStep The identifier of the step to execute
-	 * @param string|null $sInstallComment
-	 *
-	 * @return array (status => , message => , percentage-completed => , next-step => , next-step-label => )
+	 * @inherit
 	 */
-	public function ExecuteStep($sStep = '', $sInstallComment = null)
+	public function ExecuteStep($sStep = '', $sInstallComment = null): array
 	{
 		try {
 			/**
@@ -105,22 +84,5 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 			$fDuration = round(microtime(true) - $fStart, 2);
 			SetupLog::Info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
-	}
-
-	protected function DoWriteConfig()
-	{
-		$sConfigFilePath = utils::GetConfigFilePath($this->GetTargetEnv());
-		if (is_file($sConfigFilePath)) {
-			$oConfig = new Config($sConfigFilePath);
-
-			$sTempConfigFileName = utils::GetConfigFilePath($this->GetTempEnv());
-			$sConfigDir = dirname($sTempConfigFileName);
-			@mkdir($sConfigDir);
-			@chmod($sConfigDir, 0770); // RWX for owner and group, nothing for others
-
-			return $oConfig->WriteToFile($sTempConfigFileName);
-		}
-
-		return false;
 	}
 }

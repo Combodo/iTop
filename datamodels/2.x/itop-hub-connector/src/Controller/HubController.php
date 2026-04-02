@@ -13,7 +13,6 @@ use iTopExtensionsMap;
 use iTopMutex;
 use LoginWebPage;
 use MetaModel;
-use MFCompiler;
 use RunTimeEnvironment;
 use SecurityException;
 use SetupLog;
@@ -187,7 +186,7 @@ class HubController
 
 			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, 'AfterDatabaseSetup');
 
-			$oRuntimeEnv->LoadData($aAvailableModules, false /* no sample data*/);
+			$oRuntimeEnv->LoadData(false, false /* no sample data*/);
 
 			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, 'AfterDataLoad');
 

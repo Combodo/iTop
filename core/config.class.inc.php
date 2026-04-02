@@ -20,9 +20,6 @@
  *
  */
 
-use Combodo\iTop\Config\Validator\iTopConfigAstValidator;
-use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;
-
 define('ITOP_APPLICATION', 'iTop');
 define('ITOP_APPLICATION_SHORT', 'iTop');
 
@@ -1173,8 +1170,8 @@ class Config
 		'tracking_level_linked_set_default' => [
 			'type' => 'integer',
 			'description' => 'Default tracking level if not explicitly set at the attribute level, for AttributeLinkedSet (defaults to NONE in case of a fresh install, LIST otherwise - this to preserve backward compatibility while upgrading from a version older than 2.0.3 - see TRAC #936)',
-			'default' => LINKSET_TRACKING_LIST,
-			'value' => LINKSET_TRACKING_LIST,
+			'default' => LINKSET_TRACKING_NONE,
+			'value' => LINKSET_TRACKING_NONE,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
