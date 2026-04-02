@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<Brand alias="Brand" id="1">
+<Brand alias="Brand" id="6">
   <name>Acer</name>
   <logo><mimetype>image/svg+xml</mimetype><filename>icon-acer.svg</filename><data>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmc6c3ZnIHhtbG5zOmlua3NjYXBlPSJodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy9uYW1lc3BhY2VzL2lua3NjYXBlIiB4bWxuczpzb2RpcG9kaT0iaHR0cDovL3NvZGlwb2RpLnNvdXJjZWZvcmdlLm5ldC9EVEQvc29kaXBvZGktMC5kdGQiIHhtbG5zOnN2Zz0iaH
     R0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgaWQ9ImFjZXIiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iODMiIGhlaWdodD0iODMiIHZpZXdCb3g9IjAgMCA4MyA4MyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgc29kaXBvZGk6ZG9jbmFtZT0iaWNvbi1hY2VyLnN2ZyIgaW5rc2NhcGU6dmVyc2lvbj0iMS40LjMgKDBkMTVmNzUwNDIsIDIwMjUtMTItMjUpIj48c3ZnOmRlZnMgaWQ9ImRlZnMxIi8+PHNvZGlwb2RpOm5hbWVkdmlldyBpZD0ibmFtZWR2
@@ -45,7 +45,7 @@
   <finalclass>Brand</finalclass>
   <friendlyname>Asus</friendlyname>
 </Brand>
-<Brand alias="Brand" id="4">
+<Brand alias="Brand" id="10">
   <name>Cisco</name>
   <logo><mimetype>image/svg+xml</mimetype><filename>icon-cisco.svg</filename><data>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcgeG1sbnM6aW5rc2NhcGU9Imh0dHA6Ly93d3cuaW5rc2NhcGUub3JnL25hbWVzcGFjZXMvaW5rc2NhcGUiIHhtbG5zOnNvZGlwb2RpPSJodHRwOi8vc29kaXBvZGkuc291cmNlZm9yZ2UubmV0L0RURC9zb2RpcG9kaS0wLmR0ZCIgeG1sbnM9Imh0dHA6Ly93d
     3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczpzdmc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiIHhtbG5zOmNjPSJodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9ucyMiIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgd2lkdGg9IjEwOCIgaGVpZ2h0PSIxMDgiIHZpZXdCb3g9IjAgMCAxMDggMTA4IiByb2xlPSJpbWciIHZlcnNpb24
@@ -74,7 +74,7 @@
   <finalclass>Brand</finalclass>
   <friendlyname>Dell</friendlyname>
 </Brand>
-<Brand alias="Brand" id="6">
+<Brand alias="Brand" id="7">
   <name>HP Inc</name>
   <logo><mimetype>image/svg+xml</mimetype><filename>icons8-hp.svg</filename><data>PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDggNDgiIHdpZHRoPSI0OHB4IiBoZWlnaHQ9IjQ4cHgiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0yNCA0QTIwIDIwIDAgMSAwIDI0IDQ0QTIwIDIwIDAgMSAwIDI0IDRaIi8+PHBhdGggZmlsbD0iIzE5NzZkMiIgZD0iTTI0LDQzLj
     k5N2MtMC4xOTksMC0wLjY1MiwwLjAwNi0wLjg1LDBsNC0xMC45OTloNS42MjVjMC45ODcsMCwyLjA3MS0wLjc1OSwyLjQwOS0xLjY4Nmw0Ljc0OC0xMi42ODdjMC43MjUtMS45OTUtMC40MTctMy42MjYtMi41MzktMy42MjZoLTcuODA0bC02LjUxOCwxOC4yNTdoLTAuMDAybC0zLjcxMiwxMC4xOThDMTAuNTUsNDEuMzYxLDQsMzMuNDQ1LDQsMjMuOTk5YzAtOS4xNzQsNi4xNzgtMTYuOTA1LDE0LjYtMTkuMjYxbC0zLjgzLDEwLjUyNmgtMC4wMDFMOC4xNSwzMi45OTho
@@ -82,7 +82,7 @@
   <finalclass>Brand</finalclass>
   <friendlyname>HP Inc</friendlyname>
 </Brand>
-<Brand alias="Brand" id="7">
+<Brand alias="Brand" id="1">
   <name>HPE</name>
   <logo><mimetype>image/svg+xml</mimetype><filename>icon-hpe.svg</filename><data>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcgeG1sbnM6aW5rc2NhcGU9Imh0dHA6Ly93d3cuaW5rc2NhcGUub3JnL25hbWVzcGFjZXMvaW5rc2NhcGUiIHhtbG5zOnNvZGlwb2RpPSJodHRwOi8vc29kaXBvZGkuc291cmNlZm9yZ2UubmV0L0RURC9zb2RpcG9kaS0wLmR0ZCIgeG1sbnM9Imh0dHA6Ly93d3c
     udzMub3JnLzIwMDAvc3ZnIiB4bWxuczpzdmc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjAiIGlkPSJrYXRtYW5fMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA2MzAgNjMwIiB4bWw6c3BhY2U9InByZXNlcnZlIiBzb2RpcG9kaTpkb2NuYW1lPSJpY29uLWhwZS5zdmciIHdpZHRoPSI2MzAiIGhlaWdodD0iNjMwIiBpbmtzY2FwZTp2ZXJzaW9uPSIxLjQuMyAoMGQxNWY3NTA0MiwgMjAyNS0xMi0yNSkiPjxkZWZzIGlkPSJkZWZzM
@@ -117,7 +117,7 @@
   <finalclass>Brand</finalclass>
   <friendlyname>Lenovo</friendlyname>
 </Brand>
-<Brand alias="Brand" id="10">
+<Brand alias="Brand" id="4">
   <name>Razer</name>
   <logo><mimetype>image/svg+xml</mimetype><filename>icons8-razer.svg</filename><data>PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDggNDgiIHdpZHRoPSI0OHB4IiBoZWlnaHQ9IjQ4cHgiPjxwYXRoIGZpbGw9IiM2NGRkMTciIGQ9Ik0yNiwyMGMwLjEsMCwwLjIsMCwwLjMsMGMwLjMtMC4xLDAuNS0wLjMsMC42LTAuNWMwLjEtMC4yLDAuMS0wLjUsMC4xLTA
     uOGMtMC4yLTAuNi0xLTEuOC0yLTIuNCBjMCwwLjcsMCwxLjMsMCwxLjljMCwwLjUsMCwxLDAsMS4yYzAuMSwwLjIsMC4zLDAuNCwwLjUsMC42QzI1LjcsMjAsMjUuOCwyMCwyNiwyMCBNMjkuNCwyM2MwLjcsMCwxLjYtMC4xLDIuMy0wLjUgYy0wLjUtMC4zLTEtMC42LTEuNS0wLjljLTAuNC0wLjMtMC45LTAuNi0xLjEtMC42YzAsMC0wLjEsMC0wLjEsMGMtMC4yLDAtMC40LDAuMS0wLjYsMC4yYy0wLjIsMC4xLTAuNCwwLjQtMC40LDAuNiBjLTAuMSwwLjUsMC4zLDEuM

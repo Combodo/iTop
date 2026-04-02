@@ -1158,6 +1158,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:NetworkDeviceType' => 'Typ sieťového zariadenia',
 	'Class:NetworkDeviceType+' => '~~',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Sieťové zariadenia',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'All the network devices corresponding to this type~~',
 ]);

@@ -1160,6 +1160,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:NetworkDeviceType' => 'Typ síťového zařízení',
 	'Class:NetworkDeviceType+' => '',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Síťová zařízení',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Všechna síťová zařízení odpovídající tomuto typu',
 ]);

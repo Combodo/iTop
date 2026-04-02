@@ -1159,6 +1159,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:NetworkDeviceType' => 'Тип сетевого устройства',
 	'Class:NetworkDeviceType+' => '',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Устройства',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Все сетевые устройства этого типа',
 ]);

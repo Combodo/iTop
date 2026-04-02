@@ -1159,6 +1159,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:NetworkDeviceType' => 'Ağ Cihazı Tipi',
 	'Class:NetworkDeviceType+' => '~~',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Ağ Aygıtları',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Bu türde karşılık gelen tüm ağ aygıtları',
 ]);

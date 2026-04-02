@@ -1179,6 +1179,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:NetworkDeviceType' => 'Tipo di Dispositivo di Rete',
 	'Class:NetworkDeviceType+' => '~~',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Dispositivi di Rete',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Tutti i dispositivi di rete corrispondenti a questo tipo',
 ]);

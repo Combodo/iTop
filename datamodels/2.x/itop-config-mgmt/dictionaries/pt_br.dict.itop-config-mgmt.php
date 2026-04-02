@@ -1158,6 +1158,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:NetworkDeviceType' => 'Tipo de dispositivo de rede',
 	'Class:NetworkDeviceType+' => '',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Dispositivos de rede',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Todos os Dispositivos de rede correspondentes a este Tipo',
 ]);
