@@ -188,19 +188,6 @@ class MFCompiler
 	}
 
 	/**
-	 * @return bool if flag is present true, false otherwise
-	 *
-	 * @uses \file_exists()
-	 * @uses USE_SYMBOLIC_LINKS_FILE_PATH
-	 *
-	 * @since 3.0.0 N°4092
-	 */
-	public static function IsUseSymbolicLinksFlagPresent(): bool
-	{
-		return (file_exists(static::USE_SYMBOLIC_LINKS_FILE_PATH));
-	}
-
-	/**
 	 * This is to check if the functionality can be used. As this is really only useful for developers,
 	 * this is strictly limited and not available on any iTop instance !
 	 *
@@ -214,17 +201,22 @@ class MFCompiler
 	 *
 	 * @since 3.0.0 N°4092
 	 */
-	public static function CanUseSymbolicLinksFlagBeUsed(): bool
+	public static function CanUseSymbolicLinks(): bool
 	{
-		if (false === utils::IsDevelopmentEnvironment()) {
-			return false;
-		}
+		return utils::IsDevelopmentEnvironment();
+	}
 
-		if (false === function_exists('symlink')) {
-			return false;
-		}
-
-		return true;
+	/**
+	 * @return bool if flag is present true, false otherwise
+	 *
+	 * @uses \file_exists()
+	 * @uses USE_SYMBOLIC_LINKS_FILE_PATH
+	 *
+	 * @since 3.0.0 N°4092
+	 */
+	public static function UseSymbolicLinks(): bool
+	{
+		return (file_exists(static::USE_SYMBOLIC_LINKS_FILE_PATH));
 	}
 
 	/**
@@ -236,7 +228,7 @@ class MFCompiler
 	 */
 	public static function SetUseSymbolicLinksFlag(bool $bUseSymbolicLinks): void
 	{
-		$bIsUseSymlinksFlagPresent = (static::IsUseSymbolicLinksFlagPresent());
+		$bIsUseSymlinksFlagPresent = self::UseSymbolicLinks();
 
 		if ($bUseSymbolicLinks) {
 			if ($bIsUseSymlinksFlagPresent) {
@@ -283,7 +275,7 @@ class MFCompiler
 	{
 		if (is_null($bUseSymbolicLinks)) {
 			$bUseSymbolicLinks = false;
-			if (self::CanUseSymbolicLinksFlagBeUsed() && self::IsUseSymbolicLinksFlagPresent()) {
+			if (self::CanUseSymbolicLinks() && self::UseSymbolicLinks()) {
 				// We are only overriding the useSymLinks option if the consumer didn't specify anything
 				// The toolkit always send this parameter for example, but not the Designer Connector
 				$bUseSymbolicLinks = true;

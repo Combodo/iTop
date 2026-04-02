@@ -17,6 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
@@ -38,6 +39,7 @@ class WizStepUpgradeMiscParams extends AbstractWizStepMiscParams
 	{
 		$this->oWizard->SaveParameter('application_url', '');
 		$this->oWizard->SaveParameter('graphviz_path', '');
+		$this->oWizard->SaveParameter('use-symbolic-links', MFCompiler::UseSymbolicLinks());
 		$this->oWizard->SaveParameter('force-uninstall', false);
 		return new WizardState(WizStepModulesChoice::class, 'start_upgrade');
 	}
