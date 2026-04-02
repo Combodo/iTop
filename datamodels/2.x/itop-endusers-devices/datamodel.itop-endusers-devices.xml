@@ -196,7 +196,7 @@
             <item id="col:col1">
               <rank>10</rank>
               <items>
-                <item id="fieldset:Server:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -241,25 +241,25 @@
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
-                      <rank>110</rank>
+                      <rank>10</rank>
                     </item>
                     <item id="purchase_date">
-                      <rank>120</rank>
+                      <rank>20</rank>
                     </item>
                     <item id="end_of_warranty">
-                      <rank>130</rank>
+                      <rank>30</rank>
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <rank>20</rank>
                   <items>
                     <item id="description">
-                      <rank>140</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                 </item>
@@ -407,7 +407,7 @@
             <item id="col:col1">
               <rank>10</rank>
               <items>
-                <item id="fieldset:Server:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -458,25 +458,25 @@
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
-              <rank>130</rank>
+                      <rank>10</rank>
                     </item>
                     <item id="purchase_date">
-              <rank>140</rank>
+                      <rank>20</rank>
                     </item>
                     <item id="end_of_warranty">
-                      <rank>150</rank>
+                      <rank>30</rank>
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <rank>20</rank>
                   <items>
                     <item id="description">
-                      <rank>160</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                 </item>
@@ -616,7 +616,7 @@
             <item id="col:col1">
               <rank>10</rank>
               <items>
-                <item id="fieldset:Server:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -661,25 +661,25 @@
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
-              <rank>110</rank>
+                      <rank>10</rank>
                     </item>
                     <item id="purchase_date">
-              <rank>120</rank>
+                        <rank>20</rank>
                     </item>
                     <item id="end_of_warranty">
-                      <rank>130</rank>
+                      <rank>30</rank>
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <rank>20</rank>
                   <items>
                     <item id="description">
-                      <rank>140</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                 </item>
@@ -815,7 +815,7 @@
             <item id="col:col1">
               <rank>10</rank>
               <items>
-                <item id="fieldset:Server:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -857,25 +857,25 @@
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
-              <rank>100</rank>
+                      <rank>10</rank>
                     </item>
                     <item id="purchase_date">
-              <rank>110</rank>
+                      <rank>20</rank>
                     </item>
                     <item id="end_of_warranty">
-                      <rank>120</rank>
+                      <rank>30</rank>
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <rank>20</rank>
                   <items>
                     <item id="description">
-                      <rank>130</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                 </item>
@@ -1061,7 +1061,7 @@
             <item id="col:col1">
               <rank>10</rank>
               <items>
-                <item id="fieldset:Server:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -1118,7 +1118,7 @@
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
@@ -1132,7 +1132,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <rank>20</rank>
                   <items>
                     <item id="description">
@@ -1282,7 +1282,7 @@
             <item id="col:col1">
               <rank>10</rank>
               <items>
-                <item id="fieldset:Server:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -1324,7 +1324,7 @@
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
@@ -1338,7 +1338,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <rank>20</rank>
                   <items>
                     <item id="description">
@@ -1482,7 +1482,7 @@
             <item id="col:col1">
               <rank>10</rank>
               <items>
-                <item id="fieldset:Server:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -1524,25 +1524,25 @@
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
-              <rank>100</rank>
+                      <rank>10</rank>
                     </item>
                     <item id="purchase_date">
-              <rank>110</rank>
+                      <rank>20</rank>
                     </item>
                     <item id="end_of_warranty">
-                      <rank>120</rank>
+                      <rank>30</rank>
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <rank>20</rank>
                   <items>
                     <item id="description">
-                      <rank>130</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                 </item>

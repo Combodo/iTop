@@ -182,7 +182,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:Container:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -193,7 +193,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:Container:moreinfo">
+                <item id="fieldset:Software:moreinfo">
                   <items>
                     <item id="publisher">
                       <rank>10</rank>
@@ -215,10 +215,10 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:Container:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="description">
-                      <rank>60</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>
@@ -392,7 +392,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:Container:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -425,19 +425,24 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:Container:otherinfo">
+                <item id="fieldset:ConfigMgmt:dates">
                   <items>
                     <item id="move2production">
-                      <rank>50</rank>
-                    </item>
-                    <item id="logo">
-                      <rank>60</rank>
-                    </item>
-                    <item id="description">
-                      <rank>70</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>
@@ -936,7 +941,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:Container:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -975,16 +980,21 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:Container:otherinfo">
+                <item id="fieldset:ConfigMgmt:dates">
                   <items>
                     <item id="move2production">
-                      <rank>50</rank>
-                    </item>
-                    <item id="description">
-                      <rank>60</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>
@@ -1143,7 +1153,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:Container:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -1173,16 +1183,21 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:Container:otherinfo">
+                <item id="fieldset:ConfigMgmt:dates">
                   <items>
                     <item id="move2production">
-                      <rank>50</rank>
-                    </item>
-                    <item id="description">
-                      <rank>60</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>

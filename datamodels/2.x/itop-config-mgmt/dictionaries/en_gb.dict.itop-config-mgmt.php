@@ -1552,7 +1552,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 Dict::Add('EN GB', 'British English', 'British English', [
 	'ConfigMgmt:baseinfo' => 'General',
 	'ConfigMgmt:moreinfo' => 'CI specifics',
-	'ConfigMgmt:otherinfo' => 'Dates and description',
+	'ConfigMgmt:otherinfo' => 'Description',
+	'ConfigMgmt:dates' => 'Dates',
 	'Storage:moreinfo' => 'Storage specifics',
 	'Software:moreinfo' => 'Software specifics~~',
 	'Phone:moreinfo' => 'Phone specifics~~',
