@@ -191,6 +191,8 @@ class ApplicationInstallSequencer extends StepSequencer
 
 		$this->oRunTimeEnvironment->UpdateDBSchema($oConfig, $sMode, $aSelectedModules);
 
+		$oConfig->Set('access_mode', ACCESS_FULL);
+
 		// Set a DBProperty with a unique ID to identify this instance of iTop
 		$sUUID = DBProperty::GetProperty('database_uuid', '');
 		if ($sUUID === '') {
