@@ -167,7 +167,8 @@ class RunTimeEnvironment
 		}
 
 		if (! isset($_SESSION)) {
-			$_SESSION = [];
+			Session::$bAllowCLI = true;
+			Session::Start();
 		}
 		Session::Set('itop_env', $this->sBuildEnv);
 
@@ -1024,6 +1025,10 @@ class RunTimeEnvironment
 			@rmdir(dirname($sBuildConfig)); // Cleanup the temporary build dir if empty
 
 			MetaModel::ResetAllCaches($this->sFinalEnv);
+			if (! isset($_SESSION)) {
+				Session::$bAllowCLI = true;
+				Session::Start();
+			}
 			Session::Set('itop_env', $this->sFinalEnv);
 		}
 	}

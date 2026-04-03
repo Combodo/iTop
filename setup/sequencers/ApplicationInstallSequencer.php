@@ -175,11 +175,14 @@ class ApplicationInstallSequencer extends StepSequencer
 	}
 
 	/**
+	 * @param \Config $oConfig
 	 * @param $aSelectedModules
 	 *
-	 * @throws \ConfigException
 	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	protected function DoUpdateDBSchema(Config $oConfig, $aSelectedModules)
 	{

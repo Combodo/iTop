@@ -68,12 +68,10 @@ class WizStepInstall extends AbstractWizStepInstall
 		$oPage->add('</div>'); // progress_content
 		$oPage->add('</fieldset>');
 		$oPage->add("<div class=\"message message-error ibo-is-html-content\" style=\"display:none;\" id=\"setup_error\"></div>");
-
 	}
 
 	public function Display(WebPage $oPage)
 	{
-
 		$aInstallParams = $this->BuildConfig();
 		$this->AddProgressBar($oPage, 'Progress of the installation');
 
@@ -91,27 +89,10 @@ JS);
 			return;
 		}
 
-		//When the setup reach this step, it already checked whether extensions were uninstallable (during WizStepModulesChoice). We only need to log what has been done.
-		if ($this->oWizard->GetParameter('force-uninstall', false)) {
-			SetupLog::Warning("User disabled uninstallation checks");
-		}
-		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('removed_extensions'), true) ?? [];
-		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable'));
-		$aExtensionsForceUninstalled = [];
-		foreach ($aExtensionsRemoved as $sExtensionCode => $sLabel) {
-			if (in_array($sExtensionCode, $aExtensionsNotUninstallable)) {
-				$aExtensionsForceUninstalled[] = $sExtensionCode;
-			}
-		}
-		if (count($aExtensionsForceUninstalled)) {
-			SetupLog::Warning("Extensions uninstalled forcefully : ".implode(',', $aExtensionsForceUninstalled));
-		}
-
 		$oPage->add_ready_script(<<<JS
 	$("#wiz_form").data("installation_status", "not started");
 	ExecuteStep("");
 JS);
-
 	}
 
 	/**
@@ -126,7 +107,7 @@ JS);
 		/** @var StepSequencer $oInstaller */
 		$oInstaller = new (static::SequencerClass)($oParameters);
 		$aRes = $oInstaller->ExecuteStep($sStep);
-		if (($aRes['status'] != $oInstaller::ERROR) && ($aRes['next-step'] != '')) {
+		if (($aRes['status'] !== StepSequencer::ERROR) && ($aRes['next-step'] != '')) {
 			// Tell the web page to move the progress bar and to launch the next step
 			$sMessage = addslashes(utils::EscapeHtml($aRes['next-step-label']));
 			$oPage->add_ready_script(
@@ -140,7 +121,7 @@ JS);
 	ExecuteStep('{$aRes['next-step']}');
 EOF
 			);
-		} elseif ($aRes['status'] != $oInstaller::ERROR) {
+		} elseif ($aRes['status'] !== StepSequencer::ERROR) {
 			// Installation complete, move to the next step of the wizard
 			$oPage->add_ready_script(
 				<<<EOF

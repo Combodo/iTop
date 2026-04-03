@@ -149,8 +149,7 @@ class WizardController
 	{
 		$sCurrentStepClass = utils::ReadParam('_class', $this->sInitialStepClass);
 		$sCurrentState = utils::ReadParam('_state', $this->sInitialState);
-		/** @var \WizardStep $oStep */
-		$oStep = $oStep = $this->GetWizardStep($sCurrentStepClass, $sCurrentState);
+		$oStep = $this->GetWizardStep($sCurrentStepClass, $sCurrentState);
 		if ($oStep->ValidateParams()) {
 			if ($oStep->CanComeBack()) {
 				$this->PushStep(['class' => $sCurrentStepClass, 'state' => $sCurrentState]);
@@ -177,7 +176,7 @@ class WizardController
 		$sCurrentStepClass = utils::ReadParam('_class', $this->sInitialStepClass);
 		$sCurrentState = utils::ReadParam('_state', $this->sInitialState);
 		$oStep = $this->GetWizardStep($sCurrentStepClass, $sCurrentState);
-		$oWizardState = $oStep->UpdateWizardStateAndGetNextStep(false); // false => Moving backwards
+		$oStep->UpdateWizardStateAndGetNextStep(false); // false => Moving backwards
 
 		// Display the previous step
 		$aCurrentStepInfo = $this->PopStep();
