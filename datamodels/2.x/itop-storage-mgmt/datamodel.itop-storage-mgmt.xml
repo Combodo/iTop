@@ -1983,6 +1983,18 @@
                 <rank>3</rank>
                 <class>LogicalVolume</class>
               </dashlet>
+              <dashlet id="FiberChannelInterface" xsi:type="DashletBadge" _delta="define">
+                <rank>1.3</rank>
+                <class>FiberChannelInterface</class>
+              </dashlet>
+              <dashlet id="NASFileSystem" xsi:type="DashletBadge" _delta="define">
+                <rank>3.3</rank>
+                <class>NASFileSystem</class>
+              </dashlet>
+              <dashlet id="Tape" xsi:type="DashletBadge" _delta="define">
+                <rank>3.5</rank>
+                <class>Tape</class>
+              </dashlet>
             </dashlets>
           </cell>
         </cells>
