@@ -88,7 +88,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 	 */
 	protected function GetSourceEnvironment(): string
 	{
-		return ITOP_DEFAULT_ENV;
+		return 'production';
 	}
 
 	/**
