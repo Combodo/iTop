@@ -109,6 +109,16 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
+        <field id="groups_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkGroupToCI</linked_class>
+          <ext_key_to_me>functionalci_id</ext_key_to_me>
+          <ext_key_to_remote>group_id</ext_key_to_remote>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <duplicates>false</duplicates>
+          <filter>SELECT Group WHERE status = 'active'</filter>
+          <display_style>property</display_style>
+        </field>
       </fields>
       <presentation>
         <details>
@@ -907,6 +917,9 @@
             <item id="fiberinterfacelist_list">
               <rank>220</rank>
             </item>
+            <item id="groups_list">
+              <rank>230</rank>
+            </item>
           </items>
         </details>
         <default_search>
@@ -1164,6 +1177,9 @@
                   <items>
                     <item id="description">
                       <rank>10</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
                     </item>
                   </items>
                 </item>
@@ -1554,6 +1570,9 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -1794,8 +1813,11 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
-                    <item id="logo">
+                    <item id="groups_list">
                       <rank>20</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>30</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -1987,8 +2009,11 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
-                    <item id="logo">
+                    <item id="groups_list">
                       <rank>20</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>30</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -2385,6 +2410,9 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
+                    </item>
                   </items>
                   <rank>20</rank>
                 </item>
@@ -2568,6 +2596,9 @@
                   <items>
                     <item id="description">
                       <rank>10</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -2753,6 +2784,9 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
+                    </item>
                   </items>
                   <rank>20</rank>
                 </item>
@@ -2929,6 +2963,9 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
+                    </item>
                   </items>
                   <rank>20</rank>
                 </item>
@@ -3091,6 +3128,9 @@
                   <items>
                     <item id="description">
                       <rank>10</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -3266,8 +3306,11 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
-                    <item id="logo">
+                    <item id="groups_list">
                       <rank>20</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>30</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -3435,6 +3478,9 @@
                   <items>
                     <item id="description">
                       <rank>10</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -3622,8 +3668,11 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
-                    <item id="logo">
+                    <item id="groups_list">
                       <rank>20</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>30</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -3800,6 +3849,16 @@
           <storage_max_height>128</storage_max_height>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="end_of_support" xsi:type="AttributeDate">
+          <sql>end_of_support</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="end_of_life" xsi:type="AttributeDate">
+          <sql>end_of_life</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="softwareinstance_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwareInstance</linked_class>
           <ext_key_to_me>software_id</ext_key_to_me>
@@ -3855,13 +3914,21 @@
             </item>
             <item id="col:col2">
               <items>
+                <item id="fieldset:ConfigMgmt:dates">
+                  <items>
+                    <item id="end_of_support">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
                 <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="logo">
                       <rank>20</rank>
                     </item>
                   </items>
-                  <rank>10</rank>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>
@@ -5320,6 +5387,16 @@
           <storage_max_height>512</storage_max_height>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="end_of_support" xsi:type="AttributeDate">
+          <sql>end_of_support</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="end_of_life" xsi:type="AttributeDate">
+          <sql>end_of_life</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="type" xsi:type="AttributeEnum">
           <sort_type>label</sort_type>
           <values>
@@ -5402,6 +5479,9 @@
             <item id="brand_id">
               <rank>20</rank>
             </item>
+            <item id="end_of_support">
+              <rank>25</rank>
+            </item>
             <item id="picture">
               <rank>30</rank>
             </item>
@@ -5465,6 +5545,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
+        <fields_semantic>
+          <image_attribute>logo</image_attribute>
+        </fields_semantic>
         <style>
           <icon/>
         </style>
@@ -6984,6 +7067,9 @@
                   <items>
                     <item id="comment">
                       <rank>10</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
                     </item>
                   </items>
                   <rank>10</rank>

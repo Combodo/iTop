@@ -103,6 +103,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => 'medium',
 	'Class:FunctionalCI/Attribute:move2production' => 'Move to production date',
 	'Class:FunctionalCI/Attribute:move2production+' => '',
+	'Class:FunctionalCI/Attribute:groups_list' => 'Groups',
+	'Class:FunctionalCI/Attribute:groups_list+' => 'Groups can be used as tags, to document environment, projects (migration, upgrade, security), etc…',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Contacts',
 	'Class:FunctionalCI/Attribute:contacts_list+' => 'All the contacts for this configuration item',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Documents',

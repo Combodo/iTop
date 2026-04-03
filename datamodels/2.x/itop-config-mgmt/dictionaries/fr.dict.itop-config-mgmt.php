@@ -87,6 +87,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => 'moyenne',
 	'Class:FunctionalCI/Attribute:move2production' => 'Date de mise en production',
 	'Class:FunctionalCI/Attribute:move2production+' => '',
+	'Class:FunctionalCI/Attribute:groups_list' => 'Groupes',
+	'Class:FunctionalCI/Attribute:groups_list+' => 'Les groupes sont des sortes d\étiquettes qui permettent d\identifier des environnements de travail, l\'appartenance à des projets ou les équipements qui doivent être mise à jour, déplacés, remplacés, etc…',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Contacts',
 	'Class:FunctionalCI/Attribute:contacts_list+' => 'Tous les contacts de cet élément de configuration',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Documents',

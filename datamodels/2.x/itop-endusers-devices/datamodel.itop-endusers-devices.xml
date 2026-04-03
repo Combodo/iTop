@@ -90,6 +90,9 @@
             <item id="documents_list">
               <rank>160</rank>
             </item>
+            <item id="groups_list">
+              <rank>170</rank>
+            </item>
           </items>
         </details>
         <search>
@@ -260,6 +263,9 @@
                   <items>
                     <item id="description">
                       <rank>10</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
                     </item>
                   </items>
                 </item>
@@ -478,6 +484,9 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -681,6 +690,9 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -876,6 +888,9 @@
                   <items>
                     <item id="description">
                       <rank>10</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
                     </item>
                   </items>
                 </item>
@@ -1138,6 +1153,9 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -1344,6 +1362,9 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -1543,6 +1564,9 @@
                   <items>
                     <item id="description">
                       <rank>10</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
                     </item>
                   </items>
                 </item>

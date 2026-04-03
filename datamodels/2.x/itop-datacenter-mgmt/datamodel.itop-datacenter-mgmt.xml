@@ -109,13 +109,13 @@
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
-                      <rank>110</rank>
+                      <rank>10</rank>
                     </item>
                     <item id="purchase_date">
-                      <rank>120</rank>
+                      <rank>20</rank>
                     </item>
                     <item id="end_of_warranty">
-                      <rank>130</rank>
+                      <rank>30</rank>
                     </item>
                   </items>
                 </item>
@@ -123,7 +123,10 @@
                   <rank>20</rank>
                   <items>
                     <item id="description">
-                      <rank>140</rank>
+                      <rank>10</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
                     </item>
                   </items>
                 </item>
@@ -358,6 +361,9 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -565,6 +571,9 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -767,6 +776,9 @@
                   <items>
                     <item id="description">
                       <rank>10</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
                     </item>
                   </items>
                 </item>
@@ -996,6 +1008,9 @@
                   <items>
                     <item id="description">
                       <rank>10</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
                     </item>
                   </items>
                 </item>

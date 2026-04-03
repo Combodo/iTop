@@ -421,6 +421,9 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
+                    </item>
                   </items>
                   <rank>20</rank>
                 </item>
@@ -597,6 +600,9 @@
                     <items>
                       <item id="description">
                         <rank>10</rank>
+                      </item>
+                      <item id="groups_list">
+                        <rank>20</rank>
                       </item>
                     </items>
                     <rank>20</rank>
@@ -864,6 +870,9 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -1020,6 +1029,9 @@
                 <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="comment">
+                      <rank>20</rank>
+                    </item>
+                    <item id="groups_list">
                       <rank>20</rank>
                     </item>
                   </items>
@@ -1253,8 +1265,11 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
-                    <item id="logo">
+                    <item id="groups_list">
                       <rank>20</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>30</rank>
                     </item>
                   </items>
                   <rank>20</rank>
