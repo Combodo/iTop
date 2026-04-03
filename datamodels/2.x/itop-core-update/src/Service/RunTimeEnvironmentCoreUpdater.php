@@ -25,7 +25,7 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 	 *
 	 * @throws \Exception
 	 */
-	public function __construct($sEnvironment = 'production', $bAutoCommit = true)
+	public function __construct($sEnvironment = ITOP_DEFAULT_ENV, $bAutoCommit = true)
 	{
 		parent::__construct($sEnvironment, $bAutoCommit);
 
@@ -83,7 +83,7 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 	{
 		// Clone the default 'production' config file
 		//
-		$oConfig = clone($this->GetConfig('production'));
+		$oConfig = clone($this->GetConfig(ITOP_DEFAULT_ENV));
 
 		$oConfig->UpdateIncludes('env-'.$this->sBuildEnv);
 

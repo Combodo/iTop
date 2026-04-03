@@ -92,7 +92,7 @@ class RunTimeEnvironment
 	 * @param string $sEnvironment (e.g. 'test')
 	 * @param bool $bAutoCommit (make the final environment directly, or build a temporary one)
 	 */
-	public function __construct($sEnvironment = 'production', $bAutoCommit = true)
+	public function __construct($sEnvironment = ITOP_DEFAULT_ENV, $bAutoCommit = true)
 	{
 		$this->sFinalEnv = $sEnvironment;
 		if ($bAutoCommit) {
@@ -167,10 +167,10 @@ class RunTimeEnvironment
 		}
 
 		if (! isset($_SESSION)) {
-			Session::$bAllowCLI = true;
-			Session::Start();
+			//used in all UI setups (not unattended)
+			session_start();
 		}
-		Session::Set('itop_env', $this->sBuildEnv);
+		$_SESSION['itop_env'] = $this->sBuildEnv;
 
 		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache, false, $this->sBuildEnv);
 		self::$bMetamodelStarted = true;
@@ -1024,12 +1024,11 @@ class RunTimeEnvironment
 			@chmod($sFinalConfig, 0440); // Read-only for owner and group, nothing for others
 			@rmdir(dirname($sBuildConfig)); // Cleanup the temporary build dir if empty
 
-			MetaModel::ResetAllCaches($this->sFinalEnv);
 			if (! isset($_SESSION)) {
-				Session::$bAllowCLI = true;
-				Session::Start();
+				//used in all UI setups (not unattended)
+				session_start();
 			}
-			Session::Set('itop_env', $this->sFinalEnv);
+			$_SESSION['itop_env'] = $this->sFinalEnv;
 		}
 	}
 
@@ -1318,7 +1317,7 @@ class RunTimeEnvironment
 
 	public function DataToCleanupAudit()
 	{
-		$oSetupAudit = new SetupAudit('production', $this->sBuildEnv);
+		$oSetupAudit = new SetupAudit(ITOP_DEFAULT_ENV, $this->sBuildEnv);
 
 		//Make sure the MetaModel is started before analysing for issues
 		$sConfFile = utils::GetConfigFilePath($this->sBuildEnv);
@@ -1333,7 +1332,7 @@ class RunTimeEnvironment
 
 	public function CopySetupFiles(): void
 	{
-		$sSourceEnv = 'production';
+		$sSourceEnv = ITOP_DEFAULT_ENV;
 		$sDestinationEnv = $this->sBuildEnv;
 
 		if ($sDestinationEnv != $sSourceEnv) {
@@ -1347,10 +1346,6 @@ class RunTimeEnvironment
 				chmod($sFinalConfig, 0770); // In case it exists: RWX for owner and group, nothing for others
 			}
 			SetupUtils::copydir(APPCONF.$sSourceEnv, APPCONF.$sDestinationEnv);
-			if (is_file($sFinalConfig)) {
-				chmod($sFinalConfig, 0440); // Read-only for owner and group, nothing for others
-			}
-
 			MetaModel::ResetAllCaches($sDestinationEnv);
 		}
 	}
@@ -1456,7 +1451,7 @@ class RunTimeEnvironment
 			SetupUtils::tidydir($sBuildPath);
 		}
 
-		$oExtensionsMap = new iTopExtensionsMap('production', $aDirsToScan);
+		$oExtensionsMap = new iTopExtensionsMap(ITOP_DEFAULT_ENV, $aDirsToScan);
 		// Removed modules are stored as static for FindModules()
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 

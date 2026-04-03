@@ -41,7 +41,7 @@ class iTopExtensionsMap
 	 * @param bool $bNormailizeOldExtension true to "magically" convert some well-known old extensions (i.e. a set of modules) to the new iTopExtension format
 	 * @return void
 	 */
-	public function __construct($sFromEnvironment = 'production', $aExtraDirs = [])
+	public function __construct($sFromEnvironment = ITOP_DEFAULT_ENV, $aExtraDirs = [])
 	{
 		$this->aExtensions = [];
 		$this->aExtensionsByCode = [];

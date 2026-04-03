@@ -31,7 +31,7 @@ class TransactionsTest extends ItopTestCase
 		parent::setUp();
 		require_once('DeadLockInjection.php');
 		$this->RequireOnceItopFile('/core/cmdbsource.class.inc.php');
-		$sEnv = 'production';
+		$sEnv = ITOP_DEFAULT_ENV;
 		$sConfigFile = APPCONF.$sEnv.'/config-itop.php';
 
 		MetaModel::Startup($sConfigFile, false, true, false, $sEnv);

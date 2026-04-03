@@ -915,7 +915,7 @@ class SetupUtils
 			$aResult['found'] = true;
 		} elseif (file_exists($sDir.'/conf/production/config-itop.php')) {
 			$sSourceDir = $sDir;
-			$sSourceEnvironment = 'production';
+			$sSourceEnvironment = ITOP_DEFAULT_ENV;
 			$sConfigFile = $sDir.'/conf/production/config-itop.php';
 			$aResult['found'] = true;
 		}
@@ -1586,7 +1586,7 @@ JS
 		}
 		$oProductionEnv = new RunTimeEnvironment();
 		$aRemovedExtensionCodes = json_decode($oWizard->GetParameter('removed_extensions'), true) ?? [];
-		$oExtensionsMap = new iTopExtensionsMap('production', $aDirsToScan);
+		$oExtensionsMap = new iTopExtensionsMap(ITOP_DEFAULT_ENV, $aDirsToScan);
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aDirsToScan, $bAbortOnMissingDependency, $aModulesToLoad);

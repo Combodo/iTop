@@ -149,9 +149,9 @@ try {
 			if (is_subclass_of($sClass, 'WizardStep')) {
 				/** @var WizardStep $oStep */
 				$oStep = new $sClass($oDummyController, $sState);
-				$sConfigFile = utils::GetConfigFilePath();
+				$sConfigFile = utils::GetConfigFilePath(ITOP_DEFAULT_ENV);
 				if (file_exists($sConfigFile) && !is_writable($sConfigFile) && $oStep->RequiresWritableConfig()) {
-					$sRelativePath = utils::GetConfigFilePathRelative();
+					$sRelativePath = utils::GetConfigFilePathRelative(ITOP_DEFAULT_ENV);
 					$oPage->error("<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.");
 					$oPage->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.");
 					$oPage->output();

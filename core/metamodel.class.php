@@ -130,7 +130,7 @@ abstract class MetaModel
 	/** @var array */
 	private static $m_aClassToFile = [];
 	/** @var string */
-	protected static $m_sEnvironment = 'production';
+	protected static $m_sEnvironment = ITOP_DEFAULT_ENV;
 
 	/**
 	 * Objects currently created/updated.
@@ -5748,7 +5748,7 @@ abstract class MetaModel
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \Exception
 	 */
-	public static function Startup($config, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false, $sEnvironment = 'production')
+	public static function Startup($config, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false, $sEnvironment = ITOP_DEFAULT_ENV)
 	{
 		// Startup on a new environment is not supported
 		static $bStarted = false;

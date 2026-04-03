@@ -86,7 +86,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	/**
 	 * @var string Default environment to use for test cases
 	 */
-	public const DEFAULT_TEST_ENVIRONMENT = 'production';
+	public const DEFAULT_TEST_ENVIRONMENT = ITOP_DEFAULT_ENV;
 	public const USE_TRANSACTION = true;
 	public const CREATE_TEST_ORG = false;
 

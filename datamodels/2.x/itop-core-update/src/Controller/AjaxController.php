@@ -246,10 +246,10 @@ class AjaxController extends Controller
 		$iResponseCode = 200;
 		try {
 			$aParams['sAjaxURL'] = utils::GetAbsoluteUrlAppRoot().'/pages/UI.php';
-			$oConfig = new Config(APPCONF.'production'.'/'.ITOP_CONFIG_FILE);
-			$oEnvironment = new RunTimeEnvironment('production');
+			$oConfig = new Config(APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE);
+			$oEnvironment = new RunTimeEnvironment(ITOP_DEFAULT_ENV);
 			$oEnvironment->WriteConfigFileSafe($oConfig);
-			$oEnvironment->CompileFrom('production');
+			$oEnvironment->CompileFrom(ITOP_DEFAULT_ENV);
 		} catch (Exception $e) {
 			IssueLog::Error('RebuildToolkitEnvironment: '.$e->getMessage());
 			$aParams['sError'] = $e->getMessage();

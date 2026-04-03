@@ -56,7 +56,7 @@ $sMode = $oParams->Get('mode');
 
 $sTargetEnvironment = $oParams->Get('target_env', '');
 if ($sTargetEnvironment == '') {
-	$sTargetEnvironment = 'production';
+	$sTargetEnvironment = ITOP_DEFAULT_ENV;
 }
 
 $sXmlSetupBaseName = basename($sParamFile);
@@ -218,7 +218,7 @@ if ($sMode == 'install') {
 	//use settings from itop conf
 	$sTargetEnvironment = $oParams->Get('target_env', '');
 	if ($sTargetEnvironment == '') {
-		$sTargetEnvironment = 'production';
+		$sTargetEnvironment = ITOP_DEFAULT_ENV;
 	}
 	$sTargetDir = APPROOT.'env-'.$sTargetEnvironment;
 }
@@ -271,6 +271,10 @@ $bFoundIssues = false;
 
 $bInstall = utils::ReadParam('install', true, true /* CLI allowed */);
 if ($bInstall) {
+	if (! isset($_SESSION)) {
+		$_SESSION = [];
+	}
+
 	echo "Starting the unattended installation...\n";
 	$oWizard = new DataAuditSequencer($oParams);
 	$bRes = $oWizard->ExecuteAllSteps();

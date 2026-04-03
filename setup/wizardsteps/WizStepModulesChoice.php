@@ -60,8 +60,8 @@ class WizStepModulesChoice extends WizardStep
 		$sConfigPath = null;
 		if (($sPreviousSourceDir !== '') && is_readable($sPreviousSourceDir.'/conf/production/config-itop.php')) {
 			$sConfigPath = $sPreviousSourceDir.'/conf/production/config-itop.php';
-		} elseif (is_readable(utils::GetConfigFilePath('production'))) {
-			$sConfigPath = utils::GetConfigFilePath('production');
+		} elseif (is_readable(utils::GetConfigFilePath(ITOP_DEFAULT_ENV))) {
+			$sConfigPath = utils::GetConfigFilePath(ITOP_DEFAULT_ENV);
 		}
 
 		// only called if the config file exists : we are updating a previous installation !

@@ -67,7 +67,6 @@ class ApplicationInstallSequencer extends StepSequencer
 
 				case 'backup':
 					if (array_key_exists('backup', $this->oParams->Get('optional_steps', []))) {
-
 						$aBackupOptions = $this->oParams->Get('optional_steps')['backup'];
 						// __DB__-%Y-%m-%d
 						$sDestination = $aBackupOptions['destination'];
@@ -136,7 +135,7 @@ class ApplicationInstallSequencer extends StepSequencer
 					return $this->GetNextStep('', "Unknown setup step '$sStep'.", 100, '', self::ERROR);
 			}
 		} catch (Exception $e) {
-			$this->ReportException($e);
+			SetupLog::Exception("$sStep failed", $e);
 			$aResult = $this->GetNextStep('', '', 100, $e->getMessage(), self::ERROR);
 			$aResult['error_code'] = $e->getCode();
 			return $aResult;

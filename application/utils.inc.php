@@ -961,7 +961,7 @@ class utils
 			return self::$oConfig;
 		}
 
-		$sProductionEnvConfigPath = self::GetConfigFilePath('production');
+		$sProductionEnvConfigPath = self::GetConfigFilePath(ITOP_DEFAULT_ENV);
 		if (file_exists($sProductionEnvConfigPath)) {
 			$oProductionEnvDiskConfig = new Config($sProductionEnvConfigPath);
 			self::SetConfig($oProductionEnvDiskConfig);

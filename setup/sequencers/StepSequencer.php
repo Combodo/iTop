@@ -159,24 +159,6 @@ abstract class StepSequencer
 		file_put_contents(APPROOT.'log/'.$sFileName.'.xml', $sSafeXml);
 	}
 
-	protected function ReportException(Exception $e)
-	{
-		SetupLog::Error('An exception occurred: '.$e->getMessage().' at line '.$e->getLine().' in file '.$e->getFile());
-		$idx = 0;
-		// Log the call stack, but not the parameters since they may contain passwords or other sensitive data
-		SetupLog::Ok('Call stack:');
-		foreach ($e->getTrace() as $aTrace) {
-			$sLine = empty($aTrace['line']) ? '' : $aTrace['line'];
-			$sFile = empty($aTrace['file']) ? '' : $aTrace['file'];
-			$sClass = empty($aTrace['class']) ? '' : $aTrace['class'];
-			$sType = empty($aTrace['type']) ? '' : $aTrace['type'];
-			$sFunction = empty($aTrace['function']) ? '' : $aTrace['function'];
-			$sVerb = empty($sClass) ? $sFunction : "$sClass{$sType}$sFunction";
-			SetupLog::Ok("#$idx $sFile($sLine): $sVerb(...)");
-			$idx++;
-		}
-	}
-
 	protected function GetConfig()
 	{
 		$sTargetEnvironment = $this->oRunTimeEnvironment->GetBuildEnv();

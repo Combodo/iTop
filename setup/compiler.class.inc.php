@@ -290,7 +290,7 @@ class MFCompiler
 		} else {
 			$oConfig = null;
 		}
-		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
+		if (($this->sEnvironment == ITOP_DEFAULT_ENV) && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
 			SetupUtils::EnterMaintenanceMode($oConfig);
 		}
 		if ($bUseSymbolicLinks || $bSkipTempDir) {
@@ -313,7 +313,7 @@ class MFCompiler
 				// Cleanup the temporary directory
 				SetupUtils::rrmdir($sTempTargetDir);
 			}
-			if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
+			if (($this->sEnvironment == ITOP_DEFAULT_ENV) && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
 				SetupUtils::ExitMaintenanceMode();
 			}
 			throw $e;
@@ -323,7 +323,7 @@ class MFCompiler
 			// Move the results to the target directory
 			SetupUtils::movedir($sTempTargetDir, $sFinalTargetDir);
 		}
-		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
+		if (($this->sEnvironment == ITOP_DEFAULT_ENV) && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
 			SetupUtils::ExitMaintenanceMode();
 		}
 

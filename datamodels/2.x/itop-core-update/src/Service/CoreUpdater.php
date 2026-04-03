@@ -89,7 +89,7 @@ final class CoreUpdater
 			// Compile code
 			SetupLog::Info('itop-core-update: Start checking compilation');
 
-			$sFinalEnv = 'production';
+			$sFinalEnv = ITOP_DEFAULT_ENV;
 			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sFinalEnv, false);
 			$oRuntimeEnv->CheckDirectories($sFinalEnv);
 			$oRuntimeEnv->CompileFrom($sFinalEnv);
@@ -117,10 +117,10 @@ final class CoreUpdater
 			// Compile code
 			SetupLog::Info('itop-core-update: Start compilation');
 
-			$sFinalEnv = 'production';
+			$sFinalEnv = ITOP_DEFAULT_ENV;
 			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sFinalEnv, true);
 			$oRuntimeEnv->CheckDirectories($sFinalEnv);
-			$oRuntimeEnv->CompileFrom('production');
+			$oRuntimeEnv->CompileFrom(ITOP_DEFAULT_ENV);
 
 			SetupLog::Info('itop-core-update: Compilation done');
 		} catch (Exception $e) {
@@ -142,7 +142,7 @@ final class CoreUpdater
 		try {
 			SetupLog::Info('itop-core-update: Start Update database');
 
-			$sFinalEnv = 'production';
+			$sFinalEnv = ITOP_DEFAULT_ENV;
 			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sFinalEnv, true);
 			$oConfig = $oRuntimeEnv->MakeConfigFile($sFinalEnv.' (built on '.date('Y-m-d').')');
 			$oConfig->Set('access_mode', ACCESS_FULL);

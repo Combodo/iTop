@@ -190,15 +190,16 @@ class WizardController
 	 */
 	protected function DisplayStep(WizardStep $oStep)
 	{
+		SetupLog::Info("=== Setup screen: ".$oStep->GetTitle().' ('.get_class($oStep).')');
 		$oPage = new SetupPage($oStep->GetTitle());
 		if ($oStep->RequiresWritableConfig()) {
-			$sConfigFile = utils::GetConfigFilePath();
+			$sConfigFile = utils::GetConfigFilePath(ITOP_DEFAULT_ENV);
 			if (file_exists($sConfigFile)) {
 				// The configuration file already exists
 				if (!is_writable($sConfigFile)) {
 					SetupUtils::ExitReadOnlyMode(false); // Reset readonly mode in case of problem
 					SetupUtils::EraseSetupToken();
-					$sRelativePath = utils::GetConfigFilePathRelative();
+					$sRelativePath = utils::GetConfigFilePathRelative(ITOP_DEFAULT_ENV);
 					$oP = new SetupPage('Installation Cannot Continue');
 					$oP->add("<h2>Fatal error</h2>\n");
 					$oP->error("<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.");
