@@ -192,7 +192,6 @@ $(function()
 			for (let i in oData.updated_fields)
 			{
 				const oUpdatedField = oData.updated_fields[i];
-				const oUpdatedField = oData.updated_fields[i];
 				const oPreviousField = this.options.fields_list[oUpdatedField.id];
 				if (!oPreviousField || JSON.stringify(oPreviousField) !== JSON.stringify(oUpdatedField)) {
 					this.options.fields_list[oUpdatedField.id] = oUpdatedField;
