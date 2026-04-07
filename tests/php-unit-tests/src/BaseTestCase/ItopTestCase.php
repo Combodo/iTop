@@ -727,6 +727,16 @@ abstract class ItopTestCase extends KernelTestCase
 	{
 		$sUrl = \MetaModel::GetConfig()->Get('app_root_url')."/$sUri";
 
+		// Add PHP version in header to be able to handle Docker dev environments with automatic PHP version detection (instead of hardcoding the PHP version in the app_root_url)
+		$sPhpVersion = PHP_VERSION;
+		$aPhpVersionParts = explode('.', $sPhpVersion);
+		$sPhpVersionHeaderValue = ($aPhpVersionParts[0] ?? '0').($aPhpVersionParts[1] ?? '0');
+		$aCurlOptions = $aCurlOptions ?? [];
+		$aCurlOptions[CURLOPT_HTTPHEADER] = array_merge(
+			$aCurlOptions[CURLOPT_HTTPHEADER] ?? [],
+			['X-PHP-Version: '.$sPhpVersionHeaderValue]
+		);
+
 		return $this->CallUrl($sUrl, $aPostFields, $aCurlOptions, $bXDebugEnabled);
 	}
 
