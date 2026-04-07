@@ -35,7 +35,7 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 		if ($index !== false) {
 			// Force login mode
 			Session::Set('login_mode', $sProposedLoginMode);
-		} else {
+		} elseif (!Session::IsSet('login_mode')) {
 			Session::Unset('login_mode');
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
