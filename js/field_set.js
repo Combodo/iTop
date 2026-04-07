@@ -189,11 +189,14 @@ $(function()
 			this.buildData.script_code = '';
 			this.buildData.style_code = '';
 
-			for (var i in oData.updated_fields)
+			for (let i in oData.updated_fields)
 			{
-				var oUpdatedField = oData.updated_fields[i];
-				this.options.fields_list[oUpdatedField.id] = oUpdatedField;
-				this._prepareField(oUpdatedField.id);
+				const oUpdatedField = oData.updated_fields[i];
+				const oPreviousField = this.options.fields_list[oUpdatedField.id];
+				if (!oPreviousField || JSON.stringify(oPreviousField) !== JSON.stringify(oUpdatedField)) {
+					this.options.fields_list[oUpdatedField.id] = oUpdatedField;
+					this._prepareField(oUpdatedField.id);
+				}
 			}
 
 			// Adding code to the dom
