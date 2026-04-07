@@ -746,6 +746,10 @@
           <extkey_attcode>osversion_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="os_end_of_support" xsi:type="AttributeExternalField">
+          <extkey_attcode>osversion_id</extkey_attcode>
+          <target_attcode>end_of_support</target_attcode>
+        </field>
         <field id="oslicence_id" xsi:type="AttributeExternalKey">
           <filter><![CDATA[SELECT OSLicence WHERE osversion_id = :this->osversion_id]]></filter>
           <dependencies>
@@ -861,6 +865,9 @@
                   <items>
                     <item id="move2production">
                       <rank>10</rank>
+                    </item>
+                    <item id="os_end_of_support">
+                      <rank>20</rank>
                     </item>
                   </items>
                 </item>

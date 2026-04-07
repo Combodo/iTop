@@ -136,6 +136,9 @@
                     <item id="end_of_warranty">
                       <rank>30</rank>
                     </item>
+                    <item id="model_end_of_support">
+                      <rank>40</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Server:power">
@@ -397,6 +400,9 @@
                     </item>
                     <item id="end_of_warranty">
                       <rank>30</rank>
+                    </item>
+                    <item id="model_end_of_support">
+                      <rank>40</rank>
                     </item>
                   </items>
                 </item>
@@ -660,6 +666,9 @@
                     <item id="end_of_warranty">
                       <rank>30</rank>
                     </item>
+                    <item id="model_end_of_support">
+                      <rank>40</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Server:power">
@@ -921,6 +930,9 @@
                     </item>
                     <item id="end_of_warranty">
                       <rank>30</rank>
+                    </item>
+                    <item id="model_end_of_support">
+                      <rank>40</rank>
                     </item>
                   </items>
                 </item>

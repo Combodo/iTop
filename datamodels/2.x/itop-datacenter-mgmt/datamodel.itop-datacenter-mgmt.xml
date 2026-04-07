@@ -117,6 +117,9 @@
                     <item id="end_of_warranty">
                       <rank>30</rank>
                     </item>
+                    <item id="model_end_of_support">
+                      <rank>40</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Server:otherinfo">
@@ -352,6 +355,9 @@
                     </item>
                     <item id="end_of_warranty">
                       <rank>30</rank>
+                    </item>
+                    <item id="model_end_of_support">
+                      <rank>40</rank>
                     </item>
                   </items>
                 </item>
@@ -769,6 +775,9 @@
                     <item id="end_of_warranty">
                         <rank>30</rank>
                     </item>
+                    <item id="model_end_of_support">
+                      <rank>40</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:ConfigMgmt:otherinfo">
@@ -1000,6 +1009,9 @@
                     </item>
                     <item id="end_of_warranty">
                         <rank>30</rank>
+                    </item>
+                    <item id="model_end_of_support">
+                      <rank>40</rank>
                     </item>
                   </items>
                 </item>

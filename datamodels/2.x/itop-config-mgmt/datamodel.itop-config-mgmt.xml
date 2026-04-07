@@ -396,6 +396,10 @@
           <extkey_attcode>model_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="model_end_of_support" xsi:type="AttributeExternalField">
+          <extkey_attcode>model_id</extkey_attcode>
+          <target_attcode>end_of_support</target_attcode>
+        </field>
         <field id="asset_number" xsi:type="AttributeString">
           <sql>asset_number</sql>
           <default_value/>
@@ -1069,6 +1073,10 @@
           <extkey_attcode>iosversion_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="ios_end_of_support" xsi:type="AttributeExternalField">
+          <extkey_attcode>iosversion_id</extkey_attcode>
+          <target_attcode>end_of_support</target_attcode>
+        </field>
         <field id="ram" xsi:type="AttributeString">
           <sql>ram</sql>
           <default_value/>
@@ -1155,6 +1163,12 @@
                     </item>
                     <item id="end_of_warranty">
                       <rank>30</rank>
+                    </item>
+                    <item id="model_end_of_support">
+                      <rank>40</rank>
+                    </item>
+                    <item id="ios_end_of_support">
+                      <rank>50</rank>
                     </item>
                   </items>
                 </item>
@@ -1401,6 +1415,10 @@
           <extkey_attcode>osversion_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="os_end_of_support" xsi:type="AttributeExternalField">
+          <extkey_attcode>osversion_id</extkey_attcode>
+          <target_attcode>end_of_support</target_attcode>
+        </field>
         <field id="oslicence_id" xsi:type="AttributeExternalKey">
           <filter><![CDATA[SELECT OSLicence WHERE osversion_id = :this->osversion_id]]></filter>
           <dependencies>
@@ -1547,6 +1565,12 @@
                     </item>
                     <item id="end_of_warranty">
                       <rank>30</rank>
+                    </item>
+                    <item id="model_end_of_support">
+                      <rank>40</rank>
+                    </item>
+                    <item id="os_end_of_support">
+                      <rank>50</rank>
                     </item>
                   </items>
                 </item>
@@ -2139,6 +2163,10 @@
           <extkey_attcode>software_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="software_end_of_support" xsi:type="AttributeExternalField">
+          <extkey_attcode>software_id</extkey_attcode>
+          <target_attcode>end_of_support</target_attcode>
+        </field>
         <field id="softwarelicence_id" xsi:type="AttributeExternalKey">
           <filter><![CDATA[SELECT SoftwareLicence WHERE software_id= :this->software_id]]></filter>
           <dependencies>
@@ -2402,6 +2430,9 @@
                     <item id="move2production">
                       <rank>10</rank>
                     </item>
+                    <item id="software_end_of_support">
+                      <rank>20</rank>
+                    </item>
                   </items>
                   <rank>10</rank>
                 </item>
@@ -2588,6 +2619,9 @@
                   <items>
                     <item id="move2production">
                       <rank>10</rank>
+                    </item>
+                    <item id="software_end_of_support">
+                      <rank>20</rank>
                     </item>
                   </items>
                   <rank>10</rank>
@@ -2776,6 +2810,9 @@
                     <item id="move2production">
                       <rank>10</rank>
                     </item>
+                    <item id="software_end_of_support">
+                      <rank>20</rank>
+                    </item>
                   </items>
                   <rank>10</rank>
                 </item>
@@ -2955,6 +2992,9 @@
                     <item id="move2production">
                       <rank>10</rank>
                     </item>
+                    <item id="software_end_of_support">
+                      <rank>20</rank>
+                    </item>
                   </items>
                   <rank>10</rank>
                 </item>
@@ -3120,6 +3160,9 @@
                   <items>
                     <item id="move2production">
                       <rank>10</rank>
+                    </item>
+                    <item id="software_end_of_support">
+                      <rank>20</rank>
                     </item>
                   </items>
                   <rank>10</rank>
@@ -3851,11 +3894,6 @@
         </field>
         <field id="end_of_support" xsi:type="AttributeDate">
           <sql>end_of_support</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="end_of_life" xsi:type="AttributeDate">
-          <sql>end_of_life</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
@@ -5095,6 +5133,11 @@
           <extkey_attcode>osfamily_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="end_of_support" xsi:type="AttributeDate">
+          <sql>end_of_support</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="ospatches_list" xsi:type="AttributeLinkedSet">
           <linked_class>OSPatch</linked_class>
           <ext_key_to_me>osversion_id</ext_key_to_me>
@@ -5111,8 +5154,11 @@
             <item id="osfamily_id">
               <rank>20</rank>
             </item>
-            <item id="ospatches_list">
+            <item id="end_of_support">
               <rank>30</rank>
+            </item>
+            <item id="ospatches_list">
+              <rank>40</rank>
             </item>
           </items>
         </details>
@@ -5392,11 +5438,6 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
-        <field id="end_of_life" xsi:type="AttributeDate">
-          <sql>end_of_life</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
         <field id="type" xsi:type="AttributeEnum">
           <sort_type>label</sort_type>
           <values>
@@ -5651,6 +5692,11 @@
           <extkey_attcode>brand_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="end_of_support" xsi:type="AttributeDate">
+          <sql>end_of_support</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="networkdevices_list" xsi:type="AttributeLinkedSet">
           <linked_class>NetworkDevice</linked_class>
           <ext_key_to_me>iosversion_id</ext_key_to_me>
@@ -5667,8 +5713,11 @@
             <item id="brand_id">
               <rank>20</rank>
             </item>
-            <item id="networkdevices_list">
+            <item id="end_of_support">
               <rank>30</rank>
+            </item>
+            <item id="networkdevices_list">
+              <rank>40</rank>
             </item>
           </items>
         </details>
