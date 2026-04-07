@@ -34,12 +34,13 @@ class DataAuditSequencer extends StepSequencer
 	public function ExecuteStep($sStep = '', $sInstallComment = null): array
 	{
 		try {
+			$fStart = microtime(true);
+
 			/**
 			 * @since 3.2.0 move the ContextTag init at the very beginning of the method
 			 * @noinspection PhpUnusedLocalVariableInspection
 			 */
 			$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
-			$fStart = microtime(true);
 			SetupLog::Info("##### STEP {$sStep} start");
 			switch ($sStep) {
 				case '':
@@ -50,7 +51,7 @@ class DataAuditSequencer extends StepSequencer
 					return $this->GetNextStep('compile', 'Compiling the data model', 20, 'Copying...');
 
 				case 'compile':
-					$aSelectedModules = $this->oParams->Get('selected_modules');
+					$aSelectedModules = $this->oParams->Get('selected_modules', []);
 					$sSourceDir = $this->oParams->Get('source_dir', 'datamodels/latest');
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
 					$aMiscOptions = $this->oParams->Get('options', []);
@@ -64,7 +65,11 @@ class DataAuditSequencer extends StepSequencer
 						$sExtensionDir,
 						$bUseSymbolicLinks
 					);
-					return $this->GetNextStep('setup-audit', 'Checking data consistency with the new data model', 70, $sMessage);
+
+					if ($this->IsDataAuditRequired()) {
+						return $this->GetNextStep('setup-audit', 'Checking data consistency with the new data model', 70, $sMessage);
+					}
+					return $this->GetNextStep('', 'Completed', 100);
 
 				case 'setup-audit':
 					if ($this->IsDataAuditRequired()) {

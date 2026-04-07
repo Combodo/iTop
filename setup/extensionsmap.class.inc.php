@@ -462,14 +462,6 @@ class iTopExtensionsMap
 		}
 	}
 
-	public function MarkAsUninstallable($sExtensionCode, $bMark = true)
-	{
-		$oExtension = $this->GetFromExtensionCode($sExtensionCode);
-		if (!is_null($oExtension)) {
-			$oExtension->bUninstallable = $bMark;
-		}
-	}
-
 	/**
 	 * Tells if a given extension(code) is marked as chosen
 	 * @param string $sExtensionCode

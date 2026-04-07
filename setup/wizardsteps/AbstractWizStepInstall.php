@@ -56,8 +56,8 @@ abstract class AbstractWizStepInstall extends WizardStep
 		$aCopies = [];
 		if (($sMode == 'upgrade') && ($this->oWizard->GetParameter('upgrade_type') == 'keep-previous')) {
 			$sPreviousVersionDir = $this->oWizard->GetParameter('previous_version_dir');
-			$aCopies[] = ['source' => $sSourceDir, 'destination' => 'modules']; // Source is an absolute path, destination is relative to APPROOT
-			$aCopies[] = ['source' => $sPreviousVersionDir.'/portal', 'destination' => 'portal']; // Source is an absolute path, destination is relative to APPROOT
+			//$aCopies[] = ['source' => $sSourceDir, 'destination' => 'modules']; // Source is an absolute path, destination is relative to APPROOT
+			//$aCopies[] = ['source' => $sPreviousVersionDir.'/portal', 'destination' => 'portal']; // Source is an absolute path, destination is relative to APPROOT
 			$sSourceDir = APPROOT.'modules';
 		}
 

@@ -40,33 +40,45 @@ require_once(APPROOT.'setup/SetupDBBackup.php');
  */
 class ApplicationInstallSequencer extends StepSequencer
 {
+	protected const LABELS = [
+		'log-parameters' => 'Log parameters',
+		'backup' => 'Performing a backup of the database',
+		'migrate-before' => 'Migrate data before database upgrade',
+		'db-schema' => 'Updating database schema',
+		'migrate-after' => 'Migrate data after database upgrade',
+		'after-db-create' => 'Load data after database create',
+		'load-data' => 'Loading data',
+		'create-config' => 'Creating the configuration File',
+		'commit' => 'Finalize',
+	];
+
 	/**
 	 * @inherit
 	 */
 	public function ExecuteStep($sStep = '', $sInstallComment = null): array
 	{
 		try {
+			$fStart = microtime(true);
+
 			/**
 			 * @since 3.2.0 move the ContextTag init at the very beginning of the method
 			 * @noinspection PhpUnusedLocalVariableInspection
 			 */
 			$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
-			$fStart = microtime(true);
 			SetupLog::Info("##### STEP {$sStep} start");
-			$this->EnterReadOnlyMode();
+			$this->oRunTimeEnvironment->EnterReadOnlyMode($this->GetConfig());
 			switch ($sStep) {
 				case '':
-					return $this->GetNextStep('log-parameters', 'Log parameters', 0);
+					return $this->ComputeNextStep($sStep);
 
 				case 'log-parameters':
-					if (array_key_exists('log-parameters', $this->oParams->Get('optional_steps', []))) {
+					if (array_key_exists($sStep, $this->oParams->Get('optional_steps', []))) {
 						$this->DoLogParameters();
 					}
-
-					return $this->GetNextStep('backup', 'Performing a backup of the database', 20);
+					return $this->ComputeNextStep($sStep);
 
 				case 'backup':
-					if (array_key_exists('backup', $this->oParams->Get('optional_steps', []))) {
+					if (array_key_exists($sStep, $this->oParams->Get('optional_steps', []))) {
 						$aBackupOptions = $this->oParams->Get('optional_steps')['backup'];
 						// __DB__-%Y-%m-%d
 						$sDestination = $aBackupOptions['destination'];
@@ -75,25 +87,24 @@ class ApplicationInstallSequencer extends StepSequencer
 						$this->oRunTimeEnvironment->Backup($this->oConfig, $sDestination, $sSourceConfigFile, $sMySQLBinDir);
 					}
 
-					return $this->GetNextStep('migrate-before', 'Migrate data before database upgrade', 30);
+					return $this->ComputeNextStep($sStep);
 
 				case 'migrate-before':
-					if (array_key_exists('migrate-before', $this->oParams->Get('optional_steps', []))) {
+					if (array_key_exists($sStep, $this->oParams->Get('optional_steps', []))) {
 						$this->oRunTimeEnvironment->MigrateDataBeforeUpdateStructure($this->oParams->Get('mode'), $this->GetConfig());
 					}
-					return $this->GetNextStep('db-schema', 'Updating database schema', 40);
+					return $this->ComputeNextStep($sStep);
 
 				case 'db-schema':
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
 					$this->DoUpdateDBSchema($this->GetConfig(), $aSelectedModules);
-
-					return $this->GetNextStep('migrate-after', 'Migrate data after database upgrade', 50);
+					return $this->ComputeNextStep($sStep);
 
 				case 'migrate-after':
-					if (array_key_exists('migrate-after', $this->oParams->Get('optional_steps', []))) {
+					if (array_key_exists($sStep, $this->oParams->Get('optional_steps', []))) {
 						$this->oRunTimeEnvironment->MigrateDataAfterUpdateStructure($this->oParams->Get('mode'), $this->GetConfig());
 					}
-					return $this->GetNextStep('after-db-create', 'Load data after database create', 60);
+					return $this->ComputeNextStep($sStep);
 
 				case 'after-db-create':
 					$aAdminParams = $this->oParams->Get('admin_account');
@@ -101,8 +112,7 @@ class ApplicationInstallSequencer extends StepSequencer
 					$sMode = $this->oParams->Get('mode');
 
 					$this->oRunTimeEnvironment->AfterDBCreate($this->GetConfig(), $sMode, $aSelectedModules, $aAdminParams);
-
-					return $this->GetNextStep('load-data', 'Loading data', 70);
+					return $this->ComputeNextStep($sStep);
 
 				case 'load-data':
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
@@ -110,7 +120,7 @@ class ApplicationInstallSequencer extends StepSequencer
 
 					$this->oRunTimeEnvironment->DoLoadData($this->GetConfig(), $bSampleData, $aSelectedModules);
 
-					return $this->GetNextStep('create-config', 'Creating the configuration File', 80, 'All data loaded');
+					return $this->ComputeNextStep($sStep, 'All data loaded');
 
 				case 'create-config':
 					$sDataModelVersion = $this->oParams->Get('datamodel_version', '0.0.0');
@@ -124,11 +134,11 @@ class ApplicationInstallSequencer extends StepSequencer
 						$aSelectedExtensionCodes,
 						$sInstallComment
 					);
-
-					return $this->GetNextStep('commit', 'Finalize', 95);
+					return $this->ComputeNextStep($sStep);
 
 				case 'commit':
 					$this->oRunTimeEnvironment->Commit();
+					$this->oRunTimeEnvironment->ExitReadOnlyMode();
 					return $this->GetNextStep('', 'Completed', 100);
 
 				default:
@@ -140,37 +150,9 @@ class ApplicationInstallSequencer extends StepSequencer
 			$aResult['error_code'] = $e->getCode();
 			return $aResult;
 		} finally {
-			$this->ExitReadOnlyMode();
 			$fDuration = round(microtime(true) - $fStart, 2);
 			SetupLog::Info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
-
-	}
-
-	protected function EnterReadOnlyMode()
-	{
-		if ($this->oRunTimeEnvironment->GetFinalEnv() != 'production') {
-			return;
-		}
-
-		if (SetupUtils::IsInReadOnlyMode()) {
-			return;
-		}
-
-		SetupUtils::EnterReadOnlyMode($this->GetConfig());
-	}
-
-	protected function ExitReadOnlyMode()
-	{
-		if ($this->oRunTimeEnvironment->GetFinalEnv() != 'production') {
-			return;
-		}
-
-		if (!SetupUtils::IsInReadOnlyMode()) {
-			return;
-		}
-
-		SetupUtils::ExitReadOnlyMode();
 	}
 
 	/**
@@ -195,13 +177,58 @@ class ApplicationInstallSequencer extends StepSequencer
 
 		$oConfig->Set('access_mode', ACCESS_FULL);
 
-		// Set a DBProperty with a unique ID to identify this instance of iTop
-		$sUUID = DBProperty::GetProperty('database_uuid', '');
-		if ($sUUID === '') {
-			$sUUID = utils::CreateUUID('database');
-			DBProperty::SetProperty('database_uuid', $sUUID, 'Installation/upgrade of '.ITOP_APPLICATION, 'Unique ID of this '.ITOP_APPLICATION.' Database');
-		}
+		$this->oRunTimeEnvironment->SetDbUUID();
 
 		SetupLog::Info("Database Schema Successfully Updated for environment '$sTargetEnvironment'.");
+	}
+
+	public function GetStepNames(): array
+	{
+		$aStepNames = [ ''];
+		foreach (['log-parameters', 'backup', 'migrate-before'] as $sStepName) {
+			if (array_key_exists($sStepName, $this->oParams->Get('optional_steps', []))) {
+				$aStepNames [] = $sStepName;
+			}
+		}
+		$aStepNames [] = 'db-schema';
+		if (array_key_exists('migrate-after', $this->oParams->Get('optional_steps', []))) {
+			$aStepNames [] = 'migrate-after';
+		}
+
+		$aOthers = [
+			'after-db-create',
+			'load-data',
+			'create-config',
+			'commit',
+		];
+		$aStepNames = array_merge($aStepNames, $aOthers);
+		return $aStepNames;
+	}
+
+	public function GetStepAfterWithPercent($sCurrentStep): array
+	{
+		$aAllStepNames = $this->GetStepNames();
+		$iKey = array_search($sCurrentStep, $aAllStepNames);
+		$iNextStepIndex = $iKey + 1;
+		$sNextStep = $aAllStepNames[$iNextStepIndex] ?? '';
+		return [$sNextStep, $this->ComputePercent($aAllStepNames, $iNextStepIndex)];
+	}
+
+	public function ComputePercent(array $aAllStepNames, $iKey): int
+	{
+		$iCount = count($aAllStepNames);
+		if ($iKey >= $iCount) {
+			return 100;
+		}
+
+		$iRes =  100 * $iKey / $iCount;
+		return (int) $iRes;
+	}
+
+	private function ComputeNextStep(string $sCurrentStep, string $sMessage = ''): array
+	{
+		[$sNextStep, $iPercent] = $this->GetStepAfterWithPercent($sCurrentStep);
+		$sLabel = self::LABELS[$sNextStep] ?? '';
+		return $this->GetNextStep($sNextStep, $sLabel, $iPercent, $sMessage);
 	}
 }

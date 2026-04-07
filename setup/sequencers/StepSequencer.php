@@ -161,18 +161,23 @@ abstract class StepSequencer
 
 	protected function GetConfig()
 	{
+		if (! is_null($this->oConfig)) {
+			return $this->oConfig;
+		}
+
 		$sTargetEnvironment = $this->oRunTimeEnvironment->GetBuildEnv();
 		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
 		try {
-			$oConfig = new Config($sConfigFile);
+			$this->oConfig = new Config($sConfigFile);
 		} catch (Exception $e) {
-			return null;
+			SetupLog::Exception("Setup error", $e);
+			throw $e;
 		}
 
 		$aParamValues = $this->oParams->GetParamForConfigArray();
-		$oConfig->UpdateFromParams($aParamValues);
+		$this->oConfig->UpdateFromParams($aParamValues);
 
-		return $oConfig;
+		return $this->oConfig;
 	}
 
 	/**

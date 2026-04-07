@@ -648,6 +648,16 @@ class RunTimeEnvironment
 		}
 	}
 
+	public function SetDbUUID(): void
+	{
+		// Set a DBProperty with a unique ID to identify this instance of iTop
+		$sUUID = DBProperty::GetProperty('database_uuid', '');
+		if ($sUUID === '') {
+			$sUUID = utils::CreateUUID('database');
+			DBProperty::SetProperty('database_uuid', $sUUID, 'Installation/upgrade of '.ITOP_APPLICATION, 'Unique ID of this '.ITOP_APPLICATION.' Database');
+		}
+	}
+
 	/**
 	 * @param \Config $oConfig
 	 * @param array|null $aSelectedModules null means all
@@ -1528,6 +1538,32 @@ class RunTimeEnvironment
 
 		CMDBSource::InitFromConfig($oConfig);
 		$oBackup->CreateCompressedBackup($sTargetFile, $sSourceConfigFile);
+	}
+
+	public function EnterReadOnlyMode(Config $oConfig)
+	{
+		if ($this->GetFinalEnv() != 'production') {
+			return;
+		}
+
+		if (SetupUtils::IsInReadOnlyMode()) {
+			return;
+		}
+
+		SetupUtils::EnterReadOnlyMode($oConfig);
+	}
+
+	public function ExitReadOnlyMode()
+	{
+		if ($this->GetFinalEnv() != 'production') {
+			return;
+		}
+
+		if (!SetupUtils::IsInReadOnlyMode()) {
+			return;
+		}
+
+		SetupUtils::ExitReadOnlyMode();
 	}
 
 	public function GetFinalEnv(): string
