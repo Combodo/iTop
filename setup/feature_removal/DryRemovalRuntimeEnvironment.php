@@ -2,15 +2,11 @@
 
 namespace Combodo\iTop\Setup\FeatureRemoval;
 
-use Combodo\iTop\Setup\ModuleDependency\Module;
-use Config;
-use InstallationChoicesToModuleConverter;
 use iTopExtensionsMap;
 use MetaModel;
 use ModuleDiscovery;
 use RunTimeEnvironment;
 use SetupUtils;
-use utils;
 
 class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 {
@@ -59,27 +55,6 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 	{
 		$oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv);
 		$oExtensionsMap->DeclareExtensionAsRemoved($aExtensionCodes);
-	}
-
-	private function GetModulesToLoad(string $sSourceEnv, $aSearchDirs): array
-	{
-		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
-		$aChoices = iTopExtensionsMap::GetChoicesFromDatabase($oSourceConfig);
-		$sSourceDir = $oSourceConfig->Get('source_dir');
-
-		$sInstallFilePath = APPROOT.$sSourceDir.'/installation.xml';
-		if (! is_file($sInstallFilePath)) {
-			$sInstallFilePath = null;
-		}
-
-		$aModuleIdsToLoad = InstallationChoicesToModuleConverter::GetInstance()->GetModules($aChoices, $aSearchDirs, $sInstallFilePath);
-		$aModulesToLoad = [];
-		foreach ($aModuleIdsToLoad as $sModuleId) {
-			$oModule = new Module($sModuleId);
-			$sModuleName = $oModule->GetModuleName();
-			$aModulesToLoad[] = $sModuleName;
-		}
-		return $aModulesToLoad;
 	}
 
 	public function Cleanup(): void

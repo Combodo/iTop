@@ -1170,6 +1170,7 @@ class ModelFactory
 					]);
 			}
 		} catch (Exception $e) {
+			SetupLog::Exception(__METHOD__, $e);
 			$aLoadedModuleNames = [];
 			foreach (self::$aLoadedModules as $oLoadedModule) {
 				$aLoadedModuleNames[] = $oLoadedModule->GetName().':'.$oLoadedModule->GetVersion();

@@ -26,6 +26,7 @@
 
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
+use Combodo\iTop\Setup\ModuleDependency\Module;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
@@ -467,7 +468,9 @@ class RunTimeEnvironment
 		// Determine the installed modules and extensions
 		//
 		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
-		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile);
+
+		$aModulesToLoad = $this->GetModulesToLoad($this->sFinalEnv, $aDirsToCompile);
+		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile, false, $aModulesToLoad);
 
 		// Actually read the modules available for the build environment,
 		// but get the selection from the source environment and finally
@@ -1592,5 +1595,26 @@ class RunTimeEnvironment
 		}
 
 		return substr_compare($sHaystack, $sNeedle, 0, strlen($sNeedle)) === 0;
+	}
+
+	protected function GetModulesToLoad(string $sSourceEnv, $aSearchDirs): array
+	{
+		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
+		$aChoices = iTopExtensionsMap::GetChoicesFromDatabase($oSourceConfig);
+		$sSourceDir = $oSourceConfig->Get('source_dir');
+
+		$sInstallFilePath = APPROOT.$sSourceDir.'/installation.xml';
+		if (! is_file($sInstallFilePath)) {
+			$sInstallFilePath = null;
+		}
+
+		$aModuleIdsToLoad = InstallationChoicesToModuleConverter::GetInstance()->GetModules($aChoices, $aSearchDirs, $sInstallFilePath);
+		$aModulesToLoad = [];
+		foreach ($aModuleIdsToLoad as $sModuleId) {
+			$oModule = new Module($sModuleId);
+			$sModuleName = $oModule->GetModuleName();
+			$aModulesToLoad[] = $sModuleName;
+		}
+		return $aModulesToLoad;
 	}
 }
