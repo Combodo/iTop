@@ -152,7 +152,7 @@ class WebPage implements Page
 	 */
 	public const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/webpage/layout';
 
-	protected const BODY_DATA_GUI_TYPE = 'backoffice';
+	public const BODY_DATA_GUI_TYPE = 'backoffice';
 
 	protected $s_title;
 	protected $s_content;
