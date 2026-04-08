@@ -123,8 +123,7 @@ class HubController
 			throw new SecurityException(Dict::S('iTopHub:FailAuthent'));
 		}
 		// First step: prepare the datamodel, if it fails, roll-back
-		$aSelectedExtensionCodes = utils::ReadParam('extension_codes', []);
-		$aSelectedExtensionDirs = utils::ReadParam('extension_dirs', []);
+		$aSelectedExtensionDirs = utils::ReadParam('extension_dirs', [], false, utils::ENUM_SANITIZATION_FILTER_MODULE_CODE);
 
 		$oRuntimeEnv = new HubRunTimeEnvironment('production', false); // use a temp environment: production-build
 		$oRuntimeEnv->MoveSelectedExtensions(APPROOT.'/data/downloaded-extensions/', $aSelectedExtensionDirs);
@@ -160,6 +159,22 @@ class HubController
 		// Second step: update the schema and the data
 		// Everything happening below is based on env-production
 		$oRuntimeEnv = new RunTimeEnvironment('production', true);
+
+		try {
+			$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
+			if (!file_exists(utils::GetDataPath().'hub/compile_authent') || $sAuthent !== file_get_contents(utils::GetDataPath().'hub/compile_authent')) {
+				throw new SecurityException(Dict::S('iTopHub:FailAuthent'));
+			}
+		} catch (Exception $e) {
+			if (file_exists(utils::GetDataPath().'hub/compile_authent')) {
+				unlink(utils::GetDataPath().'hub/compile_authent');
+			}
+			// Note: at this point, the dictionnary is not necessarily loaded
+			SetupLog::Error(get_class($e).': '.Dict::S('iTopHub:ConfigurationSafelyReverted')."\n".$e->getMessage());
+			SetupLog::Error('Debug trace: '.$e->getTraceAsString());
+			$this->ReportError($e->getMessage(), $e->getCode());
+			return;
+		}
 
 		try {
 			SetupLog::Info('Move to production starts...');

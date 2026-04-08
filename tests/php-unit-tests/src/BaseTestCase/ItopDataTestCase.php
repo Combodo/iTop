@@ -1556,23 +1556,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 		@unlink($this->sConfigTmpBackupFile);
 	}
 
-	protected function AddLoginModeAndSaveConfiguration(string $sLoginMode): void
-	{
-		$aAllowedLoginTypes = $this->oiTopConfig->GetAllowedLoginTypes();
-		if (!in_array($sLoginMode, $aAllowedLoginTypes)) {
-			$aAllowedLoginTypes[] = $sLoginMode;
-			$this->oiTopConfig->SetAllowedLoginTypes($aAllowedLoginTypes);
-			$this->SaveItopConfFile();
-		}
-	}
-
-	protected function SaveItopConfFile(): void
-	{
-		@chmod($this->oiTopConfig->GetLoadedFile(), 0770);
-		$this->oiTopConfig->WriteToFile();
-		@chmod($this->oiTopConfig->GetLoadedFile(), 0440);
-	}
-
 	public function AssertPreviousAndCurrentInstallationAreEquivalent()
 	{
 		$aPreviousInstallations = ModuleInstallationRepository::GetInstance()->GetPreviousModuleInstallationsByOffset(1);
@@ -1598,5 +1581,21 @@ abstract class ItopDataTestCase extends ItopTestCase
 
 		asort($aRes);
 		return $aRes;
+	}
+
+	protected function AddLoginModeAndSaveConfiguration(string $sLoginMode): void
+	{
+		$aAllowedLoginTypes = $this->oiTopConfig->GetAllowedLoginTypes();
+		if (!in_array($sLoginMode, $aAllowedLoginTypes)) {
+			$aAllowedLoginTypes[] = $sLoginMode;
+			$this->oiTopConfig->SetAllowedLoginTypes($aAllowedLoginTypes);
+			$this->SaveItopConfFile();
+		}
+	}
+	protected function SaveItopConfFile(): void
+	{
+		@chmod($this->oiTopConfig->GetLoadedFile(), 0770);
+		$this->oiTopConfig->WriteToFile();
+		@chmod($this->oiTopConfig->GetLoadedFile(), 0440);
 	}
 }

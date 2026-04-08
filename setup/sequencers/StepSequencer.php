@@ -38,9 +38,10 @@ abstract class StepSequencer
 	{
 		if (is_null($oRunTimeEnvironment)) {
 			$sEnvironment = $oParams->Get('target_env', 'production');
-			$oRunTimeEnvironment = new RunTimeEnvironment($sEnvironment, false);
+			$this->oRunTimeEnvironment = new RunTimeEnvironment($sEnvironment, false);
+		} else {
+			$this->oRunTimeEnvironment = $oRunTimeEnvironment;
 		}
-		$this->oRunTimeEnvironment = $oRunTimeEnvironment;
 
 		$this->oParams = $oParams;
 

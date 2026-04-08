@@ -82,7 +82,7 @@ class InstallationChoicesToModuleConverter
 		return ModuleDiscovery::GetAllModules($aSearchDirs);
 	}
 
-	private function FindInstalledPackageModules(array $aPackageModules, array $aInstallationChoices, array $aInstallationDescription = null): array
+	private function FindInstalledPackageModules(array $aPackageModules, array $aInstallationChoices, ?array $aInstallationDescription = null): array
 	{
 		$aInstalledModules = [];
 
