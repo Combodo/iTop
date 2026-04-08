@@ -1603,7 +1603,7 @@ class Config
 			'show_in_conf_sample' => false,
 		],
 		'search_manual_submit' => [
-			'type' => 'array',
+			'type' => 'bool',
 			'description' => 'Force manual submit of search all requests',
 			'default' => false,
 			'value' => true,
