@@ -175,6 +175,7 @@ $ibo-input-select--action-button--color: $ibo-input-select-wrapper--after--color
 $ibo-input-select-selectize--item--active--text-color: $ibo-color-grey-100 !default;
 $ibo-input-select-selectize--item--active--background-color: $ibo-color-grey-500 !default;
 $ibo-input-select--autocomplete-item-image--background-color: $ibo-color-grey-800 !default;
+$ibo-input-date--button--color: $ibo-input-select--action-button--color;
 $ibo-vendors-selectize-input--color: $ibo-body-text-color !default;
 $ibo-vendors-selectize-input--background-color: $ibo-input--background-color !default;
 $ibo-vendors-selectize--input--border-color: $ibo-input--border-color !default;
@@ -222,6 +223,11 @@ $ibo-vendors-datatables--row-highlight--colors:('red': ($ibo-color-red-700),'dan
 
 $ibo-vendors-jqueryui--ui-dialog--background-color: $ibo-color-grey-800 !default;
 $ibo-vendors-jqueryui--ui-dialog-titlebar--border-bottom: solid 1px $ibo-color-grey-500 !default;
+$ibo-vendors-jqueryui--ui-datepicker--background-color: $ibo-color-grey-700 !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--color: $ibo-color-primary-200 !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--highlight--background-color: $ibo-color-primary-800 !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--hover--background-color: $ibo-color-primary-500 !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--active--background-color: $ibo-color-primary-700 !default;
 
 
 
