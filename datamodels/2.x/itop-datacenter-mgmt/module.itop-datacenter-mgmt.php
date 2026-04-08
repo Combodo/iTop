@@ -45,7 +45,7 @@ SetupWebPage::AddModule(
 		],
 		'data.sample' => [
 			// add your sample data XML files here,
-			'data.sample.racks.xml',
+			'data/data.sample.racks.xml',
 		],
 
 		// Documentation

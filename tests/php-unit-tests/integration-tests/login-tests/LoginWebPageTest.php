@@ -26,14 +26,14 @@ class LoginWebPageTest extends ItopDataTestCase
 		$this->BackupConfiguration();
 		$sFolderPath = APPROOT.'env-production/extension-with-delegated-authentication-endpoints-list';
 		if (file_exists($sFolderPath)) {
-			throw new Exception("Folder $sFolderPath already exists, please remove it before running the test");
+			$this->RecurseRmdir($sFolderPath);
 		}
 		mkdir($sFolderPath);
 		$this->RecurseCopy(__DIR__.'/extension-with-delegated-authentication-endpoints-list', $sFolderPath);
 
 		$sFolderPath = APPROOT.'env-production/extension-without-delegated-authentication-endpoints-list';
 		if (file_exists($sFolderPath)) {
-			throw new Exception("Folder $sFolderPath already exists, please remove it before running the test");
+			$this->RecurseRmdir($sFolderPath);
 		}
 		mkdir($sFolderPath);
 		$this->RecurseCopy(__DIR__.'/extension-without-delegated-authentication-endpoints-list', $sFolderPath);
@@ -81,8 +81,7 @@ class LoginWebPageTest extends ItopDataTestCase
 
 	public function testUserCanAccessAnyFile()
 	{
-		// generate random login
-		$sUserLogin = 'user-'.date('YmdHis');
+		$sUserLogin = 'user-'.uniqid();
 		$this->CreateUser($sUserLogin, self::$aURP_Profiles['Service Desk Agent'], self::PASSWORD);
 		$this->GivenConfigFileAllowedLoginTypes(explode('|', 'form'));
 
@@ -102,7 +101,7 @@ class LoginWebPageTest extends ItopDataTestCase
 	public function testWithoutDelegatedAuthenticationEndpointsListWithForceLoginConf()
 	{
 		@chmod($this->oConfig->GetLoadedFile(), 0770);
-		$this->oConfig->Set('security.force_login_when_no_delegated_authentication_endpoints_list', true, 'AnythingButEmptyOrUnknownValue'); // 3rd param to write file even if show_in_conf_sample is false
+		$this->oConfig->Set('security.disable_exec_forced_login_for_all_enpoints', false, 'AnythingButEmptyOrUnknownValue'); // 3rd param to write file even if show_in_conf_sample is false
 		$this->oConfig->WriteToFile();
 		@chmod($this->oConfig->GetLoadedFile(), 0444);
 		$sPageContent = $this->CallItopUri(

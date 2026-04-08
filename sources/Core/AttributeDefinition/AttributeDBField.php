@@ -21,7 +21,7 @@ class AttributeDBField extends AttributeDBFieldVoid
 		return array_merge(parent::ListExpectedParams(), ["default_value", "is_null_allowed"]);
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return $this->MakeRealValue($this->Get("default_value"), $oHostObject);
 	}

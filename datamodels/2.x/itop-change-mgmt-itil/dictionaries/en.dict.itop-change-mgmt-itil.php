@@ -64,7 +64,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Change' => 'Change',
-	'Class:Change+' => '',
+	'Class:Change+' => 'Abstract class. A type of Ticket to handle Change which has an effect on delivered Services.',
 	'Class:Change/Attribute:status' => 'Status',
 	'Class:Change/Attribute:status+' => '',
 	'Class:Change/Attribute:status/Value:new' => 'New',
@@ -167,7 +167,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:RoutineChange' => 'Routine Change',
-	'Class:RoutineChange+' => '',
+	'Class:RoutineChange+' => 'Standard change with low risk, without the need for additional authorization, and for which a validated procedure exists and must be applied.',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Validate',
 	'Class:RoutineChange/Stimulus:ev_validate+' => '',
 	'Class:RoutineChange/Stimulus:ev_reject' => 'Reject',
@@ -197,8 +197,8 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:ApprovedChange' => 'Approved Changes',
-	'Class:ApprovedChange+' => '',
+	'Class:ApprovedChange' => 'Change To Approve',
+	'Class:ApprovedChange+' => 'Abstract class. Normal Change and Emergency Change which requires an approval.',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Approval Date',
 	'Class:ApprovedChange/Attribute:approval_date+' => '',
 	'Class:ApprovedChange/Attribute:approval_comment' => 'Approval comment',
@@ -233,7 +233,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:NormalChange' => 'Normal Change',
-	'Class:NormalChange+' => '',
+	'Class:NormalChange+' => 'Type of Change',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Acceptance date',
 	'Class:NormalChange/Attribute:acceptance_date+' => '',
 	'Class:NormalChange/Attribute:acceptance_comment' => 'Acceptance comment',
@@ -268,7 +268,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:EmergencyChange' => 'Emergency Change',
-	'Class:EmergencyChange+' => '',
+	'Class:EmergencyChange+' => 'Change Ticket to manage emergency situations (malfunctions, security). The approval process is accelerated. The Emergency Change is implemented as soon as possible.',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Validate',
 	'Class:EmergencyChange/Stimulus:ev_validate+' => '',
 	'Class:EmergencyChange/Stimulus:ev_reject' => 'Reject',

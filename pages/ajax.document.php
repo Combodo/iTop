@@ -34,7 +34,6 @@ try {
 	require_once(APPROOT.'/application/startup.inc.php');
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-	LoginWebPage::DoLoginEx();
 
 	IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
@@ -45,6 +44,7 @@ try {
 
 	switch ($operation) {
 		case 'download_document':
+			LoginWebPage::DoLoginEx();
 			$id = utils::ReadParam('id', '');
 			$sField = utils::ReadParam('field', '');
 			if ($sClass == 'Attachment') {
@@ -64,6 +64,7 @@ try {
 			break;
 
 		case 'download_inlineimage':
+			LoginWebPage::DoLoginEx();
 			$id = utils::ReadParam('id', '');
 			$sSecret = utils::ReadParam('s', '');
 			$iCacheSec = 31556926; // One year ahead: an inline image cannot change

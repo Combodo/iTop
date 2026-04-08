@@ -42,6 +42,7 @@ use RunTimeEnvironment;
 use ScalarExpression;
 use SetupUtils;
 use UILinksWidget;
+use UserRights;
 use utils;
 use WizardHelper;
 
@@ -71,6 +72,15 @@ class AjaxRenderController
 			$bShowObsoleteData = utils::ShowObsoleteData();
 		}
 		$oSet->SetShowObsoleteData($bShowObsoleteData);
+
+		// N°8606 : Check user permissions on the main class
+		if (
+			UserRights::IsActionAllowed($oSet->GetClass(), UR_ACTION_READ, $oSet) !== UR_ALLOWED_YES
+			&& ($aExtraParams['display_unauthorized_objects'] ?? false) === false
+		) {
+			throw new Exception(Dict::Format('UI:Error:ReadNotAllowedOn_Class', $oSet->GetClass()));
+		}
+
 		$iCount = 0;
 		if (isset($aExtraParams['object_count'])) {
 			$iCount = $aExtraParams['object_count'];
@@ -99,6 +109,14 @@ class AjaxRenderController
 							'aColumnsLoad' => $aColumnsLoad,
 						]);
 						continue;
+					}
+
+					// N°8606 : Check user permissions on the current class
+					if (
+						UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) !== UR_ALLOWED_YES
+						&& ($aExtraParams['display_unauthorized_objects'] ?? false) === false
+					) {
+						throw new Exception(Dict::Format('UI:Error:ReadNotAllowedOn_Class', $sClass));
 					}
 
 					foreach ($aColumnsLoad[$sAlias] as $sAttCode) {

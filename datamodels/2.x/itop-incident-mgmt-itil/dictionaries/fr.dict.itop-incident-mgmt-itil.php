@@ -50,7 +50,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Incident' => 'Incident',
-	'Class:Incident+' => '',
+	'Class:Incident+' => 'Type de Ticket pour gérer les dysfonctionnements d\'un service ou d\'éléments de configuration',
 	'Class:Incident/Attribute:status' => 'Etat',
 	'Class:Incident/Attribute:status+' => '',
 	'Class:Incident/Attribute:status/Value:new' => 'Nouveau',
@@ -115,9 +115,9 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Incident/Attribute:service_id+' => '',
 	'Class:Incident/Attribute:service_name' => 'Nom du service',
 	'Class:Incident/Attribute:service_name+' => '',
-	'Class:Incident/Attribute:servicesubcategory_id' => 'Sous catégorie de service',
+	'Class:Incident/Attribute:servicesubcategory_id' => 'Sous-catégorie de service',
 	'Class:Incident/Attribute:servicesubcategory_id+' => '',
-	'Class:Incident/Attribute:servicesubcategory_name' => 'Nom Sous catégorie de service',
+	'Class:Incident/Attribute:servicesubcategory_name' => 'Nom Sous-catégorie de service',
 	'Class:Incident/Attribute:servicesubcategory_name+' => '',
 	'Class:Incident/Attribute:escalation_flag' => 'Ticket à surveiller',
 	'Class:Incident/Attribute:escalation_flag+' => '',

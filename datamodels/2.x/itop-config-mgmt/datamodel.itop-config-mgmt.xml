@@ -1068,7 +1068,7 @@
             <item id="col:col1">
               <rank>10</rank>
               <items>
-                <item id="fieldset:Server:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -1131,7 +1131,7 @@
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
@@ -1159,7 +1159,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <rank>30</rank>
                   <items>
                     <item id="description">
@@ -1283,7 +1283,39 @@
           </items>
         </summary>
       </presentation>
-      <methods/>
+      <methods>
+        <method id="GetIcon">
+          <comment>	/**
+            * Overrides the GetIcon method to return the logo of the associated NetworkDeviceType if any, otherwise the default icon of the class will be returned
+            *
+            */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Custom</type>
+          <code><![CDATA[	public function GetIcon($bImgTag = true)
+	{
+	   $sIconClass = 'NetworkDeviceType'; // the class storing the image which will be used as icon for the current object
+	   $sExtKeyCode = 'networkdevicetype_id'; // the external key attribute code pointing to the class storing the image attribute
+	   $sIconAttCode = 'logo'; // the attribute code of the image in the IconClass
+
+		 $iObj = $this->Get($sExtKeyCode);
+		 if ($iObj > 0) {
+		    $oObj = MetaModel::GetObject($sIconClass, $iObj, true, true);
+        $oImage = $oObj->Get($sIconAttCode);
+    		$sIconUrl = $oImage->IsEmpty() ? '' : $oImage->GetDisplayURL($sIconClass, $iObj, $sIconAttCode);
+    		if (strlen($sIconUrl) > 0) {
+    			 if ($bImgTag) {
+    				  return "<img src=\"$sIconUrl\" alt=''/>";
+    			 } else {
+    				  return $sIconUrl;
+    			 }
+    		}
+		 }
+		 // Return the default image
+	   return parent::GetIcon($bImgTag);
+	}]]></code>
+        </method>
+      </methods>
       <relations>
         <relation id="impacts">
           <neighbours>
@@ -1419,7 +1451,7 @@
             <item id="col:col1">
               <rank>120</rank>
               <items>
-                <item id="fieldset:Server:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -1488,7 +1520,7 @@
             <item id="col:col2">
               <rank>130</rank>
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
@@ -1516,7 +1548,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <rank>30</rank>
                   <items>
                     <item id="description">
@@ -1646,6 +1678,7 @@
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
+          <image_attribute>logo</image_attribute>
         </fields_semantic>
         <style>
           <icon>../../images/icons/icons8-application-window.svg</icon>
@@ -1713,6 +1746,13 @@
           <min_up_mode>user</min_up_mode>
           <min_up_type>count</min_up_type>
         </field>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <presentation>
         <details>
@@ -1741,16 +1781,24 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgmt:otherinfo">
+                <item id="fieldset:ConfigMgmt:dates">
                   <items>
                     <item id="move2production">
-                      <rank>50</rank>
-                    </item>
-                    <item id="description">
-                      <rank>60</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>
@@ -1842,6 +1890,7 @@
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
+          <image_attribute>logo</image_attribute>
         </fields_semantic>
         <style>
           <icon>../../images/icons/icons8-process-improvement.svg</icon>
@@ -1890,6 +1939,13 @@
           <is_null_allowed>true</is_null_allowed>
           <display_style>list</display_style>
         </field>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <presentation>
         <details>
@@ -1918,16 +1974,24 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgmt:otherinfo">
+                <item id="fieldset:ConfigMgmt:dates">
                   <items>
                     <item id="move2production">
-                      <rank>50</rank>
-                    </item>
-                    <item id="description">
-                      <rank>60</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>
@@ -2188,7 +2252,40 @@
           </items>
         </list>
       </presentation>
-      <methods/>
+      <methods>
+        <method id="GetIcon">
+          <comment>	/**
+            * Overrides the GetIcon method to return the logo of the associated Software if any, otherwise the default icon of the class will be returned
+            *
+            */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Custom</type>
+          <code><![CDATA[	public function GetIcon($bImgTag = true)
+	{
+	   // If there is an image defined on the associated Software, we use it
+	   $sIconClass = 'Software'; // the class storing the image which will be used as icon for the current object
+	   $sExtKeyCode = 'software_id'; // the attribute code pointing to the class having the image to display
+	   $sIconAttCode = 'logo'; // the attribute code of the image to display on the IconClass
+
+		 $iObj = $this->Get($sExtKeyCode);
+		 if ($iObj > 0) {
+		    $oObj = MetaModel::GetObject($sIconClass, $iObj, true, true);
+        $oImage = $oObj->Get($sIconAttCode);
+    		$sIconUrl = $oImage->IsEmpty() ? '' : $oImage->GetDisplayURL($sIconClass, $iObj, $sIconAttCode);
+    		if (strlen($sIconUrl) > 0) {
+    			 if ($bImgTag) {
+    				  return "<img src=\"$sIconUrl\" alt=''/>";
+    			 } else {
+    				  return $sIconUrl;
+    			 }
+    		}
+		 }
+		 // Return the default image
+	   return parent::GetIcon($bImgTag);
+	}]]></code>
+        </method>
+      </methods>
     </class>
     <class id="Middleware" _delta="define">
       <parent>SoftwareInstance</parent>
@@ -2275,18 +2372,18 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <items>
                     <item id="move2production">
-                      <rank>90</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="description">
-                      <rank>100</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -2459,18 +2556,18 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <items>
                     <item id="move2production">
-                      <rank>90</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="description">
-                      <rank>100</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -2643,18 +2740,18 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <items>
                     <item id="move2production">
-                      <rank>90</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="description">
-                      <rank>100</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -2819,18 +2916,18 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <items>
                     <item id="move2production">
-                      <rank>90</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="description">
-                      <rank>100</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -2982,18 +3079,18 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <items>
                     <item id="move2production">
-                      <rank>90</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="description">
-                      <rank>100</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -3086,6 +3183,9 @@
             <attribute id="middleware_name"/>
           </complementary_attributes>
         </naming>
+        <fields_semantic>
+          <image_attribute>logo</image_attribute>
+        </fields_semantic>
         <style>
           <icon>../../images/icons/icons8-automatic.svg</icon>
         </style>
@@ -3113,6 +3213,13 @@
           <extkey_attcode>middleware_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <presentation>
         <details>
@@ -3133,7 +3240,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:ConfigMgmt:moreinfo">
+                <item id="fieldset:Software:moreinfo">
                   <items>
                     <item id="middleware_id">
                       <rank>30</rank>
@@ -3146,16 +3253,24 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgmt:otherinfo">
+                <item id="fieldset:ConfigMgmt:dates">
                   <items>
                     <item id="move2production">
-                      <rank>50</rank>
-                    </item>
-                    <item id="description">
-                      <rank>60</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>
@@ -3295,7 +3410,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:ConfigMgmt:moreinfo">
+                <item id="fieldset:Software:moreinfo">
                   <items>
                     <item id="dbserver_id">
                       <rank>10</rank>
@@ -3308,16 +3423,21 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgmt:otherinfo">
+                <item id="fieldset:ConfigMgmt:dates">
                   <items>
                     <item id="move2production">
-                      <rank>50</rank>
-                    </item>
-                    <item id="description">
-                      <rank>60</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>
@@ -3412,6 +3532,9 @@
             <attribute id="webserver_name"/>
           </complementary_attributes>
         </naming>
+        <fields_semantic>
+          <image_attribute>logo</image_attribute>
+        </fields_semantic>
         <style>
           <icon>../../images/icons/icons8-web.svg</icon>
         </style>
@@ -3442,6 +3565,13 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
           <target>_blank</target>
+        </field>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
       <presentation>
@@ -3479,16 +3609,24 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgmt:otherinfo">
+                <item id="fieldset:ConfigMgmt:dates">
                   <items>
                     <item id="move2production">
-              <rank>60</rank>
-                    </item>
-                    <item id="description">
-                      <rank>70</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>
@@ -3593,6 +3731,9 @@
             <attribute id="type"/>
           </complementary_attributes>
         </naming>
+        <fields_semantic>
+          <image_attribute>logo</image_attribute>
+        </fields_semantic>
         <style>
           <icon>../../images/icons/icons8-software.svg</icon>
         </style>
@@ -3652,6 +3793,13 @@
           <is_null_allowed>true</is_null_allowed>
           <display_style>list</display_style>
         </field>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="softwareinstance_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwareInstance</linked_class>
           <ext_key_to_me>software_id</ext_key_to_me>
@@ -3678,29 +3826,57 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="version">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Software:moreinfo">
+                  <items>
+                    <item id="vendor">
+                      <rank>30</rank>
+                    </item>
+                    <item id="type">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="version">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="logo">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
             </item>
-            <item id="vendor">
-              <rank>30</rank>
-            </item>
-            <item id="type">
-              <rank>40</rank>
-            </item>
             <item id="documents_list">
-              <rank>50</rank>
-            </item>
-            <item id="softwareinstance_list">
               <rank>60</rank>
             </item>
-            <item id="softwarepatch_list">
+            <item id="softwareinstance_list">
               <rank>70</rank>
             </item>
-            <item id="softwarelicence_list">
+            <item id="softwarepatch_list">
               <rank>80</rank>
+            </item>
+            <item id="softwarelicence_list">
+              <rank>90</rank>
             </item>
           </items>
         </details>
@@ -3809,13 +3985,33 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="documents_list">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
             </item>
-            <item id="description">
+            <item id="documents_list">
               <rank>30</rank>
             </item>
           </items>
@@ -3899,20 +4095,45 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Software:moreinfo">
+                  <items>
+                    <item id="osversion_id">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="documents_list">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
             </item>
-            <item id="functionalcis_list">
+            <item id="documents_list">
               <rank>30</rank>
             </item>
-            <item id="osversion_id">
+            <item id="functionalcis_list">
               <rank>40</rank>
-            </item>
-            <item id="description">
-              <rank>50</rank>
             </item>
           </items>
         </details>
@@ -4001,17 +4222,42 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Software:moreinfo">
+                  <items>
+                    <item id="software_id">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="documents_list">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
             </item>
-            <item id="software_id">
+            <item id="documents_list">
               <rank>30</rank>
-            </item>
-            <item id="description">
-              <rank>40</rank>
             </item>
             <item id="softwareinstances_list">
               <rank>50</rank>
@@ -4366,19 +4612,24 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgmt:otherinfo">
+                <item id="fieldset:ConfigMgmt:dates">
                   <items>
                     <item id="start_date">
-                      <rank>70</rank>
+                      <rank>10</rank>
                     </item>
                     <item id="end_date">
-                      <rank>80</rank>
-                    </item>
-                    <item id="description">
-                      <rank>90</rank>
+                      <rank>20</rank>
                     </item>
                   </items>
                   <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>
@@ -4542,7 +4793,7 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgmt:otherinfo">
+                <item id="fieldset:ConfigMgmt:dates">
                   <items>
                     <item id="start_date">
                       <rank>70</rank>
@@ -4550,11 +4801,16 @@
                     <item id="end_date">
                       <rank>80</rank>
                     </item>
-                    <item id="description">
-                      <rank>90</rank>
-                    </item>
                   </items>
                   <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>
@@ -4749,6 +5005,17 @@
             <attribute id="osfamily_name"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="name_osfamily">
+            <attributes>
+              <attribute id="name"/>
+              <attribute id="osfamily_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="osfamily_id" xsi:type="AttributeExternalKey">
@@ -4826,6 +5093,16 @@
             <attribute id="name"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="name">
+            <attributes>
+              <attribute id="name"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="logo" xsi:type="AttributeImage">
@@ -5198,6 +5475,13 @@
         </reconciliation>
       </properties>
       <fields>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="networkdevicesdevices_list" xsi:type="AttributeLinkedSet">
           <linked_class>NetworkDevice</linked_class>
           <ext_key_to_me>networkdevicetype_id</ext_key_to_me>
@@ -5214,8 +5498,11 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="networkdevicesdevices_list">
+            <item id="logo">
               <rank>20</rank>
+            </item>
+            <item id="networkdevicesdevices_list">
+              <rank>30</rank>
             </item>
           </items>
         </details>
@@ -5228,7 +5515,7 @@
         </search>
         <list>
           <items>
-            <item id="name">
+            <item id="logo">
               <rank>10</rank>
             </item>
           </items>
@@ -5260,6 +5547,15 @@
             <attribute id="brand_name"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="name_brand">
+            <attributes>
+              <attribute id="name"/>
+              <attribute id="brand_id"/>
+            </attributes>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="brand_id" xsi:type="AttributeExternalKey">
@@ -6003,20 +6299,45 @@
       <presentation>
         <details>
           <items>
-            <item id="ip">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="subnet_name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:moreinfo">
+                  <items>
+                    <item id="ip">
+                      <rank>10</rank>
+                    </item>
+                    <item id="ip_mask">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="ip_mask">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
-            </item>
-            <item id="subnet_name">
-              <rank>25</rank>
-            </item>
-            <item id="org_id">
-              <rank>30</rank>
-            </item>
-            <item id="description">
-              <rank>40</rank>
             </item>
             <item id="vlans_list">
               <rank>50</rank>
@@ -6165,14 +6486,34 @@
       <presentation>
         <details>
           <items>
-            <item id="vlan_tag">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="vlan_tag">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                </items>
               <rank>10</rank>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
-            </item>
-            <item id="description">
-              <rank>30</rank>
             </item>
             <item id="subnets_list">
               <rank>40</rank>
@@ -6639,10 +6980,10 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="comment">
-                      <rank>60</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>
@@ -7455,10 +7796,10 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="description">
-              <rank>50</rank>
+                      <rank>10</rank>
                     </item>
                   </items>
                   <rank>10</rank>

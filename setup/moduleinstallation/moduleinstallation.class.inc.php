@@ -31,7 +31,7 @@ class ModuleInstallation extends DBObject
 	{
 		$aParams =
 		[
-			"category"            => "core,view_in_gui",
+			"category"            => "core,view_in_gui,grant_by_profile",
 			"key_type"            => "autoincrement",
 			'name_attcode'        => ['name', 'version'],
 			"state_attcode"       => "",

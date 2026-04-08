@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="108"
+   height="108"
+   viewBox="0 0 108 108"
+   role="img"
+   version="1.1"
+   id="svg11"
+   sodipodi:docname="icon-cisco.svg"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview11"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showguides="true"
+     inkscape:zoom="6.8229602"
+     inkscape:cx="48.879078"
+     inkscape:cy="51.737075"
+     inkscape:window-width="2560"
+     inkscape:window-height="1360"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg11">
+    <sodipodi:guide
+       position="16.939587,53.376303"
+       orientation="0,-1"
+       id="guide11"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <title
+     id="fw-c-header__logo-title">Cisco.com France</title>
+  <defs
+     id="defs1">
+    <path
+       d="m 0,22.769 a 2.348,2.348 0 0 0 3.935,1.545 c 0.434,-0.403 0.7,-0.955 0.744,-1.545 v -5.2 a 2.34,2.34 0 0 0 -4.679,0 v 5.2"
+       id="bar_short"
+       class="bar" />
+    <path
+       d="m 12.95,22.769 a 2.349,2.349 0 0 0 2.34,2.171 2.346,2.346 0 0 0 2.339,-2.171 V 11.112 a 2.341,2.341 0 0 0 -4.679,0 V 22.77"
+       id="bar_tall"
+       class="bar" />
+    <path
+       d="m 25.832,27.464 a 2.345,2.345 0 0 0 4.678,0 V 2.249 a 2.342,2.342 0 0 0 -4.678,0 v 25.215"
+       id="bar_grande"
+       class="bar" />
+    <path
+       d="m 24.026,56.277 v -5.002 l -0.098,0.043 a 9.253,9.253 0 0 1 -3.605,0.915 5.303,5.303 0 0 1 -3.63,-1.07 4.644,4.644 0 0 1 -1.58,-2.244 5.395,5.395 0 0 1 -0.106,-3 4.6,4.6 0 0 1 1.609,-2.566 4.823,4.823 0 0 1 2.528,-1.09 8.332,8.332 0 0 1 4.774,0.895 l 0.108,0.056 v -5.03 l -0.228,-0.061 a 12.78,12.78 0 0 0 -4.552,-0.596 10.534,10.534 0 0 0 -4.065,0.93 9.29,9.29 0 0 0 -3.329,2.572 10.014,10.014 0 0 0 -0.182,12.18 9.546,9.546 0 0 0 5.292,3.403 c 2.211,0.538 4.528,0.456 6.697,-0.234 l 0.367,-0.101"
+       id="cisco_c" />
+  </defs>
+  <g
+     fill="#02c8ff"
+     fill-rule="evenodd"
+     id="g11"
+     transform="translate(-0.09466859,26.234946)">
+    <use
+       href="#cisco_c"
+       id="use1" />
+    <use
+       href="#cisco_c"
+       x="49.5"
+       id="use2" />
+    <path
+       d="m 41.69,52.125 -0.019,4.308 0.315,0.054 c 0.989,0.185 1.987,0.313 2.99,0.385 a 18.1,18.1 0 0 0 2.642,0.051 c 0.842,-0.06 1.675,-0.218 2.48,-0.468 a 6.862,6.862 0 0 0 2.573,-1.371 5.19,5.19 0 0 0 1.498,-2.148 5.912,5.912 0 0 0 -0.03,-4.324 4.852,4.852 0 0 0 -1.343,-1.862 5.568,5.568 0 0 0 -1.97,-1.147 l -3.25,-1.206 a 1.742,1.742 0 0 1 -0.887,-0.845 1.107,1.107 0 0 1 0.036,-0.986 1.29,1.29 0 0 1 0.217,-0.291 1.75,1.75 0 0 1 0.48,-0.347 c 0.363,-0.18 0.755,-0.293 1.158,-0.337 a 6.76,6.76 0 0 1 2.072,0.022 c 0.81,0.088 1.613,0.231 2.402,0.43 l 0.168,0.037 v -3.974 l -0.31,-0.067 a 21.14,21.14 0 0 0 -2.444,-0.435 12.545,12.545 0 0 0 -3.213,-0.014 6.945,6.945 0 0 0 -3.699,1.488 4.908,4.908 0 0 0 -1.58,2.178 5.984,5.984 0 0 0 -0.003,4.05 c 0.242,0.65 0.63,1.237 1.136,1.714 0.437,0.422 0.932,0.78 1.47,1.065 0.708,0.38 1.458,0.675 2.235,0.878 0.257,0.077 0.512,0.158 0.766,0.243 l 0.385,0.141 0.11,0.045 c 0.38,0.136 0.726,0.35 1.018,0.628 0.202,0.19 0.358,0.423 0.455,0.683 0.06,0.237 0.061,0.485 0.003,0.723 a 1.536,1.536 0 0 1 -0.744,0.892 3.691,3.691 0 0 1 -1.239,0.387 9,9 0 0 1 -1.92,0.097 21.973,21.973 0 0 1 -2.507,-0.334 c -0.433,-0.09 -0.864,-0.19 -1.291,-0.303 z m -11.144,4.482 h 4.73 V 37.846 h -4.73 z M 85.305,43.386 a 4.934,4.934 0 1 1 6.157,7.711 4.934,4.934 0 0 1 -6.157,-7.71 m -6.867,3.848 a 9.87,9.87 0 0 0 12.002,9.485 9.629,9.629 0 0 0 3.157,-17.729 9.934,9.934 0 0 0 -15.16,8.244"
+       id="path2" />
+    <use
+       href="#bar_short"
+       x="0"
+       id="use3" />
+    <use
+       href="#bar_tall"
+       x="0"
+       id="use4" />
+    <use
+       href="#bar_grande"
+       x="0"
+       id="use5" />
+    <use
+       href="#bar_tall"
+       x="25.875"
+       id="use6" />
+    <use
+       href="#bar_short"
+       x="51.75"
+       id="use7" />
+    <use
+       href="#bar_tall"
+       x="51.75"
+       id="use8" />
+    <use
+       href="#bar_grande"
+       x="51.75"
+       id="use9" />
+    <use
+       href="#bar_tall"
+       x="77.625"
+       id="use10" />
+    <use
+       href="#bar_short"
+       x="103.375"
+       id="use11" />
+  </g>
+  <metadata
+     id="metadata11">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Cisco.com France</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>

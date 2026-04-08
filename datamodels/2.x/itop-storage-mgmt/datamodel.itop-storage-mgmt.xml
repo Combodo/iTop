@@ -70,7 +70,7 @@
             <item id="col:col1">
               <rank>110</rank>
               <items>
-                <item id="fieldset:Server:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -124,7 +124,7 @@
             <item id="col:col2">
               <rank>120</rank>
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
@@ -152,7 +152,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <rank>30</rank>
                   <items>
                     <item id="description">
@@ -329,7 +329,7 @@
             <item id="col:col1">
               <rank>100</rank>
               <items>
-                <item id="fieldset:Server:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -383,7 +383,7 @@
             <item id="col:col2">
               <rank>110</rank>
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
@@ -411,7 +411,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <rank>30</rank>
                   <items>
                     <item id="description">
@@ -642,7 +642,7 @@
             <item id="col:col2">
               <rank>110</rank>
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
@@ -847,7 +847,7 @@
             <item id="col:col1">
               <rank>100</rank>
               <items>
-                <item id="fieldset:Server:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -901,7 +901,7 @@
             <item id="col:col2">
               <rank>110</rank>
               <items>
-                <item id="fieldset:Server:Date">
+                <item id="fieldset:ConfigMgmt:dates">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
@@ -929,7 +929,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <rank>30</rank>
                   <items>
                     <item id="description">
@@ -1097,17 +1097,42 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Storage:moreinfo">
+                  <items>
+                    <item id="tapelibrary_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="size">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="description">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
-            </item>
-            <item id="tapelibrary_id">
-              <rank>30</rank>
-            </item>
-            <item id="size">
-              <rank>40</rank>
             </item>
           </items>
         </details>
@@ -1215,7 +1240,7 @@
             <item id="col:col1">
               <rank>10</rank>
               <items>
-                <item id="fieldset:Server:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -1248,7 +1273,7 @@
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <rank>20</rank>
                   <items>
                     <item id="description">
@@ -1378,7 +1403,7 @@
             <item id="col:col1">
               <rank>10</rank>
               <items>
-                <item id="fieldset:Server:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -1600,7 +1625,7 @@
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                <item id="fieldset:Server:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <rank>20</rank>
                   <items>
                     <item id="description">
@@ -1957,6 +1982,18 @@
               <dashlet id="37" xsi:type="DashletBadge" _delta="define">
                 <rank>3</rank>
                 <class>LogicalVolume</class>
+              </dashlet>
+              <dashlet id="FiberChannelInterface" xsi:type="DashletBadge" _delta="define">
+                <rank>1.3</rank>
+                <class>FiberChannelInterface</class>
+              </dashlet>
+              <dashlet id="NASFileSystem" xsi:type="DashletBadge" _delta="define">
+                <rank>3.3</rank>
+                <class>NASFileSystem</class>
+              </dashlet>
+              <dashlet id="Tape" xsi:type="DashletBadge" _delta="define">
+                <rank>3.5</rank>
+                <class>Tape</class>
               </dashlet>
             </dashlets>
           </cell>

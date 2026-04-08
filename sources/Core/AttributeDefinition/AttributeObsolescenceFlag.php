@@ -109,7 +109,7 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 		return null;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return $this->MakeRealValue(false, $oHostObject);
 	}

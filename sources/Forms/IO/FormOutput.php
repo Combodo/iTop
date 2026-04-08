@@ -34,7 +34,7 @@ class FormOutput extends AbstractFormIO
 	 *
 	 * @throws FormBlockIOException
 	 */
-	public function __construct(string $sName, string $sType, bool $bIsArray = false, AbstractConverter $oConverter = null)
+	public function __construct(string $sName, string $sType, bool $bIsArray = false, ?AbstractConverter $oConverter = null)
 	{
 		parent::__construct($sName, $sType, $bIsArray);
 		$this->oConverter = $oConverter;

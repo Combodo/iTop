@@ -234,10 +234,11 @@ abstract class Action extends cmdbAbstractObject
 		}
 
 		$oActionFilter = DBObjectSearch::FromOQL($sActionQueryOql, $aActionQueryParams);
+		$oActionFilter->AllowAllData();
 		$oSet = new DBObjectSet($oActionFilter, ['date' => false]);
 
 		$sPanelTitle = Dict::Format('Action:last_executions_tab_panel_title', $sActionQueryLimit);
-		$oExecutionsListBlock = DataTableUIBlockFactory::MakeForResult($oPage, 'action_executions_list', $oSet, ['panel_title' => $sPanelTitle]);
+		$oExecutionsListBlock = DataTableUIBlockFactory::MakeForResult($oPage, 'action_executions_list', $oSet, ['panel_title' => $sPanelTitle, 'display_unauthorized_objects' => true]);
 
 		$oPage->AddUiBlock($oExecutionsListBlock);
 	}

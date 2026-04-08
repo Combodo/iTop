@@ -25,12 +25,12 @@ SetupWebPage::AddModule(
 		'data.struct' => [
 		],
 		'data.sample' => [
-			'data.sample.organizations.xml',
-			'data.sample.locations.xml',
-			'data.sample.persons.xml',
-			'data.sample.teams.xml',
-			'data.sample.contactteam.xml',
-			'data.sample.contacttype.xml',
+			'data/data.sample.organizations.xml',
+			'data/data.sample.locations.xml',
+			'data/data.sample.persons.xml',
+			'data/data.sample.teams.xml',
+			'data/data.sample.contactteam.xml',
+			'data/data.sample.contacttype.xml',
 		],
 
 		// Documentation

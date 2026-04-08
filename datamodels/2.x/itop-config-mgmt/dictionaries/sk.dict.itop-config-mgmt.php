@@ -231,7 +231,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ConnectableCI' => 'Pripojiteľné zariadenie',
-	'Class:ConnectableCI+' => 'Physical CI~~',
+	'Class:ConnectableCI+' => 'Physical Device which can be connected to a network.~~',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Sieťové zariadenia',
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'All network devices connected to this device~~',
@@ -492,6 +492,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'All the configuration items that compose this application solution~~',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Biznis procesy',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'All the business processes depending on this application solution~~',
+	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
+	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Stav',
 	'Class:ApplicationSolution/Attribute:status+' => '~~',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Aktívne',
@@ -513,6 +515,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:BusinessProcess+' => '~~',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Aplikačné riešenia',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'All the application solutions that impact this business process~~',
+	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
+	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:BusinessProcess/Attribute:status' => 'Stav',
 	'Class:BusinessProcess/Attribute:status+' => '~~',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'Aktívny',
@@ -577,7 +581,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 //
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:WebServer' => 'Web server',
+	'Class:WebServer' => 'Web Server',
 	'Class:WebServer+' => '~~',
 	'Class:WebServer/Attribute:webapp_list' => 'Webové aplikácie',
 	'Class:WebServer/Attribute:webapp_list+' => 'All the web applications available on this web server~~',
@@ -609,6 +613,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:MiddlewareInstance' => 'Middleware inštancia',
 	'Class:MiddlewareInstance+' => '~~',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Názov Middleware-u',
@@ -641,6 +647,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:WebApplication/Attribute:webserver_id+' => '~~',
 	'Class:WebApplication/Attribute:webserver_name' => 'Názov Web serveru',
 	'Class:WebApplication/Attribute:webserver_name+' => '~~',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '~~',
 ]);
@@ -838,7 +846,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Tape' => 'Páska',
-	'Class:Tape+' => '~~',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
 	'Class:Tape/Attribute:name' => 'Názov',
 	'Class:Tape/Attribute:name+' => '~~',
 	'Class:Tape/Attribute:description' => 'Popis',
@@ -888,6 +896,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Software/Attribute:version+' => '~~',
 	'Class:Software/Attribute:documents_list' => 'Dokumenty',
 	'Class:Software/Attribute:documents_list+' => 'All the documents linked to this software~~',
+	'Class:Software/Attribute:logo' => 'Logo~~',
+	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs~~',
 	'Class:Software/Attribute:type' => 'Typ',
 	'Class:Software/Attribute:type+' => '~~',
 	'Class:Software/Attribute:type/Value:DBServer' => 'DB Server',
@@ -1053,6 +1063,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Názov kategórie OS',
 	'Class:OSVersion/Attribute:osfamily_name+' => '~~',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
 ]);
 
 //
@@ -1062,6 +1074,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:OSFamily' => 'Kategória OS',
 	'Class:OSFamily+' => '~~',
+	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
+	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
 ]);
 
 //
@@ -1144,6 +1158,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:NetworkDeviceType' => 'Typ sieťového zariadenia',
 	'Class:NetworkDeviceType+' => '~~',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Sieťové zariadenia',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'All the network devices corresponding to this type~~',
 ]);
@@ -1159,6 +1175,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:IOSVersion/Attribute:brand_id+' => '~~',
 	'Class:IOSVersion/Attribute:brand_name' => 'Názov značky',
 	'Class:IOSVersion/Attribute:brand_name+' => '~~',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
 ]);
 
 //
@@ -1529,7 +1547,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'ConfigMgmt:baseinfo' => 'General~~',
 	'ConfigMgmt:moreinfo' => 'CI specifics~~',
 	'Storage:moreinfo' => 'Storage specifics~~',
-	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'ConfigMgmt:otherinfo' => 'Description~~',
+	'ConfigMgmt:dates' => 'Dates~~',
 	'Software:moreinfo' => 'Software specifics~~',
 	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Všeobecné informácie',
@@ -1620,8 +1639,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 //
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
 	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location id~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
 	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 ]);

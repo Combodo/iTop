@@ -40,7 +40,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Problem' => 'Problème',
-	'Class:Problem+' => '',
+	'Class:Problem+' => 'Un incident devient un problème lorsqu\'il n\'est pas résolu dans un délai raisonnable ou lorsqu\'il se répète fréquemment.',
 	'Class:Problem/Attribute:status' => 'Etat',
 	'Class:Problem/Attribute:status+' => '',
 	'Class:Problem/Attribute:status/Value:new' => 'Nouveau',
@@ -55,9 +55,9 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Problem/Attribute:service_id+' => '',
 	'Class:Problem/Attribute:service_name' => 'Nom du service',
 	'Class:Problem/Attribute:service_name+' => '',
-	'Class:Problem/Attribute:servicesubcategory_id' => 'Sous catégorie de service',
+	'Class:Problem/Attribute:servicesubcategory_id' => 'Sous-catégorie de service',
 	'Class:Problem/Attribute:servicesubcategory_id+' => '',
-	'Class:Problem/Attribute:servicesubcategory_name' => 'Nom sous catégorie de service',
+	'Class:Problem/Attribute:servicesubcategory_name' => 'Nom sous-catégorie de service',
 	'Class:Problem/Attribute:servicesubcategory_name+' => '',
 	'Class:Problem/Attribute:product' => 'Produit',
 	'Class:Problem/Attribute:product+' => '',

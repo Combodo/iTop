@@ -251,7 +251,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Service/Attribute:contacts_list' => 'Kontakty',
 	'Class:Service/Attribute:contacts_list+' => 'Všechny kontakty pro tuto službu',
 	'Class:Service/Attribute:status' => 'Stav',
-	'Class:Service/Attribute:status+' => '',
+	'Class:Service/Attribute:status+' => 'By default only Service in production are visible by Portal users~~',
 	'Class:Service/Attribute:status/Value:implementation' => 'implementace',
 	'Class:Service/Attribute:status/Value:implementation+' => '',
 	'Class:Service/Attribute:status/Value:obsolete' => 'zastaralá',
@@ -327,7 +327,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'v produkci',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => '',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Typ požadavku',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user selects this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'incident',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => '',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'požadavek na službu',
@@ -447,6 +447,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'Název SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);
 
 //
@@ -548,13 +550,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);

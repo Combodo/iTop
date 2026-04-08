@@ -325,7 +325,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Produkcia',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'production~~',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Typ požiadavky',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '~~',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user selects this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Incident',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'incident~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Požiadavka',
@@ -445,6 +445,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA Názov',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);
 
 //
@@ -546,13 +548,4 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);

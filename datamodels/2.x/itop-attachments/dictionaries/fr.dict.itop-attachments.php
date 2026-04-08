@@ -38,8 +38,8 @@ Soit demandez à votre administrateur système s\'il reste de la place disque di
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:Attachment' => 'Attachement',
-	'Class:Attachment+' => '',
+	'Class:Attachment' => 'Pièce jointe',
+	'Class:Attachment+' => 'Fichier : texte ou image, associé à un et un seul object, supprimable mais non modifiable, non créable en dehors d\'un objet',
 	'Class:Attachment/Attribute:expire' => 'Expire',
 	'Class:Attachment/Attribute:expire+' => '',
 	'Class:Attachment/Attribute:temp_id' => 'Id Temporaire',
@@ -82,12 +82,12 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TriggerOnAttachmentDownload' => 'Déclencheur sur le téléchargement d\'une pièce jointe d\'un objet',
-	'Class:TriggerOnAttachmentDownload+' => '',
+	'Class:TriggerOnAttachmentDownload+' => 'Déclencheur sur le téléchargement d\'une pièce jointe depuis un objet de la classe donnée ou d\'une classe enfant.',
 	'Class:TriggerOnAttachmentCreate'                         => 'Déclencheur sur la création d\'une pièce jointe',
-	'Class:TriggerOnAttachmentCreate+'                        => '',
+	'Class:TriggerOnAttachmentCreate+'                        => 'Déclencheur sur la création d\'une pièce jointe d\'un objet',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Ajoute le fichier dans l\'email',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'Si coché, le fichier sera automatiquement attaché à l\'email quand l\'action email est lancée',
 	'Class:TriggerOnAttachmentDelete'                         => 'Déclencheur sur la suppression d\'une pièce jointe',
-	'Class:TriggerOnAttachmentDelete+'                        => '',
+	'Class:TriggerOnAttachmentDelete+'                        => 'Déclencheur sur la suppression d\'une pièce jointe d\'un objet',
 	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Les Triggers sur les objets ne sont pas autorisés sur la classe Attachement. Veuillez utiliser les triggers spécifiques pour cette classe',
 ]);

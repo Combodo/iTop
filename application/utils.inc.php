@@ -123,6 +123,11 @@ class utils
 	 */
 	public const ENUM_SANITIZATION_FILTER_VARIABLE_NAME = 'variable_name';
 	/**
+	 * @var string For module codes (e.g. `itop-portal-base`, `combodo-webhook-integration`, `some-module-code-x.y`, ...)
+	 * @since 3.2.3 3.3.0 N°8554
+	 */
+	public const ENUM_SANITIZATION_FILTER_MODULE_CODE = 'module_code';
+	/**
 	 * @var string
 	 * @since 2.7.10 3.0.0
 	 */
@@ -393,6 +398,7 @@ class utils
 	 * @since 2.7.10 N°6606 use the utils::ENUM_SANITIZATION_* const
 	 * @since 2.7.10 N°6606 new case for ENUM_SANITIZATION_FILTER_PHP_CLASS
 	 * @since 3.2.1-1 N°8242 Allow value to be an array for every filter
+	 * @since 3.2.3 3.3.0 N°8554 new case for ENUM_SANITIZATION_FILTER_MODULE_CODE
 	 *
 	 * @link https://www.php.net/manual/en/filter.filters.sanitize.php PHP sanitization filters
 	 */
@@ -480,7 +486,7 @@ class utils
 				);
 				break;
 
-				// For XML / HTML node id selector
+				// For XML / HTML node selector
 			case static::ENUM_SANITIZATION_FILTER_ELEMENT_SELECTOR:
 				$retValue = filter_var(
 					$value,
@@ -491,6 +497,15 @@ class utils
 
 			case static::ENUM_SANITIZATION_FILTER_VARIABLE_NAME:
 				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
+				break;
+
+			case static::ENUM_SANITIZATION_FILTER_MODULE_CODE:
+				// Module codes allow all alphabets letters, numbers, dash and dot characters
+				$retValue = filter_var(
+					$value,
+					FILTER_VALIDATE_REGEXP,
+					['options' => ['regexp' => '/^[\p{L}\d.-]+$/u']]
+				);
 				break;
 
 				// For URL
@@ -1440,6 +1455,12 @@ class utils
 
 			case iPopupMenuExtension::MENU_OBJLIST_TOOLKIT:
 				/** @var \DBObjectSet $param */
+
+				// Check if the user has the right to read the objects of this list, otherwise do not propose any action (eg. configure this list, export, etc.)
+				if (UserRights::IsActionAllowed($param->GetFilter()->GetClass(), UR_ACTION_READ, $param) !== UR_ALLOWED_YES) {
+					break;
+				}
+
 				$oAppContext = new ApplicationContext();
 				$sContext = $oAppContext->GetForLink(true);
 				$sDataTableId = is_null($sDataTableId) ? '' : $sDataTableId;

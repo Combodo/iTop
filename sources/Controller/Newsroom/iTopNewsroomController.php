@@ -26,6 +26,7 @@ use CoreException;
 use DBObjectSearch;
 use DBObjectSet;
 use Dict;
+use EventNotificationNewsroom;
 use MetaModel;
 use SecurityException;
 use UserRights;
@@ -361,6 +362,7 @@ JS
 		// Search for all notifications for the current user
 		$oSearch = DBObjectSearch::FromOQL('SELECT EventNotificationNewsroom');
 		$oSearch->AddCondition('contact_id', UserRights::GetContactId(), '=');
+		$oSearch->AllowAllData();
 		$oSet = new DBObjectSet($oSearch, ['read' => true, 'date' => false], []);
 
 		// Add main content block
@@ -529,6 +531,7 @@ JS
 
 		if (utils::IsNotNullOrEmptyString($iContactId)) {
 			$oSearch = DBObjectSearch::FromOQL('SELECT EventNotificationNewsroom WHERE contact_id = :contact_id AND read = "no"');
+			$oSearch->AllowAllData();
 			$oSet = new DBObjectSet($oSearch, [], ['contact_id' => $iContactId]);
 
 			while ($oMessage = $oSet->Fetch()) {
@@ -542,7 +545,7 @@ $sMessage
 HTML;
 
 				$sIcon = $oMessage->Get('icon') !== null ?
-					$oMessage->Get('icon')->GetDisplayURL('EventNotificationNewsroom', $oMessage->GetKey(), 'icon') :
+					$oMessage->Get('icon')->GetDisplayURL(EventNotificationNewsroom::class, $oMessage->GetKey(), 'icon') :
 					Branding::GetCompactMainLogoAbsoluteUrl();
 				$aMessages[] = [
 					'id'         => $oMessage->GetKey(),
@@ -579,6 +582,7 @@ HTML;
 
 		if (utils::IsNotNullOrEmptyString($iContactId)) {
 			$oSearch = DBObjectSearch::FromOQL('SELECT EventNotificationNewsroom WHERE contact_id = :contact_id AND read = "no"');
+			$oSearch->AllowAllData();
 			$oSet = new DBObjectSet($oSearch, [], ['contact_id' => $iContactId]);
 
 			while ($oEvent = $oSet->Fetch()) {
@@ -608,7 +612,7 @@ HTML;
 		$sEventId = utils::ReadParam('event_id', 0);
 		if ($sEventId > 0) {
 			try {
-				$oEvent = MetaModel::GetObject('EventNotificationNewsroom', $sEventId);
+				$oEvent = MetaModel::GetObject(EventNotificationNewsroom::class, $sEventId, true, true);
 				if ($oEvent !== null && $oEvent->Get('contact_id') === UserRights::GetContactId()) {
 					$oEvent->Set('read', 'yes');
 					$oEvent->SetCurrentDate('read_date');

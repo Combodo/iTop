@@ -230,14 +230,14 @@ class UserRightsTest extends ItopDataTestCase
 			'User Portal UserRequest read'                   => [2, ['class' => 'UserRequest', 'action' => 1, 'res' => true]],
 			'User Portal URP_UserProfile read'               => [2, ['class' => 'URP_UserProfile', 'action' => 1, 'res' => false]],
 			'User Portal UserLocal read'                     => [2, ['class' => 'UserLocal', 'action' => 1, 'res' => false]],
-			'User Portal ModuleInstallation read'            => [2, ['class' => 'ModuleInstallation', 'action' => 1, 'res' => true]],
+			'User Portal ModuleInstallation read'            => [2, ['class' => 'ModuleInstallation', 'action' => 1, 'res' => false]],
 
 			/* Configuration manager (1 = UR_ACTION_READ) */
 			'Configuration manager FunctionalCI read'        => [3, ['class' => 'FunctionalCI', 'action' => 1, 'res' => true]],
 			'Configuration manager UserRequest read'         => [3, ['class' => 'UserRequest', 'action' => 1, 'res' => true]],
 			'Configuration manager URP_UserProfile read'     => [3, ['class' => 'URP_UserProfile', 'action' => 1, 'res' => false]],
 			'Configuration manager UserLocal read'           => [3, ['class' => 'UserLocal', 'action' => 1, 'res' => false]],
-			'Configuration manager ModuleInstallation read'  => [3, ['class' => 'ModuleInstallation', 'action' => 1, 'res' => true]],
+			'Configuration manager ModuleInstallation read'  => [3, ['class' => 'ModuleInstallation', 'action' => 1, 'res' => false]],
 		];
 	}
 
@@ -283,14 +283,14 @@ class UserRightsTest extends ItopDataTestCase
 			'User Portal UserRequest'                  => [2, ['class' => 'UserRequest', 'action' => 2, 'res' => true]],
 			'User Portal URP_UserProfile'              => [2, ['class' => 'URP_UserProfile', 'action' => 2, 'res' => false]],
 			'User Portal UserLocal'                    => [2, ['class' => 'UserLocal', 'action' => 2, 'res' => false]],
-			'User Portal ModuleInstallation'           => [2, ['class' => 'ModuleInstallation', 'action' => 2, 'res' => true]],
+			'User Portal ModuleInstallation'           => [2, ['class' => 'ModuleInstallation', 'action' => 2, 'res' => false]],
 
 			/* Configuration manager (2 = UR_ACTION_MODIFY) */
 			'Configuration manager FunctionalCI'       => [3, ['class' => 'FunctionalCI', 'action' => 2, 'res' => true]],
 			'Configuration manager UserRequest'        => [3, ['class' => 'UserRequest', 'action' => 2, 'res' => false]],
 			'Configuration manager URP_UserProfile'    => [3, ['class' => 'URP_UserProfile', 'action' => 2, 'res' => false]],
 			'Configuration manager UserLocal'          => [3, ['class' => 'UserLocal', 'action' => 2, 'res' => false]],
-			'Configuration manager ModuleInstallation' => [3, ['class' => 'ModuleInstallation', 'action' => 2, 'res' => true]],
+			'Configuration manager ModuleInstallation' => [3, ['class' => 'ModuleInstallation', 'action' => 2, 'res' => false]],
 		];
 	}
 

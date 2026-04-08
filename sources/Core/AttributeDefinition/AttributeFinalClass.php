@@ -50,7 +50,7 @@ class AttributeFinalClass extends AttributeString
 		$this->m_sValue = $sValue;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return $this->m_sValue;
 	}

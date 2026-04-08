@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 29.5.1, SVG Export Plug-In . SVG Version: 9.03 Build 0)  -->
+
+<svg
+   version="1.0"
+   id="katman_1"
+   x="0px"
+   y="0px"
+   viewBox="0 0 630 630"
+   xml:space="preserve"
+   sodipodi:docname="icon-hpe.svg"
+   width="630"
+   height="630"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs2" /><sodipodi:namedview
+   id="namedview2"
+   pagecolor="#ffffff"
+   bordercolor="#000000"
+   borderopacity="0.25"
+   inkscape:showpageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#d1d1d1"
+   showguides="true"
+   inkscape:zoom="0.6905515"
+   inkscape:cx="-217.94175"
+   inkscape:cy="275.1424"
+   inkscape:window-width="2560"
+   inkscape:window-height="1360"
+   inkscape:window-x="0"
+   inkscape:window-y="0"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="katman_1"><sodipodi:guide
+     position="197.66244,314.48848"
+     orientation="0,-1"
+     id="guide2"
+     inkscape:locked="false" /></sodipodi:namedview>
+<style
+   type="text/css"
+   id="style1">
+	.st0{fill:none;stroke:#000000;stroke-width:36;}
+	.st1{fill:none;stroke:#03A883;stroke-width:36;}
+</style>
+<path
+   class="st0"
+   d="m 18.511987,405.93012 v -180 m 154.000003,180 v -180 m -154.000003,89 H 155.51199 m 95,91 v -180 m 0,18 h 102 c 27.6,0 50,22.4 50,50 0,27.6 -22.4,50 -50,50 h -102 m 222,-67 v -33 h 158"
+   id="path1" />
+<path
+   class="st1"
+   d="m 630.51199,387.93012 h -158 v -76 h 158"
+   id="path2" />
+</svg>

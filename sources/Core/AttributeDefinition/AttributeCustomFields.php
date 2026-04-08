@@ -61,7 +61,7 @@ class AttributeCustomFields extends AttributeDefinition
 		return false;
 	} // See ReadValue...
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return new ormCustomFieldsValue($oHostObject, $this->GetCode());
 	}

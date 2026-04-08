@@ -11,8 +11,8 @@
  *
  */
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:KnownError' => 'Erreur Connue',
-	'Class:KnownError+' => 'Erreur documenté pour un problème connu',
+	'Class:KnownError' => 'Erreur connue',
+	'Class:KnownError+' => 'Erreur aux multiples occurrences, documentée suite à un Problème, pour faciliter le support.',
 	'Class:KnownError/Attribute:name' => 'Nom',
 	'Class:KnownError/Attribute:name+' => 'Ce nom devrait être unique parmi les erreurs connues de cette organisation',
 	'Class:KnownError/Attribute:org_id' => 'Organisation',
@@ -60,7 +60,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkErrorToFunctionalCI' => 'Lien Erreur / CI',
+	'Class:lnkErrorToFunctionalCI' => 'Lien Erreur connue / CI fonctionnel',
 	'Class:lnkErrorToFunctionalCI+' => 'Lien entre une erreur et un ci',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
@@ -80,8 +80,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkDocumentToError' => 'Lien Documents / Errors',
-	'Class:lnkDocumentToError+' => 'Lien entre un document et une erreur',
+	'Class:lnkDocumentToError' => 'Lien Document / Erreur connue',
+	'Class:lnkDocumentToError+' => 'Lien utilisé lorsqu\'un Document est applicable à une Erreur connue',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Document',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',

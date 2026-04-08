@@ -2806,8 +2806,8 @@ public function PrefillSearchForm(&$aContextParam)
               <dashlet id="ServiceByStatus" xsi:type="DashletHeaderDynamic">
                 <rank>1</rank>
                 <title>Class:Service</title>
-                <icon>/icons8-service.svg</icon>
-                <subtitle>UI-ServiceCatalogMenu-ObsoleteNotInPortal</subtitle>
+                <icon>../images/icons/icons8-service.svg</icon>
+                <subtitle>UI-ServiceCatalogMenu-OnlyProductionInPortal</subtitle>
                 <query>SELECT Service</query>
                 <group_by>status</group_by>
                 <values>implementation,obsolete,production</values>
@@ -2815,8 +2815,8 @@ public function PrefillSearchForm(&$aContextParam)
               <dashlet id="ServiceSubcategoryByStatus" xsi:type="DashletHeaderDynamic">
                 <rank>2</rank>
                 <title>Class:ServiceSubcategory</title>
-                <icon>/icons8-services.svg</icon>
-                <subtitle>UI-ServiceCatalogMenu-ObsoleteNotInPortal</subtitle>
+                <icon>../images/icons/icons8-services.svg</icon>
+                <subtitle>UI-ServiceCatalogMenu-OnlyProductionInPortal</subtitle>
                 <query>SELECT ServiceSubcategory</query>
                 <group_by>status</group_by>
                 <values>implementation,obsolete,production</values>
