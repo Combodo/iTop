@@ -55,14 +55,14 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 			SetupUtils::rrmdir($sDestModulesDir);
 		}
 
-		SetupUtils::copydir(APPROOT.'/data/'.$sSourceEnv.'-modules', $sDestModulesDir, $bUseSymLinks);
+		SetupUtils::copydir(APPROOT.'/data/'.$sSourceEnv.'-modules', $sDestModulesDir, (true === $bUseSymLinks));
 
 		if ($this->bUseAdditionalFeatures) {
 			foreach ($this->GetExtensionFoldersToAdd() as $sExtensionCode => $sFolderPath) {
 				\SetupLog::Info("ExtensionFoldersToAdd: $sExtensionCode => $sFolderPath");
 				$sFolderName = basename($sFolderPath);
 				@mkdir($sDestModulesDir.DIRECTORY_SEPARATOR.$sFolderName);
-				SetupUtils::copydir($sFolderPath, $sDestModulesDir.DIRECTORY_SEPARATOR.$sFolderName, $bUseSymLinks);
+				SetupUtils::copydir($sFolderPath, $sDestModulesDir.DIRECTORY_SEPARATOR.$sFolderName, (true === $bUseSymLinks));
 			}
 		}
 
