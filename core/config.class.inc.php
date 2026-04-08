@@ -873,8 +873,8 @@ class Config
 		'ext_auth_variable' => [
 			'type' => 'string',
 			'description' => 'External authentication expression (allowed: $_SERVER[\'key\'], $_COOKIE[\'key\'], $_REQUEST[\'key\'], getallheaders()[\'Header-Name\'])',
-			'default' => '',
-			'value' => '',
+			'default' => '$_SERVER[\'REMOTE_USER\']',
+			'value' => '$_SERVER[\'REMOTE_USER\']',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
