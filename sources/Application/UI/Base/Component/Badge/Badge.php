@@ -37,7 +37,7 @@ class Badge extends UIBlock
 	private string $sColor;
 	private string $sTooltip;
 
-	public function __construct(string $sLabel, string $sColor = self::DEFAULT_COLOR_SCHEME, string $sTooltip = '', string $sId = null)
+	public function __construct(string $sLabel, string $sColor = self::DEFAULT_COLOR_SCHEME, string $sTooltip = '', ?string $sId = null)
 	{
 		parent::__construct($sId);
 
