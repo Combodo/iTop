@@ -39,7 +39,7 @@ class LoginExternalTest extends ItopDataTestCase
 
 	protected function tearDown(): void
 	{
-		$this->oConfig->Set('ext_auth_variable', $this->sOriginalExtAuthVariable, 'unit_test');
+		$this->oConfig->SetExternalAuthenticationVariable($this->sOriginalExtAuthVariable);
 		parent::tearDown();
 	}
 
@@ -54,7 +54,7 @@ class LoginExternalTest extends ItopDataTestCase
 	public function testGetAuthUserFromServerVariable()
 	{
 		$_SERVER['REMOTE_USER'] = 'alice';
-		$this->oConfig->Set('ext_auth_variable', '$_SERVER[\'REMOTE_USER\']', 'unit_test');
+		$this->oConfig->SetExternalAuthenticationVariable('$_SERVER[\'REMOTE_USER\']');
 
 		$this->assertSame('alice', $this->CallGetAuthUser());
 	}
@@ -62,7 +62,7 @@ class LoginExternalTest extends ItopDataTestCase
 	public function testGetAuthUserFromCookie()
 	{
 		$_COOKIE['auth_user'] = 'bob';
-		$this->oConfig->Set('ext_auth_variable', '$_COOKIE[\'auth_user\']', 'unit_test');
+		$this->oConfig->SetExternalAuthenticationVariable('$_COOKIE[\'auth_user\']');
 
 		$this->assertSame('bob', $this->CallGetAuthUser());
 	}
@@ -70,14 +70,14 @@ class LoginExternalTest extends ItopDataTestCase
 	public function testGetAuthUserFromRequest()
 	{
 		$_REQUEST['auth_user'] = 'carol';
-		$this->oConfig->Set('ext_auth_variable', '$_REQUEST[\'auth_user\']', 'unit_test');
+		$this->oConfig->SetExternalAuthenticationVariable('$_REQUEST[\'auth_user\']');
 
 		$this->assertSame('carol', $this->CallGetAuthUser());
 	}
 
 	public function testInvalidExpressionReturnsFalse()
 	{
-		$this->oConfig->Set('ext_auth_variable', '$_SERVER[\'HTTP_X_CMD\']) ? print(\'x\') : false; //', 'unit_test');
+		$this->oConfig->SetExternalAuthenticationVariable('$_SERVER[\'HTTP_X_CMD\']) ? print(\'x\') : false; //');
 
 		$this->assertFalse($this->CallGetAuthUser());
 	}
@@ -88,7 +88,7 @@ class LoginExternalTest extends ItopDataTestCase
 			$this->markTestSkipped('getallheaders() not available');
 		}
 		$_SERVER['HTTP_X_REMOTE_USER'] = 'CN=header-test';
-		$this->oConfig->Set('ext_auth_variable', 'getallheaders()[\'X-Remote-User\']', 'unit_test');
+		$this->oConfig->SetExternalAuthenticationVariable('getallheaders()[\'X-Remote-User\']');
 
 		$this->assertSame('CN=header-test', $this->CallGetAuthUser());
 	}

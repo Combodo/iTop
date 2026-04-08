@@ -1976,11 +1976,6 @@ class Config
 	protected $m_sAllowedLoginTypes;
 
 	/**
-	 * @var string Name of the PHP variable in which external authentication information is passed by the web server
-	 */
-	protected $m_sExtAuthVariable;
-
-	/**
 	 * @var string Encryption key used for all attributes of type "encrypted string". Can be set to a random value
 	 *             unless you want to import a database from another iTop instance, in which case you must use
 	 *             the same encryption key in order to properly decode the encrypted fields
@@ -2052,7 +2047,6 @@ class Config
 		$this->m_bSecureConnectionRequired = DEFAULT_SECURE_CONNECTION_REQUIRED;
 		$this->m_sDefaultLanguage = 'EN US';
 		$this->m_sAllowedLoginTypes = DEFAULT_ALLOWED_LOGIN_TYPES;
-		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
 		$this->m_aCharsets = [];
 		$this->m_bQueryCacheEnabled = DEFAULT_QUERY_CACHE_ENABLED;
 		$this->m_iPasswordHashAlgo = DEFAULT_HASH_ALGO;
@@ -2206,7 +2200,6 @@ class Config
 
 		$this->m_sDefaultLanguage = isset($MySettings['default_language']) ? trim($MySettings['default_language']) : 'EN US';
 		$this->m_sAllowedLoginTypes = isset($MySettings['allowed_login_types']) ? trim($MySettings['allowed_login_types']) : DEFAULT_ALLOWED_LOGIN_TYPES;
-		$this->m_sExtAuthVariable = isset($MySettings['ext_auth_variable']) ? trim($MySettings['ext_auth_variable']) : DEFAULT_EXT_AUTH_VARIABLE;
 		$this->m_sEncryptionKey = isset($MySettings['encryption_key']) ? trim($MySettings['encryption_key']) : $this->m_sEncryptionKey;
 		$this->m_sEncryptionLibrary = isset($MySettings['encryption_library']) ? trim($MySettings['encryption_library']) : $this->m_sEncryptionLibrary;
 		$this->m_aCharsets = isset($MySettings['csv_import_charsets']) ? $MySettings['csv_import_charsets'] : [];
@@ -2521,7 +2514,7 @@ class Config
 
 	public function SetExternalAuthenticationVariable($sExtAuthVariable)
 	{
-		$this->m_sExtAuthVariable = $sExtAuthVariable;
+		$this->Set('ext_auth_variable', $sExtAuthVariable);
 	}
 
 	public function SetEncryptionKey($sKey)
@@ -2576,7 +2569,6 @@ class Config
 		$aSettings['secure_connection_required'] = $this->m_bSecureConnectionRequired;
 		$aSettings['default_language'] = $this->m_sDefaultLanguage;
 		$aSettings['allowed_login_types'] = $this->m_sAllowedLoginTypes;
-		$aSettings['ext_auth_variable'] = $this->m_sExtAuthVariable;
 		$aSettings['encryption_key'] = $this->m_sEncryptionKey;
 		$aSettings['encryption_library'] = $this->m_sEncryptionLibrary;
 		$aSettings['csv_import_charsets'] = $this->m_aCharsets;
@@ -2681,7 +2673,6 @@ class Config
 			$aOtherValues = [
 				'default_language' => $this->m_sDefaultLanguage,
 				'allowed_login_types' => $this->m_sAllowedLoginTypes,
-				'ext_auth_variable' => $this->m_sExtAuthVariable,
 				'encryption_key' => $this->m_sEncryptionKey,
 				'encryption_library' => $this->m_sEncryptionLibrary,
 				'csv_import_charsets' => $this->m_aCharsets,
