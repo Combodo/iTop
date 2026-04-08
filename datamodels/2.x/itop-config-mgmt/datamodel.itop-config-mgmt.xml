@@ -111,12 +111,12 @@
         </field>
         <field id="groups_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkGroupToCI</linked_class>
-          <ext_key_to_me>functionalci_id</ext_key_to_me>
+          <ext_key_to_me>ci_id</ext_key_to_me>
           <ext_key_to_remote>group_id</ext_key_to_remote>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates>false</duplicates>
-          <filter>SELECT Group WHERE status = 'active'</filter>
+          <filter>SELECT Group WHERE status != 'obsolete'</filter>
           <display_style>property</display_style>
         </field>
       </fields>
@@ -7116,9 +7116,6 @@
                   <items>
                     <item id="comment">
                       <rank>10</rank>
-                    </item>
-                    <item id="groups_list">
-                      <rank>20</rank>
                     </item>
                   </items>
                   <rank>10</rank>
