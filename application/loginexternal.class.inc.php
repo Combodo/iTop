@@ -75,13 +75,10 @@ class LoginExternal extends AbstractLoginFSMExtension
 	}
 
 	/**
-	 * @return bool
+	 * @return bool|mixed
 	 */
 	private function GetAuthUser()
 	{
-		$sExtAuthVar = MetaModel::GetConfig()->GetExternalAuthenticationVariable(); // In which variable is the info passed ?
-		eval('$sAuthUser = isset('.$sExtAuthVar.') ? '.$sExtAuthVar.' : false;'); // Retrieve the value
-		/** @var string $sAuthUser */
-		return $sAuthUser; // Retrieve the value
+		return MetaModel::GetConfig()->GetExternalAuthenticationVariable();
 	}
 }
