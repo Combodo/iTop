@@ -78,6 +78,7 @@ define('DEFAULT_EXT_AUTH_VARIABLE', '$_SERVER[\'REMOTE_USER\']');
 define('DEFAULT_ENCRYPTION_KEY', '@iT0pEncr1pti0n!'); // We'll use a random generated key later (if possible)
 define('DEFAULT_ENCRYPTION_LIB', 'Mcrypt'); // We'll define the best encryption available later
 define('DEFAULT_HASH_ALGO', PASSWORD_DEFAULT);
+
 /**
  * Config
  * configuration data (this class cannot not be localized, because it is responsible for loading the dictionaries)
@@ -868,6 +869,14 @@ class Config
 			// examples... not used (nor 'description')
 			'default' => false,
 			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'ext_auth_variable' => [
+			'type' => 'string',
+			'description' => 'External authentication expression (allowed: $_SERVER[\'key\'], $_COOKIE[\'key\'], $_REQUEST[\'key\'], getallheaders()[\'Header-Name\'])',
+			'default' => '$_SERVER[\'REMOTE_USER\']',
+			'value' => '$_SERVER[\'REMOTE_USER\']',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
@@ -1971,11 +1980,6 @@ class Config
 	protected $m_sDefaultLanguage;
 
 	/**
-	 * @var string Name of the PHP variable in which external authentication information is passed by the web server
-	 */
-	protected $m_sExtAuthVariable;
-
-	/**
 	 * @var string Encryption key used for all attributes of type "encrypted string". Can be set to a random value
 	 *             unless you want to import a database from another iTop instance, in which case you must use
 	 *             the same encryption key in order to properly decode the encrypted fields
@@ -2043,7 +2047,6 @@ class Config
 		$this->m_iFastReloadInterval = DEFAULT_FAST_RELOAD_INTERVAL;
 		$this->m_bSecureConnectionRequired = DEFAULT_SECURE_CONNECTION_REQUIRED;
 		$this->m_sDefaultLanguage = 'EN US';
-		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
 		$this->m_aCharsets = [];
 		$this->m_bQueryCacheEnabled = DEFAULT_QUERY_CACHE_ENABLED;
 		$this->m_iPasswordHashAlgo = DEFAULT_HASH_ALGO;
@@ -2189,7 +2192,6 @@ class Config
 		$this->m_aModuleSettings = isset($MyModuleSettings) ? $MyModuleSettings : [];
 
 		$this->m_sDefaultLanguage = isset($MySettings['default_language']) ? trim($MySettings['default_language']) : 'EN US';
-		$this->m_sExtAuthVariable = isset($MySettings['ext_auth_variable']) ? trim($MySettings['ext_auth_variable']) : DEFAULT_EXT_AUTH_VARIABLE;
 		$this->m_sEncryptionKey = isset($MySettings['encryption_key']) ? trim($MySettings['encryption_key']) : $this->m_sEncryptionKey;
 		$this->m_sEncryptionLibrary = isset($MySettings['encryption_library']) ? trim($MySettings['encryption_library']) : $this->m_sEncryptionLibrary;
 		$this->m_aCharsets = isset($MySettings['csv_import_charsets']) ? $MySettings['csv_import_charsets'] : [];
@@ -2351,9 +2353,73 @@ class Config
 		return explode('|', $this->m_aSettings['allowed_login_types']['value']);
 	}
 
+	/**
+	 * @return bool|mixed
+	 * @since 3.2.3 return the parsed value instead of an unsecured variable name
+	 */
 	public function GetExternalAuthenticationVariable()
 	{
-		return $this->m_sExtAuthVariable;
+		$sExpression = $this->Get('ext_auth_variable');
+		$aParsed = $this->ParseExternalAuthVariableExpression($sExpression);
+		if ($aParsed === null) {
+			return false;
+		}
+
+		$sKey = $aParsed['key'];
+		switch ($aParsed['type']) {
+			case 'server':
+				return $_SERVER[$sKey] ?? false;
+			case 'cookie':
+				return $_COOKIE[$sKey] ?? false;
+			case 'request':
+				return $_REQUEST[$sKey] ?? false;
+			case 'header':
+				if (!function_exists('getallheaders')) {
+					return false;
+				}
+				$aHeaders = getallheaders();
+				if (!is_array($aHeaders)) {
+					return false;
+				}
+				return $aHeaders[$sKey] ?? false;
+		}
+		return false;
+	}
+
+	/**
+	 * @param $sExpression
+	 * @return array|null
+	 */
+	private function ParseExternalAuthVariableExpression($sExpression)
+	{
+		// If it's a configuration parameter it's probably already trimmed, but just in case
+		$sExpression = trim((string) $sExpression);
+		if ($sExpression === '') {
+			return null;
+		}
+
+		// Match $_SERVER/$_COOKIE/$_REQUEST['key'] with optional whitespace and single/double quotes.
+		if (preg_match('/^\$_(SERVER|COOKIE|REQUEST)\s*\[\s*(["\'])\s*([^"\']+)\2\s*\]\s*$/', $sExpression, $aMatches) === 1) {
+			$sContext = strtoupper($aMatches[1]);
+			$sKey = $aMatches[3];
+			return [
+				'type' => strtolower($sContext),
+				'key' => $sKey,
+				'normalized' => '$_'.$sContext.'[\''.$sKey.'\']',
+			];
+		}
+
+		// Match getallheaders()['Header-Name'] in a case-insensitive way.
+		if (preg_match('/^getallheaders\(\)\s*\[\s*(["\'])\s*([^"\']+)\1\s*\]\s*$/i', $sExpression, $aMatches) === 1) {
+			$sKey = $aMatches[2];
+			return [
+				'type' => 'header',
+				'key' => $sKey,
+				'normalized' => 'getallheaders()[\''.$sKey.'\']',
+			];
+		}
+
+		return null;
 	}
 
 	public function GetCSVImportCharsets()
@@ -2449,7 +2515,7 @@ class Config
 
 	public function SetExternalAuthenticationVariable($sExtAuthVariable)
 	{
-		$this->m_sExtAuthVariable = $sExtAuthVariable;
+		$this->Set('ext_auth_variable', $sExtAuthVariable);
 	}
 
 	public function SetEncryptionKey($sKey)
@@ -2503,7 +2569,6 @@ class Config
 		$aSettings['fast_reload_interval'] = $this->m_iFastReloadInterval;
 		$aSettings['secure_connection_required'] = $this->m_bSecureConnectionRequired;
 		$aSettings['default_language'] = $this->m_sDefaultLanguage;
-		$aSettings['ext_auth_variable'] = $this->m_sExtAuthVariable;
 		$aSettings['encryption_key'] = $this->m_sEncryptionKey;
 		$aSettings['encryption_library'] = $this->m_sEncryptionLibrary;
 		$aSettings['csv_import_charsets'] = $this->m_aCharsets;
@@ -2606,7 +2671,6 @@ class Config
 			// Old fashioned remaining values
 			$aOtherValues = [
 				'default_language' => $this->m_sDefaultLanguage,
-				'ext_auth_variable' => $this->m_sExtAuthVariable,
 				'encryption_key' => $this->m_sEncryptionKey,
 				'encryption_library' => $this->m_sEncryptionLibrary,
 				'csv_import_charsets' => $this->m_aCharsets,
