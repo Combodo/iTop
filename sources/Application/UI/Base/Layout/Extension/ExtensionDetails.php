@@ -27,7 +27,7 @@ class ExtensionDetails extends UIContentBlock
 	protected PopoverMenu $oPopoverMenu;
 	protected array $aBadges;
 
-	public function __construct(string $sCode, string $sLabel, string $sDescription = '', array $aMetaData = [], array $aBadges = [], string $sAbout = '', string $sId = null)
+	public function __construct(string $sCode, string $sLabel, string $sDescription = '', array $aMetaData = [], array $aBadges = [], string $sAbout = '', ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->sCode = $sCode;
