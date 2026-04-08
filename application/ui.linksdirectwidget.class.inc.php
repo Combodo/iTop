@@ -228,7 +228,7 @@ JS
 			<<<HTML
 <form id="ObjectsAddForm_{$this->sInputid}">
     <div id="SearchResultsToAdd_{$this->sInputid}">
-        <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
+        <div style="border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
     </div>
     <input type="hidden" id="count_{$this->sInputid}" value="0"/>
 </form>
