@@ -8,8 +8,13 @@ use AttributeFriendlyName;
 use AttributeLinkedSet;
 use cmdbAbstract;
 use cmdbAbstractObject;
+use CoreException;
 use Dict;
+use Exception;
+use IssueLog;
+use LogChannels;
 use Metamodel;
+use utils;
 
 /**
  * Class DataTableSettings
@@ -130,7 +135,10 @@ class DataTableSettings
 	 */
 	public function unserialize($sData)
 	{
-		$aData = unserialize($sData);
+		$aData = utils::Unserialize($sData, ['allowed_classes' => false]);
+		if (!is_array($aData)) {
+			throw new CoreException('Wrong data table settings format, expected an array', ['datatable_settings_data' => $aData]);
+		}
 		$this->iDefaultPageSize = $aData['iDefaultPageSize'];
 		$this->aColumns = $aData['aColumns'];
 		foreach ($this->aClassAliases as $sAlias => $sClass) {
@@ -269,7 +277,19 @@ class DataTableSettings
 				return null;
 			}
 		}
-		$oSettings->unserialize($pref);
+
+		try {
+			$oSettings->unserialize($pref);
+		} catch (Exception $e) {
+			IssueLog::Warning("User table settings corrupted, back to the default values provided by the data model", LogChannels::CONSOLE, [
+				'table_id' => $sTableId,
+				'root_cause' => $e->getMessage(),
+			]);
+			// unset the preference
+			appUserPreferences::UnsetPref($oSettings->GetPrefsKey($sTableId));
+			// use the default values provided by the data model
+			return null;
+		}
 
 		return $oSettings;
 	}
