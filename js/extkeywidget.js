@@ -171,7 +171,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			// To avoid dropdown to be cut by the container's overflow hidden rule
 			dropdownParent: 'body',
 			onDropdownOpen: function (oDropdownElem) {
-				me.UpdateDropdownPosition(this.$control, oDropdownElem);
+				me.UpdateDropdownPosition(this.$control, oDropdownElem, this.$dropdown_content);
 			},
 		});
 		let $selectize = $select[0].selectize; // This stores the selectize object to a variable (with name 'selectize')
@@ -320,7 +320,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	 * @param {object} oDropdownElem jQuery object representing the results dropdown
 	 * @return {void}
 	 */
-	this.UpdateDropdownPosition = function (oControlElem, oDropdownElem) {
+	this.UpdateDropdownPosition = function (oControlElem, oDropdownElem, oDropdownContentElem) {
 		// First fix width to ensure it's not too long
 		const fControlWidth = oControlElem.outerWidth();
 		oDropdownElem.css('width', fControlWidth);
@@ -340,6 +340,11 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			// Set dropdown max-height to 1/3 of the screen, this way we are sure the dropdown will fit in either the top / bottom half of the screen
 			oDropdownElem.css('max-height', '30vh');
 			fDropdownHeight = oDropdownElem.outerHeight();
+
+            // N°9468 Dropdown content needs to be a few pixel shorter than the dropdown itself to avoid double scrollbar
+            if(oDropdownContentElem) {
+                oDropdownContentElem.css('max-height', 'calc(30vh - 4px)');
+            }
 
 			// Position dropdown above input if not enough space on the bottom part of the screen
 			if ((fDropdownTopY / fWindowHeight) > 0.6) {
