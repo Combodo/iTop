@@ -438,8 +438,11 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
-                    <item id="logo">
+                    <item id="groups_list">
                       <rank>20</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>30</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -993,6 +996,9 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
+                    </item>
                   </items>
                   <rank>20</rank>
                 </item>
@@ -1196,6 +1202,9 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
+                    </item>
                   </items>
                   <rank>20</rank>
                 </item>
@@ -1254,6 +1263,16 @@
             <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="name">
+            <attributes>
+              <attribute id="name"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields/>
       <methods/>
@@ -1298,6 +1317,16 @@
             <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="name">
+            <attributes>
+              <attribute id="name"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields/>
       <methods/>
