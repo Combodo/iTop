@@ -34,6 +34,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:Incident:Shortcuts+' => '',
 	'Menu:Incident:MyIncidents' => '分配给我的事件',
 	'Menu:Incident:MyIncidents+' => '分配给我的事件',
+	'Menu:Incident:MySupportIncidents' => 'My support incidents~~',
+	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
 	'Menu:Incident:EscalatedIncidents' => '已升级的事件',
 	'Menu:Incident:EscalatedIncidents+' => '已升级的事件',
 	'Menu:Incident:OpenIncidents' => '所有打开的事件',
