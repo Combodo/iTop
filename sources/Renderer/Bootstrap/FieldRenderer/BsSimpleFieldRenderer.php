@@ -653,7 +653,7 @@ HTML
 				if (false === empty($iEntryUserId)) {
 					$oEntryUser = MetaModel::GetObject('User', $iEntryUserId, false /* Necessary in case user has been deleted */, true);
 					if (!is_null($oEntryUser)) {
-						$sEntryUserLogin = UserRights::GetUserFriendlyName($oEntryUser->Get('login'));
+						$sEntryUserLogin = UserRights::GetUserFriendlyName($oEntryUser->Get('login'), true);
 					}
 
 					// Retrieve (and cache) profile picture if available (standard datamodel)

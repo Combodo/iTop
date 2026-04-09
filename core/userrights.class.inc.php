@@ -1345,12 +1345,12 @@ class UserRights
 	 * @return string
 	 * @throws \OQLException
 	 */
-	public static function GetUserFriendlyName($sLogin = '')
+	public static function GetUserFriendlyName(string $sLogin = '', bool $bAllowDisabledUsers = false)
 	{
 		if (empty($sLogin)) {
 			$oUser = self::$m_oUser;
 		} else {
-			$oUser = self::FindUser($sLogin);
+			$oUser = self::FindUser($sLogin, 'any', $bAllowDisabledUsers);
 		}
 		if (is_null($oUser)) {
 			return '';
