@@ -3996,6 +3996,9 @@
             <item id="type">
               <rank>30</rank>
             </item>
+            <item id="end_of_support">
+              <rank>40</rank>
+            </item>
           </items>
         </default_search>
         <search>
@@ -4021,6 +4024,9 @@
             </item>
             <item id="type">
               <rank>20</rank>
+            </item>
+            <item id="end_of_support">
+              <rank>30</rank>
             </item>
           </items>
         </list>
@@ -5169,13 +5175,26 @@
             </item>
           </items>
         </search>
-        <list>
+        <default_search>
           <items>
             <item id="name">
               <rank>10</rank>
             </item>
             <item id="osfamily_id">
               <rank>20</rank>
+            </item>
+            <item id="end_of_support">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
+        <list>
+          <items>
+            <item id="osfamily_id">
+              <rank>20</rank>
+            </item>
+            <item id="end_of_support">
+              <rank>30</rank>
             </item>
           </items>
         </list>
@@ -5255,9 +5274,6 @@
         </search>
         <list>
           <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
             <item id="logo">
               <rank>20</rank>
             </item>
@@ -5544,16 +5560,32 @@
             </item>
           </items>
         </search>
-        <list>
+        <default_search>
           <items>
             <item id="name">
               <rank>10</rank>
             </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="brand_id">
+              <rank>30</rank>
+            </item>
+            <item id="end_of_support">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
+        <list>
+          <items>
             <item id="brand_id">
               <rank>20</rank>
             </item>
             <item id="type">
               <rank>30</rank>
+            </item>
+            <item id="end_of_support">
+              <rank>40</rank>
             </item>
           </items>
         </list>
@@ -5728,13 +5760,26 @@
             </item>
           </items>
         </search>
-        <list>
+        <default_search>
           <items>
             <item id="name">
               <rank>10</rank>
             </item>
             <item id="brand_id">
               <rank>20</rank>
+            </item>
+            <item id="end_of_support">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
+        <list>
+          <items>
+            <item id="brand_id">
+              <rank>20</rank>
+            </item>
+            <item id="end_of_support">
+              <rank>30</rank>
             </item>
           </items>
         </list>
