@@ -3265,17 +3265,17 @@ TXT
 	 */
 	public static function Unserialize(mixed $data, array $aOptions, bool $bThrowNotAllowedObjectClassException = true): mixed
 	{
-		$oData = unserialize($data, $aOptions);
+		$data = unserialize($data, $aOptions);
 
 		if ($bThrowNotAllowedObjectClassException) {
 			try {
-				self::AssertNoIncompleteClassDetected($oData);
+				self::AssertNoIncompleteClassDetected($data);
 			} catch (Exception $e) {
 				throw new CoreException('Unserialization failed because an incomplete class was detected.', [], '', $e);
 			}
 		}
 
-		return $oData;
+		return $data;
 	}
 
 	/**
@@ -3283,7 +3283,7 @@ TXT
 	 *
 	 * @throws Exception
 	 */
-	public static function AssertNoIncompleteClassDetected($data): void
+	public static function AssertNoIncompleteClassDetected(mixed $data): void
 	{
 		if (is_object($data)) {
 			if ($data instanceof __PHP_Incomplete_Class) {
