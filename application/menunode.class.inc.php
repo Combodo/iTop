@@ -1546,7 +1546,16 @@ class ShortcutMenuNode extends MenuNode
 	public function GetHyperlink($aExtraParams)
 	{
 		$sContext = $this->oShortcut->Get('context');
-		$aContext = unserialize($sContext);
+		try {
+			$aContext = utils::Unserialize($sContext, ['allowed_classes' => false]);
+		} catch (Exception $e) {
+			IssueLog::Warning("User shortcut corrupted, delete the shortcut", LogChannels::CONSOLE, [
+				'shortcut_name' => $this->oShortcut->GetName(),
+				'root_cause' => $e->getMessage(),
+			]);
+			// delete the shortcut
+			$this->oShortcut->DBDelete();
+		}
 		if (isset($aContext['menu'])) {
 			unset($aContext['menu']);
 		}
