@@ -35,18 +35,32 @@ class iTopExtensionsMap
 	/** @var bool $bHasXmlInstallationFile : false when legacy 1.x package with no installation.xml */
 	protected $bHasXmlInstallationFile = true;
 
+	//extension dirs apart from package
+	protected array $aExtraDirs = [];
+
 	/**
 	 * The list of all discovered extensions
+	 *
 	 * @param string $sFromEnvironment The environment to scan
-	 * @param bool $bNormailizeOldExtension true to "magically" convert some well-known old extensions (i.e. a set of modules) to the new iTopExtension format
+	 * @param array $aExtraDirs extensions dir to scan
+	 *
 	 * @return void
 	 */
-	public function __construct($sFromEnvironment = ITOP_DEFAULT_ENV, $aExtraDirs = [])
+	public function __construct(string $sFromEnvironment = ITOP_DEFAULT_ENV, array $aExtraDirs = [])
 	{
 		$this->aExtensions = [];
 		$this->aExtensionsByCode = [];
 		$this->aScannedDirs = [];
 		$this->ScanDisk($sFromEnvironment);
+
+		$this->aExtraDirs = $aExtraDirs;
+		if (is_dir(APPROOT.'extensions')) {
+			$this->aExtraDirs [] = APPROOT.'extensions';
+		}
+		if (is_dir(APPROOT.'data/'.$sFromEnvironment.'-modules')) {
+			$this->aExtraDirs [] = APPROOT.'data/'.$sFromEnvironment.'-modules';
+		}
+
 		foreach ($aExtraDirs as $sDir) {
 			$this->ReadDir($sDir, iTopExtension::SOURCE_REMOTE);
 		}
@@ -64,13 +78,13 @@ class iTopExtensionsMap
 		if (!$this->ReadInstallationWizard(APPROOT.'/datamodels/2.x')) {
 			$this->bHasXmlInstallationFile = false;
 			//no installation xml found in 2.x: let's read all extensions in 2.x first
-			if (!$this->ReadDir(APPROOT.'/datamodels/2.x', iTopExtension::SOURCE_WIZARD)) {
+			if (!$this->ReadDir(APPROOT.'datamodels/2.x', iTopExtension::SOURCE_WIZARD)) {
 				//nothing found in 2.x : fallback read in 1.x (flat structure)
-				$this->ReadDir(APPROOT.'/datamodels/1.x', iTopExtension::SOURCE_WIZARD);
+				$this->ReadDir(APPROOT.'datamodels/1.x', iTopExtension::SOURCE_WIZARD);
 			}
 		}
-		$this->ReadDir(APPROOT.'/extensions', iTopExtension::SOURCE_MANUAL);
-		$this->ReadDir(APPROOT.'/data/'.$sEnvironment.'-modules', iTopExtension::SOURCE_REMOTE);
+		$this->ReadDir(APPROOT.'extensions', iTopExtension::SOURCE_MANUAL);
+		$this->ReadDir(APPROOT.'data/'.$sEnvironment.'-modules', iTopExtension::SOURCE_REMOTE);
 	}
 
 	/**
@@ -375,9 +389,10 @@ class iTopExtensionsMap
 	}
 
 	/**
-	* @param bool $bKeepMissingDependencyExtensions
-	* @param bool $bRemoteExtensionsShouldBeMandatory
-	* @return array<\iTopExtension>>
+	 * @param bool $bKeepExtensionsHavingMissingDependencies
+	 * @param bool $bRemoteExtensionsShouldBeMandatory
+	 *
+	 * @return \iTopExtension[]
 	 */
 	public function GetAllExtensionsToDisplayInSetup(bool $bKeepExtensionsHavingMissingDependencies = false, bool $bRemoteExtensionsShouldBeMandatory = true): array
 	{
@@ -587,6 +602,11 @@ class iTopExtensionsMap
 			// No database or erroneous information
 			return false;
 		}
+	}
+
+	public function GetExtraDir(): array
+	{
+		return $this->aExtraDirs;
 	}
 
 	/**

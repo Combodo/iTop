@@ -54,7 +54,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		$oDryRemovalRuntimeEnvt = new DryRemovalRuntimeEnvironment($this->GetTestEnvironment(), ['nominal_ext1', 'finalclass_ext2']);
 		$oDryRemovalRuntimeEnvt->CompileFrom($this->GetTestEnvironment());
 
-		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment());
+		$oSetupAudit = new SetupAudit($this->GetTestEnvironment());
 
 		$expected = [
 			"Feature1Module1MyClass",

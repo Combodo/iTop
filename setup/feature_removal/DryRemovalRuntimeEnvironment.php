@@ -3,8 +3,6 @@
 namespace Combodo\iTop\Setup\FeatureRemoval;
 
 use iTopExtensionsMap;
-use MetaModel;
-use ModuleDiscovery;
 use RunTimeEnvironment;
 use SetupUtils;
 
@@ -37,18 +35,19 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 		SetupUtils::copydir(APPROOT."/conf/$sSourceEnv", APPROOT."/conf/$sBuildEnv");
 
 		$this->DeclareExtensionAsRemoved($this->aExtensionsByCode);
+		/*
+				$sSourceDir = MetaModel::GetConfig()->Get('source_dir');
+				$aSearchDirs = $this->GetExtraDirsToCompile($sSourceDir);
 
-		$sSourceDir = MetaModel::GetConfig()->Get('source_dir');
-		$aSearchDirs = $this->GetExtraDirsToCompile($sSourceDir);
+				$aModulesToLoad = $this->GetModulesToLoad($sSourceEnv, $aSearchDirs);
+				\SetupLog::Info(__METHOD__, null, ['module_to_load' => $aModulesToLoad]);
 
-		$aModulesToLoad = $this->GetModulesToLoad($sSourceEnv, $aSearchDirs);
-
-		try {
-			ModuleDiscovery::GetModulesOrderedByDependencies($aSearchDirs, true, $aModulesToLoad);
-		} catch (\MissingDependencyException $e) {
-			\IssueLog::Error("Cannot prepare setup due to dependency issue", null, ['msg' => $e->getMessage(), 'modules_to_load' => $aModulesToLoad]);
-			throw $e;
-		}
+				try {
+					ModuleDiscovery::GetModulesOrderedByDependencies($aSearchDirs, true, $aModulesToLoad);
+				} catch (\MissingDependencyException $e) {
+					\IssueLog::Error("Cannot prepare setup due to dependency issue", null, ['msg' => $e->getMessage(), 'modules_to_load' => $aModulesToLoad]);
+					throw $e;
+				}*/
 	}
 
 	private function DeclareExtensionAsRemoved(array $aExtensionCodes): void

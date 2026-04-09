@@ -6,6 +6,7 @@
  */
 
 use Combodo\iTop\Setup\ModuleDependency\DependencyExpression;
+use Combodo\iTop\Setup\ModuleDependency\Module;
 
 require_once __DIR__.'/ModuleInstallationException.php';
 require_once(APPROOT.'/setup/moduledependency/module.class.inc.php');
@@ -36,11 +37,12 @@ class InstallationChoicesToModuleConverter
 	 * @param array<string> $aInstallationChoices
 	 * @param array<string> $aSearchDirs
 	 * @param string|null $sInstallationFilePath
+	 * @param array|null $aExtensionDirs : module/extension dirs to load if they are compliant with choices
 	 *
 	 * @return array<string>
 	 * @throws \ModuleInstallationException
 	 */
-	public function GetModules(array $aInstallationChoices, array $aSearchDirs, ?string $sInstallationFilePath = null): array
+	public function GetModules(array $aInstallationChoices, array $aSearchDirs, ?string $sInstallationFilePath = null, ?array $aExtensionDirs = null): array
 	{
 		$aPackageModules = $this->GetAllModules($aSearchDirs);
 
@@ -61,11 +63,28 @@ class InstallationChoicesToModuleConverter
 		foreach (array_keys($aPackageModules) as $sModuleId) {
 			list($sModuleName) = ModuleDiscovery::GetModuleName($sModuleId);
 			if (in_array($sModuleName, $aInstalledModuleNames)) {
-				$aInstalledModules[] = $sModuleId;
+				$aInstalledModules[$sModuleName] = $sModuleId;
 			}
 		}
 
-		return $aInstalledModules;
+		if (!is_null($aExtensionDirs)) {
+			foreach (array_keys($this->GetAllModules($aExtensionDirs)) as $sModuleId) {
+				$oModule = new Module($sModuleId);
+
+				$sPreviousModuleId = $aInstalledModules[$oModule->GetModuleName()] ?? null;
+				if (is_null($sPreviousModuleId)) {
+					$aInstalledModules[$oModule->GetModuleName()] = $sModuleId;
+					continue;
+				}
+
+				$oPreviousModule = new Module($sPreviousModuleId);
+				if (version_compare($oModule->GetVersion(), $oPreviousModule->GetVersion(), '>')) {
+					$aInstalledModules[$oModule->GetModuleName()] = $sModuleId;
+				}
+			}
+		}
+
+		return array_values($aInstalledModules);
 	}
 
 	/**
