@@ -21,6 +21,7 @@ $text-strong: inherit !default;
  * See https://bulma.io/documentation/elements/content/
  */
 $content-block-margin-bottom: 0 !default;
+$content-blockquote-background-color: $ibo-color-grey-200 !default;
 
 /* Table: Reset style as much as possible to match rich text editor preview, which is the browser's default stylesheet.
  * As there is no way to avoid bulma rules, we simply make them invalid by setting an invalid variable value, the rules will then be ignored by the browser.
