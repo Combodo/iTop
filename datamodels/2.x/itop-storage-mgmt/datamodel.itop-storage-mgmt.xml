@@ -1460,16 +1460,6 @@
                 </item>
               </items>
             </item>
-            <item id="col:col2">
-              <rank>20</rank>
-              <items>
-                <item id="fieldset:ConfigMgmt:otherinfo">
-                  <rank>20</rank>
-                  <items>
-                  </items>
-                </item>
-              </items>
-            </item>
           </items>
         </details>
         <search>
