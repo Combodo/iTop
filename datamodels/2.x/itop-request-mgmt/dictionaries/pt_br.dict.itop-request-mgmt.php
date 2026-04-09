@@ -32,7 +32,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:UserRequest:EscalatedRequests' => 'Solicitações escalonadas',
 	'Menu:UserRequest:EscalatedRequests+' => 'Solicitações escalonadas',
 	'Menu:UserRequest:OpenRequests' => 'Todas as solicitações abertas',
-	'Menu:UserRequest:OpenRequests+' => '',
+	'Menu:UserRequest:OpenRequests+' => 'All requests that are not closed~~',
 	'UI:WelcomeMenu:MyAssignedCalls' => 'Solicitações atribuídas a mim',
 	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Solicitações dos últimos 14 dias (por tipo)',
 	'UI-RequestManagementOverview-Last-14-days' => 'Solicitações dos últimos 14 dias (por dia)',

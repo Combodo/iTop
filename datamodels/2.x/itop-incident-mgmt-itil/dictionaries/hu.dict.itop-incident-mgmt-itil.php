@@ -23,6 +23,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:Incident:Shortcuts+' => 'Gyorselérés gombok',
 	'Menu:Incident:MyIncidents' => 'Hozzám rendelt incidensek',
 	'Menu:Incident:MyIncidents+' => 'Hozzám rendelt incidensek (ügyintézőként)',
+	'Menu:Incident:MySupportIncidents' => 'My support incidents~~',
+	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
 	'Menu:Incident:EscalatedIncidents' => 'Eszkalált incidensek',
 	'Menu:Incident:EscalatedIncidents+' => 'Eszkalált incidensek',
 	'Menu:Incident:OpenIncidents' => 'Nyitott incidensek',

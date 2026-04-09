@@ -23,6 +23,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:Incident:Shortcuts+' => '',
 	'Menu:Incident:MyIncidents' => '担当しているインシデント',
 	'Menu:Incident:MyIncidents+' => '担当しているインシデント(エージェント)',
+	'Menu:Incident:MySupportIncidents' => 'My support incidents~~',
+	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
 	'Menu:Incident:EscalatedIncidents' => 'エスカレーションされたインシデント',
 	'Menu:Incident:EscalatedIncidents+' => 'エスカレーションされたインシデント',
 	'Menu:Incident:OpenIncidents' => '全オープンインシデント',

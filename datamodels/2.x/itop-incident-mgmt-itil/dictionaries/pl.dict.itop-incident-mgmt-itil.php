@@ -23,6 +23,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Menu:Incident:Shortcuts+' => '',
 	'Menu:Incident:MyIncidents' => 'Incydenty przypisane do mnie',
 	'Menu:Incident:MyIncidents+' => 'Incydenty przypisane do mnie (jako Agent)',
+	'Menu:Incident:MySupportIncidents' => 'My support incidents~~',
+	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
 	'Menu:Incident:EscalatedIncidents' => 'Pilne incydenty',
 	'Menu:Incident:EscalatedIncidents+' => 'Pilne incydenty',
 	'Menu:Incident:OpenIncidents' => 'Wszystkie otwarte incydenty',
