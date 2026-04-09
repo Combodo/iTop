@@ -604,7 +604,7 @@ class iTopExtensionsMap
 		}
 	}
 
-	public function GetExtraDir(): array
+	public function GetExtraDirs(): array
 	{
 		return $this->aExtraDirs;
 	}
