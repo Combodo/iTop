@@ -30,7 +30,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:UserRequest:MySupportRequests' => 'Mes demandes de support',
 	'Menu:UserRequest:MySupportRequests+' => 'Les demandes utilisateur en cours dont je suis le demandeur',
 	'Menu:UserRequest:EscalatedRequests' => 'Demandes en escalade',
-	'Menu:UserRequest:EscalatedRequests+' => 'Les demandes utilisateur en escalade, par status ou par indicateur',
+	'Menu:UserRequest:EscalatedRequests+' => 'Les demandes utilisateur en escalade ou à surveiller',
 	'Menu:UserRequest:OpenRequests' => 'Demandes en cours',
 	'Menu:UserRequest:OpenRequests+' => 'Toutes les demandes utilisateur qui ne sont pas fermées',
 	'UI:WelcomeMenu:MyAssignedCalls' => 'Demandes utilisateur qui me sont assignées',
