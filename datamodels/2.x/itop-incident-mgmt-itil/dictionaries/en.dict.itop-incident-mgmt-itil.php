@@ -40,7 +40,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'Menu:Incident:EscalatedIncidents' => 'Escalated incidents',
 	'Menu:Incident:EscalatedIncidents+' => 'Incident which are under escalation, by status or flag',
 	'Menu:Incident:OpenIncidents' => 'All open incidents',
-	'Menu:Incident:OpenIncidents+' => 'All incidents that are not closed~~',
+	'Menu:Incident:OpenIncidents+' => 'All incidents that are not closed',
 	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => 'Last 14 days incident per priority',
 	'UI-IncidentManagementOverview-Last-14-days' => 'Last 14 days number of incidents',
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Open incidents by status',
