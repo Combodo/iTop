@@ -46,11 +46,9 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 	 */
 	public function CheckDirectories($sBuildEnv)
 	{
-		$sBuildDir = APPROOT.'env-'.$sBuildEnv;
-		$sBuildDir = $sBuildDir.'-build';
-
-		self::CheckDirectory($sBuildDir);
-		self::CheckDirectory($sBuildDir);
+		$sCurrentEnvDir = APPROOT.'env-'.$sBuildEnv;
+		self::CheckDirectory($sCurrentEnvDir);
+		self::CheckDirectory($sCurrentEnvDir.'-build');
 	}
 
 	/**
