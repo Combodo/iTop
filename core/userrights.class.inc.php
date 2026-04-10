@@ -1350,7 +1350,7 @@ class UserRights
 		if (empty($sLogin)) {
 			$oUser = self::$m_oUser;
 		} else {
-			$oUser = self::FindUser($sLogin, 'any', $bAllowDisabledUsers);
+			$oUser = self::FindUser($sLogin, bAllowDisabledUsers: $bAllowDisabledUsers);
 		}
 		if (is_null($oUser)) {
 			return '';
