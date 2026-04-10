@@ -812,7 +812,7 @@
             <item id="col:col1">
               <rank>90</rank>
               <items>
-                <item id="fieldset:ConfigMgmt:baseinfo">
+                <item id="fieldset:Server:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -871,7 +871,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:ConfigMgmt:otherinfo">
+                <item id="fieldset:Server:otherinfo">
                   <rank>20</rank>
                   <items>
                     <item id="description">

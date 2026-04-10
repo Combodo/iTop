@@ -865,7 +865,7 @@
             <item id="col:col1">
               <rank>100</rank>
               <items>
-                <item id="fieldset:ConfigMgmt:baseinfo">
+                <item id="fieldset:Server:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -891,7 +891,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Storage:moreinfo">
+                <item id="fieldset:Server:moreinfo">
                   <rank>20</rank>
                   <items>
                     <item id="brand_id">
@@ -919,7 +919,7 @@
             <item id="col:col2">
               <rank>110</rank>
               <items>
-                <item id="fieldset:ConfigMgmt:dates">
+                <item id="fieldset:Server:Date">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
@@ -950,7 +950,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:ConfigMgmt:otherinfo">
+                <item id="fieldset:Server:otherinfo">
                   <rank>30</rank>
                   <items>
                     <item id="description">
