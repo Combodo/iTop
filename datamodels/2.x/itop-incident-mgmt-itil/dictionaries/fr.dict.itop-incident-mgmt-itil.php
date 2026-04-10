@@ -26,7 +26,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:Incident:MySupportIncidents' => 'Les incidents que j\'ai remontés',
 	'Menu:Incident:MySupportIncidents+' => 'Les incidents en cours dont je suis le demandeur',
 	'Menu:Incident:EscalatedIncidents' => 'Incidents en cours d\'escalade',
-	'Menu:Incident:EscalatedIncidents+' => 'Ticket d\'incident en cours d\'escalade',
+	'Menu:Incident:EscalatedIncidents+' => 'Ticket d\'incident en cours d\'escalade ou à surveiller',
 	'Menu:Incident:OpenIncidents' => 'Incidents ouverts',
 	'Menu:Incident:OpenIncidents+' => 'Tous les tickets d\'incident ouverts',
 	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => 'Incidents des 14 derniers jours par priorité',
