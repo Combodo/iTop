@@ -3263,7 +3263,7 @@ TXT
 	 * @return mixed PHP @unserialise return
 	 * @throws Exception
 	 */
-	public static function Unserialize(mixed $data, array $aOptions, bool $bThrowNotAllowedObjectClassException = true): mixed
+	public static function Unserialize(mixed $data, array $aOptions = ['allowed_classes' => false], bool $bThrowNotAllowedObjectClassException = true): mixed
 	{
 		$data = unserialize($data, $aOptions);
 

@@ -1547,7 +1547,7 @@ class ShortcutMenuNode extends MenuNode
 	{
 		$sContext = $this->oShortcut->Get('context');
 		try {
-			$aContext = utils::Unserialize($sContext, ['allowed_classes' => false]);
+			$aContext = utils::Unserialize($sContext);
 			if (isset($aContext['menu'])) {
 				unset($aContext['menu']);
 			}

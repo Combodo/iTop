@@ -135,7 +135,7 @@ class DataTableSettings
 	 */
 	public function unserialize($sData)
 	{
-		$aData = utils::Unserialize($sData, ['allowed_classes' => false]);
+		$aData = utils::Unserialize($sData);
 		if (!is_array($aData)) {
 			throw new CoreException('Wrong data table settings format, expected an array', ['datatable_settings_data' => $aData]);
 		}
