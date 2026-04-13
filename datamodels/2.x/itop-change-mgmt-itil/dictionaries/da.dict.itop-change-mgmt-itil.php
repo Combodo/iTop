@@ -24,7 +24,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:WaitingAcceptance' => 'Changes, som afventer accept',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Changes, som afventer godkendelse',
-	'Menu:WaitingApproval+' => '',
+	'Menu:WaitingApproval+' => 'Changes in planned status~~',
 	'Menu:Changes' => 'Offene Changes',
 	'Menu:Changes+' => 'Alle åbne Changes',
 	'Menu:MyChanges' => 'Mine Changes',

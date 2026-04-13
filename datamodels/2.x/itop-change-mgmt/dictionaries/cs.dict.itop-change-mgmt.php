@@ -25,7 +25,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:WaitingAcceptance' => 'Změny čekající na přijetí',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Změny čekající na schválení',
-	'Menu:WaitingApproval+' => '',
+	'Menu:WaitingApproval+' => 'Changes in planned status~~',
 	'Menu:Changes' => 'Otevřené změny',
 	'Menu:Changes+' => 'Všechny otevřené změny',
 	'Menu:MyChanges' => 'Změny přidělené mně',

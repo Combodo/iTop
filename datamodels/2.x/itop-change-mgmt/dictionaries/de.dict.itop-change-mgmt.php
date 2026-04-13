@@ -19,7 +19,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:NewChange+' => 'Einen neuen Change erstellen',
 	'Menu:SearchChanges' => 'Suche nach Changes',
 	'Menu:SearchChanges+' => 'Unter den bestehenden Changes suchen',
-	'Menu:Change:Shortcuts' => 'Shortcuts',
+	'Menu:Change:Shortcuts' => 'Changes~~',
 	'Menu:Change:Shortcuts+' => '',
 	'Menu:WaitingAcceptance' => 'Changes, die auf Annahme warten',
 	'Menu:WaitingAcceptance+' => 'Changes, die auf Annahme warten',
