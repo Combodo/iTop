@@ -54,9 +54,8 @@ class DataAuditSequencer extends StepSequencer
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
 					$sSourceDir = $this->oParams->Get('source_dir', 'datamodels/latest');
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
-					$aMiscOptions = $this->oParams->Get('options', []);
 					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', []);
-					$bUseSymbolicLinks = $aMiscOptions['symlinks'] ?? false;
+					$bUseSymbolicLinks = $this->oParams->Get('use-symbolic-links', null) === 'on' ?? false;
 					$sMessage = $bUseSymbolicLinks ? '' : 'Using symbolic links instead of copying data model files (for developers only!)';
 					$this->oRunTimeEnvironment->DoCompile(
 						$aRemovedExtensionCodes,

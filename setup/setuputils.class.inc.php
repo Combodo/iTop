@@ -846,14 +846,19 @@ class SetupUtils
 						// Skip
 						continue;
 					}
-					if (is_dir($sSource.'/'.$sFile)) {
+					$sSourcePath = $sSource.'/'.$sFile;
+					$sDestPath = $sDest.'/'.$sFile;
+					if (is_dir($sSourcePath)) {
 						// Recurse
-						self::copydir($sSource.'/'.$sFile, $sDest.'/'.$sFile, $bUseSymbolicLinks);
+						self::copydir($sSourcePath, $sDestPath, $bUseSymbolicLinks);
+					} elseif (is_link($sSourcePath)) {
+						$sLinkPath = readlink($sSourcePath);
+						symlink($sLinkPath, $sDestPath);
 					} else {
 						if ($bUseSymbolicLinks) {
-							symlink($sSource.'/'.$sFile, $sDest.'/'.$sFile);
+							symlink($sSourcePath, $sDestPath);
 						} else {
-							copy($sSource.'/'.$sFile, $sDest.'/'.$sFile);
+							copy($sSourcePath, $sDestPath);
 						}
 					}
 				}
@@ -862,6 +867,9 @@ class SetupUtils
 		} elseif (is_file($sSource)) {
 			if ($bUseSymbolicLinks) {
 				return symlink($sSource, $sDest);
+			} elseif (is_link($sSource)) {
+				$sLinkPath = readlink($sSource);
+				return symlink($sLinkPath, $sDest);
 			} else {
 				return copy($sSource, $sDest);
 			}
