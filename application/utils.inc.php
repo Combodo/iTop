@@ -3252,4 +3252,50 @@ TXT
 
 		return $aTrace;
 	}
+
+	/**
+	 * PHP unserialize encapsulation, allow throwing exception when not allowed object class is detected (for security hardening)
+	 *
+	 * @param string $data data to unserialize
+	 * @param array $aOptions PHP @unserialise options
+	 * @param bool $bThrowNotAllowedObjectClassException flag to throw exception
+	 *
+	 * @return mixed PHP @unserialise return
+	 * @throws Exception
+	 */
+	public static function Unserialize(string $data, array $aOptions = ['allowed_classes' => false], bool $bThrowNotAllowedObjectClassException = true): mixed
+	{
+		$data = unserialize($data, $aOptions);
+
+		if ($bThrowNotAllowedObjectClassException) {
+			try {
+				self::AssertNoIncompleteClassDetected($data);
+			} catch (Exception $e) {
+				throw new CoreException('Unserialization failed because an incomplete class was detected.', [], '', $e);
+			}
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Assert that data provided doesn't contain any incomplete class.
+	 *
+	 * @throws Exception
+	 */
+	public static function AssertNoIncompleteClassDetected(mixed $data): void
+	{
+		if (is_object($data)) {
+			if ($data instanceof __PHP_Incomplete_Class) {
+				throw new Exception('__PHP_Incomplete_Class_Name object detected');
+			}
+			foreach (get_object_vars($data) as $property) {
+				self::AssertNoIncompleteClassDetected($property);
+			}
+		} elseif (is_array($data)) {
+			foreach ($data as $value) {
+				self::AssertNoIncompleteClassDetected($value);
+			}
+		}
+	}
 }

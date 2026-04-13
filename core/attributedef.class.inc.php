@@ -4829,7 +4829,7 @@ class AttributeCaseLog extends AttributeLongText
 		}
 
 		if (strlen($sIndex) > 0) {
-			$aIndex = unserialize($sIndex);
+			$aIndex = utils::Unserialize($sIndex, ['allowed_classes' => false], false);
 			$value = new ormCaseLog($sLog, $aIndex);
 		} else {
 			$value = new ormCaseLog($sLog);
