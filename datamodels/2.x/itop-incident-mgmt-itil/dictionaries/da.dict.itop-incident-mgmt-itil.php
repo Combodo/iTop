@@ -24,7 +24,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:Incident:Shortcuts+' => '',
 	'Menu:Incident:MyIncidents' => 'Mine Incidents',
 	'Menu:Incident:MyIncidents+' => '',
-	'Menu:Incident:MySupportIncidents' => 'My support incidents~~',
+	'Menu:Incident:MySupportIncidents' => 'Reported by me~~',
 	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
 	'Menu:Incident:EscalatedIncidents' => 'Eskalerede Incidents',
 	'Menu:Incident:EscalatedIncidents+' => 'Incident which are under escalation, by status or flag~~',

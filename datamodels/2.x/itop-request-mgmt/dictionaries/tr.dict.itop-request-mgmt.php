@@ -30,7 +30,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:UserRequest:MySupportRequests' => 'My support requests~~',
 	'Menu:UserRequest:MySupportRequests+' => 'Non closed requests where I am the caller~~',
 	'Menu:UserRequest:EscalatedRequests' => 'Escalated requests~~',
-	'Menu:UserRequest:EscalatedRequests+' => 'Requests which are under escalation, by status or flag~~',
+	'Menu:UserRequest:EscalatedRequests+' => 'Requests which are under escalation, by status or hot flag~~',
 	'Menu:UserRequest:OpenRequests' => 'All open requests~~',
 	'Menu:UserRequest:OpenRequests+' => 'All requests that are not closed~~',
 	'UI:WelcomeMenu:MyAssignedCalls' => 'Requests assigned to me~~',

@@ -25,7 +25,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:Incident:Shortcuts+' => '',
 	'Menu:Incident:MyIncidents' => 'Incidenten toegewezen aan mij',
 	'Menu:Incident:MyIncidents+' => 'Incidenten toegewezen aan mij (als Agent)',
-	'Menu:Incident:MySupportIncidents' => 'My support incidents~~',
+	'Menu:Incident:MySupportIncidents' => 'Reported by me~~',
 	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
 	'Menu:Incident:EscalatedIncidents' => 'Geëscaleerde incidenten',
 	'Menu:Incident:EscalatedIncidents+' => 'Geëscaleerde incidenten',

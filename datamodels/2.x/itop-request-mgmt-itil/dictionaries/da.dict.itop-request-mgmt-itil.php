@@ -31,7 +31,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:UserRequest:MySupportRequests' => 'Mine Support henvendelser',
 	'Menu:UserRequest:MySupportRequests+' => 'Non closed requests where I am the caller~~',
 	'Menu:UserRequest:EscalatedRequests' => 'Eskalerede Brugerhenvendelser',
-	'Menu:UserRequest:EscalatedRequests+' => 'Requests which are under escalation, by status or flag~~',
+	'Menu:UserRequest:EscalatedRequests+' => 'Requests which are under escalation, by status or hot flag~~',
 	'Menu:UserRequest:OpenRequests' => 'Alle åbne brugerhenvendelser',
 	'Menu:UserRequest:OpenRequests+' => 'All requests that are not closed~~',
 	'UI:WelcomeMenu:MyAssignedCalls' => 'Mine tildelte henvendelser',

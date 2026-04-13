@@ -24,7 +24,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:Incident:Shortcuts+' => '',
 	'Menu:Incident:MyIncidents' => 'Mir zugewiesene Incidents',
 	'Menu:Incident:MyIncidents+' => 'Incidents die mir als Bearbeiter zugewiesen sind',
-	'Menu:Incident:MySupportIncidents' => 'My support incidents~~',
+	'Menu:Incident:MySupportIncidents' => 'Reported by me~~',
 	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
 	'Menu:Incident:EscalatedIncidents' => 'Eskalierte Incidents',
 	'Menu:Incident:EscalatedIncidents+' => 'Incidents die eskaliert sind',
