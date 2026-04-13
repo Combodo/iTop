@@ -23,7 +23,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:WaitingAcceptance' => 'Modifiche in attesa di accettazione',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Modifiche in attesa di approvazione',
-	'Menu:WaitingApproval+' => '',
+	'Menu:WaitingApproval+' => 'Changes in planned status~~',
 	'Menu:Changes' => 'Modifiche aperte',
 	'Menu:Changes+' => 'Tutte le Modifiche aperte',
 	'Menu:MyChanges' => 'Modifiche assegnate a me',

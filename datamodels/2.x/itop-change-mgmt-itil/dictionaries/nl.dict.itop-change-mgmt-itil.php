@@ -25,7 +25,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:WaitingAcceptance' => 'Changes die acceptatie vereisen',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Changes die goedkeuring vereisen',
-	'Menu:WaitingApproval+' => '',
+	'Menu:WaitingApproval+' => 'Changes in planned status~~',
 	'Menu:Changes' => 'Open changes',
 	'Menu:Changes+' => 'Alle open changes',
 	'Menu:MyChanges' => 'Changes toegewezen aan mij',

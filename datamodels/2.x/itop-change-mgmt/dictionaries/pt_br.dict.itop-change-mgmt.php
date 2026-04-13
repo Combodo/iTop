@@ -23,7 +23,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:WaitingAcceptance' => 'Mudanças aguardando aceitação',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Mudanças aguardando aprovação',
-	'Menu:WaitingApproval+' => '',
+	'Menu:WaitingApproval+' => 'Changes in planned status~~',
 	'Menu:Changes' => 'Mudanças abertas',
 	'Menu:Changes+' => 'Todas as mudanças abertas',
 	'Menu:MyChanges' => 'Mudanças atribuídas a mim',
