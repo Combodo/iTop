@@ -3256,14 +3256,14 @@ TXT
 	/**
 	 * PHP unserialize encapsulation, allow throwing exception when not allowed object class is detected (for security hardening)
 	 *
-	 * @param mixed $data data to unserialize
+	 * @param string $data data to unserialize
 	 * @param array $aOptions PHP @unserialise options
 	 * @param bool $bThrowNotAllowedObjectClassException flag to throw exception
 	 *
 	 * @return mixed PHP @unserialise return
 	 * @throws Exception
 	 */
-	public static function Unserialize(mixed $data, array $aOptions = ['allowed_classes' => false], bool $bThrowNotAllowedObjectClassException = true): mixed
+	public static function Unserialize(string $data, array $aOptions = ['allowed_classes' => false], bool $bThrowNotAllowedObjectClassException = true): mixed
 	{
 		$data = unserialize($data, $aOptions);
 
