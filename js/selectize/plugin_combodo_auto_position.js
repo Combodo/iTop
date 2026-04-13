@@ -19,6 +19,7 @@ Selectize.define("combodo_auto_position", function (aOptions) {
 
 	// Selectize instance
 	let oSelf = this;
+    const iDropdownContentHeightDifference = 4;
 
 	// Plugin options
 	aOptions = $.extend({
@@ -53,7 +54,7 @@ Selectize.define("combodo_auto_position", function (aOptions) {
                 iDropdownHeight = oSelf.$dropdown.outerHeight();
 
                 oSelf.$dropdown.css({
-                    top: oSelf.$control.offset().top - iDropdownHeight + 4, // Content will be shorter, so our real height too
+                    top: oSelf.$control.offset().top - iDropdownHeight + iDropdownContentHeightDifference, // Content will be shorter, so our real height too
                     left: oSelf.$control.offset().left,
 					width: oSelf.$wrapper.outerWidth(),
 					overflowY: 'auto',
@@ -62,7 +63,7 @@ Selectize.define("combodo_auto_position", function (aOptions) {
 
                 // N°9468 Dropdown content needs to be a few pixel shorter than the dropdown itself to avoid double scrollbar
                 oSelf.$dropdown_content.css({
-                    'max-height': `calc(${aOptions.maxDropDownHeight} - 4px)`
+                    'max-height': `calc(${aOptions.maxDropDownHeight} - ${iDropdownContentHeightDifference}px)`
                 });
 
 			}

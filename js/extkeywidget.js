@@ -120,6 +120,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	this.sFormAttCode = sFormAttCode;
 
 	var me = this;
+    const iDropdownContentHeightDifference = 4;
 
 	this.Init = function () {
 		// make sure that the form is clean
@@ -353,13 +354,13 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 
             // N°9468 Dropdown content needs to be a few pixel shorter than the dropdown itself to avoid double scrollbar
             if(oDropdownContentElem) {
-                oDropdownContentElem.css('max-height', 'calc(30vh - 4px)');
+                oDropdownContentElem.css('max-height', `calc(30vh - ${iDropdownContentHeightDifference}px)`);
             }
 
 			/* Position dropdown above input if not enough space on the bottom part of the screen
                Doesn't seem to work with selectize as an internal plugin "auto_position" refreshes the top position after
                this method is called, input set use a custom plugin to avoid fix this issue "plugin_combodo_auto_position"
-               This would need to take the potential 4px difference into account if this is fixed.
+               This would need to take the potential 4px difference (iDropdownContentHeightDifference) into account if this is fixed.
 			 */
 			if ((fDropdownTopY / fWindowHeight) > 0.6) {
                 oDropdownElem.css({
