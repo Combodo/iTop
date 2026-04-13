@@ -26,7 +26,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:UserRequest:Shortcuts' => 'Skratky',
 	'Menu:UserRequest:Shortcuts+' => '~~',
 	'Menu:UserRequest:MyRequests' => 'požiadavky pridelené mne',
-	'Menu:UserRequest:MyRequests+' => 'Requests assigned to me (as Agent)~~',
+	'Menu:UserRequest:MyRequests+' => 'Requests assigned to me (as an Agent)~~',
 	'Menu:UserRequest:MySupportRequests' => 'Moje hovory podpory',
 	'Menu:UserRequest:MySupportRequests+' => 'Non closed requests where I am the caller~~',
 	'Menu:UserRequest:EscalatedRequests' => 'Eskalované požiadavky',

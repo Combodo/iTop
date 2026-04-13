@@ -24,7 +24,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:NewUserRequest+' => 'Neue Benutzeranfrage erstellen',
 	'Menu:SearchUserRequests' => 'Nach Benutzeranfrage suchen',
 	'Menu:SearchUserRequests+' => 'Nach bestehenden Benutzeranfragen suchen',
-	'Menu:UserRequest:Shortcuts' => 'Shortcuts',
+	'Menu:UserRequest:Shortcuts' => 'Requests',
 	'Menu:UserRequest:Shortcuts+' => '',
 	'Menu:UserRequest:MyRequests' => 'Mir zugewiesene Benutzeranfragen',
 	'Menu:UserRequest:MyRequests+' => '',
