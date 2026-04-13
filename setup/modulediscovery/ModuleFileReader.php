@@ -42,6 +42,10 @@ class ModuleFileReader
 		"utils::GetItopVersionWikiSyntax",
 	];
 
+	public const STATIC_CALL_AUTOSELECT_WHITELIST = [
+		"SetupInfo::ModuleIsSelected",
+	];
+
 	protected function __construct()
 	{
 		$this->oPhpExpressionEvaluator = new PhpExpressionEvaluator(static::FUNC_CALL_WHITELIST, static::STATIC_CALLWHITELIST);

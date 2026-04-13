@@ -2,11 +2,9 @@
 
 namespace Combodo\iTop\Setup\ModuleDependency;
 
-require_once(APPROOT.'/setup/runtimeenv.class.inc.php');
-
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
-use RunTimeEnvironment;
 
 /**
  * Class that handles a module dependency
@@ -64,7 +62,7 @@ class DependencyExpression
 	public static function GetPhpExpressionEvaluator(): PhpExpressionEvaluator
 	{
 		if (!isset(self::$oPhpExpressionEvaluator)) {
-			self::$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
+			self::$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], ModuleFileReader::STATIC_CALL_AUTOSELECT_WHITELIST);
 		}
 
 		return self::$oPhpExpressionEvaluator;

@@ -17,8 +17,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-//require_once(APPROOT.'setup/setuppage.class.inc.php');
-
 /**
  * Class ModuleInstaller
  * Defines the API to implement module specific actions during the setup

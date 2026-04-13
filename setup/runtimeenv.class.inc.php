@@ -46,10 +46,6 @@ define('DATAMODEL_MODULE', 'datamodel'); // Convention to store the version of t
 
 class RunTimeEnvironment
 {
-	public const STATIC_CALL_AUTOSELECT_WHITELIST = [
-		"SetupInfo::ModuleIsSelected",
-	];
-
 	private static bool $bMetamodelStarted = false;
 
 	/**
@@ -513,7 +509,7 @@ class RunTimeEnvironment
 			}
 		}
 
-		$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
+		$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], ModuleFileReader::STATIC_CALL_AUTOSELECT_WHITELIST);
 
 		// Now process the 'AutoSelect' modules
 		do {

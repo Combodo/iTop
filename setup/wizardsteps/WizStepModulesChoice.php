@@ -20,6 +20,7 @@
 
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
 /**
@@ -466,7 +467,7 @@ EOF
 	private function GetPhpExpressionEvaluator(): PhpExpressionEvaluator
 	{
 		if (!isset($this->oPhpExpressionEvaluator)) {
-			$this->oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
+			$this->oPhpExpressionEvaluator = new PhpExpressionEvaluator([], ModuleFileReader::STATIC_CALL_AUTOSELECT_WHITELIST);
 		}
 
 		return $this->oPhpExpressionEvaluator;

@@ -1,6 +1,7 @@
 <?php
 
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
 require_once(APPROOT.'/application/utils.inc.php');
@@ -286,7 +287,7 @@ class InstallationFileService
 
 	public function ProcessAutoSelectModules(): void
 	{
-		$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
+		$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], ModuleFileReader::STATIC_CALL_AUTOSELECT_WHITELIST);
 
 		foreach ($this->GetAutoSelectModules() as $sModuleId => $aModule) {
 			try {
