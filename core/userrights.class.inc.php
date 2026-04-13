@@ -1345,12 +1345,12 @@ class UserRights
 	 * @return string
 	 * @throws \OQLException
 	 */
-	public static function GetUserFriendlyName(string $sLogin = '')
+	public static function GetUserFriendlyName($sLogin = '')
 	{
 		if (empty($sLogin)) {
 			$oUser = self::$m_oUser;
 		} else {
-			$oUser = self::FindUser($sLogin);
+			$oUser = self::FindUser($sLogin, bAllowDisabledUsers: true);
 		}
 		if (is_null($oUser)) {
 			return '';
@@ -1817,7 +1817,7 @@ class UserRights
 	 * @return User The found user or null
 	 * @throws \OQLException
 	 */
-	protected static function FindUser($sLogin, $sAuthentication = 'any', $bAllowDisabledUsers = true)
+	protected static function FindUser($sLogin, $sAuthentication = 'any', $bAllowDisabledUsers = false)
 	{
 		if ($sAuthentication === 'any') {
 			$oUser = self::FindUser($sLogin, 'internal', $bAllowDisabledUsers);
