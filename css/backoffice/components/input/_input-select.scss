@@ -201,8 +201,9 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 }
 
 // N°7982 Default selectize stylesheet override
+// N°9468 Dropdown content needs to be a few pixel shorter than the dropdown itself to avoid double scrollbar
 .selectize-dropdown-content{
-  max-height: $ibo-input-select-selectize--dropdown--max-height;
+  max-height: calc(#{$ibo-input-select-selectize--dropdown--max-height} - 4px);
 }
 
 .selectize-dropdown.ui-menu .ui-state-active {

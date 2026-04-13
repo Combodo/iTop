@@ -19,10 +19,11 @@ Selectize.define("combodo_auto_position", function (aOptions) {
 
 	// Selectize instance
 	let oSelf = this;
+    const iDropdownContentHeightDifference = 4;
 
 	// Plugin options
 	aOptions = $.extend({
-			maxDropDownHeight: 200,
+			maxDropDownHeight: '200px',
 		},
 		aOptions
 	);
@@ -33,28 +34,47 @@ Selectize.define("combodo_auto_position", function (aOptions) {
 	// Override position dropdown function
 	oSelf.positionDropdown = (function () {
 		return function () {
-			let iRefHeight = oSelf.$dropdown.outerHeight() < aOptions.maxDropDownHeight ?
-				oSelf.$dropdown.outerHeight() : aOptions.maxDropDownHeight;
+            // Clear previously set rules so the comparison is done with dropdown real height
+            oSelf.$dropdown.css({
+                'max-height': '',
+            });
 
-			if(oSelf.$control.offset().top + oSelf.$control.outerHeight() + iRefHeight > window.innerHeight){
+            oSelf.$dropdown_content.css({
+                'max-height': '',
+            });
 
-				oSelf.$dropdown.css({
-					top: oSelf.$control.offset().top - iRefHeight,
-					left: oSelf.$control.offset().left,
+            let iDropdownHeight = oSelf.$dropdown.outerHeight();
+			if(oSelf.$control.offset().top + oSelf.$control.outerHeight() + iDropdownHeight > window.innerHeight){
+
+                // Apply max-height as we are overflowing, that'll allow us to calculate where we should place ourselves later
+                oSelf.$dropdown.css({
+                    maxHeight: `${aOptions.maxDropDownHeight}`,
+                })
+
+                iDropdownHeight = oSelf.$dropdown.outerHeight();
+
+                oSelf.$dropdown.css({
+                    top: oSelf.$control.offset().top - iDropdownHeight + iDropdownContentHeightDifference, // Content will be shorter, so our real height too
+                    left: oSelf.$control.offset().left,
 					width: oSelf.$wrapper.outerWidth(),
-					'max-height': `${aOptions.maxDropDownHeight}px`,
-					'overflow-y': 'auto',
-					'border-top': '1px solid #d0d0d0',
+					overflowY: 'auto',
+                    borderTop : oSelf.$dropdown.css('border-bottom')
 				});
+
+                // N°9468 Dropdown content needs to be a few pixel shorter than the dropdown itself to avoid double scrollbar
+                oSelf.$dropdown_content.css({
+                    'max-height': `calc(${aOptions.maxDropDownHeight} - ${iDropdownContentHeightDifference}px)`
+                });
+
 			}
 			else{
 				oSelf.$dropdown.css({
 					top: oSelf.$control.offset().top + oSelf.$control.outerHeight(),
 					left: oSelf.$control.offset().left,
 					width: oSelf.$wrapper.outerWidth(),
-					'max-height': `${aOptions.maxDropDownHeight}px`,
-					'overflow-y': 'auto'
-				});
+					overflowY: 'auto',
+                    borderTop: 'none'
+            });
 			}
 		};
 	}());
