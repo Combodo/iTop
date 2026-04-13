@@ -30,7 +30,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:UserRequest:MySupportRequests' => '私のサポートコール',
 	'Menu:UserRequest:MySupportRequests+' => 'Non closed requests where I am the caller~~',
 	'Menu:UserRequest:EscalatedRequests' => 'エスカレートされた要求',
-	'Menu:UserRequest:EscalatedRequests+' => 'Requests which are under escalation, by status or flag~~',
+	'Menu:UserRequest:EscalatedRequests+' => 'Requests which are under escalation, by status or hot flag~~',
 	'Menu:UserRequest:OpenRequests' => '全てのオープンな要求',
 	'Menu:UserRequest:OpenRequests+' => 'All requests that are not closed~~',
 	'UI:WelcomeMenu:MyAssignedCalls' => '私に割り当てられた要求',

@@ -23,7 +23,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:Incident:Shortcuts+' => '~~',
 	'Menu:Incident:MyIncidents' => 'Incidenti assegnati a me',
 	'Menu:Incident:MyIncidents+' => 'Incidenti assegnati a me (come agente)',
-	'Menu:Incident:MySupportIncidents' => 'My support incidents~~',
+	'Menu:Incident:MySupportIncidents' => 'Reported by me~~',
 	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
 	'Menu:Incident:EscalatedIncidents' => 'Evoluzione Incidente',
 	'Menu:Incident:EscalatedIncidents+' => 'Evoluzione Incidente',

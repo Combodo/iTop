@@ -24,7 +24,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:UserRequest:MySupportRequests' => '我办理的需求',
 	'Menu:UserRequest:MySupportRequests+' => 'Non closed requests where I am the caller~~',
 	'Menu:UserRequest:EscalatedRequests' => '已升级的需求',
-	'Menu:UserRequest:EscalatedRequests+' => 'Requests which are under escalation, by status or flag~~',
+	'Menu:UserRequest:EscalatedRequests+' => 'Requests which are under escalation, by status or hot flag~~',
 	'Menu:UserRequest:OpenRequests' => '所有打开的需求',
 	'Menu:UserRequest:OpenRequests+' => 'All requests that are not closed~~',
 	'UI:WelcomeMenu:MyAssignedCalls' => '分配给我的需求',

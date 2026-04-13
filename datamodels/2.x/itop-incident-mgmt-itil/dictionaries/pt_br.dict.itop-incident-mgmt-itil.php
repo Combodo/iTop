@@ -23,7 +23,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:Incident:Shortcuts+' => '',
 	'Menu:Incident:MyIncidents' => 'Incidentes atribuídos para mim',
 	'Menu:Incident:MyIncidents+' => 'Incidentes atribuídos para mim (como Agente)',
-	'Menu:Incident:MySupportIncidents' => 'My support incidents~~',
+	'Menu:Incident:MySupportIncidents' => 'Reported by me~~',
 	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
 	'Menu:Incident:EscalatedIncidents' => 'Incidentes escalonados',
 	'Menu:Incident:EscalatedIncidents+' => 'Incident which are under escalation, by status or flag~~',

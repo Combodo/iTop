@@ -30,7 +30,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:UserRequest:MySupportRequests' => 'Moje hovory podpory',
 	'Menu:UserRequest:MySupportRequests+' => 'Non closed requests where I am the caller~~',
 	'Menu:UserRequest:EscalatedRequests' => 'Eskalované požiadavky',
-	'Menu:UserRequest:EscalatedRequests+' => 'Requests which are under escalation, by status or flag~~',
+	'Menu:UserRequest:EscalatedRequests+' => 'Requests which are under escalation, by status or hot flag~~',
 	'Menu:UserRequest:OpenRequests' => 'Všetky otvorené požiadavky',
 	'Menu:UserRequest:OpenRequests+' => 'All requests that are not closed~~',
 	'UI:WelcomeMenu:MyAssignedCalls' => 'požiadavky pridelené mne',

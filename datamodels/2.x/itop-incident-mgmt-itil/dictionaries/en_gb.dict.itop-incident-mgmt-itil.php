@@ -35,7 +35,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:Incident:Shortcuts+' => '',
 	'Menu:Incident:MyIncidents' => 'Incidents assigned to me',
 	'Menu:Incident:MyIncidents+' => 'Incidents assigned to me (as Agent)',
-	'Menu:Incident:MySupportIncidents' => 'My support incidents~~',
+	'Menu:Incident:MySupportIncidents' => 'Reported by me~~',
 	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
 	'Menu:Incident:EscalatedIncidents' => 'Escalated incidents',
 	'Menu:Incident:EscalatedIncidents+' => 'Incident which are under escalation, by status or flag',

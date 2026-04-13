@@ -24,7 +24,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:Incident:Shortcuts+' => 'Ярлыки',
 	'Menu:Incident:MyIncidents' => 'Назначенные мне',
 	'Menu:Incident:MyIncidents+' => 'Инциденты, назначенные мне (в качестве агента)',
-	'Menu:Incident:MySupportIncidents' => 'My support incidents~~',
+	'Menu:Incident:MySupportIncidents' => 'Reported by me~~',
 	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
 	'Menu:Incident:EscalatedIncidents' => 'Эскалированные',
 	'Menu:Incident:EscalatedIncidents+' => 'Эскалированные инциденты',

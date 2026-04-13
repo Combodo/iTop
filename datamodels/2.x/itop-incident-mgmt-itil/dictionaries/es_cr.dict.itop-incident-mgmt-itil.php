@@ -21,7 +21,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:Incident:Shortcuts+' => 'Accesos Rápidos',
 	'Menu:Incident:MyIncidents' => 'Incidentes Asignados a Mí',
 	'Menu:Incident:MyIncidents+' => 'Incidentes Asignados a Mí (como Analista)',
-	'Menu:Incident:MySupportIncidents' => 'My support incidents~~',
+	'Menu:Incident:MySupportIncidents' => 'Reported by me~~',
 	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
 	'Menu:Incident:EscalatedIncidents' => 'Incidentes Escalados',
 	'Menu:Incident:EscalatedIncidents+' => 'Incidentes Escalados',
