@@ -27,7 +27,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:Incident:MySupportIncidents' => 'Reported by me~~',
 	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
 	'Menu:Incident:EscalatedIncidents' => 'Eskalerede Incidents',
-	'Menu:Incident:EscalatedIncidents+' => 'Incident which are under escalation, by status or flag~~',
+	'Menu:Incident:EscalatedIncidents+' => 'Incident which are under escalation, by status or hot flag~~',
 	'Menu:Incident:OpenIncidents' => 'Alle åbne Incidents',
 	'Menu:Incident:OpenIncidents+' => 'All incidents that are not closed~~',
 	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => 'Incidents de sidste 14 dage efter prioritet',

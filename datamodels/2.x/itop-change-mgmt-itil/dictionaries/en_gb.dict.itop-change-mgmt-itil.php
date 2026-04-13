@@ -39,7 +39,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:Changes' => 'Open changes',
 	'Menu:Changes+' => 'All open changes',
 	'Menu:MyChanges' => 'Changes assigned to me',
-	'Menu:MyChanges+' => 'Changes assigned to me (as Agent)',
+	'Menu:MyChanges+' => 'Changes assigned to me (as an Agent)',
 	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes by category for the last 7 days',
 	'UI-ChangeManagementOverview-Last-7-days' => 'Number of changes for the last 7 days',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes by domain for the last 7 days',

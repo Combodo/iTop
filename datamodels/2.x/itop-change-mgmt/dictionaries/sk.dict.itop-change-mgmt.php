@@ -27,7 +27,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:Changes' => 'Otvorené zmeny',
 	'Menu:Changes+' => 'All open changes~~',
 	'Menu:MyChanges' => 'Zmeny pridelené mne',
-	'Menu:MyChanges+' => 'Changes assigned to me (as Agent)~~',
+	'Menu:MyChanges+' => 'Changes assigned to me (as an Agent)~~',
 	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Zmeny podľa kategórie za posledných 7 dní',
 	'UI-ChangeManagementOverview-Last-7-days' => 'Počet zmien za posledných 7 dní',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Zmeny podľa domény za posledných 7 dní',

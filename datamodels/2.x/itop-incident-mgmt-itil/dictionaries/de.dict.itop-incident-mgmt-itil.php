@@ -20,7 +20,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:NewIncident+' => 'Einen neuen Incident dokumentieren',
 	'Menu:SearchIncidents' => 'Nach Incidents suchen',
 	'Menu:SearchIncidents+' => 'Suche nach einem bestehendem Incident',
-	'Menu:Incident:Shortcuts' => 'Shortcuts',
+	'Menu:Incident:Shortcuts' => 'Incidents',
 	'Menu:Incident:Shortcuts+' => '',
 	'Menu:Incident:MyIncidents' => 'Mir zugewiesene Incidents',
 	'Menu:Incident:MyIncidents+' => 'Incidents die mir als Bearbeiter zugewiesen sind',

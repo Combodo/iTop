@@ -26,7 +26,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:Incident:MySupportIncidents' => 'Reported by me~~',
 	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
 	'Menu:Incident:EscalatedIncidents' => 'Incidentes escalonados',
-	'Menu:Incident:EscalatedIncidents+' => 'Incident which are under escalation, by status or flag~~',
+	'Menu:Incident:EscalatedIncidents+' => 'Incident which are under escalation, by status or hot flag~~',
 	'Menu:Incident:OpenIncidents' => 'Todos os incidentes abertos',
 	'Menu:Incident:OpenIncidents+' => 'All incidents that are not closed~~',
 	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => 'Incidentes dos últimos 14 dias por prioridade',
