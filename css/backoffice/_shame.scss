@@ -39,6 +39,8 @@
 //
 // .site-nav a { color:#BADA55!important; }
 
+$ibo-blockquote--color: $ibo-body-text-color !default;
+
 // N°2847 - Recolor svg illustrations with iTop's primary color
 .ibo-svg-illustration--container > svg *[fill="#6c63ff"]{
 	fill: $ibo-svg-illustration--fill;
@@ -108,4 +110,12 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 7px;
+}
+
+/*
+  Bulma sets blockquote background color through a variable, it affects ckeditor and html display.
+  This rule is needed harmonize the blockquote text color in both contexts.
+ */
+.ibo-is-html-content blockquote {
+  color: $ibo-blockquote--color;
 }
