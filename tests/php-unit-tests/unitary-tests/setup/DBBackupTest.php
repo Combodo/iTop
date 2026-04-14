@@ -45,7 +45,11 @@ class DBBackupTest extends ItopTestCase
 		$oConfigToTest->Set('db_tls.enabled', false);
 		$sCliArgsNoTls = DBBackup::GetMysqlCliTlsOptions($oConfigToTest);
 
-		$this->assertEmpty($sCliArgsNoTls);
+		if (CMDBSource::IsSslModeDBVersion()) {
+			$this->assertEquals(' --skip-ssl', $sCliArgsNoTls);
+		} else {
+			$this->assertEmpty($sCliArgsNoTls);
+		}
 	}
 
 	/**
