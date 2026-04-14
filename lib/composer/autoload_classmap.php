@@ -134,6 +134,7 @@ return array(
     'Combodo\\iTop\\Application\\Helper\\CKEditorHelper' => $baseDir . '/sources/Application/Helper/CKEditorHelper.php',
     'Combodo\\iTop\\Application\\Helper\\ExportHelper' => $baseDir . '/sources/Application/Helper/ExportHelper.php',
     'Combodo\\iTop\\Application\\Helper\\FormHelper' => $baseDir . '/sources/Application/Helper/FormHelper.php',
+    'Combodo\\iTop\\Application\\Helper\\ImportHelper' => $baseDir . '/sources/Application/Helper/ImportHelper.php',
     'Combodo\\iTop\\Application\\Helper\\SearchHelper' => $baseDir . '/sources/Application/Helper/SearchHelper.php',
     'Combodo\\iTop\\Application\\Helper\\Session' => $baseDir . '/sources/Application/Helper/Session.php',
     'Combodo\\iTop\\Application\\Helper\\WebResourcesHelper' => $baseDir . '/sources/Application/Helper/WebResourcesHelper.php',

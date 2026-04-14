@@ -136,6 +136,9 @@
                     <item id="end_of_warranty">
                       <rank>30</rank>
                     </item>
+                    <item id="model_end_of_support">
+                      <rank>40</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Server:power">
@@ -157,6 +160,9 @@
                   <items>
                     <item id="description">
                       <rank>10</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
                     </item>
                   </items>
                 </item>
@@ -395,6 +401,9 @@
                     <item id="end_of_warranty">
                       <rank>30</rank>
                     </item>
+                    <item id="model_end_of_support">
+                      <rank>40</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Server:power">
@@ -416,6 +425,9 @@
                   <items>
                     <item id="description">
                       <rank>10</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
                     </item>
                   </items>
                 </item>
@@ -654,6 +666,9 @@
                     <item id="end_of_warranty">
                       <rank>30</rank>
                     </item>
+                    <item id="model_end_of_support">
+                      <rank>40</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Server:power">
@@ -675,6 +690,9 @@
                   <items>
                     <item id="description">
                       <rank>10</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
                     </item>
                   </items>
                 </item>
@@ -847,7 +865,7 @@
             <item id="col:col1">
               <rank>100</rank>
               <items>
-                <item id="fieldset:ConfigMgmt:baseinfo">
+                <item id="fieldset:Server:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">
@@ -873,7 +891,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Storage:moreinfo">
+                <item id="fieldset:Server:moreinfo">
                   <rank>20</rank>
                   <items>
                     <item id="brand_id">
@@ -901,7 +919,7 @@
             <item id="col:col2">
               <rank>110</rank>
               <items>
-                <item id="fieldset:ConfigMgmt:dates">
+                <item id="fieldset:Server:Date">
                   <rank>10</rank>
                   <items>
                     <item id="move2production">
@@ -912,6 +930,9 @@
                     </item>
                     <item id="end_of_warranty">
                       <rank>30</rank>
+                    </item>
+                    <item id="model_end_of_support">
+                      <rank>40</rank>
                     </item>
                   </items>
                 </item>
@@ -929,11 +950,14 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:ConfigMgmt:otherinfo">
+                <item id="fieldset:Server:otherinfo">
                   <rank>30</rank>
                   <items>
                     <item id="description">
                       <rank>10</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>20</rank>
                     </item>
                   </items>
                 </item>

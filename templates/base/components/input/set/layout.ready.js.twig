@@ -23,7 +23,7 @@ let oWidget{{ oUIBlock.GetId() }} = $('#{{ oUIBlock.GetId() }}').selectize({
         },
         {# PLUGIN combodo auto position  #}
         'combodo_auto_position' : {
-            maxDropDownHeight: 300, {# in px #}
+            maxDropDownHeight: '30vh', {# same value as external key widget #}
         },
         {# PLUGIN combodo add button #}
         {% if oUIBlock.HasAddOptionButton() %}

@@ -151,9 +151,21 @@
           <values>
             <value id="incident">
               <code>incident</code>
+              <rank>10</rank>
+              <style>
+                <main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
+                <decoration_classes>fas fa-exclamation</decoration_classes>
+              </style>
             </value>
             <value id="service_request">
               <code>service_request</code>
+              <rank>20</rank>
+              <style>
+                <main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
+                <decoration_classes>fas fa-list-ul</decoration_classes>
+              </style>
             </value>
           </values>
           <sql>request_type</sql>

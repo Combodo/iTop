@@ -120,6 +120,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	this.sFormAttCode = sFormAttCode;
 
 	var me = this;
+    const iDropdownContentHeightDifference = 4;
 
 	this.Init = function () {
 		// make sure that the form is clean
@@ -171,7 +172,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			// To avoid dropdown to be cut by the container's overflow hidden rule
 			dropdownParent: 'body',
 			onDropdownOpen: function (oDropdownElem) {
-				me.UpdateDropdownPosition(this.$control, oDropdownElem);
+				me.UpdateDropdownPosition(this.$control, oDropdownElem, this.$dropdown_content);
 			},
 		});
 		let $selectize = $select[0].selectize; // This stores the selectize object to a variable (with name 'selectize')
@@ -314,19 +315,27 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	};
 
 	/**
-	 * Update the dropdown's position so it always fits in the screen
-	 *
-	 * @param {object} oControlElem jQuery object representing the "control" input (= where the user types) of the external key
-	 * @param {object} oDropdownElem jQuery object representing the results dropdown
-	 * @return {void}
-	 */
-	this.UpdateDropdownPosition = function (oControlElem, oDropdownElem) {
+     * Update the dropdown's position so it always fits in the screen
+     *
+     * @param {object} oControlElem jQuery object representing the "control" input (= where the user types) of the external key
+     * @param {object} oDropdownElem jQuery object representing the results dropdown
+     * @param {object|undefined} oDropdownContentElem
+     * @return {void}
+     */
+	this.UpdateDropdownPosition = function (oControlElem, oDropdownElem, oDropdownContentElem) {
 		// First fix width to ensure it's not too long
 		const fControlWidth = oControlElem.outerWidth();
 		oDropdownElem.css('width', fControlWidth);
 
 		// Then, fix height / position to ensure it's within the viewport
 		const fWindowHeight = window.innerHeight;
+
+        // Clear previously set rule so the comparison is done with dropdown real height
+        oDropdownElem.css('max-height', '');
+
+        if(oDropdownContentElem) {
+            oDropdownContentElem.css('max-height', '');
+        }
 
 		const fControlTopY = oControlElem.offset().top;
 		const fControlHeight = oControlElem.outerHeight();
@@ -338,14 +347,38 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 
 		if (fDropdownBottomY > fWindowHeight) {
 			// Set dropdown max-height to 1/3 of the screen, this way we are sure the dropdown will fit in either the top / bottom half of the screen
-			oDropdownElem.css('max-height', '30vh');
+			oDropdownElem.css({
+                maxHeight: '30vh',
+            });
 			fDropdownHeight = oDropdownElem.outerHeight();
 
-			// Position dropdown above input if not enough space on the bottom part of the screen
+            // N°9468 Dropdown content needs to be a few pixel shorter than the dropdown itself to avoid double scrollbar
+            if(oDropdownContentElem) {
+                oDropdownContentElem.css('max-height', `calc(30vh - ${iDropdownContentHeightDifference}px)`);
+            }
+
+			/* Position dropdown above input if not enough space on the bottom part of the screen
+               Doesn't seem to work with selectize as an internal plugin "auto_position" refreshes the top position after
+               this method is called, input set use a custom plugin to avoid fix this issue "plugin_combodo_auto_position"
+               This would need to take the potential 4px difference (iDropdownContentHeightDifference) into account if this is fixed.
+			 */
 			if ((fDropdownTopY / fWindowHeight) > 0.6) {
-				oDropdownElem.css('top', fDropdownTopY - fDropdownHeight - fControlHeight);
-			}
+                oDropdownElem.css({
+                    top: fDropdownTopY - fDropdownHeight - fControlHeight,
+                    borderTop: oDropdownElem.css('border-bottom')
+                });
+            }
+            else {
+                oDropdownElem.css({
+                    borderTop: 'none'
+                })
+            }
 		}
+        else {
+            oDropdownElem.css({
+                borderTop: 'none'
+            })
+        }
 	};
 	this.ManageScroll = function () {
 		if ($('#label_'+me.id).scrollParent()[0].tagName != 'HTML') {
