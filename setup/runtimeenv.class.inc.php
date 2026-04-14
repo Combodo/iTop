@@ -375,7 +375,7 @@ class RunTimeEnvironment
 			throw new Exception('Failed to record the installation information');
 		}
 
-		$oConfig->UpdateIncludes($this->sBuildEnv);
+		$oConfig->UpdateIncludes('env-'.$this->sBuildEnv);
 		$sEnvironmentLabel = $this->GetFinalEnv().' (built on '.date('Y-m-d').')';
 		$oConfig->Set('app_env_label', $sEnvironmentLabel, $sSourceDesc);
 
