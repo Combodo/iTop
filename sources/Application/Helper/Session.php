@@ -8,7 +8,6 @@
 namespace Combodo\iTop\Application\Helper;
 
 use Combodo\iTop\SessionTracker\SessionHandler;
-use utils;
 
 /**
  * Session management
@@ -30,7 +29,15 @@ class Session
 
 	public static function Start()
 	{
-		if (self::IsModeCLI()) {
+		if (session_status() === PHP_SESSION_DISABLED) {
+			return;
+		}
+
+		if (session_status() === PHP_SESSION_ACTIVE) {
+			// Session already started
+			self::$bIsInitialized = true;
+			self::$bSessionStarted = true;
+			self::$iSessionId = session_id();
 			return;
 		}
 
@@ -53,7 +60,7 @@ class Session
 
 	public static function RegenerateId($bDeleteOldSession = false)
 	{
-		if (self::IsModeCLI()) {
+		if (session_status() === PHP_SESSION_DISABLED) {
 			return;
 		}
 
@@ -67,7 +74,7 @@ class Session
 
 	public static function WriteClose()
 	{
-		if (self::IsModeCLI()) {
+		if (session_status() === PHP_SESSION_DISABLED) {
 			return;
 		}
 
@@ -205,15 +212,5 @@ class Session
 	public static function GetLog()
 	{
 		return print_r($_SESSION, true);
-	}
-
-	private static function IsModeCLI(): bool
-	{
-		if (self::$bAllowCLI) {
-
-			return false;
-		}
-
-		return utils::IsModeCLI();
 	}
 }
