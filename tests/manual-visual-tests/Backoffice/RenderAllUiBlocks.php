@@ -22,6 +22,7 @@
 
 namespace Combodo\iTop\Test\VisualTest\Backoffice;
 
+use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
@@ -402,7 +403,8 @@ $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 1', 1));
 $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 2', 2));
 $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 3', 3));
 $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 4', 4));
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 5', 5));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPageWithIcon('Title example 5', MetaModel::GetClassIcon('Organization', false)));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPageWithIcon('Title example 6', Branding::GetFullMainLogoAbsoluteUrl()));
 
 /////////
 // DataTable
