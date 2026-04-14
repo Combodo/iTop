@@ -5,9 +5,11 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\ImportHelper;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\Select;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
@@ -385,6 +387,14 @@ try {
 EOF
 				);
 			}
+			break;
+
+		case 'display_classes_select':
+			$oPage = new AjaxPage("");
+			$sClassName = utils::ReadPostedParam('class_name', '', utils::ENUM_SANITIZATION_FILTER_CLASS);
+			$bAdvanced = utils::ReadPostedParam('advanced', 'false');
+			$oClassesSelect = ImportHelper::GetClassesSelectUIBlock('class_name', $sClassName, UR_ACTION_BULK_MODIFY, $bAdvanced === 'true');
+			$oPage->AddSubBlock($oClassesSelect);
 			break;
 
 		case 'get_csv_template':

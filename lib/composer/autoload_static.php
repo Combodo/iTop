@@ -548,6 +548,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Application\\Helper\\CKEditorHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/CKEditorHelper.php',
         'Combodo\\iTop\\Application\\Helper\\ExportHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/ExportHelper.php',
         'Combodo\\iTop\\Application\\Helper\\FormHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/FormHelper.php',
+        'Combodo\\iTop\\Application\\Helper\\ImportHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/ImportHelper.php',
         'Combodo\\iTop\\Application\\Helper\\SearchHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/SearchHelper.php',
         'Combodo\\iTop\\Application\\Helper\\Session' => __DIR__ . '/../..' . '/sources/Application/Helper/Session.php',
         'Combodo\\iTop\\Application\\Helper\\WebResourcesHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/WebResourcesHelper.php',
