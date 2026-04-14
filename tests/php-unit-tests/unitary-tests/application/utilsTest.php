@@ -23,6 +23,7 @@
 namespace Combodo\iTop\Test\UnitTest\Application;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use CoreException;
 use ormDocument;
 use utils;
 
@@ -982,5 +983,22 @@ INI;
 		self::assertEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() should have loaded the file: $sTmpFileOutsideItop");
 
 		unlink($sTmpFileOutsideItop);
+	}
+
+	public function testUnserialize()
+	{
+		// data to unserialize containing an object
+		$sData = 'a:2:{s:6:"string";s:9:"My string";s:6:"object";O:8:"DateTime":3:{s:4:"date";s:26:"2026-04-13 09:09:23.033175";s:13:"timezone_type";i:3;s:8:"timezone";s:16:"Europe/Amsterdam";}}';
+
+		// allow the DateTime object (no exception triggered)
+		utils::Unserialize($sData, ['allowed_classes' => ['DateTime']]);
+
+		// flag to avoid throwing an exception
+		utils::Unserialize($sData, ['allowed_classes' => false], false);
+
+		// flag to require throwing an exception
+		$this->expectException(CoreException::class);
+		utils::Unserialize($sData);
+
 	}
 }

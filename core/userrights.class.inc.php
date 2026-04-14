@@ -1182,7 +1182,7 @@ class UserRights
 			return self::$m_oUser->GetKey();
 		} else {
 			// find the id out of the login string
-			$oUser = self::FindUser($sLogin);
+			$oUser = self::FindUser($sLogin, bAllowDisabledUsers: true);
 			if (is_null($oUser)) {
 				return null;
 			}
