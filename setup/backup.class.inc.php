@@ -511,7 +511,7 @@ EOF;
 	{
 		$bDbTlsEnabled = $oConfig->Get('db_tls.enabled');
 		if (!$bDbTlsEnabled) {
-			return CMDBSource::IsSslModeDBVersion() ? '  --skip-ssl' : '';
+			return CMDBSource::IsSslModeDBVersion() ? ' --skip-ssl' : '';
 		}
 		$sTlsOptions = '';
 		// Mysql 5.7.11 and upper deprecated --ssl and uses --ssl-mode instead
