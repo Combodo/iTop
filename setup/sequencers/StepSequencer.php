@@ -27,14 +27,16 @@ abstract class StepSequencer
 	protected Parameters $oParams;
 	protected Config $oConfig;
 	protected RunTimeEnvironment $oRunTimeEnvironment;
+	protected string $sSourceDesc;
 
 	/**
 	 * @param \Parameters $oParams
 	 * @param \RunTimeEnvironment|null $oRunTimeEnvironment
+	 * @param string $sSourceDesc
 	 *
 	 * @throws \CoreException
 	 */
-	public function __construct(Parameters $oParams, ?RunTimeEnvironment $oRunTimeEnvironment = null)
+	public function __construct(Parameters $oParams, ?RunTimeEnvironment $oRunTimeEnvironment = null, string $sSourceDesc = 'Setup')
 	{
 		if (is_null($oRunTimeEnvironment)) {
 			$sEnvironment = $oParams->Get('target_env', 'production');
@@ -49,6 +51,7 @@ abstract class StepSequencer
 		$this->oConfig = new Config();
 		$this->oConfig->UpdateFromParams($aParamValues);
 		utils::SetConfig($this->oConfig);
+		$this->sSourceDesc = $sSourceDesc;
 	}
 
 	public function LogStep($sStep, $aResult)

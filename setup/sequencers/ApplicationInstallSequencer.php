@@ -132,7 +132,8 @@ class ApplicationInstallSequencer extends StepSequencer
 						$sDataModelVersion,
 						$aSelectedModuleCodes,
 						$aSelectedExtensionCodes,
-						$sInstallComment
+						$sInstallComment,
+						$this->sSourceDesc
 					);
 					return $this->ComputeNextStep($sStep);
 

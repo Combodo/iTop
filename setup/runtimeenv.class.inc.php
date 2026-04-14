@@ -24,7 +24,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
@@ -365,7 +364,7 @@ class RunTimeEnvironment
 	 * @throws \MySQLException
 	 * @throws \Exception
 	 */
-	public function DoCreateConfig(Config $oConfig, string $sDataModelVersion, array $aSelectedModuleCodes, array $aSelectedExtensionCodes, ?string $sInstallComment = null)
+	public function DoCreateConfig(Config $oConfig, string $sDataModelVersion, array $aSelectedModuleCodes, array $aSelectedExtensionCodes, ?string $sInstallComment = null, string $sSourceDesc = 'Setup')
 	{
 		$oConfig->Set('access_mode', ACCESS_FULL);
 
@@ -375,6 +374,10 @@ class RunTimeEnvironment
 		if (!$this->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sInstallComment)) {
 			throw new Exception('Failed to record the installation information');
 		}
+
+		$oConfig->UpdateIncludes($this->sBuildEnv);
+		$sEnvironmentLabel = $this->GetFinalEnv().' (built on '.date('Y-m-d').')';
+		$oConfig->Set('app_env_label', $sEnvironmentLabel, $sSourceDesc);
 
 		$this->WriteConfigFileSafe($oConfig);
 
