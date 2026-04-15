@@ -96,6 +96,24 @@ abstract class ModuleInstallerAPI
 				}
 				SetupLog::Info("Renaming class in DB - final class from '$sFrom' to '$sTo': $iAffectedRows rows affected");
 			}
+
+			// Also rename the class reference on the following classes
+			$aAdditionalClassReferences = [
+				['class' => CMDBChangeOp::class, 'attcode' => 'objclass'],
+				['class' => SynchroReplica::class, 'attcode' => 'dest_class'],
+				['class' => TriggerOnObject::class, 'attcode' => 'target_class'],
+				['class' => EventOnObject::class, 'attcode' => 'obj_class'],
+			];
+			foreach ($aAdditionalClassReferences as ['class' => $sClass, 'attcode' => $sAttCode]) {
+				if (MetaModel::IsValidAttCode($sClass, $sAttCode)) {
+					$sTableName = MetaModel::DBGetTable($sClass, $sAttCode);
+					$sClassCol = MetaModel::GetAttributeDef($sClass, $sAttCode)->Get("sql");
+					$sRepair = "UPDATE `$sTableName` SET `$sClassCol` = '$sTo' WHERE `$sClassCol` = BINARY '$sFrom'";
+					CMDBSource::Query($sRepair);
+					$iAffectedRows = CMDBSource::AffectedRows();
+					SetupLog::Info("Renaming class in DB - $sClass::$sAttCode - from '$sFrom' to '$sTo': $iAffectedRows rows affected");
+				}
+			}
 		} catch (Exception $e) {
 			SetupLog::Warning("Failed to rename class in DB - final class from '$sFrom' to '$sTo'. Reason: ".$e->getMessage());
 		}
