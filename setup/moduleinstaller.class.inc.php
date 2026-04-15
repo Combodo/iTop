@@ -77,7 +77,7 @@ abstract class ModuleInstallerAPI
 	/**
 	 * Helper to complete the renaming of a class
 	 * The renaming is made in the datamodel definition, but the name has to be changed in the DB as well
-	 * Must be called after DB update, i.e within an implementation of AfterDatabaseCreation()
+	 * Must be called before DB update, i.e within an implementation of BeforeDatabaseCreation()
 	 *
 	 * @param string $sFrom Original name (already INVALID in the current datamodel)
 	 * @param string $sTo New name (valid in the current datamodel)
@@ -85,8 +85,14 @@ abstract class ModuleInstallerAPI
 	 */
 	public static function RenameClassInDB($sFrom, $sTo)
 	{
+		if (!MetaModel::DBExists(false)) {
+			// Install from scratch, no migration
+			return;
+		}
+
 		try {
 			if (!MetaModel::IsStandaloneClass($sTo)) {
+				$iAffectedRows = 0;
 				foreach (MetaModel::EnumParentClasses($sTo) as $sParentClass) {
 					$sTableName = MetaModel::DBGetTable($sParentClass);
 					$sFinalClassCol = MetaModel::DBGetClassField($sParentClass);
@@ -100,6 +106,7 @@ abstract class ModuleInstallerAPI
 			// Also rename the class reference on the following classes
 			$aAdditionalClassReferences = [
 				['class' => CMDBChangeOp::class, 'attcode' => 'objclass'],
+				['class' => SynchroDataSource::class, 'attcode' => 'scope_class'],
 				['class' => SynchroReplica::class, 'attcode' => 'dest_class'],
 				['class' => TriggerOnObject::class, 'attcode' => 'target_class'],
 				['class' => EventOnObject::class, 'attcode' => 'obj_class'],
