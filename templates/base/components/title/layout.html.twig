@@ -4,7 +4,7 @@
             <div class="ibo-title--icon">
                 <img class="ibo-title--icon-background ibo-title--icon-background--must-{{ oUIBlock.GetIconCoverMethod() }} ibo-title--icon-level-{{ oUIBlock.GetLevel() }}"
                 {% if oUIBlock.HasLazyLoadIcon %} loading="lazy" {% endif %}
-                 data-role="ibo-panel--icon-img" src="{{ oUIBlock.GetIconUrl()|raw }}" alt="" aria-hidden="true"/>
+                 data-role="ibo-title--icon-img" src="{{ oUIBlock.GetIconUrl()|raw }}" alt="" aria-hidden="true"/>
             </div>
         {% endif %}
         <div class="ibo-title--content">
