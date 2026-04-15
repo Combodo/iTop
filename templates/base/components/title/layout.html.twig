@@ -2,7 +2,9 @@
     <div id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.HasIcon() %}ibo-has-icon{% endif %}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" data-role="ibo-title">
         {% if oUIBlock.HasIcon() %}
             <div class="ibo-title--icon">
-                <div class="ibo-title--icon-background ibo-title--icon-background--must-{{ oUIBlock.GetIconCoverMethod() }} ibo-title--icon-level-{{ oUIBlock.GetLevel() }}" style="background-image: url('{{ oUIBlock.GetIconUrl()|raw }}');"></div>
+                <img class="ibo-title--icon-background ibo-title--icon-background--must-{{ oUIBlock.GetIconCoverMethod() }} ibo-title--icon-level-{{ oUIBlock.GetLevel() }}"
+                {% if oUIBlock.HasLazyLoadIcon %} loading="lazy" {% endif %}
+                 data-role="ibo-title--icon-img" src="{{ oUIBlock.GetIconUrl()|raw }}" alt="" aria-hidden="true"/>
             </div>
         {% endif %}
         <div class="ibo-title--content">
