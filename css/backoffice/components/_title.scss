@@ -66,7 +66,8 @@ $ibo-title--icon-img--size--must-zoomout: $ibo-title--icon-background--size--mus
 }
 
 .ibo-title--icon-img--must-zoomout, .ibo-title--icon-background--must-zoomout { // second class is deprecated, remove it when dealing with N°9317
-  background-size: $ibo-title--icon-img--size--must-zoomout;
+  width: $ibo-title--icon-img--size--must-zoomout;
+  height: $ibo-title--icon-img--size--must-zoomout;
 }
 
 .ibo-title--for-object-details {

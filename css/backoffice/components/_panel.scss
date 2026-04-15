@@ -185,16 +185,20 @@ $ibo-panel--is-selectable--body--after--font-size: $ibo-font-size-700 !default;
 .ibo-panel--icon-img, .ibo-panel--icon-background { // second class is deprecated, remove it when dealing with N°9317
   width: 100%;
   height: 100%;
+  object-position: center;
+  object-fit: $ibo-panel--icon-img--size--must-contain;
   background-position: center;
   background-repeat: no-repeat;
   background-size: $ibo-panel--icon-img--size--must-contain;
 }
 
 .ibo-panel--icon-img--must-contain, .ibo-panel--icon-background--must-contain { // second class is deprecated, remove it when dealing with N°9317
+  object-fit: $ibo-panel--icon-img--size--must-contain;
   background-size: $ibo-panel--icon-img--size--must-contain;
 }
 
 .ibo-panel--icon-img--must-cover, .ibo-panel--icon-background--must-cover { // second class is deprecated, remove it when dealing with N°9317
+  object-fit: $ibo-panel--icon-img--size--must-cover;
   background-size: $ibo-panel--icon-img--size--must-cover;
 }
 
