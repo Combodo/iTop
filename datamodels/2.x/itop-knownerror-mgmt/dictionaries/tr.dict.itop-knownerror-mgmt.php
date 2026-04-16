@@ -98,7 +98,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:ProblemManagement' => 'Problem Yönetimi',
-	'Menu:ProblemManagement+' => 'Problem Yönetimi',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Kısayollar',
 	'Menu:NewError' => 'Yeni bilinen hata',
 	'Menu:NewError+' => 'Yeni bilinen hata yatarımı',

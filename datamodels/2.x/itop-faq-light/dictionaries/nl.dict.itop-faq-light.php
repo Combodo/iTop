@@ -46,7 +46,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 ]);
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:ProblemManagement' => 'Probleem Management',
-	'Menu:ProblemManagement+' => 'Probleem Management',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Snelkoppelingen',
 	'Menu:FAQCategory' => 'FAQ-categorieën',
 	'Menu:FAQCategory+' => 'Alle FAQ-categorieën',

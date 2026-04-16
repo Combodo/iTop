@@ -98,7 +98,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 
 Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:ProblemManagement' => 'Problem Management',
-	'Menu:ProblemManagement+' => 'Problem Management',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Genvej',
 	'Menu:NewError' => 'Ny kendt fejl',
 	'Menu:NewError+' => '',

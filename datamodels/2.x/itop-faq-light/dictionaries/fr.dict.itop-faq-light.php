@@ -36,7 +36,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:FAQCategory' => 'Catégorie de FAQ',
-	'Class:FAQCategory+' => 'Typologie. Segmentation des Questions fréquement posées (FAQ)',
+	'Class:FAQCategory+' => 'Segmentation de la Foire Aux Questions (FAQ)',
 	'Class:FAQCategory/Attribute:name' => 'Nom',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
@@ -50,7 +50,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 ]);
 Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:ProblemManagement' => 'Gestion des problèmes',
-	'Menu:ProblemManagement+' => 'Gestion des problèmes',
+	'Menu:ProblemManagement+' => 'Un processus ITIL qui identifie la cause des incidents répétitifs, documente les Erreurs connues et les FAQs, afin de réduire la charge de travail du heldesk',
 	'Menu:Problem:Shortcuts' => 'Raccourcis',
 	'Menu:FAQCategory' => 'Catégories de FAQ',
 	'Menu:FAQCategory+' => 'Toutes les catégories de FAQ',

@@ -97,7 +97,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 
 Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:ProblemManagement' => 'Gestione dei problemi',
-	'Menu:ProblemManagement+' => 'Gestione dei problemi',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Scorciatoia',
 	'Menu:NewError' => 'Nuovo errore conosciuto',
 	'Menu:NewError+' => 'Creazione di un nuovo errore conosciuto',

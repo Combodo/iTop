@@ -45,10 +45,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 ]);
 Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:ProblemManagement' => 'Problem Management',
-	'Menu:ProblemManagement+' => 'Problem Management',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Genvej',
 	'Menu:FAQCategory' => 'FAQ-Kategorier',
-	'Menu:FAQCategory+' => '',
+	'Menu:FAQCategory+' => 'A typology to categorize frequently asked questions (FAQ)~~',
 	'Menu:FAQ' => 'FAQs',
 	'Menu:FAQ+' => '',
 	'Brick:Portal:FAQ:Menu' => 'FAQ~~',
