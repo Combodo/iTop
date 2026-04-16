@@ -17,7 +17,6 @@ namespace Combodo\iTop\Test\UnitTest;
 use ArchivedObjectException;
 use CMDBObject;
 use CMDBSource;
-use Combodo\iTop\DBTools\Service\DBToolsUtils;
 use Combodo\iTop\Service\Events\EventService;
 use Config;
 use Contact;
@@ -1448,27 +1447,48 @@ abstract class ItopDataTestCase extends ItopTestCase
 		return $sLogin;
 	}
 
+	protected function GivenUserWithContactInDB(string $sLogin, string $sProfileId, string $sPassword, string $sPersonId, string $sOrgId): string
+	{
+		return $this->GivenObjectInDB('UserLocal', [
+			'login' => $sLogin,
+			'password' => $sPassword,
+			'language' => 'EN US',
+			'profile_list' => [
+				'profileid:'.$sProfileId,
+			],
+			'contactid' => $sPersonId,
+			'allowed_org_list' => [
+				'allowed_org_id:'.$sOrgId,
+			],
+		]);
+	}
+
 	/**
 	 * @param string $sPassword
 	 * @param array $aProfiles Profile names Example: ['Administrator']
+	 * @param string|null $sLogin
+	 * @param string|null $sUserId
 	 *
 	 * @return string The unique login
 	 * @throws \Exception
 	 */
-	protected function GivenUserInDB(string $sPassword, array $aProfiles): string
+	protected function GivenUserInDB(string $sPassword, array $aProfiles, string $sLogin = null, string &$sUserId = null): string
 	{
-		$sLogin = 'demo_test_'.uniqid(__CLASS__, true);
+		if (is_null($sLogin)) {
+			$sLogin = 'demo_test_'.uniqid(__CLASS__, true);
+		}
 
 		$aProfileList = array_map(function ($sProfileId) {
 			return 'profileid:'.self::$aURP_Profiles[$sProfileId];
 		}, $aProfiles);
 
-		$iUser = $this->GivenObjectInDB('UserLocal', [
+		$sUserId = $this->GivenObjectInDB('UserLocal', [
 			'login' => $sLogin,
 			'password' => $sPassword,
 			'language' => 'EN US',
 			'profile_list' => $aProfileList,
 		]);
+
 		return $sLogin;
 	}
 
