@@ -165,10 +165,6 @@ abstract class StepSequencer
 
 	protected function GetConfig()
 	{
-		if (! is_null($this->oConfig)) {
-			return $this->oConfig;
-		}
-
 		$sTargetEnvironment = $this->oRunTimeEnvironment->GetBuildEnv();
 		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
 		try {
