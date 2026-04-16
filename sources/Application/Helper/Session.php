@@ -23,8 +23,6 @@ class Session
 	/** @var bool */
 	protected static $bIsInitialized = false;
 	/** @var bool */
-	protected static $bSessionStarted = false;
-	/** @var bool */
 	public static $bAllowCLI = false;
 
 	public static function Start()
@@ -36,7 +34,6 @@ class Session
 		if (session_status() === PHP_SESSION_ACTIVE) {
 			// Session already started
 			self::$bIsInitialized = true;
-			self::$bSessionStarted = true;
 			self::$iSessionId = session_id();
 			return;
 		}
@@ -47,15 +44,13 @@ class Session
 		}
 
 		self::$bIsInitialized = true;
-		if (!self::$bSessionStarted) {
-			if (!is_null(self::$iSessionId)) {
-				if (session_id(self::$iSessionId) === false) {
-					session_regenerate_id(true);
-				}
+		if (!is_null(self::$iSessionId)) {
+			if (session_id(self::$iSessionId) === false) {
+				session_regenerate_id(true);
 			}
-			self::$bSessionStarted = session_start();
-			self::$iSessionId = session_id();
 		}
+		session_start();
+		self::$iSessionId = session_id();
 	}
 
 	public static function RegenerateId($bDeleteOldSession = false)
@@ -65,10 +60,10 @@ class Session
 		}
 
 		session_regenerate_id($bDeleteOldSession);
-		if (self::$bSessionStarted) {
+		if (session_status() === PHP_SESSION_ACTIVE) {
 			self::WriteClose();
 		}
-		self::$bSessionStarted = session_start();
+		session_start();
 		self::$iSessionId = session_id();
 	}
 
@@ -78,9 +73,8 @@ class Session
 			return;
 		}
 
-		if (self::$bSessionStarted) {
+		if (session_status() === PHP_SESSION_ACTIVE) {
 			session_write_close();
-			self::$bSessionStarted = false;
 		}
 	}
 
@@ -103,7 +97,7 @@ class Session
 			$sSessionVar = &$sSessionVar[$key];
 		}
 		$sSessionVar = $value;
-		if (!self::$bSessionStarted) {
+		if (session_status() !== PHP_SESSION_ACTIVE) {
 			self::Start();
 			$_SESSION = $aSession;
 			self::WriteClose();
@@ -131,7 +125,7 @@ class Session
 					$sPrevKey = $sKey;
 				}
 			}
-			if (!self::$bSessionStarted) {
+			if (session_status() !== PHP_SESSION_ACTIVE) {
 				self::Start();
 				unset($sSessionVar[$sKey]);
 				$_SESSION = $aSession;
