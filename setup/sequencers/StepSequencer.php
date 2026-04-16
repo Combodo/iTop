@@ -165,6 +165,7 @@ abstract class StepSequencer
 
 	protected function GetConfig()
 	{
+		// Caching config here is a bad idea, the first config loaded does not contain module settings
 		$sTargetEnvironment = $this->oRunTimeEnvironment->GetBuildEnv();
 		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
 		try {
