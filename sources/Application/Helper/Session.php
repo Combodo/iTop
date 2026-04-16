@@ -21,8 +21,6 @@ class Session
 	/** @var int|null */
 	public static $iSessionId = null;
 	/** @var bool */
-	protected static $bIsInitialized = false;
-	/** @var bool */
 	public static $bAllowCLI = false;
 
 	public static function Start()
@@ -31,19 +29,15 @@ class Session
 			return;
 		}
 
-		if (session_status() === PHP_SESSION_ACTIVE) {
+		if (session_status() === PHP_SESSION_ACTIVE || headers_sent()) {
 			// Session already started
-			self::$bIsInitialized = true;
 			self::$iSessionId = session_id();
 			return;
 		}
 
-		if (!headers_sent()) {
-			SessionHandler::session_set_save_handler();
-			session_name('itop-'.md5(APPROOT));
-		}
+		SessionHandler::session_set_save_handler();
+		session_name('itop-'.md5(APPROOT));
 
-		self::$bIsInitialized = true;
 		if (!is_null(self::$iSessionId)) {
 			if (session_id(self::$iSessionId) === false) {
 				session_regenerate_id(true);
@@ -55,7 +49,7 @@ class Session
 
 	public static function RegenerateId($bDeleteOldSession = false)
 	{
-		if (session_status() === PHP_SESSION_DISABLED) {
+		if (session_status() === PHP_SESSION_DISABLED || headers_sent()) {
 			return;
 		}
 
@@ -190,14 +184,6 @@ class Session
 	public static function ListVariables(): array
 	{
 		return array_keys($_SESSION);
-	}
-
-	/**
-	 * @return bool
-	 */
-	public static function IsInitialized(): bool
-	{
-		return self::$bIsInitialized;
 	}
 
 	/**
