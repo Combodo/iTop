@@ -38,7 +38,7 @@ class Session
 			return;
 		}
 
-		if (!self::$bIsInitialized) {
+		if (!headers_sent()) {
 			SessionHandler::session_set_save_handler();
 			session_name('itop-'.md5(APPROOT));
 		}
