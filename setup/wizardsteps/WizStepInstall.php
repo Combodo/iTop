@@ -70,7 +70,7 @@ class WizStepInstall extends AbstractWizStepInstall
 		$oPage->add("<div class=\"message message-error ibo-is-html-content\" style=\"display:none;\" id=\"setup_error\"></div>");
 	}
 
-	public function Display(WebPage $oPage)
+	public function Display(SetupPage $oPage): void
 	{
 		$aInstallParams = $this->BuildConfig();
 		$this->AddProgressBar($oPage, 'Progress of the installation');

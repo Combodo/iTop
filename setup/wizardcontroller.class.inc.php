@@ -67,7 +67,7 @@ class WizardController
 
 	/**
 	 * Removes information about the previous step from the stack
-	 * @return hash Array('class' => , 'state' => )
+	 * @return array Array('class' => , 'state' => )
 	 */
 	protected function PopStep()
 	{
@@ -186,9 +186,12 @@ class WizardController
 
 	/**
 	 * Displays the specified 'step' of the wizard
+	 *
 	 * @param WizardStep $oStep The 'step' to display
+	 *
+	 * @throws \Exception
 	 */
-	protected function DisplayStep(WizardStep $oStep)
+	protected function DisplayStep(WizardStep $oStep): void
 	{
 		SetupLog::Info("=== Setup screen: ".$oStep->GetTitle().' ('.get_class($oStep).')');
 		$oPage = new SetupPage($oStep->GetTitle());
@@ -313,7 +316,7 @@ on the page's parameters
 	 * Provides information about the structure/workflow of the wizard by listing
 	 * the possible list of 'steps' and their dependencies
 	 * @param string $sStep Name of the class to start from (used for recursion)
-	 * @param hash $aAllSteps List of steps (used for recursion)
+	 * @param array $aAllSteps List of steps (used for recursion)
 	 */
 	public function DumpStructure($sStep = '', $aAllSteps = null)
 	{

@@ -37,11 +37,11 @@ class iTopExtensionsMap
 
 	/**
 	 * The list of all discovered extensions
+	 *
 	 * @param string $sFromEnvironment The environment to scan
-	 * @param bool $bNormailizeOldExtension true to "magically" convert some well-known old extensions (i.e. a set of modules) to the new iTopExtension format
-	 * @return void
+	 * @param array $aExtraDirs
 	 */
-	public function __construct($sFromEnvironment = ITOP_DEFAULT_ENV, $aExtraDirs = [])
+	public function __construct(string $sFromEnvironment = ITOP_DEFAULT_ENV, array $aExtraDirs = [])
 	{
 		$this->aExtensions = [];
 		$this->aExtensionsByCode = [];
@@ -375,9 +375,10 @@ class iTopExtensionsMap
 	}
 
 	/**
-	* @param bool $bKeepMissingDependencyExtensions
-	* @param bool $bRemoteExtensionsShouldBeMandatory
-	* @return array<\iTopExtension>>
+	 * @param bool $bKeepExtensionsHavingMissingDependencies
+	 * @param bool $bRemoteExtensionsShouldBeMandatory
+	 *
+	 * @return array<\iTopExtension>
 	 */
 	public function GetAllExtensionsToDisplayInSetup(bool $bKeepExtensionsHavingMissingDependencies = false, bool $bRemoteExtensionsShouldBeMandatory = true): array
 	{

@@ -57,9 +57,8 @@ class ApplicationInstallSequencer extends StepSequencer
 	 */
 	public function ExecuteStep($sStep = '', $sInstallComment = null): array
 	{
+		$fStart = microtime(true);
 		try {
-			$fStart = microtime(true);
-
 			/**
 			 * @since 3.2.0 move the ContextTag init at the very beginning of the method
 			 * @noinspection PhpUnusedLocalVariableInspection

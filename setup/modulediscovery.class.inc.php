@@ -34,7 +34,7 @@ class MissingDependencyException extends CoreException
 {
 	/**
 	 * @see \ModuleDiscovery::OrderModulesByDependencies property init
-	 * @var array<string, array<string>>
+	 * @var array<string, array<array>>
 	 *     module id as key
 	 *     another array as value, containing : 'module' with module info, 'dependencies' with missing dependencies
 	 */
@@ -410,6 +410,7 @@ class ModuleDiscovery
 				continue;
 			}
 
+			/** @var array|null $aCurrentModuleInfo */
 			$aCurrentModuleInfo = $oExtension->aModuleInfo[$sModuleName] ?? null;
 			if (is_null($aCurrentModuleInfo)) {
 				SetupLog::Warning("Missing $sModuleName in ".$oExtension->sLabel.". it should not happen");

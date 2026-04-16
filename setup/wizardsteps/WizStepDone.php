@@ -39,7 +39,7 @@ class WizStepDone extends WizardStep
 		return new WizardState('');
 	}
 
-	public function Display(WebPage $oPage)
+	public function Display(SetupPage $oPage): void
 	{
 		// Check if there are some manual steps required:
 		$aManualSteps = [];
@@ -102,9 +102,9 @@ class WizStepDone extends WizardStep
 		$sSetupTokenFile = APPROOT.'data/.setup';
 		$sSetupToken = bin2hex(random_bytes(12));
 		file_put_contents($sSetupTokenFile, $sSetupToken);
-		$sIframeUrl .= "&setup_token=$sSetupToken";
 
-		if ($sIframeUrl != '') {
+		if (mb_strlen($sIframeUrl) > 0) {
+			$sIframeUrl .= "&setup_token=$sSetupToken";
 			$oPage->add('<iframe id="fresh_content" frameborder="0" scrolling="auto" src="'.$sIframeUrl.'"></iframe>');
 
 			$oPage->add_script("

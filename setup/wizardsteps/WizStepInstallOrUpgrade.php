@@ -62,7 +62,7 @@ class WizStepInstallOrUpgrade extends WizardStep
 		return new WizardState($sNextStep);
 	}
 
-	public function Display(WebPage $oPage)
+	public function Display(SetupPage $oPage): void
 	{
 		$sInstallMode = $this->oWizard->GetParameter('install_mode', '');
 		$sDBServer = $this->oWizard->GetParameter('db_server', '');
@@ -121,8 +121,7 @@ HTML
 			$sDBName,
 			$sDBPrefix,
 			$sTlsEnabled,
-			$sTlsCA,
-			null
+			$sTlsCA
 		);
 
 		$sAuthentToken = $this->oWizard->GetParameter('authent', '');

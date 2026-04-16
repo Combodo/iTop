@@ -107,16 +107,19 @@ abstract class WizardStep
 	 * The page can contain any number of "<input/>" fields, but no "<form>...</form>" tag
 	 * The name of the input fields (and their id if one is supplied) MUST NOT start with "_"
 	 * (this is reserved for the wizard's own parameters)
+	 *
+	 * @param \SetupPage $oPage
+	 *
 	 * @return void
 	 */
-	abstract public function Display(WebPage $oPage);
+	abstract public function Display(SetupPage $oPage): void;
 
 	/**
 	 * Processes the page's parameters and (if moving forward) returns the next step/state to be displayed
 	 * @param bool $bMoveForward True if the wizard is moving forward 'Next >>' button pressed, false otherwise
-	 * @return hash array('class' => $sNextClass, 'state' => $sNextState)
+	 * @return WizardState array('class' => $sNextClass, 'state' => $sNextState)
 	 */
-	abstract public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState;
+	abstract public function UpdateWizardStateAndGetNextStep(bool $bMoveForward = true): WizardState;
 
 	/**
 	 * Returns the list of possible steps from this step forward
@@ -205,7 +208,7 @@ abstract class WizardStep
 	/**
 	 * Overload this function to implement asynchronous action(s) (AJAX)
 	 * @param string $sCode The code of the action (if several actions need to be distinguished)
-	 * @param hash $aParameters The action's parameters name => value
+	 * @param array $aParameters The action's parameters name => value
 	 */
 	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
 	{

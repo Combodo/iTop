@@ -152,9 +152,9 @@ try {
 				$sConfigFile = utils::GetConfigFilePath(ITOP_DEFAULT_ENV);
 				if (file_exists($sConfigFile) && !is_writable($sConfigFile) && $oStep->RequiresWritableConfig()) {
 					$sRelativePath = utils::GetConfigFilePathRelative(ITOP_DEFAULT_ENV);
-					$oPage->error("<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.");
-					$oPage->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.");
-					$oPage->output();
+					$sErrorMsg = "<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.";
+					$sErrorMsg .= "The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.";
+					throw new Exception($sErrorMsg);
 				} else {
 					$oStep->AsyncAction($oPage, $sActionCode, $aParams);
 				}
@@ -181,6 +181,7 @@ try {
 
 if (function_exists('memory_get_peak_usage')) {
 	if ($sOperation == 'file') {
+		$sFileName = utils::ReadParam('file', '', false, 'raw_data');
 		SetupLog::Info("loading file '$sFileName', peak memory usage. ".memory_get_peak_usage());
 	} else {
 		SetupLog::Info("operation '$sOperation', peak memory usage. ".memory_get_peak_usage());

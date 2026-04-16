@@ -51,7 +51,7 @@ class WizStepDBParams extends WizardStep
 		return new WizardState(WizStepAdminAccount::class);
 	}
 
-	public function Display(WebPage $oPage)
+	public function Display(SetupPage $oPage): void
 	{
 		$oPage->add('<h2>Configuration of the database connection:</h2>');
 		$sDBServer = $this->oWizard->GetParameter('db_server', '');

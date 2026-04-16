@@ -1279,7 +1279,7 @@ class ModelFactory
 		if ($bExcludeWorkspace) {
 			$aModules = [];
 			foreach (self::$aLoadedModules as $oModule) {
-				if (!$oModule instanceof MFWorkspace) {
+				if (!class_exists('MFWorkspace') || !$oModule instanceof MFWorkspace) {
 					$aModules[] = $oModule;
 				}
 			}

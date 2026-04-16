@@ -44,7 +44,7 @@ class WizStepUpgradeMiscParams extends AbstractWizStepMiscParams
 		return new WizardState(WizStepModulesChoice::class, 'start_upgrade');
 	}
 
-	public function Display(WebPage $oPage)
+	public function Display(SetupPage $oPage): void
 	{
 		$sApplicationURL = $this->oWizard->GetParameter('application_url', utils::GetAbsoluteUrlAppRoot(true)); //Preserve existing configuration (except for the str_replace based joker $SERVER_NAME$ which is lost)
 		$sDefaultGraphvizPath = (strtolower(substr(PHP_OS, 0, 3)) === 'win') ? 'C:\\Program Files\\Graphviz\\bin\\dot.exe' : '/usr/bin/dot';

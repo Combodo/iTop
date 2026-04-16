@@ -53,7 +53,7 @@ class WizStepWelcome extends WizardStep
 		return new WizardState(WizStepInstallOrUpgrade::class);
 	}
 
-	public function Display(WebPage $oPage)
+	public function Display(SetupPage $oPage): void
 	{
 		// Store the misc_options for the future...
 		$aMiscOptions = utils::ReadParam('option', [], false, 'raw_data');
