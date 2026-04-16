@@ -45,7 +45,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 ]);
 Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:ProblemManagement' => 'Problem yönetimi',
-	'Menu:ProblemManagement+' => 'Problem yönetimi',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Kısayollar',
 	'Menu:FAQCategory' => 'SSS kategorileri',
 	'Menu:FAQCategory+' => 'Tüm SSS kategorileri',

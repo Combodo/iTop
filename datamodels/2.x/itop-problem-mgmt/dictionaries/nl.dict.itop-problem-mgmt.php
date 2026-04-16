@@ -15,7 +15,7 @@
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:ProblemManagement' => 'Probleem Management',
-	'Menu:ProblemManagement+' => 'Probleem Management',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
 	'Menu:Problem:Overview' => 'Overzicht',
 	'Menu:Problem:Overview+' => 'Overzicht',
 	'Menu:NewProblem' => 'Nieuw probleem',
@@ -24,9 +24,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:SearchProblems+' => 'Zoek naar problemen',
 	'Menu:Problem:Shortcuts' => 'Snelkoppelingen',
 	'Menu:Problem:MyProblems' => 'Mijn problemen',
-	'Menu:Problem:MyProblems+' => 'Mijn problemen',
+	'Menu:Problem:MyProblems+' => 'Problems assigned to me which are neither resolved nor closed~~',
 	'Menu:Problem:OpenProblems' => 'Alle open problemen',
-	'Menu:Problem:OpenProblems+' => 'Alle open problemen',
+	'Menu:Problem:OpenProblems+' => 'All problem tickets which are nor closed~~',
 	'UI-ProblemManagementOverview-ProblemByService' => 'Problemen per service',
 	'UI-ProblemManagementOverview-ProblemByService+' => 'Problemen per service',
 	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problemen per prioriteit',

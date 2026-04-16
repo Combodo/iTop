@@ -46,10 +46,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 ]);
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:ProblemManagement' => 'Správa problémů',
-	'Menu:ProblemManagement+' => 'Správa problémů',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Odkazy',
 	'Menu:FAQCategory' => 'Kategorie FAQ',
-	'Menu:FAQCategory+' => '',
+	'Menu:FAQCategory+' => 'A typology to categorize frequently asked questions (FAQ)~~',
 	'Menu:FAQ' => 'FAQ',
 	'Menu:FAQ+' => 'FAQ - Často kladené dotazy',
 	'Brick:Portal:FAQ:Menu' => 'FAQ',

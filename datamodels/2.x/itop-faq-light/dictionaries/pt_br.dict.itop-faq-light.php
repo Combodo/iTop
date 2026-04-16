@@ -44,7 +44,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 ]);
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:ProblemManagement' => 'Gerencimento de problemas',
-	'Menu:ProblemManagement+' => '',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Atalhos',
 	'Menu:FAQCategory' => 'Categorias de FAQ',
 	'Menu:FAQCategory+' => 'Lista de Categorias de FAQ',
