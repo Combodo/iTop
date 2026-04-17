@@ -1015,7 +1015,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:OSLicence/Attribute:osversion_id' => 'Verze OS',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
 	'Class:OSLicence/Attribute:osfamily_id' => 'OS Family~~',
-	'Class:OSLicence/Attribute:osfamily_id+' => '~~',
+	'Class:OSLicence/Attribute:osfamily_id+' => '',
 	'Class:OSLicence/Attribute:osversion_name' => 'Název verze OS',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtuální stroje (VM)',
