@@ -72,7 +72,9 @@ class DataAuditSequencer extends StepSequencer
 					return $this->GetNextStep('complete', 'Check Completed', 100);
 
 				case 'setup-audit':
-					$this->oRunTimeEnvironment->DataToCleanupAudit();
+					if ($this->IsDataAuditRequired()) {
+						$this->oRunTimeEnvironment->DataToCleanupAudit();
+					}
 					return $this->GetNextStep('complete', 'Check Completed', 100);
 
 				case 'complete':

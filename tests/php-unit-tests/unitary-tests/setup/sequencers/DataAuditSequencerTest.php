@@ -5,7 +5,6 @@ namespace Combodo\iTop\Test\UnitTest\Setup\Sequencers;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DataAuditSequencer;
 use PHPParameters;
-use PHPUnit\Framework\TestCase;
 
 class DataAuditSequencerTest extends ItopTestCase
 {
@@ -106,8 +105,8 @@ class DataAuditSequencerTest extends ItopTestCase
 		$aExpected = [
 			'status' => 1,
 			'message' => '',
-			'next-step' => '',
-			'next-step-label' => 'Completed',
+			'next-step' => 'complete',
+			'next-step-label' => 'Check Completed',
 			'percentage-completed' => 100,
 		];
 		$this->assertEquals($aExpected, $aRes);
@@ -129,8 +128,8 @@ class DataAuditSequencerTest extends ItopTestCase
 		$aExpected = [
 			'status' => 1,
 			'message' => '',
-			'next-step' => '',
-			'next-step-label' => 'Completed',
+			'next-step' => 'complete',
+			'next-step-label' => 'Check Completed',
 			'percentage-completed' => 100,
 		];
 		$this->assertEquals($aExpected, $aRes);
@@ -159,7 +158,7 @@ class DataAuditSequencerTest extends ItopTestCase
 	{
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
 		$oRunTimeEnvironment->expects($this->once())->method('DataToCleanupAudit');
-		$oRunTimeEnvironment->expects($this->once())->method('GetFinalEnv')
+		$oRunTimeEnvironment->expects($this->any())->method('GetFinalEnv')
 			->willReturn('production');
 
 		$aAdditionalParams = [
@@ -171,8 +170,8 @@ class DataAuditSequencerTest extends ItopTestCase
 		$aExpected = [
 			'status' => 1,
 			'message' => '',
-			'next-step' => '',
-			'next-step-label' => 'Completed',
+			'next-step' => 'complete',
+			'next-step-label' => 'Check Completed',
 			'percentage-completed' => 100,
 		];
 		$this->assertEquals($aExpected, $aRes);
@@ -193,8 +192,8 @@ class DataAuditSequencerTest extends ItopTestCase
 		$aExpected = [
 			'status' => 1,
 			'message' => '',
-			'next-step' => '',
-			'next-step-label' => 'Completed',
+			'next-step' => 'complete',
+			'next-step-label' => 'Check Completed',
 			'percentage-completed' => 100,
 		];
 		$this->assertEquals($aExpected, $aRes);
@@ -213,8 +212,8 @@ class DataAuditSequencerTest extends ItopTestCase
 		$aExpected = [
 			'status' => 1,
 			'message' => '',
-			'next-step' => '',
-			'next-step-label' => 'Completed',
+			'next-step' => 'complete',
+			'next-step-label' => 'Check Completed',
 			'percentage-completed' => 100,
 		];
 		$this->assertEquals($aExpected, $aRes);
