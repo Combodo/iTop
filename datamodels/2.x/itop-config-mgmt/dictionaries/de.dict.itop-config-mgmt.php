@@ -1014,7 +1014,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:OSLicence/Attribute:osversion_id' => 'OS-Version',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
 	'Class:OSLicence/Attribute:osfamily_id' => 'OS Family~~',
-	'Class:OSLicence/Attribute:osfamily_id+' => '~~',
+	'Class:OSLicence/Attribute:osfamily_id+' => '',
 	'Class:OSLicence/Attribute:osversion_name' => 'OS-Versionsname',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtuelle Maschinen',
