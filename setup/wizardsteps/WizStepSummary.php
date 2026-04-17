@@ -171,7 +171,6 @@ class WizStepSummary extends AbstractWizStepInstall
 		}
 
 		if (isset($aMiscOptions['generate_config'])) {
-			/** @var \DOMDocument $oDoc */
 			$oDoc = new DOMDocument('1.0', 'UTF-8');
 			$oDoc->preserveWhiteSpace = false;
 			$oDoc->formatOutput = true;

@@ -1562,15 +1562,7 @@ EOF;
 			foreach ($aStatesOrder as $sState => $foo) {
 				$oState = $aStates[$sState];
 				$oInitialStatePath = $oState->GetOptionalElement('initial_state_path');
-				$sInitialStatePath = '';
-				if (!is_null($oInitialStatePath)) {
-					$aInitialStatePath = [];
-					foreach ($oInitialStatePath->getElementsByTagName('state_ref') as $oIntermediateState) {
-						$aInitialStatePath[] = "'".$oIntermediateState->GetText()."'";
-					}
-					$sInitialStatePath = 'Array('.implode(', ', $aInitialStatePath).')';
-				}
-
+				
 				$sLifecycle .= "		MetaModel::Init_DefineState(\n";
 				$sLifecycle .= "			\"".$sState."\",\n";
 				$sLifecycle .= "			array(\n";
@@ -1598,6 +1590,11 @@ EOF;
 
 				$sLifecycle .= "				),\n";
 				if (!is_null($oInitialStatePath)) {
+					$aInitialStatePath = [];
+					foreach ($oInitialStatePath->getElementsByTagName('state_ref') as $oIntermediateState) {
+						$aInitialStatePath[] = "'".$oIntermediateState->GetText()."'";
+					}
+					$sInitialStatePath = 'Array('.implode(', ', $aInitialStatePath).')';
 					$sLifecycle .= "				\"initial_state_path\" => $sInitialStatePath,\n";
 				}
 				$sLifecycle .= "			)\n";

@@ -514,7 +514,6 @@ EOF
 					foreach ($aChoice['modules'] as $sModuleId) {
 						$bSelected = true;
 						if (isset($aModuleInfo[$sModuleId])) {
-							// Test if module has 'auto_select'
 							/** @var array $aCurrentModuleInfo */
 							$aCurrentModuleInfo = $aModuleInfo[$sModuleId];
 							if (isset($aCurrentModuleInfo['auto_select'])) {

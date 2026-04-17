@@ -67,7 +67,7 @@ class WizardController
 
 	/**
 	 * Removes information about the previous step from the stack
-	 * @return array Array('class' => , 'state' => )
+	 * @return array{'class': string, 'state': string}
 	 */
 	protected function PopStep()
 	{

@@ -180,10 +180,5 @@ try {
 }
 
 if (function_exists('memory_get_peak_usage')) {
-	if ($sOperation == 'file') {
-		$sFileName = utils::ReadParam('file', '', false, 'raw_data');
-		SetupLog::Info("loading file '$sFileName', peak memory usage. ".memory_get_peak_usage());
-	} else {
-		SetupLog::Info("operation '$sOperation', peak memory usage. ".memory_get_peak_usage());
-	}
+	SetupLog::Info("operation '$sOperation', peak memory usage. ".memory_get_peak_usage());
 }
