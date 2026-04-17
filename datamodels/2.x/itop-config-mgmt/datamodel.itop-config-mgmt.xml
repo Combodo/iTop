@@ -5121,7 +5121,7 @@
           </complementary_attributes>
         </naming>
         <style>
-          <icon/>
+          <icon>images/icons8-os-version-software.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -5232,7 +5232,7 @@
           <image_attribute>logo</image_attribute>
         </fields_semantic>
         <style>
-          <icon/>
+          <icon>images/icons8-os-family-software.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -5708,7 +5708,7 @@
           </attributes>
         </naming>
         <style>
-          <icon/>
+          <icon>images/icons8-ios-version-software.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -8351,6 +8351,22 @@
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:SWAndApps</title>
                 <icon>../images/icons/icons8-software.svg</icon>
+              </dashlet>
+              <dashlet id="Software" xsi:type="DashletBadge">
+                <rank>0.1</rank>
+                <class>Software</class>
+              </dashlet>
+              <dashlet id="OSFamily" xsi:type="DashletBadge">
+                <rank>0.2</rank>
+                <class>OSFamily</class>
+              </dashlet>
+              <dashlet id="OSVersion" xsi:type="DashletBadge">
+                <rank>0.3</rank>
+                <class>OSVersion</class>
+              </dashlet>
+              <dashlet id="IOSVersion" xsi:type="DashletBadge">
+                <rank>0.4</rank>
+                <class>IOSVersion</class>
               </dashlet>
               <dashlet id="5" xsi:type="DashletBadge">
                 <rank>1</rank>
