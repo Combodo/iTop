@@ -169,7 +169,11 @@ abstract class StepSequencer
 		$sTargetEnvironment = $this->oRunTimeEnvironment->GetBuildEnv();
 		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
 		try {
-			$this->oConfig = new Config($sConfigFile);
+			if (file_exists($sConfigFile)) {
+				$this->oConfig = new Config($sConfigFile);
+			} else {
+				$this->oConfig = new Config();
+			}
 		} catch (Exception $e) {
 			SetupLog::Exception("Setup error", $e);
 			throw $e;
