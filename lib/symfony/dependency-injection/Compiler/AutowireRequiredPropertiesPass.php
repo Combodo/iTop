@@ -11,9 +11,6 @@
 
 namespace Symfony\Component\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
-use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\TypedReference;
@@ -59,11 +56,7 @@ class AutowireRequiredPropertiesPass extends AbstractRecursivePass
             }
 
             $type = $type->getName();
-            $value->setProperty($name, new TypedReference($type, $type, ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, $name, array_map(static fn ($a) => $a->newInstance(), array_merge(
-                $reflectionProperty->getAttributes(Autowire::class, \ReflectionAttribute::IS_INSTANCEOF),
-                $reflectionProperty->getAttributes(AutowireDecorated::class),
-                $reflectionProperty->getAttributes(Target::class),
-            ))));
+            $value->setProperty($name, new TypedReference($type, $type, ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, $name));
         }
 
         return $value;

@@ -72,40 +72,27 @@ abstract class FileLoader extends Loader
      */
     public function import(mixed $resource, ?string $type = null, bool $ignoreErrors = false, ?string $sourceResource = null, string|array|null $exclude = null)
     {
-        $excluded = [];
-        foreach ((array) $exclude as $pattern) {
-            foreach ($this->glob($pattern, true, $_, false, true) as $path => $info) {
-                // normalize Windows slashes and remove trailing slashes
-                $excluded[rtrim(str_replace('\\', '/', $path), '/')] = true;
-            }
-        }
-
-        if (\is_string($resource) && !class_exists($resource)) {
-            $isGlobPattern = \strlen($resource) !== strcspn($resource, '*?{[');
-
-            if (!$isGlobPattern && $excluded) {
-                $resource = rtrim(str_replace('\\', '/', $resource), '/');
-                $resource .= '/**/*';
-                $isGlobPattern = true;
-            }
-
-            if ($isGlobPattern && !str_contains($resource, "\n")) {
-                $ret = [];
-                $i = strcspn($resource, '*?{[');
-                $isSubpath = 0 !== $i && str_contains(substr($resource, 0, $i), '/');
-                foreach ($this->glob($resource, false, $_, $ignoreErrors || !$isSubpath, false, $excluded) as $path => $info) {
-                    if (null !== $res = $this->doImport($path, 'glob' === $type ? null : $type, $ignoreErrors, $sourceResource)) {
-                        $ret[] = $res;
-                    }
-                    $isSubpath = true;
-                }
-
-                if ($isSubpath) {
-                    return isset($ret[1]) ? $ret : ($ret[0] ?? null);
+        if (\is_string($resource) && \strlen($resource) !== ($i = strcspn($resource, '*?{[')) && !str_contains($resource, "\n")) {
+            $excluded = [];
+            foreach ((array) $exclude as $pattern) {
+                foreach ($this->glob($pattern, true, $_, false, true) as $path => $info) {
+                    // normalize Windows slashes and remove trailing slashes
+                    $excluded[rtrim(str_replace('\\', '/', $path), '/')] = true;
                 }
             }
-        } elseif (\is_array($resource) && $excluded) {
-            $resource['_excluded'] = $excluded;
+
+            $ret = [];
+            $isSubpath = 0 !== $i && str_contains(substr($resource, 0, $i), '/');
+            foreach ($this->glob($resource, false, $_, $ignoreErrors || !$isSubpath, false, $excluded) as $path => $info) {
+                if (null !== $res = $this->doImport($path, 'glob' === $type ? null : $type, $ignoreErrors, $sourceResource)) {
+                    $ret[] = $res;
+                }
+                $isSubpath = true;
+            }
+
+            if ($isSubpath) {
+                return isset($ret[1]) ? $ret : ($ret[0] ?? null);
+            }
         }
 
         return $this->doImport($resource, $type, $ignoreErrors, $sourceResource);

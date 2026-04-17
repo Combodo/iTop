@@ -474,8 +474,6 @@ class QuestionHelper extends Helper
 
             try {
                 return $question->getValidator()($interviewer());
-            } catch (MissingInputException $e) {
-                throw $error ?? $e;
             } catch (RuntimeException $e) {
                 throw $e;
             } catch (\Exception $error) {

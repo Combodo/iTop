@@ -8,17 +8,16 @@ namespace PhpParser\Internal;
  * Myers, Eugene W. "An O (ND) difference algorithm and its variations."
  * Algorithmica 1.1 (1986): 251-266.
  *
- * @template T
  * @internal
  */
-class Differ {
-    /** @var callable(T, T): bool */
+class Differ
+{
     private $isEqual;
 
     /**
      * Create differ over the given equality relation.
      *
-     * @param callable(T, T): bool $isEqual Equality relation
+     * @param callable $isEqual Equality relation with signature function($a, $b) : bool
      */
     public function __construct(callable $isEqual) {
         $this->isEqual = $isEqual;
@@ -27,14 +26,12 @@ class Differ {
     /**
      * Calculate diff (edit script) from $old to $new.
      *
-     * @param T[] $old Original array
-     * @param T[] $new New array
+     * @param array $old Original array
+     * @param array $new New array
      *
      * @return DiffElem[] Diff (edit script)
      */
-    public function diff(array $old, array $new): array {
-        $old = \array_values($old);
-        $new = \array_values($new);
+    public function diff(array $old, array $new) {
         list($trace, $x, $y) = $this->calculateTrace($old, $new);
         return $this->extractDiff($trace, $x, $y, $old, $new);
     }
@@ -45,37 +42,32 @@ class Differ {
      * If a sequence of remove operations is followed by the same number of add operations, these
      * will be coalesced into replace operations.
      *
-     * @param T[] $old Original array
-     * @param T[] $new New array
+     * @param array $old Original array
+     * @param array $new New array
      *
      * @return DiffElem[] Diff (edit script), including replace operations
      */
-    public function diffWithReplacements(array $old, array $new): array {
+    public function diffWithReplacements(array $old, array $new) {
         return $this->coalesceReplacements($this->diff($old, $new));
     }
 
-    /**
-     * @param T[] $old
-     * @param T[] $new
-     * @return array{array<int, array<int, int>>, int, int}
-     */
-    private function calculateTrace(array $old, array $new): array {
-        $n = \count($old);
-        $m = \count($new);
+    private function calculateTrace(array $a, array $b) {
+        $n = \count($a);
+        $m = \count($b);
         $max = $n + $m;
         $v = [1 => 0];
         $trace = [];
         for ($d = 0; $d <= $max; $d++) {
             $trace[] = $v;
             for ($k = -$d; $k <= $d; $k += 2) {
-                if ($k === -$d || ($k !== $d && $v[$k - 1] < $v[$k + 1])) {
-                    $x = $v[$k + 1];
+                if ($k === -$d || ($k !== $d && $v[$k-1] < $v[$k+1])) {
+                    $x = $v[$k+1];
                 } else {
-                    $x = $v[$k - 1] + 1;
+                    $x = $v[$k-1] + 1;
                 }
 
                 $y = $x - $k;
-                while ($x < $n && $y < $m && ($this->isEqual)($old[$x], $new[$y])) {
+                while ($x < $n && $y < $m && ($this->isEqual)($a[$x], $b[$y])) {
                     $x++;
                     $y++;
                 }
@@ -89,19 +81,13 @@ class Differ {
         throw new \Exception('Should not happen');
     }
 
-    /**
-     * @param array<int, array<int, int>> $trace
-     * @param T[] $old
-     * @param T[] $new
-     * @return DiffElem[]
-     */
-    private function extractDiff(array $trace, int $x, int $y, array $old, array $new): array {
+    private function extractDiff(array $trace, int $x, int $y, array $a, array $b) {
         $result = [];
         for ($d = \count($trace) - 1; $d >= 0; $d--) {
             $v = $trace[$d];
             $k = $x - $y;
 
-            if ($k === -$d || ($k !== $d && $v[$k - 1] < $v[$k + 1])) {
+            if ($k === -$d || ($k !== $d && $v[$k-1] < $v[$k+1])) {
                 $prevK = $k + 1;
             } else {
                 $prevK = $k - 1;
@@ -111,7 +97,7 @@ class Differ {
             $prevY = $prevX - $prevK;
 
             while ($x > $prevX && $y > $prevY) {
-                $result[] = new DiffElem(DiffElem::TYPE_KEEP, $old[$x - 1], $new[$y - 1]);
+                $result[] = new DiffElem(DiffElem::TYPE_KEEP, $a[$x-1], $b[$y-1]);
                 $x--;
                 $y--;
             }
@@ -121,12 +107,12 @@ class Differ {
             }
 
             while ($x > $prevX) {
-                $result[] = new DiffElem(DiffElem::TYPE_REMOVE, $old[$x - 1], null);
+                $result[] = new DiffElem(DiffElem::TYPE_REMOVE, $a[$x-1], null);
                 $x--;
             }
 
             while ($y > $prevY) {
-                $result[] = new DiffElem(DiffElem::TYPE_ADD, null, $new[$y - 1]);
+                $result[] = new DiffElem(DiffElem::TYPE_ADD, null, $b[$y-1]);
                 $y--;
             }
         }
@@ -139,7 +125,7 @@ class Differ {
      * @param DiffElem[] $diff
      * @return DiffElem[]
      */
-    private function coalesceReplacements(array $diff): array {
+    private function coalesceReplacements(array $diff) {
         $newDiff = [];
         $c = \count($diff);
         for ($i = 0; $i < $c; $i++) {

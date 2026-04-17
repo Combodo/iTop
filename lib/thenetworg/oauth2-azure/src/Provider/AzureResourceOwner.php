@@ -3,7 +3,6 @@
 namespace TheNetworg\OAuth2\Client\Provider;
 
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
-use TheNetworg\OAuth2\Client\Token\AccessToken;
 
 class AzureResourceOwner implements ResourceOwnerInterface
 {
@@ -15,20 +14,13 @@ class AzureResourceOwner implements ResourceOwnerInterface
     protected $data;
 
     /**
-     * @var AccessToken
-     */
-    protected $token;
-
-    /**
      * Creates new azure resource owner.
      *
      * @param array $data
-     * @param AccessToken $token
      */
-    public function __construct(array $data, AccessToken $token)
+    public function __construct($data = [])
     {
         $this->data = $data;
-        $this->token = $token;
     }
 
     /**
@@ -121,13 +113,5 @@ class AzureResourceOwner implements ResourceOwnerInterface
     public function toArray()
     {
         return $this->data;
-    }
-
-    /**
-     * @return AccessToken
-     */
-    public function getToken()
-    {
-        return $this->token;
     }
 }

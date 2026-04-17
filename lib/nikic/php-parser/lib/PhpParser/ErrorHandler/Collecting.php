@@ -10,11 +10,12 @@ use PhpParser\ErrorHandler;
  *
  * This allows graceful handling of errors.
  */
-class Collecting implements ErrorHandler {
+class Collecting implements ErrorHandler
+{
     /** @var Error[] Collected errors */
-    private array $errors = [];
+    private $errors = [];
 
-    public function handleError(Error $error): void {
+    public function handleError(Error $error) {
         $this->errors[] = $error;
     }
 
@@ -23,21 +24,23 @@ class Collecting implements ErrorHandler {
      *
      * @return Error[]
      */
-    public function getErrors(): array {
+    public function getErrors() : array {
         return $this->errors;
     }
 
     /**
      * Check whether there are any errors.
+     *
+     * @return bool
      */
-    public function hasErrors(): bool {
+    public function hasErrors() : bool {
         return !empty($this->errors);
     }
 
     /**
      * Reset/clear collected errors.
      */
-    public function clearErrors(): void {
+    public function clearErrors() {
         $this->errors = [];
     }
 }

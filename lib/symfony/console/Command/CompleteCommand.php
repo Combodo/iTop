@@ -115,30 +115,24 @@ final class CompleteCommand extends Command
                 '<info>Messages:</>',
             ]);
 
-            if ($command = $this->findCommand($completionInput, $output)) {
-                $command->mergeApplicationDefinition();
-                $completionInput->bind($command->getDefinition());
-            }
-
+            $command = $this->findCommand($completionInput, $output);
             if (null === $command) {
                 $this->log('  No command found, completing using the Application class.');
 
                 $this->getApplication()->complete($completionInput, $suggestions);
             } elseif (
                 $completionInput->mustSuggestArgumentValuesFor('command')
+                && $command->getName() !== $completionInput->getCompletionValue()
+                && !\in_array($completionInput->getCompletionValue(), $command->getAliases(), true)
             ) {
-                $this->log('  Command found, completing command name.');
+                $this->log('  No command found, completing using the Application class.');
 
                 // expand shortcut names ("cache:cl<TAB>") into their full name ("cache:clear")
-                $commandNames = array_filter(array_merge([$command->getName()], $command->getAliases()));
-                foreach ($commandNames as $name) {
-                    if (str_starts_with($name, $completionInput->getCompletionValue())) {
-                        $commandNames = [$name];
-                        break;
-                    }
-                }
-                $suggestions->suggestValues($commandNames);
+                $suggestions->suggestValues(array_filter(array_merge([$command->getName()], $command->getAliases())));
             } else {
+                $command->mergeApplicationDefinition();
+                $completionInput->bind($command->getDefinition());
+
                 if (CompletionInput::TYPE_OPTION_NAME === $completionInput->getCompletionType()) {
                     $this->log('  Completing option names for the <comment>'.($command instanceof LazyCommand ? $command->getCommand() : $command)::class.'</> command.');
 

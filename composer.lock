@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eebbdc6c10a479b0e62fc18d88496f5c",
+    "content-hash": "357b8cf8792f43362d4d66813db378b1",
     "packages": [
         {
             "name": "apereo/phpcas",
@@ -239,12 +239,12 @@
             "version": "v7.0.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/firebase/php-jwt.git",
+                "url": "https://github.com/googleapis/php-jwt.git",
                 "reference": "5645b43af647b6947daac1d0f659dd1fbe8d3b65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/5645b43af647b6947daac1d0f659dd1fbe8d3b65",
+                "url": "https://api.github.com/repos/googleapis/php-jwt/zipball/5645b43af647b6947daac1d0f659dd1fbe8d3b65",
                 "reference": "5645b43af647b6947daac1d0f659dd1fbe8d3b65",
                 "shasum": ""
             },
@@ -5106,7 +5106,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.1.0 <8.5.0",
+        "php": ">=8.2.0 <8.5.0",
         "ext-ctype": "*",
         "ext-dom": "*",
         "ext-gd": "*",
@@ -5117,7 +5117,7 @@
     },
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.1.0"
+        "php": "8.2.0"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }

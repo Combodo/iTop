@@ -222,7 +222,7 @@ class ResolveBindingsPass extends AbstractRecursivePass
                     continue;
                 }
 
-                if (null !== $binding = $bindingNames[$name] ?? $bindingNames[$parsedName] ?? $bindingNames[$parameter->name] ?? null) {
+                if (isset($bindingNames[$name]) || isset($bindingNames[$parsedName]) || isset($bindingNames[$parameter->name])) {
                     $bindingKey = array_search($binding, $bindings, true);
                     $argumentType = substr($bindingKey, 0, strpos($bindingKey, ' '));
                     $this->errorMessages[] = \sprintf('Did you forget to add the type "%s" to argument "$%s" of method "%s::%s()"?', $argumentType, $parameter->name, $reflectionMethod->class, $reflectionMethod->name);

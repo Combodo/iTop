@@ -4,26 +4,27 @@ namespace PhpParser\Node\Stmt;
 
 use PhpParser\Node\Stmt;
 
-class InlineHTML extends Stmt {
+class InlineHTML extends Stmt
+{
     /** @var string String */
-    public string $value;
+    public $value;
 
     /**
      * Constructs an inline HTML node.
      *
-     * @param string $value String
-     * @param array<string, mixed> $attributes Additional attributes
+     * @param string $value      String
+     * @param array  $attributes Additional attributes
      */
     public function __construct(string $value, array $attributes = []) {
         $this->attributes = $attributes;
         $this->value = $value;
     }
 
-    public function getSubNodeNames(): array {
+    public function getSubNodeNames() : array {
         return ['value'];
     }
-
-    public function getType(): string {
+    
+    public function getType() : string {
         return 'Stmt_InlineHTML';
     }
 }

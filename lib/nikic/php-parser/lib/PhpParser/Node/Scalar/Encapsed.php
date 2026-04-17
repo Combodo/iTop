@@ -2,14 +2,30 @@
 
 namespace PhpParser\Node\Scalar;
 
-require __DIR__ . '/InterpolatedString.php';
+use PhpParser\Node\Expr;
+use PhpParser\Node\Scalar;
 
-if (false) {
+class Encapsed extends Scalar
+{
+    /** @var Expr[] list of string parts */
+    public $parts;
+
     /**
-     * For classmap-authoritative support.
+     * Constructs an encapsed string node.
      *
-     * @deprecated use \PhpParser\Node\Scalar\InterpolatedString instead.
+     * @param Expr[] $parts      Encaps list
+     * @param array  $attributes Additional attributes
      */
-    class Encapsed extends InterpolatedString {
+    public function __construct(array $parts, array $attributes = []) {
+        $this->attributes = $attributes;
+        $this->parts = $parts;
+    }
+
+    public function getSubNodeNames() : array {
+        return ['parts'];
+    }
+    
+    public function getType() : string {
+        return 'Scalar_Encapsed';
     }
 }

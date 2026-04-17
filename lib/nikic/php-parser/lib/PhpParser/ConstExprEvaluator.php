@@ -1,11 +1,10 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser;
 
+use function array_merge;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Scalar;
-
-use function array_merge;
 
 /**
  * Evaluates constant expressions.
@@ -17,6 +16,8 @@ use function array_merge;
  * following node types:
  *
  *  * All Scalar\MagicConst\* nodes.
+ *  * Expr\ConstFetch nodes. Only null/false/true are already handled by this class.
+ *  * Expr\ClassConstFetch nodes.
  *
  * The fallback evaluator should throw ConstExprEvaluationException for nodes it cannot evaluate.
  *
@@ -24,9 +25,9 @@ use function array_merge;
  * point to string conversions are affected by the precision ini setting. Secondly, they are also
  * affected by the LC_NUMERIC locale.
  */
-class ConstExprEvaluator {
-    /** @var callable|null */
-    protected $fallbackEvaluator;
+class ConstExprEvaluator
+{
+    private $fallbackEvaluator;
 
     /**
      * Create a constant expression evaluator.
@@ -37,7 +38,7 @@ class ConstExprEvaluator {
      * @param callable|null $fallbackEvaluator To call if subexpression cannot be evaluated
      */
     public function __construct(?callable $fallbackEvaluator = null) {
-        $this->fallbackEvaluator = $fallbackEvaluator ?? function (Expr $expr) {
+        $this->fallbackEvaluator = $fallbackEvaluator ?? function(Expr $expr) {
             throw new ConstExprEvaluationException(
                 "Expression of type {$expr->getType()} cannot be evaluated"
             );
@@ -62,7 +63,7 @@ class ConstExprEvaluator {
      * @throws ConstExprEvaluationException if the expression cannot be evaluated or an error occurred
      */
     public function evaluateSilently(Expr $expr) {
-        set_error_handler(function ($num, $str, $file, $line) {
+        set_error_handler(function($num, $str, $file, $line) {
             throw new \ErrorException($str, 0, $num, $file, $line);
         });
 
@@ -100,10 +101,9 @@ class ConstExprEvaluator {
         return $this->evaluate($expr);
     }
 
-    /** @return mixed */
-    protected function evaluate(Expr $expr) {
-        if ($expr instanceof Scalar\Int_
-            || $expr instanceof Scalar\Float_
+    private function evaluate(Expr $expr) {
+        if ($expr instanceof Scalar\LNumber
+            || $expr instanceof Scalar\DNumber
             || $expr instanceof Scalar\String_
         ) {
             return $expr->value;
@@ -143,18 +143,10 @@ class ConstExprEvaluator {
             return $this->evaluateConstFetch($expr);
         }
 
-        if ($expr instanceof Expr\ClassConstFetch) {
-            return $this->evaluateClassConstFetch($expr);
-        }
-
-        if ($expr instanceof Expr\Cast) {
-            return $this->evaluateCast($expr);
-        }
-
         return ($this->fallbackEvaluator)($expr);
     }
 
-    private function evaluateArray(Expr\Array_ $expr): array {
+    private function evaluateArray(Expr\Array_ $expr) {
         $array = [];
         foreach ($expr->items as $item) {
             if (null !== $item->key) {
@@ -168,7 +160,6 @@ class ConstExprEvaluator {
         return $array;
     }
 
-    /** @return mixed */
     private function evaluateTernary(Expr\Ternary $expr) {
         if (null === $expr->if) {
             return $this->evaluate($expr->cond) ?: $this->evaluate($expr->else);
@@ -179,7 +170,6 @@ class ConstExprEvaluator {
             : $this->evaluate($expr->else);
     }
 
-    /** @return mixed */
     private function evaluateBinaryOp(Expr\BinaryOp $expr) {
         if ($expr instanceof Expr\BinaryOp\Coalesce
             && $expr->left instanceof Expr\ArrayDimFetch
@@ -221,87 +211,17 @@ class ConstExprEvaluator {
             case '<':   return $this->evaluate($l) <   $this->evaluate($r);
             case '<=':  return $this->evaluate($l) <=  $this->evaluate($r);
             case '<=>': return $this->evaluate($l) <=> $this->evaluate($r);
-            case '|>':
-                $lval = $this->evaluate($l);
-                return $this->evaluate($r)($lval);
         }
 
         throw new \Exception('Should not happen');
     }
 
-    /** @return mixed */
     private function evaluateConstFetch(Expr\ConstFetch $expr) {
-        try {
-            $name = $expr->name->name;
-
-            if (defined($name)) {
-                return constant($name);
-            }
-        } catch (\Throwable $t) {
-        }
-
-        return ($this->fallbackEvaluator)($expr);
-    }
-
-    /** @return mixed */
-    private function evaluateClassConstFetch(Expr\ClassConstFetch $expr) {
-        try {
-            $classname = $expr->class->name;
-            $property = $expr->name->name;
-
-            if ('class' === $property) {
-                return $classname;
-            }
-
-            if (class_exists($classname)) {
-                $class = new \ReflectionClass($classname);
-                if (array_key_exists($property, $class->getConstants())) {
-                    $oReflectionConstant = $class->getReflectionConstant($property);
-                    if ($oReflectionConstant->isPublic()) {
-                        return $class->getConstant($property);
-                    }
-                }
-            }
-        } catch (\Throwable $t) {
-        }
-
-        return ($this->fallbackEvaluator)($expr);
-    }
-
-    /** @return mixed */
-    private function evaluateCast(Expr\Cast $expr) {
-        try {
-            $subexpr = $this->evaluate($expr->expr);
-            $type = get_class($expr);
-            switch ($type) {
-                case Expr\Cast\Array_::class:
-                    return (array) $subexpr;
-
-                case Expr\Cast\Bool_::class:
-                    return (bool) $subexpr;
-
-                case Expr\Cast\Double::class:
-                    switch ($expr->getAttribute("kind")) {
-                        case Expr\Cast\Double::KIND_DOUBLE:
-                            return (float) $subexpr;
-
-                        case Expr\Cast\Double::KIND_FLOAT:
-                        case Expr\Cast\Double::KIND_REAL:
-                            return (float) $subexpr;
-                    }
-
-                    break;
-
-                case Expr\Cast\Int_::class:
-                    return (int) $subexpr;
-
-                case Expr\Cast\Object_::class:
-                    return (object) $subexpr;
-
-                case Expr\Cast\String_::class:
-                    return (string) $subexpr;
-            }
-        } catch (\Throwable $t) {
+        $name = $expr->name->toLowerString();
+        switch ($name) {
+            case 'null': return null;
+            case 'false': return false;
+            case 'true': return true;
         }
 
         return ($this->fallbackEvaluator)($expr);

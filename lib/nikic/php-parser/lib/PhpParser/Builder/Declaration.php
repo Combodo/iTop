@@ -5,23 +5,16 @@ namespace PhpParser\Builder;
 use PhpParser;
 use PhpParser\BuilderHelpers;
 
-abstract class Declaration implements PhpParser\Builder {
-    /** @var array<string, mixed> */
-    protected array $attributes = [];
+abstract class Declaration implements PhpParser\Builder
+{
+    protected $attributes = [];
 
-    /**
-     * Adds a statement.
-     *
-     * @param PhpParser\Node\Stmt|PhpParser\Builder $stmt The statement to add
-     *
-     * @return $this The builder instance (for fluid interface)
-     */
     abstract public function addStmt($stmt);
 
     /**
      * Adds multiple statements.
      *
-     * @param (PhpParser\Node\Stmt|PhpParser\Builder)[] $stmts The statements to add
+     * @param array $stmts The statements to add
      *
      * @return $this The builder instance (for fluid interface)
      */

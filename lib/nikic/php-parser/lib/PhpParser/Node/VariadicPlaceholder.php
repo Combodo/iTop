@@ -11,7 +11,7 @@ class VariadicPlaceholder extends NodeAbstract {
     /**
      * Create a variadic argument placeholder (first-class callable syntax).
      *
-     * @param array<string, mixed> $attributes Additional attributes
+     * @param array $attributes Additional attributes
      */
     public function __construct(array $attributes = []) {
         $this->attributes = $attributes;

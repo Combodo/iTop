@@ -3,18 +3,19 @@
 namespace PhpParser\NodeVisitor;
 
 use PhpParser\Node;
-use PhpParser\NodeVisitor;
+use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 
 /**
  * This visitor can be used to find the first node satisfying some criterion determined by
  * a filter callback.
  */
-class FirstFindingVisitor extends NodeVisitorAbstract {
+class FirstFindingVisitor extends NodeVisitorAbstract
+{
     /** @var callable Filter callback */
     protected $filterCallback;
     /** @var null|Node Found node */
-    protected ?Node $foundNode;
+    protected $foundNode;
 
     public function __construct(callable $filterCallback) {
         $this->filterCallback = $filterCallback;
@@ -27,11 +28,11 @@ class FirstFindingVisitor extends NodeVisitorAbstract {
      *
      * @return null|Node Found node (or null if not found)
      */
-    public function getFoundNode(): ?Node {
+    public function getFoundNode() {
         return $this->foundNode;
     }
 
-    public function beforeTraverse(array $nodes): ?array {
+    public function beforeTraverse(array $nodes) {
         $this->foundNode = null;
 
         return null;
@@ -41,7 +42,7 @@ class FirstFindingVisitor extends NodeVisitorAbstract {
         $filterCallback = $this->filterCallback;
         if ($filterCallback($node)) {
             $this->foundNode = $node;
-            return NodeVisitor::STOP_TRAVERSAL;
+            return NodeTraverser::STOP_TRAVERSAL;
         }
 
         return null;

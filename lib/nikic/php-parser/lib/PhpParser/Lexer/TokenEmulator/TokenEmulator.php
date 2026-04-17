@@ -2,28 +2,23 @@
 
 namespace PhpParser\Lexer\TokenEmulator;
 
-use PhpParser\PhpVersion;
-use PhpParser\Token;
-
 /** @internal */
-abstract class TokenEmulator {
-    abstract public function getPhpVersion(): PhpVersion;
+abstract class TokenEmulator
+{
+    abstract public function getPhpVersion(): string;
 
     abstract public function isEmulationNeeded(string $code): bool;
 
     /**
-     * @param Token[] $tokens Original tokens
-     * @return Token[] Modified Tokens
+     * @return array Modified Tokens
      */
     abstract public function emulate(string $code, array $tokens): array;
 
     /**
-     * @param Token[] $tokens Original tokens
-     * @return Token[] Modified Tokens
+     * @return array Modified Tokens
      */
     abstract public function reverseEmulate(string $code, array $tokens): array;
 
-    /** @param array{int, string, string}[] $patches */
     public function preprocessCode(string $code, array &$patches): string {
         return $code;
     }

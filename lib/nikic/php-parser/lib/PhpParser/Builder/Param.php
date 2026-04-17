@@ -4,19 +4,25 @@ namespace PhpParser\Builder;
 
 use PhpParser;
 use PhpParser\BuilderHelpers;
-use PhpParser\Modifiers;
 use PhpParser\Node;
 
-class Param implements PhpParser\Builder {
-    protected string $name;
-    protected ?Node\Expr $default = null;
-    /** @var Node\Identifier|Node\Name|Node\ComplexType|null */
-    protected ?Node $type = null;
-    protected bool $byRef = false;
-    protected int $flags = 0;
-    protected bool $variadic = false;
-    /** @var list<Node\AttributeGroup> */
-    protected array $attributeGroups = [];
+class Param implements PhpParser\Builder
+{
+    protected $name;
+
+    protected $default = null;
+
+    /** @var Node\Identifier|Node\Name|Node\NullableType|null */
+    protected $type = null;
+
+    protected $byRef = false;
+
+    protected $variadic = false;
+
+    protected $flags = 0;
+
+    /** @var Node\AttributeGroup[] */
+    protected $attributeGroups = [];
 
     /**
      * Creates a parameter builder.
@@ -57,6 +63,19 @@ class Param implements PhpParser\Builder {
     }
 
     /**
+     * Sets type for the parameter.
+     *
+     * @param string|Node\Name|Node\Identifier|Node\ComplexType $type Parameter type
+     *
+     * @return $this The builder instance (for fluid interface)
+     *
+     * @deprecated Use setType() instead
+     */
+    public function setTypeHint($type) {
+        return $this->setType($type);
+    }
+
+    /**
      * Make the parameter accept the value by reference.
      *
      * @return $this The builder instance (for fluid interface)
@@ -84,7 +103,7 @@ class Param implements PhpParser\Builder {
      * @return $this The builder instance (for fluid interface)
      */
     public function makePublic() {
-        $this->flags = BuilderHelpers::addModifier($this->flags, Modifiers::PUBLIC);
+        $this->flags = BuilderHelpers::addModifier($this->flags, Node\Stmt\Class_::MODIFIER_PUBLIC);
 
         return $this;
     }
@@ -95,7 +114,7 @@ class Param implements PhpParser\Builder {
      * @return $this The builder instance (for fluid interface)
      */
     public function makeProtected() {
-        $this->flags = BuilderHelpers::addModifier($this->flags, Modifiers::PROTECTED);
+        $this->flags = BuilderHelpers::addModifier($this->flags, Node\Stmt\Class_::MODIFIER_PROTECTED);
 
         return $this;
     }
@@ -106,7 +125,7 @@ class Param implements PhpParser\Builder {
      * @return $this The builder instance (for fluid interface)
      */
     public function makePrivate() {
-        $this->flags = BuilderHelpers::addModifier($this->flags, Modifiers::PRIVATE);
+        $this->flags = BuilderHelpers::addModifier($this->flags, Node\Stmt\Class_::MODIFIER_PRIVATE);
 
         return $this;
     }
@@ -117,29 +136,7 @@ class Param implements PhpParser\Builder {
      * @return $this The builder instance (for fluid interface)
      */
     public function makeReadonly() {
-        $this->flags = BuilderHelpers::addModifier($this->flags, Modifiers::READONLY);
-
-        return $this;
-    }
-
-    /**
-     * Gives the promoted property private(set) visibility.
-     *
-     * @return $this The builder instance (for fluid interface)
-     */
-    public function makePrivateSet() {
-        $this->flags = BuilderHelpers::addModifier($this->flags, Modifiers::PRIVATE_SET);
-
-        return $this;
-    }
-
-    /**
-     * Gives the promoted property protected(set) visibility.
-     *
-     * @return $this The builder instance (for fluid interface)
-     */
-    public function makeProtectedSet() {
-        $this->flags = BuilderHelpers::addModifier($this->flags, Modifiers::PROTECTED_SET);
+        $this->flags = BuilderHelpers::addModifier($this->flags, Node\Stmt\Class_::MODIFIER_READONLY);
 
         return $this;
     }
@@ -162,7 +159,7 @@ class Param implements PhpParser\Builder {
      *
      * @return Node\Param The built parameter node
      */
-    public function getNode(): Node {
+    public function getNode() : Node {
         return new Node\Param(
             new Node\Expr\Variable($this->name),
             $this->default, $this->type, $this->byRef, $this->variadic, [], $this->flags, $this->attributeGroups

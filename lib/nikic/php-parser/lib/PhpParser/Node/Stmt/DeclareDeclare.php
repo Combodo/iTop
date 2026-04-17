@@ -2,16 +2,33 @@
 
 namespace PhpParser\Node\Stmt;
 
-use PhpParser\Node\DeclareItem;
+use PhpParser\Node;
 
-require __DIR__ . '/../DeclareItem.php';
+class DeclareDeclare extends Node\Stmt
+{
+    /** @var Node\Identifier Key */
+    public $key;
+    /** @var Node\Expr Value */
+    public $value;
 
-if (false) {
     /**
-     * For classmap-authoritative support.
+     * Constructs a declare key=>value pair node.
      *
-     * @deprecated use \PhpParser\Node\DeclareItem instead.
+     * @param string|Node\Identifier $key        Key
+     * @param Node\Expr              $value      Value
+     * @param array                  $attributes Additional attributes
      */
-    class DeclareDeclare extends DeclareItem {
+    public function __construct($key, Node\Expr $value, array $attributes = []) {
+        $this->attributes = $attributes;
+        $this->key = \is_string($key) ? new Node\Identifier($key) : $key;
+        $this->value = $value;
+    }
+
+    public function getSubNodeNames() : array {
+        return ['key', 'value'];
+    }
+    
+    public function getType() : string {
+        return 'Stmt_DeclareDeclare';
     }
 }

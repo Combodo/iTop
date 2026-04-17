@@ -533,7 +533,7 @@ class Azure extends AbstractProvider
      */
     protected function createResourceOwner(array $response, \League\OAuth2\Client\Token\AccessToken $token): AzureResourceOwner
     {
-        return new AzureResourceOwner($response, $token);
+        return new AzureResourceOwner($response);
     }
 
     private function wrapResponse($response)

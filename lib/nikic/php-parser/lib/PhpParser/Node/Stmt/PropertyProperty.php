@@ -2,16 +2,33 @@
 
 namespace PhpParser\Node\Stmt;
 
-use PhpParser\Node\PropertyItem;
+use PhpParser\Node;
 
-require __DIR__ . '/../PropertyItem.php';
+class PropertyProperty extends Node\Stmt
+{
+    /** @var Node\VarLikeIdentifier Name */
+    public $name;
+    /** @var null|Node\Expr Default */
+    public $default;
 
-if (false) {
     /**
-     * For classmap-authoritative support.
+     * Constructs a class property node.
      *
-     * @deprecated use \PhpParser\Node\PropertyItem instead.
+     * @param string|Node\VarLikeIdentifier $name       Name
+     * @param null|Node\Expr                $default    Default value
+     * @param array                         $attributes Additional attributes
      */
-    class PropertyProperty extends PropertyItem {
+    public function __construct($name, ?Node\Expr $default = null, array $attributes = []) {
+        $this->attributes = $attributes;
+        $this->name = \is_string($name) ? new Node\VarLikeIdentifier($name) : $name;
+        $this->default = $default;
+    }
+
+    public function getSubNodeNames() : array {
+        return ['name', 'default'];
+    }
+    
+    public function getType() : string {
+        return 'Stmt_PropertyProperty';
     }
 }

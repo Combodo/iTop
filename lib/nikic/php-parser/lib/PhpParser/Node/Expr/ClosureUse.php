@@ -2,14 +2,33 @@
 
 namespace PhpParser\Node\Expr;
 
-require __DIR__ . '/../ClosureUse.php';
+use PhpParser\Node\Expr;
 
-if (false) {
+class ClosureUse extends Expr
+{
+    /** @var Expr\Variable Variable to use */
+    public $var;
+    /** @var bool Whether to use by reference */
+    public $byRef;
+
     /**
-     * For classmap-authoritative support.
+     * Constructs a closure use node.
      *
-     * @deprecated use \PhpParser\Node\ClosureUse instead.
+     * @param Expr\Variable $var        Variable to use
+     * @param bool          $byRef      Whether to use by reference
+     * @param array         $attributes Additional attributes
      */
-    class ClosureUse extends \PhpParser\Node\ClosureUse {
+    public function __construct(Expr\Variable $var, bool $byRef = false, array $attributes = []) {
+        $this->attributes = $attributes;
+        $this->var = $var;
+        $this->byRef = $byRef;
+    }
+
+    public function getSubNodeNames() : array {
+        return ['var', 'byRef'];
+    }
+    
+    public function getType() : string {
+        return 'Expr_ClosureUse';
     }
 }

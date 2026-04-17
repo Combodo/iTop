@@ -4,21 +4,22 @@ namespace PhpParser\Node\Stmt;
 
 use PhpParser\Node;
 
-class TryCatch extends Node\Stmt {
+class TryCatch extends Node\Stmt
+{
     /** @var Node\Stmt[] Statements */
-    public array $stmts;
+    public $stmts;
     /** @var Catch_[] Catches */
-    public array $catches;
+    public $catches;
     /** @var null|Finally_ Optional finally node */
-    public ?Finally_ $finally;
+    public $finally;
 
     /**
      * Constructs a try catch node.
      *
-     * @param Node\Stmt[] $stmts Statements
-     * @param Catch_[] $catches Catches
-     * @param null|Finally_ $finally Optional finally node
-     * @param array<string, mixed> $attributes Additional attributes
+     * @param Node\Stmt[]   $stmts      Statements
+     * @param Catch_[]      $catches    Catches
+     * @param null|Finally_ $finally    Optional finally node
+     * @param array         $attributes Additional attributes
      */
     public function __construct(array $stmts, array $catches, ?Finally_ $finally = null, array $attributes = []) {
         $this->attributes = $attributes;
@@ -27,11 +28,11 @@ class TryCatch extends Node\Stmt {
         $this->finally = $finally;
     }
 
-    public function getSubNodeNames(): array {
+    public function getSubNodeNames() : array {
         return ['stmts', 'catches', 'finally'];
     }
 
-    public function getType(): string {
+    public function getType() : string {
         return 'Stmt_TryCatch';
     }
 }

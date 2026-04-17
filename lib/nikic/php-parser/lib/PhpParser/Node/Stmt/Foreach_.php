@@ -4,32 +4,29 @@ namespace PhpParser\Node\Stmt;
 
 use PhpParser\Node;
 
-class Foreach_ extends Node\Stmt {
+class Foreach_ extends Node\Stmt
+{
     /** @var Node\Expr Expression to iterate */
-    public Node\Expr $expr;
+    public $expr;
     /** @var null|Node\Expr Variable to assign key to */
-    public ?Node\Expr $keyVar;
+    public $keyVar;
     /** @var bool Whether to assign value by reference */
-    public bool $byRef;
+    public $byRef;
     /** @var Node\Expr Variable to assign value to */
-    public Node\Expr $valueVar;
+    public $valueVar;
     /** @var Node\Stmt[] Statements */
-    public array $stmts;
+    public $stmts;
 
     /**
      * Constructs a foreach node.
      *
-     * @param Node\Expr $expr Expression to iterate
-     * @param Node\Expr $valueVar Variable to assign value to
-     * @param array{
-     *     keyVar?: Node\Expr|null,
-     *     byRef?: bool,
-     *     stmts?: Node\Stmt[],
-     * } $subNodes Array of the following optional subnodes:
-     *             'keyVar' => null   : Variable to assign key to
-     *             'byRef'  => false  : Whether to assign value by reference
-     *             'stmts'  => array(): Statements
-     * @param array<string, mixed> $attributes Additional attributes
+     * @param Node\Expr $expr       Expression to iterate
+     * @param Node\Expr $valueVar   Variable to assign value to
+     * @param array     $subNodes   Array of the following optional subnodes:
+     *                              'keyVar' => null   : Variable to assign key to
+     *                              'byRef'  => false  : Whether to assign value by reference
+     *                              'stmts'  => array(): Statements
+     * @param array     $attributes Additional attributes
      */
     public function __construct(Node\Expr $expr, Node\Expr $valueVar, array $subNodes = [], array $attributes = []) {
         $this->attributes = $attributes;
@@ -40,11 +37,11 @@ class Foreach_ extends Node\Stmt {
         $this->stmts = $subNodes['stmts'] ?? [];
     }
 
-    public function getSubNodeNames(): array {
+    public function getSubNodeNames() : array {
         return ['expr', 'keyVar', 'byRef', 'valueVar', 'stmts'];
     }
-
-    public function getType(): string {
+    
+    public function getType() : string {
         return 'Stmt_Foreach';
     }
 }
