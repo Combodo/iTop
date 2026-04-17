@@ -1454,7 +1454,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 			'password' => $sPassword,
 			'language' => 'EN US',
 			'profile_list' => [
-				'profileid:'.$sProfileId,
+				'profileid:'.self::$aURP_Profiles[$sProfileId],
 			],
 			'contactid' => $sPersonId,
 			'allowed_org_list' => [
