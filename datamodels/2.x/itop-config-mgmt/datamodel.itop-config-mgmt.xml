@@ -4197,6 +4197,10 @@
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
+        <field id="osfamily_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>osversion_id</extkey_attcode>
+          <target_attcode>osfamily_id</target_attcode>
+        </field>
         <field id="osversion_name" xsi:type="AttributeExternalField">
           <extkey_attcode>osversion_id</extkey_attcode>
           <target_attcode>name</target_attcode>
@@ -4218,8 +4222,11 @@
                 </item>
                 <item id="fieldset:Software:moreinfo">
                   <items>
-                    <item id="osversion_id">
+                    <item id="osfamily_id">
                       <rank>10</rank>
+                    </item>
+                    <item id="osversion_id">
+                      <rank>20</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -4665,6 +4672,10 @@
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
+        <field id="osfamily_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>osversion_id</extkey_attcode>
+          <target_attcode>osfamily_id</target_attcode>
+        </field>
         <field id="osversion_name" xsi:type="AttributeExternalField">
           <extkey_attcode>osversion_id</extkey_attcode>
           <target_attcode>name</target_attcode>
@@ -4704,6 +4715,9 @@
                 <item id="fieldset:ConfigMgmt:moreinfo">
                   <rank>20</rank>
                   <items>
+                    <item id="osfamily_id">
+                      <rank>10</rank>
+                    </item>
                     <item id="osversion_id">
                       <rank>30</rank>
                     </item>

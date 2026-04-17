@@ -1068,6 +1068,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'Tous les systèmes où ce patch est installé',
 	'Class:OSPatch/Attribute:osversion_id' => 'Version OS',
 	'Class:OSPatch/Attribute:osversion_id+' => '',
+	'Class:OSPatch/Attribute:osfamily_id' => 'Famille d\'OS',
+	'Class:OSPatch/Attribute:osfamily_id+' => 'Déduite de la version d\'OS sélectionnée',
 	'Class:OSPatch/Attribute:osversion_name' => 'Nom Version OS',
 	'Class:OSPatch/Attribute:osversion_name+' => '',
 ]);
@@ -1143,6 +1145,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:OSLicence/Attribute:osversion_id' => 'Version OS',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
+	'Class:OSLicence/Attribute:osfamily_id' => 'Famille d\'OS',
+	'Class:OSLicence/Attribute:osfamily_id+' => 'Déduite de la version d\'OS sélectionnée',
 	'Class:OSLicence/Attribute:osversion_name' => 'Nom Version OS',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Machines virtuelles',
