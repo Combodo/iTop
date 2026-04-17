@@ -6,7 +6,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'combodo-backoffice-fullmoon-protanopia-deuteranopia-theme/3.2.1',
+	'combodo-backoffice-fullmoon-protanopia-deuteranopia-theme/3.2.3',
 	[
 		// Identification
 		//
