@@ -1579,8 +1579,6 @@ class CMDBSource
 		if (static::GetDBVendor() === static::ENUM_DB_VENDOR_MYSQL) {
 			//Mysql 5.7.0 and upper deprecated --ssl and uses --ssl-mode instead
 			return version_compare(static::GetDBVersion(), '5.7.11', '>=');
-		} elseif (static::GetDBVendor() === static::ENUM_DB_VENDOR_MARIADB) {
-			return version_compare(static::GetDBVersion(), '10.2.6', '>=');
 		}
 		return false;
 	}
