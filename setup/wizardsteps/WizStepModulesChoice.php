@@ -145,7 +145,7 @@ class WizStepModulesChoice extends WizardStep
 			throw new Exception('Internal error: invalid step "'.$index.'" for the choice of modules.');
 		} elseif ($bMoveForward) {
 			if ($this->GetStepInfo(1 + $index) != null) {
-				return new WizardState(WizStepModulesChoice::class, (1 + $index));
+				return new WizardState(WizStepModulesChoice::class, (string)($index +1));
 			} else {
 				// Exiting this step of the wizard, let's convert the selection into a list of modules
 				$aModules = [];
@@ -173,7 +173,7 @@ class WizStepModulesChoice extends WizardStep
 
 		}
 		//Unused when going backward
-		return new WizardState(WizStepModulesChoice::class, ($index - 1));
+		return new WizardState(WizStepModulesChoice::class, (string)($index - 1));
 	}
 
 	public function Display(SetupPage $oPage): void
