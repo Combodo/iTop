@@ -1014,7 +1014,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:OSLicence/Attribute:osversion_id' => 'Versie besturingssysteem',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
-	'Class:OSLicence/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSLicence/Attribute:osfamily_id' => 'Soort besturingssysteem',
 	'Class:OSLicence/Attribute:osfamily_id+' => '~~',
 	'Class:OSLicence/Attribute:osversion_name' => 'Naam versie bestandssysteem',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
