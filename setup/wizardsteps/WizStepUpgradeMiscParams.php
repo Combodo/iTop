@@ -39,7 +39,7 @@ class WizStepUpgradeMiscParams extends AbstractWizStepMiscParams
 	{
 		$this->oWizard->SaveParameter('application_url', '');
 		$this->oWizard->SaveParameter('graphviz_path', '');
-		$this->oWizard->SaveParameter('use-symbolic-links', false);
+		$this->oWizard->SaveParameter('use_symbolic_links', false);
 		$this->oWizard->SaveParameter('force-uninstall', false);
 		return new WizardState(WizStepModulesChoice::class, 'start_upgrade');
 	}

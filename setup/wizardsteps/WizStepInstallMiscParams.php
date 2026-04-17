@@ -41,7 +41,7 @@ class WizStepInstallMiscParams extends AbstractWizStepMiscParams
 		$this->oWizard->SaveParameter('application_url', '');
 		$this->oWizard->SaveParameter('graphviz_path', '');
 		$this->oWizard->SaveParameter('sample_data', 'yes');
-		$this->oWizard->SaveParameter('use-symbolic-links', false);
+		$this->oWizard->SaveParameter('use_symbolic_links', false);
 		return new WizardState(WizStepModulesChoice::class, 'start_install');
 	}
 

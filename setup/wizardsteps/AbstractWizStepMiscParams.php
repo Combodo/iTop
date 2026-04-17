@@ -31,11 +31,11 @@ abstract class AbstractWizStepMiscParams extends WizardStep
 	final protected function AddUseSymlinksFlagOption(WebPage $oPage): void
 	{
 		if (MFCompiler::CanUseSymbolicLinks()) {
-			$sChecked = $this->oWizard->GetParameter('use-symbolic-links', MFCompiler::UseSymbolicLinks()) ? ' checked ' : '';
+			$sChecked = $this->oWizard->GetParameter('use_symbolic_links', MFCompiler::UseSymbolicLinks()) ? ' checked ' : '';
 
 			$oPage->add('<fieldset>');
 			$oPage->add('<legend>Dev parameters</legend>');
-			$oPage->p('<input id="use-symbolic-links" name="use-symbolic-links" type="checkbox"'.$sChecked.'><label for="use-symbolic-links">&nbsp;Create symbolic links instead of creating a copy in env-production (useful for debugging extensions)');
+			$oPage->p('<input id="use_symbolic_links" name="use_symbolic_links" type="checkbox"'.$sChecked.'><label for="use_symbolic_links">&nbsp;Create symbolic links instead of creating a copy in env-production (useful for debugging extensions)');
 			$oPage->add('</fieldset>');
 		}
 	}
