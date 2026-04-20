@@ -25,7 +25,7 @@ abstract class StepSequencer
 	public const INFO = 4;
 	protected array $aStepsHistory = [];
 	protected Parameters $oParams;
-	protected Config $oConfig;
+	protected ?Config $oTestConfig = null;
 	protected RunTimeEnvironment $oRunTimeEnvironment;
 	protected string $sSourceDesc;
 
@@ -46,11 +46,7 @@ abstract class StepSequencer
 		}
 
 		$this->oParams = $oParams;
-
-		$aParamValues = $oParams->GetParamForConfigArray();
-		$this->oConfig = new Config();
-		$this->oConfig->UpdateFromParams($aParamValues);
-		utils::SetConfig($this->oConfig);
+		utils::SetConfig($this->GetConfig());
 		$this->sSourceDesc = $sSourceDesc;
 	}
 
@@ -165,24 +161,30 @@ abstract class StepSequencer
 
 	protected function GetConfig()
 	{
+		if (! is_null($this->oTestConfig)) {
+			return $this->oTestConfig;
+		}
+
 		// Caching config here is a bad idea, the first config loaded does not contain module settings
 		$sTargetEnvironment = $this->oRunTimeEnvironment->GetBuildEnv();
 		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
 		try {
 			if (file_exists($sConfigFile)) {
-				$this->oConfig = new Config($sConfigFile);
+				$oConfig = new Config($sConfigFile);
 			} else {
-				$this->oConfig = new Config();
+				$oConfig = new Config();
 			}
+
+			$oConfig->Set('access_mode', ACCESS_FULL);
 		} catch (Exception $e) {
 			SetupLog::Exception("Setup error", $e);
 			throw $e;
 		}
 
 		$aParamValues = $this->oParams->GetParamForConfigArray();
-		$this->oConfig->UpdateFromParams($aParamValues);
+		$oConfig->UpdateFromParams($aParamValues);
 
-		return $this->oConfig;
+		return $oConfig;
 	}
 
 	/**

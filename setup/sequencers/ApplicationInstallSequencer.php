@@ -84,7 +84,7 @@ class ApplicationInstallSequencer extends StepSequencer
 						$sDestination = $aBackupOptions['destination'];
 						$sSourceConfigFile = $aBackupOptions['configuration_file'];
 						$sMySQLBinDir = $this->oParams->Get('mysql_bindir', null);
-						$this->oRunTimeEnvironment->Backup($this->oConfig, $sDestination, $sSourceConfigFile, $sMySQLBinDir);
+						$this->oRunTimeEnvironment->Backup($this->GetConfig(), $sDestination, $sSourceConfigFile, $sMySQLBinDir);
 					}
 
 					return $this->ComputeNextStep($sStep);
@@ -175,8 +175,6 @@ class ApplicationInstallSequencer extends StepSequencer
 		$sMode = $aParamValues['mode'];
 
 		$this->oRunTimeEnvironment->UpdateDBSchema($oConfig, $sMode, $aSelectedModules);
-
-		$oConfig->Set('access_mode', ACCESS_FULL);
 
 		$this->oRunTimeEnvironment->SetDbUUID();
 

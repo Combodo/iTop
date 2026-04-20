@@ -24,7 +24,8 @@ class DataAuditSequencerTest extends ItopTestCase
 	public function testDataAuditFirstStep()
 	{
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
-		$oRunTimeEnvironment->expects($this->never())->method($this->anything());
+		$oRunTimeEnvironment->expects($this->once())->method('GetBuildEnv')
+		->willReturn('production-test');
 		$oSequencer = new DataAuditSequencer($this->GivenParams(), $oRunTimeEnvironment);
 
 		$aRes = $oSequencer->ExecuteStep();
@@ -41,7 +42,8 @@ class DataAuditSequencerTest extends ItopTestCase
 	public function testDataUnknownStep()
 	{
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
-		$oRunTimeEnvironment->expects($this->never())->method($this->anything());
+		$oRunTimeEnvironment->expects($this->once())->method('GetBuildEnv')
+			->willReturn('production-test');
 		$oSequencer = new DataAuditSequencer($this->GivenParams(), $oRunTimeEnvironment);
 
 		$aRes = $oSequencer->ExecuteStep('gabuzomeu');

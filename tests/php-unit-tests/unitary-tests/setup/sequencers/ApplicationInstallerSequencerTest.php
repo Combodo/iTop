@@ -11,6 +11,7 @@ use RunTimeEnvironment;
 class ApplicationInstallerSequencerTest extends ItopTestCase
 {
 	private \RunTimeEnvironment&\PHPUnit\Framework\MockObject\MockObject $oRunTimeEnvironment;
+	private \Config&\PHPUnit\Framework\MockObject\MockObject $oConfig;
 	private ApplicationInstallSequencer $oSequencer;
 
 	protected function setUp(): void
@@ -24,9 +25,6 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 		$this->RequireOnceItopFile('/setup/parameters.class.inc.php');
 		$this->RequireOnceItopFile('/setup/setuputils.class.inc.php');
 		$this->RequireOnceItopFile('/setup/runtimeenv.class.inc.php');
-
-		// Copy conf to production-test
-		\SetupUtils::copydir(APPROOT.'conf/production', APPROOT.'conf/production-test');
 	}
 
 	public static function FirstStepProvider()
@@ -141,7 +139,8 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 		];
 
 		$this->GivenApplicationInstallSequencer($aAdditionalParams);
-		$this->oRunTimeEnvironment->expects($this->once())->method('Backup');
+		$this->oRunTimeEnvironment->expects($this->once())->method('Backup')
+			->with($this->oConfig, '/my_backup_file_path', '/my_config_file_path', null);
 
 		$aRes = $this->oSequencer->ExecuteStep('backup');
 		$aExpected = [
@@ -163,7 +162,8 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 		];
 		$this->GivenApplicationInstallSequencer($aAdditionalParams);
 
-		$this->oRunTimeEnvironment->expects($this->once())->method('MigrateDataBeforeUpdateStructure');
+		$this->oRunTimeEnvironment->expects($this->once())->method('MigrateDataBeforeUpdateStructure')
+			->with('install', $this->oConfig);
 
 		$aRes = $this->oSequencer->ExecuteStep('migrate-before');
 		$aExpected = [
@@ -207,7 +207,8 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 		];
 		$this->GivenApplicationInstallSequencer($aAdditionalParams);
 
-		$this->oRunTimeEnvironment->expects($this->once())->method('UpdateDBSchema');
+		$this->oRunTimeEnvironment->expects($this->once())->method('UpdateDBSchema')
+			->with($this->oConfig, 'install', ["a" => "b"]);
 		$this->oRunTimeEnvironment->expects($this->once())->method('SetDbUUID')
 			->with();
 
@@ -231,7 +232,8 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 		];
 		$this->GivenApplicationInstallSequencer($aAdditionalParams);
 
-		$this->oRunTimeEnvironment->expects($this->once())->method('MigrateDataAfterUpdateStructure');
+		$this->oRunTimeEnvironment->expects($this->once())->method('MigrateDataAfterUpdateStructure')
+			->with('install', $this->oConfig);
 
 		$aRes = $this->oSequencer->ExecuteStep('migrate-after');
 		$aExpected = [
@@ -257,7 +259,8 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 		];
 		$this->GivenApplicationInstallSequencer($aAdditionalParams);
 
-		$this->oRunTimeEnvironment->expects($this->once())->method('AfterDBCreate');
+		$this->oRunTimeEnvironment->expects($this->once())->method('AfterDBCreate')
+			->with($this->oConfig, 'install', ["a" => "b"], $aAdminParams);
 
 		$aRes = $this->oSequencer->ExecuteStep('after-db-create');
 		$aExpected = [
@@ -278,7 +281,8 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 		];
 		$this->GivenApplicationInstallSequencer($aAdditionalParams);
 
-		$this->oRunTimeEnvironment->expects($this->once())->method('DoLoadData');
+		$this->oRunTimeEnvironment->expects($this->once())->method('DoLoadData')
+			->with($this->oConfig, true, ["a" => "b"]);
 
 		$aRes = $this->oSequencer->ExecuteStep('load-data');
 		$aExpected = [
@@ -300,7 +304,8 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 			'sample_data' => 1,
 		];
 		$this->GivenApplicationInstallSequencer($aAdditionalParams);
-		$this->oRunTimeEnvironment->expects($this->once())->method('DoCreateConfig');
+		$this->oRunTimeEnvironment->expects($this->once())->method('DoCreateConfig')
+			->with($this->oConfig, "6.6.6", ["a" => "b"], ["c" => "d"], null);
 
 		$aRes = $this->oSequencer->ExecuteStep('create-config');
 		$aExpected = [
@@ -333,7 +338,7 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 	public function testAnyFailure()
 	{
 		$this->GivenApplicationInstallSequencer();
-		$this->oRunTimeEnvironment->expects($this->once())->method('UpdateDBSchema')
+		$this->oRunTimeEnvironment->expects($this->once())->method('GetBuildEnv')
 			->willThrowException(new \CoreException('SHADOK MSG'));
 
 		$aRes = $this->oSequencer->ExecuteStep('db-schema');
@@ -483,14 +488,21 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 	{
 		$this->oRunTimeEnvironment = $this->createMock(RunTimeEnvironment::class);
 		if (! $bStepComputationOnly) {
-			$this->oRunTimeEnvironment->expects($this->once())->method('EnterReadOnlyMode');
-			$this->oRunTimeEnvironment->expects($this->any())->method('GetBuildEnv')->willReturn('production-test');
+			$this->oRunTimeEnvironment->expects($this->once())->method('EnterReadOnlyMode')
+				->with($this->oConfig);
 		}
+	}
+
+	private function GivenConfig(): void
+	{
+		$this->oConfig = $this->createMock(Config::class);
 	}
 
 	private function GivenApplicationInstallSequencer(array $aAdditionalParams = [], bool $bStepComputationOnly = false): void
 	{
+		$this->GivenConfig();
 		$this->GivenRunTimeEnvironment($bStepComputationOnly);
 		$this->oSequencer = new ApplicationInstallSequencer($this->GivenParams($aAdditionalParams), $this->oRunTimeEnvironment);
+		$this->SetNonPublicProperty($this->oSequencer, 'oTestConfig', $this->oConfig);
 	}
 }
