@@ -14,6 +14,7 @@ namespace Symfony\Component\Dotenv;
 use Symfony\Component\Dotenv\Exception\FormatException;
 use Symfony\Component\Dotenv\Exception\FormatExceptionContext;
 use Symfony\Component\Dotenv\Exception\PathException;
+use Symfony\Component\Dotenv\Exception\VariableCircularReferenceException;
 use Symfony\Component\Process\Exception\ExceptionInterface as ProcessException;
 use Symfony\Component\Process\Process;
 
@@ -81,6 +82,7 @@ final class Dotenv
     public function load(string $path, string ...$extraPaths): void
     {
         $this->doLoad(false, \func_get_args());
+        $this->resolveLoadedVars();
     }
 
     /**
@@ -100,33 +102,42 @@ final class Dotenv
      */
     public function loadEnv(string $path, ?string $envKey = null, string $defaultEnv = 'dev', array $testEnvs = ['test'], bool $overrideExistingVars = false): void
     {
-        $k = $envKey ?? $this->envKey;
+        try {
+            $k = $envKey ?? $this->envKey;
 
-        if (is_file($path) || !is_file($p = "$path.dist")) {
-            $this->doLoad($overrideExistingVars, [$path]);
-        } else {
-            $this->doLoad($overrideExistingVars, [$p]);
-        }
+            if (is_file($path) || !is_file($p = "$path.dist")) {
+                $this->doLoad($overrideExistingVars, [$path]);
+            } else {
+                $this->doLoad($overrideExistingVars, [$p]);
+            }
 
-        if (null === $env = $_SERVER[$k] ?? $_ENV[$k] ?? null) {
-            $this->populate([$k => $env = $defaultEnv], $overrideExistingVars);
-        }
+            if (null === $env = $_SERVER[$k] ?? $_ENV[$k] ?? null) {
+                $this->populate([$k => $env = $defaultEnv], $overrideExistingVars);
+            } elseif (str_contains($env, '$') || str_contains($env, "\x00") || str_contains($env, '\\')) {
+                $env = $this->resolveEnvKey($env, $k);
+            }
 
-        if (!\in_array($env, $testEnvs, true) && is_file($p = "$path.local")) {
-            $this->doLoad($overrideExistingVars, [$p]);
-            $env = $_SERVER[$k] ?? $_ENV[$k] ?? $env;
-        }
+            if (!\in_array($env, $testEnvs, true) && is_file($p = "$path.local")) {
+                $this->doLoad($overrideExistingVars, [$p]);
+                $env = $_SERVER[$k] ?? $_ENV[$k] ?? $env;
+                if (str_contains($env, '$') || str_contains($env, "\x00") || str_contains($env, '\\')) {
+                    $env = $this->resolveEnvKey($env, $k);
+                }
+            }
 
-        if ('local' === $env) {
-            return;
-        }
+            if ('local' === $env) {
+                return;
+            }
 
-        if (is_file($p = "$path.$env")) {
-            $this->doLoad($overrideExistingVars, [$p]);
-        }
+            if (is_file($p = "$path.$env")) {
+                $this->doLoad($overrideExistingVars, [$p]);
+            }
 
-        if (is_file($p = "$path.$env.local")) {
-            $this->doLoad($overrideExistingVars, [$p]);
+            if (is_file($p = "$path.$env.local")) {
+                $this->doLoad($overrideExistingVars, [$p]);
+            }
+        } finally {
+            $this->resolveLoadedVars();
         }
     }
 
@@ -168,6 +179,7 @@ final class Dotenv
     public function overload(string $path, string ...$extraPaths): void
     {
         $this->doLoad(true, \func_get_args());
+        $this->resolveLoadedVars();
     }
 
     /**
@@ -236,6 +248,48 @@ final class Dotenv
         $this->values = [];
         $name = '';
 
+        $loadedVars = array_flip(explode(',', $_SERVER['SYMFONY_DOTENV_VARS'] ?? $_ENV['SYMFONY_DOTENV_VARS'] ?? ''));
+        unset($loadedVars['']);
+
+        $this->skipEmptyLines();
+
+        while ($this->cursor < $this->end) {
+            switch ($state) {
+                case self::STATE_VARNAME:
+                    $name = $this->lexVarname();
+                    $state = self::STATE_VALUE;
+                    break;
+
+                case self::STATE_VALUE:
+                    $this->values[$name] = $this->resolveValue($this->lexValue(), $loadedVars);
+                    $state = self::STATE_VARNAME;
+                    break;
+            }
+        }
+
+        if (self::STATE_VALUE === $state) {
+            $this->values[$name] = '';
+        }
+
+        try {
+            return $this->values;
+        } finally {
+            $this->values = [];
+            unset($this->path, $this->cursor, $this->lineno, $this->data, $this->end);
+        }
+    }
+
+    private function parseRaw(string $data, string $path = '.env'): array
+    {
+        $this->path = $path;
+        $this->data = str_replace(["\r\n", "\r"], "\n", $data);
+        $this->lineno = 1;
+        $this->cursor = 0;
+        $this->end = \strlen($this->data);
+        $state = self::STATE_VARNAME;
+        $this->values = [];
+        $name = '';
+
         $this->skipEmptyLines();
 
         while ($this->cursor < $this->end) {
@@ -260,8 +314,20 @@ final class Dotenv
             return $this->values;
         } finally {
             $this->values = [];
-            unset($this->path, $this->cursor, $this->lineno, $this->data, $this->end);
         }
+    }
+
+    /**
+     * Resolves a raw value by expanding commands, variables, backslash escapes,
+     * and restoring literal $ markers.
+     */
+    private function resolveValue(string $value, array $loadedVars): string
+    {
+        $resolved = $this->resolveCommands($value, $loadedVars);
+        $resolved = $this->resolveVariables($resolved, $loadedVars);
+        $resolved = str_replace('\\\\', '\\', $resolved);
+
+        return str_replace("\x00", '$', $resolved);
     }
 
     private function lexVarname(): string
@@ -305,8 +371,6 @@ final class Dotenv
             throw $this->createFormatException('Whitespace are not supported before the value');
         }
 
-        $loadedVars = array_flip(explode(',', $_SERVER['SYMFONY_DOTENV_VARS'] ?? $_ENV['SYMFONY_DOTENV_VARS'] ?? ''));
-        unset($loadedVars['']);
         $v = '';
 
         do {
@@ -321,7 +385,10 @@ final class Dotenv
                     }
                 } while ("'" !== $this->data[$this->cursor + $len]);
 
-                $v .= substr($this->data, 1 + $this->cursor, $len - 1);
+                // In single-quoted strings, $ is literal and \ has no special meaning.
+                // Double backslashes so they survive the unescape in resolveValue(),
+                // and mark $ as \x00 so it's not treated as a variable reference.
+                $v .= str_replace(['\\', '$'], ['\\\\', "\x00"], substr($this->data, 1 + $this->cursor, $len - 1));
                 $this->cursor += 1 + $len;
             } elseif ('"' === $this->data[$this->cursor]) {
                 $value = '';
@@ -340,11 +407,8 @@ final class Dotenv
                 }
                 ++$this->cursor;
                 $value = str_replace(['\\"', '\r', '\n'], ['"', "\r", "\n"], $value);
-                $resolvedValue = $value;
-                $resolvedValue = $this->resolveCommands($resolvedValue, $loadedVars);
-                $resolvedValue = $this->resolveVariables($resolvedValue, $loadedVars);
-                $resolvedValue = str_replace('\\\\', '\\', $resolvedValue);
-                $v .= $resolvedValue;
+                // Mark escaped $ (\$) as \x00 so it's treated as literal
+                $v .= $this->protectEscapedDollars($value);
             } else {
                 $value = '';
                 $prevChr = $this->data[$this->cursor - 1];
@@ -363,12 +427,9 @@ final class Dotenv
                     ++$this->cursor;
                 }
                 $value = rtrim($value);
-                $resolvedValue = $value;
-                $resolvedValue = $this->resolveCommands($resolvedValue, $loadedVars);
-                $resolvedValue = $this->resolveVariables($resolvedValue, $loadedVars);
-                $resolvedValue = str_replace('\\\\', '\\', $resolvedValue);
+                $resolvedValue = $this->protectEscapedDollars($value);
 
-                if ($resolvedValue === $value && preg_match('/\s+/', $value)) {
+                if ($resolvedValue === $value && preg_match('/\s+/', $value) && !str_contains($value, '$')) {
                     throw $this->createFormatException('A value containing spaces must be surrounded by quotes');
                 }
 
@@ -383,6 +444,26 @@ final class Dotenv
         $this->skipEmptyLines();
 
         return $v;
+    }
+
+    /**
+     * Converts \$ (escaped dollar) to \x00 (literal marker), handling
+     * even/odd backslash counts correctly: \$ → \x00, \\$ → \\$ (unchanged).
+     */
+    private function protectEscapedDollars(string $value): string
+    {
+        if (!str_contains($value, '$')) {
+            return $value;
+        }
+
+        return preg_replace_callback('/\\\\+\$/', static function ($m) {
+            $bs = substr($m[0], 0, -1);
+            if (1 === \strlen($bs) % 2) {
+                return substr($bs, 0, -1)."\x00";
+            }
+
+            return $m[0];
+        }, $value);
     }
 
     private function lexNestedExpression(): string
@@ -559,7 +640,148 @@ final class Dotenv
                 throw new FormatException('Loading files starting with a byte-order-mark (BOM) is not supported.', new FormatExceptionContext($data, $path, 1, 0));
             }
 
-            $this->populate($this->parse($data, $path), $overrideExistingVars);
+            if (str_contains($data, "\0")) {
+                throw new FormatException('Loading files containing NUL bytes is not supported.', new FormatExceptionContext($data, $path, 1, 0));
+            }
+
+            $this->populate($this->parseRaw($data, $path), $overrideExistingVars);
         }
+    }
+
+    /**
+     * Eagerly resolves a raw env key value so that loadEnv() can determine
+     * which additional .env files to load before full deferred resolution.
+     */
+    private function resolveEnvKey(string $value, string $name): string
+    {
+        $loadedVars = array_flip(explode(',', $_SERVER['SYMFONY_DOTENV_VARS'] ?? $_ENV['SYMFONY_DOTENV_VARS'] ?? ''));
+        unset($loadedVars['']);
+
+        // Save and clear own value so self-referencing defaults work
+        $envBackup = $_ENV[$name] ?? null;
+        $serverBackup = $_SERVER[$name] ?? null;
+        unset($_ENV[$name], $_SERVER[$name]);
+        if ($this->usePutenv) {
+            $getenvBackup = (string) getenv($name);
+            putenv($name);
+        }
+
+        $this->values = [];
+        $this->path = '';
+        $this->data = '';
+        $this->lineno = 0;
+        $this->cursor = 0;
+        $this->end = 0;
+
+        $resolved = $this->resolveCommands($value, $loadedVars);
+        $resolved = $this->resolveVariables($resolved, $loadedVars);
+        $resolved = str_replace(["\x00", '\\\\'], ['$', '\\'], $resolved);
+
+        if (null !== $envBackup) {
+            $_ENV[$name] = $envBackup;
+        }
+        if (null !== $serverBackup) {
+            $_SERVER[$name] = $serverBackup;
+        }
+        if ($this->usePutenv) {
+            putenv("$name=$getenvBackup");
+        }
+
+        $this->values = [];
+
+        return $resolved;
+    }
+
+    private function resolveLoadedVars(): void
+    {
+        $loadedVars = array_flip(explode(',', $_SERVER['SYMFONY_DOTENV_VARS'] ?? $_ENV['SYMFONY_DOTENV_VARS'] ?? ''));
+        unset($loadedVars['']);
+
+        $this->values = [];
+        $this->path = '';
+        $this->data = '';
+        $this->lineno = 0;
+        $this->cursor = 0;
+        $this->end = 0;
+
+        // Detect variables that were originally defined as self-referencing
+        // (e.g. MY_VAR="${MY_VAR:-default}") so their own raw value is hidden
+        // during resolution, allowing the default to trigger correctly.
+        $selfReferencingVars = [];
+        foreach ($loadedVars as $name => $_) {
+            if ('SYMFONY_DOTENV_VARS' === $name) {
+                continue;
+            }
+            $value = $_ENV[$name] ?? '';
+            if (str_contains($value, '$') && preg_match('/\$\{?'.preg_quote($name, '/').'(?![A-Za-z0-9_])/', $value)) {
+                $selfReferencingVars[$name] = true;
+            }
+        }
+
+        for ($pass = 0; $pass < 5; ++$pass) {
+            $resolved = [];
+            foreach ($loadedVars as $name => $_) {
+                if ('SYMFONY_DOTENV_VARS' === $name) {
+                    continue;
+                }
+                if (!str_contains($value = $_ENV[$name] ?? '', '$')) {
+                    continue;
+                }
+
+                if (isset($selfReferencingVars[$name])) {
+                    $envBackup = $_ENV[$name] ?? null;
+                    $serverBackup = $_SERVER[$name] ?? null;
+                    unset($_ENV[$name], $_SERVER[$name]);
+                    if ($this->usePutenv) {
+                        $getenvBackup = $this->usePutenv ? (string) getenv($name) : null;
+                        putenv($name);
+                    }
+                }
+
+                $resolvedValue = $this->resolveCommands($value, $loadedVars);
+                $resolvedValue = $this->resolveVariables($resolvedValue, $loadedVars);
+
+                if (isset($selfReferencingVars[$name])) {
+                    if (null !== $envBackup) {
+                        $_ENV[$name] = $envBackup;
+                    }
+                    if (null !== $serverBackup) {
+                        $_SERVER[$name] = $serverBackup;
+                    }
+                    if ($this->usePutenv) {
+                        putenv("$name=$getenvBackup");
+                    }
+                }
+
+                if ($value !== $resolvedValue) {
+                    $resolved[$name] = $resolvedValue;
+                }
+            }
+            if (!$resolved) {
+                break;
+            }
+            $this->populate($resolved, true);
+        }
+        if (5 === $pass && $resolved) {
+            throw new VariableCircularReferenceException('Too many levels of variable indirection in env vars: '.implode(', ', array_keys($resolved)).'.');
+        }
+
+        // Restore literal $ signs and unescape backslashes
+        $restored = [];
+        foreach ($loadedVars as $name => $_) {
+            if ('SYMFONY_DOTENV_VARS' === $name) {
+                continue;
+            }
+            $value = $_ENV[$name] ?? '';
+            if ($value !== $newValue = str_replace(["\x00", '\\\\'], ['$', '\\'], $value)) {
+                $restored[$name] = $newValue;
+            }
+        }
+        if ($restored) {
+            $this->populate($restored, true);
+        }
+
+        $this->values = [];
+        unset($this->path, $this->data, $this->lineno, $this->cursor, $this->end);
     }
 }

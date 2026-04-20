@@ -11,8 +11,8 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
-        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
+        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         '89efb1254ef2d1c5d80096acd12c4098' => __DIR__ . '/..' . '/twig/twig/src/Resources/core.php',
         'ffecb95d45175fd40f75be8a23b34f90' => __DIR__ . '/..' . '/twig/twig/src/Resources/debug.php',
         'c7baa00073ee9c61edf148c51917cfb4' => __DIR__ . '/..' . '/twig/twig/src/Resources/escaper.php',
@@ -35,6 +35,7 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         ),
         'S' =>
         array (
+            'Symfony\\Runtime\\Symfony\\Component\\' => 34,
             'Symfony\\Polyfill\\Php83\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
@@ -54,6 +55,7 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
             'Symfony\\Component\\Stopwatch\\' => 28,
             'Symfony\\Component\\Security\\Csrf\\' => 32,
             'Symfony\\Component\\Security\\Core\\' => 32,
+            'Symfony\\Component\\Runtime\\' => 26,
             'Symfony\\Component\\Routing\\' => 26,
             'Symfony\\Component\\PropertyInfo\\' => 31,
             'Symfony\\Component\\PropertyAccess\\' => 33,
@@ -77,6 +79,7 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
             'Symfony\\Bundle\\WebProfilerBundle\\' => 33,
             'Symfony\\Bundle\\TwigBundle\\' => 26,
             'Symfony\\Bundle\\FrameworkBundle\\' => 31,
+            'Symfony\\Bundle\\DebugBundle\\' => 27,
             'Symfony\\Bridge\\Twig\\' => 20,
             'Soundasleep\\' => 12,
             'ScssPhp\\ScssPhp\\' => 16,
@@ -125,6 +128,10 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'TheNetworg\\OAuth2\\Client\\' =>
         array (
             0 => __DIR__ . '/..' . '/thenetworg/oauth2-azure/src',
+        ),
+        'Symfony\\Runtime\\Symfony\\Component\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/symfony/runtime/Internal',
         ),
         'Symfony\\Polyfill\\Php83\\' =>
         array (
@@ -201,6 +208,10 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'Symfony\\Component\\Security\\Core\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/security-core',
+        ),
+        'Symfony\\Component\\Runtime\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/symfony/runtime',
         ),
         'Symfony\\Component\\Routing\\' =>
         array (
@@ -293,6 +304,10 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'Symfony\\Bundle\\FrameworkBundle\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/framework-bundle',
+        ),
+        'Symfony\\Bundle\\DebugBundle\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/symfony/debug-bundle',
         ),
         'Symfony\\Bridge\\Twig\\' =>
         array (
@@ -1346,6 +1361,7 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'IntervalExpression' => __DIR__ . '/../..' . '/core/oql/expression.class.inc.php',
         'IntervalOqlExpression' => __DIR__ . '/../..' . '/core/oql/oqlquery.class.inc.php',
         'IntlDateFormatter' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/Resources/stubs/IntlDateFormatter.php',
+        'IntlListFormatter' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/Resources/stubs/IntlListFormatter.php',
         'Introspection' => __DIR__ . '/../..' . '/core/introspection.class.inc.php',
         'InvalidConfigParamException' => __DIR__ . '/../..' . '/application/exceptions/InvalidConfigParamException.php',
         'InvalidExternalKeyValueException' => __DIR__ . '/../..' . '/application/exceptions/InvalidExternalKeyValueException.php',
@@ -1992,6 +2008,11 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'Symfony\\Bridge\\Twig\\TokenParser\\TransTokenParser' => __DIR__ . '/..' . '/symfony/twig-bridge/TokenParser/TransTokenParser.php',
         'Symfony\\Bridge\\Twig\\Translation\\TwigExtractor' => __DIR__ . '/..' . '/symfony/twig-bridge/Translation/TwigExtractor.php',
         'Symfony\\Bridge\\Twig\\UndefinedCallableHandler' => __DIR__ . '/..' . '/symfony/twig-bridge/UndefinedCallableHandler.php',
+        'Symfony\\Bundle\\DebugBundle\\Command\\ServerDumpPlaceholderCommand' => __DIR__ . '/..' . '/symfony/debug-bundle/Command/ServerDumpPlaceholderCommand.php',
+        'Symfony\\Bundle\\DebugBundle\\DebugBundle' => __DIR__ . '/..' . '/symfony/debug-bundle/DebugBundle.php',
+        'Symfony\\Bundle\\DebugBundle\\DependencyInjection\\Compiler\\DumpDataCollectorPass' => __DIR__ . '/..' . '/symfony/debug-bundle/DependencyInjection/Compiler/DumpDataCollectorPass.php',
+        'Symfony\\Bundle\\DebugBundle\\DependencyInjection\\Configuration' => __DIR__ . '/..' . '/symfony/debug-bundle/DependencyInjection/Configuration.php',
+        'Symfony\\Bundle\\DebugBundle\\DependencyInjection\\DebugExtension' => __DIR__ . '/..' . '/symfony/debug-bundle/DependencyInjection/DebugExtension.php',
         'Symfony\\Bundle\\FrameworkBundle\\CacheWarmer\\AbstractPhpFileCacheWarmer' => __DIR__ . '/..' . '/symfony/framework-bundle/CacheWarmer/AbstractPhpFileCacheWarmer.php',
         'Symfony\\Bundle\\FrameworkBundle\\CacheWarmer\\AnnotationsCacheWarmer' => __DIR__ . '/..' . '/symfony/framework-bundle/CacheWarmer/AnnotationsCacheWarmer.php',
         'Symfony\\Bundle\\FrameworkBundle\\CacheWarmer\\CachePoolClearerCacheWarmer' => __DIR__ . '/..' . '/symfony/framework-bundle/CacheWarmer/CachePoolClearerCacheWarmer.php',
@@ -2195,6 +2216,7 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'Symfony\\Component\\Cache\\Traits\\Relay\\Relay121Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/Relay121Trait.php',
         'Symfony\\Component\\Cache\\Traits\\Relay\\Relay12Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/Relay12Trait.php',
         'Symfony\\Component\\Cache\\Traits\\Relay\\Relay20Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/Relay20Trait.php',
+        'Symfony\\Component\\Cache\\Traits\\Relay\\Relay21Trait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/Relay21Trait.php',
         'Symfony\\Component\\Cache\\Traits\\Relay\\SwapdbTrait' => __DIR__ . '/..' . '/symfony/cache/Traits/Relay/SwapdbTrait.php',
         'Symfony\\Component\\Config\\Builder\\ClassBuilder' => __DIR__ . '/..' . '/symfony/config/Builder/ClassBuilder.php',
         'Symfony\\Component\\Config\\Builder\\ConfigBuilderGenerator' => __DIR__ . '/..' . '/symfony/config/Builder/ConfigBuilderGenerator.php',
@@ -2643,6 +2665,7 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'Symfony\\Component\\Dotenv\\Exception\\FormatException' => __DIR__ . '/..' . '/symfony/dotenv/Exception/FormatException.php',
         'Symfony\\Component\\Dotenv\\Exception\\FormatExceptionContext' => __DIR__ . '/..' . '/symfony/dotenv/Exception/FormatExceptionContext.php',
         'Symfony\\Component\\Dotenv\\Exception\\PathException' => __DIR__ . '/..' . '/symfony/dotenv/Exception/PathException.php',
+        'Symfony\\Component\\Dotenv\\Exception\\VariableCircularReferenceException' => __DIR__ . '/..' . '/symfony/dotenv/Exception/VariableCircularReferenceException.php',
         'Symfony\\Component\\ErrorHandler\\BufferingLogger' => __DIR__ . '/..' . '/symfony/error-handler/BufferingLogger.php',
         'Symfony\\Component\\ErrorHandler\\Debug' => __DIR__ . '/..' . '/symfony/error-handler/Debug.php',
         'Symfony\\Component\\ErrorHandler\\DebugClassLoader' => __DIR__ . '/..' . '/symfony/error-handler/DebugClassLoader.php',
@@ -3460,6 +3483,21 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'Symfony\\Component\\Routing\\RouteCompilerInterface' => __DIR__ . '/..' . '/symfony/routing/RouteCompilerInterface.php',
         'Symfony\\Component\\Routing\\Router' => __DIR__ . '/..' . '/symfony/routing/Router.php',
         'Symfony\\Component\\Routing\\RouterInterface' => __DIR__ . '/..' . '/symfony/routing/RouterInterface.php',
+        'Symfony\\Component\\Runtime\\GenericRuntime' => __DIR__ . '/..' . '/symfony/runtime/GenericRuntime.php',
+        'Symfony\\Component\\Runtime\\Internal\\BasicErrorHandler' => __DIR__ . '/..' . '/symfony/runtime/Internal/BasicErrorHandler.php',
+        'Symfony\\Component\\Runtime\\Internal\\ComposerPlugin' => __DIR__ . '/..' . '/symfony/runtime/Internal/ComposerPlugin.php',
+        'Symfony\\Component\\Runtime\\Internal\\MissingDotenv' => __DIR__ . '/..' . '/symfony/runtime/Internal/MissingDotenv.php',
+        'Symfony\\Component\\Runtime\\Internal\\SymfonyErrorHandler' => __DIR__ . '/..' . '/symfony/runtime/Internal/SymfonyErrorHandler.php',
+        'Symfony\\Component\\Runtime\\ResolverInterface' => __DIR__ . '/..' . '/symfony/runtime/ResolverInterface.php',
+        'Symfony\\Component\\Runtime\\Resolver\\ClosureResolver' => __DIR__ . '/..' . '/symfony/runtime/Resolver/ClosureResolver.php',
+        'Symfony\\Component\\Runtime\\Resolver\\DebugClosureResolver' => __DIR__ . '/..' . '/symfony/runtime/Resolver/DebugClosureResolver.php',
+        'Symfony\\Component\\Runtime\\RunnerInterface' => __DIR__ . '/..' . '/symfony/runtime/RunnerInterface.php',
+        'Symfony\\Component\\Runtime\\Runner\\ClosureRunner' => __DIR__ . '/..' . '/symfony/runtime/Runner/ClosureRunner.php',
+        'Symfony\\Component\\Runtime\\Runner\\Symfony\\ConsoleApplicationRunner' => __DIR__ . '/..' . '/symfony/runtime/Runner/Symfony/ConsoleApplicationRunner.php',
+        'Symfony\\Component\\Runtime\\Runner\\Symfony\\HttpKernelRunner' => __DIR__ . '/..' . '/symfony/runtime/Runner/Symfony/HttpKernelRunner.php',
+        'Symfony\\Component\\Runtime\\Runner\\Symfony\\ResponseRunner' => __DIR__ . '/..' . '/symfony/runtime/Runner/Symfony/ResponseRunner.php',
+        'Symfony\\Component\\Runtime\\RuntimeInterface' => __DIR__ . '/..' . '/symfony/runtime/RuntimeInterface.php',
+        'Symfony\\Component\\Runtime\\SymfonyRuntime' => __DIR__ . '/..' . '/symfony/runtime/SymfonyRuntime.php',
         'Symfony\\Component\\Security\\Core\\AuthenticationEvents' => __DIR__ . '/..' . '/symfony/security-core/AuthenticationEvents.php',
         'Symfony\\Component\\Security\\Core\\Authentication\\AuthenticationTrustResolver' => __DIR__ . '/..' . '/symfony/security-core/Authentication/AuthenticationTrustResolver.php',
         'Symfony\\Component\\Security\\Core\\Authentication\\AuthenticationTrustResolverInterface' => __DIR__ . '/..' . '/symfony/security-core/Authentication/AuthenticationTrustResolverInterface.php',
@@ -3951,6 +3989,7 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'Symfony\\Polyfill\\Intl\\Icu\\Exception\\RuntimeException' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/Exception/RuntimeException.php',
         'Symfony\\Polyfill\\Intl\\Icu\\Icu' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/Icu.php',
         'Symfony\\Polyfill\\Intl\\Icu\\IntlDateFormatter' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/IntlDateFormatter.php',
+        'Symfony\\Polyfill\\Intl\\Icu\\IntlListFormatter' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/IntlListFormatter.php',
         'Symfony\\Polyfill\\Intl\\Icu\\Locale' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/Locale.php',
         'Symfony\\Polyfill\\Intl\\Icu\\NumberFormatter' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/NumberFormatter.php',
         'Symfony\\Polyfill\\Intl\\Idn\\Idn' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/Idn.php',
@@ -3960,6 +3999,13 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'Symfony\\Polyfill\\Intl\\Normalizer\\Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Normalizer.php',
         'Symfony\\Polyfill\\Mbstring\\Mbstring' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/Mbstring.php',
         'Symfony\\Polyfill\\Php83\\Php83' => __DIR__ . '/..' . '/symfony/polyfill-php83/Php83.php',
+        'Symfony\\Runtime\\Symfony\\Component\\Console\\ApplicationRuntime' => __DIR__ . '/..' . '/symfony/runtime/Internal/Console/ApplicationRuntime.php',
+        'Symfony\\Runtime\\Symfony\\Component\\Console\\Command\\CommandRuntime' => __DIR__ . '/..' . '/symfony/runtime/Internal/Console/Command/CommandRuntime.php',
+        'Symfony\\Runtime\\Symfony\\Component\\Console\\Input\\InputInterfaceRuntime' => __DIR__ . '/..' . '/symfony/runtime/Internal/Console/Input/InputInterfaceRuntime.php',
+        'Symfony\\Runtime\\Symfony\\Component\\Console\\Output\\OutputInterfaceRuntime' => __DIR__ . '/..' . '/symfony/runtime/Internal/Console/Output/OutputInterfaceRuntime.php',
+        'Symfony\\Runtime\\Symfony\\Component\\HttpFoundation\\RequestRuntime' => __DIR__ . '/..' . '/symfony/runtime/Internal/HttpFoundation/RequestRuntime.php',
+        'Symfony\\Runtime\\Symfony\\Component\\HttpFoundation\\ResponseRuntime' => __DIR__ . '/..' . '/symfony/runtime/Internal/HttpFoundation/ResponseRuntime.php',
+        'Symfony\\Runtime\\Symfony\\Component\\HttpKernel\\HttpKernelInterfaceRuntime' => __DIR__ . '/..' . '/symfony/runtime/Internal/HttpKernel/HttpKernelInterfaceRuntime.php',
         'SynchroExceptionNotStarted' => __DIR__ . '/../..' . '/application/exceptions/SynchroExceptionNotStarted.php',
         'System' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/System.php',
         'TCPDF' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf.php',
