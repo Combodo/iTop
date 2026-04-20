@@ -7,6 +7,8 @@
 
 namespace Combodo\iTop\Core\AttributeDefinition;
 
+use ApplicationContext;
+use cmdbAbstractObject;
 use CoreException;
 use CoreUnexpectedValue;
 use CoreWarning;
@@ -534,21 +536,21 @@ HTML;
 	}
 
 	/**
-	 * @param $value
+	 * @param $sValue
 	 * @param DBObject $oHostObject
 	 * @param bool $bLocalize
 	 *
 	 * @return string
 	 *
 	 */
-	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
+	public function GetAsXML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (is_object($value) && ($value instanceof ormTagSet)) {
+		if (is_object($sValue) && ($sValue instanceof ormTagSet)) {
 			$sRes = "<Set>\n";
 			if ($bLocalize) {
-				$aValues = $value->GetLabels();
+				$aValues = $sValue->GetLabels();
 			} else {
-				$aValues = $value->GetValues();
+				$aValues = $sValue->GetValues();
 			}
 			if (!empty($aValues)) {
 				$sRes .= '<Tag>'.implode('</Tag><Tag>', $aValues).'</Tag>';
@@ -636,7 +638,7 @@ HTML;
 	public function FromJSONToValue($json)
 	{
 		$oSet = new ormTagSet($this->GetHostClass(), $this->GetCode(), $this->GetMaxItems());
-		$oSet->SetValues($json);
+		$oSet->SetValues(json_decode($json, true));
 
 		return $oSet;
 	}
