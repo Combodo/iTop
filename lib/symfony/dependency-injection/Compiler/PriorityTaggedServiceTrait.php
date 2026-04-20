@@ -65,6 +65,17 @@ trait PriorityTaggedServiceTrait
             $class = $container->getParameterBag()->resolveValue($class) ?: null;
             $checkTaggedItem = !$definition->hasTag($definition->isAutoconfigured() ? 'container.ignore_attributes' : $tagName);
 
+            // For decorated services, walk the decoration chain to find #[AsTaggedItem] on the original service
+            $innerClass = null;
+            $innerDef = $definition;
+            while ($innerId = $innerDef->getTag('container.decorator')[0]['inner'] ?? null) {
+                if (!$container->has($innerId)) {
+                    break;
+                }
+                $innerDef = $container->findDefinition($innerId);
+                $innerClass = $container->getParameterBag()->resolveValue($innerDef->getClass()) ?: null;
+            }
+
             foreach ($attributes as $attribute) {
                 $index = $priority = null;
 
@@ -72,6 +83,9 @@ trait PriorityTaggedServiceTrait
                     $priority = $attribute['priority'];
                 } elseif (null === $defaultPriority && $defaultPriorityMethod && $class) {
                     $defaultPriority = PriorityTaggedServiceUtil::getDefault($container, $serviceId, $class, $defaultPriorityMethod, $tagName, 'priority', $checkTaggedItem);
+                    if (null === $defaultPriority && $innerClass) {
+                        $defaultPriority = PriorityTaggedServiceUtil::getDefault($container, $serviceId, $innerClass, $defaultPriorityMethod, $tagName, 'priority', true);
+                    }
                 }
                 $priority ??= $defaultPriority ??= 0;
 
@@ -84,6 +98,9 @@ trait PriorityTaggedServiceTrait
                     $index = $attribute[$indexAttribute];
                 } elseif (null === $defaultIndex && $defaultPriorityMethod && $class) {
                     $defaultIndex = PriorityTaggedServiceUtil::getDefault($container, $serviceId, $class, $defaultIndexMethod ?? 'getDefaultName', $tagName, $indexAttribute, $checkTaggedItem);
+                    if (null === $defaultIndex && $innerClass) {
+                        $defaultIndex = PriorityTaggedServiceUtil::getDefault($container, $serviceId, $innerClass, $defaultIndexMethod ?? 'getDefaultName', $tagName, $indexAttribute, true);
+                    }
                 }
                 $decorated = $definition->getTag('container.decorator')[0]['id'] ?? null;
                 $index = $index ?? $defaultIndex ?? $defaultIndex = $decorated ?? $serviceId;
