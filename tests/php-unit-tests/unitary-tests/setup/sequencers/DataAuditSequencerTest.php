@@ -77,6 +77,8 @@ class DataAuditSequencerTest extends ItopTestCase
 	public function testCompileWithAudit()
 	{
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
+		$oRunTimeEnvironment->expects($this->once())->method('GetApplicationVersion')
+			->willReturn(['product_version' => ITOP_VERSION_FULL]);
 		$oRunTimeEnvironment->expects($this->once())->method('DoCompile');
 		$oRunTimeEnvironment->expects($this->once())->method('GetFinalEnv')
 			->willReturn('production');
@@ -117,6 +119,8 @@ class DataAuditSequencerTest extends ItopTestCase
 	public function testCompileNoAuditInUpgradeWithoutAnyRuntimeEnv()
 	{
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
+		$oRunTimeEnvironment->expects($this->once())->method('GetApplicationVersion')
+			->willReturn(['product_version' => ITOP_VERSION_FULL]);
 		$oRunTimeEnvironment->expects($this->once())->method('DoCompile');
 		$oRunTimeEnvironment->expects($this->once())->method('GetFinalEnv')
 			->willReturn('gabuzomeu');
@@ -159,6 +163,8 @@ class DataAuditSequencerTest extends ItopTestCase
 	public function testAuditCalled()
 	{
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
+		$oRunTimeEnvironment->expects($this->once())->method('GetApplicationVersion')
+			->willReturn(['product_version' => ITOP_VERSION_FULL]);
 		$oRunTimeEnvironment->expects($this->once())->method('DataToCleanupAudit');
 		$oRunTimeEnvironment->expects($this->any())->method('GetFinalEnv')
 			->willReturn('production');
@@ -182,6 +188,8 @@ class DataAuditSequencerTest extends ItopTestCase
 	public function testNoAuditInUpgradeModeWhenNoRuntimeEnvironmentAvailable()
 	{
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
+		$oRunTimeEnvironment->expects($this->once())->method('GetApplicationVersion')
+			->willReturn(['product_version' => ITOP_VERSION_FULL]);
 		$oRunTimeEnvironment->expects($this->never())->method('DataToCleanupAudit');
 		$oRunTimeEnvironment->expects($this->once())->method('GetFinalEnv')
 			->willReturn('gabuzomeu');
@@ -243,5 +251,50 @@ class DataAuditSequencerTest extends ItopTestCase
 
 		$oParams->LoadFromHash($aParams);
 		return $oParams;
+	}
+
+	public function testIsDataAuditRequired_NoAuditInFreshInstall()
+	{
+		$this->oConfig = $this->createMock(\Config::class);
+
+		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
+		$oRunTimeEnvironment->expects($this->once())->method("GetBuildEnv")->willReturn("production-test");
+
+		$oSequencer = new DataAuditSequencer($this->GivenParams(), $oRunTimeEnvironment);
+		$this->SetNonPublicProperty($oSequencer, 'oTestConfig', $this->oConfig);
+		self::assertFalse($this->InvokeNonPublicMethod(DataAuditSequencer::class, "IsDataAuditRequired", $oSequencer));
+	}
+
+	public function testIsDataAuditRequired_NoAuditOnPackageUpgrade()
+	{
+		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
+		$oRunTimeEnvironment->expects($this->once())->method('GetApplicationVersion')
+			->willReturn(['product_version' => ITOP_VERSION_FULL."_alpha"]);
+		$oRunTimeEnvironment->expects($this->never())->method("GetFinalEnv");
+
+		$oSequencer = new DataAuditSequencer($this->GivenParams(['mode' => 'upgrade']), $oRunTimeEnvironment);
+		self::assertFalse($this->InvokeNonPublicMethod(DataAuditSequencer::class, "IsDataAuditRequired", $oSequencer));
+	}
+
+	public function testIsDataAuditRequired_NoAuditOnSystemChange()
+	{
+		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
+		$oRunTimeEnvironment->expects($this->once())->method('GetApplicationVersion')
+			->willReturn(['product_version' => ITOP_VERSION_FULL]);
+		$oRunTimeEnvironment->expects($this->once())->method("GetFinalEnv")->willReturn("production-gabuzomeu");
+
+		$oSequencer = new DataAuditSequencer($this->GivenParams(['mode' => 'upgrade']), $oRunTimeEnvironment);
+		self::assertFalse($this->InvokeNonPublicMethod(DataAuditSequencer::class, "IsDataAuditRequired", $oSequencer));
+	}
+
+	public function testIsDataAuditRequired_AuditTriggered()
+	{
+		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
+		$oRunTimeEnvironment->expects($this->once())->method('GetApplicationVersion')
+			->willReturn(['product_version' => ITOP_VERSION_FULL]);
+		$oRunTimeEnvironment->expects($this->once())->method("GetFinalEnv")->willReturn("production");
+
+		$oSequencer = new DataAuditSequencer($this->GivenParams(['mode' => 'upgrade']), $oRunTimeEnvironment);
+		self::assertTrue($this->InvokeNonPublicMethod(DataAuditSequencer::class, "IsDataAuditRequired", $oSequencer));
 	}
 }

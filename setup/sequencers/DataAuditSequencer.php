@@ -101,6 +101,13 @@ class DataAuditSequencer extends StepSequencer
 			return false;
 		}
 
+		$aInstalledInfo = $this->oRunTimeEnvironment->GetApplicationVersion($this->GetConfig());
+		$sInstalledVersion = $aInstalledInfo['product_version'];
+
+		if ($sInstalledVersion !== ITOP_VERSION_FULL) {
+			return false;
+		}
+
 		$sFinalEnvDir = APPROOT.'env-'.$this->oRunTimeEnvironment->GetFinalEnv();
 		return is_dir($sFinalEnvDir);
 	}
