@@ -176,7 +176,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	protected $sDisplayMode;
 	protected $aFieldsMap;
     /**
-     * @var array Store posted values in order to be used in GetAttributeFlag
+     * @var array Store posted values in order to be used in GetAttributeFlags
      */
     protected $aPostedValues = [];
 
@@ -3800,7 +3800,7 @@ HTML;
 
     /**
      * function to test if the posted value or if not exists the existing value matches the expected value
-     * this is used to check the current value in GetAttributeFlag function (useful to manage dynamic readonly attributes)
+     * this is used to check the current value in GetAttributeFlags function (useful to manage dynamic readonly attributes)
      * @param $sAttCode
      */
     public function GetCurrentValueInScreen($sAttCode)
@@ -3813,7 +3813,7 @@ HTML;
 
     /*
      * This function checks if the value of the attribute has been modified in screen
-     * this is used to check if field has been modified in GetAttributeFlag function (useful to manage dynamic readonly attributes)
+     * this is used to check if field has been modified in GetAttributeFlags function (useful to manage dynamic readonly attributes)
      * @param $sAttCode
      */
     public function IsModifiedValueInScreen($sAttCode)
@@ -4016,7 +4016,7 @@ HTML;
 
 		$aErrors = [];
 		$aFinalValues = [];
-		$this->aPostedValues = $aValues; // Store the values for later use (e.g. in getAttributeFlag)
+		$this->aPostedValues = $aValues; // Store the values for later use (e.g. in GetAttributeFlags)
 		foreach ($this->GetWriteableAttList(array_keys($aValues), $aErrors, $aAttFlags) as $sAttCode => $oAttDef) {
 			$aFinalValues[$sAttCode] = $aValues[$sAttCode];
 		}
