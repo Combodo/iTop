@@ -104,7 +104,7 @@ class CheckResult
 class SetupUtils
 {
 	// -- Minimum versions (requirements : forbids installation if not met)
-	public const PHP_MIN_VERSION             = '8.1.0';
+	public const PHP_MIN_VERSION             = '8.2.0';
 	public const MYSQL_MIN_VERSION           = '5.7.0'; // 5.6 is no longer supported
 	public const MYSQL_NOT_VALIDATED_VERSION = ''; // MySQL 8 is now OK (N°2010 in 2.7.0) but has no query cache so mind the perf on large volumes !
 
