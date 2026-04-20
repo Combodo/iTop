@@ -78,7 +78,6 @@ class DataAuditSequencer extends StepSequencer
 					return $this->GetNextStep('complete', 'Check Completed', 100);
 
 				case 'complete':
-					sleep(1);
 					return $this->GetNextStep('', 'Completed', 100);
 
 				default:
