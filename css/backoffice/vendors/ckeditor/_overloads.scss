@@ -38,8 +38,13 @@ $ibo-vendors-ckeditor--ck-mentions--item--padding-y: $ibo-spacing-200 !default;
   --ck-text-small-font-size: #{$ibo-vendors-ckeditor--ck-text-small-font-size};
   --ck-text-big-font-size: #{$ibo-vendors-ckeditor--ck-text-big-font-size};
   --ck-text-huge-font-size: #{$ibo-vendors-ckeditor--ck-text-huge-font-size};
+  --ck-content-font-size: #{$ibo-font-size-100} !important; /* Important to overload the CKE native rule */
+  --ck-content-font-family: #{$ibo-font-family-base}, #{$ibo-font-family-fallbacks};
 
   --ck-color-image-caption-text: #{$ibo-vendors-ckeditor--ck-color-image-caption-text};
+  --ck-icon-size: 1.3rem;
+  --ck-ui-component-min-height: 1rem;
+
 }
 
 /* Base style */
