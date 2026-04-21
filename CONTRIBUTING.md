@@ -4,6 +4,8 @@ You want to contribute to iTop? Many thanks to you! 🎉 👍
 
 Here are some guidelines that will help us integrate your work!
 
+## Contributions
+
 ### Subjects
 
 You are welcome to create pull requests on any of those subjects:
