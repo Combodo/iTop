@@ -14,6 +14,18 @@ Any PRs not following the guidelines or with missing information will not be con
 | Related to a SourceForge thread / Another PR / A GitHub Issue / Combodo ticket? | <!-- Put the URL -->                 |
 | Type of change?                                                                 | Bug fix / Enhancement / Translations |
 
+## Symptom (bug) / Objective (enhancement)
+
+<!--
+If it's a bug
+  - Explain the symptom in details
+  - If possible put error messages, logs or screenshots (you can paste image directly in this editor).
+
+If it's an enhancement
+  - Describe what is blocking you, what is the objective with as many details as possible.
+  - Add screenshots if it's related to UI.
+-->
+
 ## Reproduction procedure (bug)
 
 <!--
@@ -28,12 +40,7 @@ If it requires a custom datamodel, provide the minimal XML delta to reproduce it
 5. ...
 6. Finally, see that... (what is expected and what is actually happening)
 
-Additional information (if needed)
-<!--
-- If possible put error messages, logs or screenshots (you can paste image directly in this editor).
--->
-
-## Reproduction procedure (enhancement)
+## Reproduction procedure (enhancement - if needed)
 
 <!--
 Please explain how we can reproduce the feature/behavior you want to improve, and what's your proposition to make it better.

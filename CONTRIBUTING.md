@@ -13,7 +13,7 @@ You are welcome to create pull requests on any of those subjects:
 
 If you want to implement a **new feature**, please [create a corresponding issue](https://github.com/Combodo/iTop/issues) for review.
 We should review within two weeks, and get back to you to indicate if we're interested in your proposal or not.
-f you ever want to begin implementation, do so in a fork, and add a link to the corresponding commits in the ticket.
+If you ever want to begin implementation, do so in a fork, and add a link to the corresponding commits in the ticket.
 
 For all **security related subjects**, please see our [security policy](SECURITY.md).
 
@@ -22,7 +22,7 @@ impact all existing customers, and could prevent them from upgrading!
 Combodo has a long experience of datamodel changes: they are very disruptive!
 This is why we avoid them in iTop core, especially the changes on existing objects/fields.   
 If you have an idea you're sure would benefit to all of iTop users, you may
-[create a corresponding ticket](https://sourceforge.net/p/itop/tickets/new/) to submit it, but be warned that there are lots of good
+[create a corresponding issue](https://github.com/Combodo/iTop/issues) to submit it, but be warned that there are lots of good
 reasons to refuse such changes.
 
 ### 📄 License and copyright
@@ -56,96 +56,12 @@ For example, if no version is currently prepared for shipping we could have:
 - `develop` containing future 3.3.0 version
 - `support/3.2`: 3.2.x maintenance version
 
-And when 3.3.0 final will be out:
+And when 3.3.0 will be out:
 
 - `develop`: future 3.4.0 version
-- `support/3.2`: 3.2.x maintenance version (will host developments for 3.2.4)
-
-Also note that we have a "micro-version" concept : each of those versions have a very small amount of modifications. They are made from
-`support/*` branches as well. For example 2.6.2-1 and 2.6.2-2 were made from the `support/2.6.2` branch.
-
-## Coding
-
-### 🌐 Translations
-
-A [dedicated page](https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Atranslation) is available in the official wiki.
-
-### Where to start ?
-
-1. Create a fork from our repository (see [Working with forks - GitHub Help](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/working-with-forks))
-2. Create a branch in this fork, based on the develop branch
-3. Code !
-
-Do create a dedicated branch for each modification you want to propose : if you don't, it will be very hard to merge back your work !
-
-Most of the time you should base your developments on the develop branch.    
-That may be different if you want to fix a bug, please use develop anyway and ask in your PR if rebase is possible.
-
-### 🎨 PHP styleguide# Contributing to iTop
-
-You want to contribute to iTop? Many thanks to you! 🎉 👍
-
-Here are some guidelines that will help us integrate your work!
-
-### Subjects
-
-You are welcome to create pull requests on any of those subjects:
-
-* 🐛 bug fix
-* 🌐 translation / i18n / l10n
-
-If you want to implement a **new feature**, please [create a corresponding issue](https://github.com/Combodo/iTop/issues) for review.
-We should review within two weeks, and get back to you to indicate if we're interested in your proposal or not.
-f you ever want to begin implementation, do so in a fork, and add a link to the corresponding commits in the ticket.
-
-For all **security related subjects**, please see our [security policy](SECURITY.md).
-
-All **datamodel modification** should be done in an extension. Beware that such change would
-impact all existing customers, and could prevent them from upgrading!
-Combodo has a long experience of datamodel changes: they are very disruptive!
-This is why we avoid them in iTop core, especially the changes on existing objects/fields.   
-If you have an idea you're sure would benefit to all of iTop users, you may
-[create a corresponding ticket](https://sourceforge.net/p/itop/tickets/new/) to submit it, but be warned that there are lots of good
-reasons to refuse such changes.
-
-### 📄 License and copyright
-
-iTop is distributed under the AGPL-3.0 license (see the [license.txt] file).
-
-The iTop repository is divided in three parts: iTop (mainly PHP/JS/XML sources and dictionaries), images, and third-party libraries.
-Combodo has the copyright on most of the source files in the iTop part of the repository: please do not modify the existing file copyrights.  
-Anyhow, you are encouraged to signal your contribution by the mean of `@author` annotations.
-
-If you want to use another license or keep the code ownership (copyright), you may [create an extension][wiki new ext].
-
-[license.txt]: https://github.com/Combodo/iTop/blob/develop/license.txt
-
-[wiki new ext]: https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Astart#by_writing_your_own_extension
-
-## 🔀 iTop branch model
-
-When we first start with Git, we were using the [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/) branch model. As
-there was some confusions about branches to use for current developed release and previous maintained release, and also because we were
-using just a very few of the GitFlow commands, we decided to add just a little modification to this branch model : since April 2020
-we don't have a `master` branch anymore.
-
-Here are the branches we use and their meaning :
-
-- `develop`: ongoing development version
-- `support/*`: maintenance branches for older versions
-
-For example, if no version is currently prepared for shipping we could have:
-
-- `develop` containing future 3.3.0 version
+- `support/3.3`: 3.3.x maintenance version (will host developments for 3.3.1)
 - `support/3.2`: 3.2.x maintenance version
 
-And when 3.3.0 final will be out:
-
-- `develop`: future 3.4.0 version
-- `support/3.2`: 3.2.x maintenance version (will host developments for 3.2.4)
-
-Also note that we have a "micro-version" concept : each of those versions have a very small amount of modifications. They are made from
-`support/*` branches as well. For example 2.6.2-1 and 2.6.2-2 were made from the `support/2.6.2` branch.
 
 ## Coding
 
