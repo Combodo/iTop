@@ -35,7 +35,7 @@ body:
       required: false
 
   - type: textarea
-    id: enhancement_procedure
+    id: enhancement_details
     attributes:
       label: Enhancement details
       description: |
