@@ -6,15 +6,14 @@ use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
+use DBSearch;
 use Dict;
 use DOMSanitizer;
 use Exception;
 use ExceptionLog;
-use UserRights;
 use MetaModel;
-use DBSearch;
+use UserRights;
 use utils;
-use appUserPreferences;
 
 /**
  * Class CKEditorHelper
@@ -266,7 +265,7 @@ HTML;
 		if (file_exists(APPROOT.$sLanguageFileRelPath)) {
 			$aJSRelPaths[] = $sLanguageFileRelPath;
 		} else {
-			$sLanguageFileRelPath = 'node_modules/ckeditor5-itop-build/build/translations/'.$sLanguage.'.js';
+			$sLanguageFileRelPath = 'node_modules/ckeditor5-itop-build/build/translations/'.$sLanguage.'.umd.js';
 			if (file_exists(APPROOT.$sLanguageFileRelPath)) {
 				$aJSRelPaths[] = $sLanguageFileRelPath;
 			}
