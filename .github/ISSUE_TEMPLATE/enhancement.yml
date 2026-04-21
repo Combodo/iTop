@@ -6,7 +6,7 @@ body:
       value: |
         Please explain why you're creating this issue :
         - Are you willing to create a PR for this enhancement ? If so, we'll indicate in the issue if we're interested in it.
-        - Then, please describe how to reproduce the issue (if it's a bug) or what's your improvement proposition (if it's an enhancement).
+        - Then, please describe what's your improvement proposition.
 
   - type: dropdown
     id: willing_to_pr
