@@ -2,15 +2,9 @@
 
 namespace Combodo\iTop\Setup\FeatureRemoval;
 
-use Combodo\iTop\Setup\ModuleDependency\Module;
-use Config;
-use InstallationChoicesToModuleConverter;
 use iTopExtensionsMap;
-use MetaModel;
-use ModuleDiscovery;
 use RunTimeEnvironment;
 use SetupUtils;
-use utils;
 
 class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 {
@@ -41,45 +35,12 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 		SetupUtils::copydir(APPROOT."/conf/$sSourceEnv", APPROOT."/conf/$sBuildEnv");
 
 		$this->DeclareExtensionAsRemoved($this->aExtensionsByCode);
-
-		$sSourceDir = MetaModel::GetConfig()->Get('source_dir');
-		$aSearchDirs = $this->GetExtraDirsToCompile($sSourceDir);
-
-		$aModulesToLoad = $this->GetModulesToLoad($sSourceEnv, $aSearchDirs);
-
-		try {
-			ModuleDiscovery::GetModulesOrderedByDependencies($aSearchDirs, true, $aModulesToLoad);
-		} catch (\MissingDependencyException $e) {
-			\IssueLog::Error("Cannot prepare setup due to dependency issue", null, ['msg' => $e->getMessage(), 'modules_to_load' => $aModulesToLoad]);
-			throw $e;
-		}
 	}
 
 	private function DeclareExtensionAsRemoved(array $aExtensionCodes): void
 	{
 		$oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv);
 		$oExtensionsMap->DeclareExtensionAsRemoved($aExtensionCodes);
-	}
-
-	private function GetModulesToLoad(string $sSourceEnv, $aSearchDirs): array
-	{
-		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
-		$aChoices = iTopExtensionsMap::GetChoicesFromDatabase($oSourceConfig);
-		$sSourceDir = $oSourceConfig->Get('source_dir');
-
-		$sInstallFilePath = APPROOT.$sSourceDir.'/installation.xml';
-		if (! is_file($sInstallFilePath)) {
-			$sInstallFilePath = null;
-		}
-
-		$aModuleIdsToLoad = InstallationChoicesToModuleConverter::GetInstance()->GetModules($aChoices, $aSearchDirs, $sInstallFilePath);
-		$aModulesToLoad = [];
-		foreach ($aModuleIdsToLoad as $sModuleId) {
-			$oModule = new Module($sModuleId);
-			$sModuleName = $oModule->GetModuleName();
-			$aModulesToLoad[] = $sModuleName;
-		}
-		return $aModulesToLoad;
 	}
 
 	public function Cleanup(): void
