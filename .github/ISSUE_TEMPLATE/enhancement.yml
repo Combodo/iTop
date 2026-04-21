@@ -1,23 +1,12 @@
-name: "Issue creation"
-description: "Report a bug or suggest an enhancement"
+name: "Enhancement suggestion"
+description: "Suggest an improvement to iTop, with a clear description of the expected behavior and the benefits it would bring. If you identified a bug and have an improvement proposition, please use the 'Bug report' template instead."
 body:
   - type: markdown
     attributes:
       value: |
         Please explain why you're creating this issue :
-        - Did you find a bug ? Do you want to propose an enhancement ?
-        - Are you willing to create a PR for the bug fix / enhancement ? If so, we'll indicate in the issue if we're interested in it.
+        - Are you willing to create a PR for this enhancement ? If so, we'll indicate in the issue if we're interested in it.
         - Then, please describe how to reproduce the issue (if it's a bug) or what's your improvement proposition (if it's an enhancement).
-
-  - type: dropdown
-    id: issue_type
-    attributes:
-      label: Type of issue
-      options:
-        - Bug report
-        - Enhancement
-    validations:
-      required: true
 
   - type: dropdown
     id: willing_to_pr
@@ -46,24 +35,9 @@ body:
       required: false
 
   - type: textarea
-    id: reproduction_steps
-    attributes:
-      label: Reproduction procedure (bug only)
-      description: |
-        Please explain step by step how to reproduce the issue on a standard iTop Community.
-        If it requires a custom datamodel, provide the minimal XML delta to reproduce it.
-      placeholder: |
-        1. First go there
-        2. Then do that
-        3. ...
-        4. Finally, see that... (what is expected and what is actually happening)
-    validations:
-      required: false
-
-  - type: textarea
     id: enhancement_procedure
     attributes:
-      label: Reproduction procedure (enhancement only)
+      label: Enhancement details
       description: |
         Please explain what you want to improve, and your proposition to make it better.
         If it requires a custom datamodel, provide the minimal XML delta to reproduce it.
