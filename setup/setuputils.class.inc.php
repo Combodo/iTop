@@ -1989,14 +1989,7 @@ JS
 				return;
 			}
 			// Use mutex to check if cron is running
-			$oMutex = new iTopMutex(
-				'cron'.$oConfig->Get('db_name').$oConfig->Get('db_subname'),
-				$oConfig->Get('db_host'),
-				$oConfig->Get('db_user'),
-				$oConfig->Get('db_pwd'),
-				$oConfig->Get('db_tls.enabled'),
-				$oConfig->Get('db_tls.ca')
-			);
+			$oMutex = self::GetCronMutex($oConfig);
 			$iCount = 1;
 			$iStarted = time();
 			$iMaxDuration = $oConfig->Get('cron_max_execution_time');
@@ -2012,6 +2005,26 @@ JS
 		} catch (Exception $e) {
 			// Ignore errors
 		}
+	}
+
+	/**
+	 * @param \Config $oConfig
+	 *
+	 * @return \iTopMutex
+	 * @since 3.3.0
+	 */
+	public static function GetCronMutex(Config $oConfig): iTopMutex
+	{
+		$oMutex = new iTopMutex(
+			'cron'.$oConfig->Get('db_name').$oConfig->Get('db_subname'),
+			$oConfig->Get('db_host'),
+			$oConfig->Get('db_user'),
+			$oConfig->Get('db_pwd'),
+			$oConfig->Get('db_tls.enabled'),
+			$oConfig->Get('db_tls.ca')
+		);
+
+		return $oMutex;
 	}
 
 	/**
