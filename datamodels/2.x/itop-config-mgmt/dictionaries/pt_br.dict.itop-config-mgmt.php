@@ -946,6 +946,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'Todos os sistemas onde essa Atualização de SO está instalada',
 	'Class:OSPatch/Attribute:osversion_id' => 'Versão do SO',
 	'Class:OSPatch/Attribute:osversion_id+' => '',
+	'Class:OSPatch/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSPatch/Attribute:osfamily_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'Nome da versão do SO',
 	'Class:OSPatch/Attribute:osversion_name+' => '',
 ]);
@@ -1010,6 +1012,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:OSLicence/Attribute:osversion_id' => 'Versão do SO',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
+	'Class:OSLicence/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSLicence/Attribute:osfamily_id+' => '~~',
 	'Class:OSLicence/Attribute:osversion_name' => 'Nome da versão do SO',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Máquinas virtuais (VMs)',

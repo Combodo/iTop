@@ -947,6 +947,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'Alle Systeme, auf denen dieser Patch installiert ist',
 	'Class:OSPatch/Attribute:osversion_id' => 'OS Version',
 	'Class:OSPatch/Attribute:osversion_id+' => '',
+	'Class:OSPatch/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSPatch/Attribute:osfamily_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'OS-Versionsname',
 	'Class:OSPatch/Attribute:osversion_name+' => '',
 ]);
@@ -1011,6 +1013,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:OSLicence/Attribute:osversion_id' => 'OS-Version',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
+	'Class:OSLicence/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSLicence/Attribute:osfamily_id+' => '',
 	'Class:OSLicence/Attribute:osversion_name' => 'OS-Versionsname',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtuelle Maschinen',

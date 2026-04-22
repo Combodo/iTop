@@ -37,23 +37,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 // Class:<class_name>/UniquenessRule:<rule_code>+
 
 //////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
@@ -946,6 +929,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'Rendszerek, amelyekre telepítve lett ez az OS javítócsomag',
 	'Class:OSPatch/Attribute:osversion_id' => 'OS verzió',
 	'Class:OSPatch/Attribute:osversion_id+' => '~~',
+	'Class:OSPatch/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSPatch/Attribute:osfamily_id+' => '~~',
 	'Class:OSPatch/Attribute:osversion_name' => 'OS verzió név',
 	'Class:OSPatch/Attribute:osversion_name+' => '~~',
 ]);
@@ -1010,6 +995,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:OSLicence/Attribute:osversion_id' => 'OS verzió',
 	'Class:OSLicence/Attribute:osversion_id+' => '~~',
+	'Class:OSLicence/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSLicence/Attribute:osfamily_id+' => '~~',
 	'Class:OSLicence/Attribute:osversion_name' => 'OS verzió név',
 	'Class:OSLicence/Attribute:osversion_name+' => '~~',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtuális gépek',

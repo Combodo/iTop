@@ -4197,6 +4197,10 @@
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
+        <field id="osfamily_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>osversion_id</extkey_attcode>
+          <target_attcode>osfamily_id</target_attcode>
+        </field>
         <field id="osversion_name" xsi:type="AttributeExternalField">
           <extkey_attcode>osversion_id</extkey_attcode>
           <target_attcode>name</target_attcode>
@@ -4218,8 +4222,11 @@
                 </item>
                 <item id="fieldset:Software:moreinfo">
                   <items>
-                    <item id="osversion_id">
+                    <item id="osfamily_id">
                       <rank>10</rank>
+                    </item>
+                    <item id="osversion_id">
+                      <rank>20</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -4665,6 +4672,10 @@
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
+        <field id="osfamily_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>osversion_id</extkey_attcode>
+          <target_attcode>osfamily_id</target_attcode>
+        </field>
         <field id="osversion_name" xsi:type="AttributeExternalField">
           <extkey_attcode>osversion_id</extkey_attcode>
           <target_attcode>name</target_attcode>
@@ -4704,6 +4715,9 @@
                 <item id="fieldset:ConfigMgmt:moreinfo">
                   <rank>20</rank>
                   <items>
+                    <item id="osfamily_id">
+                      <rank>10</rank>
+                    </item>
                     <item id="osversion_id">
                       <rank>30</rank>
                     </item>
@@ -5107,7 +5121,7 @@
           </complementary_attributes>
         </naming>
         <style>
-          <icon/>
+          <icon>images/icons8-os-version-software.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -5218,7 +5232,7 @@
           <image_attribute>logo</image_attribute>
         </fields_semantic>
         <style>
-          <icon/>
+          <icon>images/icons8-os-family-software.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -5694,7 +5708,7 @@
           </attributes>
         </naming>
         <style>
-          <icon/>
+          <icon>images/icons8-ios-version-software.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -8337,6 +8351,22 @@
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:SWAndApps</title>
                 <icon>../images/icons/icons8-software.svg</icon>
+              </dashlet>
+              <dashlet id="Software" xsi:type="DashletBadge">
+                <rank>0.1</rank>
+                <class>Software</class>
+              </dashlet>
+              <dashlet id="OSFamily" xsi:type="DashletBadge">
+                <rank>0.2</rank>
+                <class>OSFamily</class>
+              </dashlet>
+              <dashlet id="OSVersion" xsi:type="DashletBadge">
+                <rank>0.3</rank>
+                <class>OSVersion</class>
+              </dashlet>
+              <dashlet id="IOSVersion" xsi:type="DashletBadge">
+                <rank>0.4</rank>
+                <class>IOSVersion</class>
               </dashlet>
               <dashlet id="5" xsi:type="DashletBadge">
                 <rank>1</rank>

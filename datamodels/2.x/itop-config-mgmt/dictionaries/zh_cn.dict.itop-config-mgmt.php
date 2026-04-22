@@ -963,6 +963,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:OSPatch/Attribute:functionalcis_list+' => '已安装此补丁的所有系统',
 	'Class:OSPatch/Attribute:osversion_id' => '操作系统版本',
 	'Class:OSPatch/Attribute:osversion_id+' => '',
+	'Class:OSPatch/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSPatch/Attribute:osfamily_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => '名称',
 	'Class:OSPatch/Attribute:osversion_name+' => '',
 ]);
@@ -1027,6 +1029,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:OSLicence/Attribute:osversion_id' => '操作系统版本',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
+	'Class:OSLicence/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSLicence/Attribute:osfamily_id+' => '~~',
 	'Class:OSLicence/Attribute:osversion_name' => '名称',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => '虚拟机',
