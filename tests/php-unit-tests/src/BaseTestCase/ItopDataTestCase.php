@@ -1454,7 +1454,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 			'password' => $sPassword,
 			'language' => 'EN US',
 			'profile_list' => [
-				'profileid:'.$sProfileId,
+				'profileid:'.self::$aURP_Profiles[$sProfileId],
 			],
 			'contactid' => $sPersonId,
 			'allowed_org_list' => [
@@ -1472,7 +1472,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 * @return string The unique login
 	 * @throws \Exception
 	 */
-	protected function GivenUserInDB(string $sPassword, array $aProfiles, string $sLogin = null, string &$sUserId = null): string
+	protected function GivenUserInDB(string $sPassword, array $aProfiles, ?string $sLogin = null, ?string &$sUserId = null): string
 	{
 		if (is_null($sLogin)) {
 			$sLogin = 'demo_test_'.uniqid(__CLASS__, true);

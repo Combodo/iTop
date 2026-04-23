@@ -277,11 +277,12 @@ if ($bInstall) {
 
 	echo "Starting the unattended installation...\n";
 	$oWizard = new DataAuditSequencer($oParams);
-	$bRes = $oWizard->ExecuteAllSteps();
+	$sComment = "Done by Unattended Install";
+	$bRes = $oWizard->ExecuteAllSteps(sComment:$sComment);
 
 	if ($bRes) {
 		$oWizard = new ApplicationInstallSequencer($oParams);
-		$bRes = $oWizard->ExecuteAllSteps();
+		$bRes = $oWizard->ExecuteAllSteps(sComment:$sComment);
 	}
 
 	if (!$bRes) {
@@ -289,15 +290,15 @@ if ($bInstall) {
 		$bFoundIssues = true;
 	} else {
 		try {
-			$oMysqli = CMDBSource::GetMysqliInstance($sDBServer, $sDBUser, $sDBPwd, null, $bDBTlsEnabled, $sDBTlsCa, true);
-			if ($oMysqli->select_db($sDBName)) {
-				// Check the presence of a table to record information about the MTP (from the Designer)
-				$sDesignerUpdatesTable = $sDBPrefix.'priv_designer_update';
-				$sSQL = "SELECT id FROM `$sDesignerUpdatesTable`";
-				if ($oMysqli->query($sSQL) !== false) {
-					// Record the Designer Udpates in the priv_designer_update table
-					$sDeltaFile = APPROOT.'data/'.$sTargetEnvironment.'.delta.xml';
-					if (is_readable($sDeltaFile)) {
+			$sDeltaFile = APPROOT.'data/'.$sTargetEnvironment.'.delta.xml';
+			if (is_readable($sDeltaFile)) {
+				$oMysqli = CMDBSource::GetMysqliInstance($sDBServer, $sDBUser, $sDBPwd, null, $bDBTlsEnabled, $sDBTlsCa, true);
+				if ($oMysqli->select_db($sDBName)) {
+					// Check the presence of a table to record information about the MTP (from the Designer)
+					$sDesignerUpdatesTable = $sDBPrefix.'priv_designer_update';
+					$sSQL = "SELECT id FROM `$sDesignerUpdatesTable`";
+					if ($oMysqli->query($sSQL) !== false) {
+						// Record the Designer Udpates in the priv_designer_update table
 						// Retrieve the revision
 						$oDoc = new DOMDocument();
 						$oDoc->load($sDeltaFile);
@@ -315,8 +316,6 @@ if ($bInstall) {
 							echo "\nFailed to read the revision from $sDeltaFile file. No designer update information will be recorded.\n";
 
 						}
-					} else {
-						echo "\nNo $sDeltaFile file (or the file is not accessible). No designer update information to record.\n";
 					}
 				}
 			}

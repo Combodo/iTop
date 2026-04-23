@@ -1073,15 +1073,23 @@ class ModelFactory
 	 */
 	public function LoadModule(MFModule $oModule, $aLanguages = [])
 	{
+		$sRootDir = null;
+		$sModuleName = null;
+		$sModuleVersion = null;
+
 		try {
-			$aDataModels = $oModule->GetDataModelFiles();
+			$sRootDir = $oModule->GetRootDir();
+			$sModuleVersion = $oModule->GetVersion();
 			$sModuleName = $oModule->GetName();
+			SetupLog::Debug("Loading module", null, [ $sModuleName, $sModuleVersion, $sRootDir]);
+			$aDataModels = $oModule->GetDataModelFiles();
+
 			self::$aLoadedModules[] = $oModule;
 
 			// For persistence in the cache
 			$oModuleNode = $this->oDOMDocument->CreateElement('module');
 			$oModuleNode->setAttribute('id', $oModule->GetId());
-			$oModuleNode->appendChild($this->oDOMDocument->CreateElement('root_dir', $oModule->GetRootDir()));
+			$oModuleNode->appendChild($this->oDOMDocument->CreateElement('root_dir', $sRootDir));
 			$oModuleNode->appendChild($this->oDOMDocument->CreateElement('label', $oModule->GetLabel()));
 
 			$oModules = $this->oRoot->getElementsByTagName('loaded_modules')->item(0);
@@ -1170,6 +1178,7 @@ class ModelFactory
 					]);
 			}
 		} catch (Exception $e) {
+			SetupLog::Exception("Cannot load module", $e, null, [ $sModuleName, $sModuleVersion, $sRootDir]);
 			$aLoadedModuleNames = [];
 			foreach (self::$aLoadedModules as $oLoadedModule) {
 				$aLoadedModuleNames[] = $oLoadedModule->GetName().':'.$oLoadedModule->GetVersion();

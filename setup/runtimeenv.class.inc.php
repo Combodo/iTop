@@ -26,6 +26,7 @@
 
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
+use Combodo\iTop\Setup\ModuleDependency\Module;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
@@ -145,10 +146,6 @@ class RunTimeEnvironment
 	 */
 	public function InitDataModel($oConfig, $bModelOnly = true, $bUseCache = false): void
 	{
-		//		if (self::$bMetamodelStarted && $bModelOnly) {
-		//			return;
-		//		}
-
 		$sConfigFile = $oConfig->GetLoadedFile();
 		if (strlen($sConfigFile) > 0) {
 			$this->log_info("MetaModel::Startup from $sConfigFile (ModelOnly = $bModelOnly)");
@@ -168,7 +165,6 @@ class RunTimeEnvironment
 		$_SESSION['itop_env'] = $this->sBuildEnv;
 
 		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache, false, $this->sBuildEnv);
-		self::$bMetamodelStarted = true;
 
 		if ($this->oExtensionsMap === null) {
 			$this->oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv);
@@ -464,10 +460,7 @@ class RunTimeEnvironment
 		$aExtraDirs = $this->GetExtraDirsToScan($aDirsToCompile);
 		$aDirsToCompile = array_merge($aDirsToCompile, $aExtraDirs);
 
-		// Determine the installed modules and extensions
-		//
 		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
-		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile);
 
 		// Actually read the modules available for the build environment,
 		// but get the selection from the source environment and finally
@@ -481,6 +474,9 @@ class RunTimeEnvironment
 				$this->GetExtensionMap()->MarkAsChosen($oExtension->sCode);
 			}
 		}
+
+		$aModulesToLoad = $this->GetModulesToLoad($this->sFinalEnv, $aDirsToCompile);
+		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile, false, $aModulesToLoad);
 
 		// Do load the required modules
 		//
@@ -1329,9 +1325,9 @@ class RunTimeEnvironment
 		$oSetupAudit = new SetupAudit(ITOP_DEFAULT_ENV, $this->sBuildEnv);
 
 		//Make sure the MetaModel is started before analysing for issues
-		$sConfFile = utils::GetConfigFilePath($this->sBuildEnv);
-		MetaModel::Startup($sConfFile, false, false, false, $this->sBuildEnv);
-		$oSetupAudit->GetIssues(true);
+		$sConfFile = utils::GetConfigFilePath(ITOP_DEFAULT_ENV);
+		MetaModel::Startup($sConfFile, false, false); // Start on production environment
+		$oSetupAudit->RunDataAudit(true);
 		$iCount = $oSetupAudit->GetDataToCleanupCount();
 
 		if ($iCount > 0) {
@@ -1592,5 +1588,52 @@ class RunTimeEnvironment
 		}
 
 		return substr_compare($sHaystack, $sNeedle, 0, strlen($sNeedle)) === 0;
+	}
+
+	/**
+	 * @param string $sSourceEnv
+	 * @param array<string> $aSearchDirs : module/extension dirs to load if they are included in choices
+	 *
+	 * @return array| null
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \ModuleInstallationException
+	 */
+	protected function GetModulesToLoad(string $sSourceEnv, array $aSearchDirs): ?array
+	{
+		if (is_null($this->GetExtensionMap())) {
+			return null;
+		}
+
+		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
+
+		$aChoices = $this->GetExtensionMap()->GetChoicesFromDatabase($oSourceConfig);
+		if (false === $aChoices) {
+			return null;
+		}
+		$sSourceDir = $oSourceConfig->Get('source_dir');
+
+		$sInstallFilePath = APPROOT.$sSourceDir.'/installation.xml';
+		if (! is_file($sInstallFilePath)) {
+			$sInstallFilePath = null;
+		}
+
+		$aExtensionDirs = [];
+		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
+			if ($oExtension->bMarkedAsChosen && is_dir($oExtension->sSourceDir)) {
+				$aExtensionDirs []= $oExtension->sSourceDir;
+			}
+		}
+
+		SetupLog::Info(__METHOD__, null, ['ext_dirs' => $aExtensionDirs]);
+		$aModuleIdsToLoad = InstallationChoicesToModuleConverter::GetInstance()->GetModules($aChoices, $aSearchDirs, $sInstallFilePath, $aExtensionDirs);
+		$aModulesToLoad = [];
+		foreach ($aModuleIdsToLoad as $sModuleId) {
+			$oModule = new Module($sModuleId);
+			$sModuleName = $oModule->GetModuleName();
+			$aModulesToLoad[] = $sModuleName;
+		}
+
+		return $aModulesToLoad;
 	}
 }

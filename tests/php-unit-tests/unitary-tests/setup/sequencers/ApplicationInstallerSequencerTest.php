@@ -503,6 +503,6 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 		$this->GivenConfig();
 		$this->GivenRunTimeEnvironment($bStepComputationOnly);
 		$this->oSequencer = new ApplicationInstallSequencer($this->GivenParams($aAdditionalParams), $this->oRunTimeEnvironment);
-		$this->SetNonPublicProperty($this->oSequencer, 'oConfig', $this->oConfig);
+		$this->SetNonPublicProperty($this->oSequencer, 'oTestConfig', $this->oConfig);
 	}
 }

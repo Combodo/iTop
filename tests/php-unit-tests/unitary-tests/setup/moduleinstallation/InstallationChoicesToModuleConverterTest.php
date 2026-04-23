@@ -170,6 +170,109 @@ class InstallationChoicesToModuleConverterTest extends ItopDataTestCase
 		$this->assertEquals($aExpected, $aInstalledModules);
 	}
 
+	private function GivenNewExtensionDir($MainDir, $sExtensionCode, $sModuleCode, $sModuleVersion): string
+	{
+		$sExtDir = "$MainDir/$sExtensionCode";
+
+		mkdir($sExtDir, recursive:true);
+		$sModuleDir = $sExtDir."/$sModuleCode";
+		mkdir($sModuleDir);
+		$sContent = <<<PHP
+<?php
+
+SetupWebPage::AddModule(
+	__FILE__,
+	'$sModuleCode/$sModuleVersion',
+	[
+		'label' => '$sModuleCode',
+		'category' => 'authentication',
+		'dependencies' => [],
+		'mandatory' => true,
+		'visible' => true,
+		'datamodel' => [],
+		'webservice' => [],
+		'data.struct' => [],
+		'data.sample' => [],
+		'doc.manual_setup' => '',
+		'doc.more_information' => '',
+	]
+);
+PHP;
+		file_put_contents($sModuleDir."/module.$sModuleCode.php", $sContent);
+
+		return $sExtDir;
+	}
+
+	//integration
+	public function testGetModules_ComputeAdditionalExtensionDirectories()
+	{
+		$aSearchDirs = $this->GivenModuleDiscoveryInit();
+
+		$MainDir = __DIR__."/ressources/InstallationChoicesToModuleConverterTest";
+		$this->aFileToClean [] = $MainDir;
+		$aExtensionDirs = [
+			//should replace same one in the package
+			$this->GivenNewExtensionDir($MainDir, 'itop-oauth-client', 'itop-oauth-client', '6.6.0'),
+			//not in the package => should be added after installation
+			$this->GivenNewExtensionDir($MainDir, 'shadok', 'gabu-zomeu', '1.2.3'),
+			//same one in the package should remain
+			$this->GivenNewExtensionDir($MainDir, 'itop-files-information', 'itop-files-information', '3.3.0'),
+		];
+
+		$aInstalledModules = InstallationChoicesToModuleConverter::GetInstance()->GetModules(
+			$this->GivenNonItilChoices(),
+			$aSearchDirs,
+			__DIR__.'/ressources/installation.xml',
+			$aExtensionDirs,
+		);
+
+		$aExpected = [
+			'authent-cas/3.3.0',
+			'authent-external/3.3.0',
+			'authent-ldap/3.3.0',
+			'authent-local/3.3.0',
+			'combodo-backoffice-darkmoon-theme/3.3.0',
+			'combodo-backoffice-fullmoon-high-contrast-theme/3.3.0',
+			'combodo-backoffice-fullmoon-protanopia-deuteranopia-theme/3.3.0',
+			'combodo-backoffice-fullmoon-tritanopia-theme/3.3.0',
+			'itop-attachments/3.3.0',
+			'itop-backup/3.3.0',
+			'itop-config/3.3.0',
+			'itop-files-information/3.3.0',
+			'itop-portal-base/3.3.0',
+			'itop-portal/3.3.0',
+			'itop-profiles-itil/3.3.0',
+			'itop-sla-computation/3.3.0',
+			'itop-structure/3.3.0',
+			'itop-themes-compat/3.3.0',
+			'itop-tickets/3.3.0',
+			'itop-welcome-itil/3.3.0',
+			'combodo-db-tools/3.3.0',
+			'itop-config-mgmt/3.3.0',
+			'itop-core-update/3.3.0',
+			'itop-datacenter-mgmt/3.3.0',
+			'itop-endusers-devices/3.3.0',
+			'itop-faq-light/3.3.0',
+			'itop-hub-connector/3.3.0',
+			'itop-knownerror-mgmt/3.3.0',
+			'itop-oauth-client/6.6.0',
+			'itop-request-mgmt/3.3.0',
+			'itop-service-mgmt/3.3.0',
+			'itop-storage-mgmt/3.3.0',
+			'itop-virtualization-mgmt/3.3.0',
+			'itop-bridge-cmdb-services/3.3.0',
+			'itop-bridge-cmdb-ticket/3.3.0',
+			'itop-bridge-datacenter-mgmt-services/3.3.0',
+			'itop-bridge-endusers-devices-services/3.3.0',
+			'itop-bridge-storage-mgmt-services/3.3.0',
+			'itop-bridge-virtualization-mgmt-services/3.3.0',
+			'itop-bridge-virtualization-storage/3.3.0',
+			'itop-change-mgmt/3.3.0',
+			'gabu-zomeu/1.2.3',
+		];
+		$this->assertEquals($aExpected, $aInstalledModules);
+	}
+
 	public function testIsDefaultModule_RootModuleShouldNeverBeDefault()
 	{
 		$sModuleId = ROOT_MODULE;
@@ -423,8 +526,7 @@ class InstallationChoicesToModuleConverterTest extends ItopDataTestCase
 	{
 		$aSearchDirs = [APPROOT.'datamodels/2.x'];
 		$this->SetNonPublicStaticProperty(ModuleDiscovery::class, 'm_aSearchDirs', $aSearchDirs);
-		$aAllModules = $this->GivenAllModules();
-		$this->SetNonPublicStaticProperty(ModuleDiscovery::class, 'm_aModules', $aAllModules);
+		$this->SetNonPublicStaticProperty(ModuleDiscovery::class, 'm_aModules', $this->GivenAllModules());
 		return $aSearchDirs;
 	}
 }

@@ -197,6 +197,7 @@ abstract class ItopTestCase extends KernelTestCase
 			}
 
 			SetupUtils::tidydir($sPath);
+			SetupUtils::rrmdir($sPath);
 		}
 	}
 

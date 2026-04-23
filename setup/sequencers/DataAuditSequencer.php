@@ -68,12 +68,15 @@ class DataAuditSequencer extends StepSequencer
 					if ($this->IsDataAuditRequired()) {
 						return $this->GetNextStep('setup-audit', 'Checking data consistency with the new data model', 70, $sMessage);
 					}
-					return $this->GetNextStep('', 'Completed', 100);
+					return $this->GetNextStep('complete', 'Check Completed', 100);
 
 				case 'setup-audit':
 					if ($this->IsDataAuditRequired()) {
 						$this->oRunTimeEnvironment->DataToCleanupAudit();
 					}
+					return $this->GetNextStep('complete', 'Check Completed', 100);
+
+				case 'complete':
 					return $this->GetNextStep('', 'Completed', 100);
 
 				default:
@@ -93,6 +96,13 @@ class DataAuditSequencer extends StepSequencer
 	protected function IsDataAuditRequired(): bool
 	{
 		if ('install' === $this->oParams->Get('mode')) {
+			return false;
+		}
+
+		$aInstalledInfo = $this->oRunTimeEnvironment->GetApplicationVersion($this->GetConfig());
+		$sInstalledVersion = $aInstalledInfo['product_version'];
+
+		if ($sInstalledVersion !== ITOP_VERSION_FULL) {
 			return false;
 		}
 

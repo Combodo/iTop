@@ -51,7 +51,15 @@ abstract class AbstractSetupAudit
 		return $this->aRemovedClasses;
 	}
 
-	public function GetIssues(bool $bStopDataCheckAtFirstIssue = false): array
+	/**
+	 * Generate issues when audit detects data to remove
+	 *
+	 * @param bool $bStopDataCheckAtFirstIssue
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 */
+	public function RunDataAudit(bool $bStopDataCheckAtFirstIssue = false): array
 	{
 		$this->aFinalClassesToCleanup = [];
 
@@ -64,7 +72,7 @@ abstract class AbstractSetupAudit
 				$iCount = $this->Count($sClass);
 				$this->aFinalClassesToCleanup[$sClass] = $iCount;
 				if ($bStopDataCheckAtFirstIssue && $iCount > 0) {
-					//setup envt: should raise issue ASAP
+					//setup env: should raise issue ASAP
 					$this->LogInfoWithProperLogger("Setup audit found data to cleanup", null, $this->aFinalClassesToCleanup);
 					return $this->aFinalClassesToCleanup;
 				}

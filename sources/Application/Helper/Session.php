@@ -29,7 +29,7 @@ class Session
 			return;
 		}
 
-		if (session_status() === PHP_SESSION_ACTIVE || headers_sent()) {
+		if (self::IsInitialized()) {
 			// Session already started
 			self::$iSessionId = session_id();
 			return;
@@ -192,5 +192,10 @@ class Session
 	public static function GetLog()
 	{
 		return print_r($_SESSION, true);
+	}
+
+	public static function IsInitialized(): bool
+	{
+		return session_status() === PHP_SESSION_ACTIVE || headers_sent();
 	}
 }

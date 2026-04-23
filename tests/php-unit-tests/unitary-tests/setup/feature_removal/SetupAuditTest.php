@@ -54,7 +54,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		$oDryRemovalRuntimeEnvt = new DryRemovalRuntimeEnvironment($this->GetTestEnvironment(), ['nominal_ext1', 'finalclass_ext2']);
 		$oDryRemovalRuntimeEnvt->CompileFrom($this->GetTestEnvironment());
 
-		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment());
+		$oSetupAudit = new SetupAudit($this->GetTestEnvironment());
 
 		$expected = [
 			"Feature1Module1MyClass",
@@ -66,7 +66,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		$expected = [
 			"FinalClassFeature2Module1MyFinalClassFromLocation" => 0,
 		];
-		$this->assertEqualsCanonicalizing($expected, $oSetupAudit->GetIssues());
+		$this->assertEqualsCanonicalizing($expected, $oSetupAudit->RunDataAudit());
 	}
 
 	public function testGetRemovedClassesFromSetupWizard()
@@ -103,7 +103,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 			"FinalClassFeature1Module1MyFinalClassFromLocation" => 1,
 			"FinalClassFeature2Module1MyFinalClassFromLocation" => 0,
 		];
-		$this->assertEqualsCanonicalizing($expected, $oSetupAudit->GetIssues());
+		$this->assertEqualsCanonicalizing($expected, $oSetupAudit->RunDataAudit());
 	}
 
 	public function testAuditExtensionsCleanupRulesFailASAP()
@@ -128,6 +128,6 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		$expected = [
 			"FinalClassFeature1Module1MyFinalClassFromLocation" => 1,
 		];
-		$this->assertEqualsCanonicalizing($expected, $oSetupAudit->GetIssues(true));
+		$this->assertEqualsCanonicalizing($expected, $oSetupAudit->RunDataAudit(true));
 	}
 }

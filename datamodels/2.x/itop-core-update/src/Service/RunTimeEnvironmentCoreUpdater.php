@@ -11,7 +11,6 @@ require_once(APPROOT."setup/runtimeenv.class.inc.php");
 
 use Config;
 use Exception;
-use ModelFactory;
 use RunTimeEnvironment;
 use SetupUtils;
 
@@ -47,11 +46,9 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 	 */
 	public function CheckDirectories($sBuildEnv)
 	{
-		$sBuildDir = APPROOT.'env-'.$sBuildEnv;
-		$sBuildDir = $sBuildDir.'-build';
-
-		self::CheckDirectory($sBuildDir);
-		self::CheckDirectory($sBuildDir);
+		$sCurrentEnvDir = APPROOT.'env-'.$sBuildEnv;
+		self::CheckDirectory($sCurrentEnvDir);
+		self::CheckDirectory($sCurrentEnvDir.'-build');
 	}
 
 	/**
@@ -115,37 +112,4 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 		}
 		throw new Exception('No configuration file available');
 	}
-
-	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir)
-	{
-		$aRet =  parent::GetMFModulesToCompile($sSourceEnv, $sSourceDir);
-
-		// Add new mandatory modules from datamodel 2.x only
-		$sSourceDirFull = APPROOT.$sSourceDir;
-		if (!is_dir($sSourceDirFull)) {
-			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
-		}
-		$aDirsToCompile = [$sSourceDirFull];
-
-		$oFactory = new ModelFactory($aDirsToCompile);
-		$aModules = $oFactory->FindModules();
-		$aAvailableModules = [];
-		/** @var \MFModule $oModule */
-		foreach ($aModules as $oModule) {
-			$aAvailableModules[$oModule->GetName()] = $oModule;
-		}
-		// TODO check the auto-selected modules here
-		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
-			if ($oExtension->bMarkedAsChosen) {
-				foreach ($oExtension->aModules as $sModuleName) {
-					if (!isset($aRet[$sModuleName]) && isset($aAvailableModules[$sModuleName])) {
-						$aRet[$sModuleName] = $aAvailableModules[$sModuleName];
-					}
-				}
-			}
-		}
-
-		return $aRet;
-	}
-
 }

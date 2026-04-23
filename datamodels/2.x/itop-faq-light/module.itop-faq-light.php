@@ -21,6 +21,7 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => [
+			'model.itop-faq-light.php',
 		],
 		'data.struct' => [
 			//'data.struct.itop-knownerror-mgmt.xml',

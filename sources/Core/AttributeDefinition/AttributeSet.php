@@ -213,7 +213,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
 	 *
 	 * @param $proposedValue
-	 * @param DBObject $oHostObj
+	 * @param DBObject|null $oHostObj
 	 *
 	 * @param bool $bIgnoreErrors
 	 *
