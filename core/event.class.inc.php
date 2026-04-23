@@ -176,7 +176,7 @@ class EventNotificationEmail extends EventNotification
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'message', 'trigger_id', 'action_id', 'object_id', 'to', 'cc', 'bcc', 'from', 'subject', 'body', 'attachments']); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', ['date', 'message', 'to', 'subject', 'attachments']); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', ['date', 'message', 'to', 'cc', 'bcc', 'subject', 'attachments']); // Attributes to be displayed for a list
 
 		// Search criteria
 		//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
