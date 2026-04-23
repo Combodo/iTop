@@ -261,7 +261,7 @@ HTML;
 		// add corresponding ckeditor language file
 		// P1 language + country
 		// P2 language
-		$sLanguageFileRelPath = 'node_modules/ckeditor5-itop-build/build/translations/'.$sLanguage.'-'.$sCountry.'.js';
+		$sLanguageFileRelPath = 'node_modules/ckeditor5-itop-build/build/translations/'.$sLanguage.'-'.$sCountry.'.umd.js';
 		if (file_exists(APPROOT.$sLanguageFileRelPath)) {
 			$aJSRelPaths[] = $sLanguageFileRelPath;
 		} else {
