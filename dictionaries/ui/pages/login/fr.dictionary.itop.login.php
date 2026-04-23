@@ -36,7 +36,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:ResetPwd-Ready'               => 'Le mot de passe a bien été changé.',
 	'UI:ResetPwd-Login'               => 'Cliquez ici pour vous connecter...',
 
-	'UI:Login:About'                               => ITOP_APPLICATION.' Powered by Combodo~~',
+	'UI:Login:About'                               => ITOP_APPLICATION.' Powered by Combodo',
 	'UI:Login:ChangeYourPassword'                  => 'Changer de mot de passe',
 	'UI:Login:OldPasswordPrompt'                   => 'Ancien mot de passe',
 	'UI:Login:NewPasswordPrompt'                   => 'Nouveau mot de passe',
