@@ -1672,12 +1672,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/combodo-itop-libs/scssphp.git",
-                "reference": "dde81c0a39d02e8e6fc81b70269747734e16d526"
+                "reference": "5966ac4c6041ec4eb741fdf56dd4cb6eef756399"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/combodo-itop-libs/scssphp/zipball/dde81c0a39d02e8e6fc81b70269747734e16d526",
-                "reference": "dde81c0a39d02e8e6fc81b70269747734e16d526",
+                "url": "https://api.github.com/repos/combodo-itop-libs/scssphp/zipball/5966ac4c6041ec4eb741fdf56dd4cb6eef756399",
+                "reference": "5966ac4c6041ec4eb741fdf56dd4cb6eef756399",
                 "shasum": ""
             },
             "require": {
@@ -1700,7 +1700,7 @@
                 "ext-iconv": "Can be used as fallback when ext-mbstring is not available",
                 "ext-mbstring": "For best performance, mbstring should be installed as it is faster than ext-iconv"
             },
-            "time": "2026-03-23T15:26:59+00:00",
+            "time": "2026-04-23T13:10:31+00:00",
             "bin": [
                 "bin/pscss"
             ],

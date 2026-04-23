@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'combodo/itop',
-        'pretty_version' => 'dev-develop',
-        'version' => 'dev-develop',
-        'reference' => '3ccbfb2b130419fec9d1158836395a13baa0ec4b',
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
+        'reference' => null,
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,9 +22,9 @@
             'dev_requirement' => false,
         ),
         'combodo/itop' => array(
-            'pretty_version' => 'dev-develop',
-            'version' => 'dev-develop',
-            'reference' => '3ccbfb2b130419fec9d1158836395a13baa0ec4b',
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
+            'reference' => null,
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -296,7 +296,7 @@
         'scssphp/scssphp' => array(
             'pretty_version' => 'dev-combodo/1.x',
             'version' => 'dev-combodo/1.x',
-            'reference' => 'dde81c0a39d02e8e6fc81b70269747734e16d526',
+            'reference' => '5966ac4c6041ec4eb741fdf56dd4cb6eef756399',
             'type' => 'library',
             'install_path' => __DIR__ . '/../scssphp/scssphp',
             'aliases' => array(),

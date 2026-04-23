@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1cca58a0e26794fb9c546a001f7f7de8",
+    "content-hash": "24e7507794b971955358df5f2b143ac4",
     "packages": [
         {
             "name": "apereo/phpcas",
@@ -1605,12 +1605,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/combodo-itop-libs/scssphp.git",
-                "reference": "dde81c0a39d02e8e6fc81b70269747734e16d526"
+                "reference": "5966ac4c6041ec4eb741fdf56dd4cb6eef756399"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/combodo-itop-libs/scssphp/zipball/dde81c0a39d02e8e6fc81b70269747734e16d526",
-                "reference": "dde81c0a39d02e8e6fc81b70269747734e16d526",
+                "url": "https://api.github.com/repos/combodo-itop-libs/scssphp/zipball/5966ac4c6041ec4eb741fdf56dd4cb6eef756399",
+                "reference": "5966ac4c6041ec4eb741fdf56dd4cb6eef756399",
                 "shasum": ""
             },
             "require": {
@@ -1680,7 +1680,7 @@
             "support": {
                 "source": "https://github.com/combodo-itop-libs/scssphp/tree/combodo/1.x"
             },
-            "time": "2026-03-23T15:26:59+00:00"
+            "time": "2026-04-23T13:10:31+00:00"
         },
         {
             "name": "soundasleep/html2text",
