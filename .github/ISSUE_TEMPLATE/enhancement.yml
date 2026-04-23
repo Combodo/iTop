@@ -1,5 +1,5 @@
-name: "Enhancement suggestion"
-description: "Suggest an improvement to iTop, with a clear description of the expected behavior and the benefits it would bring. If you identified a bug and have an improvement proposition, please use the 'Bug report' template instead."
+name: "Enhancement suggestion form"
+description: "Suggest an improvement to iTop"
 body:
   - type: markdown
     attributes:
@@ -13,8 +13,8 @@ body:
     attributes:
       label: Are you willing to create (at a later stage) a PR for that?
       options:
-        - Yes
-        - No
+        - 'Yes'
+        - 'No'
     validations:
       required: true
 
@@ -51,4 +51,4 @@ body:
       description: "Add/drag and drop screenshots, logs or any files that can be relevant for your issue."
     validations:
       required: false
-      accept: ".png, .jpg, .jpeg, .gif, .webp, .log, .txt, .json, .csv, .xml, .zip, .tar.gz"
+      accept: ".png, .jpg, .jpeg, .gif, .webp, .log, .txt, .json, .csv, .xml, .zip"
