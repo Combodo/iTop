@@ -12,10 +12,12 @@ You are welcome to create pull requests on any of those subjects:
 
 * 🐛 bug fix
 * 🌐 translation / i18n / l10n
+* 🚸 enhancement
 
-If you want to implement a **new feature**, please [create a corresponding issue](https://github.com/Combodo/iTop/issues) for review.
+But before creating a PR, please [create a corresponding issue][itop-issues] for review.
 We should review within two weeks, and get back to you to indicate if we're interested in your proposal or not.
-If you ever want to begin implementation, do so in a fork, and add a link to the corresponding commits in the ticket.
+If you don't create an issue, you won't know if we're interested in your contribution, and you may spend time coding something that won't be accepted.
+If you ever want to begin implementation, do so in a fork, and add a link to the corresponding commits in the issue.
 
 For all **security related subjects**, please see our [security policy](SECURITY.md).
 
@@ -24,7 +26,7 @@ impact all existing customers, and could prevent them from upgrading!
 Combodo has a long experience of datamodel changes: they are very disruptive!
 This is why we avoid them in iTop core, especially the changes on existing objects/fields.   
 If you have an idea you're sure would benefit to all of iTop users, you may
-[create a corresponding issue](https://github.com/Combodo/iTop/issues) to submit it, but be warned that there are lots of good
+[create a corresponding issue][itop-issues] to submit it, but be warned that there are lots of good
 reasons to refuse such changes.
 
 ### 📄 License and copyright
@@ -38,6 +40,8 @@ Anyhow, you are encouraged to signal your contribution by the mean of `@author` 
 If you want to use another license or keep the code ownership (copyright), you may [create an extension][wiki new ext].
 
 [license.txt]: https://github.com/Combodo/iTop/blob/develop/license.txt
+
+[itop-issues]: https://github.com/Combodo/iTop/issues
 
 [wiki new ext]: https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Astart#by_writing_your_own_extension
 
@@ -63,7 +67,6 @@ And when 3.3.0 will be out:
 - `develop`: future 3.4.0 version
 - `support/3.3`: 3.3.x maintenance version (will host developments for 3.3.1)
 - `support/3.2`: 3.2.x maintenance version
-
 
 ## Coding
 
