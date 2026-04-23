@@ -46,7 +46,6 @@ class CKEditorHelper
 		// configuration
 		$aConfiguration = [
 			'language' => $sLanguage,
-			'maximize' => [],
 			'detectChanges' => [
 				'initialValue' => $sInitialValue,
 			],
