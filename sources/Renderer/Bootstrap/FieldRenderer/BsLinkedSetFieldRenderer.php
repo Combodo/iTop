@@ -852,7 +852,7 @@ JS
 						'object_class'  => $sClass,
 						'object_id'  => $oItem->GetKey(),
 						'attribute_code' => $sAttCode,
-						'attribute_type' => get_class($oAttDef),
+						'attribute_type' => $oAttDef->GetType(),
 				];
 				// - Value raw
 				// For simple fields, we get the raw (stored) value as well

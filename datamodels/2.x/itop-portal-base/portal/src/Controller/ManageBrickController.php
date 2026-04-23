@@ -689,6 +689,7 @@ class ManageBrickController extends BrickController
 							$sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
 							$sSortValue = $oCurrentRow->Get($sItemAttr);
 						}
+						$sAttType = $oAttDef->GetType();
 						unset($oAttDef);
 
 						// For simple fields, we get the raw (stored) value as well
@@ -705,7 +706,7 @@ class ManageBrickController extends BrickController
 							'object_class' => $sCurrentObjectClass,
 							'object_id' => $sCurrentObjectId,
 							'attribute_code' => $sItemAttr,
-							'attribute_type' => $sAttDefClass,
+							'attribute_type' => $sAttType,
 							'value_raw' => $attValueRaw,
 							'value_html' => $sValue,
 							'sort_value' => $sSortValue,

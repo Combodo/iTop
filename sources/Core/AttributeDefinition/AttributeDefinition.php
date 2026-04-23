@@ -1095,7 +1095,7 @@ abstract class AttributeDefinition
 
 		// Metadata
 		$oFormField->AddMetadata('attribute-code', $this->GetCode());
-		$oFormField->AddMetadata('attribute-type', get_class($this));
+		$oFormField->AddMetadata('attribute-type', $this->GetType());
 		$oFormField->AddMetadata('attribute-label', $this->GetLabel());
 		// - Attribute flags
 		$aPossibleAttFlags = MetaModel::EnumPossibleAttributeFlags();
