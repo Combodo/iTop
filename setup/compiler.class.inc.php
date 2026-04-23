@@ -1562,14 +1562,7 @@ EOF;
 			foreach ($aStatesOrder as $sState => $foo) {
 				$oState = $aStates[$sState];
 				$oInitialStatePath = $oState->GetOptionalElement('initial_state_path');
-				if ($oInitialStatePath) {
-					$aInitialStatePath = [];
-					foreach ($oInitialStatePath->getElementsByTagName('state_ref') as $oIntermediateState) {
-						$aInitialStatePath[] = "'".$oIntermediateState->GetText()."'";
-					}
-					$sInitialStatePath = 'Array('.implode(', ', $aInitialStatePath).')';
-				}
-
+				
 				$sLifecycle .= "		MetaModel::Init_DefineState(\n";
 				$sLifecycle .= "			\"".$sState."\",\n";
 				$sLifecycle .= "			array(\n";
@@ -1597,6 +1590,11 @@ EOF;
 
 				$sLifecycle .= "				),\n";
 				if (!is_null($oInitialStatePath)) {
+					$aInitialStatePath = [];
+					foreach ($oInitialStatePath->getElementsByTagName('state_ref') as $oIntermediateState) {
+						$aInitialStatePath[] = "'".$oIntermediateState->GetText()."'";
+					}
+					$sInitialStatePath = 'Array('.implode(', ', $aInitialStatePath).')';
 					$sLifecycle .= "				\"initial_state_path\" => $sInitialStatePath,\n";
 				}
 				$sLifecycle .= "			)\n";
@@ -2487,6 +2485,8 @@ EOF
 
 		// Generate SCSS declaration
 		$sScss = "";
+		$sMainColorCssVariableName = null;
+		$sComplementaryColorCssVariableName = null;
 		if ($bHasAtLeastOneColor) {
 			if ($bHasMainColor) {
 				$sMainColorScssVariableName = "\$$sCssRegularClass--main-color";
@@ -2503,8 +2503,10 @@ EOF
 				$sCssAlternativeClassComplementaryColorDeclaration = "--ibo-complementary-color: #{{$sMainColorScssVariableName}};";
 			} else {
 				$sMainColorScssVariableDeclaration = null;
+				$sMainColorCssVariableDeclaration = null;
 
 				$sCssRegularClassMainColorDeclaration = null;
+				$sCssRegularClassMainColor100Declaration = null;
 				$sCssRegularClassMainColor900Declaration = null;
 
 				$sCssAlternativeClassComplementaryColorDeclaration = null;
@@ -3358,6 +3360,7 @@ EOF;
 		clearstatcache();
 
 		$iDataXmlFileLastModified = 0;
+		$sDataXmlProvidedPrecompiledFile = '';
 		if (!empty($sPrecompiledFileUri)) {
 			$sDataXmlProvidedPrecompiledFile = $sTempTargetDir.DIRECTORY_SEPARATOR.$sPrecompiledFileUri;
 			$bDataXmlPrecompiledFileExists = file_exists($sDataXmlProvidedPrecompiledFile) ;
@@ -3371,7 +3374,6 @@ EOF;
 					APPROOT.DIRECTORY_SEPARATOR.'extensions/',
 				];
 
-				$iDataXmlFileLastModified = 0;
 				foreach ($aDirToCheck as $sDir) {
 					$sCurrentFile = $sDir.DIRECTORY_SEPARATOR.$sPrecompiledFileUri;
 					if (is_file($sCurrentFile)) {

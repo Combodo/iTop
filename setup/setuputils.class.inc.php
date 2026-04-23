@@ -58,7 +58,7 @@ class CheckResult
 
 	/**
 	 * @param \CheckResult[] $aResults
-	 * @param string[] $aCheckResultSeverities list of CheckResult object severities to keep
+	 * @param array $aCheckResultSeverities list of CheckResult object severities to keep
 	 *
 	 * @return \CheckResult[] only elements that have one of the passed severity
 	 *
@@ -458,6 +458,7 @@ class SetupUtils
 			);
 
 			$sPhpNextMinVersion = self::PHP_NEXT_MIN_VERSION; // mandatory before PHP 5.5 (arbitrary expressions), keeping compat because we're in the setup !
+			// @phpstan-ignore empty.variable
 			if (!empty($sPhpNextMinVersion)) {
 				if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>=')) {
 					$aResult[] = new CheckResult(
@@ -1351,6 +1352,7 @@ EOF
 			);
 
 			$sMySqlNextMinVersion = self::MYSQL_NEXT_MIN_VERSION; // mandatory before PHP 5.5 (arbitrary expressions), keeping compat because we're in the setup !
+			// @phpstan-ignore empty.variable
 			if (!empty($sMySqlNextMinVersion)) {
 				if (version_compare($sDBVersion, self::MYSQL_NEXT_MIN_VERSION, '>=')) {
 					$aResult['checks'][] = new CheckResult(
@@ -1675,8 +1677,8 @@ JS
 	 * @param string $sSourceDir Relative path to the directory to check under $sBaseDir
 	 * @param $aManifest
 	 * @param array $aExcludeNames
-	 * @param Hash $aResult Used for recursion
-	 * @return hash Hash array ('added' => array(), 'removed' => array(), 'modified' => array())
+	 * @param array $aResult Used for recursion
+	 * @return array array ('added' => array(), 'removed' => array(), 'modified' => array())
 	 * @internal param array $aDOMManifest Array of array('path' => relative_path 'size'=> iSize, 'md5' => sHexMD5)
 	 */
 	public static function CheckDirAgainstManifest($sBaseDir, $sSourceDir, $aManifest, $aExcludeNames = ['.svn', '.git'], $aResult = null)
@@ -1801,7 +1803,7 @@ JS
 	/**
 	 * @param string $sInstalledVersion
 	 * @param string $sSourceDir
-	 * @return bool|hash
+	 * @return bool|array
 	 * @throws Exception
 	 */
 	public static function CheckVersion($sInstalledVersion, $sSourceDir)

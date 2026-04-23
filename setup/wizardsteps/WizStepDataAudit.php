@@ -64,7 +64,7 @@ class WizStepDataAudit extends WizStepInstall
 		return false;
 	}
 
-	public function Display(WebPage $oPage)
+	public function Display(SetupPage $oPage): void
 	{
 
 		$aInstallParams = $this->BuildConfig();

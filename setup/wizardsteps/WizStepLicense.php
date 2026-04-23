@@ -60,9 +60,9 @@ class WizStepLicense extends WizardStep
 	}
 
 	/**
-	 * @param WebPage $oPage
+	 * @param \SetupPage $oPage
 	 */
-	public function Display(WebPage $oPage)
+	public function Display(SetupPage $oPage): void
 	{
 		$aLicenses = SetupUtils::GetLicenses();
 		$oPage->add_style(

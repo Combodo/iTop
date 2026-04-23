@@ -44,7 +44,7 @@ class WizStepAdminAccount extends WizardStep
 		return new WizardState(WizStepInstallMiscParams::class);
 	}
 
-	public function Display(WebPage $oPage)
+	public function Display(SetupPage $oPage): void
 	{
 		$sAdminUser = $this->oWizard->GetParameter('admin_user', 'admin');
 		$sAdminPwd = $this->oWizard->GetParameter('admin_pwd', '');

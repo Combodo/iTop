@@ -44,7 +44,7 @@ class WizStepInstallMiscParams extends AbstractWizStepMiscParams
 		return new WizardState(WizStepModulesChoice::class, 'start_install');
 	}
 
-	public function Display(WebPage $oPage)
+	public function Display(SetupPage $oPage): void
 	{
 		$sDefaultLanguage = $this->oWizard->GetParameter('default_language', $this->oWizard->GetParameter('admin_language'));
 		$sApplicationURL = $this->oWizard->GetParameter('application_url', utils::GetDefaultUrlAppRoot(true));

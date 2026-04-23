@@ -37,4 +37,5 @@ parameters:
             - ../../../env-toolkit (?)              # Irrelevent as it will either already be in `env-production` or might be desynchronized from `env-production` (for local run only, not useful in the CI)
 
             - ../../../tests (?)                    # Exclude tests for now
-            - ../../../toolkit (?)                  # Exlclude toolkit for now
+            - ../../../toolkit (?)                  # Exclude toolkit for now
+            - ../../../setup/compat                 # Exclude fake DOMDocument & DOMElement declarations

@@ -73,7 +73,7 @@ class iTopExtension
 	public $bVisible;
 
 	/**
-	 * @var string[]
+	 * @var array
 	 */
 	public $aModules;
 
@@ -83,7 +83,7 @@ class iTopExtension
 	public $aModuleVersion;
 
 	/**
-	 * @var string[]
+	 * @var array
 	 */
 	public $aModuleInfo;
 
@@ -94,7 +94,7 @@ class iTopExtension
 
 	/**
 	 *
-	 * @var string[]
+	 * @var array
 	 */
 	public $aMissingDependencies;
 	/**

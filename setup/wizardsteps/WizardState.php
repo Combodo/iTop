@@ -2,7 +2,7 @@
 
 class WizardState
 {
-	public function __construct($sNextStep, $sCurrentState = '')
+	public function __construct(string $sNextStep, string $sCurrentState = '')
 	{
 		$this->sNextStep = $sNextStep;
 		$this->sCurrentState = $sCurrentState;

@@ -65,7 +65,7 @@ class WizStepSummary extends AbstractWizStepInstall
 		return new WizardState(WizStepInstall::class);
 	}
 
-	public function Display(WebPage $oPage)
+	public function Display(SetupPage $oPage): void
 	{
 
 		$aInstallParams = $this->BuildConfig();
@@ -100,7 +100,7 @@ class WizStepSummary extends AbstractWizStepInstall
 		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Extensions to be uninstalled">Extensions to be uninstalled</a>');
 
 		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('removed_extensions'), true) ?? [];
-		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable'));
+		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable')) ?? [];
 		if (count($aExtensionsRemoved) > 0) {
 			$sExtensionsRemoved = '<ul>';
 			foreach ($aExtensionsRemoved as $sExtensionCode => $sLabel) {

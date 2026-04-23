@@ -145,7 +145,7 @@ class WizStepModulesChoice extends WizardStep
 			throw new Exception('Internal error: invalid step "'.$index.'" for the choice of modules.');
 		} elseif ($bMoveForward) {
 			if ($this->GetStepInfo(1 + $index) != null) {
-				return new WizardState(WizStepModulesChoice::class, (1 + $index));
+				return new WizardState(WizStepModulesChoice::class, (string)($index +1));
 			} else {
 				// Exiting this step of the wizard, let's convert the selection into a list of modules
 				$aModules = [];
@@ -173,10 +173,10 @@ class WizStepModulesChoice extends WizardStep
 
 		}
 		//Unused when going backward
-		return new WizardState(WizStepModulesChoice::class, ($index - 1));
+		return new WizardState(WizStepModulesChoice::class, (string)($index - 1));
 	}
 
-	public function Display(WebPage $oPage)
+	public function Display(SetupPage $oPage): void
 	{
 		$this->DisplayStep($oPage);
 	}
@@ -390,14 +390,12 @@ EOF
 			}
 
 			if (isset($aChoice['sub_options'])) {
-				$aScores[$sChoiceId] = array_merge($aScores[$sChoiceId], $this->GuessDefaultsFromModules($aChoice['sub_options'], $aDefaults, $sChoiceId));
+				$aScores[$sChoiceId] = array_merge($aScores[$sChoiceId], $this->GuessDefaultsFromModules($aChoice['sub_options'], $aDefaults, $aModules, $sChoiceId));
 			}
-			$index++;
 		}
 
 		$aAlternatives = isset($aInfo['alternatives']) ? $aInfo['alternatives'] : [];
 		$sChoiceName = null;
-		$sChoiceIdNone = null;
 		foreach ($aAlternatives as $index => $aChoice) {
 			$sChoiceId = $sParentId.self::$SEP.$index;
 			$aScores[$sChoiceId] = [];
@@ -413,7 +411,6 @@ EOF
 					$aScores[$sChoiceId] = $this->GuessDefaultsFromModules($aChoice['sub_options'], $aDefaults, $aModules, $sChoiceId);
 				}
 			}
-			$index++;
 		}
 
 		$iMaxScore = 0;
@@ -517,7 +514,7 @@ EOF
 					foreach ($aChoice['modules'] as $sModuleId) {
 						$bSelected = true;
 						if (isset($aModuleInfo[$sModuleId])) {
-							// Test if module has 'auto_select'
+							/** @var array $aCurrentModuleInfo */
 							$aCurrentModuleInfo = $aModuleInfo[$sModuleId];
 							if (isset($aCurrentModuleInfo['auto_select'])) {
 								// Check the module selection
@@ -760,9 +757,6 @@ EOF
 
 		foreach ($aAlternatives as $index => $aChoice) {
 			$sChoiceId = $sParentId.self::$SEP.$index;
-			if ($sChoiceName === null) {
-				$sChoiceName = $sChoiceId; // All radios share the same name
-			}
 			$bSelected = isset($aSelectedComponents[$sChoiceName]) && ($aSelectedComponents[$sChoiceName] === $sChoiceId);
 			if (!isset($aSelectedComponents[$sChoiceName]) && ($sChoiceIdNone !== null)) {
 				// No choice selected, select the "None" option
