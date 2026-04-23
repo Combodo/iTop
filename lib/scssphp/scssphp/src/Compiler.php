@@ -10516,7 +10516,7 @@ TXT;
         $difference=array();
         foreach($array1 as $key => $value) {
             if(is_array($value) && isset($array2[$key])){ // it's an array and both have the key
-                $new_diff = diff_recursive($value, $array2[$key]);
+                $new_diff = $this->diff_recursive($value, $array2[$key]);
                 if( !empty($new_diff) )
                     $difference[$key] = $new_diff;
             } else if(is_string($value) && !in_array($value, $array2)) { // the value is a string and it's not in array B

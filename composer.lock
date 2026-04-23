@@ -1592,12 +1592,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/combodo-itop-libs/scssphp.git",
-                "reference": "5966ac4c6041ec4eb741fdf56dd4cb6eef756399"
+                "reference": "6820f035182a956c355cbfa7882d90f1198a208b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/combodo-itop-libs/scssphp/zipball/5966ac4c6041ec4eb741fdf56dd4cb6eef756399",
-                "reference": "5966ac4c6041ec4eb741fdf56dd4cb6eef756399",
+                "url": "https://api.github.com/repos/combodo-itop-libs/scssphp/zipball/6820f035182a956c355cbfa7882d90f1198a208b",
+                "reference": "6820f035182a956c355cbfa7882d90f1198a208b",
                 "shasum": ""
             },
             "require": {
@@ -1667,7 +1667,7 @@
             "support": {
                 "source": "https://github.com/combodo-itop-libs/scssphp/tree/combodo/1.x"
             },
-            "time": "2026-04-23T13:10:31+00:00"
+            "time": "2026-04-23T14:20:24+00:00"
         },
         {
             "name": "soundasleep/html2text",
