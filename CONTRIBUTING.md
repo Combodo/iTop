@@ -148,4 +148,4 @@ We have one sticker per contribution type. You might get multiple stickers with 
 
 Here is the design of each sticker:
 
-![iTop stickers](.doc/contributing-guide/2026.contributing-stickers-side-by-side.png)
+![iTop stickers](.doc/contributing-guide/contributing-stickers-side-by-side.png)
