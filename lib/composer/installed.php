@@ -294,7 +294,7 @@
         'scssphp/scssphp' => array(
             'pretty_version' => 'dev-combodo/1.x',
             'version' => 'dev-combodo/1.x',
-            'reference' => 'dde81c0a39d02e8e6fc81b70269747734e16d526',
+            'reference' => '5966ac4c6041ec4eb741fdf56dd4cb6eef756399',
             'type' => 'library',
             'install_path' => __DIR__ . '/../scssphp/scssphp',
             'aliases' => array(),
