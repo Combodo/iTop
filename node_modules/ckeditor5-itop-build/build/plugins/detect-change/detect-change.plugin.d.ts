@@ -1,4 +1,4 @@
-import { Plugin, type Editor } from 'ckeditor5/src/core.js';
+import { Plugin, type Editor } from '@ckeditor/ckeditor5-core';
 /**
  * DetectChanges Plugin.
  *
