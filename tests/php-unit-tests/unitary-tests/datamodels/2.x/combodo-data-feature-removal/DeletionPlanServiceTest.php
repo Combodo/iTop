@@ -14,7 +14,7 @@ use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use DeletionPlan;
 
 /**
- * Unit tests for the DeletionPlanService class in the Combodo Data Feature Removal module.
+ * Unit tests for the DeletionPlanService cf Combodo Data Feature Removal module.
  *
  * These tests cover:
  * - GetDeletionPlanSummary method: handling null and empty input, and verifying summary output for various delete/update scenarios.
@@ -34,12 +34,6 @@ use DeletionPlan;
  */
 class DeletionPlanServiceTest extends ItopCustomDatamodelTestCase
 {
-	protected function setUp(): void
-	{
-		parent::setUp();
-		$this->RequireOnceItopFile('env-production/combodo-data-feature-removal/vendor/autoload.php');
-	}
-
 	//--- GetDeletionPlanSummary tests ---
 
 	/**
@@ -255,8 +249,6 @@ class DeletionPlanServiceTest extends ItopCustomDatamodelTestCase
 	 */
 	public function testExecuteDeletionPlanThrowsExceptionWhenIssuesExist(): void
 	{
-		$this->RequireOnceItopFile('env-production/combodo-data-feature-removal/src/Helper/DataFeatureRemovalException.php');
-
 		$oDeletionPlan = $this->createMock(DeletionPlan::class);
 		$oDeletionPlan->method('GetIssues')->willReturn(['Some issue']);
 		$oDeletionPlan->method('ListDeletes')->willReturn([]);

@@ -20,12 +20,14 @@ class DataFeatureRemovalBackgroundTask implements iBackgroundProcess
 	 */
 	public function Process($iUnixTimeLimit)
 	{
+		$iCount = 0;
 		while ($oBackgroundOperation = BackgroundOperationService::GetInstance()->GetNext()) {
 			$aClasses = BackgroundOperationService::GetInstance()->GetClasses($oBackgroundOperation);
 			$aRes = DeletionPlanService::GetInstance()->ExecuteDeletionPlan($aClasses, $iUnixTimeLimit);
+
 			IssueLog::Info(__METHOD__, null, $aRes);
 
-			IssueLog::Info(__METHOD__, null, [
+			IssueLog::Debug(__METHOD__, null, [
 				'$iUnixTimeLimit' => $iUnixTimeLimit,
 				'time' => time(),
 				'timeout reached' => DataFeatureRemovalHelper::IsTimeLimitExceeded($iUnixTimeLimit),
@@ -33,12 +35,14 @@ class DataFeatureRemovalBackgroundTask implements iBackgroundProcess
 
 			if (DataFeatureRemovalHelper::IsTimeLimitExceeded($iUnixTimeLimit)) {
 				//timeout reached
-				return;
+				return "Handled $iCount operations.";
 			}
 
 			//execution finished before timeout: nothing left to remove
 			$oBackgroundOperation->DBDelete();
+			$iCount++;
 		}
 
+		return "Handled $iCount operations.";
 	}
 }
