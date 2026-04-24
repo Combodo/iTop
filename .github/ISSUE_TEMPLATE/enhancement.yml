@@ -1,38 +1,13 @@
-name: "Enhancement suggestion form"
+name: "Enhancement suggestion"
 description: "Suggest an improvement to iTop"
+type: feature
 body:
   - type: markdown
     attributes:
       value: |
         Please explain why you're creating this issue :
-        - Are you willing to create a PR for this enhancement ? If so, we'll indicate in the issue if we're interested in it.
-        - Then, please describe what's your improvement proposition.
-
-  - type: dropdown
-    id: willing_to_pr
-    attributes:
-      label: Are you willing to create (at a later stage) a PR for that?
-      options:
-        - 'Yes'
-        - 'No'
-    validations:
-      required: true
-
-  - type: input
-    id: itop_version
-    attributes:
-      label: iTop version
-      description: "Complete iTop version (e.g., 3.2.3)"
-    validations:
-      required: false
-
-  - type: input
-    id: php_version
-    attributes:
-      label: PHP version
-      description: "Complete PHP version (e.g., 8.4.20)"
-    validations:
-      required: false
+        - Please describe what's your improvement proposition.
+        - Then tell us if you're willing to create a PR for this enhancement ? If so, we'll indicate in the issue if we're interested in it.
 
   - type: textarea
     id: enhancement_details
@@ -43,6 +18,32 @@ body:
         If it requires a custom datamodel, provide the minimal XML delta to reproduce it.
     validations:
       required: false
+
+  - type: input
+    id: itop_version
+    attributes:
+      label: iTop version (if appropriate)
+      description: "Complete iTop version (e.g., 3.2.3)"
+    validations:
+      required: false
+
+  - type: input
+    id: php_version
+    attributes:
+      label: PHP version (if appropriate)
+      description: "Complete PHP version (e.g., 8.4.20)"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: willing_to_pr
+    attributes:
+      label: Are you willing to create (at a later stage) a PR for that?
+      options:
+        - 'Yes'
+        - 'No'
+    validations:
+      required: true
 
   - type: upload
     id: additional_info
