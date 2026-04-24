@@ -714,6 +714,125 @@ class ObjectController extends BrickController
 		return $oResponse;
 	}
 
+	public function GetColumnsFromAttributeAction(Request $oRequest, $sTargetAttCode, $sHostObjectClass, $sHostObjectId = null)
+	{
+		$sFinalClass = $this->oRequestManipulatorHelper->ReadParam('finalclass', null, FILTER_UNSAFE_RAW);
+		/** @var array $aCombodoPortalInstanceConf */
+		$aCombodoPortalInstanceConf = $this->getParameter('combodo.portal.instance.conf');
+
+		$aData = [
+			'sMode'             => 'search_regular',
+			'sTargetAttCode'    => $sTargetAttCode,
+			'sHostObjectClass'  => $sHostObjectClass,
+			'sHostObjectId'     => $sHostObjectId,
+			'sActionRulesToken' => $this->oRequestManipulatorHelper->ReadParam('ar_token', ''),
+		];
+
+		// Checking security layers
+		if (!$this->oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sHostObjectClass, $sHostObjectId)) {
+			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to read '.$sHostObjectClass.'::'.$sHostObjectId.' object.');
+			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+		}
+
+		// Retrieving host object for future DBSearch parameters
+		if ($sHostObjectId !== null) {
+			// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
+			$oHostObject = MetaModel::GetObject($sHostObjectClass, $sHostObjectId, true, true);
+		} else {
+			$oHostObject = MetaModel::NewObject($sHostObjectClass);
+			// Retrieving action rules
+			//
+			// Note : The action rules must be a base64-encoded JSON object, this is just so users are tempted to changes values.
+			// But it would not be a security issue as it only presets values in the form.
+			$aActionRules = !empty($aData['sActionRulesToken']) ? ContextManipulatorHelper::DecodeRulesToken($aData['sActionRulesToken']) : [];
+			// Preparing object
+			$this->oContextManipulatorHelper->PrepareObject($aActionRules, $oHostObject);
+		}
+
+		// Updating host object with form data / values
+		$sFormManagerClass = $this->oRequestManipulatorHelper->ReadParam('formmanager_class', '', FILTER_UNSAFE_RAW);
+		$sFormManagerData = $this->oRequestManipulatorHelper->ReadParam('formmanager_data', '', FILTER_UNSAFE_RAW);
+		if (!empty($sFormManagerClass) && !empty($sFormManagerData)) {
+			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
+			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
+			$oFormManager->SetObjectFormHandlerHelper($this->oObjectFormHandlerHelper);
+			$oFormManager->SetObject($oHostObject);
+
+			// Applying action rules if present
+			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== '')) {
+				$aActionRules = ContextManipulatorHelper::DecodeRulesToken($oFormManager->GetActionRulesToken());
+				$oObj = $oFormManager->GetObject();
+				$this->oContextManipulatorHelper->PrepareObject($aActionRules, $oObj);
+				$oFormManager->SetObject($oObj);
+			}
+
+			// Updating host object
+			$oFormManager->OnUpdate([
+				'currentValues' => $this->oRequestManipulatorHelper->ReadParam('current_values', [], FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY),
+			]);
+			$oHostObject = $oFormManager->GetObject();
+		}
+
+		// Retrieving request parameters
+		$sFieldId = $this->oRequestManipulatorHelper->ReadParam('sFieldId', '');
+
+		// Building search query
+		// - Retrieving target object class from attcode
+		$oTargetAttDef = MetaModel::GetAttributeDef($sHostObjectClass, $sTargetAttCode);
+		if ($oTargetAttDef->IsExternalKey()) {
+			/** @var \AttributeExternalKey $oTargetAttDef */
+			$sTargetObjectClass = $oTargetAttDef->GetTargetClass();
+		} elseif ($oTargetAttDef->IsLinkSet()) {
+			/** @var \AttributeLinkedSet $oTargetAttDef */
+			if (!$oTargetAttDef->IsIndirect()) {
+				$sTargetObjectClass = $oTargetAttDef->GetLinkedClass();
+			} else {
+				/** @var \AttributeLinkedSetIndirect $oTargetAttDef */
+				/** @var \AttributeExternalKey $oRemoteAttDef */
+				$oRemoteAttDef = MetaModel::GetAttributeDef($oTargetAttDef->GetLinkedClass(), $oTargetAttDef->GetExtKeyToRemote());
+				$sTargetObjectClass = $oRemoteAttDef->GetTargetClass();
+			}
+		} elseif ($oTargetAttDef->GetEditClass() === 'CustomFields') {
+			$oRequestTemplate = $oHostObject->Get($sTargetAttCode);
+			/** @var \DBSearch $oTemplateFieldSearch */
+			$oTemplateFieldSearch = $oRequestTemplate->GetForm()->GetField('user_data')->GetForm()->GetField($sFieldId)->GetSearch();
+			$sTargetObjectClass = $oTemplateFieldSearch->GetClass();
+		} else {
+			throw new Exception('Search from attribute can only apply on AttributeExternalKey or AttributeLinkedSet objects, '.get_class($oTargetAttDef).' given.');
+		}
+		if (!empty($sFinalClass)) {
+			if (!MetaModel::IsParentClass($sTargetObjectClass, $sFinalClass)) {
+				throw new Exception('The finalclass parameter should be a child class of the target object class');
+			}
+		} else {
+			$sFinalClass = $sTargetObjectClass;
+		}
+
+		// - Retrieving class attribute list
+		$aAttCodes = ApplicationHelper::GetLoadedListFromClass($aCombodoPortalInstanceConf['lists'], $sFinalClass, 'list');
+		// - Adding friendlyname attribute to the list is not already in it
+		$sTitleAttCode = 'friendlyname';
+		if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodes)) {
+			$aAttCodes = array_merge([$sTitleAttCode], $aAttCodes);
+		}
+
+		// Retrieving results
+		// - Retrieving columns properties
+		$aColumnProperties = [];
+		foreach ($aAttCodes as $sAttCode) {
+			$oAttDef = MetaModel::GetAttributeDef($sFinalClass, $sAttCode);
+			$aColumnProperties[$sAttCode] = [
+				'title' => $oAttDef->GetLabel(),
+			];
+		}
+
+		// Preparing response
+		$aData = $aData + [
+				'levelsProperties' => $aColumnProperties,
+			];
+
+		return new JsonResponse($aData);
+	}
 	/**
 	 * Handles the regular (table) search from an attribute
 	 *
@@ -737,6 +856,7 @@ class ObjectController extends BrickController
 	 */
 	public function SearchFromAttributeAction(Request $oRequest, $sTargetAttCode, $sHostObjectClass, $sHostObjectId = null)
 	{
+		$sFinalClass = $this->oRequestManipulatorHelper->ReadParam('finalclass', null, FILTER_UNSAFE_RAW);
 		/** @var array $aCombodoPortalInstanceConf */
 		$aCombodoPortalInstanceConf = $this->getParameter('combodo.portal.instance.conf');
 
@@ -826,9 +946,16 @@ class ObjectController extends BrickController
 		} else {
 			throw new Exception('Search from attribute can only apply on AttributeExternalKey or AttributeLinkedSet objects, '.get_class($oTargetAttDef).' given.');
 		}
+		if (utils::IsNotNullOrEmptyString($sFinalClass)) {
+			if (!MetaModel::IsParentClass($sTargetObjectClass, $sFinalClass)) {
+				throw new Exception('The finalclass parameter should be a child class of the target object class');
+			}
+		} else {
+			$sFinalClass = $sTargetObjectClass;
+		}
 
 		// - Retrieving class attribute list
-		$aAttCodes = ApplicationHelper::GetLoadedListFromClass($aCombodoPortalInstanceConf['lists'], $sTargetObjectClass, 'list');
+		$aAttCodes = ApplicationHelper::GetLoadedListFromClass($aCombodoPortalInstanceConf['lists'], $sFinalClass, 'list');
 		// - Adding friendlyname attribute to the list is not already in it
 		$sTitleAttCode = 'friendlyname';
 		if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodes)) {
@@ -838,10 +965,10 @@ class ObjectController extends BrickController
 		// - Retrieving scope search
 		// Note : This do NOT apply to custom fields as the portal administrator is not supposed to know which objects will be put in the templates.
 		// It is the responsibility of the template designer to write the right query so the user see only what he should.
-		$oScopeSearch = $this->oScopeValidatorHelper->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ);
+		$oScopeSearch = $this->oScopeValidatorHelper->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sFinalClass, UR_ACTION_READ);
 		$aInternalParams = [];
 		if (($oScopeSearch === null) && ($oTargetAttDef->GetEditClass() !== 'CustomFields')) {
-			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' has no scope query for '.$sTargetObjectClass.' class.');
+			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' has no scope query for '.$sFinalClass.' class.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -855,7 +982,9 @@ class ObjectController extends BrickController
 			// Note : $oTemplateFieldSearch has been defined in the "Retrieving target object class from attcode" part, it is not available otherwise
 			$oSearch = $oTemplateFieldSearch;
 		}
-
+		if ($sFinalClass != $sTargetObjectClass) {
+			$oSearch->AddCondition('finalclass', $sFinalClass, '=');
+		}
 		// - Filtering objects to ignore
 		if (($aObjectIdsToIgnore !== null) && (is_array($aObjectIdsToIgnore))) {
 			//$oSearch->AddConditionExpression('id', $aObjectIdsToIgnore, 'NOT IN');
@@ -877,7 +1006,7 @@ class ObjectController extends BrickController
 			/** @noinspection SlowArrayOperationsInLoopInspection */
 			for ($i = 0; $i < count($aAttCodes); $i++) {
 				// Checking if the current attcode is an external key in order to search on the friendlyname
-				$oAttDef = MetaModel::GetAttributeDef($sTargetObjectClass, $aAttCodes[$i]);
+				$oAttDef = MetaModel::GetAttributeDef($sFinalClass, $aAttCodes[$i]);
 				$sAttCode = (!$oAttDef->IsExternalKey()) ? $aAttCodes[$i] : $aAttCodes[$i].'_friendlyname';
 				// Building expression for the current attcode
 				// - For attributes that need conversion from their display value to storage value
@@ -933,38 +1062,25 @@ class ObjectController extends BrickController
 			}
 		}
 
-		// Retrieving results
-		// - Preparing object set
-		$oSet = new DBObjectSet($oSearch, [], $aInternalParams);
-		$oSet->OptimizeColumnLoad([$oSearch->GetClassAlias() => $aAttCodes]);
-		$oSet->SetLimit($iListLength, $iListLength * ($iPageNumber - 1));
 		// - Retrieving columns properties
 		$aColumnProperties = [];
 		foreach ($aAttCodes as $sAttCode) {
-			$oAttDef = MetaModel::GetAttributeDef($sTargetObjectClass, $sAttCode);
+			$oAttDef = MetaModel::GetAttributeDef($sFinalClass, $sAttCode);
 			$aColumnProperties[$sAttCode] = [
 				'title' => $oAttDef->GetLabel(),
 			];
-		}
-		// - Retrieving objects
-		$aItems = [];
-		while ($oItem = $oSet->Fetch()) {
-			$aItems[] = $this->PrepareObjectInformation($oItem, $aAttCodes);
 		}
 
 		// Preparing response
 		if ($bInitialPass) {
 			$aData = $aData + [
+					'sParentClass' => $sTargetObjectClass,
 					'form' => [
 						'id' => 'object_search_form_'.time(),
 						'title' => Dict::Format('Brick:Portal:Object:Search:Regular:Title', $oTargetAttDef->GetLabel()),
 						'title_complement' => MetaModel::GetName($sTargetObjectClass),
 					],
 					'aColumnProperties' => json_encode($aColumnProperties),
-					'aResults' => [
-						'aItems' => json_encode($aItems),
-						'iCount' => count($aItems),
-					],
 					'bMultipleSelect' => $oTargetAttDef->IsLinkSet(),
 					'aSource' => [
 						'sFormPath' => $sFormPath,
@@ -974,7 +1090,19 @@ class ObjectController extends BrickController
 						'sFormManagerData' => $sFormManagerData,
 					],
 				];
-
+			if (MetaModel::HasChildrenClasses($sTargetObjectClass)) {
+				$aEnumChildClasses = \MetaModel::EnumChildClasses('FunctionalCI');
+				$aChildClasses = [];
+				foreach ($aEnumChildClasses as $sClassName) {
+					$aChildClasses[$sClassName] = MetaModel::GetName($sClassName);
+				}
+				$aData = $aData + [
+						'bHasSubClasses' => true,
+						'aSubClasses'    => $aChildClasses,
+					];
+			} else {
+				$aData = $aData + ['bHasSubClasses' => false];
+			}
 			if ($oRequest->isXmlHttpRequest()) {
 				$oResponse = $this->render($this->GetTemplatePath('modal'), $aData);
 			} else {
@@ -982,13 +1110,22 @@ class ObjectController extends BrickController
 				$oResponse = $this->render($this->GetTemplatePath('page'), $aData);
 			}
 		} else {
+			// Retrieving results
+			// - Preparing object set
+			$oSet = new DBObjectSet($oSearch, [], $aInternalParams);
+			$oSet->OptimizeColumnLoad([$oSearch->GetClassAlias() => $aAttCodes]);
+			$oSet->SetLimit($iListLength, $iListLength * ($iPageNumber - 1));
+			// - Retrieving objects
+			$aItems = [];
+			while ($oItem = $oSet->Fetch()) {
+				$aItems[] = $this->PrepareObjectInformation($oItem, $aAttCodes);
+			}
 			$aData = $aData + [
 					'levelsProperties' => $aColumnProperties,
 					'data' => $aItems,
 					'recordsTotal' => $oSet->Count(),
 					'recordsFiltered' => $oSet->Count(),
 				];
-
 			$oResponse = new JsonResponse($aData);
 		}
 
