@@ -27,14 +27,6 @@ body:
     validations:
       required: false
 
-  - type: input
-    id: php_version
-    attributes:
-      label: PHP version (if appropriate)
-      description: "Complete PHP version (e.g., 8.4.20)"
-    validations:
-      required: false
-
   - type: dropdown
     id: willing_to_pr
     attributes:
