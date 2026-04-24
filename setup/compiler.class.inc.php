@@ -1562,7 +1562,7 @@ EOF;
 			foreach ($aStatesOrder as $sState => $foo) {
 				$oState = $aStates[$sState];
 				$oInitialStatePath = $oState->GetOptionalElement('initial_state_path');
-				
+
 				$sLifecycle .= "		MetaModel::Init_DefineState(\n";
 				$sLifecycle .= "			\"".$sState."\",\n";
 				$sLifecycle .= "			array(\n";
