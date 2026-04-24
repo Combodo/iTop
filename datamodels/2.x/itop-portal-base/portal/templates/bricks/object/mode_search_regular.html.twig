@@ -12,7 +12,7 @@
         <div class="form_field_label">
             <label>{{ 'UI:SearchFor_Class'|dict_format('') }}</label>
             <select id="finalclass{{ sFormId }}">
-                <option value="">{{ 'Class:FunctionalCI'|dict_s }}</option>
+                <option value="">{{ sParentClassName }}</option>
                 {% for key, sClassName in aSubClasses %}
                     <option value="{{ key }}">{{ sClassName }}</option>
                 {% endfor %}

@@ -1074,7 +1074,7 @@ class ObjectController extends BrickController
 		// Preparing response
 		if ($bInitialPass) {
 			$aData = $aData + [
-					'sParentClass' => $sTargetObjectClass,
+					'sParentClassName' => Dict::S('Class:'.$sTargetObjectClass),
 					'form' => [
 						'id' => 'object_search_form_'.time(),
 						'title' => Dict::Format('Brick:Portal:Object:Search:Regular:Title', $oTargetAttDef->GetLabel()),
@@ -1091,7 +1091,7 @@ class ObjectController extends BrickController
 					],
 				];
 			if (MetaModel::HasChildrenClasses($sTargetObjectClass)) {
-				$aEnumChildClasses = \MetaModel::EnumChildClasses('FunctionalCI');
+				$aEnumChildClasses = \MetaModel::EnumChildClasses($sTargetObjectClass);
 				$aChildClasses = [];
 				foreach ($aEnumChildClasses as $sClassName) {
 					$aChildClasses[$sClassName] = MetaModel::GetName($sClassName);
