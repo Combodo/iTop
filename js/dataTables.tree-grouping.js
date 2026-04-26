@@ -37,11 +37,11 @@ var iTopDataTableExternalKeyGrouping = (function ($) {
 				'.ibo-datatable--tree-spacer {' +
 				'  display: inline-block;' +
 				'}' +
-				'th.ibo-datatable--tree-sortable {' +
+				'.dataTables_scrollHead th.ibo-datatable--tree-sortable {' +
 				'  cursor: pointer;' +
 				'  user-select: none;' +
 				'}' +
-				'th.ibo-datatable--tree-sortable::after {' +
+				'.dataTables_scrollHead th.ibo-datatable--tree-sortable::after {' +
 				'  font-family: "Font Awesome 5 Free";' +
 				'  font-weight: 900;' +
 				'  content: "\\f0dc";' +
@@ -49,13 +49,19 @@ var iTopDataTableExternalKeyGrouping = (function ($) {
 				'  opacity: 0.4;' +
 				'  font-size: 0.85em;' +
 				'}' +
-				'th.ibo-datatable--tree-sort-asc::after {' +
+				'.dataTables_scrollHead th.ibo-datatable--tree-sort-asc::after {' +
 				'  content: "\\f0de";' +
 				'  opacity: 1;' +
 				'}' +
-				'th.ibo-datatable--tree-sort-desc::after {' +
+				'.dataTables_scrollHead th.ibo-datatable--tree-sort-desc::after {' +
 				'  content: "\\f0dd";' +
 				'  opacity: 1;' +
+				'}' +
+				/* Suppress ::after on the minimised thead clone that DataTables injects
+				   into scrollBody on every draw — it copies scrollHead classes verbatim,
+				   so our sort-icon classes would show there too without this rule. */
+				'.dataTables_scrollBody thead th::after {' +
+				'  display: none !important;' +
 				'}'
 			)
 			.appendTo('head');
@@ -240,9 +246,6 @@ var iTopDataTableExternalKeyGrouping = (function ($) {
 			oDt.clear();
 			oDt.rows.add(aVisible);
 			oDt.draw(false);
-			// DataTables leaves the scrollBody <thead> visible in non-paged client-side mode;
-			// hide it to prevent a phantom header row with duplicate sort icons.
-			$('#' + sTableId).closest('.dataTables_scrollBody').find('thead').css('visibility', 'hidden');
 		}
 
 		// ── Add indent spacer + toggle button to the first cell of each row ───────
