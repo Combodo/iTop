@@ -631,6 +631,14 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$aExtraParams['table_id'] = $sTableId;
 		$aExtraParams['list_id'] = $sListId;
 
+		// Tree grouping options
+		if ($bIsTreeGroupingView) {
+			$sFirstAlias = array_key_first($aAuthorizedClasses);
+			$aOptions['sTreeGroupingAttr'] = $sTreeGroupingAttr;
+			// The JS reads the parent ID from this data key in each row
+			$aOptions['sTreeGroupingParentKey'] = $sFirstAlias.'/'.$sTreeGroupingAttr.'/raw';
+		}
+
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php");
 		$oDataTable->SetAjaxData([
