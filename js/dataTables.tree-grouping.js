@@ -1,13 +1,13 @@
 /**
- * External key grouping (tree display) for iTop DataTables.
+ * Tree grouping for iTop DataTables.
  *
- * Activated when a DataTable has the 'sTreeGroupingAttr' option set (via DashletObjectList).
+ * Activated when a DataTable has the 'sTreeGroupingAttr' option set.
  * Transforms a flat list of objects into an expandable/collapsible tree grouped by parent ID.
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license   http://opensource.org/licenses/AGPL-3.0
  */
-var iTopDataTableExternalKeyGrouping = (function ($) {
+var iTopDataTableTreeGrouping = (function ($) {
 	'use strict';
 
 	// Inject CSS once
