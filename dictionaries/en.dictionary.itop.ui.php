@@ -1264,6 +1264,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:DashletObjectList:Prop-Title' => 'Title',
 	'UI:DashletObjectList:Prop-Query' => 'Query',
 	'UI:DashletObjectList:Prop-Menu' => 'Menu',
+	'UI:DashletObjectList:Prop-TreeGroupingAttr' => 'Tree group by',
 
 	'UI:DashletGroupBy:Prop-Title' => 'Title',
 	'UI:DashletGroupBy:Prop-Query' => 'Query',

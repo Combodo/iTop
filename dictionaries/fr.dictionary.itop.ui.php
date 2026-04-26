@@ -1217,6 +1217,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:DashletObjectList:Prop-Title' => 'Titre',
 	'UI:DashletObjectList:Prop-Query' => 'Requête OQL',
 	'UI:DashletObjectList:Prop-Menu' => 'Menu',
+	'UI:DashletObjectList:Prop-TreeGroupingAttr' => 'Arborescence par',
 	'UI:DashletGroupBy:Prop-Title' => 'Titre',
 	'UI:DashletGroupBy:Prop-Query' => 'Requête OQL',
 	'UI:DashletGroupBy:Prop-Style' => 'Style',

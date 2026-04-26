@@ -878,6 +878,41 @@ class DashletObjectList extends Dashlet
 		$this->aProperties['title'] = '';
 		$this->aProperties['query'] = 'SELECT Contact';
 		$this->aProperties['menu'] = false;
+		$this->aProperties['tree_grouping_attr'] = '';
+	}
+
+	/**
+	 * Return all attribute codes allowed for tree grouping for the class targeted by $sOql.
+	 * Which means any external / hierarchical keys of the same class (or child classes)
+	 *
+	 * @param string $sOql
+	 * @return array  [attcode => label]
+	 */
+	protected function GetTreeGroupingAttributes(string $sOql): array
+	{
+		$aAttrs = [];
+		try {
+			$oQuery = $this->oModelReflection->GetQuery($sOql);
+			$sClass = $oQuery->GetClass();
+			foreach ($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType) {
+				// Ignore non-external key attributes
+				if (false === is_a($sAttType, AttributeExternalKey::class, true)) {
+					continue;
+				}
+
+				// Ignore external that do not point to the same class
+				$sExtKeyTargetClass = $this->oModelReflection->GetAttributeProperty($sClass, $sAttCode, 'targetclass', '');
+				if (false === is_a($sExtKeyTargetClass, $sClass, true)) {
+					continue;
+				}
+
+				$aAttrs[$sAttCode] = $this->oModelReflection->GetLabel($sClass, $sAttCode);
+			}
+		} catch (Exception $e) {
+			// Fallback: return empty list on OQL error
+		}
+
+		return $aAttrs;
 	}
 
 	/**
@@ -905,6 +940,9 @@ class DashletObjectList extends Dashlet
 			"panel_title" => Dict::S($sTitle),
 			"panel_class" => $sClass,
 		];
+		if (utils::IsNotNullOrEmptyString($this->aProperties['tree_grouping_attr'])) {
+			$aParams['tree_grouping_attr'] = $this->aProperties['tree_grouping_attr'];
+		}
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
 		//$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));
 
@@ -968,6 +1006,30 @@ HTML;
 	/**
 	 * @inheritdoc
 	 */
+	public function Update($aValues, $aUpdatedFields)
+	{
+		if (in_array('query', $aUpdatedFields)) {
+			try {
+				$oCurrSearch = $this->oModelReflection->GetQuery($aValues['query']);
+				$sCurrClass = $oCurrSearch->GetClass();
+
+				$oPrevSearch = $this->oModelReflection->GetQuery($this->aProperties['query']);
+				$sPrevClass = $oPrevSearch->GetClass();
+
+				if ($sCurrClass !== $sPrevClass) {
+					$this->aProperties['tree_grouping_attr'] = '';
+					$this->bFormRedrawNeeded = true;
+				}
+			} catch (Exception $e) {
+				$this->bFormRedrawNeeded = true;
+			}
+		}
+		return parent::Update($aValues, $aUpdatedFields);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
 		$oField = new DesignerTextField('title', Dict::S('UI:DashletObjectList:Prop-Title'), $this->aProperties['title']);
@@ -977,6 +1039,15 @@ HTML;
 		$oField->SetMandatory();
 		$oField->AddCSSClass("ibo-query-oql");
 		$oField->AddCSSClass("ibo-is-code");
+		$oForm->AddField($oField);
+
+		$aTreeGroupingAttrs = $this->GetTreeGroupingAttributes($this->aProperties['query']);
+		$oField = new DesignerComboField(
+			'tree_grouping_attr',
+			Dict::S('UI:DashletObjectList:Prop-TreeGroupingAttr'),
+			$this->aProperties['tree_grouping_attr']
+		);
+		$oField->SetAllowedValues($aTreeGroupingAttrs);
 		$oForm->AddField($oField);
 
 		$oField = new DesignerBooleanField('menu', Dict::S('UI:DashletObjectList:Prop-Menu'), $this->aProperties['menu']);
@@ -1015,6 +1086,16 @@ HTML;
 		$oField->SetMandatory();
 		$oField->AddCSSClass("ibo-query-oql");
 		$oField->AddCSSClass("ibo-is-code");
+		$oForm->AddField($oField);
+
+		// TODO: Add tree grouping attr. But what is this for?
+		$aTreeGroupingAttrs = $this->GetTreeGroupingAttributes($this->aProperties['query']);
+		$oField = new DesignerComboField(
+			'tree_grouping_attr',
+			Dict::S('UI:DashletObjectList:Prop-TreeGroupingAttr'),
+			$this->aProperties['tree_grouping_attr']
+		);
+		$oField->SetAllowedValues($aTreeGroupingAttrs);
 		$oForm->AddField($oField);
 
 		$oField = new DesignerBooleanField('menu', Dict::S('UI:DashletObjectList:Prop-Menu'), $this->aProperties['menu']);
