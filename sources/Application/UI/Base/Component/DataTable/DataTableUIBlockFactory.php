@@ -300,6 +300,9 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 
 		// Initialize and check the parameters
 		$bViewLink = isset($aExtraParams['view_link']) ? $aExtraParams['view_link'] : true;
+		// Check if this is a tree grouping view
+		$sTreeGroupingAttr = $aExtraParams['tree_grouping_attr'] ?? '';
+		$bIsTreeGroupingView = utils::IsNotNullOrEmptyString($sTreeGroupingAttr);
 		// Check if there is a list of aliases to limit the display to...
 		$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',', $aExtraParams['display_aliases']) : [];
 		$sZListName = isset($aExtraParams['zlist']) ? ($aExtraParams['zlist']) : 'list';
@@ -452,6 +455,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oCustomSettings = $oDefaultSettings;
 		}
 
+		// Tree grouping mode: Disable pagination so the full dataset is embedded in the page, otherwise there will be glitches in grouping / sorting
+		if ($bIsTreeGroupingView) {
+			$oCustomSettings->iDefaultPageSize = 0;
+		}
+
 		if ($oCustomSettings->iDefaultPageSize > 0) {
 			$oSet->SetLimit($oCustomSettings->iDefaultPageSize);
 		}
@@ -467,17 +475,18 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		// Load only the requested columns
 		$aColumnsToLoad = [];
 		foreach ($oCustomSettings->aColumns as $sAlias => $aColumnsInfo) {
+			$sClass = $aClassAliases[$sAlias];
 			foreach ($aColumnsInfo as $sAttCode => $aData) {
 				$bForceLoad = false;
 				if ($aData['sort'] != 'none' || isset($oCustomSettings->aSortOrder[$sAttCode])) {
 					$bForceLoad = true;
 				}
+
 				if ($sAttCode != '_key_') {
 					if ($aData['checked'] || $bForceLoad) {
 						$aColumnsToLoad[$sAlias][] = $sAttCode;
 					} else {
 						// See if this column is a must to load
-						$sClass = $aClassAliases[$sAlias];
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 						if ($oAttDef->AlwaysLoadInTables()) {
 							$aColumnsToLoad[$sAlias][] = $sAttCode;
@@ -488,6 +497,13 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 						$sIdName = $sAlias."/_key_";
 					}
 				}
+			}
+
+			// Tree grouping mode: ensure the grouping attribute is loaded even if not displayed
+			if ($bIsTreeGroupingView
+				&& MetaModel::IsValidAttCode($sClass, $sTreeGroupingAttr)
+				&& !in_array($sTreeGroupingAttr, $aColumnsToLoad[$sAlias] ?? [])) {
+				$aColumnsToLoad[$sAlias][] = $sTreeGroupingAttr;
 			}
 		}
 		$oSet->OptimizeColumnLoad($aColumnsToLoad);
@@ -984,6 +1000,8 @@ JS;
 			/** Don't provide the standard object creation feature */
 			'display_unauthorized_objects',
 			/** bool Display objects for which the user has no read rights */
+			'tree_grouping_attr',
+			/** string Attribute code to group objects on as a collapsible tree */
 		];
 	}
 }
