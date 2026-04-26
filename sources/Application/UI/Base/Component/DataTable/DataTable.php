@@ -41,6 +41,7 @@ class DataTable extends UIContentBlock
 		'js/dataTables.settings.js',
 		'js/dataTables.pipeline.js',
 		'js/dataTables.row-actions.js',
+		'js/dataTables.tree-grouping.js',
 	];
 
 	protected $aOptions;//list of specific options for display datatable
