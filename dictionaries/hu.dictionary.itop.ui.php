@@ -731,6 +731,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI:Query:UrlV1' => 'A mezők listája nem került meghatározásra. Az <em>export-V2.php</em> oldal nem hívható meg ezen információ nélkül. Ezért az alábbiakban javasolt URL az örökölt oldalra mutat: <em>export.php</em>. Az exportálásnak ez a régi változata a következő korlátozással rendelkezik: az exportált mezők listája a kimeneti formátumtól és a '.ITOP_APPLICATION_SHORT.' adatmodelltől függően változhat. Ha garantálni szeretné, hogy az exportált oszlopok listája hosszú távon stabil maradjon, akkor meg kell adnia a "Fields" attribútum értékét, és használnia kell a <em>export-V2.php</em> oldalt.',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' objektum séma',
 	'UI:Schema:TitleForClass' => '%1$s séma',
+	'UI:Schema:NoClassSelected' => 'No class selected, please choose one~~',
 	'UI:Schema:CategoryMenuItem' => '<b>%1$s</b> kategória',
 	'UI:Schema:Relationships' => 'Kapcsolatok',
 	'UI:Schema:AbstractClass' => 'Absztrakt osztály: nem példányosítható belőle objektum.',

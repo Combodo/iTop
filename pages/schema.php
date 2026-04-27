@@ -1232,7 +1232,8 @@ switch ($operation) {
 		// no break
 	default:
 		$sSource = APPROOT."images/illustrations/undraw_reading_time.svg";
-		$oEmpty = HtmlFactory::MakeRaw("<div class='ibo-datamodel-viewer--empty ibo-svg-illustration--container'>".file_get_contents($sSource)."</div>");
+		$oEmpty = HtmlFactory::MakeRaw("<div class='ibo-datamodel-viewer--empty ibo-svg-illustration--container'>".
+			file_get_contents($sSource)."<div class='ibo-datamodel-viewer--empty--text'>".Dict::S('UI:Schema:NoClassSelected')."</div></div>");
 		$oLayout->AddSubBlock($oEmpty);
 		break;
 }

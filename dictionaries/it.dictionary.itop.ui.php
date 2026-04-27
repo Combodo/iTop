@@ -775,6 +775,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:Query:UrlV1' => 'L\'elenco dei campi è stato lasciato non specificato. La pagina <em>export-V2.php</em> non può essere invocata senza queste informazioni. Pertanto, l\'URL suggerito di seguito punta alla pagina legacy: <em>export.php</em>. Questa versione legacy dell\'esportazione ha il seguente limite: l\'elenco dei campi esportati può variare a seconda del formato di output e del modello di dati di '.ITOP_APPLICATION_SHORT.'. Se vuoi garantire che l\'elenco delle colonne esportate rimanga stabile nel lungo periodo, devi specificare un valore per l\'attributo "Campi" e utilizzare la pagina <em>export-V2.php</em>.',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' schema degli oggetti',
 	'UI:Schema:TitleForClass' => '%1$s schema',
+	'UI:Schema:NoClassSelected' => 'No class selected, please choose one~~',
 	'UI:Schema:CategoryMenuItem' => 'Categoria <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relazioni',
 	'UI:Schema:AbstractClass' => 'Classe astratta: nessun oggetto di questa classe può essere istanziato.',

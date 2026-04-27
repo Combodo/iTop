@@ -732,6 +732,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. <br/>Should you want to guarantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' オブジェクトスキーマ',
 	'UI:Schema:TitleForClass' => '%1$s schema~~',
+	'UI:Schema:NoClassSelected' => 'No class selected, please choose one~~',
 	'UI:Schema:CategoryMenuItem' => 'カテゴリ <b>%1$s</b>',
 	'UI:Schema:Relationships' => '関係',
 	'UI:Schema:AbstractClass' => '抽象クラス：このクラスのインスタンスを作成することはできません。',
