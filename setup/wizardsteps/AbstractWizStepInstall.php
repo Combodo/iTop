@@ -97,7 +97,7 @@ abstract class AbstractWizStepInstall extends WizardStep
 			'old_addon' => $this->oWizard->GetParameter('old_addon', false), // whether or not to use the "old" userrights profile addon
 			'options' => json_decode($this->oWizard->GetParameter('misc_options', '[]'), true),
 			'mysql_bindir' => $this->oWizard->GetParameter('mysql_bindir'),
-			'use-symbolic-links' => $this->oWizard->GetParameter('use-symbolic-links', MFCompiler::UseSymbolicLinks()),
+			'use_symbolic_links' => $this->oWizard->GetParameter('use_symbolic_links', MFCompiler::UseSymbolicLinks()),
 		];
 
 		if ($sBackupDestination != '') {
