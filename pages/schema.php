@@ -73,7 +73,7 @@ function GetClassHierarchy(string $sClass, string $sContext): string
 	$sClassSpacer = '<i class="fas fa-arrow-right ibo-datamodel-viewer--parent--spacer"></i>';
 	$aParentClasses = [];
 	foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass) {
-		$aParentClasses[] = MakeClassHLink($sParentClass, $sContext, "ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-primary", true);
+		$aParentClasses[] = MakeClassHLink($sParentClass, $sContext, "ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral", true);
 	}
 
 	if (count($aParentClasses) > 0) {
@@ -82,7 +82,7 @@ function GetClassHierarchy(string $sClass, string $sContext): string
 		$sParents = '';
 	}
 
-	return "<div class='ibo-datamodel-viewer--breadcrumb'><a href=\"schema.php?operation=list{$sContext}\" class=\"ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-primary \">".Dict::S('UI:Schema:AllClasses')."</a> $sParents".$sClassSpacer.MakeClassHLink($sClass, $sContext, "ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-primary", true)."</div>";
+	return "<div class='ibo-datamodel-viewer--breadcrumb'><a href=\"schema.php?operation=list{$sContext}\" class=\"ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral \">".Dict::S('UI:Schema:AllClasses')."</a> $sParents".$sClassSpacer.MakeClassHLink($sClass, $sContext, "ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral", true)."</div>";
 }
 
 /**
