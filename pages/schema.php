@@ -1231,8 +1231,8 @@ switch ($operation) {
 		}
 		// no break
 	default:
-		$sSource = utils::GetAbsoluteUrlAppRoot()."images/illustrations/undraw_reading_time.svg";
-		$oEmpty = HtmlFactory::MakeHtmlContent("<div class='ibo-datamodel-viewer--empty'><img src=\"$sSource\" alt=\"viewer empty\"></div>");
+		$sSource = APPROOT."images/illustrations/undraw_reading_time.svg";
+		$oEmpty = HtmlFactory::MakeRaw("<div class='ibo-datamodel-viewer--empty ibo-svg-illustration--container'>".file_get_contents($sSource)."</div>");
 		$oLayout->AddSubBlock($oEmpty);
 		break;
 }

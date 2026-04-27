@@ -65,13 +65,13 @@ $ibo-datamodel-viewer--lifecycle-image--margin-bottom: $ibo-spacing-500 !default
   .ibo-panel--subtitle{
     @extend %ibo-font-ral-nor-150;
   }
-}
-
-.ibo-datamodel-viewer--empty{
-  width: $ibo-datamodel-viewer--viewer-empty--width;
-  justify-self: center;
-  margin: $ibo-spacing-900 0;
-  text-align: center;
+  .ibo-datamodel-viewer--empty{
+    display: flex;
+    justify-content: center;
+    svg{
+      width: max(20%, 350px);
+    }
+  }
 }
 
 .ibo-datamodel-viewer--breadcrumb{
