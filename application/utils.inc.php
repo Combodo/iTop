@@ -3190,4 +3190,48 @@ TXT
 			}
 		}
 	}
+
+	public static function GetMemoryLimit(): int
+	{
+		$sLimit = ini_get('memory_limit');
+		if ($sLimit == '-1') {
+			return 128 * 1048576;
+		}
+		switch (substr($sLimit, -1)) {
+			case 'M':
+			case 'm':
+				return (int)$sLimit * 1048576;
+			case 'K':
+			case 'k':
+				return (int)$sLimit * 1024;
+			case 'G':
+			case 'g':
+				return (int)$sLimit * 1073741824;
+			default:
+				return (int)$sLimit;
+		}
+	}
+
+	/**
+	 * @param int $iMaxTime
+	 * @param int $iMaxMemory
+	 *
+	 * @return bool
+	 */
+	public static function ShouldStopExecution(int $iMaxTime = 0, int $iMaxMemoryPercent = 100): bool
+	{
+		if (($iMaxTime != 0) && (time() > $iMaxTime)) {
+			\IssueLog::Debug(__METHOD__.' timeout '.time()." (current) > $iMaxTime (max)");
+			return true;
+		}
+
+		$iMemory = memory_get_usage(true);
+		$iMaxMemory = self::GetMemoryLimit() * $iMaxMemoryPercent / 100;
+		if ($iMemory > $iMaxMemory) {
+			\IssueLog::Debug(__METHOD__." Memory limit $iMemory (current) > $iMaxMemory (max)");
+			return true;
+		}
+
+		return false;
+	}
 }
