@@ -410,7 +410,7 @@ class EMailSymfony extends Email
 		}
 
 		// Inline CSS if needed
-		if ($sMimeType === 'text/html') {
+		if ($sPrimaryMimeType === 'text/html') {
 			$sBody = static::InlineCssIntoBodyContent($sBody, $sCustomStyles);
 		}
 
@@ -419,7 +419,7 @@ class EMailSymfony extends Email
 		$oTextPart = new TextPart(strip_tags($sBody), 'utf-8', 'plain', 'base64');
 
 		// Embed inline images and store them in attachments (so BuildSymfonyMessageFromInternal can pick them)
-		if ($sMimeType === 'text/html') {
+		if ($sPrimaryMimeType === 'text/html') {
 			$aAdditionalParts = $this->EmbedInlineImages($sBody);
 			$oHtmlPart = new TextPart($sBody, 'utf-8', 'html', 'base64');
 			$oAlternativePart = new AlternativePart($oHtmlPart, $oTextPart);
