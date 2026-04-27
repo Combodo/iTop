@@ -52,7 +52,7 @@ function GetClassLabel(string $sClass): string
 
 	$sAbstract = '';
 	if ($oClass->isAbstract()) {
-		$sAbstract = '<span class="ibo-datamodel-viewer--abstract-class-icon" data-tooltip-content="'.Dict::S('UI:Schema:AbstractClass').'"></span>';
+		$sAbstract = '<span class="ibo-datamodel-viewer--icon--abstract" data-tooltip-content="'.Dict::S('UI:Schema:AbstractClass').'"></span>';
 	}
 
 	return "$sAbstract $sName <span class=\"ibo-datamodel-viewer--classname\">$sClass</span>";
@@ -1137,18 +1137,16 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 	// Class Title
 	$oPanel = PanelUIBlockFactory::MakeForClass($sClass, MetaModel::GetName($sClass).' ('.$sClass.')')->SetIcon(MetaModel::GetClassIcon($sClass, false));
 	$oEnhancedPanelSubtitle = $oPanel->GetSubTitleBlock();
-	$sEnhancedPanelSubtitle = MetaModel::GetClassDescription($sClass);
-	// badges *****
-	$sBadges = '';
-	foreach (explode(',', MetaModel::GetCategory($sClass)) as $sCategory) {
-		$sBadges .= '<span class="ibo-datamodel-viewer--badge ibo-datamodel-viewer--category">'.$sCategory.'</span>';
+	$sClassDescription = MetaModel::GetClassDescription($sClass);
+	$sTags = '';
+	if (utils::IsNotNullOrEmptyString($sClassDescription)) {
+		$sTags .= '<span class="ibo-object-details--tag">'.$sClassDescription.'</span>';
 	}
+	$sTags .= '<span class="ibo-object-details--tag ibo-datamodel-viewer--tag--category"><span class="ibo-object-details--tag-icon"><span class="fas fa-tags"></span></span>'.str_replace(',', ' - ', MetaModel::GetCategory($sClass)).'</span>';
 	if (MetaModel::IsAbstract($sClass)) {
-		$sBadges .= '<span class="ibo-datamodel-viewer--badge ibo-datamodel-viewer--abstract-class"></span>';
+		$sTags .= '<span class="ibo-object-details--tag ibo-datamodel-viewer--tag--abstract"><span class="ibo-object-details--tag-icon"><span class="ibo-datamodel-viewer--icon--abstract"></span></span>'.Dict::S('UI:Schema:AbstractClass').'</span>';
 	}
-	// badges *****
-	$oEnhancedPanelSubtitle->AddHtml($sEnhancedPanelSubtitle);
-	$oEnhancedPanelSubtitle->AddSubBlock(HtmlFactory::MakeHtmlContent($sBadges));
+	$oEnhancedPanelSubtitle->AddSubBlock(HtmlFactory::MakeHtmlContent($sTags));
 	$oPage->AddUiBlock($oPanel);
 
 	// Details container
