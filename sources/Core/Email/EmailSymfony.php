@@ -389,8 +389,28 @@ class EMailSymfony extends Email
 	 */
 	public function SetBody($sBody, $sMimeType = 'text/html', $sCustomStyles = null)
 	{
+		// Some mime types can have options, let's retrieve the different parts so we can extract the primary mime type
+		$aMimeTypeParts = array_map('trim', explode(';', $sMimeType));
+		$sPrimaryMimeType = strtolower(array_shift($aMimeTypeParts));
+
+		$aMimeTypeParams = [];
+		foreach ($aMimeTypeParts as $sPart) {
+			// Parse key=value parameters (eg method=REQUEST, charset=UTF-8) after the semicolon.
+			// Stored in $aMimeTypeParams so they can be added to the Content-Type header.
+			if ($sPart === '') {
+				continue;
+			}
+			$aPair = explode('=', $sPart, 2);
+			$sKey = strtolower(trim($aPair[0]));
+			// Normalize and unquote the parameter value for Content-Type (eg charset=UTF-8).
+			$sValue = isset($aPair[1]) ? trim($aPair[1], " \t\n\r\0\x0B\"") : '';
+			if ($sKey !== '') {
+				$aMimeTypeParams[$sKey] = $sValue;
+			}
+		}
+
 		// Inline CSS if needed
-		if ($sMimeType === 'text/html') {
+		if ($sPrimaryMimeType === 'text/html') {
 			$sBody = static::InlineCssIntoBodyContent($sBody, $sCustomStyles);
 		}
 
@@ -399,7 +419,7 @@ class EMailSymfony extends Email
 		$oTextPart = new TextPart(strip_tags($sBody), 'utf-8', 'plain', 'base64');
 
 		// Embed inline images and store them in attachments (so BuildSymfonyMessageFromInternal can pick them)
-		if ($sMimeType === 'text/html') {
+		if ($sPrimaryMimeType === 'text/html') {
 			$aAdditionalParts = $this->EmbedInlineImages($sBody);
 			$oHtmlPart = new TextPart($sBody, 'utf-8', 'html', 'base64');
 			$oAlternativePart = new AlternativePart($oHtmlPart, $oTextPart);
@@ -411,8 +431,20 @@ class EMailSymfony extends Email
 				$oRootPart = new RelatedPart(...$aRelatedParts);
 			}
 		} else {
-			// Default root part is the text body
-			$oRootPart = $oTextPart;
+			// Default root part is a TextPart with the right mimetype
+			$sSubtype = 'plain';
+			// Extract subtype for text/* content; default to plain otherwise.
+			if (strpos($sPrimaryMimeType, '/') !== false) {
+				list($sType, $sSubtype) = explode('/', $sPrimaryMimeType, 2);
+				if ($sType !== 'text') {
+					$sSubtype = 'plain';
+				}
+			}
+			$oRootPart = new TextPart($sBody, 'utf-8', $sSubtype, 'base64');
+			// Add parsed Content-Type parameters like method/charset if provided.
+			if (!empty($aMimeTypeParams)) {
+				$oRootPart->getHeaders()->addParameterizedHeader('Content-Type', $sPrimaryMimeType, $aMimeTypeParams);
+			}
 		}
 
 		$this->m_oMessage->setBody($oRootPart);
@@ -432,9 +464,13 @@ class EMailSymfony extends Email
 
 	/**
 	 * Add a new part to the existing body
+	 *
+	 * @deprecated 3.2.3 3.3.0 N°9549 This worked with the previous mail lib (Laminas) but it no longer works with SymfonyMailer and needs to be split in specific methods
 	 */
 	public function AddPart($sText, $sMimeType = 'text/html')
 	{
+		\DeprecatedCallsLog::NotifyDeprecatedPhpMethod('No generic alternative yet, if you want to add an attachment use `self::AddAttachment()`');
+
 		$sMimeSubtype = $this->GetMimeSubtype($sMimeType);
 
 		if (!array_key_exists('parts', $this->m_aData)) {
