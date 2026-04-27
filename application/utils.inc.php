@@ -3191,6 +3191,11 @@ TXT
 		}
 	}
 
+	/**
+	 * Read memory limit from the php.ini file
+	 *
+	 * @return int Memory limit in bytes
+	 */
 	public static function GetMemoryLimit(): int
 	{
 		$sLimit = ini_get('memory_limit');
@@ -3213,10 +3218,12 @@ TXT
 	}
 
 	/**
-	 * @param int $iMaxTime
-	 * @param int $iMaxMemory
+	 * Check if execution should stop due to time limit or memory limit
 	 *
-	 * @return bool
+	 * @param int $iMaxTime             Absolute max time in seconds since epoch
+	 * @param int $iMaxMemoryPercent    Percent of memory usage allowed (0-100)
+	 *
+	 * @return bool true if execution should stop
 	 */
 	public static function ShouldStopExecution(int $iMaxTime = 0, int $iMaxMemoryPercent = 100): bool
 	{
@@ -3225,6 +3232,7 @@ TXT
 			return true;
 		}
 
+		$iMaxMemoryPercent = (int)min(max($iMaxMemoryPercent, 0), 100);
 		$iMemory = memory_get_usage(true);
 		$iMaxMemory = self::GetMemoryLimit() * $iMaxMemoryPercent / 100;
 		if ($iMemory > $iMaxMemory) {
