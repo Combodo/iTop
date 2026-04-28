@@ -1136,6 +1136,8 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 
 :root {
   --ck-content-font-family: #{$font-family-base};
+  --ck-content-font-size: #{$font-size-base};
+  --ck-content-font-color: inherit;
 }
 
 /* - Ensure HTML contents are displayed like in CKEditor */
