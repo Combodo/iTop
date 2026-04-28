@@ -91,7 +91,7 @@ class DataAuditSequencerTest extends ItopTestCase
 		$aRes = $oSequencer->ExecuteStep('compile');
 		$aExpected = [
 			'status' => 1,
-			'message' => 'Using symbolic links instead of copying data model files (for developers only!)',
+			'message' => '',
 			'next-step' => 'setup-audit',
 			'next-step-label' => 'Checking data consistency with the new data model',
 			'percentage-completed' => 70,
