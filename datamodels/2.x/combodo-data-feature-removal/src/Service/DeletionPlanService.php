@@ -6,6 +6,7 @@ use CMDBObjectSet;
 use CMDBSource;
 use Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
+use Combodo\iTop\DataFeatureRemoval\Helper\ExecutionLimits;
 use DBObject;
 use DBObjectSearch;
 use DeletionPlan;
@@ -16,6 +17,7 @@ class DeletionPlanService
 {
 	private array $aVisited = [];
 	private iObjectService $oObjectService;
+	private ExecutionLimits $oExecutionLimits;
 
 	/**
 	 * Get a summary of the deletion plan computed for the classes.
@@ -67,11 +69,17 @@ class DeletionPlanService
 	}
 
 	/**
-	* @param array $aClasses
-	* @param int $iMaxExecutionTime
-	* @param int $iMaxMemoryPercent
-	* @return array execution summary
-	* @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
+	 * @param array $aClasses
+	 * @param int $iMaxExecutionTime
+	 * @param int $iMaxMemoryPercent
+	 * @param \Combodo\iTop\DataFeatureRemoval\Service\iObjectService|null $oObjectService
+	 *
+	 * @return array execution summary
+	 * @throws \ArchivedObjectException
+	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public function ExecuteDeletionPlan(array $aClasses, int $iMaxExecutionTime = 30, int $iMaxMemoryPercent = 80, ?iObjectService $oObjectService = null): array
 	{
@@ -81,7 +89,8 @@ class DeletionPlanService
 
 		while ($oObject = $this->GetNextObjectToDelete($aClasses)) {
 			$iMaxTime = time() + $iMaxExecutionTime;
-			if ($this->RecursiveDeletion($oObject, $iMaxTime, $iMaxMemoryPercent) === false) {
+			$this->oExecutionLimits = new ExecutionLimits($iMaxTime, $iMaxMemoryPercent);
+			if ($this->RecursiveDeletion($oObject) === false) {
 				// Timeout, stop here
 				break;
 			}
@@ -112,8 +121,6 @@ class DeletionPlanService
 	/**
 	 *
 	 * @param \DBObject $oObjectToClean
-	 * @param int $iMaxTime
-	 * @param int $iMaxMemoryPercent
 	 *
 	 * @return bool true if deletion is complete, false in case of timeout or memory limit reached
 	 *
@@ -123,9 +130,9 @@ class DeletionPlanService
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	private function RecursiveDeletion(DBObject $oObjectToClean, int $iMaxTime, int $iMaxMemoryPercent): bool
+	private function RecursiveDeletion(DBObject $oObjectToClean): bool
 	{
-		if (utils::ShouldStopExecution($iMaxTime, $iMaxMemoryPercent)) {
+		if ($this->oExecutionLimits->ShouldStopExecution()) {
 			return false;
 		}
 
@@ -167,7 +174,7 @@ class DeletionPlanService
 						if ($this->IsVisited($oDependentObj)) {
 							continue;
 						}
-						$this->RecursiveDeletion($oDependentObj, $iMaxTime, $iMaxMemoryPercent);
+						$this->RecursiveDeletion($oDependentObj);
 					}
 				}
 			}
