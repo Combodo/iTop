@@ -6,8 +6,10 @@
  */
 
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\Select;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
@@ -27,15 +29,235 @@ LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled('DataModelMenu');
 
 /**
- * Helper for this page -> link to a class
+ * Get a short or full class label.
+ *
+ * Short: Class Label
+ * Full: Class Label (ClassName)
+ *
+ * Short: UserRequest
+ * Full: User Request (UserRequest)
+ *
+ * @param string $sClass
+ *
+ * @return string
+ * @throws CoreException
+ * @throws DictExceptionMissingString
+ * @throws ReflectionException
  */
-function MakeClassHLink($sClass, $sContext)
+function GetClassLabel(string $sClass): string
 {
+	$sName = MetaModel::GetName($sClass);
+
+	$oClass = new ReflectionClass($sClass);
+
+	$sAbstract = '';
+	if ($oClass->isAbstract()) {
+		$sAbstract = '<span class="ibo-datamodel-viewer--icon--abstract" data-tooltip-content="'.Dict::S('UI:Schema:AbstractClass').'"></span>';
+	}
+
+	return "$sAbstract $sName <span class=\"ibo-datamodel-viewer--classname\">$sClass</span>";
+}
+
+/**
+ * Get class hierarchy as breadcrumb.
+ *
+ * @param string $sClass
+ * @param string $sContext
+ *
+ * @return string
+ * @throws CoreException
+ * @throws ReflectionException
+ */
+function GetClassHierarchy(string $sClass, string $sContext): string
+{
+	$sClassSpacer = '<i class="fas fa-arrow-right ibo-datamodel-viewer--parent--spacer"></i>';
+	$aParentClasses = [];
+	foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass) {
+		$aParentClasses[] = MakeClassHLink($sParentClass, $sContext, "ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral", true);
+	}
+
+	if (count($aParentClasses) > 0) {
+		$sParents = $sClassSpacer.implode($sClassSpacer, $aParentClasses);
+	} else {
+		$sParents = '';
+	}
+
+	return "<div class='ibo-datamodel-viewer--breadcrumb'><a href=\"schema.php?operation=list{$sContext}\" class=\"ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral \">".Dict::S('UI:Schema:AllClasses')."</a> $sParents".$sClassSpacer.MakeClassHLink($sClass, $sContext, "ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral", true)."</div>";
+}
+
+/**
+ * Make a class link.
+ *
+ * @param string $sClass
+ * @param string $sContext
+ * @param string $sCssClasses
+ *
+ * @return string
+ * @throws CoreException
+ * @throws DictExceptionMissingString
+ * @throws ReflectionException
+ */
+function MakeClassHLink(string $sClass, string $sContext, string $sCssClasses = ''): string
+{
+	$sLabel = GetClassLabel($sClass);
+
 	return "<a href=\"schema.php?operation=details_class&class=$sClass{$sContext}\" title=\"".html_entity_decode(
 		MetaModel::GetClassDescription($sClass),
 		ENT_QUOTES,
 		'UTF-8'
-	)."\">".MetaModel::GetName($sClass)." (".$sClass.")</a>";
+	)."\" class=\"$sCssClasses\">$sLabel</a>";
+}
+
+/**
+ * Display class information.
+ *
+ * @param string $sClass
+ * @param string $sContext
+ *
+ * @return array
+ * @throws CoreException
+ * @throws DictExceptionMissingString
+ * @throws ReflectionException
+ */
+function GetClassInformation(string $sClass, string $sContext): array
+{
+	// List the attributes of the object
+	$aForwardChangeTracking = MetaModel::GetTrackForwardExternalKeys($sClass);
+	$aDetails = [];
+
+	$aOrigins = [];
+	foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+		if ($oAttDef->IsExternalKey()) {
+			$sValue = Dict::Format('UI:Schema:ExternalKey_To', MakeClassHLink($oAttDef->GetTargetClass(), $sContext));
+			if (array_key_exists($sAttCode, $aForwardChangeTracking)) {
+				$oLinkSet = $aForwardChangeTracking[$sAttCode];
+				$sRemoteClass = $oLinkSet->GetHostClass();
+				$sValue = $sValue."<span title=\"Forward changes to $sRemoteClass\">*</span>";
+			}
+		} elseif ($oAttDef->IsLinkSet()) {
+			$sValue = MakeClassHLink($oAttDef->GetLinkedClass(), $sContext);
+		} else {
+			$sValue = $oAttDef->GetDescription();
+		}
+
+		[$classShortName, $label, $description] = array_values($oAttDef->GetTypeInformation());
+
+		$sOrigin = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
+		$aOrigins[$sOrigin] = true;
+		$sMoreInfo = "";
+		$sDefaultNullValue = '';
+		if (call_user_func([get_class($oAttDef), 'IsBasedOnDBColumns'])) {
+
+			$aMoreInfo = [];
+			if ($oAttDef->IsNullAllowed()) {
+				$aMoreInfo[] = Dict::S('UI:Schema:NullAllowed');
+				$sDefaultNullValue = (!is_null($oAttDef->GetNullValue()) ? $oAttDef->GetNullValue() : null);
+				if (!is_null($sDefaultNullValue) && !is_string($sDefaultNullValue)) {
+					$sDefaultNullValue = json_encode($sDefaultNullValue);
+				}
+				$sDefaultNullValue = (!is_null($sDefaultNullValue) ? Dict::Format(
+					'UI:Schema:DefaultNullValue',
+					$sDefaultNullValue
+				) : '');
+			} else {
+				$aMoreInfo[] = Dict::S('UI:Schema:NullNotAllowed');
+			}
+			if ($oAttDef->GetDefaultValue()) {
+				$sDefaultValue = $oAttDef->GetDefaultValue();
+				if (!is_string($sDefaultValue)) {
+					$sDefaultValue = json_encode($sDefaultValue);
+				}
+				$aMoreInfo[] = Dict::Format("UI:Schema:Default_Description", $sDefaultValue);
+			}
+			$sMoreInfo .= implode(', ', $aMoreInfo);
+		}
+		$sAttrCode = $oAttDef->GetCode();
+
+		if ($oAttDef instanceof AttributeEnum) {
+			// Display localized values for the enum (which depend on the localization provided by the class)
+			$aLocalizedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, []);
+			$aDescription = [];
+			foreach ($aLocalizedValues as $val => $sDisplay) {
+				$aDescription[] = $sDisplay." (".$val.")";
+			}
+			$sAllowedValues = implode(', ', $aDescription);
+		} elseif (is_object($oAllowedValuesDef = $oAttDef->GetValuesDef())) {
+			$sAllowedValues = str_replace("Filter: ", "", $oAllowedValuesDef->GetValuesDescription());
+			$sAllowedValuesEscpd = utils::HtmlEntities($sAllowedValues);
+
+			$sFilterURL = urlencode($sAllowedValues);
+			$sAllowedValues = '<span id="values'.$sAttrCode.'" data-tooltip-content="'.$sAllowedValuesEscpd.'"><a href="run_query.php?expression='.$sFilterURL.'" class="fas fa-search"></a> '.Dict::S('UI:Schema:Attribute/Filter')."</span>";
+		} else {
+			$sAllowedValues = '';
+		}
+		$sAttrValueEscpd = utils::HtmlEntities($sValue);
+		$sAttrTypeDescEscpd = utils::HtmlEntities($description);
+		$sAttrOriginEscpd = utils::HtmlEntities($sOrigin);
+		$sDefaultNullValueEscpd = utils::HtmlEntities($sDefaultNullValue);
+
+		$aDetails[] = [
+			'code' => '<span id="attr'.$sAttrCode.'" data-tooltip-content="'.$sAttrValueEscpd.'" data-tooltip-html-enabled="true">'.$oAttDef->GetLabel().' ('.$oAttDef->GetCode().')</span>',
+			'type' => '<span id="type'.$sAttrCode.'" data-tooltip-content="'.$sAttrTypeDescEscpd.'">'.$label.' ('.$classShortName.')</span>',
+			'origincolor' => '<div class="originColor'.$sOrigin.'" data-tooltip-content="'.$sAttrOriginEscpd.'"></div>',
+			'origin' => "<span id=\"origin".$sAttrCode."\">$sOrigin</span>",
+			'values' => $sAllowedValues,
+			'moreinfo' => '<span id="moreinfo'.$sAttrCode.'" data-tooltip-content="'.$sDefaultNullValueEscpd.'">'.$sMoreInfo.'</span>',
+		];
+
+	}
+
+	return [
+		'details' => $aDetails,
+		'origins' => $aOrigins,
+	];
+}
+
+/**
+ * Display class attributes.
+ *
+ * @param iTopWebPage $oPage
+ * @param string $sClass
+ * @param string $sContext
+ *
+ * @return void
+ */
+function DisplayClassAttributes(iTopWebPage $oPage, string $sClass, string $sContext): void
+{
+	$aClassInformation = GetClassInformation($sClass, $sContext);
+
+	$aConfig = [
+		'origincolor' => ['label' => "", 'description' => ""],
+		'code' => ['label' => Dict::S('UI:Schema:AttributeCode'), 'description' => Dict::S('UI:Schema:AttributeCode+')],
+		'type' => ['label' => Dict::S('UI:Schema:Type'), 'description' => Dict::S('UI:Schema:Type+')],
+		'values' => ['label' => Dict::S('UI:Schema:AllowedValues'), 'description' => Dict::S('UI:Schema:AllowedValues+')],
+		'moreinfo' => ['label' => Dict::S('UI:Schema:MoreInfo'), 'description' => Dict::S('UI:Schema:MoreInfo+')],
+		'origin' => ['label' => Dict::S('UI:Schema:Origin'), 'description' => Dict::S('UI:Schema:Origin+')],
+	];
+	$oTablePanel = PanelUIBlockFactory::MakeForClass($sClass, '');
+	$oTablePanel->AddCSSClass('ibo-datatable-panel');
+
+	$oAttributesTable = DataTableUIBlockFactory::MakeForStaticData('', $aConfig, $aClassInformation['details'], 'ibo-datamodel-viewer--attributes-table', [], "", ['pageLength' => -1]);
+	$oTablePanel->AddSubBlock($oAttributesTable);
+	$oPage->AddUiBlock($oTablePanel);
+	$sOrigins = json_encode(array_keys($aClassInformation['origins']));
+
+	//color calculation in order to keep 1 color for 1 extended class. Colors are interpolated and will be used for
+	// graph scheme color too
+	$oPage->add_ready_script(
+		<<< EOF
+				var aOrigins = $sOrigins;
+				var aColors = d3.scale.linear().domain([1,aOrigins.length])
+				  .interpolate(d3.interpolateHcl)
+				  .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);		
+				$.each(aOrigins,function(idx, origin){
+					$('.originColor'+origin).css('background-color',aColors(aOrigins.indexOf(origin)));
+				});
+				Array.prototype.forEach.call($(".listResults").find('td:nth-child(1),th:nth-child(1)'), function(e){
+					$(e).removeClass("header").addClass("ibo-datamodel-viewer--origin-cell");
+				});
+
+EOF
+	);
 }
 
 /**
@@ -222,11 +444,18 @@ JS
 /**
  * Helper for the trigger
  */
-function DisplayTriggers($oPage, $sClass)
+function DisplayTriggers(iTopWebPage $oPage, string $sClass)
 {
 	$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
 	$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObject WHERE target_class IN ('$sClassList')"));
-	cmdbAbstractObject::DisplaySet($oPage, $oSet, ['block_id' => 'triggers']);
+	try {
+		cmdbAbstractObject::DisplaySet($oPage, $oSet, ['block_id' => 'triggers']);
+	} catch (Exception $e) {
+		$oPage->AddUiBlock(AlertUIBlockFactory::MakeForFailure('Unable to load current class triggers.'));
+		IssueLog::Error('Unable to load current class triggers.', null, [
+			'root_cause' => $e->getMessage(),
+		]);
+	}
 }
 
 function DisplayEvents(WebPage $oPage, $sClass)
@@ -333,7 +562,7 @@ function DisplayClassesList($oPage, $oLayout, $sContext)
 	$oLayout->AddSideHtml("<label for='search-model'>".Dict::S('UI:Schema:ClassFilter')."</label><br>");
 
 	$oListSearch = new Select("ibo-datamodel-viewer--class-search");
-	$oListSearch->SetName('aa');
+	$oListSearch->SetName('datamodel_class_select');
 	// Get all the "root" classes for display
 	$aRootClasses = [];
 	$aClassLabelAndCodeAsJSON = [];
@@ -897,156 +1126,38 @@ JS
  * @param string $sClass
  * @param string $sContext
  *
- * @throws \CoreException
+ * @throws CoreException|ReflectionException
  */
 function DisplayClassDetails($oPage, $sClass, $sContext)
 {
-	$aParentClasses = [];
-	foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass) {
-		$aParentClasses[] = MakeClassHLink($sParentClass, $sContext);
-	}
-	if (count($aParentClasses) > 0) {
-		$sParents = implode(' <i class="fas fa-arrow-right ibo-datamodel-viewer--parent--spacer"></i> ', $aParentClasses).' <i class="fas fa-arrow-right ibo-datamodel-viewer--parent--spacer"></i> '.MetaModel::GetName($sClass).'('.$sClass.')';
-	} else {
-		$sParents = '';
-	}
-	$sClassHierarchy = ("[<a href=\"schema.php?operation=list{$sContext}\">".Dict::S('UI:Schema:AllClasses')."</a>] $sParents");
+	// Hierarchy
+	$sClassHierarchy = GetClassHierarchy($sClass, $sContext);
+	$oPage->AddUiBlock(HtmlFactory::MakeRaw($sClassHierarchy));
 
-	$oPanel = PanelUIBlockFactory::MakeForClass($sClass, MetaModel::GetName($sClass).' ('.$sClass.')')
-		->SetIcon(MetaModel::GetClassIcon($sClass, false));
-	$sClassDescritpion = MetaModel::GetClassDescription($sClass);
+	// Class Title
+	$oPanel = PanelUIBlockFactory::MakeForClass($sClass, MetaModel::GetName($sClass).' ('.$sClass.')')->SetIcon(MetaModel::GetClassIcon($sClass, false));
 	$oEnhancedPanelSubtitle = $oPanel->GetSubTitleBlock();
-	$sEnhancedPanelSubtitle = $sClassHierarchy.($sClassDescritpion == "" ? "" : ' - '.$sClassDescritpion);
-	if (MetaModel::IsAbstract($sClass)) {
-		$sEnhancedPanelSubtitle .= ' - <i class="fas fa-lock" data-tooltip-content="'.Dict::S('UI:Schema:AbstractClass').'"></i>';
+	$sClassDescription = MetaModel::GetClassDescription($sClass);
+	$sTags = '';
+	if (utils::IsNotNullOrEmptyString($sClassDescription)) {
+		$sTags .= '<span class="ibo-object-details--tag">'.$sClassDescription.'</span>';
 	}
-	$oEnhancedPanelSubtitle->AddHtml($sEnhancedPanelSubtitle);
+	$sTags .= '<span class="ibo-object-details--tag ibo-datamodel-viewer--tag--category"><span class="ibo-object-details--tag-icon"><span class="fas fa-tags"></span></span>'.str_replace(',', ' - ', MetaModel::GetCategory($sClass)).'</span>';
+	if (MetaModel::IsAbstract($sClass)) {
+		$sTags .= '<span class="ibo-object-details--tag ibo-datamodel-viewer--tag--abstract"><span class="ibo-object-details--tag-icon"><span class="ibo-datamodel-viewer--icon--abstract"></span></span>'.Dict::S('UI:Schema:AbstractClass').'</span>';
+	}
+	$oEnhancedPanelSubtitle->AddSubBlock(HtmlFactory::MakeHtmlContent($sTags));
 	$oPage->AddUiBlock($oPanel);
+
+	// Details container
 	$oPage->AddTabContainer('details', '', $oPanel);
 	$oPage->SetCurrentTabContainer('details');
-	// List the attributes of the object
-	$aForwardChangeTracking = MetaModel::GetTrackForwardExternalKeys($sClass);
-	$aDetails = [];
 
-	$aOrigins = [];
-	foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
-		if ($oAttDef->IsExternalKey()) {
-			$sValue = Dict::Format('UI:Schema:ExternalKey_To', MakeClassHLink($oAttDef->GetTargetClass(), $sContext));
-			if (array_key_exists($sAttCode, $aForwardChangeTracking)) {
-				$oLinkSet = $aForwardChangeTracking[$sAttCode];
-				$sRemoteClass = $oLinkSet->GetHostClass();
-				$sValue = $sValue."<span title=\"Forward changes to $sRemoteClass\">*</span>";
-			}
-		} elseif ($oAttDef->IsLinkSet()) {
-			$sValue = MakeClassHLink($oAttDef->GetLinkedClass(), $sContext);
-		} else {
-			$sValue = $oAttDef->GetDescription();
-		}
-		$sType = get_class($oAttDef);
-		$sTypeDict = $oAttDef->GetType();
-		$sTypeDesc = $oAttDef->GetTypeDesc();
-
-		$sOrigin = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
-		$aOrigins[$sOrigin] = true;
-		$sAllowedValues = "";
-		$sMoreInfo = "";
-		$sDefaultNullValue = '';
-		if (call_user_func([get_class($oAttDef), 'IsBasedOnDBColumns'])) {
-
-			$aMoreInfo = [];
-			if ($oAttDef->IsNullAllowed()) {
-				$aMoreInfo[] = Dict::S('UI:Schema:NullAllowed');
-				$sDefaultNullValue = (!is_null($oAttDef->GetNullValue()) ? $oAttDef->GetNullValue() : null);
-				if (!is_null($sDefaultNullValue) && !is_string($sDefaultNullValue)) {
-					$sDefaultNullValue = json_encode($sDefaultNullValue);
-				}
-				$sDefaultNullValue = (!is_null($sDefaultNullValue) ? Dict::Format(
-					'UI:Schema:DefaultNullValue',
-					$sDefaultNullValue
-				) : '');
-			} else {
-				$aMoreInfo[] = Dict::S('UI:Schema:NullNotAllowed');
-			}
-			if ($oAttDef->GetDefaultValue()) {
-				$sDefaultValue = $oAttDef->GetDefaultValue();
-				if (!is_string($sDefaultValue)) {
-					$sDefaultValue = json_encode($sDefaultValue);
-				}
-				$aMoreInfo[] = Dict::Format("UI:Schema:Default_Description", $sDefaultValue);
-			}
-			$sMoreInfo .= implode(', ', $aMoreInfo);
-		}
-		$sAttrCode = $oAttDef->GetCode();
-		$sIsEnumValues = 'false';
-		$sAllowedValuesEscpd = '""';
-		if ($oAttDef instanceof AttributeEnum) {
-			// Display localized values for the enum (which depend on the localization provided by the class)
-			$aLocalizedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, []);
-			$aDescription = [];
-			foreach ($aLocalizedValues as $val => $sDisplay) {
-				$aDescription[] = $sDisplay." (".$val.")";
-			}
-			$sAllowedValues = implode(', ', $aDescription);
-			$sIsEnumValues = 'true';
-		} elseif (is_object($oAllowedValuesDef = $oAttDef->GetValuesDef())) {
-			$sAllowedValues = str_replace("Filter: ", "", $oAllowedValuesDef->GetValuesDescription());
-			$sAllowedValuesEscpd = utils::HtmlEntities($sAllowedValues);
-
-			$sFilterURL = urlencode($sAllowedValues);
-			$sAllowedValues = '<span id="values'.$sAttrCode.'" data-tooltip-content="'.$sAllowedValuesEscpd.'"><a href="run_query.php?expression='.$sFilterURL.'" class="fas fa-search"></a> '.Dict::S('UI:Schema:Attribute/Filter')."</span>";
-		} else {
-			$sAllowedValues = '';
-		}
-		$sAttrValueEscpd = utils::HtmlEntities($sValue);
-		$sAttrTypeDescEscpd = utils::HtmlEntities($sTypeDesc);
-		$sAttrOriginEscpd = utils::HtmlEntities($sOrigin);
-		$sDefaultNullValueEscpd = utils::HtmlEntities($sDefaultNullValue);
-
-		$aDetails[] = [
-			'code' => '<span id="attr'.$sAttrCode.'" data-tooltip-content="'.$sAttrValueEscpd.'" data-tooltip-html-enabled="true">'.$oAttDef->GetLabel().' ('.$oAttDef->GetCode().')</span>',
-			'type' => '<span id="type'.$sAttrCode.'" data-tooltip-content="'.$sAttrTypeDescEscpd.'">'.$sTypeDict.' ('.$sType.')</span>',
-			'origincolor' => '<div class="originColor'.$sOrigin.'" data-tooltip-content="'.$sAttrOriginEscpd.'"></div>',
-			'origin' => "<span id=\"origin".$sAttrCode."\">$sOrigin</span>",
-			'values' => $sAllowedValues,
-			'moreinfo' => '<span id="moreinfo'.$sAttrCode.'" data-tooltip-content="'.$sDefaultNullValueEscpd.'">'.$sMoreInfo.'</span>',
-		];
-
-	}
+	// Attributes
 	$oPage->SetCurrentTab('UI:Schema:Attributes');
-	$aConfig = [
-		'origincolor' => ['label' => "", 'description' => ""],
-		'code' => ['label' => Dict::S('UI:Schema:AttributeCode'), 'description' => Dict::S('UI:Schema:AttributeCode+')],
-		'type' => ['label' => Dict::S('UI:Schema:Type'), 'description' => Dict::S('UI:Schema:Type+')],
-		'values' => ['label' => Dict::S('UI:Schema:AllowedValues'), 'description' => Dict::S('UI:Schema:AllowedValues+')],
-		'moreinfo' => ['label' => Dict::S('UI:Schema:MoreInfo'), 'description' => Dict::S('UI:Schema:MoreInfo+')],
-		'origin' => ['label' => Dict::S('UI:Schema:Origin'), 'description' => Dict::S('UI:Schema:Origin+')],
-	];
-	$oTablePanel = PanelUIBlockFactory::MakeForClass($sClass, '');
-	$oTablePanel->AddCSSClass('ibo-datatable-panel');
+	DisplayClassAttributes($oPage, $sClass, $sContext);
 
-	$oAttributesTable = DataTableUIBlockFactory::MakeForStaticData('', $aConfig, $aDetails, 'ibo-datamodel-viewer--attributes-table', [], "", ['pageLength' => -1]);
-	$oTablePanel->AddSubBlock($oAttributesTable);
-	$oPage->AddUiBlock($oTablePanel);
-	$sOrigins = json_encode(array_keys($aOrigins));
-
-	//color calculation in order to keep 1 color for 1 extended class. Colors are interpolated and will be used for
-	// graph scheme color too
-	$oPage->add_ready_script(
-		<<< EOF
-				var aOrigins = $sOrigins;
-				var aColors = d3.scale.linear().domain([1,aOrigins.length])
-				  .interpolate(d3.interpolateHcl)
-				  .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);		
-				$.each(aOrigins,function(idx, origin){
-					$('.originColor'+origin).css('background-color',aColors(aOrigins.indexOf(origin)));
-				});
-				Array.prototype.forEach.call($(".listResults").find('td:nth-child(1),th:nth-child(1)'), function(e){
-					$(e).removeClass("header").addClass("ibo-datamodel-viewer--origin-cell");
-				});
-
-EOF
-	);
-
+	// Related classes
 	$oPage->SetCurrentTab('UI:Schema:RelatedClasses');
 	DisplayRelatedClassesGraph($oPage, $sClass);
 
@@ -1060,12 +1171,15 @@ EOF
 		$oPage->add_ready_script('$("#ClassHierarchy").treeview({collapsed: false,});');
 	}
 
+	// Lifecycle
 	$oPage->SetCurrentTab('UI:Schema:LifeCycle');
 	DisplayLifecycle($oPage, $sClass);
 
+	// Triggers
 	$oPage->SetCurrentTab('UI:Schema:Triggers');
 	DisplayTriggers($oPage, $sClass);
 
+	// Events
 	$oPage->SetCurrentTab('UI:Schema:Events');
 	DisplayEvents($oPage, $sClass);
 
@@ -1100,7 +1214,6 @@ $oPage->SetBreadCrumbEntry(
 );
 
 $oTitle = TitleUIBlockFactory::MakeForPage(Dict::S('UI:Schema:Title'));
-$oPage->AddUiBlock($oTitle);
 $oLayout->AddSideHtml("<div class='ibo-datamodel-viewer--classes-list'> ");
 DisplayClassesList($oPage, $oLayout, $sContext);
 $oLayout->AddSideHtml("</div>");
@@ -1118,6 +1231,11 @@ switch ($operation) {
 		}
 		// no break
 	default:
+		$sSource = APPROOT."images/illustrations/undraw_reading_time.svg";
+		$oEmpty = HtmlFactory::MakeRaw("<div class='ibo-datamodel-viewer--empty ibo-svg-illustration--container'>".
+			file_get_contents($sSource)."<div class='ibo-datamodel-viewer--empty--text'>".Dict::S('UI:Schema:NoClassSelected')."</div></div>");
+		$oLayout->AddSubBlock($oEmpty);
+		break;
 }
 $oPage->add("</div>");
 $oPage->add("</div>");

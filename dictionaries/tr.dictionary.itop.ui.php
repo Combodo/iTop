@@ -732,6 +732,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'UI:Query:UrlV1' => 'Alanların listesi belirtilmeden bırakılmıştır. <em>export-V2.php</em> sayfası bu bilgi olmadan çağrılamaz. Bu nedenle, aşağıda önerilen URL eski sayfaya işaret etmektedir: <em>export.php</em>. Dışa aktarmanın bu eski sürümü aşağıdaki sınırlamaya sahiptir: dışa aktarılan alanların listesi, '.ITOP_APPLICATION_SHORT.'\'un çıktı biçimine ve veri modeline bağlı olarak değişebilir. Dışa aktarılan sütunların listesinin uzun vadede sabit kalacağını garanti etmek istiyorsanız, "Alanlar" özelliği için bir değer belirtmeli ve <em>export-V2.php</em> sayfasını kullanmalısınız.',
 	'UI:Schema:Title' => 'iTop objects schema',
 	'UI:Schema:TitleForClass' => '%1$s schema~~',
+	'UI:Schema:NoClassSelected' => 'No class selected, please choose one~~',
 	'UI:Schema:CategoryMenuItem' => 'Kategori <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'İlişkiler',
 	'UI:Schema:AbstractClass' => 'Soyut sınıf: bu sınıftan nesne türetilemez.',
