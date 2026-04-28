@@ -1,9 +1,0 @@
-@import '../node_modules/ckeditor5-itop-build/build/styles/compiled-theme';
-
-:root {
-  --ck-content-font-family: #{$common-font-family-base}, #{$common-font-family-fallbacks};
-}
-
-.ipb-is-html-content {
-  @extend .ck-content;
-}

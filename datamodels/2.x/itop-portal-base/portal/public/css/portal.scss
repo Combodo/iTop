@@ -1133,6 +1133,11 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 /*********/
 /* Forms */
 /*********/
+
+:root {
+  --ck-content-font-family: #{$font-family-base};
+}
+
 /* - Ensure HTML contents are displayed like in CKEditor */
 .ipb-is-html-content {
   @extend .ck-content;
