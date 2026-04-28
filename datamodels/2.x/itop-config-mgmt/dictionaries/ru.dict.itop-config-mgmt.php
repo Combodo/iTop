@@ -947,6 +947,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'Все системы, где установлен этот патч',
 	'Class:OSPatch/Attribute:osversion_id' => 'Версия ОС',
 	'Class:OSPatch/Attribute:osversion_id+' => '',
+	'Class:OSPatch/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSPatch/Attribute:osfamily_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'Версия ОС',
 	'Class:OSPatch/Attribute:osversion_name+' => '',
 ]);
@@ -1011,6 +1013,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:OSLicence/Attribute:osversion_id' => 'Версия ОС',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
+	'Class:OSLicence/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSLicence/Attribute:osfamily_id+' => '~~',
 	'Class:OSLicence/Attribute:osversion_name' => 'Версия ОС',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Виртуальные машины',

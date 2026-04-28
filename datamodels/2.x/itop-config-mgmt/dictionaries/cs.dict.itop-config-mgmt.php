@@ -948,6 +948,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'Všechna zařízení, kde je tato záplata (patch) instalována',
 	'Class:OSPatch/Attribute:osversion_id' => 'Verze OS',
 	'Class:OSPatch/Attribute:osversion_id+' => '',
+	'Class:OSPatch/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSPatch/Attribute:osfamily_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'Název verze OS',
 	'Class:OSPatch/Attribute:osversion_name+' => '',
 ]);
@@ -1012,6 +1014,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:OSLicence/Attribute:osversion_id' => 'Verze OS',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
+	'Class:OSLicence/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSLicence/Attribute:osfamily_id+' => '',
 	'Class:OSLicence/Attribute:osversion_name' => 'Název verze OS',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtuální stroje (VM)',

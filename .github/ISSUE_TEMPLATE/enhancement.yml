@@ -1,0 +1,47 @@
+name: "Enhancement suggestion"
+description: "Suggest an improvement to iTop"
+type: feature
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please explain why you're creating this issue :
+        - Please describe what's your improvement proposition.
+        - Then tell us if you're willing to create a PR for this enhancement ? If so, we'll indicate in the issue if we're interested in it.
+
+  - type: textarea
+    id: enhancement_details
+    attributes:
+      label: Enhancement details
+      description: |
+        Please explain what you want to improve, and your proposition to make it better.
+        If it requires a custom datamodel, provide the minimal XML delta to reproduce it.
+    validations:
+      required: false
+
+  - type: input
+    id: itop_version
+    attributes:
+      label: iTop version (if appropriate)
+      description: "Complete iTop version (e.g., 3.2.3)"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: willing_to_pr
+    attributes:
+      label: Are you willing to create (at a later stage) a PR for that?
+      options:
+        - 'Yes'
+        - 'No'
+    validations:
+      required: true
+
+  - type: upload
+    id: additional_info
+    attributes:
+      label: Additional information (if needed)
+      description: "Add/drag and drop screenshots, logs or any files that can be relevant for your issue."
+    validations:
+      required: false
+      accept: ".png, .jpg, .jpeg, .gif, .webp, .log, .txt, .json, .csv, .xml, .zip"

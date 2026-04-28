@@ -97,17 +97,18 @@
 			$bDebug = isset($aServerParams['debug']) ? $aServerParams['debug'] : false;
 		}
 
+		if (array_key_exists(LDAP_OPT_DEBUG_LEVEL, $aOptions))
+		{
+			// Set debug level before trying to connect, so that debug info appear in the PHP error log if ldap_connect goes wrong
+			$bRet = ldap_set_option(null, LDAP_OPT_DEBUG_LEVEL, $aOptions[LDAP_OPT_DEBUG_LEVEL]);
+			$this->LogInfo($bDebug, "ldap_set_option('LDAP_OPT_DEBUG_LEVEL', '{$aOptions[LDAP_OPT_DEBUG_LEVEL]}') returned ".($bRet ? 'true' : 'false'));
+		}
+
 		$hDS = @ldap_connect($sURI);
 		if ($hDS === false)
 		{
 			$this->LogIssue($bDebug, "ldap_authentication: can not connect to the LDAP server '$sURI'. Check the configuration file config-itop.php.");
 			return false;
-		}
-		if (array_key_exists(LDAP_OPT_DEBUG_LEVEL, $aOptions))
-		{
-			// Set debug level before trying to connect, so that debug info appear in the PHP error log if ldap_connect goes wrong
-			$bRet = ldap_set_option($hDS, LDAP_OPT_DEBUG_LEVEL, $aOptions[LDAP_OPT_DEBUG_LEVEL]);
-			$this->LogInfo($bDebug, "ldap_set_option('LDAP_OPT_DEBUG_LEVEL', '{$aOptions[LDAP_OPT_DEBUG_LEVEL]}') returned ".($bRet ? 'true' : 'false'));
 		}
 		foreach($aOptions as $name => $value)
 		{

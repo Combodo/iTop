@@ -947,6 +947,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'Bu yamanın kurulduğu tüm sistemler',
 	'Class:OSPatch/Attribute:osversion_id' => 'OS Sürümü',
 	'Class:OSPatch/Attribute:osversion_id+' => '~~',
+	'Class:OSPatch/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSPatch/Attribute:osfamily_id+' => '~~',
 	'Class:OSPatch/Attribute:osversion_name' => 'OS Sürüm Adı',
 	'Class:OSPatch/Attribute:osversion_name+' => '~~',
 ]);
@@ -1011,6 +1013,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:OSLicence/Attribute:osversion_id' => 'OS Sürümü',
 	'Class:OSLicence/Attribute:osversion_id+' => '~~',
+	'Class:OSLicence/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSLicence/Attribute:osfamily_id+' => '~~',
 	'Class:OSLicence/Attribute:osversion_name' => 'OS Sürüm Adı',
 	'Class:OSLicence/Attribute:osversion_name+' => '~~',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Sanal Makineler',

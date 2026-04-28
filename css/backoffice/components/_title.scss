@@ -51,19 +51,23 @@ $ibo-title--icon-img--size--must-zoomout: $ibo-title--icon-background--size--mus
   width: 100%;
   height: 100%;
   object-position: center;
+  object-fit: $ibo-title--icon-img--size--must-contain;
   background-size: $ibo-title--icon-img--size--must-contain;
 }
 
 .ibo-title--icon-img--must-contain, .ibo-title--icon-background--must-contain { // second class is deprecated, remove it when dealing with N°9317
+  object-fit: $ibo-title--icon-img--size--must-contain;
   background-size: $ibo-title--icon-img--size--must-contain;
 }
 
 .ibo-title--icon-img--must-cover, .ibo-title--icon-background--must-cover { // second class is deprecated, remove it when dealing with N°9317
+  object-fit: $ibo-title--icon-img--size--must-cover;
   background-size: $ibo-title--icon-img--size--must-cover;
 }
 
 .ibo-title--icon-img--must-zoomout, .ibo-title--icon-background--must-zoomout { // second class is deprecated, remove it when dealing with N°9317
-  background-size: $ibo-title--icon-img--size--must-zoomout;
+  width: $ibo-title--icon-img--size--must-zoomout;
+  height: $ibo-title--icon-img--size--must-zoomout;
 }
 
 .ibo-title--for-object-details {

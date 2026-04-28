@@ -948,6 +948,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'Alle systemen waarop deze patch is geïnstalleerd',
 	'Class:OSPatch/Attribute:osversion_id' => 'Versie besturingssysteem',
 	'Class:OSPatch/Attribute:osversion_id+' => '',
+	'Class:OSPatch/Attribute:osfamily_id' => 'Soort besturingssysteem',
+	'Class:OSPatch/Attribute:osfamily_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'Naam versie besturingssysteem',
 	'Class:OSPatch/Attribute:osversion_name+' => '',
 ]);
@@ -1012,6 +1014,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:OSLicence/Attribute:osversion_id' => 'Versie besturingssysteem',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
+	'Class:OSLicence/Attribute:osfamily_id' => 'Soort besturingssysteem',
+	'Class:OSLicence/Attribute:osfamily_id+' => '~~',
 	'Class:OSLicence/Attribute:osversion_name' => 'Naam versie bestandssysteem',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtuele machines',

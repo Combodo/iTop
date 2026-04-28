@@ -1,0 +1,60 @@
+name: "Bug report"
+description: "Report a bug that you identified in iTop"
+type: bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please explain why you're creating this issue :
+        - Are you willing to create a PR for the bug fix ? If so, we'll indicate in the issue if we're interested in it.
+        - Then, please describe how to reproduce the issue.
+
+  - type: dropdown
+    id: willing_to_pr
+    attributes:
+      label: Are you willing to create (at a later stage) a PR for that?
+      options:
+        - 'Yes'
+        - 'No'
+    validations:
+      required: true
+
+  - type: input
+    id: itop_version
+    attributes:
+      label: iTop version
+      description: "Complete iTop version (e.g., 3.2.3)"
+    validations:
+      required: false
+
+  - type: input
+    id: php_version
+    attributes:
+      label: PHP version
+      description: "Complete PHP version (e.g., 8.4.20)"
+    validations:
+      required: false
+
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: Reproduction procedure
+      description: |
+        Please explain step by step how to reproduce the issue on a standard iTop Community.
+        If it requires a custom datamodel, provide the minimal XML delta to reproduce it.
+      placeholder: |
+        1. First go there
+        2. Then do that
+        3. ...
+        4. Finally, see that... (what is expected and what is actually happening)
+    validations:
+      required: false
+
+  - type: upload
+    id: additional_info
+    attributes:
+      label: Additional information (if needed)
+      description: "Add/drag and drop screenshots, logs or any files that can be relevant for your issue."
+    validations:
+      required: false
+      accept: ".png, .jpg, .jpeg, .gif, .webp, .log, .txt, .json, .csv, .xml, .zip"

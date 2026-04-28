@@ -1598,9 +1598,6 @@
                 <item id="fieldset:Ticket:Type">
                   <rank>10</rank>
                   <items>
-                    <item id="request_type">
-                      <rank>10</rank>
-                    </item>
                     <item id="impact">
                       <rank>20</rank>
                     </item>
