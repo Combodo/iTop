@@ -127,15 +127,16 @@ class DeletionPlanService
 	* @return void
 	* @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
 	 */
-	public function ExecuteDeletionPlan(array $aClasses, int $iMaxExecutionTime = 30, int $iMaxMemoryPercent = 80): void
+	public function ExecuteDeletionPlan(array $aClasses, int $iMaxExecutionTime = 30, int $iMaxMemoryPercent = 80): array
 	{
 		$oObject = $this->GetNextObjectToDelete($aClasses);
 		if (is_null($oObject)) {
-			return;
+			return [];
 		}
 
 		$iMaxTime = time() + $iMaxExecutionTime;
 		$this->RecursiveDeletion($oObject, $iMaxTime, $iMaxMemoryPercent);
+		return [];
 	}
 
 	public function IsVisited(DBObject $oObject): bool
