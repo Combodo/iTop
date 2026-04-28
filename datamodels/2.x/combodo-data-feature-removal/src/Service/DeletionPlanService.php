@@ -56,9 +56,10 @@ class DeletionPlanService
 			$oFilter = new DBObjectSearch($sClass);
 			$oFilter->AllowAllData();
 			$oSet = new \DBObjectSet($oFilter);
-			$oObject = $oSet->Fetch();
-			if (! is_null($oObject)) {
-				return $oObject;
+			while ($oObject = $oSet->Fetch()) {
+				if (!$this->IsVisited($oObject)) {
+					return $oObject;
+				}
 			}
 		}
 
@@ -89,14 +90,22 @@ class DeletionPlanService
 
 	}
 
+	private function MarkObjectAsVisited(DBObject $oObject): void
+	{
+		$sClass = get_class($oObject);
+		$sId = $oObject->GetKey();
+		$sKey = "$sClass-$sId";
+		$this->aVisited[$sKey] = true;
+	}
+
 	private function IsVisited(DBObject $oObject): bool
 	{
 		$sClass = get_class($oObject);
 		$sId = $oObject->GetKey();
-		$sKey = "{$sClass}_{$sId}";
+		$sKey = "$sClass-$sId";
 
 		$bRes = $this->aVisited[$sKey] ?? false;
-		$this->aVisited[$sKey] = true;
+		\IssueLog::Info('Checking if object is visited', null, [$sKey, $bRes]);
 		return $bRes;
 	}
 
@@ -120,6 +129,7 @@ class DeletionPlanService
 			return false;
 		}
 
+		$this->MarkObjectAsVisited($oObjectToClean);
 		$sClass = get_class($oObjectToClean);
 
 		$aReferencingMe = MetaModel::EnumReferencingClasses($sClass);
@@ -153,6 +163,7 @@ class DeletionPlanService
 							$this->oObjectService->Update($oDependentObj, $oExtKeyAttDef->GetCode(), 0);
 						}
 					} else {
+						// Propagate deletion only if not visited
 						if ($this->IsVisited($oDependentObj)) {
 							continue;
 						}
@@ -165,28 +176,5 @@ class DeletionPlanService
 		$this->oObjectService->Delete($sClass, $oObjectToClean->GetKey());
 
 		return true;
-	}
-
-	/**
-	 * Get a deletion plan for all the objects of the classes
-	 *
-	 * @param array $aClasses array of class names to clean
-	 *
-	 * @return \DeletionPlan
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 */
-	public function GetDeletionPlan(array $aClasses): DeletionPlan
-	{
-		$oDeletionPlan = new DeletionPlan();
-		foreach ($aClasses as $sClass) {
-			$aObjects = $this->GetAllObjects($sClass);
-			foreach ($aObjects as $oObject) {
-				$oObject->CheckToDelete($oDeletionPlan);
-			}
-		}
-
-		return $oDeletionPlan;
 	}
 }
