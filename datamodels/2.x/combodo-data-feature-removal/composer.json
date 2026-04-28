@@ -4,8 +4,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Combodo\\iTop\\DataFeatureRemoval\\": "src",
-      "": "src/NoNamespace"
+      "Combodo\\iTop\\DataFeatureRemoval\\": "src"
     }
   },
   "name": "combodo/combodo-data-feature-removal",

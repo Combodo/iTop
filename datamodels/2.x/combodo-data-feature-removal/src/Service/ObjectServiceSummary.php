@@ -7,7 +7,7 @@
 
 namespace Combodo\iTop\DataFeatureRemoval\Service;
 
-use Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity;
+use Combodo\iTop\DataFeatureRemoval\Entity\DataCleanupSummaryEntity;
 use DBObject;
 use IssueLog;
 
@@ -25,7 +25,7 @@ class ObjectServiceSummary implements iObjectService
 		$sClass = get_class($oToUpdate);
 		IssueLog::Info('Update object', null, ['class' => $sClass, 'id' => $oToUpdate->GetKey(), 'code' => $sAttCode, 'value' => "$value"]);
 		if (! array_key_exists($sClass, $this->aSummary)) {
-			$this->aSummary[$sClass] = new DeletionPlanSummaryEntity($sClass);
+			$this->aSummary[$sClass] = new DataCleanupSummaryEntity($sClass);
 		}
 		$oDeletionPlanSummaryEntity = $this->aSummary[$sClass];
 		$oDeletionPlanSummaryEntity->iUpdateCount++;
@@ -35,7 +35,7 @@ class ObjectServiceSummary implements iObjectService
 	{
 		IssueLog::Info('Delete object', null, ['class' => $sClass, 'id' => $sId]);
 		if (!array_key_exists($sClass, $this->aSummary)) {
-			$this->aSummary[$sClass] = new DeletionPlanSummaryEntity($sClass);
+			$this->aSummary[$sClass] = new DataCleanupSummaryEntity($sClass);
 		}
 		$oDeletionPlanSummaryEntity = $this->aSummary[$sClass];
 		$oDeletionPlanSummaryEntity->iDeleteCount++;

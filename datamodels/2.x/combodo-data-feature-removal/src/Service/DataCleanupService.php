@@ -9,7 +9,7 @@ use DBObject;
 use DBObjectSearch;
 use MetaModel;
 
-class DeletionPlanService
+class DataCleanupService
 {
 	private array $aVisited = [];
 	private iObjectService $oObjectService;
@@ -27,32 +27,15 @@ class DeletionPlanService
 	 *
 	 * @param array|null $aClasses
 	 *
-	 * @return array<\Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity>
+	 * @return array<\Combodo\iTop\DataFeatureRemoval\Entity\DataCleanupSummaryEntity>
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
 	 */
-	public function GetDeletionPlanSummary(?array $aClasses): array
+	public function GetCleanupSummary(?array $aClasses): array
 	{
-		return $this->ExecuteDeletionPlan($aClasses ?? [], oObjectService: new ObjectServiceSummary());
-	}
-
-	/**
-	 * @param string $sClass
-	 *
-	 * @return \DBObject[]
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \Exception
-	 */
-	private function GetAllObjects(string $sClass): array
-	{
-		$oFilter = new DBObjectSearch($sClass);
-		$oFilter->AllowAllData();
-		$oSet = new \DBObjectSet($oFilter);
-		return $oSet->ToArray();
+		return $this->ExecuteCleanup($aClasses ?? [], oObjectService: new ObjectServiceSummary());
 	}
 
 	private function GetNextObjectToDelete(array $aClasses): ?DBObject
@@ -82,7 +65,7 @@ class DeletionPlanService
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function ExecuteDeletionPlan(array $aClasses, ?iObjectService $oObjectService = null): array
+	public function ExecuteCleanup(array $aClasses, ?iObjectService $oObjectService = null): array
 	{
 		$this->oObjectService = $oObjectService ?? new ObjectService();
 

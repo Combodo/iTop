@@ -7,10 +7,10 @@
 
 namespace Combodo\iTop\Test\UnitTest\Module\DataFeatureRemoval\Service;
 
-use Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity;
+use Combodo\iTop\DataFeatureRemoval\Entity\DataCleanupSummaryEntity;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\ExecutionLimits;
-use Combodo\iTop\DataFeatureRemoval\Service\DeletionPlanService;
+use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DeletionPlan;
@@ -19,8 +19,8 @@ use DeletionPlan;
  * Unit tests for the DeletionPlanService cf the Combodo Data Feature Removal module.
  *
  * These tests cover:
- * - GetDeletionPlanSummary method: handling null and empty input, and verifying summary output for various delete/update scenarios.
- * - ExecuteDeletionPlan method: confirming that an exception is thrown when issues are detected in the deletion plan.
+ * - GetCleanupSummary method: handling null and empty input, and verifying summary output for various delete/update scenarios.
+ * - ExecuteCleanup method: confirming that an exception is thrown when issues are detected in the deletion plan.
  *
  * Key aspects tested:
  * - Consistent singleton instance management.
@@ -30,35 +30,34 @@ use DeletionPlan;
  *
  * The tests use PHPUnit, mocks for DeletionPlan and DeletionPlanService, and data providers to cover multiple scenarios.
  *
- * @see DeletionPlanService
- * @see DeletionPlanSummaryEntity
+ * @see DataCleanupService
+ * @see DataCleanupSummaryEntity
  * @see ItopDataTestCase
  */
-class DeletionPlanServiceTest extends ItopCustomDatamodelTestCase
+class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 {
 	private ExecutionLimits&\PHPUnit\Framework\MockObject\MockObject $oExecutionLimits;
 
-	protected function setUp(): void
+	public function GetDatamodelDeltaAbsPath(): string
 	{
-		parent::setUp();
-		//$this->RequireOnceItopFile('env-production/combodo-data-feature-removal/vendor/autoload.php');
+		return __DIR__.'/data_cleanup_delta.xml';
 	}
 
-	//--- GetDeletionPlanSummary tests ---
+	//--- GetCleanupSummary tests ---
 
 	/**
-	 * Tests that GetDeletionPlanSummary returns an empty array when passed null as input.
+	 * Tests that GetCleanupSummary returns an empty array when passed null as input.
 	 */
 	public function testGetDeletionPlanSummaryReturnsEmptyArrayWhenNull(): void
 	{
-		$oService = new DeletionPlanService();
-		$aResult = $oService->GetDeletionPlanSummary(null);
+		$oService = new DataCleanupService();
+		$aResult = $oService->GetCleanupSummary(null);
 
 		$this->assertIsArray($aResult, 'Expected result to be an array when input is null.');
 		$this->assertEmpty($aResult, 'Expected result to be empty array when input is null.');
 	}
 
-	//--- ExecuteDeletionPlan tests ---
+	//--- ExecuteCleanup tests ---
 
 	public function testExecuteDeletionPlan_DeleteOneObjPerClassWithoutLimit()
 	{
@@ -69,7 +68,8 @@ class DeletionPlanServiceTest extends ItopCustomDatamodelTestCase
 		EOF);
 
 		$aClasses = [ 'DFRToRemoveLeaf' ];
-		$aRes = (new DeletionPlanService())->ExecuteDeletionPlan($aClasses);
+		$oService = new DataCleanupService();
+		$aRes = $oService->ExecuteCleanup($aClasses);
 		$aExpected = [
 			['DFRToUpdate', 1, 0 ],
 			['DFRToRemoveLeaf', 0, 1 ],
@@ -96,7 +96,8 @@ class DeletionPlanServiceTest extends ItopCustomDatamodelTestCase
 		EOF);
 
 		$aClasses = [ 'DFRToRemoveLeaf' ];
-		$aRes = (new DeletionPlanService())->ExecuteDeletionPlan($aClasses);
+		$oService = new DataCleanupService();
+		$aRes = $oService->ExecuteCleanup($aClasses);
 		$aExpected = [
 			['DFRToUpdate', 3, 0 ],
 			['DFRToRemoveLeaf', 0, 3 ],
@@ -123,7 +124,8 @@ class DeletionPlanServiceTest extends ItopCustomDatamodelTestCase
 		EOF);
 
 		$aClasses = [ 'DFRToRemoveLeaf' ];
-		$aRes = (new DeletionPlanService())->GetDeletionPlanSummary($aClasses);
+		$oService = new DataCleanupService();
+		$aRes = $oService->GetCleanupSummary($aClasses);
 		$aExpected = [
 			['DFRToUpdate', 3, 0 ],
 			['DFRToRemoveLeaf', 0, 3 ],
@@ -142,7 +144,8 @@ class DeletionPlanServiceTest extends ItopCustomDatamodelTestCase
 		$aClasses = [ 'DFRToRemoveLeaf' ];
 		$this->expectException(DataFeatureRemovalException::class);
 		$this->expectExceptionMessage('Deletion Plan cannot be executed due to issues');
-		(new DeletionPlanService())->GetDeletionPlanSummary($aClasses);
+		$oService = new DataCleanupService();
+		$oService->GetCleanupSummary($aClasses);
 	}
 
 	private function AssertSummaryEquals(array $expected, $actual, $sMessage = '')
@@ -153,7 +156,7 @@ class DeletionPlanServiceTest extends ItopCustomDatamodelTestCase
 			$iUpdate = $line[1];
 			$iDelete = $line[2];
 
-			$oDeletionPlanSummaryEntity = new DeletionPlanSummaryEntity($sClass);
+			$oDeletionPlanSummaryEntity = new DataCleanupSummaryEntity($sClass);
 			$oDeletionPlanSummaryEntity->iUpdateCount = $iUpdate;
 			$oDeletionPlanSummaryEntity->iDeleteCount = $iDelete;
 			$aExpected[$sClass] = $oDeletionPlanSummaryEntity;
@@ -226,16 +229,11 @@ class DeletionPlanServiceTest extends ItopCustomDatamodelTestCase
 		EOF);
 
 		$aClasses = [ 'DFRToRemoveLeaf' ];
-		$oDeletionPlaService = new DeletionPlanService();
+		$oDeletionPlaService = new DataCleanupService();
 		$this->GivenExecutionLimits($iExecutionCount);
 		$this->SetNonPublicProperty($oDeletionPlaService, 'oExecutionLimits', $this->oExecutionLimits);
-		$aRes = $oDeletionPlaService->ExecuteDeletionPlan($aClasses);
+		$aRes = $oDeletionPlaService->ExecuteCleanup($aClasses);
 		$this->AssertSummaryEquals($aExpected, $aRes);
-	}
-
-	public function GetDatamodelDeltaAbsPath(): string
-	{
-		return __DIR__.'/deletionplan_delta.xml';
 	}
 
 	private function GivenDFRTreeInDB(string $sTree)

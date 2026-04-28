@@ -15,7 +15,7 @@ use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalConfig;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
 use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
-use Combodo\iTop\DataFeatureRemoval\Service\DeletionPlanService;
+use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Dict;
@@ -104,7 +104,8 @@ class DataFeatureRemovalController extends Controller
 
 		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 
-		$aDeletionPlanSummaryEntities = (new DeletionPlanService())->GetDeletionPlanSummary($aClasses);
+		$oDataCleanupService = new DataCleanupService();
+		$aDeletionPlanSummaryEntities = $oDataCleanupService->GetCleanupSummary($aClasses);
 		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount', 'Issue'];
 		$aRows = [];
 		$iQueryCount = 0;
@@ -135,7 +136,8 @@ class DataFeatureRemovalController extends Controller
 
 		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 
-		$aDeletionExecutionSummary = (new DeletionPlanService())->ExecuteDeletionPlan($aClasses);
+		$oDataCleanupService = new DataCleanupService();
+		$aDeletionExecutionSummary = $oDataCleanupService->ExecuteCleanup($aClasses);
 		$aColumns = ['Class', 'DeletedCount' , 'UpdatedCount'];
 		$aRows = [];
 		foreach ($aDeletionExecutionSummary as $oDeletionExecutionSummaryEntity) {

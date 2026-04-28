@@ -2,7 +2,7 @@
 
 namespace Combodo\iTop\DataFeatureRemoval\Entity;
 
-class DeletionPlanSummaryEntity
+class DataCleanupSummaryEntity
 {
 	public string $sClass;
 	public ?string $sIssue = null;
