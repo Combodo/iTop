@@ -33,6 +33,9 @@ class ComposerStaticInit4f96a7199e2c0d90e547333758b26464
         'Combodo\\iTop\\DataFeatureRemoval\\Helper\\DataFeatureRemovalLog' => __DIR__ . '/../..' . '/src/Helper/DataFeatureRemovalLog.php',
         'Combodo\\iTop\\DataFeatureRemoval\\Service\\DataFeatureRemoverExtensionService' => __DIR__ . '/../..' . '/src/Service/DataFeatureRemoverExtensionService.php',
         'Combodo\\iTop\\DataFeatureRemoval\\Service\\DeletionPlanService' => __DIR__ . '/../..' . '/src/Service/DeletionPlanService.php',
+        'Combodo\\iTop\\DataFeatureRemoval\\Service\\ObjectService' => __DIR__ . '/../..' . '/src/Service/ObjectService.php',
+        'Combodo\\iTop\\DataFeatureRemoval\\Service\\ObjectServiceSummary' => __DIR__ . '/../..' . '/src/Service/ObjectServiceSummary.php',
+        'Combodo\\iTop\\DataFeatureRemoval\\Service\\iObjectService' => __DIR__ . '/../..' . '/src/Service/iObjectService.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 

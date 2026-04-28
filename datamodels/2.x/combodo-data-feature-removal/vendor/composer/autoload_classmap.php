@@ -14,5 +14,8 @@ return array(
     'Combodo\\iTop\\DataFeatureRemoval\\Helper\\DataFeatureRemovalLog' => $baseDir . '/src/Helper/DataFeatureRemovalLog.php',
     'Combodo\\iTop\\DataFeatureRemoval\\Service\\DataFeatureRemoverExtensionService' => $baseDir . '/src/Service/DataFeatureRemoverExtensionService.php',
     'Combodo\\iTop\\DataFeatureRemoval\\Service\\DeletionPlanService' => $baseDir . '/src/Service/DeletionPlanService.php',
+    'Combodo\\iTop\\DataFeatureRemoval\\Service\\ObjectService' => $baseDir . '/src/Service/ObjectService.php',
+    'Combodo\\iTop\\DataFeatureRemoval\\Service\\ObjectServiceSummary' => $baseDir . '/src/Service/ObjectServiceSummary.php',
+    'Combodo\\iTop\\DataFeatureRemoval\\Service\\iObjectService' => $baseDir . '/src/Service/iObjectService.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
 );

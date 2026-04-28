@@ -15,6 +15,7 @@ use utils;
 class DeletionPlanService
 {
 	private array $aVisited = [];
+	private iObjectService $oObjectService;
 
 	/**
 	 * Get a summary of the deletion plan computed for the classes.
@@ -29,31 +30,7 @@ class DeletionPlanService
 	 */
 	public function GetDeletionPlanSummary(?array $aClasses): array
 	{
-		$aSummary = [];
-		if (is_null($aClasses)) {
-			return $aSummary;
-		}
-
-		$oDeletionPlan = $this->GetDeletionPlan($aClasses);
-
-		foreach ($oDeletionPlan->ListUpdates() as $sClass => $aUpdates) {
-			$oDeletionPlanSummaryEntity = new DeletionPlanSummaryEntity($sClass);
-			$oDeletionPlanSummaryEntity->iUpdateCount = count($aUpdates);
-			$aSummary[$sClass] = $oDeletionPlanSummaryEntity;
-		}
-
-		foreach ($oDeletionPlan->ListDeletes() as $sClass => $aDeletes) {
-			$oDeletionPlanSummaryEntity = $aSummary[$sClass] ?? new DeletionPlanSummaryEntity($sClass);
-			$oDeletionPlanSummaryEntity->iDeleteCount = count($aDeletes);
-
-			$aDelete = array_shift($aDeletes);
-			$oDeletionPlanSummaryEntity->iMode = $aDelete['mode'];
-			$oDeletionPlanSummaryEntity->sIssue = $aDelete['issue'] ?? null;
-
-			$aSummary[$sClass] = $oDeletionPlanSummaryEntity;
-		}
-
-		return $aSummary;
+		return $this->ExecuteDeletionPlan($aClasses ?? [], oObjectService: new ObjectServiceSummary());
 	}
 
 	/**
@@ -88,38 +65,6 @@ class DeletionPlanService
 		return null;
 	}
 
-	private function Update(DBObject $oToUpdate, string $sAttCode, $value)
-	{
-		$oToUpdate->Set($sAttCode, $value);
-		$oToUpdate->DBUpdate();
-	}
-
-	private function Delete(string $sClass, string $sId)
-	{
-		try {
-			CMDBSource::Query('START TRANSACTION');
-			// Delete any existing change tracking about the current object
-			$oFilter = new DBObjectSearch('CMDBChangeOp');
-			$oFilter->AddCondition('objclass', $sClass, '=');
-			$oFilter->AddCondition('objkey', $sId, '=');
-			MetaModel::PurgeData($oFilter);
-
-			// Delete the entry
-			$aClassesToRemove = array_merge(MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL), MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_EXCLUDELEAF, false));
-			foreach ($aClassesToRemove as $sParentClass) {
-				$oFilter = DBObjectSearch::FromOQL_AllData("SELECT $sParentClass WHERE id=:id");
-				$sQuery = $oFilter->MakeDeleteQuery(['id' => $sId]);
-				CMDBSource::DeleteFrom($sQuery);
-			}
-
-			CMDBSource::Query('COMMIT');
-		} catch (\Exception $e) {
-			\IssueLog::Exception(__METHOD__.': Cleanup failed', $e);
-			CMDBSource::Query('ROLLBACK');
-			throw $e;
-		}
-	}
-
 	/**
 	* @param array $aClasses
 	* @param int $iMaxExecutionTime
@@ -127,16 +72,21 @@ class DeletionPlanService
 	* @return array execution summary
 	* @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
 	 */
-	public function ExecuteDeletionPlan(array $aClasses, int $iMaxExecutionTime = 30, int $iMaxMemoryPercent = 80): array
+	public function ExecuteDeletionPlan(array $aClasses, int $iMaxExecutionTime = 30, int $iMaxMemoryPercent = 80, ?iObjectService $oObjectService = null): array
 	{
-		$oObject = $this->GetNextObjectToDelete($aClasses);
-		if (is_null($oObject)) {
-			return [];
-		}
+		$this->oObjectService = $oObjectService ?? new ObjectService();
 
-		$iMaxTime = time() + $iMaxExecutionTime;
-		$this->RecursiveDeletion($oObject, $iMaxTime, $iMaxMemoryPercent);
-		return [];
+		$this->aVisited = [];
+
+		while ($oObject = $this->GetNextObjectToDelete($aClasses)) {
+			$iMaxTime = time() + $iMaxExecutionTime;
+			if ($this->RecursiveDeletion($oObject, $iMaxTime, $iMaxMemoryPercent) === false) {
+				// Timeout, stop here
+				break;
+			}
+		}
+		return $this->oObjectService->GetSummary();
+
 	}
 
 	private function IsVisited(DBObject $oObject): bool
@@ -150,10 +100,24 @@ class DeletionPlanService
 		return $bRes;
 	}
 
-	private function RecursiveDeletion(DBObject $oObjectToClean, int $iMaxTime, int $iMaxMemoryPercent): void
+	/**
+	 *
+	 * @param \DBObject $oObjectToClean
+	 * @param int $iMaxTime
+	 * @param int $iMaxMemoryPercent
+	 *
+	 * @return bool true if deletion is complete, false in case of timeout or memory limit reached
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	private function RecursiveDeletion(DBObject $oObjectToClean, int $iMaxTime, int $iMaxMemoryPercent): bool
 	{
 		if (utils::ShouldStopExecution($iMaxTime, $iMaxMemoryPercent)) {
-			return;
+			return false;
 		}
 
 		$sClass = get_class($oObjectToClean);
@@ -176,7 +140,7 @@ class DeletionPlanService
 				while ($oDependentObj = $oSet->Fetch()) {
 					$iDeletePropagationOption = $oExtKeyAttDef->GetDeletionPropagationOption();
 					if ($iDeletePropagationOption == DEL_MANUAL) {
-						throw new DataFeatureRemovalException("DEL_MANUAL object");
+						throw new DataFeatureRemovalException("Deletion Plan cannot be executed due to issues");
 					}
 
 					if ($oExtKeyAttDef->IsNullAllowed()) {
@@ -184,9 +148,9 @@ class DeletionPlanService
 						if (($iDeletePropagationOption == DEL_MOVEUP) && ($oExtKeyAttDef->IsHierarchicalKey())) {
 							// Move the child up one level i.e. set the same parent as the current object
 							$iParentId = $oObjectToClean->Get($oExtKeyAttDef->GetCode());
-							$this->Update($oDependentObj, $oExtKeyAttDef->GetCode(), $iParentId);
+							$this->oObjectService->Update($oDependentObj, $oExtKeyAttDef->GetCode(), $iParentId);
 						} else {
-							$this->Update($oDependentObj, $oExtKeyAttDef->GetCode(), 0);
+							$this->oObjectService->Update($oDependentObj, $oExtKeyAttDef->GetCode(), 0);
 						}
 					} else {
 						if ($this->IsVisited($oDependentObj)) {
@@ -198,7 +162,9 @@ class DeletionPlanService
 			}
 		}
 
-		$this->Delete($sClass, $oObjectToClean->GetKey());
+		$this->oObjectService->Delete($sClass, $oObjectToClean->GetKey());
+
+		return true;
 	}
 
 	/**
