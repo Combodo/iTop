@@ -31,6 +31,7 @@ class DeletionPlanService
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
+	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
 	 */
 	public function GetDeletionPlanSummary(?array $aClasses): array
 	{
