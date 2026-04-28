@@ -104,7 +104,7 @@ class DataFeatureRemovalController extends Controller
 
 		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 
-		$aDeletionPlanSummaryEntities = DeletionPlanService::GetInstance()->GetDeletionPlanSummary($aClasses);
+		$aDeletionPlanSummaryEntities = (new DeletionPlanService())->GetDeletionPlanSummary($aClasses);
 		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount', 'Issue'];
 		$aRows = [];
 		$iQueryCount = 0;
@@ -135,7 +135,7 @@ class DataFeatureRemovalController extends Controller
 
 		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 
-		$aDeletionExecutionSummary = DeletionPlanService::GetInstance()->ExecuteDeletionPlan($aClasses);
+		$aDeletionExecutionSummary = (new DeletionPlanService())->ExecuteDeletionPlan($aClasses);
 		$aColumns = ['Class', 'DeletedCount' , 'UpdatedCount'];
 		$aRows = [];
 		foreach ($aDeletionExecutionSummary as $oDeletionExecutionSummaryEntity) {

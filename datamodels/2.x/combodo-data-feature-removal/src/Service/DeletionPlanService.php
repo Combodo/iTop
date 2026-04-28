@@ -3,21 +3,23 @@
 namespace Combodo\iTop\DataFeatureRemoval\Service;
 
 use CMDBObjectSet;
-use CMDBSource;
-use Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\ExecutionLimits;
 use DBObject;
 use DBObjectSearch;
-use DeletionPlan;
 use MetaModel;
-use utils;
 
 class DeletionPlanService
 {
 	private array $aVisited = [];
 	private iObjectService $oObjectService;
 	private ExecutionLimits $oExecutionLimits;
+
+	public function __construct(int $iMaxExecutionTime = 30, int $iMaxMemoryPercent = 80)
+	{
+		$iMaxTime = time() + $iMaxExecutionTime;
+		$this->oExecutionLimits = new ExecutionLimits($iMaxTime, $iMaxMemoryPercent);
+	}
 
 	/**
 	 * Get a summary of the deletion plan computed for the classes.
@@ -70,8 +72,6 @@ class DeletionPlanService
 
 	/**
 	 * @param array $aClasses
-	 * @param int $iMaxExecutionTime
-	 * @param int $iMaxMemoryPercent
 	 * @param \Combodo\iTop\DataFeatureRemoval\Service\iObjectService|null $oObjectService
 	 *
 	 * @return array execution summary
@@ -81,15 +81,13 @@ class DeletionPlanService
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function ExecuteDeletionPlan(array $aClasses, int $iMaxExecutionTime = 30, int $iMaxMemoryPercent = 80, ?iObjectService $oObjectService = null): array
+	public function ExecuteDeletionPlan(array $aClasses, ?iObjectService $oObjectService = null): array
 	{
 		$this->oObjectService = $oObjectService ?? new ObjectService();
 
 		$this->aVisited = [];
 
 		while ($oObject = $this->GetNextObjectToDelete($aClasses)) {
-			$iMaxTime = time() + $iMaxExecutionTime;
-			$this->oExecutionLimits = new ExecutionLimits($iMaxTime, $iMaxMemoryPercent);
 			if ($this->RecursiveDeletion($oObject) === false) {
 				// Timeout, stop here
 				break;
@@ -114,7 +112,7 @@ class DeletionPlanService
 		$sKey = "$sClass-$sId";
 
 		$bRes = $this->aVisited[$sKey] ?? false;
-		\IssueLog::Info('Checking if object is visited', null, [$sKey, $bRes]);
+		\IssueLog::Debug('Checking if object is visited', null, [$sKey, $bRes]);
 		return $bRes;
 	}
 
@@ -132,10 +130,6 @@ class DeletionPlanService
 	 */
 	private function RecursiveDeletion(DBObject $oObjectToClean): bool
 	{
-		if ($this->oExecutionLimits->ShouldStopExecution()) {
-			return false;
-		}
-
 		$this->MarkObjectAsVisited($oObjectToClean);
 		$sClass = get_class($oObjectToClean);
 
@@ -169,18 +163,29 @@ class DeletionPlanService
 						} else {
 							$this->oObjectService->Update($oDependentObj, $oExtKeyAttDef->GetCode(), 0);
 						}
+						if ($this->oExecutionLimits->ShouldStopExecution()) {
+							return false;
+						}
 					} else {
 						// Propagate deletion only if not visited
 						if ($this->IsVisited($oDependentObj)) {
 							continue;
 						}
-						$this->RecursiveDeletion($oDependentObj);
+						if (!$this->RecursiveDeletion($oDependentObj)) {
+							// Timeout
+							return false;
+						}
 					}
+
 				}
 			}
 		}
 
 		$this->oObjectService->Delete($sClass, $oObjectToClean->GetKey());
+
+		if ($this->oExecutionLimits->ShouldStopExecution()) {
+			return false;
+		}
 
 		return true;
 	}

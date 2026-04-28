@@ -34,6 +34,7 @@ class ObjectService extends ObjectServiceSummary
 			// Delete the entry
 			$aClassesToRemove = array_merge(MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL), MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_EXCLUDELEAF, false));
 			foreach ($aClassesToRemove as $sParentClass) {
+				/** @var DBObjectSearch $oFilter */
 				$oFilter = DBObjectSearch::FromOQL_AllData("SELECT $sParentClass WHERE id=:id");
 				$sQuery = $oFilter->MakeDeleteQuery(['id' => $sId]);
 				CMDBSource::DeleteFrom($sQuery);

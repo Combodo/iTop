@@ -9,6 +9,7 @@ namespace Combodo\iTop\Test\UnitTest\Module\DataFeatureRemoval\Service;
 
 use Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
+use Combodo\iTop\DataFeatureRemoval\Helper\ExecutionLimits;
 use Combodo\iTop\DataFeatureRemoval\Service\DeletionPlanService;
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
@@ -35,6 +36,8 @@ use DeletionPlan;
  */
 class DeletionPlanServiceTest extends ItopCustomDatamodelTestCase
 {
+	private ExecutionLimits&\PHPUnit\Framework\MockObject\MockObject $oExecutionLimits;
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -158,7 +161,55 @@ class DeletionPlanServiceTest extends ItopCustomDatamodelTestCase
 		$this->assertEquals($aExpected, $actual, $sMessage);
 	}
 
-	public function testExecuteDeletionPlan_StopInUpdates()
+	public static function ExecuteDeletionPlan_StopInProcessKeepDatabaseOk(): array
+	{
+		return [
+			'Stop after  1' => [
+				1,
+				[
+					['DFRToUpdate', 1, 0],
+				],
+			],
+			'Stop after  2' => [
+				2,
+				[
+					['DFRToUpdate', 1, 0],
+					['DFRRemovedCollateralCascade', 0, 1],
+				],
+			],
+			'Stop after  3' => [
+				3,
+				[
+					['DFRToUpdate', 1, 0],
+					['DFRRemovedCollateralCascade', 0, 1],
+					['DFRRemovedCollateral', 0, 1],
+				],
+			],
+			'Stop after  4' => [
+				4,
+				[
+					['DFRToUpdate', 1, 0],
+					['DFRRemovedCollateralCascade', 0, 1],
+					['DFRRemovedCollateral', 0, 1],
+					['DFRToRemoveLeaf', 0, 1],
+				],
+			],
+			'Stop after  5' => [
+				5,
+				[
+					['DFRToUpdate', 2, 0],
+					['DFRRemovedCollateralCascade', 0, 1],
+					['DFRRemovedCollateral', 0, 1],
+					['DFRToRemoveLeaf', 0, 1],
+				],
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider ExecuteDeletionPlan_StopInProcessKeepDatabaseOk
+	 */
+	public function testExecuteDeletionPlan_StopInProcessKeepDatabaseOk(int $iExecutionCount, array $aExpected): void
 	{
 		$this->GivenDFRTreeInDB(<<<EOF
 			DFRToRemoveLeaf_1 <- DFRToUpdate_1
@@ -175,71 +226,11 @@ class DeletionPlanServiceTest extends ItopCustomDatamodelTestCase
 		EOF);
 
 		$aClasses = [ 'DFRToRemoveLeaf' ];
-		$aRes = (new DeletionPlanService())->ExecuteDeletionPlan($aClasses, 0, 3);
-		$aExpected = [
-			['DFRToUpdate', 3, 0 ],
-			['DFRToRemoveLeaf', 0, 0 ],
-		];
+		$oDeletionPlaService = new DeletionPlanService();
+		$this->GivenExecutionLimits($iExecutionCount);
+		$this->SetNonPublicProperty($oDeletionPlaService, 'oExecutionLimits', $this->oExecutionLimits);
+		$aRes = $oDeletionPlaService->ExecuteDeletionPlan($aClasses);
 		$this->AssertSummaryEquals($aExpected, $aRes);
-	}
-
-	public function testExecuteDeletionPlan_StopInDeletes()
-	{
-		$this->GivenDFRTreeInDB(<<<EOF
-			DFRToRemoveLeaf_1 <- DFRToUpdate_1
-			DFRToRemoveLeaf_1 <- DFRRemovedCollateral_1
-			DFRRemovedCollateral_1 <- DFRRemovedCollateralCascade_1
-			
-			DFRToRemoveLeaf_2 <- DFRToUpdate_2
-			DFRToRemoveLeaf_2 <- DFRRemovedCollateral_2
-			DFRRemovedCollateral_2 <- DFRRemovedCollateralCascade_2
-			
-			DFRToRemoveLeaf_3 <- DFRToUpdate_3
-			DFRToRemoveLeaf_3 <- DFRRemovedCollateral_3
-			DFRRemovedCollateral_3 <- DFRRemovedCollateralCascade_3
-		EOF);
-
-		$aClasses = [ 'DFRToRemoveLeaf' ];
-		$aRes = (new DeletionPlanService())->ExecuteDeletionPlan($aClasses, 0, 8);
-		$aExpected = [
-			['DFRToUpdate', 3, 0 ],
-			['DFRToRemoveLeaf', 0, 3 ],
-			['DFRRemovedCollateral', 0, 2 ],
-		];
-		$this->AssertSummaryEquals($aExpected, $aRes);
-	}
-
-	public function testExecuteDeletionPlan_WrongOrderDeletion()
-	{
-		$this->GivenDFRTreeInDB(<<<EOF
-			DFRToRemoveLeaf_1 <- DFRRemovedCollateral_1
-			DFRRemovedCollateral_1 <- DFRRemovedCollateralCascade_1
-			
-			DFRToRemoveLeaf_2 <- DFRRemovedCollateral_2
-			DFRRemovedCollateral_2 <- DFRRemovedCollateralCascade_2
-			
-			DFRToRemoveLeaf_3 <- DFRRemovedCollateral_3
-			DFRRemovedCollateral_3 <- DFRRemovedCollateralCascade_3
-		EOF);
-
-		$aClasses = [ 'DFRToRemoveLeaf' ];
-
-		$oSet = new \DBObjectSet(\DBObjectSearch::FromOQL("SELECT DFRRemovedCollateral WHERE name='DFRRemovedCollateral_3'"));
-		$oExpectedObj = $oSet->Fetch();
-		self::assertNotNull($oExpectedObj);
-
-		$aRes = (new DeletionPlanService())->ExecuteDeletionPlan($aClasses, 0, 5);
-		$aExpected = [
-			['DFRToRemoveLeaf', 0, 3 ],
-			['DFRRemovedCollateral', 0, 2 ],
-		];
-
-		$this->AssertSummaryEquals($aExpected, $aRes);
-
-		$oSet = new \DBObjectSet(\DBObjectSearch::FromOQL("SELECT DFRRemovedCollateral WHERE name='DFRRemovedCollateral_3'"));
-		$oActualObj = $oSet->Fetch();
-		self::assertNotNull($oActualObj, "Deletion plan executed in wrong order: DFRRemovedCollateralCascade/DFRRemovedCollateral are not valid anymore");
-		self::assertEquals($oExpectedObj->GetKey(), $oActualObj->GetKey());
 	}
 
 	public function GetDatamodelDeltaAbsPath(): string
@@ -275,5 +266,18 @@ class DeletionPlanServiceTest extends ItopCustomDatamodelTestCase
 		list($sChildClass, ) = explode('_', $sRight, 2);
 		$iRightId = $this->GivenObjectInDB($sChildClass, ['name' => $sRight, 'extkey_id' => $iLeftId]);
 		$this->aIdByObjectName[$sRight] = $iRightId;
+	}
+
+	private function GivenExecutionLimits(int $iStopAfterCallNumberReached): void
+	{
+		$matcher = $this->any();
+
+		$this->oExecutionLimits =  $this->createMock(ExecutionLimits::class);
+		$this->oExecutionLimits->expects($matcher)
+			->method('ShouldStopExecution')->willReturnCallback(function () use ($matcher, $iStopAfterCallNumberReached) {
+				$invocationCount = $matcher->getInvocationCount();
+
+				return ($invocationCount >= $iStopAfterCallNumberReached);
+			});
 	}
 }

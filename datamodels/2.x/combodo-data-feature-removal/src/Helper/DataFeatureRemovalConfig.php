@@ -20,11 +20,11 @@ class DataFeatureRemovalConfig
 
 	final public static function GetInstance(): DataFeatureRemovalConfig
 	{
-		if (!isset(static::$oInstance)) {
-			static::$oInstance = new DataFeatureRemovalConfig();
+		if (!isset(self::$oInstance)) {
+			self::$oInstance = new DataFeatureRemovalConfig();
 		}
 
-		return static::$oInstance;
+		return self::$oInstance;
 	}
 
 	public function Get(string $sParamName, $default = null)
