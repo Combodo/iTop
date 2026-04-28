@@ -124,7 +124,7 @@ class DeletionPlanService
 	* @param array $aClasses
 	* @param int $iMaxExecutionTime
 	* @param int $iMaxMemoryPercent
-	* @return void
+	* @return array execution summary
 	* @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
 	 */
 	public function ExecuteDeletionPlan(array $aClasses, int $iMaxExecutionTime = 30, int $iMaxMemoryPercent = 80): array
@@ -139,7 +139,7 @@ class DeletionPlanService
 		return [];
 	}
 
-	public function IsVisited(DBObject $oObject): bool
+	private function IsVisited(DBObject $oObject): bool
 	{
 		$sClass = get_class($oObject);
 		$sId = $oObject->GetKey();
@@ -171,7 +171,7 @@ class DeletionPlanService
 				$oSearch->AddCondition($sExtKeyAttCode, $oObjectToClean->GetKey(), '=');
 				$oSearch->AllowAllData();
 				$oSet = new CMDBObjectSet($oSearch);
-				$oSet->OptimizeColumnLoad([$sRemoteClass => ['id', $oExtKeyAttDef->GetCode()]]);
+				$oSet->OptimizeColumnLoad([$sRemoteClass => [$oExtKeyAttDef->GetCode()]]);
 				/** @var DBObject $oDependentObj */
 				while ($oDependentObj = $oSet->Fetch()) {
 					$iDeletePropagationOption = $oExtKeyAttDef->GetDeletionPropagationOption();

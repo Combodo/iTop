@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
@@ -509,7 +508,7 @@ EOF
 				$sDisplayChoices .= '<li>'.$aChoice['title'].'</li>';
 				if (isset($aChoice['modules'])) {
 					if (count($aChoice['modules']) === 0) {
-						throw new Exception('Extension '.$aChoice['extension_code'].' does not have any module associated');
+						//throw new Exception('Extension '.$aChoice['extension_code'].' does not have any module associated');
 					}
 					foreach ($aChoice['modules'] as $sModuleId) {
 						$bSelected = true;
