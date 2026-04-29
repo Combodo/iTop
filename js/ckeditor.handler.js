@@ -50,7 +50,10 @@ const CombodoCKEditorHandler = {
 		this.is_upload_configured[sElem] = false;
 		// create instance
 		return this.instances_promise[sElem] = new Promise((resolve, reject) => {
-			ClassicEditor.create($(sElem)[0], aConfiguration)
+            ClassicEditor.create(Object.assign({
+                attachTo: $(sElem)[0],
+                licenseKey: 'GPL',
+            }, aConfiguration))
 			.then(editor => {
 				// Adjust size if passed in configuration
 				// - Width

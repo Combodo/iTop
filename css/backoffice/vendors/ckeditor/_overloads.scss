@@ -28,6 +28,15 @@ $ibo-vendors-ckeditor--ck-mentions--item--padding-x: $ibo-spacing-300 !default;
 $ibo-vendors-ckeditor--ck-mentions--item--padding-y: $ibo-spacing-200 !default;
 
 /* CSS3 variables */
+:root {
+  --ck-content-font-family: inherit;
+  --ck-content-font-color: inherit;
+  --ck-content-font-size: inherit;
+  --ck-content-line-height: inherit;
+  --ck-content-word-break: inherit;
+  --ck-content-overflow-wrap: inherit;
+}
+
 .ck {
   --ck-color-list-button-on-background: #{$ibo-vendors-ckeditor--ck-color-list-button-on-background};
   --ck-color-list-button-on-background-focus: #{$ibo-vendors-ckeditor--ck-color-list-button-on-background-focus};

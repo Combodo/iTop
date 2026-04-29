@@ -247,7 +247,8 @@ $ibo-quick-create--compartment--placeholder-hint--text-color: $ibo-color-grey-70
 
     &:hover {
       cursor: pointer;
-      @extend a;
+      color: $ibo-hyperlink-color--on-hover;
+      text-decoration: $ibo-hyperlink-text-decoration--on-hover;
     }
 
     .highlight {
