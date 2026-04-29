@@ -51,7 +51,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'DataFeatureRemoval:Column:Class' => 'Class',
 	'DataFeatureRemoval:Column:DeleteCount' => 'Entries to delete',
 	'DataFeatureRemoval:Column:UpdateCount' => 'Entries to update',
-	'DataFeatureRemoval:Column:Issue' => 'Issue',
+	'DataFeatureRemoval:Column:IssueCount' => 'Issues found preventing automatic cleanup',
 
 	'DataFeatureRemoval:Column:DeletedCount' => 'Deleted entries',
 	'DataFeatureRemoval:Column:UpdatedCount' => 'Updated entries',

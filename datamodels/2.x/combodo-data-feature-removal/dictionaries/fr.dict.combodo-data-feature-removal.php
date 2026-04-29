@@ -51,7 +51,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'DataFeatureRemoval:Column:Class' => 'Classe',
 	'DataFeatureRemoval:Column:DeleteCount' => 'Entrées à supprimer',
 	'DataFeatureRemoval:Column:UpdateCount' => 'Entrées à mettre à jour',
-	'DataFeatureRemoval:Column:Issue' => 'Problème',
+	'DataFeatureRemoval:Column:IssueCount' => 'Problèmes empêchant le nettoyage automatique',
 
 	'DataFeatureRemoval:Column:DeletedCount' => 'Entrées supprimées',
 	'DataFeatureRemoval:Column:UpdatedCount' => 'Entrées mises à jour',
