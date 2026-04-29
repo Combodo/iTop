@@ -8,6 +8,8 @@
 namespace Combodo\iTop\DataFeatureRemoval\Service;
 
 use CMDBSource;
+use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
+use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalLog;
 use DBObject;
 use DBObjectSearch;
 use MetaModel;
@@ -44,10 +46,15 @@ class ObjectService extends ObjectServiceSummary
 			parent::Delete($sClass, $sId);
 
 		} catch (\Exception $e) {
-			\IssueLog::Exception(__METHOD__.': Cleanup failed', $e);
+			DataFeatureRemovalLog::Exception(__METHOD__.': Cleanup failed', $e);
 			CMDBSource::Query('ROLLBACK');
 			throw $e;
 		}
+	}
+
+	public function SetIssue(string $sClass): void
+	{
+		throw new DataFeatureRemovalException('Deletion Plan cannot be executed due to issues');
 	}
 
 }

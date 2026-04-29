@@ -5,7 +5,7 @@ namespace Combodo\iTop\DataFeatureRemoval\Entity;
 class DataCleanupSummaryEntity
 {
 	public string $sClass;
-	public ?string $sIssue = null;
+	public int $iIssueCount = 0;
 	public int $iUpdateCount = 0;
 	public int $iDeleteCount = 0;
 

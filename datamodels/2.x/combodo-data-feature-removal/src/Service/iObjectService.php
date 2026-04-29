@@ -15,5 +15,7 @@ interface iObjectService
 
 	public function Delete(string $sClass, string $sId): void;
 
+	public function SetIssue(string $sClass): void;
+
 	public function GetSummary(): array;
 }

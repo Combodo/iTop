@@ -7,16 +7,16 @@
 
 namespace Combodo\iTop\Test\UnitTest\Module\DataFeatureRemoval\Service;
 
+use Cleanup;
 use Combodo\iTop\DataFeatureRemoval\Entity\DataCleanupSummaryEntity;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\ExecutionLimits;
 use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use DeletionPlan;
 
 /**
- * Unit tests for the DeletionPlanService cf the Combodo Data Feature Removal module.
+ * Unit tests for the CleanupService cf the Combodo Data Feature Removal module.
  *
  * These tests cover:
  * - GetCleanupSummary method: handling null and empty input, and verifying summary output for various delete/update scenarios.
@@ -28,7 +28,7 @@ use DeletionPlan;
  * - Edge cases such as null, empty, and multiple classes.
  * - Proper exception handling when the deletion plan contains issues.
  *
- * The tests use PHPUnit, mocks for DeletionPlan and DeletionPlanService, and data providers to cover multiple scenarios.
+ * The tests use PHPUnit, mocks for Cleanup and CleanupService, and data providers to cover multiple scenarios.
  *
  * @see DataCleanupService
  * @see DataCleanupSummaryEntity
@@ -48,7 +48,7 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 	/**
 	 * Tests that GetCleanupSummary returns an empty array when passed null as input.
 	 */
-	public function testGetDeletionPlanSummaryReturnsEmptyArrayWhenNull(): void
+	public function testGetCleanupSummaryReturnsEmptyArrayWhenNull(): void
 	{
 		$oService = new DataCleanupService();
 		$aResult = $oService->GetCleanupSummary(null);
@@ -59,7 +59,7 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 
 	//--- ExecuteCleanup tests ---
 
-	public function testExecuteDeletionPlan_DeleteOneObjPerClassWithoutLimit()
+	public function testExecuteCleanup_DeleteOneObjPerClassWithoutLimit()
 	{
 		$this->GivenDFRTreeInDB(<<<EOF
 			DFRToRemoveLeaf_1 <- DFRToUpdate_1
@@ -79,7 +79,7 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 		$this->AssertSummaryEquals($aExpected, $aRes);
 	}
 
-	public function testExecuteDeletionPlan_DeleteManyObjPerClassWithoutLimit()
+	public function testExecuteCleanup_DeleteManyObjPerClassWithoutLimit()
 	{
 		$this->GivenDFRTreeInDB(<<<EOF
 			DFRToRemoveLeaf_1 <- DFRToUpdate_1
@@ -107,7 +107,7 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 		$this->AssertSummaryEquals($aExpected, $aRes);
 	}
 
-	public function testGetDeletionPlanSummary_DeleteManyObjPerClassWithoutLimit()
+	public function testGetCleanupSummary_DeleteManyObjPerClassWithoutLimit()
 	{
 		$this->GivenDFRTreeInDB(<<<EOF
 			DFRToRemoveLeaf_1 <- DFRToUpdate_1
@@ -135,7 +135,7 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 		$this->AssertSummaryEquals($aExpected, $aRes);
 	}
 
-	public function testGetDeletionPlanSummary_ManualDeleteShouldFail()
+	public function testExecuteCleanup_ManualDeleteShouldFail()
 	{
 		$this->GivenDFRTreeInDB(<<<EOF
 			DFRToRemoveLeaf_1 <- DFRManual_1
@@ -145,7 +145,25 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 		$this->expectException(DataFeatureRemovalException::class);
 		$this->expectExceptionMessage('Deletion Plan cannot be executed due to issues');
 		$oService = new DataCleanupService();
-		$oService->GetCleanupSummary($aClasses);
+		$oService->ExecuteCleanup($aClasses);
+	}
+
+	public function testGetCleanupSummary_ManualDeleteShouldFail()
+	{
+		$this->GivenDFRTreeInDB(<<<EOF
+			DFRToRemoveLeaf_1 <- DFRManual_1
+			DFRToRemoveLeaf_1 <- DFRManual_2
+			DFRToRemoveLeaf_2 <- DFRManual_3
+		EOF);
+
+		$aClasses = [ 'DFRToRemoveLeaf' ];
+		$oService = new DataCleanupService();
+		$aRes = $oService->GetCleanupSummary($aClasses);
+		$aExpected = [
+			['DFRManual', 0, 0, 3 ],
+			['DFRToRemoveLeaf', 0, 2],
+		];
+		$this->AssertSummaryEquals($aExpected, $aRes);
 	}
 
 	private function AssertSummaryEquals(array $expected, $actual, $sMessage = '')
@@ -155,16 +173,18 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 			$sClass = $line[0];
 			$iUpdate = $line[1];
 			$iDelete = $line[2];
+			$iIssue = $line[3] ?? 0;
 
-			$oDeletionPlanSummaryEntity = new DataCleanupSummaryEntity($sClass);
-			$oDeletionPlanSummaryEntity->iUpdateCount = $iUpdate;
-			$oDeletionPlanSummaryEntity->iDeleteCount = $iDelete;
-			$aExpected[$sClass] = $oDeletionPlanSummaryEntity;
+			$oCleanupSummaryEntity = new DataCleanupSummaryEntity($sClass);
+			$oCleanupSummaryEntity->iUpdateCount = $iUpdate;
+			$oCleanupSummaryEntity->iDeleteCount = $iDelete;
+			$oCleanupSummaryEntity->iIssueCount = $iIssue;
+			$aExpected[$sClass] = $oCleanupSummaryEntity;
 		}
 		$this->assertEquals($aExpected, $actual, $sMessage);
 	}
 
-	public static function ExecuteDeletionPlan_StopInProcessKeepDatabaseOk(): array
+	public static function ExecuteCleanup_StopInProcessKeepDatabaseOk(): array
 	{
 		return [
 			'Stop after  1' => [
@@ -210,9 +230,9 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 	}
 
 	/**
-	 * @dataProvider ExecuteDeletionPlan_StopInProcessKeepDatabaseOk
+	 * @dataProvider ExecuteCleanup_StopInProcessKeepDatabaseOk
 	 */
-	public function testExecuteDeletionPlan_StopInProcessKeepDatabaseOk(int $iExecutionCount, array $aExpected): void
+	public function testExecuteCleanup_StopInProcessKeepDatabaseOk(int $iExecutionCount, array $aExpected): void
 	{
 		$this->GivenDFRTreeInDB(<<<EOF
 			DFRToRemoveLeaf_1 <- DFRToUpdate_1

@@ -346,7 +346,6 @@ if (! $bFoundIssues) {
 	$sLogMsg = "installed!";
 
 	if ($bUseItopConfig && is_file("$sConfigFile.backup")) {
-		echo "\nremove config file provided by backup in $sConfigFile.";
 		unlink("$sConfigFile.backup");
 	}
 

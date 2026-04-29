@@ -4,9 +4,11 @@ namespace Combodo\iTop\DataFeatureRemoval\Service;
 
 use CMDBObjectSet;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
+use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalLog;
 use Combodo\iTop\DataFeatureRemoval\Helper\ExecutionLimits;
 use DBObject;
 use DBObjectSearch;
+use Dict;
 use MetaModel;
 
 class DataCleanupService
@@ -17,6 +19,7 @@ class DataCleanupService
 
 	public function __construct(int $iMaxExecutionTime = 30, int $iMaxMemoryPercent = 80)
 	{
+		DataFeatureRemovalLog::Enable();
 		$iMaxTime = time() + $iMaxExecutionTime;
 		$this->oExecutionLimits = new ExecutionLimits($iMaxTime, $iMaxMemoryPercent);
 	}
@@ -96,7 +99,7 @@ class DataCleanupService
 		$sKey = "$sClass-$sId";
 
 		$bRes = $this->aVisited[$sKey] ?? false;
-		\IssueLog::Debug('Checking if object is visited', null, [$sKey, $bRes]);
+		DataFeatureRemovalLog::Debug('Checking if object is visited', null, [$sKey, $bRes]);
 		return $bRes;
 	}
 
@@ -135,7 +138,8 @@ class DataCleanupService
 				while ($oDependentObj = $oSet->Fetch()) {
 					$iDeletePropagationOption = $oExtKeyAttDef->GetDeletionPropagationOption();
 					if ($iDeletePropagationOption == DEL_MANUAL) {
-						throw new DataFeatureRemovalException("Deletion Plan cannot be executed due to issues");
+						$this->oObjectService->SetIssue(get_class($oDependentObj));
+						continue;
 					}
 
 					if ($oExtKeyAttDef->IsNullAllowed()) {
