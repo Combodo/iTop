@@ -8,14 +8,14 @@
 /* eslint-env node */
 
 const path = require( 'path' );
-const webpack = require( 'webpack' );
-const { bundler, styles } = require( '@ckeditor/ckeditor5-dev-utils' );
-const { CKEditorTranslationsPlugin } = require( '@ckeditor/ckeditor5-dev-translations' );
 const TerserWebpackPlugin = require( 'terser-webpack-plugin' );
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyPlugin = require( 'copy-webpack-plugin' );
 
 module.exports = {
-	devtool: 'source-map',
+    /*
+	devtool: 'source-map', // Uncomment to build a development version of the editor. It will be much bigger than the production version, but it will be easier to debug.
+    */
 	performance: { hints: false },
 
 	entry: path.resolve( __dirname, 'src', 'ckeditor.ts' ),
@@ -33,9 +33,9 @@ module.exports = {
 	optimization: {
 		minimizer: [
 			new TerserWebpackPlugin( {
-				sourceMap: true,
 				terserOptions: {
-					output: {
+                    sourceMap: true,
+                    output: {
 						// Preserve CKEditor 5 license comments.
 						comments: /^!/
 					}
@@ -46,20 +46,18 @@ module.exports = {
 	},
 
 	plugins: [
-		new CKEditorTranslationsPlugin( {
-			// UI language. Language codes follow the https://en.wikipedia.org/wiki/ISO_639-1 format.
-			// When changing the built-in language, remember to also change it in the editor's configuration (src/ckeditor.ts).
-			language: 'en',
-			additionalLanguages: 'all'
-		} ),
 		new MiniCssExtractPlugin({
 			filename: 'styles/compiled-theme.scss', // Compiled as SCSS so we can import it in other SCSS files, but it's already compiled in CSS
 			chunkFilename: 'styles/compiled-theme-id.css', // We don't know what this is for
 		}),
-		new webpack.BannerPlugin( {
-			banner: bundler.getLicenseBanner(),
-			raw: true
-		} )
+		new CopyPlugin( {
+			patterns: [
+				{
+					from: path.resolve( __dirname, 'node_modules/ckeditor5/dist/translations/*.umd.js' ),
+					to: 'translations/[name][ext]'
+				}
+			]
+		} ),
 	],
 
 	resolve: {
@@ -75,20 +73,12 @@ module.exports = {
 			use: 'ts-loader'
 		}, {
 			test: /\.css$/,
-			use: [ MiniCssExtractPlugin.loader,
-			{
-				loader: 'css-loader'
-			}, {
-				loader: 'postcss-loader',
-				options: {
-					postcssOptions: styles.getPostCssConfig( {
-						themeImporter: {
-							themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' )
-						},
-						minify: true
-					} )
+			use: [
+				MiniCssExtractPlugin.loader,
+				{
+					loader: 'css-loader'
 				}
-			} ]
+			]
 		} ]
 	}
 };
