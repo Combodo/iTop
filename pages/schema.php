@@ -55,7 +55,7 @@ function GetClassLabel(string $sClass): string
 		$sAbstract = '<span class="ibo-datamodel-viewer--icon--abstract" data-tooltip-content="'.Dict::S('UI:Schema:AbstractClass').'"></span>';
 	}
 
-	return "$sAbstract $sName <span class=\"ibo-datamodel-viewer--classname\">$sClass</span>";
+	return "$sAbstract $sName (<span class=\"ibo-datamodel-viewer--classname\">$sClass</span>)";
 }
 
 /**
