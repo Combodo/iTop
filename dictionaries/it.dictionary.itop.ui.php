@@ -900,6 +900,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:Delete:PleaseDoTheManualOperations' => 'Si prega di eseguire le operazioni manuali di cui sopra prima di richiedere la cancellazione di questo oggetto',
 	'UI:Delect:Confirm_Object' => 'Si prega di confermare che si desidera eliminare %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Si prega di confermare che si desidera eliminare i seguenti oggetti %1$d della classe %2$s.',
+	'UI:Delete:Confirm_Object' => 'Si prega di confermare che si desidera eliminare %1$s.',
+	'UI:Delete:Confirm_Count_ObjectsOf_Class' => 'Si prega di confermare che si desidera eliminare i seguenti oggetti %1$d della classe %2$s.',
 	'UI:WelcomeToITop' => 'Benvenuto su '.ITOP_APPLICATION_SHORT, 'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s dettagli',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Errore',
 	'UI:ObjectDoesNotExist' => 'Spiacenti, questo oggetto non esiste (o non si è autorizzati per vederlo).',

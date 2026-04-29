@@ -855,6 +855,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Delete:PleaseDoTheManualOperations' => 'Verricht eerst de handmatige handelingen die hierboven staan voordat je dit object verwijdert',
 	'UI:Delect:Confirm_Object' => 'Bevestig dat je  %1$s wil verwijderen.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Bevestig dat je de volgende %1$d objecten van klasse %2$s wilt verwijderen.',
+	'UI:Delete:Confirm_Object' => 'Bevestig dat je  %1$s wil verwijderen.',
+	'UI:Delete:Confirm_Count_ObjectsOf_Class' => 'Bevestig dat je de volgende %1$d objecten van klasse %2$s wilt verwijderen.',
 	'UI:WelcomeToITop' => 'Welkom in '.ITOP_APPLICATION, 'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s details',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Fout',
 	'UI:ObjectDoesNotExist' => 'Sorry, dit object bestaat niet (of je bent niet gemachtigd het te bekijken).',

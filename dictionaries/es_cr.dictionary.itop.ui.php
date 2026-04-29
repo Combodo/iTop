@@ -851,6 +851,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Delete:PleaseDoTheManualOperations' => 'Por favor ejecute las operaciones manuales antes de eliminar este objeto',
 	'UI:Delect:Confirm_Object' => 'Por favor confirme que quiere borrar %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Por favor confirme que quiere eliminar los siguientes %1$d objeto de la clase %2$s.',
+	'UI:Delete:Confirm_Object' => 'Por favor confirme que quiere borrar %1$s.',
+	'UI:Delete:Confirm_Count_ObjectsOf_Class' => 'Por favor confirme que quiere eliminar los siguientes %1$d objeto de la clase %2$s.',
 	'UI:WelcomeToITop' => 'Bienvenido a '.ITOP_APPLICATION_SHORT, 'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - Detalles %2$s',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Error',
 	'UI:ObjectDoesNotExist' => 'Disculpe, este objeto no existe (o no está autorizado para verlo).',

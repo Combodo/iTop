@@ -5064,10 +5064,10 @@ EOF
 			} else {
 				if (count($aObjects) == 1) {
 					$oObj = $aObjects[0];
-					$sSubtitle = Dict::Format('UI:Delect:Confirm_Object', $oObj->GetHyperLink());
+					$sSubtitle = Dict::Format('UI:Delete:Confirm_Object', $oObj->GetHyperLink());
 				} else {
 					$sSubtitle = Dict::Format(
-						'UI:Delect:Confirm_Count_ObjectsOf_Class',
+						'UI:Delete:Confirm_Count_ObjectsOf_Class',
 						count($aObjects),
 						MetaModel::GetName($sClass)
 					);

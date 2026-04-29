@@ -853,6 +853,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:Delete:PleaseDoTheManualOperations' => 'Venligst foretag den manuelle opreration som er nævnt ovenfor, før sletning af objektet',
 	'UI:Delect:Confirm_Object' => 'Venligst bekræft at du ønsker at slette %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Venligst bekræft at du ønsker at slette følgende %1$d objekter af klassen %2$s.',
+	'UI:Delete:Confirm_Object' => 'Venligst bekræft at du ønsker at slette %1$s.',
+	'UI:Delete:Confirm_Count_ObjectsOf_Class' => 'Venligst bekræft at du ønsker at slette følgende %1$d objekter af klassen %2$s.',
 	'UI:WelcomeToITop' => 'Velkommen til '.ITOP_APPLICATION_SHORT, 'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s detaljer',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Fejl',
 	'UI:ObjectDoesNotExist' => 'Beklager, dette objekt eksisterer ikke (eller du har ikke tilladelse til at se det).',

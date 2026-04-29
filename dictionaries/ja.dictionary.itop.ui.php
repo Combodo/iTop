@@ -857,6 +857,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'UI:Delete:PleaseDoTheManualOperations' => 'このオブジェクトの削除を要求する前に、上記にリストされている手動操作を実行してください。',
 	'UI:Delect:Confirm_Object' => '%1$sを削除しようとしています。確認ください。',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => '以下の%2$sクラスの%1$dオブジェクトを削除しようとしています。確認ください。',
+	'UI:Delete:Confirm_Object' => '%1$sを削除しようとしています。確認ください。',
+	'UI:Delete:Confirm_Count_ObjectsOf_Class' => '以下の%2$sクラスの%1$dオブジェクトを削除しようとしています。確認ください。',
 	'UI:WelcomeToITop' => ITOP_APPLICATION_SHORT.'へようこそ',
 	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$sの詳細',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - エラー',
