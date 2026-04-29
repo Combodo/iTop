@@ -324,7 +324,7 @@ class BrowseBrickHelper
 					'object_class' => $sCurrentObjectClass,
 					'object_id' => $sCurrentObjectId,
 					'attribute_code' => $sNameAttCode,
-					'attribute_type' => $sNameAttDefClass,
+					'attribute_type' => $sNameAttDef->GetType(),
 					'value_raw' => $value->Get($sNameAttCode),
 				],
 			];
@@ -415,7 +415,7 @@ class BrowseBrickHelper
 						'object_class' => $sCurrentObjectClass,
 						'object_id' => $sCurrentObjectId,
 						'attribute_code' => $aField['code'],
-						'attribute_type' => $sAttDefClass,
+						'attribute_type' => $oAttDef->GetType(),
 						'value_raw' => $attValueRaw,
 						'value_html' => $sHtmlForFieldValue,
 					];

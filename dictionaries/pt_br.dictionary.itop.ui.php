@@ -774,6 +774,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'UI:Query:UrlV1' => 'A lista de campos não foi especificada. A página <em>export-V2.php</em> não pode ser chamada sem essa informação. Portanto, o URL sugerido abaixo aponta para a página herdada: <em>export.php</em>. Essa versão herdada da exportação tem a seguinte limitação: a lista de campos exportados pode variar dependendo do formato de saída e do modelo de dados do '.ITOP_APPLICATION_SHORT.'.Se você quiser garantir que a lista de colunas exportadas permaneça estável a longo prazo, então você deve especificar um valor para o atributo "Fields" e usar a página <em>export-V2.php</em>',
 	'UI:Schema:Title' => 'Esquema de objetos',
 	'UI:Schema:TitleForClass' => 'Esquema de %1$s',
+	'UI:Schema:NoClassSelected' => 'No class selected, please choose one~~',
 	'UI:Schema:CategoryMenuItem' => 'Categoria <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relações',
 	'UI:Schema:AbstractClass' => 'Classe abstrata: nenhum objeto desta classe pode ser instanciado',

@@ -731,6 +731,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Query:UrlV1' => '没有定义字段列表. 没有这个信息页面<em>export-V2.php</em>无法调用. 因此, 建议的以下 URL 指向传统页面: <em>export.php</em>. 该传统版本导出具有以下限制: 导出的字段列表很大程度依赖于导出格式和'.ITOP_APPLICATION_SHORT.'数据模型. <br/>如果您需要确保导出的列保持长期稳定, 则必须为属性 "Fields" 指定值并使用页面<em>export-V2.php</em>.',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.'对象模型',
 	'UI:Schema:TitleForClass' => '%1$s 模式',
+	'UI:Schema:NoClassSelected' => 'No class selected, please choose one~~',
 	'UI:Schema:CategoryMenuItem' => '类别 <b>%1$s</b>',
 	'UI:Schema:Relationships' => '关联',
 	'UI:Schema:AbstractClass' => '抽象类型: 此类型不能实例化对象.',

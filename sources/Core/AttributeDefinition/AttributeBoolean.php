@@ -11,6 +11,7 @@ use CMDBChangeOpSetAttributeScalar;
 use Combodo\iTop\Form\Field\SelectField;
 use DBObject;
 use Dict;
+use ReflectionClass;
 
 /**
  * Map a boolean column to an attribute
@@ -80,11 +81,13 @@ class AttributeBoolean extends AttributeInteger
 
 	public function GetValueLabel($bValue)
 	{
+		$oClass = new ReflectionClass(get_class($this));
+
 		if (is_null($bValue)) {
-			$sLabel = Dict::S('Core:'.get_class($this).'/Value:null');
+			$sLabel = Dict::S('Core:'.$oClass->getShortName().'/Value:null');
 		} else {
 			$sValue = $bValue ? 'yes' : 'no';
-			$sDefault = Dict::S('Core:'.get_class($this).'/Value:'.$sValue);
+			$sDefault = Dict::S('Core:'.$oClass->getShortName().'/Value:'.$sValue);
 			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, $sDefault, true /*user lang*/);
 		}
 
@@ -93,11 +96,13 @@ class AttributeBoolean extends AttributeInteger
 
 	public function GetValueDescription($bValue)
 	{
+		$oClass = new ReflectionClass(get_class($this));
+
 		if (is_null($bValue)) {
-			$sDescription = Dict::S('Core:'.get_class($this).'/Value:null+');
+			$sDescription = Dict::S('Core:'.$oClass->getShortName().'/Value:null+');
 		} else {
 			$sValue = $bValue ? 'yes' : 'no';
-			$sDefault = Dict::S('Core:'.get_class($this).'/Value:'.$sValue.'+');
+			$sDefault = Dict::S('Core:'.$oClass->getShortName().'/Value:'.$sValue.'+');
 			$sDescription = $this->SearchLabel(
 				'/Attribute:'.$this->m_sCode.'/Value:'.$sValue.'+',
 				$sDefault,

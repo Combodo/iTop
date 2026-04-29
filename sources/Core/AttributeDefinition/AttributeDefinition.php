@@ -19,6 +19,7 @@ use Exception;
 use Expression;
 use FieldExpression;
 use MetaModel;
+use ReflectionClass;
 use Str;
 use utils;
 use VariableExpression;
@@ -131,12 +132,30 @@ abstract class AttributeDefinition
 
 	public function GetType()
 	{
-		return Dict::S('Core:'.get_class($this));
+		$oClass = new ReflectionClass(get_class($this));
+		return Dict::S('Core:'.$oClass->getShortName());
 	}
 
 	public function GetTypeDesc()
 	{
-		return Dict::S('Core:'.get_class($this).'+');
+		$oClass = new ReflectionClass(get_class($this));
+		return Dict::S('Core:'.$oClass->getShortName().'+');
+	}
+
+	/**
+	 * Return type information.
+	 *
+	 * @since 3.3
+	 * @return array
+	 */
+	public function GetTypeInformation(): array
+	{
+		$oClass = new ReflectionClass(get_class($this));
+		return [
+			'classShortName' => $oClass->getShortName(),
+			'label' => Dict::S('Core:'.$oClass->getShortName()),
+			'description' => Dict::S('Core:'.$oClass->getShortName().'+'),
+		];
 	}
 
 	abstract public function GetEditClass();
@@ -1076,7 +1095,7 @@ abstract class AttributeDefinition
 
 		// Metadata
 		$oFormField->AddMetadata('attribute-code', $this->GetCode());
-		$oFormField->AddMetadata('attribute-type', get_class($this));
+		$oFormField->AddMetadata('attribute-type', $this->GetType());
 		$oFormField->AddMetadata('attribute-label', $this->GetLabel());
 		// - Attribute flags
 		$aPossibleAttFlags = MetaModel::EnumPossibleAttributeFlags();

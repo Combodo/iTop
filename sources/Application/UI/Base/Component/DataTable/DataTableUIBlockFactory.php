@@ -27,9 +27,9 @@ use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\AjaxRenderController;
 use DBObjectSet;
-use DeprecatedCallsLog;
 use Dict;
 use DisplayBlock;
 use IssueLog;
@@ -38,7 +38,6 @@ use MenuBlock;
 use MetaModel;
 use UserRights;
 use utils;
-use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Class DataTableUIBlockFactory
@@ -556,7 +555,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 							'object_class' => $sClassName,
 							'class_alias' => $sClassAlias,
 							'attribute_code' => $sAttCode,
-							'attribute_type' => $sAttDefClass,
+							'attribute_type' => $oAttDef->GetType(),
 							'attribute_label' => $sAttLabel,
 							'render' => $oAttDef->GetRenderForDataTable($sClassAlias),
 						];
@@ -738,7 +737,7 @@ JS;
 							'object_class'    => $sClassName,
 							'class_alias'     => $sClassAlias,
 							'attribute_code'  => $sAttCode,
-							'attribute_type'  => $sAttDefClass,
+							'attribute_type'  => $oAttDef->GetType(),
 							'attribute_label' => $sAttLabel,
 						];
 						$aColumnDefinition["data"] = $sClassAlias."/".$sAttCode;
