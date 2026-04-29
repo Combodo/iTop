@@ -854,6 +854,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'UI:Delete:Consequence+' => '行われます。',
 	'UI:Delete:SorryDeletionNotAllowed' => '申し訳ありませんが、あなたは、このオブジェクトを削除する権限がありません、上記の詳細な説明を参照してください。',
 	'UI:Delete:PleaseDoTheManualOperations' => 'このオブジェクトの削除を要求する前に、上記にリストされている手動操作を実行してください。',
+	'UI:Delect:Confirm_Object' => '%1$sを削除しようとしています。確認ください。',
+	'UI:Delect:Confirm_Count_ObjectsOf_Class' => '以下の%2$sクラスの%1$dオブジェクトを削除しようとしています。確認ください。',
 	'UI:Delete:Confirm_Object' => '%1$sを削除しようとしています。確認ください。',
 	'UI:Delete:Confirm_Count_ObjectsOf_Class' => '以下の%2$sクラスの%1$dオブジェクトを削除しようとしています。確認ください。',
 	'UI:WelcomeToITop' => ITOP_APPLICATION_SHORT.'へようこそ',

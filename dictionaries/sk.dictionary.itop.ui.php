@@ -856,6 +856,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'UI:Delete:Consequence+' => 'What will be done~~',
 	'UI:Delete:SorryDeletionNotAllowed' => 'Prepáčte, nemáte povolenie vymazať tento objekt, pozrite si detailné vysvetlenie vyššie',
 	'UI:Delete:PleaseDoTheManualOperations' => 'Prosím vykonajte manuálne operácie vypísané vyššie predtým ako budete žiadať o odstraňovanie tohto objektu',
+	'UI:Delect:Confirm_Object' => 'Prosím potvrďte, že chcete vymazať %1$s.',
+	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Prosím potvrďte, že chcete vymazať nasledovné %1$d objekty triedy %2$s.',
 	'UI:Delete:Confirm_Object' => 'Prosím potvrďte, že chcete vymazať %1$s.',
 	'UI:Delete:Confirm_Count_ObjectsOf_Class' => 'Prosím potvrďte, že chcete vymazať nasledovné %1$d objekty triedy %2$s.',
 	'UI:WelcomeToITop' => 'Vitajte to '.ITOP_APPLICATION_SHORT,

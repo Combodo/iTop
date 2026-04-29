@@ -853,6 +853,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI:Delete:Consequence+' => '',
 	'UI:Delete:SorryDeletionNotAllowed' => 'Az objektum törlése nem engedélyezett. Részletes magyarázat a következő sorokban.',
 	'UI:Delete:PleaseDoTheManualOperations' => 'Hajtsa végre a következő listában található műveleteket manuálisan az objektum törlésének kéréséhez',
+	'UI:Delect:Confirm_Object' => 'Hagyja jóvá a %1$s törlését!',
+	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Hagyja jóvá a %2$s osztály %1$d objektumának törlését!',
 	'UI:Delete:Confirm_Object' => 'Hagyja jóvá a %1$s törlését!',
 	'UI:Delete:Confirm_Count_ObjectsOf_Class' => 'Hagyja jóvá a %2$s osztály %1$d objektumának törlését!',
 	'UI:WelcomeToITop' => 'Üdvözli az '.ITOP_APPLICATION_SHORT, 'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s részletek',
