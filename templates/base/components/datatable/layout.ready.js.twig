@@ -501,11 +501,6 @@ $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog(
                 {
                     $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('onDlgCancel');
                 }
-                {% if oUIBlock.GetOption('sTreeGroupingAttr') is not empty %}
-                else if (sAction === "save") {
-                    setTimeout(function() { location.reload(); }, 600);
-                }
-                {% endif %}
             },
             buttons: [
                 {
@@ -548,11 +543,82 @@ if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').hasClass('itop-datatable'))
 $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings(aOptions{{ sListIDForVarSuffix }});
 
 {% if oUIBlock.GetOption('sTreeGroupingAttr') is not empty %}
-{# Tree mode: prevent DataTableSettings._refresh() from reinitialising the table as server-side.
-   Column changes are applied on the next page reload (triggered from the dialog close handler). #}
-var oPlugin{{ sListIDForVarSuffix }} = $('#datatable_dlg_{{ oUIBlock.GetId() }}').data('itop-DataTableSettings');
-if (oPlugin{{ sListIDForVarSuffix }}) {
-    oPlugin{{ sListIDForVarSuffix }}._refresh = function() {};
+{# Tree mode: replace DataTableSettings._refresh() so "Configure this list" rebuilds
+   the DataTable client-side in tree mode, instead of switching it to server-side. #}
+var sTreeParentKey{{ sListIDForVarSuffix }} = '{{ oUIBlock.GetOption("sTreeGroupingParentKey") }}';
+var oTreePlugin{{ sListIDForVarSuffix }} = $('#datatable_dlg_{{ oUIBlock.GetId() }}').data('itop-DataTableSettings');
+if (oTreePlugin{{ sListIDForVarSuffix }}) {
+    oTreePlugin{{ sListIDForVarSuffix }}._refresh = function() {
+        var me = this;
+        var oParams = me.options.oData;
+        oParams.operation = 'search_and_refresh';
+        oParams.start = 0;
+        oParams.end = me.options.iPageSize;
+        oParams.select_mode = me.options.sSelectMode;
+        oParams.display_key = me.options.sViewLink;
+        oParams.class_aliases = me.options.oClassAliases;
+        oParams.columns = me.options.oColumns;
+        oParams.list_id = me.options.sListId;
+        me.element.block();
+        $.post(me.options.sRenderUrl, oParams, function(data) {
+            var $table = $('#' + me.options.sListId);
+            var $parent = $table.closest('.dataTables_wrapper').parent();
+            var aPrevOptions = $table.DataTable().context[0].oInit;
+            $table.DataTable().destroy(true);
+
+            var aOptions = $.extend({}, aPrevOptions, JSON.parse(data));
+
+            // Compile per-column render functions returned as strings by the server
+            $.each(aOptions['columns'], function (i) {
+                aOptions['columns'][i]['render']['display'] = new Function("data, type, row", aOptions['columns'][i]['render']['display']);
+                if (aOptions['columns'][i]['createdCell'] != undefined) {
+                    aOptions['columns'][i]['createdCell'] = new Function("td, cellData, rowData, row, col", aOptions['columns'][i]['createdCell']);
+                }
+                // Tree mode handles its own sorting — disable native ordering per column
+                aOptions['columns'][i].orderable = false;
+                aOptions['columns'][i].sortable = false;
+            });
+
+            // Rebuild <thead> from the new column list
+            var sThead = '';
+            $.each(aOptions['allColumns'], function (i, item) {
+                $.each(item, function (j, champs) {
+                    if (champs.checked == 'true') {
+                        sThead += '<th>' + champs.label + '</th>';
+                    }
+                });
+            });
+            $parent.append('<table id="' + me.options.sListId + '" width="100%" class="ibo-datatable"><thead><tr>' + sThead + '</tr></thead></table>');
+
+            // Force tree-mode options (the server response is shaped for server-side mode)
+            aOptions.serverSide = false;
+            aOptions.paging = false;
+            aOptions.ordering = false;
+            aOptions.data = [];
+            aOptions.dom = "<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left'><'ibo-datatable--toolbar-right' i>>t";
+            delete aOptions.ajax;
+
+            // ajaxData passed to tree-grouping setup: same params, but operation=search to fetch rows
+            var oTreeAjaxData = $.extend({}, oParams);
+            oTreeAjaxData.operation = 'search';
+
+            aOptions.initComplete = function () {
+                this.attr('data-status', 'loaded');
+                this.closest('.dataTables_scroll').find('.dataTables_scrollHead .ibo-datatable').attr('data-status', 'loaded');
+                iTopDataTableTreeGrouping.setup(me.options.sListId, this.api(), {
+                    parentKey: sTreeParentKey{{ sListIDForVarSuffix }},
+                    ajaxUrl: me.options.sRenderUrl,
+                    ajaxData: oTreeAjaxData,
+                    initData: null
+                });
+                // Fetch rows and rebuild the tree
+                $('#' + me.options.sListId).trigger('refresh.datatable.itop');
+            };
+
+            $('#' + me.options.sListId).DataTable(aOptions);
+            me.element.unblock();
+        }, 'html');
+    };
 }
 {% else %}
 {# Normal mode: ResizeObserver and row actions #}
