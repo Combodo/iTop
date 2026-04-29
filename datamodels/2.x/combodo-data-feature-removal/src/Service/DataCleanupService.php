@@ -3,12 +3,10 @@
 namespace Combodo\iTop\DataFeatureRemoval\Service;
 
 use CMDBObjectSet;
-use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalLog;
-use Combodo\iTop\DataFeatureRemoval\Helper\ExecutionLimits;
+use Combodo\iTop\Service\Limits\ExecutionLimits;
 use DBObject;
 use DBObjectSearch;
-use Dict;
 use MetaModel;
 
 class DataCleanupService
@@ -20,8 +18,7 @@ class DataCleanupService
 	public function __construct(int $iMaxExecutionTime = 30, int $iMaxMemoryPercent = 80)
 	{
 		DataFeatureRemovalLog::Enable();
-		$iMaxTime = time() + $iMaxExecutionTime;
-		$this->oExecutionLimits = new ExecutionLimits($iMaxTime, $iMaxMemoryPercent);
+		$this->oExecutionLimits = new ExecutionLimits($iMaxExecutionTime, $iMaxMemoryPercent);
 	}
 
 	/**

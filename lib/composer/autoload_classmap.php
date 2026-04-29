@@ -625,6 +625,7 @@ return array(
     'Combodo\\iTop\\Service\\Events\\iEventServiceSetup' => $baseDir . '/sources/Service/Events/iEventServiceSetup.php',
     'Combodo\\iTop\\Service\\Import\\CSVImportPageProcessor' => $baseDir . '/sources/Service/Import/CSVImportPageProcessor.php',
     'Combodo\\iTop\\Service\\InterfaceDiscovery\\InterfaceDiscovery' => $baseDir . '/sources/Service/InterfaceDiscovery/InterfaceDiscovery.php',
+    'Combodo\\iTop\\Service\\Limits\\ExecutionLimits' => $baseDir . '/sources/Service/Limits/ExecutionLimits.php',
     'Combodo\\iTop\\Service\\Links\\LinkSetDataTransformer' => $baseDir . '/sources/Service/Links/LinkSetDataTransformer.php',
     'Combodo\\iTop\\Service\\Links\\LinkSetModel' => $baseDir . '/sources/Service/Links/LinkSetModel.php',
     'Combodo\\iTop\\Service\\Links\\LinkSetRepository' => $baseDir . '/sources/Service/Links/LinkSetRepository.php',
