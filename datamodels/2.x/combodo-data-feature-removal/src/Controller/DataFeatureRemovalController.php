@@ -14,8 +14,8 @@ use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalConfig;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
-use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
 use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
+use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Dict;
@@ -106,16 +106,18 @@ class DataFeatureRemovalController extends Controller
 
 		$oDataCleanupService = new DataCleanupService();
 		$aDeletionPlanSummaryEntities = $oDataCleanupService->GetCleanupSummary($aClasses);
-		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount', 'Issue'];
+		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount', 'IssueCount'];
 		$aRows = [];
 		$iQueryCount = 0;
+		$bHasIssues = false;
 		foreach ($aDeletionPlanSummaryEntities as $oDeletionPlanSummaryEntity) {
 			$aRows[] = [
 				$oDeletionPlanSummaryEntity->sClass,
 				$oDeletionPlanSummaryEntity->iDeleteCount,
 				$oDeletionPlanSummaryEntity->iUpdateCount,
-				$oDeletionPlanSummaryEntity->sIssue ?? '',
+				$oDeletionPlanSummaryEntity->iIssueCount,
 			];
+			$bHasIssues |= ($oDeletionPlanSummaryEntity->iIssueCount !== 0);
 			$iQueryCount += $oDeletionPlanSummaryEntity->iDeleteCount;
 			$iQueryCount += $oDeletionPlanSummaryEntity->iUpdateCount;
 		}
@@ -124,7 +126,7 @@ class DataFeatureRemovalController extends Controller
 		$aParams['aDeletionPlanSummary'] = $this->GetTableData('Extensions', $aColumns, $aRows);
 		$aParams['aClasses'] = $aClasses;
 		$aParams['iQueryCount'] = $iQueryCount;
-		$aParams['bDeletionPossible'] = ($iQueryCount <= DataFeatureRemovalConfig::GetInstance()->Get('max_count_estimation_for_safe_cleanup', 100));
+		$aParams['bDeletionPossible'] = !$bHasIssues;
 
 		$this->DisplayPage($aParams);
 	}
@@ -150,6 +152,7 @@ class DataFeatureRemovalController extends Controller
 
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
 		$aParams['aDeletionExecutionSummary'] = $this->GetTableData('Extensions', $aColumns, $aRows);
+
 		$this->DisplayPage($aParams);
 	}
 
