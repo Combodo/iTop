@@ -7,7 +7,8 @@
               'git4': 'grey',
               'git5': 'grey',
               'git6': 'grey',
-              'git7': 'grey'
+              'git7': 'grey',
+              'git8': 'grey'
        }, 'gitGraph': {'showBranches': true,'mainBranchName': 'develop','rotateCommitLabel': true}} }%%
 gitGraph
     commit id: "2016-07-06" tag: "2.3.0" type: HIGHLIGHT
@@ -94,11 +95,11 @@ gitGraph
     commit id: "2024-06-25" tag: "3.2.0-beta1" type: REVERSE
     commit id: "2024-08-07" tag: "3.2.0"
     checkout support/2.7
-    commit id: "2025-02-07" tag: "2.7.12"
+    commit id: "2025-02-07a" tag: "2.7.12"
     checkout support/3.1
-    commit id: "2025-02-07" tag: "3.1.3"
+    commit id: "2025-02-07b" tag: "3.1.3"
     checkout support/3.2
-    commit id: "2025-02-07 " tag: "3.2.1"
+    commit id: "2025-02-07c " tag: "3.2.1"
     commit id: "2025-03-31 " tag: "3.2.1-1"
     commit id: "2025-07-28 " tag: "3.2.2"
     checkout support/2.7
