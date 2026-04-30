@@ -18,6 +18,9 @@ $ipb-field--is-mandatory--color: $ipb-color-primary-700 !default;
 
 $ipb-form--linkedset--toggler--color: $ipb-color-primary-700 !default;
 
+$ipb-field--label--color: $ipb-color-grey-900 !default;
+$ipb-field--value--color: $ipb-color-grey-900 !default;
+
 .form_fields {
   fieldset {
     background-color: $ipb--fieldset--background-color;
@@ -42,4 +45,12 @@ $ipb-form--linkedset--toggler--color: $ipb-color-primary-700 !default;
   & > .glyphicon{
     color: $ipb-form--linkedset--toggler--color;
   }
+}
+
+.form_field_label {
+  color: $ipb-field--label--color;
+}
+
+.form_field_control, .form_field_control .ipb-is-html-content {
+  color: $ipb-field--value--color;
 }

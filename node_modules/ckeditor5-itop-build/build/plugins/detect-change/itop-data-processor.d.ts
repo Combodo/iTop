@@ -1,4 +1,4 @@
-import { HtmlDataProcessor, type ViewDocument, type ViewDocumentFragment } from 'ckeditor5/src/engine.js';
+import { HtmlDataProcessor, type ViewDocument, type ViewDocumentFragment } from '@ckeditor/ckeditor5-engine';
 export default class iTopDataProcessor extends HtmlDataProcessor {
     /**
      * HTML data processor used to process HTML if we detect changes

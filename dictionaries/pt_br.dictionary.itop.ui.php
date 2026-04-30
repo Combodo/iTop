@@ -899,6 +899,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'UI:Delete:PleaseDoTheManualOperations' => 'Por favor, realize as operações manuais listadas acima antes de solicitar a exclusão do referido objeto',
 	'UI:Delect:Confirm_Object' => 'Por favor, confirme se você deseja excluir "%1$s"',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Por favor, confirme que você deseja excluir o(s) seguinte(s) %1$d objeto(s) da classe "%2$s"',
+	'UI:Delete:Confirm_Object' => 'Por favor, confirme se você deseja excluir "%1$s"',
+	'UI:Delete:Confirm_Count_ObjectsOf_Class' => 'Por favor, confirme que você deseja excluir o(s) seguinte(s) %1$d objeto(s) da classe "%2$s"',
 	'UI:WelcomeToITop' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT, 'UI:DetailsPageTitle' => '%1$s - Detalhes do(a) %2$s',
 	'UI:ErrorPageTitle' => 'Erro',
 	'UI:ObjectDoesNotExist' => 'Desculpe, este objeto não existe (ou você não tem permissão para vê-lo)',

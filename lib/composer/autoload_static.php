@@ -28,12 +28,12 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
     );
 
     public static $prefixLengthsPsr4 = array (
-        'T' => 
+        'T' =>
         array (
             'Twig\\' => 5,
             'TheNetworg\\OAuth2\\Client\\' => 25,
         ),
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Runtime\\Symfony\\Component\\' => 34,
             'Symfony\\Polyfill\\Php83\\' => 23,
@@ -85,7 +85,7 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
             'ScssPhp\\ScssPhp\\' => 16,
             'Sabberworm\\CSS\\' => 15,
         ),
-        'P' => 
+        'P' =>
         array (
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
@@ -96,310 +96,310 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
             'PhpParser\\' => 10,
             'Pelago\\Emogrifier\\' => 18,
         ),
-        'L' => 
+        'L' =>
         array (
             'League\\OAuth2\\Client\\' => 21,
         ),
-        'G' => 
+        'G' =>
         array (
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
         ),
-        'F' => 
+        'F' =>
         array (
             'Firebase\\JWT\\' => 13,
         ),
-        'E' => 
+        'E' =>
         array (
             'Egulias\\EmailValidator\\' => 23,
         ),
-        'D' => 
+        'D' =>
         array (
             'Doctrine\\Common\\Lexer\\' => 22,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Twig\\' => 
+        'Twig\\' =>
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
         ),
-        'TheNetworg\\OAuth2\\Client\\' => 
+        'TheNetworg\\OAuth2\\Client\\' =>
         array (
             0 => __DIR__ . '/..' . '/thenetworg/oauth2-azure/src',
         ),
-        'Symfony\\Runtime\\Symfony\\Component\\' => 
+        'Symfony\\Runtime\\Symfony\\Component\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/runtime/Internal',
         ),
-        'Symfony\\Polyfill\\Php83\\' => 
+        'Symfony\\Polyfill\\Php83\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php83',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
+        'Symfony\\Polyfill\\Mbstring\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Symfony\\Polyfill\\Intl\\Normalizer\\' => 
+        'Symfony\\Polyfill\\Intl\\Normalizer\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer',
         ),
-        'Symfony\\Polyfill\\Intl\\Idn\\' => 
+        'Symfony\\Polyfill\\Intl\\Idn\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-intl-idn',
         ),
-        'Symfony\\Polyfill\\Intl\\Icu\\' => 
+        'Symfony\\Polyfill\\Intl\\Icu\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-intl-icu',
         ),
-        'Symfony\\Polyfill\\Intl\\Grapheme\\' => 
+        'Symfony\\Polyfill\\Intl\\Grapheme\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme',
         ),
-        'Symfony\\Polyfill\\Ctype\\' => 
+        'Symfony\\Polyfill\\Ctype\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Symfony\\Contracts\\Translation\\' => 
+        'Symfony\\Contracts\\Translation\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/translation-contracts',
         ),
-        'Symfony\\Contracts\\Service\\' => 
+        'Symfony\\Contracts\\Service\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/service-contracts',
         ),
-        'Symfony\\Contracts\\EventDispatcher\\' => 
+        'Symfony\\Contracts\\EventDispatcher\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/event-dispatcher-contracts',
         ),
-        'Symfony\\Contracts\\Cache\\' => 
+        'Symfony\\Contracts\\Cache\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/cache-contracts',
         ),
-        'Symfony\\Component\\Yaml\\' => 
+        'Symfony\\Component\\Yaml\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/yaml',
         ),
-        'Symfony\\Component\\VarExporter\\' => 
+        'Symfony\\Component\\VarExporter\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/var-exporter',
         ),
-        'Symfony\\Component\\VarDumper\\' => 
+        'Symfony\\Component\\VarDumper\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/var-dumper',
         ),
-        'Symfony\\Component\\Validator\\' => 
+        'Symfony\\Component\\Validator\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/validator',
         ),
-        'Symfony\\Component\\String\\' => 
+        'Symfony\\Component\\String\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/string',
         ),
-        'Symfony\\Component\\Stopwatch\\' => 
+        'Symfony\\Component\\Stopwatch\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/stopwatch',
         ),
-        'Symfony\\Component\\Security\\Csrf\\' => 
+        'Symfony\\Component\\Security\\Csrf\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/security-csrf',
         ),
-        'Symfony\\Component\\Security\\Core\\' => 
+        'Symfony\\Component\\Security\\Core\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/security-core',
         ),
-        'Symfony\\Component\\Runtime\\' => 
+        'Symfony\\Component\\Runtime\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/runtime',
         ),
-        'Symfony\\Component\\Routing\\' => 
+        'Symfony\\Component\\Routing\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/routing',
         ),
-        'Symfony\\Component\\PropertyInfo\\' => 
+        'Symfony\\Component\\PropertyInfo\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/property-info',
         ),
-        'Symfony\\Component\\PropertyAccess\\' => 
+        'Symfony\\Component\\PropertyAccess\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/property-access',
         ),
-        'Symfony\\Component\\PasswordHasher\\' => 
+        'Symfony\\Component\\PasswordHasher\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/password-hasher',
         ),
-        'Symfony\\Component\\OptionsResolver\\' => 
+        'Symfony\\Component\\OptionsResolver\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/options-resolver',
         ),
-        'Symfony\\Component\\Mime\\' => 
+        'Symfony\\Component\\Mime\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/mime',
         ),
-        'Symfony\\Component\\Mailer\\' => 
+        'Symfony\\Component\\Mailer\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/mailer',
         ),
-        'Symfony\\Component\\HttpKernel\\' => 
+        'Symfony\\Component\\HttpKernel\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/http-kernel',
         ),
-        'Symfony\\Component\\HttpFoundation\\' => 
+        'Symfony\\Component\\HttpFoundation\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/http-foundation',
         ),
-        'Symfony\\Component\\Form\\' => 
+        'Symfony\\Component\\Form\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/form',
         ),
-        'Symfony\\Component\\Finder\\' => 
+        'Symfony\\Component\\Finder\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/finder',
         ),
-        'Symfony\\Component\\Filesystem\\' => 
+        'Symfony\\Component\\Filesystem\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/filesystem',
         ),
-        'Symfony\\Component\\EventDispatcher\\' => 
+        'Symfony\\Component\\EventDispatcher\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/event-dispatcher',
         ),
-        'Symfony\\Component\\ErrorHandler\\' => 
+        'Symfony\\Component\\ErrorHandler\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/error-handler',
         ),
-        'Symfony\\Component\\Dotenv\\' => 
+        'Symfony\\Component\\Dotenv\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/dotenv',
         ),
-        'Symfony\\Component\\DependencyInjection\\' => 
+        'Symfony\\Component\\DependencyInjection\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/dependency-injection',
         ),
-        'Symfony\\Component\\CssSelector\\' => 
+        'Symfony\\Component\\CssSelector\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/css-selector',
         ),
-        'Symfony\\Component\\Console\\' => 
+        'Symfony\\Component\\Console\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/console',
         ),
-        'Symfony\\Component\\Config\\' => 
+        'Symfony\\Component\\Config\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/config',
         ),
-        'Symfony\\Component\\Cache\\' => 
+        'Symfony\\Component\\Cache\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/cache',
         ),
-        'Symfony\\Bundle\\WebProfilerBundle\\' => 
+        'Symfony\\Bundle\\WebProfilerBundle\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/web-profiler-bundle',
         ),
-        'Symfony\\Bundle\\TwigBundle\\' => 
+        'Symfony\\Bundle\\TwigBundle\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/twig-bundle',
         ),
-        'Symfony\\Bundle\\FrameworkBundle\\' => 
+        'Symfony\\Bundle\\FrameworkBundle\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/framework-bundle',
         ),
-        'Symfony\\Bundle\\DebugBundle\\' => 
+        'Symfony\\Bundle\\DebugBundle\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/debug-bundle',
         ),
-        'Symfony\\Bridge\\Twig\\' => 
+        'Symfony\\Bridge\\Twig\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/twig-bridge',
         ),
-        'Soundasleep\\' => 
+        'Soundasleep\\' =>
         array (
             0 => __DIR__ . '/..' . '/soundasleep/html2text/src',
         ),
-        'ScssPhp\\ScssPhp\\' => 
+        'ScssPhp\\ScssPhp\\' =>
         array (
             0 => __DIR__ . '/..' . '/scssphp/scssphp/src',
         ),
-        'Sabberworm\\CSS\\' => 
+        'Sabberworm\\CSS\\' =>
         array (
             0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
         ),
-        'Psr\\Log\\' => 
+        'Psr\\Log\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
         ),
-        'Psr\\Http\\Message\\' => 
+        'Psr\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-factory/src',
             1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Psr\\Http\\Client\\' => 
+        'Psr\\Http\\Client\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
         ),
-        'Psr\\EventDispatcher\\' => 
+        'Psr\\EventDispatcher\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/event-dispatcher/src',
         ),
-        'Psr\\Container\\' => 
+        'Psr\\Container\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'Psr\\Cache\\' => 
+        'Psr\\Cache\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
-        'PhpParser\\' => 
+        'PhpParser\\' =>
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
-        'Pelago\\Emogrifier\\' => 
+        'Pelago\\Emogrifier\\' =>
         array (
             0 => __DIR__ . '/..' . '/pelago/emogrifier/src',
         ),
-        'League\\OAuth2\\Client\\' => 
+        'League\\OAuth2\\Client\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/oauth2-google/src',
             1 => __DIR__ . '/..' . '/league/oauth2-client/src',
         ),
-        'GuzzleHttp\\Psr7\\' => 
+        'GuzzleHttp\\Psr7\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
-        'GuzzleHttp\\Promise\\' => 
+        'GuzzleHttp\\Promise\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
         ),
-        'GuzzleHttp\\' => 
+        'GuzzleHttp\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
-        'Firebase\\JWT\\' => 
+        'Firebase\\JWT\\' =>
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
-        'Egulias\\EmailValidator\\' => 
+        'Egulias\\EmailValidator\\' =>
         array (
             0 => __DIR__ . '/..' . '/egulias/email-validator/src',
         ),
-        'Doctrine\\Common\\Lexer\\' => 
+        'Doctrine\\Common\\Lexer\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/lexer/src',
         ),
     );
 
     public static $prefixesPsr0 = array (
-        'C' => 
+        'C' =>
         array (
-            'Console' => 
+            'Console' =>
             array (
                 0 => __DIR__ . '/..' . '/pear/console_getopt',
             ),
         ),
-        'A' => 
+        'A' =>
         array (
-            'Archive_Tar' => 
+            'Archive_Tar' =>
             array (
                 0 => __DIR__ . '/..' . '/pear/archive_tar',
             ),

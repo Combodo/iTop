@@ -1,0 +1,20 @@
+@import '../node_modules/ckeditor5-itop-build/build/styles/compiled-theme';
+$ipb-vendors-ckeditor--ck-content--text-color: $ipb-color-grey-900 !default;
+
+:root {
+  --ck-content-font-family: inherit;
+  --ck-content-font-color: inherit;
+  --ck-content-font-size: inherit;
+  --ck-content-line-height: inherit;
+  --ck-content-word-break: inherit;
+  --ck-content-overflow-wrap: inherit;
+}
+
+.ck-content {
+  color: $ipb-vendors-ckeditor--ck-content--text-color;
+}
+
+
+.ipb-is-html-content {
+  @extend .ck-content;
+}

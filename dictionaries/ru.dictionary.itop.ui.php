@@ -857,6 +857,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Delete:PleaseDoTheManualOperations' => 'Необходимо выполнить указанные операции в ручную до удаления этого объекта',
 	'UI:Delect:Confirm_Object' => 'Подтвердите удаление %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Подтвердите удаление %1$d объектов класса %2$s.',
+	'UI:Delete:Confirm_Object' => 'Подтвердите удаление %1$s.',
+	'UI:Delete:Confirm_Count_ObjectsOf_Class' => 'Подтвердите удаление %1$d объектов класса %2$s.',
 	'UI:WelcomeToITop' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT, 'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s подробности',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Ошибка',
 	'UI:ObjectDoesNotExist' => 'Извините, этот объект не существует (или вы не можете его видеть).',

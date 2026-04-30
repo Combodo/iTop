@@ -868,6 +868,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'UI:Delete:PleaseDoTheManualOperations' => 'Przed złożeniem wniosku o usunięcie tego obiektu wykonaj czynności ręczne wymienione powyżej',
 	'UI:Delect:Confirm_Object' => 'Potwierdź, że chcesz usunąć %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Potwierdź, że chcesz usunąć następujące obiekty %1$d klasy %2$s.',
+	'UI:Delete:Confirm_Object' => 'Potwierdź, że chcesz usunąć %1$s.',
+	'UI:Delete:Confirm_Count_ObjectsOf_Class' => 'Potwierdź, że chcesz usunąć następujące obiekty %1$d klasy %2$s.',
 	'UI:WelcomeToITop' => 'Witaj w '.ITOP_APPLICATION, 'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s szczegóły',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Błąd',
 	'UI:ObjectDoesNotExist' => 'Przepraszamy, ten obiekt nie istnieje (lub nie masz uprawnień do jego przeglądania).',
