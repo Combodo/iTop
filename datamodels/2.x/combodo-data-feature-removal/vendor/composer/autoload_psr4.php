@@ -7,5 +7,4 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Combodo\\iTop\\DataFeatureRemoval\\' => array($baseDir . '/src'),
-    '' => array($baseDir . '/src/NoNamespace'),
 );

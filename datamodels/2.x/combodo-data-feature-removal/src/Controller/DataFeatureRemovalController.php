@@ -14,8 +14,8 @@ use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalConfig;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
+use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
 use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
-use Combodo\iTop\DataFeatureRemoval\Service\DeletionPlanService;
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Dict;
@@ -104,17 +104,20 @@ class DataFeatureRemovalController extends Controller
 
 		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 
-		$aDeletionPlanSummaryEntities = DeletionPlanService::GetInstance()->GetDeletionPlanSummary($aClasses);
-		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount', 'Issue'];
+		$oDataCleanupService = new DataCleanupService();
+		$aDeletionPlanSummaryEntities = $oDataCleanupService->GetCleanupSummary($aClasses);
+		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount', 'IssueCount'];
 		$aRows = [];
 		$iQueryCount = 0;
+		$bHasIssues = false;
 		foreach ($aDeletionPlanSummaryEntities as $oDeletionPlanSummaryEntity) {
 			$aRows[] = [
 				$oDeletionPlanSummaryEntity->sClass,
 				$oDeletionPlanSummaryEntity->iDeleteCount,
 				$oDeletionPlanSummaryEntity->iUpdateCount,
-				$oDeletionPlanSummaryEntity->sIssue ?? '',
+				$oDeletionPlanSummaryEntity->iIssueCount,
 			];
+			$bHasIssues |= ($oDeletionPlanSummaryEntity->iIssueCount !== 0);
 			$iQueryCount += $oDeletionPlanSummaryEntity->iDeleteCount;
 			$iQueryCount += $oDeletionPlanSummaryEntity->iUpdateCount;
 		}
@@ -123,7 +126,7 @@ class DataFeatureRemovalController extends Controller
 		$aParams['aDeletionPlanSummary'] = $this->GetTableData('Extensions', $aColumns, $aRows);
 		$aParams['aClasses'] = $aClasses;
 		$aParams['iQueryCount'] = $iQueryCount;
-		$aParams['bDeletionPossible'] = ($iQueryCount <= DataFeatureRemovalConfig::GetInstance()->Get('max_count_estimation_for_safe_cleanup', 100));
+		$aParams['bDeletionPossible'] = !$bHasIssues;
 
 		$this->DisplayPage($aParams);
 	}
@@ -135,7 +138,8 @@ class DataFeatureRemovalController extends Controller
 
 		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 
-		$aDeletionExecutionSummary = DeletionPlanService::GetInstance()->ExecuteDeletionPlan($aClasses);
+		$oDataCleanupService = new DataCleanupService();
+		$aDeletionExecutionSummary = $oDataCleanupService->ExecuteCleanup($aClasses);
 		$aColumns = ['Class', 'DeletedCount' , 'UpdatedCount'];
 		$aRows = [];
 		foreach ($aDeletionExecutionSummary as $oDeletionExecutionSummaryEntity) {
@@ -148,6 +152,7 @@ class DataFeatureRemovalController extends Controller
 
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
 		$aParams['aDeletionExecutionSummary'] = $this->GetTableData('Extensions', $aColumns, $aRows);
+
 		$this->DisplayPage($aParams);
 	}
 

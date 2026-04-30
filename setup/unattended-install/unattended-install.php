@@ -312,9 +312,6 @@ if ($bInstall) {
 							} else {
 								echo "\nFailed to record designer updates(".$oMysqli->error.").\n";
 							}
-						} else {
-							echo "\nFailed to read the revision from $sDeltaFile file. No designer update information will be recorded.\n";
-
 						}
 					}
 				}
@@ -349,8 +346,7 @@ if (! $bFoundIssues) {
 	$sLogMsg = "installed!";
 
 	if ($bUseItopConfig && is_file("$sConfigFile.backup")) {
-		echo "\nuse config file provided by backup in $sConfigFile.";
-		copy("$sConfigFile.backup", $sConfigFile);
+		unlink("$sConfigFile.backup");
 	}
 
 	SetupLog::Info($sLogMsg);

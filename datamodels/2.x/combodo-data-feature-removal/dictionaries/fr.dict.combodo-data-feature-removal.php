@@ -28,7 +28,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'DataFeatureRemoval:DeletionPlan:SubTitle' => '%1$s ligne(s) à nettoyer avant de poursuivre',
 	'DataFeatureRemoval:DoDeletion:Title' => 'Exécuter la suppression',
 	'DataFeatureRemoval:DoDeletion:SubTitle' => 'Supprime toutes les entrées de la base de données',
-	'DataFeatureRemoval:DeletionPlan:ToManyOperations' => 'Trop d’entrées à nettoyer',
+	'DataFeatureRemoval:DeletionPlan:Error:Issues' => 'Certains objets doivent être supprimés manuellement avant le nettoyage',
 
 	'DataFeatureRemoval:Table:Analysis:ClassName' => 'Élément à supprimer',
 	'DataFeatureRemoval:Table:Analysis:FeatureName' => 'Fonctionnalité',
@@ -51,7 +51,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'DataFeatureRemoval:Column:Class' => 'Classe',
 	'DataFeatureRemoval:Column:DeleteCount' => 'Entrées à supprimer',
 	'DataFeatureRemoval:Column:UpdateCount' => 'Entrées à mettre à jour',
-	'DataFeatureRemoval:Column:Issue' => 'Problème',
+	'DataFeatureRemoval:Column:IssueCount' => 'Problèmes empêchant le nettoyage automatique',
 
 	'DataFeatureRemoval:Column:DeletedCount' => 'Entrées supprimées',
 	'DataFeatureRemoval:Column:UpdatedCount' => 'Entrées mises à jour',

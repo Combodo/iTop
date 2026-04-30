@@ -360,8 +360,8 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         ),
         'League\\OAuth2\\Client\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/oauth2-client/src',
-            1 => __DIR__ . '/..' . '/league/oauth2-google/src',
+            0 => __DIR__ . '/..' . '/league/oauth2-google/src',
+            1 => __DIR__ . '/..' . '/league/oauth2-client/src',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -1026,6 +1026,7 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'Combodo\\iTop\\Service\\Events\\iEventServiceSetup' => __DIR__ . '/../..' . '/sources/Service/Events/iEventServiceSetup.php',
         'Combodo\\iTop\\Service\\Import\\CSVImportPageProcessor' => __DIR__ . '/../..' . '/sources/Service/Import/CSVImportPageProcessor.php',
         'Combodo\\iTop\\Service\\InterfaceDiscovery\\InterfaceDiscovery' => __DIR__ . '/../..' . '/sources/Service/InterfaceDiscovery/InterfaceDiscovery.php',
+        'Combodo\\iTop\\Service\\Limits\\ExecutionLimits' => __DIR__ . '/../..' . '/sources/Service/Limits/ExecutionLimits.php',
         'Combodo\\iTop\\Service\\Links\\LinkSetDataTransformer' => __DIR__ . '/../..' . '/sources/Service/Links/LinkSetDataTransformer.php',
         'Combodo\\iTop\\Service\\Links\\LinkSetModel' => __DIR__ . '/../..' . '/sources/Service/Links/LinkSetModel.php',
         'Combodo\\iTop\\Service\\Links\\LinkSetRepository' => __DIR__ . '/../..' . '/sources/Service/Links/LinkSetRepository.php',

@@ -3190,4 +3190,30 @@ TXT
 			}
 		}
 	}
+
+	/**
+	 * Read memory limit from the php.ini file
+	 *
+	 * @return int Memory limit in bytes
+	 */
+	public static function GetMemoryLimit(): int
+	{
+		$sLimit = ini_get('memory_limit');
+		if ($sLimit == '-1') {
+			return 128 * 1048576;
+		}
+		switch (substr($sLimit, -1)) {
+			case 'M':
+			case 'm':
+				return (int)$sLimit * 1048576;
+			case 'K':
+			case 'k':
+				return (int)$sLimit * 1024;
+			case 'G':
+			case 'g':
+				return (int)$sLimit * 1073741824;
+			default:
+				return (int)$sLimit;
+		}
+	}
 }

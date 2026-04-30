@@ -20,19 +20,18 @@ class ComposerStaticInit4f96a7199e2c0d90e547333758b26464
         ),
     );
 
-    public static $fallbackDirsPsr4 = array (
-        0 => __DIR__ . '/../..' . '/src/NoNamespace',
-    );
-
     public static $classMap = array (
         'Combodo\\iTop\\DataFeatureRemoval\\Controller\\DataFeatureRemovalController' => __DIR__ . '/../..' . '/src/Controller/DataFeatureRemovalController.php',
-        'Combodo\\iTop\\DataFeatureRemoval\\Entity\\DeletionPlanSummaryEntity' => __DIR__ . '/../..' . '/src/Entity/DeletionPlanSummaryEntity.php',
+        'Combodo\\iTop\\DataFeatureRemoval\\Entity\\DataCleanupSummaryEntity' => __DIR__ . '/../..' . '/src/Entity/DataCleanupSummaryEntity.php',
         'Combodo\\iTop\\DataFeatureRemoval\\Helper\\DataFeatureRemovalConfig' => __DIR__ . '/../..' . '/src/Helper/DataFeatureRemovalConfig.php',
         'Combodo\\iTop\\DataFeatureRemoval\\Helper\\DataFeatureRemovalException' => __DIR__ . '/../..' . '/src/Helper/DataFeatureRemovalException.php',
         'Combodo\\iTop\\DataFeatureRemoval\\Helper\\DataFeatureRemovalHelper' => __DIR__ . '/../..' . '/src/Helper/DataFeatureRemovalHelper.php',
         'Combodo\\iTop\\DataFeatureRemoval\\Helper\\DataFeatureRemovalLog' => __DIR__ . '/../..' . '/src/Helper/DataFeatureRemovalLog.php',
+        'Combodo\\iTop\\DataFeatureRemoval\\Service\\DataCleanupService' => __DIR__ . '/../..' . '/src/Service/DataCleanupService.php',
         'Combodo\\iTop\\DataFeatureRemoval\\Service\\DataFeatureRemoverExtensionService' => __DIR__ . '/../..' . '/src/Service/DataFeatureRemoverExtensionService.php',
-        'Combodo\\iTop\\DataFeatureRemoval\\Service\\DeletionPlanService' => __DIR__ . '/../..' . '/src/Service/DeletionPlanService.php',
+        'Combodo\\iTop\\DataFeatureRemoval\\Service\\ObjectService' => __DIR__ . '/../..' . '/src/Service/ObjectService.php',
+        'Combodo\\iTop\\DataFeatureRemoval\\Service\\ObjectServiceSummary' => __DIR__ . '/../..' . '/src/Service/ObjectServiceSummary.php',
+        'Combodo\\iTop\\DataFeatureRemoval\\Service\\iObjectService' => __DIR__ . '/../..' . '/src/Service/iObjectService.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 
@@ -41,7 +40,6 @@ class ComposerStaticInit4f96a7199e2c0d90e547333758b26464
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit4f96a7199e2c0d90e547333758b26464::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit4f96a7199e2c0d90e547333758b26464::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit4f96a7199e2c0d90e547333758b26464::$fallbackDirsPsr4;
             $loader->classMap = ComposerStaticInit4f96a7199e2c0d90e547333758b26464::$classMap;
 
         }, null, ClassLoader::class);

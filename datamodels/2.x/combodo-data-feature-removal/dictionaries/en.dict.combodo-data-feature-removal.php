@@ -28,7 +28,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'DataFeatureRemoval:DeletionPlan:SubTitle' => '%1$s rows to clean before continuing',
 	'DataFeatureRemoval:DoDeletion:Title' => 'Do deletion',
 	'DataFeatureRemoval:DoDeletion:SubTitle' => 'Remove all the entries from the database',
-	'DataFeatureRemoval:DeletionPlan:ToManyOperations' => 'Too many entries to clean',
+	'DataFeatureRemoval:DeletionPlan:Error:Issues' => 'Some objects must be deleted manually prior to cleanup',
 
 	'DataFeatureRemoval:Table:Analysis:ClassName' => 'Element to remove',
 	'DataFeatureRemoval:Table:Analysis:FeatureName' => 'Feature name',
@@ -51,7 +51,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'DataFeatureRemoval:Column:Class' => 'Class',
 	'DataFeatureRemoval:Column:DeleteCount' => 'Entries to delete',
 	'DataFeatureRemoval:Column:UpdateCount' => 'Entries to update',
-	'DataFeatureRemoval:Column:Issue' => 'Issue',
+	'DataFeatureRemoval:Column:IssueCount' => 'Issues found preventing automatic cleanup',
 
 	'DataFeatureRemoval:Column:DeletedCount' => 'Deleted entries',
 	'DataFeatureRemoval:Column:UpdatedCount' => 'Updated entries',
