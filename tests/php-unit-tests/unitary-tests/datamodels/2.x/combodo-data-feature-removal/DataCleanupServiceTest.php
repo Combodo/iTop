@@ -7,10 +7,10 @@
 
 namespace Combodo\iTop\Test\UnitTest\Module\DataFeatureRemoval\Service;
 
-use Cleanup;
 use Combodo\iTop\DataFeatureRemoval\Entity\DataCleanupSummaryEntity;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
+use Combodo\iTop\Service\Limits\ExecutionLimits;
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
