@@ -20,8 +20,6 @@ class ExecutionLimits
 	 */
 	public function __construct(int $iMaxDuration = 0, int $iMaxMemoryPercent = 100)
 	{
-	public function __construct(int $iMaxDuration = 0, int $iMaxMemoryPercent = 100)
-	{
 		$this->iMaxTime = ($iMaxDuration > 0) ? ($iMaxDuration + time()) : 0;
 		$this->iMaxMemoryPercent = (int)min(max($iMaxMemoryPercent, 0), 100);
 	}
