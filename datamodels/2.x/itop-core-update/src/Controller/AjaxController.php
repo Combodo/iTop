@@ -46,10 +46,6 @@ class AjaxController extends Controller
 			define('MODULESROOT', APPROOT.'env-production/');
 		}
 
-		require_once(MODULESROOT.'itop-core-update/src/Service/RunTimeEnvironmentCoreUpdater.php');
-		require_once(MODULESROOT.'itop-core-update/src/Service/CoreUpdater.php');
-		require_once(MODULESROOT.'itop-core-update/src/Controller/AjaxController.php');
-
 		MetaModel::LoadConfig(utils::GetConfig());
 
 		$sViewPath = MODULESROOT.'itop-core-update/templates';
