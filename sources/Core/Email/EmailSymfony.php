@@ -189,8 +189,14 @@ class EMailSymfony extends Email
 				// Handle peer verification
 				$oStream = $oTransport->getStream();
 				$aOptions = $oStream->getStreamOptions();
-				if (!$bVerifyPeer && array_key_exists('ssl', $aOptions)) {
-					// Disable verification
+				/*
+				 * N°9584 Connection with the SMTP server always starts unencrypted, so there won't be any `ssl` option at first.
+				 *        But we have to force them if certificate should not be verified so they can be used when the connection is "upgraded" to TLS via STARTTLS
+				 * @see https://datatracker.ietf.org/doc/html/rfc3207
+				 * @see https://www.php.net/manual/en/function.stream-socket-enable-crypto.php
+				 */
+				if (!$bVerifyPeer) {
+					// Disable verification - must set even when 'ssl' key is absent (e.g. STARTTLS starts plain and upgrades later)
 					$aOptions['ssl']['verify_peer'] = false;
 					$aOptions['ssl']['verify_peer_name'] = false;
 					$aOptions['ssl']['allow_self_signed'] = true;
