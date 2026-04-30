@@ -10,10 +10,10 @@ namespace Combodo\iTop\Test\UnitTest\Module\DataFeatureRemoval\Service;
 use Cleanup;
 use Combodo\iTop\DataFeatureRemoval\Entity\DataCleanupSummaryEntity;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
-use Combodo\iTop\DataFeatureRemoval\Helper\ExecutionLimits;
 use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Unit tests for the CleanupService cf the Combodo Data Feature Removal module.
@@ -36,7 +36,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
  */
 class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 {
-	private ExecutionLimits&\PHPUnit\Framework\MockObject\MockObject $oExecutionLimits;
+	private ExecutionLimits&MockObject $oExecutionLimits;
 
 	public function GetDatamodelDeltaAbsPath(): string
 	{
