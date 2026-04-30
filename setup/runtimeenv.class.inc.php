@@ -1020,6 +1020,8 @@ class RunTimeEnvironment
 				false
 			);
 
+			$this->RerouteSymlinks(APPROOT.'env-'.$this->sFinalEnv, utils::GetDataPath().$this->sBuildEnv.'-modules/', utils::GetDataPath().$this->sFinalEnv.'-modules/');
+
 			// Move the config file
 			//
 			$sBuildConfig = APPCONF.$this->sBuildEnv.'/config-itop.php';
@@ -1635,5 +1637,35 @@ class RunTimeEnvironment
 		}
 
 		return $aModulesToLoad;
+	}
+
+	/**
+	 * Replace target for links in sToScan from sSource to sDest
+	 *
+	 * @param string $sToScan where to search for symlinks
+	 * @param string $sSource part to replace in the link target
+	 * @param string $sDest replacement in the link target
+	 *
+	 * @return void
+	 */
+	private function RerouteSymlinks(string $sToScan, string $sSource, string $sDest)
+	{
+		if (is_dir($sToScan)) {
+			$aFiles = scandir($sToScan);
+			if (sizeof($aFiles) > 0) {
+				foreach ($aFiles as $sFile) {
+					if ($sFile == '.' || $sFile == '..' || $sFile == '.svn' || $sFile == '.git') {
+						// Skip
+						continue;
+					}
+					$this->RerouteSymlinks($sToScan.'/'.$sFile, $sSource, $sDest);
+				}
+			}
+		} elseif (is_link($sToScan)) {
+			$sLinkPath = readlink($sToScan);
+			$sLinkPath = str_replace($sSource, $sDest, $sLinkPath);
+			unlink($sToScan);
+			symlink($sLinkPath, $sToScan);
+		}
 	}
 }
