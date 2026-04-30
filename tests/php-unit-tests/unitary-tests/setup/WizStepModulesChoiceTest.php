@@ -2,15 +2,13 @@
 
 namespace Combodo\iTop\Test\UnitTest\Integration;
 
-use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use iTopExtension;
 use iTopExtensionsMap;
 use iTopExtensionsMapFake;
 use ModuleDiscovery;
+use WepPageFake;
 use WizardController;
 use WizStepModulesChoiceFake;
-use WepPageFake;
 use XMLParameters;
 
 class WizStepModulesChoiceTest extends ItopTestCase
@@ -928,6 +926,40 @@ class WizStepModulesChoiceTest extends ItopTestCase
 		$this->expectException('Exception');
 		$this->expectExceptionMessage('Extension combodo-sample does not have any module associated');
 		$this->oStep->GetSelectedModules($aStepInfo, ['_0' => '_0'], $aModules, '', '', $aExtensions);
+	}
+
+	public function testGetSelectedModulesShouldNotThrowAnExceptionWhenAMandatoryModuleIsMissing()
+	{
+		$aExtensionsMapData = [];
+		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
+
+		//GetSelectedModules
+		$aStepInfo = [
+			'title' => 'Extensions',
+			'description' => '',
+			'banner' => '',
+			'options' => [
+				[
+					'extension_code' => 'combodo-sample',
+					'title' => 'Sample extension',
+					'description' => '',
+					'more_info' => '',
+					'default' => true,
+					'modules' => [],
+					'mandatory' => true,
+					'source_label' => '',
+					'uninstallable' => true,
+					'missing' => true,
+				],
+			],
+		];
+
+		$aModules = [];
+		$aExtensions = [];
+		$this->oStep->GetSelectedModules($aStepInfo, ['_0' => '_0'], $aModules, '', '', $aExtensions);
+		$this->assertCount(0, $aModules);
+		$this->assertCount(1, $aExtensions);
+
 	}
 
 	public function ProviderDisplayOptions()

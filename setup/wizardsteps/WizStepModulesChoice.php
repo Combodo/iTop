@@ -478,6 +478,7 @@ EOF
 	 * @param string $sParentId Used for recursion
 	 *
 	 * @return string A text representation of what will be installed
+	 * @throws \Exception
 	 */
 	public function GetSelectedModules($aInfo, $aSelectedChoices, &$aModules, $sParentId = '', $sDisplayChoices = '', &$aSelectedExtensions = null)
 	{
@@ -507,8 +508,8 @@ EOF
 				(isset($aSelectedChoices[$sChoiceId]) && ($aSelectedChoices[$sChoiceId] == $sChoiceId))) {
 				$sDisplayChoices .= '<li>'.$aChoice['title'].'</li>';
 				if (isset($aChoice['modules'])) {
-					if (count($aChoice['modules']) === 0) {
-						//throw new Exception('Extension '.$aChoice['extension_code'].' does not have any module associated');
+					if (count($aChoice['modules']) === 0 && (!isset($aChoice['missing']) || $aChoice['missing'] === false)) {
+						throw new Exception('Extension '.$aChoice['extension_code'].' does not have any module associated');
 					}
 					foreach ($aChoice['modules'] as $sModuleId) {
 						$bSelected = true;
