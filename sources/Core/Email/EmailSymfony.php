@@ -422,6 +422,7 @@ class EMailSymfony extends Email
 			$aAdditionalParts = $this->EmbedInlineImages($sBody);
 			$oTextPart = new TextPart((new DefaultHtmlToTextConverter())->convert($sBody, 'utf-8'), 'utf-8', 'plain', 'base64');
 			$oHtmlPart = new TextPart($sBody, 'utf-8', 'html', 'base64');
+			// It's important de order parts from least prefered to most prefered as per RFC 2046 {@see https://www.rfc-editor.org/rfc/rfc2046.html#section-5.1.4}
 			$oAlternativePart = new AlternativePart($oTextPart, $oHtmlPart);
 			// Default root part is the HTML body
 			$oRootPart = $oAlternativePart;
