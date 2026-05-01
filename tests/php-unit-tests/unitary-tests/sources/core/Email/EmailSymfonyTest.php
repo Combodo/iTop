@@ -169,6 +169,7 @@ HTML;
 	 * Email clients display the last part they support, so text/plain must come first and text/html last.
 	 *
 	 * @see https://www.rfc-editor.org/rfc/rfc2046.html#section-5.1.4
+     * @covers \Combodo\iTop\Core\Email\EmailSymfony::SetBody()
 	 * @since N°9574
 	 */
 	public function testSetBodyAlternativePartOrderForHtmlEmailIsPlainThenHtml(): void
@@ -185,6 +186,7 @@ HTML;
 	/**
 	 * @dataProvider provideSetBodyPlainTextDoesNotContainCss
 	 *
+	 * @covers \Combodo\iTop\Core\Email\EmailSymfony::SetBody()
 	 * @since N°9574
 	 */
 	public function testSetBodyPlainTextDoesNotContainCss(string $sHtml, ?string $sCustomStyles): void
@@ -217,6 +219,7 @@ HTML;
 	 * This guards against regressions where the wrong body (e.g. the plain-text version)
 	 * would end up in the HTML part.
 	 *
+	 * @covers \Combodo\iTop\Core\Email\EmailSymfony::SetBody()
 	 * @since N°9574
 	 */
 	public function testSetBodyHtmlPartContainsBodyAndInlinedCss(): void
@@ -246,6 +249,7 @@ HTML;
 	 * and the plain-text part must not contain CSS.
 	 *
 	 * @see https://www.rfc-editor.org/rfc/rfc2046.html#section-5.1.4
+	 * @covers \Combodo\iTop\Core\Email\EmailSymfony::SetBody()
 	 * @since N°9574
 	 */
 	public function testSetBodyWithInlineImagesHasCorrectPartStructure(): void
