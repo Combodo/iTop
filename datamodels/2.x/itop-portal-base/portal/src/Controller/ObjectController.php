@@ -1096,6 +1096,7 @@ class ObjectController extends BrickController
 				foreach ($aEnumChildClasses as $sClassName) {
 					$aChildClasses[$sClassName] = MetaModel::GetName($sClassName);
 				}
+				asort($aChildClasses);
 				$aData = $aData + [
 						'bHasSubClasses' => true,
 						'aSubClasses'    => $aChildClasses,

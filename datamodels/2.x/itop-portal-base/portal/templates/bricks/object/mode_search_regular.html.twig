@@ -9,14 +9,16 @@
 <div id="{{ sFormId }}">
 	{#<div class="form_alerts"></div>#}
     {% if bHasSubClasses %}
-        <div class="form_field_label">
-            <label>{{ 'UI:SearchFor_Class'|dict_format('') }}</label>
-            <select id="finalclass{{ sFormId }}">
-                <option value="">{{ sParentClassName }}</option>
-                {% for key, sClassName in aSubClasses %}
-                    <option value="{{ key }}">{{ sClassName }}</option>
-                {% endfor %}
-            </select>
+    <div class="form_filter_container">
+        <div class="form_filter_class dataTables_filter">
+                <label class="dataTables_filter">{{ 'UI:SearchFor_Class'|dict_format('') }}</label>
+                <select id="finalclass{{ sFormId }}">
+                    <option value="">{{ sParentClassName }}</option>
+                    {% for key, sClassName in aSubClasses %}
+                        <option value="{{ key }}">{{ sClassName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
     {% endif %}
 	<div class="form_fields">
