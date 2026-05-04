@@ -23,7 +23,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:Incident:Shortcuts+' => '',
 	'Menu:Incident:MyIncidents' => 'Qui me sont assignés',
 	'Menu:Incident:MyIncidents+' => 'Les tickets d\'incident en cours qui me sont assignés',
-	'Menu:Incident:MySupportIncidents' => 'Que j\'ai remontés',
+	'Menu:Incident:MySupportIncidents' => 'Que j\'ai déclarés',
 	'Menu:Incident:MySupportIncidents+' => 'Les incidents en cours dont je suis le demandeur',
 	'Menu:Incident:EscalatedIncidents' => 'En escalade',
 	'Menu:Incident:EscalatedIncidents+' => 'Ticket d\'incident en cours d\'escalade ou à surveiller',
