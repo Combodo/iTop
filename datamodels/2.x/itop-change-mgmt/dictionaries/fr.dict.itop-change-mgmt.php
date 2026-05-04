@@ -137,7 +137,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Change/Stimulus:ev_plan+' => '',
 	'Class:Change/Stimulus:ev_reject' => 'Rejeter',
 	'Class:Change/Stimulus:ev_reject+' => '',
-	'Class:Change/Stimulus:ev_reopen' => 'Réouvrir',
+	'Class:Change/Stimulus:ev_reopen' => 'Rouvrir',
 	'Class:Change/Stimulus:ev_reopen+' => '',
 	'Class:Change/Stimulus:ev_approve' => 'Approuver',
 	'Class:Change/Stimulus:ev_approve+' => '',

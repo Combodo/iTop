@@ -237,7 +237,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Incident/Stimulus:ev_resolve+' => '',
 	'Class:Incident/Stimulus:ev_close' => 'Clore cet incident',
 	'Class:Incident/Stimulus:ev_close+' => '',
-	'Class:Incident/Stimulus:ev_reopen' => 'Ré-ouvrir',
+	'Class:Incident/Stimulus:ev_reopen' => 'Rouvrir',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'L\'incident parent ne peut pas être lui-même',
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets (résoudre les tickets fils)',

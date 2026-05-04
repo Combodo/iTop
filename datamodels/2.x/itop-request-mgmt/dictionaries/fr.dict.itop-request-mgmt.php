@@ -261,7 +261,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:UserRequest/Stimulus:ev_resolve+' => '',
 	'Class:UserRequest/Stimulus:ev_close' => 'Clore cette demande',
 	'Class:UserRequest/Stimulus:ev_close+' => '',
-	'Class:UserRequest/Stimulus:ev_reopen' => 'Ré-ouvrir',
+	'Class:UserRequest/Stimulus:ev_reopen' => 'Rouvrir',
 	'Class:UserRequest/Stimulus:ev_reopen+' => '',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Attendre une approbation',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
