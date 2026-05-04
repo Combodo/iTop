@@ -1279,20 +1279,19 @@ class CMDBSource
 		}
 
 		if (is_numeric($aFieldData["Default"])) {
-			if (strtolower(substr($aFieldData["Type"], 0, 5)) == 'enum(') {
-				// Force quotes to match the column declaration statement
-				$sRet .= ' DEFAULT '.self::Quote($aFieldData["Default"], true);
+			if (self::IsNumericType($aFieldData)) {
+				$sRet .= ' DEFAULT '.$aFieldData["Default"];
 			} else {
-				if (self::IsNumericType($aFieldData)) {
-					$sRet .= ' DEFAULT '.$aFieldData["Default"];
-				} else {
-					$default = $aFieldData["Default"] + 0; // Coerce to a numeric variable
-					$sRet .= ' DEFAULT '.self::Quote($default);
-				}
+				$default = $aFieldData["Default"] + 0; // Coerce to a numeric variable
+				$sRet .= ' DEFAULT '.self::Quote($default, true);
 			}
-		} elseif (is_string($aFieldData["Default"]) == 'string') {
-			$sDefaultValue = static::RemoveSurroundingQuotes($aFieldData["Default"]);
-			$sRet .= ' DEFAULT '.self::Quote($sDefaultValue);
+		} elseif (is_string($aFieldData["Default"])) {
+			if ($aFieldData["Null"] === 'YES' && $aFieldData["Default"] === 'NULL') {
+				$sRet .= ' DEFAULT NULL';
+			} else {
+				$sDefaultValue = static::RemoveSurroundingQuotes($aFieldData["Default"]);
+				$sRet .= ' DEFAULT '.self::Quote($sDefaultValue);
+			}
 		}
 
 		return $sRet;
