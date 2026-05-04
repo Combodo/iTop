@@ -19,7 +19,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:SearchChanges' => 'Pesquisar por mudanças',
 	'Menu:SearchChanges+' => 'Pesquisar por solicitações de mudança',
 	'Menu:Change:Shortcuts' => 'Atalhos',
-	'Menu:Change:Shortcuts+' => '',
+	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => 'Mudanças aguardando aceitação',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Mudanças aguardando aprovação',

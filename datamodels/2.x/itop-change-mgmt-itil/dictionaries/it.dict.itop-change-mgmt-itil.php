@@ -19,7 +19,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:SearchChanges' => 'Cerca per cambi',
 	'Menu:SearchChanges+' => 'Cerca i cambi per tickets',
 	'Menu:Change:Shortcuts' => 'Scorciatoie',
-	'Menu:Change:Shortcuts+' => '',
+	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => 'Modifiche in attesa di accettazione',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Modifiche in attesa di approvazione',

@@ -31,7 +31,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:SearchChanges' => 'Search for changes',
 	'Menu:SearchChanges+' => 'Search for change tickets',
 	'Menu:Change:Shortcuts' => 'Changes~~',
-	'Menu:Change:Shortcuts+' => '',
+	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => 'Changes awaiting acceptance',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Changes awaiting approval',

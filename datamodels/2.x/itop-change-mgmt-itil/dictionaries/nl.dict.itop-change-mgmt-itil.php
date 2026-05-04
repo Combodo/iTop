@@ -21,7 +21,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:SearchChanges' => 'Zoek naar changes',
 	'Menu:SearchChanges+' => 'Zoek naar changes',
 	'Menu:Change:Shortcuts' => 'Snelkoppelingen',
-	'Menu:Change:Shortcuts+' => '',
+	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => 'Changes die acceptatie vereisen',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Changes die goedkeuring vereisen',

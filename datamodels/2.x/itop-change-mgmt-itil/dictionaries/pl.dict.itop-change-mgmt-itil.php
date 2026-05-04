@@ -19,7 +19,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Menu:SearchChanges' => 'Szukaj zmian',
 	'Menu:SearchChanges+' => 'Szukaj zgłoszeń zmian',
 	'Menu:Change:Shortcuts' => 'Skróty',
-	'Menu:Change:Shortcuts+' => '',
+	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => 'Zmiany do akceptacji',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Zmiany do zatwierdzenia',

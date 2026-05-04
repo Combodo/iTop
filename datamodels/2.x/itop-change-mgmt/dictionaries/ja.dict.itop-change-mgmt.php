@@ -19,7 +19,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:SearchChanges' => '変更検索',
 	'Menu:SearchChanges+' => '',
 	'Menu:Change:Shortcuts' => 'ショートカット',
-	'Menu:Change:Shortcuts+' => '',
+	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => '受け付け待ちの変更',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => '承認待ちの変更',

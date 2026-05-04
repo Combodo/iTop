@@ -30,7 +30,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:SearchChanges' => '搜索变更',
 	'Menu:SearchChanges+' => '搜索变更',
 	'Menu:Change:Shortcuts' => '快捷方式',
-	'Menu:Change:Shortcuts+' => '',
+	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => '等待审核的变更',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => '等待批准的变更',

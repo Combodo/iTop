@@ -20,7 +20,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:SearchChanges' => 'Søg efter Changes',
 	'Menu:SearchChanges+' => 'Søg efter Change Tickets',
 	'Menu:Change:Shortcuts' => 'Genveje',
-	'Menu:Change:Shortcuts+' => '',
+	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => 'Changes, som afventer accept',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Changes, som afventer godkendelse',

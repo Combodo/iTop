@@ -20,7 +20,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:SearchChanges' => 'Değişiklik ara',
 	'Menu:SearchChanges+' => 'Değişiklik isteği ara',
 	'Menu:Change:Shortcuts' => 'Kısayollar',
-	'Menu:Change:Shortcuts+' => '',
+	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => 'Kabul bekleyen değişiklik talepleri',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Onay bekleyen değişiklik talepleri',

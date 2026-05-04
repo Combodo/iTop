@@ -20,7 +20,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:SearchChanges' => 'Suche nach Changes',
 	'Menu:SearchChanges+' => 'Unter den bestehenden Changes suchen',
 	'Menu:Change:Shortcuts' => 'Changes~~',
-	'Menu:Change:Shortcuts+' => '',
+	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => 'Changes, die auf Annahme warten',
 	'Menu:WaitingAcceptance+' => 'Changes, die auf Annahme warten',
 	'Menu:WaitingApproval' => 'Changes, die auf Genehmigung warten',

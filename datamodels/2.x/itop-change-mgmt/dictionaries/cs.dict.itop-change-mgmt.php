@@ -21,7 +21,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:SearchChanges' => 'Hledat změny',
 	'Menu:SearchChanges+' => 'Hledat změnové tikety',
 	'Menu:Change:Shortcuts' => 'Odkazy',
-	'Menu:Change:Shortcuts+' => '',
+	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => 'Změny čekající na přijetí',
 	'Menu:WaitingAcceptance+' => '',
 	'Menu:WaitingApproval' => 'Změny čekající na schválení',
