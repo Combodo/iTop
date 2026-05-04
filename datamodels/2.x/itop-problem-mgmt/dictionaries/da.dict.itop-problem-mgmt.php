@@ -13,7 +13,7 @@
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:ProblemManagement' => 'Problem Management',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Overview' => 'Oversigt',
 	'Menu:Problem:Overview+' => 'Oversigt',
 	'Menu:NewProblem' => 'Nyt Problem',
@@ -24,7 +24,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:Problem:MyProblems' => 'Mine Problemer',
 	'Menu:Problem:MyProblems+' => 'Problems assigned to me which are neither resolved nor closed~~',
 	'Menu:Problem:OpenProblems' => 'Alle uløste problemer',
-	'Menu:Problem:OpenProblems+' => 'All problem tickets which are nor closed~~',
+	'Menu:Problem:OpenProblems+' => 'All problem tickets which are not closed~~',
 	'UI-ProblemManagementOverview-ProblemByService' => 'Problemer efter ydelse',
 	'UI-ProblemManagementOverview-ProblemByService+' => 'Problemer efter ydelse',
 	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problemer efter prioritet',

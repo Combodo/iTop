@@ -13,7 +13,7 @@
  */
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:ProblemManagement' => 'Управление проблемами',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Overview' => 'Обзор',
 	'Menu:Problem:Overview+' => 'Управление проблемами - Обзор',
 	'Menu:NewProblem' => 'Новая проблема',
@@ -24,7 +24,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:Problem:MyProblems' => 'Назначенные мне',
 	'Menu:Problem:MyProblems+' => 'Problems assigned to me which are neither resolved nor closed~~',
 	'Menu:Problem:OpenProblems' => 'Открытые',
-	'Menu:Problem:OpenProblems+' => 'All problem tickets which are nor closed~~',
+	'Menu:Problem:OpenProblems+' => 'All problem tickets which are not closed~~',
 	'UI-ProblemManagementOverview-ProblemByService' => 'Проблемы по услугам',
 	'UI-ProblemManagementOverview-ProblemByService+' => 'Проблемы по услугам',
 	'UI-ProblemManagementOverview-ProblemByPriority' => 'Проблемы по приоритету',

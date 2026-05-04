@@ -45,7 +45,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 ]);
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:ProblemManagement' => 'Управление проблемами',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Ярлыки',
 	'Menu:FAQCategory' => 'Категории FAQ',
 	'Menu:FAQCategory+' => 'Категории FAQ',

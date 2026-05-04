@@ -12,7 +12,7 @@
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:ProblemManagement' => 'Gerenciamento de problemas',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Overview' => 'Visão geral',
 	'Menu:Problem:Overview+' => '',
 	'Menu:NewProblem' => 'Novo problema',
@@ -23,7 +23,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:Problem:MyProblems' => 'Meus problemas',
 	'Menu:Problem:MyProblems+' => 'Problems assigned to me which are neither resolved nor closed~~',
 	'Menu:Problem:OpenProblems' => 'Todos os problemas abertos',
-	'Menu:Problem:OpenProblems+' => 'All problem tickets which are nor closed~~',
+	'Menu:Problem:OpenProblems+' => 'All problem tickets which are not closed~~',
 	'UI-ProblemManagementOverview-ProblemByService' => 'Problemas por serviço',
 	'UI-ProblemManagementOverview-ProblemByService+' => '',
 	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problemas por prioridade',

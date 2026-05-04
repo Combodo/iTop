@@ -44,7 +44,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 ]);
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:ProblemManagement' => 'Problémakezelés',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Gyorsgombok',
 	'Menu:FAQCategory' => 'Tudástár kategória',
 	'Menu:FAQCategory+' => 'Tudástár kategóriák',

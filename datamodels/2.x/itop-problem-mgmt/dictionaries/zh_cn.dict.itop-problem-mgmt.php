@@ -45,7 +45,7 @@
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:ProblemManagement' => '问题管理',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Overview' => '概况',
 	'Menu:Problem:Overview+' => '概况',
 	'Menu:NewProblem' => '新建问题',
@@ -56,7 +56,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:Problem:MyProblems' => '我的问题',
 	'Menu:Problem:MyProblems+' => 'Problems assigned to me which are neither resolved nor closed~~',
 	'Menu:Problem:OpenProblems' => '所有打开的问题',
-	'Menu:Problem:OpenProblems+' => 'All problem tickets which are nor closed~~',
+	'Menu:Problem:OpenProblems+' => 'All problem tickets which are not closed~~',
 	'UI-ProblemManagementOverview-ProblemByService' => '按服务划分的问题',
 	'UI-ProblemManagementOverview-ProblemByService+' => '按服务划分的问题',
 	'UI-ProblemManagementOverview-ProblemByPriority' => '按优先级划分的问题',

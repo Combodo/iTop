@@ -46,7 +46,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 ]);
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:ProblemManagement' => 'Správa problémů',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Odkazy',
 	'Menu:FAQCategory' => 'Kategorie FAQ',
 	'Menu:FAQCategory+' => 'A typology to categorize frequently asked questions (FAQ)~~',

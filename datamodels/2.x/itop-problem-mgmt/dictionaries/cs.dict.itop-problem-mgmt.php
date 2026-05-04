@@ -14,7 +14,7 @@
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:ProblemManagement' => 'Správa problémů',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Overview' => 'Přehled',
 	'Menu:Problem:Overview+' => 'Přehled',
 	'Menu:NewProblem' => 'Nový problém',
@@ -25,7 +25,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:Problem:MyProblems' => 'Mé problémy',
 	'Menu:Problem:MyProblems+' => 'Problems assigned to me which are neither resolved nor closed~~',
 	'Menu:Problem:OpenProblems' => 'Všechny otevřené problémy',
-	'Menu:Problem:OpenProblems+' => 'All problem tickets which are nor closed~~',
+	'Menu:Problem:OpenProblems+' => 'All problem tickets which are not closed~~',
 	'UI-ProblemManagementOverview-ProblemByService' => 'Problémy podle služby',
 	'UI-ProblemManagementOverview-ProblemByService+' => 'Problémy podle služby',
 	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problémy podle priority',

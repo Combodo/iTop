@@ -12,7 +12,7 @@
  */
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:ProblemManagement' => 'Problem management~~',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Overview' => 'Overview~~',
 	'Menu:Problem:Overview+' => 'Overview~~',
 	'Menu:NewProblem' => 'New problem~~',
@@ -23,7 +23,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:Problem:MyProblems' => 'My problems~~',
 	'Menu:Problem:MyProblems+' => 'Problems assigned to me which are neither resolved nor closed~~',
 	'Menu:Problem:OpenProblems' => 'All open problems~~',
-	'Menu:Problem:OpenProblems+' => 'All problem tickets which are nor closed~~',
+	'Menu:Problem:OpenProblems+' => 'All problem tickets which are not closed~~',
 	'UI-ProblemManagementOverview-ProblemByService' => 'Problems by service~~',
 	'UI-ProblemManagementOverview-ProblemByService+' => 'Problems by service~~',
 	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problems by priority~~',

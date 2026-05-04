@@ -134,7 +134,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:Incident/Attribute:servicesubcategory_name' => 'Service subcategory name',
 	'Class:Incident/Attribute:servicesubcategory_name+' => '',
 	'Class:Incident/Attribute:escalation_flag' => 'Hot Flag',
-	'Class:Incident/Attribute:escalation_flag+' => 'When set, the Ticket is added to the "Escalated incidents" menu',
+	'Class:Incident/Attribute:escalation_flag+' => 'When set, the Ticket is added to the "Under escalation" menu',
 	'Class:Incident/Attribute:escalation_flag/Value:no' => 'No',
 	'Class:Incident/Attribute:escalation_flag/Value:no+' => '',
 	'Class:Incident/Attribute:escalation_flag/Value:yes' => 'Yes',

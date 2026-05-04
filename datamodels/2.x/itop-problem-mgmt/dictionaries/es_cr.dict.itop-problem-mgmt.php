@@ -10,7 +10,7 @@
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:ProblemManagement' => 'Administración de Problemas',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Overview' => 'Resumen de problemas',
 	'Menu:Problem:Overview+' => 'Resumen de problemas',
 	'Menu:NewProblem' => 'Nuevo problema',
@@ -21,7 +21,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:Problem:MyProblems' => 'Problemas asignados a Mí',
 	'Menu:Problem:MyProblems+' => 'Problems assigned to me which are neither resolved nor closed~~',
 	'Menu:Problem:OpenProblems' => 'Problemas abiertos',
-	'Menu:Problem:OpenProblems+' => 'All problem tickets which are nor closed~~',
+	'Menu:Problem:OpenProblems+' => 'All problem tickets which are not closed~~',
 	'UI-ProblemManagementOverview-ProblemByService' => 'Problemas por Servicio',
 	'UI-ProblemManagementOverview-ProblemByService+' => 'Problemas por Servicio',
 	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problemas por Prioridad',

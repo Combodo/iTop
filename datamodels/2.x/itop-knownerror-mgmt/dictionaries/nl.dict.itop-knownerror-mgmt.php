@@ -99,7 +99,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:ProblemManagement' => 'Probleem Management',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Snelkoppelingen',
 	'Menu:NewError' => 'Nieuwe gekende fout',
 	'Menu:NewError+' => 'Maak een nieuwe gekende fout aan',

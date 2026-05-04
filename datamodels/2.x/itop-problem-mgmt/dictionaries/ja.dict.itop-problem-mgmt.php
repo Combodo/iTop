@@ -12,7 +12,7 @@
  */
 Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:ProblemManagement' => '問題管理',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Overview' => '概要',
 	'Menu:Problem:Overview+' => '概要',
 	'Menu:NewProblem' => '新規問題',
@@ -23,7 +23,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:Problem:MyProblems' => '担当してる問題',
 	'Menu:Problem:MyProblems+' => 'Problems assigned to me which are neither resolved nor closed~~',
 	'Menu:Problem:OpenProblems' => '全オープン問題',
-	'Menu:Problem:OpenProblems+' => 'All problem tickets which are nor closed~~',
+	'Menu:Problem:OpenProblems+' => 'All problem tickets which are not closed~~',
 	'UI-ProblemManagementOverview-ProblemByService' => 'サービス別問題',
 	'UI-ProblemManagementOverview-ProblemByService+' => 'サービス別問題',
 	'UI-ProblemManagementOverview-ProblemByPriority' => '優先度別問題',

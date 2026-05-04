@@ -42,7 +42,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 ]);
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:ProblemManagement' => 'Administración de Problemas',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce heldesk workload~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Acceso Rápido',
 	'Menu:FAQCategory' => 'Categorías de FAQ',
 	'Menu:FAQCategory+' => 'Categorías FAQ',
