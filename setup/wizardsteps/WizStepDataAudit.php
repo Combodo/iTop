@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'setup/sequencers/DataAuditSequencer.php');
@@ -112,11 +113,12 @@ JS);
 	<input type="hidden" name="aExtensions[$sSafeExtCode][enable]" value="on"/>
 INPUT;
 		}
-
+		$sUID = Session::Get('setup_token');
 		$oPage->add(
 			<<<HTML
 <form id="data-feature-removal" class="ibo-setup--wizard ibo-is-hidden" method="post" action="$sApplicationUrl">
-	<input type="hidden" name="operation" value="Analyze"/>
+	<input type="hidden" name="operation" value="AnalysisResult"/>
+	<input type="hidden" name="setup_token" value="$sUID"/>
 	$aHiddenRemovedExtensionInputs
 </form>
 HTML
