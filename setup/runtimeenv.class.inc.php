@@ -1126,7 +1126,9 @@ class RunTimeEnvironment
 			}
 
 			if (is_null($aSelectedModules) || in_array($sModuleId, $aSelectedModules)) {
-				$aArgs = [MetaModel::GetConfig(), $aModule['installed_version'], $aModule['available_version']];
+				$oConfig = MetaModel::GetConfig();
+				$oConfig->Set('access_mode', ACCESS_FULL);
+				$aArgs = [$oConfig, $aModule['installed_version'], $aModule['available_version']];
 				RunTimeEnvironment::CallInstallerHandler($aModule, $sHandlerName, $aArgs);
 			}
 		}
@@ -1193,6 +1195,9 @@ class RunTimeEnvironment
 	 */
 	public function LoadData($aAvailableModules, $bSampleData, $aSelectedModules = null)
 	{
+		$oConfig = MetaModel::GetConfig();
+		$oConfig->Set('access_mode', ACCESS_FULL);
+
 		$oDataLoader = new XMLDataLoader();
 
 		CMDBObject::SetCurrentChangeFromParams("Initialization from XML files for the selected modules ");
@@ -1326,9 +1331,6 @@ class RunTimeEnvironment
 	{
 		$oSetupAudit = new SetupAudit(ITOP_DEFAULT_ENV, $this->sBuildEnv);
 
-		//Make sure the MetaModel is started before analysing for issues
-		$sConfFile = utils::GetConfigFilePath(ITOP_DEFAULT_ENV);
-		MetaModel::Startup($sConfFile, false, false); // Start on production environment
 		$oSetupAudit->RunDataAudit(true);
 		$iCount = $oSetupAudit->GetDataToCleanupCount();
 
@@ -1537,6 +1539,15 @@ class RunTimeEnvironment
 		$oBackup->CreateCompressedBackup($sTargetFile, $sSourceConfigFile);
 	}
 
+	/**
+		* @param \Config $oConfig
+		* @return void
+	 */
+	public function EnterMaintenanceMode(Config $oConfig)
+	{
+		SetupUtils::EnterMaintenanceMode($oConfig);
+	}
+
 	public function EnterReadOnlyMode(Config $oConfig)
 	{
 		if ($this->GetFinalEnv() != 'production') {
@@ -1548,6 +1559,11 @@ class RunTimeEnvironment
 		}
 
 		SetupUtils::EnterReadOnlyMode($oConfig);
+	}
+
+	public function ExitMaintenanceMode(): void
+	{
+		SetupUtils::ExitMaintenanceMode();
 	}
 
 	public function ExitReadOnlyMode()

@@ -36,19 +36,6 @@ class ModelReflectionSerializer
 	{
 		IssueLog::Info(__METHOD__, null, ['env' => $sEnv]);
 
-		$sCurrentEnvt = MetaModel::GetEnvironment();
-		if ($sCurrentEnvt === $sEnv) {
-			$aClasses = MetaModel::GetClasses();
-			if (count($aClasses) === 0) {
-				//MetaModel not started yet
-				$sConfFile = utils::GetConfigFilePath($sEnv);
-
-				MetaModel::Startup($sConfFile, false /* $bModelOnly */, false /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
-				$aClasses = MetaModel::GetClasses();
-			}
-			return $aClasses;
-		}
-
 		$sPHPExec = trim(utils::GetConfig()->Get('php_path'));
 		$sOutput = "";
 		$iRes = 0;
