@@ -167,7 +167,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Rack' => 'Rack',
-	'Class:Rack+' => 'A physical cabinet for Datacenter Devices and Chassis.',
+	'Class:Rack+' => 'A physical cabinet for Datacenter Devices and Enclosures.',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s',
 	'Class:Rack/Attribute:nb_u' => 'Rack units',
 	'Class:Rack/Attribute:nb_u+' => '',
