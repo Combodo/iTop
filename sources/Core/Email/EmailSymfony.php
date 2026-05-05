@@ -29,6 +29,7 @@ use Symfony\Component\CssSelector\Exception\ParseException;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 use Symfony\Component\Mime\Email as SymfonyEmail;
 use Symfony\Component\Mime\HtmlToTextConverter\DefaultHtmlToTextConverter;
 use Symfony\Component\Mime\Part\DataPart;
@@ -184,18 +185,7 @@ class EMailSymfony extends Email
 					$sDsn = sprintf('smtp://%s%s@%s%s', $sDsnUser, $sDsnPassword, $sDsnPort, $sEncQuery);
 				}
 
-				$oTransport = Transport::fromDsn($sDsn);
-
-				// Handle peer verification
-				$oStream = $oTransport->getStream();
-				$aOptions = $oStream->getStreamOptions();
-				if (!$bVerifyPeer && array_key_exists('ssl', $aOptions)) {
-					// Disable verification
-					$aOptions['ssl']['verify_peer'] = false;
-					$aOptions['ssl']['verify_peer_name'] = false;
-					$aOptions['ssl']['allow_self_signed'] = true;
-				}
-				$oStream->setStreamOptions($aOptions);
+				$oTransport = $this->CreateSmtpTransport($sDsn, $bVerifyPeer);
 
 				$oMailer = new Mailer($oTransport);
 				break;
@@ -259,6 +249,36 @@ class EMailSymfony extends Email
 			$oKPI->ComputeStats('Email Sent', 'Error received');
 			throw $e;
 		}
+	}
+
+	/**
+	 * Build and configure an SMTP transport from a DSN string.
+	 *
+	 * Extracted from {@see SendSynchronous} to make SSL option handling independently testable.
+	 * When $bVerifyPeer is false, the ssl stream context options must be written unconditionally:
+	 * with STARTTLS the connection starts unencrypted, so the 'ssl' key is absent from the stream
+	 * options at construction time and only used later when stream_socket_enable_crypto() is called.
+	 *
+	 * @param string $sDsn       Full Symfony Mailer DSN (smtp:// or smtps://)
+	 * @param bool   $bVerifyPeer Whether to verify the peer SSL certificate
+	 *
+	 * @return \Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport
+	 */
+	protected function CreateSmtpTransport(string $sDsn, bool $bVerifyPeer): EsmtpTransport
+	{
+		/** @var EsmtpTransport $oTransport */
+		$oTransport = Transport::fromDsn($sDsn);
+
+		$oStream = $oTransport->getStream();
+		$aOptions = $oStream->getStreamOptions();
+		if (!$bVerifyPeer) {
+			$aOptions['ssl']['verify_peer'] = false;
+			$aOptions['ssl']['verify_peer_name'] = false;
+			$aOptions['ssl']['allow_self_signed'] = true;
+		}
+		$oStream->setStreamOptions($aOptions);
+
+		return $oTransport;
 	}
 
 	/**
