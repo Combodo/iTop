@@ -16,6 +16,7 @@ use PhpParser\Node\Stmt\ElseIf_;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\If_;
 use PhpParser\ParserFactory;
+use SetupLog;
 
 require_once __DIR__.'/ModuleFileReaderException.php';
 require_once APPROOT.'sources/PhpParser/Evaluation/PhpExpressionEvaluator.php';
@@ -143,6 +144,7 @@ class ModuleFileReader
 			}
 			// Replace the main function call by an assignment to a variable, as an array...
 			$sModuleFileContents = str_replace(['SetupWebPage::AddModule', 'ModuleDiscovery::AddModule'], '$aModuleInfo = array', $sModuleFileContents);
+			SetupLog::Debug(__METHOD__, null, ['module_file' => $sModuleFilePath]);
 			eval($sModuleFileContents); // Assigns $aModuleInfo
 
 			if (count($aModuleInfo) === 0) {

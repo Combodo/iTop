@@ -82,7 +82,7 @@ if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)) {
 	$aComputedExtensions = $oInstallationFileService->GetAfterComputationSelectedExtensions();
 	if (! $bInstallationChoicesProvided) {
 		$sMsg = "Computed installation choices";
-		echo "$sMsg:\n".implode(',', $aComputedExtensions)."\n\n";
+		echo "$sMsg:\n".implode(",\n", $aComputedExtensions)."\n\n";
 		SetupLog::Info($sMsg, null, $aComputedExtensions);
 		$oParams->Set('selected_extensions', $aComputedExtensions);
 	}
@@ -97,8 +97,8 @@ if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)) {
 	$sMsg = "Modules to install listed in $sXmlSetupBaseName (selected_modules section)";
 }
 
-sort($aSelectedModules);
-echo "$sMsg:\n".implode(',', $aSelectedModules)."\n\n";
+//sort($aSelectedModules);
+echo "$sMsg:\n".implode(",\n", $aSelectedModules)."\n\n";
 SetupLog::Info($sMsg, null, $aSelectedModules);
 
 // Configuration file

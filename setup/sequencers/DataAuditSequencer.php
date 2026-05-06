@@ -94,6 +94,10 @@ class DataAuditSequencer extends StepSequencer
 
 	protected function IsDataAuditRequired(): bool
 	{
+		if (! array_key_exists('setup-audit', $this->oParams->Get('optional_steps', []))) {
+			return false;
+		}
+
 		if ('install' === $this->oParams->Get('mode')) {
 			return false;
 		}

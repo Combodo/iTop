@@ -22,6 +22,7 @@ use Dict;
 use Exception;
 use IssueLog;
 use MetaModel;
+use SetupUtils;
 use utils;
 
 class DataFeatureRemovalController extends Controller
@@ -95,6 +96,50 @@ class DataFeatureRemovalController extends Controller
 		$aGetRemovedClasses = $oSetupAudit->RunDataAudit();
 		IssueLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
 		$this->aCountClassesToCleanup = $aGetRemovedClasses;
+	}
+
+	public function OperationAnalysisResult(): void
+	{
+		$aParams = [];
+
+		if (SetupUtils::IsSessionSetupTokenValid()) {
+			//from setup wizard/mtp
+			SetupUtils::EraseSetupToken();
+		} else {
+			//from same module
+			$this->ValidateTransactionId();
+		}
+
+		$sSourceEnv = MetaModel::GetEnvironment();
+		$oSetupAudit = new SetupAudit($sSourceEnv);
+		$aGetRemovedClasses = array_keys($oSetupAudit->RunDataAudit());
+		IssueLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
+
+		$oDataCleanupService = new DataCleanupService();
+		$aDeletionPlanSummaryEntities = $oDataCleanupService->GetCleanupSummary($aGetRemovedClasses);
+		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount', 'IssueCount'];
+		$aRows = [];
+		$iQueryCount = 0;
+		$bHasIssues = false;
+		foreach ($aDeletionPlanSummaryEntities as $oDeletionPlanSummaryEntity) {
+			$aRows[] = [
+				$oDeletionPlanSummaryEntity->sClass,
+				$oDeletionPlanSummaryEntity->iDeleteCount,
+				$oDeletionPlanSummaryEntity->iUpdateCount,
+				$oDeletionPlanSummaryEntity->iIssueCount,
+			];
+			$bHasIssues |= ($oDeletionPlanSummaryEntity->iIssueCount !== 0);
+			$iQueryCount += $oDeletionPlanSummaryEntity->iDeleteCount;
+			$iQueryCount += $oDeletionPlanSummaryEntity->iUpdateCount;
+		}
+
+		$aParams['sTransactionId'] = utils::GetNewTransactionId();
+		$aParams['aDeletionPlanSummary'] = $this->GetTableData('Extensions', $aColumns, $aRows);
+		$aParams['aClasses'] = $aGetRemovedClasses;
+		$aParams['iQueryCount'] = $iQueryCount;
+		$aParams['bDeletionPossible'] = !$bHasIssues;
+
+		$this->DisplayPage($aParams);
 	}
 
 	public function OperationDeletionPlan(): void

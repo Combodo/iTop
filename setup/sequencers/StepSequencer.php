@@ -159,6 +159,11 @@ abstract class StepSequencer
 		file_put_contents(APPROOT.'log/'.$sFileName.'.xml', $sSafeXml);
 	}
 
+	/**
+	* @return \Config
+	* @throws \ConfigException
+	* @throws \CoreException
+	 */
 	protected function GetConfig()
 	{
 		if (! is_null($this->oTestConfig)) {

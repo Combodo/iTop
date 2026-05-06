@@ -509,6 +509,7 @@ EOF
 				$sDisplayChoices .= '<li>'.$aChoice['title'].'</li>';
 				if (isset($aChoice['modules'])) {
 					if (count($aChoice['modules']) === 0 && (!isset($aChoice['missing']) || $aChoice['missing'] === false)) {
+						SetupLog::Error(__METHOD__, null, ['choice' => $aChoice]);
 						throw new Exception('Extension '.$aChoice['extension_code'].' does not have any module associated');
 					}
 					foreach ($aChoice['modules'] as $sModuleId) {

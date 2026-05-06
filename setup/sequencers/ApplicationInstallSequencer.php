@@ -89,6 +89,7 @@ class ApplicationInstallSequencer extends StepSequencer
 					return $this->ComputeNextStep($sStep);
 
 				case 'migrate-before':
+					$this->oRunTimeEnvironment->EnterMaintenanceMode($this->GetConfig());
 					if (array_key_exists($sStep, $this->oParams->Get('optional_steps', []))) {
 						$this->oRunTimeEnvironment->MigrateDataBeforeUpdateStructure($this->oParams->Get('mode'), $this->GetConfig());
 					}
@@ -139,6 +140,7 @@ class ApplicationInstallSequencer extends StepSequencer
 				case 'commit':
 					$this->oRunTimeEnvironment->Commit();
 					$this->oRunTimeEnvironment->ExitReadOnlyMode();
+					$this->oRunTimeEnvironment->ExitMaintenanceMode();
 					return $this->GetNextStep('', 'Completed', 100);
 
 				default:
