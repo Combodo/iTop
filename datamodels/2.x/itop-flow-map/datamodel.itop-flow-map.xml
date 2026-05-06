@@ -359,6 +359,10 @@
               <query_up><![CDATA[SELECT DataFlow AS f JOIN FunctionalCI AS ci ON f.destination_id = ci.id WHERE f.destination_impact = 'yes' AND ci.id=:this->id]]></query_up>
               <direction>both</direction>
             </neighbour>
+            <neighbour id="contact ">
+              <attribute>contacts_list</attribute>
+              <direction>down</direction>
+            </neighbour>
           </neighbours>
         </relation>
       </relations>
@@ -720,7 +724,7 @@
       <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
       <definition>
         <cells>
-          <cell id="3" delta="must_exist">
+          <cell id="3" delta="if_exists">
             <dashlets>
               <dashlet id="DataFlow_20" xsi:type="DashletBadge" _delta="define">
                 <rank>20</rank>
@@ -736,8 +740,7 @@
     <groups>
       <group id="Configuration">
         <classes>
-          <class id="DataFlow" _delta="define"/>
-          <class id="DataFlowType" _delta="define"/>
+          <class id="DataFlow" _delta="define_if_not_exists"/>
         </classes>
       </group>
     </groups>
