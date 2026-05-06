@@ -21,11 +21,12 @@
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
+use Combodo\iTop\Test\UnitTest\Integration\ExtensionsMapTest;
 
 /**
  * Choice of the modules to be installed
  */
-class WizStepModulesChoice extends WizardStep
+class WizStepModulesChoice extends AbstractWizStepInstall
 {
 	protected static string $SEP = '_';
 	protected bool $bUpgrade = false;
@@ -118,15 +119,44 @@ class WizStepModulesChoice extends WizardStep
 		return [$aExtensionsAdded, $aExtensionsRemoved, $aExtensionsNotUninstallable];
 	}
 
-	public function IsDataAuditEnabled(): bool
+	public static function GetSetupComponentsFromExtensions(Config $oConfig, array $aSelectedExtensions): array
 	{
-		$sPath = APPROOT.'env-production';
-		if (!is_dir($sPath)) {
-			SetupLog::Info("Reinstallation of an iTop from a backup (No env-production found). Setup data audit disabled");
+		$sSourceFile = APPROOT.'datamodels/2.x/installation.xml';
+		$oExtensionsMap = new iTopExtensionsMap();
+		$oExtensionsMap->LoadChoicesFromDatabase($oConfig);
+		$aOptions = $oExtensionsMap->GetAllExtensionsOptionInfo(false);
 
-			return false;
+		if (is_file($sSourceFile)) {
+			$aParams = new XMLParameters($sSourceFile);
+			$aSteps = $aParams->Get('steps', []);
+
+			// Display this step of the wizard only if there is something to display
+			if (count($aOptions) > 0) {
+				$aSteps[] = [
+					'title'       => 'Extensions',
+					'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions or remove installed ones.</h2>',
+					'banner'      => '/images/icons/icons8-puzzle.svg',
+					'options'     => $aOptions,
+				];
+			}
+		} else {
+			//legacy package
+			$aSteps = [
+				[
+					'title'       => 'Modules Selection',
+					'description' => '<h2>Select the modules to install. You can launch the installation again to install new modules, but you cannot remove already installed modules.</h2>',
+					'banner'      => '/images/icons/icons8-apps-tab.svg',
+					'options'     => $aOptions,
+				],
+			];
 		}
-		return true;
+
+		$aRes = [];
+		foreach ($aSteps as $aStep) {
+
+		}
+
+		return [];
 	}
 
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
@@ -861,11 +891,7 @@ EOF
 			return 'Non-uninstallable extension missing';
 		}
 
-		if ($this->GetStepInfo(1 + $this->GetStepIndex()) === null && $this->IsDataAuditEnabled()) {
-			return 'Check compatibility';
-		}
-
-		return 'Next';
+		return 'Check compatibility';
 	}
 
 }
