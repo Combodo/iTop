@@ -700,9 +700,12 @@ body {
 }
 
   #progress_content {
-    height: 200px;
+    min-height: 200px;
     overflow: auto;
     text-align: center;
+    *:not(.message) + .message  {
+      margin-top: 1.5rem;
+    }
   }
   #fresh_content{
     border: 0;

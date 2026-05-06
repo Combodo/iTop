@@ -47,7 +47,7 @@ class DataAuditSequencer extends StepSequencer
 
 				case 'copy':
 					$this->oRunTimeEnvironment->CopySetupFiles();
-					return $this->GetNextStep('compile', 'Compiling the data model', 20, 'Copying...');
+					return $this->GetNextStep('compile', 'Compiling the data model', 20, 'Copying...', 'Data model files copied');
 
 				case 'compile':
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
@@ -65,25 +65,25 @@ class DataAuditSequencer extends StepSequencer
 					);
 
 					if ($this->IsDataAuditRequired()) {
-						return $this->GetNextStep('setup-audit', 'Checking data consistency with the new data model', 70, $sMessage);
+						return $this->GetNextStep('setup-audit', 'Checking data consistency with the new data model', 70, $sMessage, 'Data model compilation completed');
 					}
-					return $this->GetNextStep('complete', 'Check Completed', 100);
+					return $this->GetNextStep('complete', 'Check Completed', 100, '', 'Data model compilation completed');
 
 				case 'setup-audit':
 					if ($this->IsDataAuditRequired()) {
 						$this->oRunTimeEnvironment->DataToCleanupAudit();
 					}
-					return $this->GetNextStep('complete', 'Check Completed', 100);
+					return $this->GetNextStep('complete', 'Check Completed', 100, '', 'Data consistency check completed');
 
 				case 'complete':
-					return $this->GetNextStep('', 'Completed', 100);
+					return $this->GetNextStep('', 'Completed', 100, '', 'All checks completed');
 
 				default:
-					return $this->GetNextStep('', "Unknown setup step '$sStep'.", 100, '', self::ERROR);
+					return $this->GetNextStep('', "Unknown setup step '$sStep'.", 100, '', '', self::ERROR);
 			}
 		} catch (Exception $e) {
 			SetupLog::Exception("$sStep failed", $e);
-			$aResult = $this->GetNextStep('', '', 100, $e->getMessage(), self::ERROR);
+			$aResult = $this->GetNextStep('', '', 100, $e->getMessage(), '', self::ERROR);
 			$aResult['error_code'] = $e->getCode();
 			return $aResult;
 		} finally {

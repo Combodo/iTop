@@ -51,6 +51,16 @@ class ApplicationInstallSequencer extends StepSequencer
 		'create-config' => 'Creating the configuration File',
 		'commit' => 'Finalize',
 	];
+	protected const SUCCESS_LABELS = [
+		'log-parameters' => 'Parameters logged',
+		'backup' => 'Database backup completed',
+		'migrate-before' => 'Pre-upgrade data migration completed',
+		'db-schema' => 'Database schema updated',
+		'migrate-after' => 'Post-upgrade data migration completed',
+		'after-db-create' => 'Post-creation data loaded',
+		'load-data' => 'Data loaded',
+		'create-config' => 'Configuration file created',
+	];
 
 	/**
 	 * @inherit
@@ -120,7 +130,7 @@ class ApplicationInstallSequencer extends StepSequencer
 
 					$this->oRunTimeEnvironment->DoLoadData($this->GetConfig(), $bSampleData, $aSelectedModules);
 
-					return $this->ComputeNextStep($sStep, 'All data loaded');
+					return $this->ComputeNextStep($sStep);
 
 				case 'create-config':
 					$sDataModelVersion = $this->oParams->Get('datamodel_version', '0.0.0');
@@ -144,11 +154,11 @@ class ApplicationInstallSequencer extends StepSequencer
 					return $this->GetNextStep('', 'Completed', 100);
 
 				default:
-					return $this->GetNextStep('', "Unknown setup step '$sStep'.", 100, '', self::ERROR);
+					return $this->GetNextStep('', "Unknown setup step '$sStep'.", 100, '', '', self::ERROR);
 			}
 		} catch (Exception $e) {
 			SetupLog::Exception("$sStep failed", $e);
-			$aResult = $this->GetNextStep('', '', 100, $e->getMessage(), self::ERROR);
+			$aResult = $this->GetNextStep('', '', 100, $e->getMessage(), '', self::ERROR);
 			$aResult['error_code'] = $e->getCode();
 			return $aResult;
 		} finally {
@@ -229,6 +239,7 @@ class ApplicationInstallSequencer extends StepSequencer
 	{
 		[$sNextStep, $iPercent] = $this->GetStepAfterWithPercent($sCurrentStep);
 		$sLabel = self::LABELS[$sNextStep] ?? '';
-		return $this->GetNextStep($sNextStep, $sLabel, $iPercent, $sMessage);
+		$sCurrentStepSuccessMessage = self::SUCCESS_LABELS[$sCurrentStep] ?? '';
+		return $this->GetNextStep($sNextStep, $sLabel, $iPercent, $sMessage, $sCurrentStepSuccessMessage);
 	}
 }

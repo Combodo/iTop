@@ -127,13 +127,14 @@ abstract class StepSequencer
 		return ($iOverallStatus == self::OK);
 	}
 
-	protected function GetNextStep(string $sNextStep, string $sNextStepLabel, int $iPercentComplete, string $sMessage = '', int $iStatus = self::OK): array
+	protected function GetNextStep(string $sNextStep, string $sNextStepLabel, int $iPercentComplete, string $sMessage = '', string $sPrevStepSuccessMessage = '', int $iStatus = self::OK): array
 	{
 		return [
 			'status' => $iStatus,
 			'message' => $sMessage,
 			'next-step' => $sNextStep,
 			'next-step-label' => $sNextStepLabel,
+			'prev-step-success-message' => $sPrevStepSuccessMessage,
 			'percentage-completed' => $iPercentComplete,
 		];
 	}
