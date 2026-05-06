@@ -170,7 +170,7 @@ HTML;
 	 * Email clients display the last part they support, so text/plain must come first and text/html last.
 	 *
 	 * @see https://www.rfc-editor.org/rfc/rfc2046.html#section-5.1.4
-     * @covers \Combodo\iTop\Core\Email\EmailSymfony::SetBody()
+	 * @covers \Combodo\iTop\Core\Email\EmailSymfony::SetBody()
 	 * @since N°9574
 	 */
 	public function testSetBodyAlternativePartOrderForHtmlEmailIsPlainThenHtml(): void
