@@ -120,8 +120,8 @@ class DataAuditSequencerTest extends ItopTestCase
 			'status' => 1,
 			'message' => '',
 			'next-step' => 'complete',
-		    'next-step-label' => 'Check Completed',
-		    'percentage-completed' => 100,
+			'next-step-label' => 'Check Completed',
+			'percentage-completed' => 100,
 		];
 		$this->assertEquals($aExpected, $aRes);
 	}
@@ -328,9 +328,9 @@ class DataAuditSequencerTest extends ItopTestCase
 	public function testIsDataAuditRequired_NoAuditTriggeredBecauseDisabled()
 	{
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
-		$oRunTimeEnvironment->expects($this->once())->method('GetApplicationVersion')
+		$oRunTimeEnvironment->expects($this->never())->method('GetApplicationVersion')
 			->willReturn(['product_version' => ITOP_VERSION_FULL]);
-		$oRunTimeEnvironment->expects($this->once())->method("GetFinalEnv")->willReturn("production");
+		$oRunTimeEnvironment->expects($this->never())->method("GetFinalEnv")->willReturn("production");
 
 		$aAdditionalParams = [
 			'mode' => 'upgrade',

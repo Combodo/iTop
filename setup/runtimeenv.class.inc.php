@@ -1566,7 +1566,9 @@ class RunTimeEnvironment
 
 	public function ExitMaintenanceMode(): void
 	{
-		SetupUtils::ExitMaintenanceMode();
+		if (SetupUtils::IsInMaintenanceMode()){
+			SetupUtils::ExitMaintenanceMode();
+		}
 	}
 
 	public function ExitReadOnlyMode()
