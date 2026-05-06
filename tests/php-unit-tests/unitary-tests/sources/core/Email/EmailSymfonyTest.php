@@ -2,6 +2,7 @@
 
 use Combodo\iTop\Core\Email\EMailSymfony;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Part\Multipart\AlternativePart;
 use Symfony\Component\Mime\Part\Multipart\RelatedPart;
@@ -295,6 +296,65 @@ HTML;
 			'custom styles only, no <style> tag' => [
 				'<html><body><p>Hello there!</p></body></html>',
 				$sCustomStyles,
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider provideCreateSmtpTransportSslOptions
+	 */
+	public function testCreateSmtpTransportSslOptions(string $sDsn, bool $bVerifyPeer, array $aExpectedSslOptions): void
+	{
+		$oEmail = new EMailSymfony();
+		/** @var EsmtpTransport $oTransport */
+		$oTransport = $this->InvokeNonPublicMethod(EMailSymfony::class, 'CreateSmtpTransport', $oEmail, [$sDsn, $bVerifyPeer]);
+
+		$aActualSslOptions = $oTransport->getStream()->getStreamOptions()['ssl'] ?? [];
+
+		$this->assertSame($aExpectedSslOptions, $aActualSslOptions);
+	}
+
+	public function provideCreateSmtpTransportSslOptions(): array
+	{
+		$aDisabledVerification = [
+			'verify_peer'      => false,
+			'verify_peer_name' => false,
+			'allow_self_signed' => true,
+		];
+
+		return [
+			// Regression scenario (N°9584): STARTTLS starts the connection unencrypted, so the 'ssl' key
+			// is absent from stream options at construction time. verify_peer=false must still be applied.
+			'STARTTLS, verify_peer=false' => [
+				'smtp://localhost:587?encryption=starttls',
+				false,
+				$aDisabledVerification,
+			],
+			'implicit TLS (smtps), verify_peer=false' => [
+				'smtps://localhost:465',
+				false,
+				$aDisabledVerification,
+			],
+			'plain SMTP, verify_peer=false' => [
+				'smtp://localhost:25',
+				false,
+				$aDisabledVerification,
+			],
+			// Default behavior: verify_peer=true must leave stream options untouched (empty).
+			'STARTTLS, verify_peer=true (default)' => [
+				'smtp://localhost:587?encryption=starttls',
+				true,
+				[],
+			],
+			'implicit TLS (smtps), verify_peer=true (default)' => [
+				'smtps://localhost:465',
+				true,
+				[],
+			],
+			'plain SMTP, verify_peer=true (default)' => [
+				'smtp://localhost:25',
+				true,
+				[],
 			],
 		];
 	}
