@@ -1,29 +1,38 @@
 {# @copyright   Copyright (C) 2010-2026 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
-{% UIPanel ForInformation { sTitle:'DataFeatureRemoval:DeletionPlan:Title'|dict_s, sSubTitle: 'DataFeatureRemoval:DeletionPlan:SubTitle'|dict_format(iQueryCount) } %}
-    {% UIDataTable ForForm { sRef:'aDeletionPlanSummary', aColumns:aDeletionPlanSummary.Columns, aData:aDeletionPlanSummary.Data} %}{% EndUIDataTable %}
-{% EndUIPanel %}
 
-{% if bDeletionPossible %}
+
+{% UIPanel ForInformation { sTitle:'DataFeatureRemoval:Analysis:Title'|dict_s} %}
+
+    {% UIFieldSet Standard {sLegend:'DataFeatureRemoval:Features:Title'|dict_s} %}
+        {% UIDataTable ForForm { sRef:'aExtensions', aColumns:aExtensions.Columns, aData:aExtensions.Data} %}{% EndUIDataTable %}
+    {% EndUIFieldSet %}
+
+    {% UIFieldSet Standard {sLegend:'DataFeatureRemoval:DeletionPlan:Title'|dict_s} %}
+        {% UIDataTable ForForm { sRef:'aDeletionPlanSummary', aColumns:aDeletionPlanSummary.Columns, aData:aDeletionPlanSummary.Data} %}{% EndUIDataTable %}
+    {% EndUIFieldSet %}
+
+    {% if bDeletionPossible %}
+        {% UIForm Standard {} %}
+            {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}
+            {% UIInput ForHidden { sName:'operation', sValue:'DoDeletion'} %}
+            {% for sKey, sClass in aClasses %}
+                {% UIInput ForHidden { sName:"classes[" ~ sKey ~ "]", sValue:sClass } %}
+            {% endfor %}
+            {% UIToolbar ForButton {} %}
+                {% UIButton ForPrimaryAction {sLabel:'UI:Button:DoDeletion'|dict_s, sName:'btn_deletion', sId:'btn_deletion', bIsSubmit:true} %}
+            {% EndUIToolbar %}
+        {% EndUIForm %}
+    {% else %}
+        {{ 'DataFeatureRemoval:DeletionPlan:Error:Issues'|dict_s }}
+    {% endif %}
+
     {% UIForm Standard {} %}
         {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}
-        {% UIInput ForHidden { sName:'operation', sValue:'DoDeletion'} %}
-        {% for sKey, sClass in aClasses %}
-            {% UIInput ForHidden { sName:"classes[" ~ sKey ~ "]", sValue:sClass } %}
-        {% endfor %}
+        {% UIInput ForHidden { sName:'operation', sValue:'Main'} %}
         {% UIToolbar ForButton {} %}
-            {% UIButton ForPrimaryAction {sLabel:'UI:Button:DoDeletion'|dict_s, sName:'btn_deletion', sId:'btn_deletion', bIsSubmit:true} %}
+            {% UIButton ForPrimaryAction {sLabel:'UI:Button:BackToMain'|dict_s, sName:'btn_back', sId:'btn_back', bIsSubmit:true} %}
         {% EndUIToolbar %}
     {% EndUIForm %}
-{% else %}
-    {{ 'DataFeatureRemoval:DeletionPlan:Error:Issues'|dict_s }}
-{% endif %}
-
-{% UIForm Standard {} %}
-    {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}
-    {% UIInput ForHidden { sName:'operation', sValue:'Main'} %}
-    {% UIToolbar ForButton {} %}
-        {% UIButton ForPrimaryAction {sLabel:'UI:Button:BackToMain'|dict_s, sName:'btn_back', sId:'btn_back', bIsSubmit:true} %}
-    {% EndUIToolbar %}
-{% EndUIForm %}
+{% EndUIPanel %}

@@ -19,7 +19,6 @@
  */
 
 use Combodo\iTop\Application\Helper\Session;
-use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'setup/sequencers/DataAuditSequencer.php');
 
@@ -101,8 +100,8 @@ JS);
 	{
 		$sApplicationUrl = utils::GetAbsoluteUrlModulePage('combodo-data-feature-removal', 'index.php');
 
-		$aRemovedExtensions = json_decode($this->oWizard->GetParameter('removed_extensions', "[]"), true);
-		$aHiddenRemovedExtensionInputs = "";
+		$aRemovedExtensions = json_decode($this->oWizard->GetParameter('removed_extensions', '[]'), true);
+		$aHiddenRemovedExtensionInputs = '';
 		if (!is_array($aRemovedExtensions)) {
 			IssueLog::Warning('Posted removed_extensions is not an array');
 			$aRemovedExtensions = [];
@@ -110,7 +109,20 @@ JS);
 		foreach ($aRemovedExtensions as $sExtCode => $sExtLabel) {
 			$sSafeExtCode = utils::HtmlEntities($sExtCode);
 			$aHiddenRemovedExtensionInputs .= <<<INPUT
-	<input type="hidden" name="aExtensions[$sSafeExtCode][enable]" value="on"/>
+	<input type="hidden" name="aRemovedExtensions[$sSafeExtCode]" value="$sExtLabel"/>
+INPUT;
+		}
+
+		$aAddedExtensions = json_decode($this->oWizard->GetParameter('extensions_added', "[]"), true);
+		$aHiddenAddedExtensionInputs = "";
+		if (!is_array($aAddedExtensions)) {
+			IssueLog::Warning('Posted extensions_added is not an array');
+			$aAddedExtensions = [];
+		}
+		foreach ($aAddedExtensions as $sExtCode => $sExtLabel) {
+			$sSafeExtCode = utils::HtmlEntities($sExtCode);
+			$aHiddenAddedExtensionInputs .= <<<INPUT
+	<input type="hidden" name="aAddedExtensions[$sSafeExtCode]" value="$sExtLabel"/>
 INPUT;
 		}
 		$sUID = Session::Get('setup_token');
@@ -120,6 +132,7 @@ INPUT;
 	<input type="hidden" name="operation" value="AnalysisResult"/>
 	<input type="hidden" name="setup_token" value="$sUID"/>
 	$aHiddenRemovedExtensionInputs
+	$aHiddenAddedExtensionInputs
 </form>
 HTML
 		);
