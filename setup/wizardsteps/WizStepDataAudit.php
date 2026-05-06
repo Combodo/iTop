@@ -128,7 +128,6 @@ HTML
 	protected function AddProgressErrorScript($oPage, $aRes)
 	{
 		if (isset($aRes['error_code']) && $aRes['error_code'] === DataAuditSequencer::DATA_AUDIT_FAILED) {
-
 			$oPage->add_ready_script(
 				<<<EOF
 	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').before('<td style="text-align:center;"><button class="ibo-button ibo-is-alternative ibo-is-neutral" type="submit" name="operation" value="next"><span class="ibo-button--label">Ignore and continue</span></button></td>');
