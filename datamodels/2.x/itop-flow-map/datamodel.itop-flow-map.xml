@@ -21,7 +21,7 @@
             <attribute id="destination_id"/>
             <attribute id="org_id"/>
             <attribute id="source_id"/>
-            <attribute id="flowtype_id"/>
+            <attribute id="dataflowtype_id"/>
           </attributes>
         </reconciliation>
         <obsolescence>

@@ -54,6 +54,15 @@
 					</modules>
 					<default>true</default>
 				</choice>
+        <choice>
+          <extension_code>itop-flow-map</extension_code>
+          <title>Application Data Flows</title>
+          <description>Modelize flows between your applications, with impacts analysis</description>
+          <modules type="array">
+            <module>itop-flow-map</module>
+          </modules>
+          <default>true</default>
+        </choice>
 				<choice>
 					<extension_code>itop-config-mgmt-storage</extension_code>
 					<title>Storage Devices</title>
@@ -80,7 +89,7 @@
                 <modules type="array">
                   <module>itop-container-mgmt</module>
                 </modules>
-                <default>false</default>
+                <default>true</default>
               </choice>
             </options>
           </sub_options>

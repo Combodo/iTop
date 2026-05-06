@@ -10,7 +10,7 @@ SetupWebPage::AddModule(
 	[
 		// Identification
 		//
-		'label' => 'Map applications data flows',
+		'label' => 'Applications data flows',
 		'category' => 'business',
 
 		// Setup
