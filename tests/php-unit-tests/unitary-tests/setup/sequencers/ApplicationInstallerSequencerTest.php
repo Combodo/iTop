@@ -62,6 +62,7 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 				'optional_steps' => [
 					'migrate-before' => true,
 				],
+				'bCallEnterMaintenanceMode' => true,
 			],
 		];
 	}
@@ -69,12 +70,12 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 	/**
 	 * @dataProvider FirstStepProvider
 	 */
-	public function testFirstStep($sNextStep, $sNextLabel, $iPercent, $aOptionalSteps)
+	public function testFirstStep($sNextStep, $sNextLabel, $iPercent, $aOptionalSteps, bool $bCallEnterMaintenanceMode = false, bool $bCallExitMaintenanceMode = false)
 	{
 		$aAdditionalParams = [
 			'optional_steps' => $aOptionalSteps,
 		];
-		$this->GivenApplicationInstallSequencer($aAdditionalParams);
+		$this->GivenApplicationInstallSequencer($aAdditionalParams, $bCallEnterMaintenanceMode, $bCallExitMaintenanceMode);
 
 		$aRes = $this->oSequencer->ExecuteStep();
 		$aExpected = [
@@ -160,7 +161,7 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 				'migrate-before' => true,
 			],
 		];
-		$this->GivenApplicationInstallSequencer($aAdditionalParams);
+		$this->GivenApplicationInstallSequencer($aAdditionalParams, bCallEnterMaintenanceMode: true);
 
 		$this->oRunTimeEnvironment->expects($this->once())->method('MigrateDataBeforeUpdateStructure')
 			->with('install', $this->oConfig);
@@ -320,7 +321,7 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 
 	public function testCommit()
 	{
-		$this->GivenApplicationInstallSequencer();
+		$this->GivenApplicationInstallSequencer(bCallExitMaintenanceMode: true);
 		$this->oRunTimeEnvironment->expects($this->once())->method('Commit');
 		$this->oRunTimeEnvironment->expects($this->once())->method('ExitReadOnlyMode');
 
@@ -484,13 +485,18 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 		$this->assertEquals(['', 100], $this->oSequencer->GetStepAfterWithPercent('commit'));
 	}
 
-	private function GivenRunTimeEnvironment(bool $bStepComputationOnly = false): void
+	private function GivenRunTimeEnvironment(bool $bStepComputationOnly = false, bool $bCallEnterMaintenanceMode = false, bool $bCallExitMaintenanceMode = false): void
 	{
 		$this->oRunTimeEnvironment = $this->createMock(RunTimeEnvironment::class);
 		if (! $bStepComputationOnly) {
 			$this->oRunTimeEnvironment->expects($this->once())->method('EnterReadOnlyMode')
 				->with($this->oConfig);
 		}
+
+		$this->oRunTimeEnvironment->expects($this->exactly($bCallEnterMaintenanceMode ? 1 : 0))->method('EnterMaintenanceMode')
+			->with($this->oConfig);
+
+		$this->oRunTimeEnvironment->expects($this->exactly($bCallExitMaintenanceMode ? 1 : 0))->method('ExitMaintenanceMode');
 	}
 
 	private function GivenConfig(): void
@@ -498,10 +504,10 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 		$this->oConfig = $this->createMock(Config::class);
 	}
 
-	private function GivenApplicationInstallSequencer(array $aAdditionalParams = [], bool $bStepComputationOnly = false): void
+	private function GivenApplicationInstallSequencer(array $aAdditionalParams = [], bool $bStepComputationOnly = false, bool $bCallEnterMaintenanceMode = false, bool $bCallExitMaintenanceMode = false): void
 	{
 		$this->GivenConfig();
-		$this->GivenRunTimeEnvironment($bStepComputationOnly);
+		$this->GivenRunTimeEnvironment($bStepComputationOnly, $bCallEnterMaintenanceMode, $bCallExitMaintenanceMode);
 		$this->oSequencer = new ApplicationInstallSequencer($this->GivenParams($aAdditionalParams), $this->oRunTimeEnvironment);
 		$this->SetNonPublicProperty($this->oSequencer, 'oTestConfig', $this->oConfig);
 	}

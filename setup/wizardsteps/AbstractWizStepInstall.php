@@ -66,6 +66,7 @@ abstract class AbstractWizStepInstall extends WizardStep
 				'log-parameters' => true,
 				'migrate-before' => true,
 				'migrate-after' => true,
+				'setup-audit' => true,
 				// 'backup' => see below
 			],
 			'source_dir' => str_replace(APPROOT, '', $sSourceDir),

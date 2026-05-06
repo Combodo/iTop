@@ -8,6 +8,8 @@ use PHPParameters;
 
 class DataAuditSequencerTest extends ItopTestCase
 {
+	private $oConfig;
+
 	protected function setUp(): void
 	{
 		static::LoadRequiredItopFiles();
@@ -85,6 +87,7 @@ class DataAuditSequencerTest extends ItopTestCase
 
 		$aAdditionalParams = [
 			'mode' => 'update',
+			'optional_steps' => ['setup-audit' => true ],
 		];
 		$oSequencer = new DataAuditSequencer($this->GivenParams($aAdditionalParams), $oRunTimeEnvironment);
 
@@ -95,6 +98,30 @@ class DataAuditSequencerTest extends ItopTestCase
 			'next-step' => 'setup-audit',
 			'next-step-label' => 'Checking data consistency with the new data model',
 			'percentage-completed' => 70,
+		];
+		$this->assertEquals($aExpected, $aRes);
+	}
+
+	public function testCompileWithAuditDisabledViaOptionalSteps()
+	{
+		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
+		$oRunTimeEnvironment->expects($this->never())->method('GetApplicationVersion');
+		$oRunTimeEnvironment->expects($this->once())->method('DoCompile');
+		$oRunTimeEnvironment->expects($this->never())->method('GetFinalEnv')
+			->willReturn('production');
+
+		$aAdditionalParams = [
+			'mode' => 'update',
+		];
+		$oSequencer = new DataAuditSequencer($this->GivenParams($aAdditionalParams), $oRunTimeEnvironment);
+
+		$aRes = $oSequencer->ExecuteStep('compile');
+		$aExpected = [
+			'status' => 1,
+			'message' => '',
+			'next-step' => 'complete',
+		    'next-step-label' => 'Check Completed',
+		    'percentage-completed' => 100,
 		];
 		$this->assertEquals($aExpected, $aRes);
 	}
@@ -127,6 +154,7 @@ class DataAuditSequencerTest extends ItopTestCase
 
 		$aAdditionalParams = [
 			'mode' => 'update',
+			'optional_steps' => ['setup-audit' => true ],
 		];
 		$oSequencer = new DataAuditSequencer($this->GivenParams($aAdditionalParams), $oRunTimeEnvironment);
 
@@ -171,6 +199,7 @@ class DataAuditSequencerTest extends ItopTestCase
 
 		$aAdditionalParams = [
 			'mode' => 'update',
+			'optional_steps' => ['setup-audit' => true ],
 		];
 		$oSequencer = new DataAuditSequencer($this->GivenParams($aAdditionalParams), $oRunTimeEnvironment);
 
@@ -196,6 +225,7 @@ class DataAuditSequencerTest extends ItopTestCase
 
 		$aAdditionalParams = [
 			'mode' => 'update',
+			'optional_steps' => ['setup-audit' => true ],
 		];
 		$oSequencer = new DataAuditSequencer($this->GivenParams($aAdditionalParams), $oRunTimeEnvironment);
 		$aRes = $oSequencer->ExecuteStep('setup-audit');
@@ -272,7 +302,11 @@ class DataAuditSequencerTest extends ItopTestCase
 			->willReturn(['product_version' => ITOP_VERSION_FULL."_alpha"]);
 		$oRunTimeEnvironment->expects($this->never())->method("GetFinalEnv");
 
-		$oSequencer = new DataAuditSequencer($this->GivenParams(['mode' => 'upgrade']), $oRunTimeEnvironment);
+		$aAdditionalParams = [
+			'mode' => 'upgrade',
+			'optional_steps' => ['setup-audit' => true ],
+		];
+		$oSequencer = new DataAuditSequencer($this->GivenParams($aAdditionalParams), $oRunTimeEnvironment);
 		self::assertFalse($this->InvokeNonPublicMethod(DataAuditSequencer::class, "IsDataAuditRequired", $oSequencer));
 	}
 
@@ -283,7 +317,25 @@ class DataAuditSequencerTest extends ItopTestCase
 			->willReturn(['product_version' => ITOP_VERSION_FULL]);
 		$oRunTimeEnvironment->expects($this->once())->method("GetFinalEnv")->willReturn("production-gabuzomeu");
 
-		$oSequencer = new DataAuditSequencer($this->GivenParams(['mode' => 'upgrade']), $oRunTimeEnvironment);
+		$aAdditionalParams = [
+			'mode' => 'upgrade',
+			'optional_steps' => ['setup-audit' => true ],
+		];
+		$oSequencer = new DataAuditSequencer($this->GivenParams($aAdditionalParams), $oRunTimeEnvironment);
+		self::assertFalse($this->InvokeNonPublicMethod(DataAuditSequencer::class, "IsDataAuditRequired", $oSequencer));
+	}
+
+	public function testIsDataAuditRequired_NoAuditTriggeredBecauseDisabled()
+	{
+		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
+		$oRunTimeEnvironment->expects($this->once())->method('GetApplicationVersion')
+			->willReturn(['product_version' => ITOP_VERSION_FULL]);
+		$oRunTimeEnvironment->expects($this->once())->method("GetFinalEnv")->willReturn("production");
+
+		$aAdditionalParams = [
+			'mode' => 'upgrade',
+		];
+		$oSequencer = new DataAuditSequencer($this->GivenParams($aAdditionalParams), $oRunTimeEnvironment);
 		self::assertFalse($this->InvokeNonPublicMethod(DataAuditSequencer::class, "IsDataAuditRequired", $oSequencer));
 	}
 
@@ -294,7 +346,11 @@ class DataAuditSequencerTest extends ItopTestCase
 			->willReturn(['product_version' => ITOP_VERSION_FULL]);
 		$oRunTimeEnvironment->expects($this->once())->method("GetFinalEnv")->willReturn("production");
 
-		$oSequencer = new DataAuditSequencer($this->GivenParams(['mode' => 'upgrade']), $oRunTimeEnvironment);
+		$aAdditionalParams = [
+			'mode' => 'upgrade',
+			'optional_steps' => ['setup-audit' => true ],
+		];
+		$oSequencer = new DataAuditSequencer($this->GivenParams($aAdditionalParams), $oRunTimeEnvironment);
 		self::assertTrue($this->InvokeNonPublicMethod(DataAuditSequencer::class, "IsDataAuditRequired", $oSequencer));
 	}
 }
