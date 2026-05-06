@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+    <DataFlowType alias="DataFlowType" id="1">
+        <name>http</name>
+    </DataFlowType>
+    <DataFlowType alias="DataFlowType" id="2">
+        <name>https</name>
+    </DataFlowType>
+    <DataFlowType alias="DataFlowType" id="3">
+        <name>ftp</name>
+    </DataFlowType>
+    <DataFlowType alias="DataFlowType" id="4">
+        <name>sftp</name>
+    </DataFlowType>
+    <DataFlowType alias="DataFlowType" id="5">
+        <name>AS2</name>
+    </DataFlowType>
+    <DataFlowType alias="DataFlowType" id="6">
+        <name>X.400</name>
+    </DataFlowType>
+</Set>

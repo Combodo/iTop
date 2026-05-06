@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
+  <classes>
+    <class id="DataFlow" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dataflow</db_table>
+        <style>
+           <icon>images/icons8-sorting-arrows-horizontal.svg</icon>
+        </style>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="destination_id"/>
+            <attribute id="org_id"/>
+            <attribute id="source_id"/>
+            <attribute id="flowtype_id"/>
+          </attributes>
+        </reconciliation>
+        <obsolescence>
+          <condition>status='inactive'</condition>
+        </obsolescence>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>Organization</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>	  
+        <field id="source_id" xsi:type="AttributeExternalKey">
+          <sql>source_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>FunctionalCI</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="source_impact" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
+          <values>
+            <value id="yes">
+              <code>yes</code>
+              <rank>10</rank>
+            </value>
+            <value id="no">
+              <code>no</code>
+              <rank>20</rank>
+            </value>
+          </values>
+          <sql>source_impact</sql>
+          <default_value>yes</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
+        <field id="destination_id" xsi:type="AttributeExternalKey">
+          <sql>destination_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>FunctionalCI</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="destination_impact" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
+          <values>
+            <value id="yes">
+              <code>yes</code>
+              <rank>10</rank>
+            </value>
+            <value id="no">
+              <code>no</code>
+              <rank>20</rank>
+            </value>
+          </values>
+          <sql>destination_impact</sql>
+          <default_value>no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
+        <field id="dataflowtype_id" xsi:type="AttributeExternalKey">
+          <sql>dataflowtype_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>DataFlowType</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="description" xsi:type="AttributeHTML">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <sql>status</sql>
+          <values>
+            <value id="active">
+              <code>active</code>
+              <rank>10</rank>
+              <style>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="inactive">
+              <code>inactive</code>
+              <rank>20</rank>
+              <style>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+          </values>
+          <sort_type>label</sort_type>
+          <default_value>active</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="business_criticity" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
+          <values>
+            <value id="high">
+              <code>high</code>
+              <rank>10</rank>
+            </value>
+            <value id="medium">
+              <code>medium</code>
+              <rank>20</rank>
+            </value>
+            <value id="low">
+              <code>low</code>
+              <rank>30</rank>
+            </value>
+          </values>
+          <sql>business_criticity</sql>
+          <default_value>low</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="execution_frequency" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
+          <values>
+            <value id="realtime">
+              <code>realtime</code>
+              <rank>10</rank>
+            </value>
+            <value id="ondemand">
+              <code>ondemand</code>
+              <rank>20</rank>
+            </value>
+            <value id="hourly">
+              <code>hourly</code>
+              <rank>30</rank>
+            </value>
+            <value id="daily">
+              <code>daily</code>
+              <rank>40</rank>
+            </value>
+            <value id="weekly">
+              <code>weekly</code>
+              <rank>50</rank>
+            </value>
+            <value id="monthly">
+              <code>monthly</code>
+              <rank>60</rank>
+            </value>
+            <value id="yearly">
+              <code>yearly</code>
+              <rank>70</rank>
+            </value>
+          </values>
+          <sql>execution_frequency</sql>
+          <default_value>daily</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="contacts_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContactToDataFlow</linked_class>
+          <ext_key_to_me>dataflow_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>contact_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+        <field id="documents_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkDocumentToDataFlow</linked_class>
+          <ext_key_to_me>dataflow_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>document_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="source_id">
+              <rank>20</rank>
+            </item>
+            <item id="destination_id">
+              <rank>30</rank>
+            </item>
+            <item id="dataflowtype_id">
+              <rank>40</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="source_id">
+              <rank>20</rank>
+            </item>
+            <item id="destination_id">
+              <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:DataFlow:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:DataFlow:moreinfo">
+                  <items>
+                    <item id="source_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="source_impact">
+                      <rank>20</rank>
+                    </item>
+                    <item id="destination_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="destination_impact">
+                      <rank>40</rank>
+                    </item>
+                    <item id="dataflowtype_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="execution_frequency">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:DataFlow:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>70</rank>
+            </item>
+            <item id="documents_list">
+              <rank>80</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="source_id">
+              <rank>20</rank>
+            </item>
+            <item id="destination_id">
+              <rank>30</rank>
+            </item>
+            <item id="dataflowtype_id">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+          </items>
+        </default_search>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+          </items>
+        </summary>
+      </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="functionalci ">
+              <query_down><![CDATA[SELECT FunctionalCI WHERE :this->destination_impact = 'yes' AND id = :this->destination_id]]></query_down>
+              <query_up><![CDATA[SELECT DataFlow AS f JOIN FunctionalCI AS ci ON f.destination_id = ci.id WHERE f.destination_impact = 'yes' AND ci.id=:this->id]]></query_up>
+              <direction>both</direction>
+            </neighbour>
+            <neighbour id="contact ">
+              <attribute>contacts_list</attribute>
+              <direction>down</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+    </class>
+    <class id="lnkDocumentToDataFlow" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkdocumenttodataflow</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="document_id_friendlyname"/>
+            <attribute id="dataflow_id_friendlyname"/>
+          </attributes>
+        </naming>
+        <style>
+          <icon/>
+        </style>
+        <reconciliation>
+          <attributes>
+            <attribute id="dataflow_id"/>
+            <attribute id="document_id"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="document_id"/>
+              <attribute id="dataflow_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+      </properties>
+      <fields>
+        <field id="dataflow_id" xsi:type="AttributeExternalKey">
+          <sql>dataflow_id</sql>
+          <target_class>DataFlow</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="document_id" xsi:type="AttributeExternalKey">
+          <sql>document_id</sql>
+          <target_class>Document</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="document_id">
+              <rank>10</rank>
+            </item>
+            <item id="dataflow_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="dataflow_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="dataflow_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkContactToDataFlow" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkcontacttodataflow</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="contact_id_friendlyname"/>
+            <attribute id="dataflow_id_friendlyname"/>
+          </attributes>
+        </naming>
+        <style>
+          <icon/>
+        </style>
+        <reconciliation>
+          <attributes>
+            <attribute id="dataflow_id"/>
+            <attribute id="contact_id"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="contact_id"/>
+              <attribute id="dataflow_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+      </properties>
+      <fields>
+        <field id="dataflow_id" xsi:type="AttributeExternalKey">
+          <sql>dataflow_id</sql>
+          <target_class>DataFlow</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <target_class>Contact</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="contact_id">
+              <rank>10</rank>
+            </item>
+            <item id="dataflow_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="dataflow_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="dataflow_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="DataFlowType" _delta="define">
+      <parent>Typology</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dataflowtype</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields/>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="FunctionalCI" _delta="must_exist">
+      <fields>
+        <field id="dataflows" xsi:type="AttributeDashboard" _delta="define">
+         <is_user_editable>true</is_user_editable>
+          <definition>
+            <layout>DashboardLayoutTwoCols</layout>
+            <title>FunctionalCI:DataFlow:Title</title>
+            <auto_reload>
+              <enabled>false</enabled>
+              <interval>300</interval>
+            </auto_reload>
+            <cells>
+              <cell id="0">
+                <rank>0</rank>
+                <dashlets>
+                  <dashlet id="DataFlow_Inbound" xsi:type="DashletObjectList">
+                    <rank>0</rank>
+                    <title>FunctionalCI:DataFlow:Inbound</title>
+                    <query>SELECT DataFlow WHERE destination_id=:this->id</query>
+                    <menu>true</menu>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="1">
+                <rank>1</rank>
+                <dashlets>
+                  <dashlet id="DataFlow_Outbound" xsi:type="DashletObjectList">
+                    <rank>0</rank>
+                    <title>FunctionalCI:DataFlow:Outbound</title>
+                    <query>SELECT DataFlow WHERE source_id=:this->id</query>
+                    <menu>true</menu>
+                  </dashlet>
+                </dashlets>
+              </cell>
+            </cells>
+          </definition>
+        </field>
+      </fields>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="flow" _delta="define">
+              <query_down><![CDATA[SELECT DataFlow WHERE source_id = :this->id AND source_impact = 'yes']]></query_down>
+              <query_up><![CDATA[SELECT FunctionalCI AS ci JOIN DataFlow AS f ON f.source_id = ci.id WHERE f.source_impact = 'yes' AND f.id = :this->id]]></query_up>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+	  </class>
+    <class id="ApplicationSolution" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="DatabaseSchema" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="DBServer" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="Middleware" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="MiddlewareInstance" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="WebApplication" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="WebServer" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="OtherSoftware" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+  </classes>
+  <menus>
+      <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
+      <definition>
+        <cells>
+          <cell id="3" delta="if_exists">
+            <dashlets>
+              <dashlet id="DataFlow_20" xsi:type="DashletBadge" _delta="define">
+                <rank>20</rank>
+                <class>DataFlow</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+  </menus>
+  <user_rights>
+    <groups>
+      <group id="Configuration">
+        <classes>
+          <class id="DataFlow" _delta="define_if_not_exists"/>
+        </classes>
+      </group>
+    </groups>
+    <profiles>
+    </profiles>
+  </user_rights>
+</itop_design>
