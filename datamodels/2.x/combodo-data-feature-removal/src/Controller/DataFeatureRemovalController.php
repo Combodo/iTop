@@ -11,7 +11,6 @@ require_once APPROOT.'setup/feature_removal/SetupAudit.php';
 require_once APPROOT.'setup/feature_removal/DryRemovalRuntimeEnvironment.php';
 
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
-use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalConfig;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
 use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
@@ -39,7 +38,7 @@ class DataFeatureRemovalController extends Controller
 		$this->ReadRemovedExtensions();
 		$this->AddAnalyzeParams();
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
-		$aParams['aExtensions'] = $this->GetExtensionsTable();
+		$aParams['aExtensions'] = $this->GetExtensionsTableToSelect();
 		$aParams['aAnalysisDataTable'] = $this->aAnalysisDataTable;
 		$aParams['aClasses'] = array_keys($this->aCountClassesToCleanup);
 		$aParams['DataFeatureRemovalErrorMessage'] = $sErrorMessage;
@@ -110,6 +109,12 @@ class DataFeatureRemovalController extends Controller
 			$this->ValidateTransactionId();
 		}
 
+		// Display changed extensions
+		$aAddedExtensions = utils::ReadPostedParam('aAddedExtensions', []);
+		$aRemovedExtensions = utils::ReadPostedParam('aRemovedExtensions', []);
+
+		IssueLog::Info(__METHOD__.' Extensions given in parameter', null, ['aAddedExtensions' => $aAddedExtensions, 'aRemovedExtensions' => $aRemovedExtensions]);
+
 		$sSourceEnv = MetaModel::GetEnvironment();
 		$oSetupAudit = new SetupAudit($sSourceEnv);
 		$aGetRemovedClasses = array_keys($oSetupAudit->RunDataAudit());
@@ -138,6 +143,9 @@ class DataFeatureRemovalController extends Controller
 		$aParams['aClasses'] = $aGetRemovedClasses;
 		$aParams['iQueryCount'] = $iQueryCount;
 		$aParams['bDeletionPossible'] = !$bHasIssues;
+		$aParams['aAddedExtensions'] = $aAddedExtensions;
+		$aParams['aRemovedExtensions'] = $aRemovedExtensions;
+		$aParams['aExtensions'] = $this->GetExtensionsTableDiff($aAddedExtensions, $aRemovedExtensions);
 
 		$this->DisplayPage($aParams);
 	}
@@ -201,12 +209,41 @@ class DataFeatureRemovalController extends Controller
 		$this->DisplayPage($aParams);
 	}
 
+	private function GetExtensionsTableDiff(array $aAddedExtensions, array $aRemovedExtensions): array
+	{
+		$aExtensions = [];
+		$aColumns = ['', 'Name', 'code', 'Badge' ];
+
+		foreach ($aAddedExtensions as $sAddedExtensionCode => $sAddedExtensionLabel) {
+			$aExtensions[] = [
+				<<<HTML
+<input type="checkbox" disabled class="extension_check" checked/>
+HTML,
+				$sAddedExtensionLabel,
+				$sAddedExtensionCode,
+				Dict::S('UI:Layout:ExtensionsDetails:BadgeToBeInstalled'),
+			];
+		}
+		foreach ($aRemovedExtensions as $sAddedExtensionCode => $sAddedExtensionLabel) {
+			$aExtensions[] = [
+				<<<HTML
+<input type="checkbox" disabled class="extension_check"/>
+HTML,
+				$sAddedExtensionLabel,
+				$sAddedExtensionCode,
+				Dict::S('UI:Layout:ExtensionsDetails:BadgeToBeUninstalled'),
+			];
+		}
+
+		return $this->GetTableData('Extensions', $aColumns, $aExtensions);
+	}
+
 	/**
 	 * Get installed extensions from disk
 	 *
 	 * @return array structure for twig datatable
 	 */
-	private function GetExtensionsTable(): array
+	private function GetExtensionsTableToSelect(): array
 	{
 		$aExtensions = [];
 		$aColumns = ['', 'Version', 'Name', 'Code'];

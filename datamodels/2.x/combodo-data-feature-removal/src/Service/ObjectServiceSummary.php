@@ -23,7 +23,7 @@ class ObjectServiceSummary implements iObjectService
 	public function Update(DBObject $oToUpdate, string $sAttCode, $value): void
 	{
 		$sClass = get_class($oToUpdate);
-		DataFeatureRemovalLog::Info('Update object', null, ['class' => $sClass, 'id' => $oToUpdate->GetKey(), 'code' => $sAttCode, 'value' => "$value"]);
+		DataFeatureRemovalLog::Info('Object to update', null, ['class' => $sClass, 'id' => $oToUpdate->GetKey(), 'code' => $sAttCode, 'value' => "$value"]);
 		if (! array_key_exists($sClass, $this->aSummary)) {
 			$this->aSummary[$sClass] = new DataCleanupSummaryEntity($sClass);
 		}
@@ -33,7 +33,7 @@ class ObjectServiceSummary implements iObjectService
 
 	public function Delete(string $sClass, string $sId): void
 	{
-		DataFeatureRemovalLog::Info('Delete object', null, ['class' => $sClass, 'id' => $sId]);
+		DataFeatureRemovalLog::Info('Object to delete', null, ['class' => $sClass, 'id' => $sId]);
 		if (!array_key_exists($sClass, $this->aSummary)) {
 			$this->aSummary[$sClass] = new DataCleanupSummaryEntity($sClass);
 		}
