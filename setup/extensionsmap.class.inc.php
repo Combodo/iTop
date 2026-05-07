@@ -108,6 +108,7 @@ class iTopExtensionsMap
 				$this->ProcessWizardChoices($aStepInfo['alternatives']);
 			}
 		}
+		// TODO Add aModuleVersion from module definition on disk in extensions
 		return true;
 	}
 

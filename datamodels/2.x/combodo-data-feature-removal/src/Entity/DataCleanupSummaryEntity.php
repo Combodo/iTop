@@ -8,6 +8,8 @@ class DataCleanupSummaryEntity
 	public int $iIssueCount = 0;
 	public int $iUpdateCount = 0;
 	public int $iDeleteCount = 0;
+	public int $iTotalUpdateCount = 0;
+	public int $iTotalDeleteCount = 0;
 
 	/**
 	 * @param string $sClass

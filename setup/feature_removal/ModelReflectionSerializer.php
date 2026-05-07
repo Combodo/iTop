@@ -6,7 +6,6 @@ use ContextTag;
 use CoreException;
 use Exception;
 use IssueLog;
-use MetaModel;
 use SetupLog;
 use utils;
 
@@ -34,7 +33,7 @@ class ModelReflectionSerializer
 
 	public function GetModelFromEnvironment(string $sEnv): array
 	{
-		IssueLog::Info(__METHOD__, null, ['env' => $sEnv]);
+		IssueLog::Debug(__METHOD__, null, ['env' => $sEnv]);
 
 		$sPHPExec = trim(utils::GetConfig()->Get('php_path'));
 		$sOutput = "";

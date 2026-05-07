@@ -99,6 +99,7 @@ class RunTimeEnvironment
 			$this->sBuildEnv = $sEnvironment.'-build';
 		}
 		$this->oExtensionsMap = null;
+		SetupLog::Enable(APPROOT.'log/setup.log');
 	}
 
 	/**
@@ -1566,7 +1567,7 @@ class RunTimeEnvironment
 
 	public function ExitMaintenanceMode(): void
 	{
-		if (SetupUtils::IsInMaintenanceMode()){
+		if (SetupUtils::IsInMaintenanceMode()) {
 			SetupUtils::ExitMaintenanceMode();
 		}
 	}
