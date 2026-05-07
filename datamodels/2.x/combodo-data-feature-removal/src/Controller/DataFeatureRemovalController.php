@@ -107,7 +107,7 @@ class DataFeatureRemovalController extends Controller
 			SetupUtils::EraseSetupToken();
 		} else {
 			//from same module
-			$this->ValidateTransactionId();
+			//$this->ValidateTransactionId();
 		}
 
 		// Display changed extensions
@@ -128,7 +128,7 @@ class DataFeatureRemovalController extends Controller
 
 		[$aParams['aDeletionPlanSummary'], $aParams['iQueryCount'], $aParams['bDeletionPossible']] = $this->GetDeletionPlanSummaryTable($aGetRemovedClasses);
 		[$aParams['aDeletionExecutionSummary'], $aParams['bHasDeletionExecution']] = $this->GetExecutionSummaryTable();
-
+		$aParams['bDeletionNeeded'] = ($aParams['iQueryCount'] > 0);
 		$aParams['aAddedExtensions'] = $aAddedExtensions;
 		$aParams['aRemovedExtensions'] = $aRemovedExtensions;
 		$aParams['aExtensions'] = $this->GetExtensionsTableDiff($aAddedExtensions, $aRemovedExtensions);
@@ -176,9 +176,7 @@ class DataFeatureRemovalController extends Controller
 
 		$aTableData = $this->GetTableData($sName, $aColumns, $aRows);
 
-		$bHasDeletionExecution = count($this->aDeletionExecutionSummary) === 0;
-
-		return [$aTableData, $bHasDeletionExecution];
+		return [$aTableData, true];
 
 	}
 

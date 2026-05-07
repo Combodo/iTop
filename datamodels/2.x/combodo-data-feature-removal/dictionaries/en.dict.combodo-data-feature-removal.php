@@ -21,6 +21,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'DataFeatureRemoval:Helper:Desc2' => 'Analyze if there are any data or dependency preventing you from enabling/disabling a feature.',
 
 	'DataFeatureRemoval:Features:Title' => 'Features',
+	'DataFeatureRemoval:Execution:Title' => 'Deletion Executions',
 	'DataFeatureRemoval:Analysis:Title' => 'Analysis result',
 	'DataFeatureRemoval:Analysis:SubTitle' => '%1$s element(s) to clean before continuing',
 
@@ -34,6 +35,9 @@ Dict::Add('EN US', 'English', 'English', [
 	'DataFeatureRemoval:Table:Analysis:FeatureName' => 'Feature name',
 	'DataFeatureRemoval:Table:Analysis:Module' => 'Module name',
 	'DataFeatureRemoval:Table:Analysis:Occurrence' => 'Occurrence',
+
+	'DataFeatureRemoval:CleanupComplete:Title' => 'All clear.',
+	'DataFeatureRemoval:CompilComplete' => 'Compilation successful. No Cleanup needed. You can proceed to setup.',
 
 	'UI:Button:Analyze' => 'Analyze',
 	'UI:Button:ModifyChoices' => 'Modify Choices',
