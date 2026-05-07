@@ -36,6 +36,7 @@ class DataAuditSequencerTest extends ItopTestCase
 			'message' => '',
 			'next-step' => 'copy',
 			'next-step-label' => 'Copying data model files',
+			'prev-step-success-message' => '',
 			'percentage-completed' => 5,
 		];
 		$this->assertEquals($aExpected, $aRes);
@@ -54,6 +55,7 @@ class DataAuditSequencerTest extends ItopTestCase
 			'message' => '',
 			'next-step' => '',
 			'next-step-label' => 'Unknown setup step \'gabuzomeu\'.',
+			'prev-step-success-message' => '',
 			'percentage-completed' => 100,
 		];
 		$this->assertEquals($aExpected, $aRes);
@@ -71,6 +73,7 @@ class DataAuditSequencerTest extends ItopTestCase
 			'message' => 'Copying...',
 			'next-step' => 'compile',
 			'next-step-label' => 'Compiling the data model',
+			'prev-step-success-message' => 'Data model files copied',
 			'percentage-completed' => 20,
 		];
 		$this->assertEquals($aExpected, $aRes);
@@ -97,6 +100,7 @@ class DataAuditSequencerTest extends ItopTestCase
 			'message' => '',
 			'next-step' => 'setup-audit',
 			'next-step-label' => 'Checking data consistency with the new data model',
+			'prev-step-success-message' => 'Data model compilation completed',
 			'percentage-completed' => 70,
 		];
 		$this->assertEquals($aExpected, $aRes);
@@ -121,6 +125,7 @@ class DataAuditSequencerTest extends ItopTestCase
 			'message' => '',
 			'next-step' => 'complete',
 			'next-step-label' => 'Check Completed',
+			'prev-step-success-message' => 'Data model compilation completed',
 			'percentage-completed' => 100,
 		];
 		$this->assertEquals($aExpected, $aRes);
@@ -138,6 +143,7 @@ class DataAuditSequencerTest extends ItopTestCase
 			'message' => '',
 			'next-step' => 'complete',
 			'next-step-label' => 'Check Completed',
+			'prev-step-success-message' => 'Data model compilation completed',
 			'percentage-completed' => 100,
 		];
 		$this->assertEquals($aExpected, $aRes);
@@ -164,6 +170,7 @@ class DataAuditSequencerTest extends ItopTestCase
 			'message' => '',
 			'next-step' => 'complete',
 			'next-step-label' => 'Check Completed',
+			'prev-step-success-message' => 'Data model compilation completed',
 			'percentage-completed' => 100,
 		];
 		$this->assertEquals($aExpected, $aRes);
@@ -182,6 +189,7 @@ class DataAuditSequencerTest extends ItopTestCase
 			'message' => 'SHADOK MSG',
 			'next-step' => '',
 			'next-step-label' => '',
+			'prev-step-success-message' => '',
 			'percentage-completed' => 100,
 			'error_code' => 0,
 		];
@@ -209,6 +217,7 @@ class DataAuditSequencerTest extends ItopTestCase
 			'message' => '',
 			'next-step' => 'complete',
 			'next-step-label' => 'Check Completed',
+			'prev-step-success-message' => 'Data consistency check completed',
 			'percentage-completed' => 100,
 		];
 		$this->assertEquals($aExpected, $aRes);
@@ -234,6 +243,7 @@ class DataAuditSequencerTest extends ItopTestCase
 			'message' => '',
 			'next-step' => 'complete',
 			'next-step-label' => 'Check Completed',
+			'prev-step-success-message' => 'Data consistency check completed',
 			'percentage-completed' => 100,
 		];
 		$this->assertEquals($aExpected, $aRes);
@@ -254,6 +264,7 @@ class DataAuditSequencerTest extends ItopTestCase
 			'message' => '',
 			'next-step' => 'complete',
 			'next-step-label' => 'Check Completed',
+			'prev-step-success-message' => 'Data consistency check completed',
 			'percentage-completed' => 100,
 		];
 		$this->assertEquals($aExpected, $aRes);
