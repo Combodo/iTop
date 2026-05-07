@@ -177,6 +177,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	protected $aFieldsMap;
     /**
      * @var array Store posted values in order to be used in GetAttributeFlags
+     * @since 3.3.0
      */
     protected $aPostedValues = [];
 
@@ -3799,8 +3800,10 @@ HTML;
 	}
 
     /**
-     * function to test if the posted value or if not exists the existing value matches the expected value
-     * this is used to check the current value in GetAttributeFlags function (useful to manage dynamic readonly attributes)
+     * get the posted value or if not exists the existing value
+     * function added for use in GetAttributeFlags (to manage dynamic readonly attributes)
+     * this is used to get the current value display in screen
+     * @since 3.3.0
      * @param $sAttCode
      */
     public function GetCurrentValueInScreen($sAttCode)
@@ -3812,8 +3815,9 @@ HTML;
     }
 
     /*
-     * This function checks if the value of the attribute has been modified in screen
-     * this is used to check if field has been modified in GetAttributeFlags function (useful to manage dynamic readonly attributes)
+     * checks if the value of the attribute has been modified in screen
+     * function added for use in GetAttributeFlags (useful to manage dynamic readonly attributes)
+     *  @since 3.3.0
      * @param $sAttCode
      */
     public function IsModifiedValueInScreen($sAttCode)
