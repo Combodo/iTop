@@ -40,6 +40,8 @@ class CaseLogEntryFormFactory
 
 		$oSaveButton = static::PrepareSaveButton();
 		$oTransitionsMenu = static::PrepareTransitionsSelectionPopoverMenu($oObject, $sCaseLogAttCode);
+		// Prevent popover menu from landing behind caselog editor
+		$oTransitionsMenu->SetContainer(PopoverMenu::ENUM_CONTAINER_BODY);
 		if (true === $oTransitionsMenu->HasItems()) {
 			$oButtonGroup = ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu($oSaveButton, $oTransitionsMenu);
 			$oCaseLogEntryForm->AddMainActionButtons($oButtonGroup);
