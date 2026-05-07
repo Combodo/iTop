@@ -70,6 +70,20 @@ class WizStepInstall extends AbstractWizStepInstall
 		$oPage->add("<div class=\"message message-error ibo-is-html-content\" style=\"display:none;\" id=\"setup_error\"></div>");
 	}
 
+	protected function AddPrevStepSuccessMessage(WebPage $oPage, string $sPrevStepSuccessMessage): void
+	{
+		if ($sPrevStepSuccessMessage === '') {
+			return;
+		}
+
+		$sPrevStepSuccessMessage = addslashes(utils::EscapeHtml($sPrevStepSuccessMessage));
+		$oPage->add_ready_script(
+			<<<EOF
+	$('<div class="message message-valid ibo-is-html-content">').html('$sPrevStepSuccessMessage').appendTo("#progress_content");
+EOF
+		);
+	}
+
 	public function Display(SetupPage $oPage): void
 	{
 		$aInstallParams = $this->BuildConfig();
@@ -121,6 +135,7 @@ JS);
 	ExecuteStep('{$aRes['next-step']}');
 EOF
 			);
+			static::AddPrevStepSuccessMessage($oPage, $aRes['prev-step-success-message']);
 		} elseif ($aRes['status'] !== StepSequencer::ERROR) {
 			// Installation complete, move to the next step of the wizard
 			$oPage->add_ready_script(
@@ -132,6 +147,7 @@ EOF
 	$("#btn_next").trigger('click');
 EOF
 			);
+			static::AddPrevStepSuccessMessage($oPage, $aRes['prev-step-success-message']);
 		} else {
 			//Error case
 			$sMessage = addslashes(utils::EscapeHtml($aRes['message']));
