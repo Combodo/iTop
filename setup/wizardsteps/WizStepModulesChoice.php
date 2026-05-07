@@ -21,7 +21,6 @@
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
-use Combodo\iTop\Test\UnitTest\Integration\ExtensionsMapTest;
 
 /**
  * Choice of the modules to be installed
@@ -891,7 +890,11 @@ EOF
 			return 'Non-uninstallable extension missing';
 		}
 
-		return 'Check compatibility';
+		if ($this->GetStepInfo(1 + $this->GetStepIndex()) === null) {
+			return 'Check compatibility';
+		}
+
+		return 'Next';
 	}
 
 }
