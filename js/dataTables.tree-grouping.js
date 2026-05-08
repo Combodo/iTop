@@ -196,9 +196,12 @@ var iTopDataTableTreeGrouping = (function ($) {
 			// Friendly name is always loaded; it sorts better than the numeric DB id
 			return sMData.replace(/\/_key_$/, '/friendlyname');
 		}
-		// External key attributes store a numeric ID in /raw — use /friendlyname instead
+		// External/hierarchical key attributes store a numeric ID in "/raw", use "/friendlyname" instead.
+		// AttributeHierarchicalKey extends AttributeExternalKey but its PHP class name does not contain
+		// "ExternalKey", hence the separate check.
 		if (oCol.metadata && typeof oCol.metadata.attribute_type === 'string' &&
-			oCol.metadata.attribute_type.indexOf('ExternalKey') !== -1) {
+			(oCol.metadata.attribute_type.indexOf('ExternalKey') !== -1 ||
+			 oCol.metadata.attribute_type.indexOf('HierarchicalKey') !== -1)) {
 			return sMData + '/friendlyname';
 		}
 		return sMData + '/raw';
