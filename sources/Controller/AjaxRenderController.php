@@ -115,10 +115,14 @@ class AjaxRenderController
 
 					foreach ($aColumnsLoad[$sAlias] as $sAttCode) {
 						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
+						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+						// Expose the friendly name of external/hierarchical keys so JS can sort by label
+						if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) {
+							$aObj[$sAlias."/".$sAttCode."/friendlyname"] = $aObject[$sAlias]->Get($sAttCode.'_friendlyname');
+						}
 						$bExcludeRawValue = false;
 						// Only retrieve raw (stored) value for simple fields
 						foreach (cmdbAbstractObject::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude) {
-							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 							if (is_a($oAttDef, $sAttDefClassToExclude, true)) {
 								$bExcludeRawValue = true;
 								break;
