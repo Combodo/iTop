@@ -501,9 +501,9 @@ class AjaxRenderController
 				$aColumnsLoad[$sAlias][] = $sAttCode;
 			}
 
-			// Tree grouping: ensure the parent key attribute is loaded so JS can build parent-child links
+			// Tree grouping: ensure the parent key attribute is loaded so the frontend can build parent-child links
 			$sTreeGroupingAttr = $extraParams['tree_grouping_attr'] ?? '';
-			if ($sTreeGroupingAttr !== ''
+			if (utils::IsNotNullOrEmptyString($sTreeGroupingAttr)
 				&& MetaModel::IsValidAttCode($sClassName, $sTreeGroupingAttr)
 				&& !in_array($sTreeGroupingAttr, $aColumnsLoad[$sAlias])) {
 				$aColumnsLoad[$sAlias][] = $sTreeGroupingAttr;
