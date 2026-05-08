@@ -106,43 +106,19 @@ var iTopDataTableTreeGrouping = (function ($) {
 	}
 
 	/**
-	 * Sort an array of nodes by a data key.
+	 * Flatten the tree in depth-first order, preserving the server-side sort order of siblings.
 	 *
-	 * @param {Array}  aNodes   - nodes to sort (not mutated; a copy is returned)
-	 * @param {string} sSortKey - data key to compare (uses raw values for numeric/locale sort)
-	 * @param {string} sSortDir - 'asc' or 'desc'
-	 * @returns {Array}
-	 */
-	function _sortNodes(aNodes, sSortKey, sSortDir) {
-		if (!sSortKey) {
-			return aNodes;
-		}
-		return aNodes.slice().sort(function (a, b) {
-			var va = a[sSortKey] !== undefined ? a[sSortKey] : '';
-			var vb = b[sSortKey] !== undefined ? b[sSortKey] : '';
-			// Numeric-aware locale comparison
-			var nCmp = String(va).localeCompare(String(vb), undefined, {numeric: true, sensitivity: 'base'});
-			return sSortDir === 'desc' ? -nCmp : nCmp;
-		});
-	}
-
-	/**
-	 * Flatten the tree in depth-first order, sorting siblings at each level.
-	 *
-	 * @param {Array}  aNodes   - nodes at the current level (roots or children)
-	 * @param {number} iDepth   - depth of these nodes (0 = root)
-	 * @param {string} sSortKey - data key used for sibling sorting
-	 * @param {string} sSortDir - 'asc' or 'desc'
+	 * @param {Array}  aNodes - nodes at the current level (roots or children)
+	 * @param {number} iDepth - depth of these nodes (0 = root)
 	 * @returns {Array} - flat list in display order
 	 */
-	function _flattenTree(aNodes, iDepth, sSortKey, sSortDir) {
+	function _flattenTree(aNodes, iDepth) {
 		var aResult = [];
-		var aSorted = _sortNodes(aNodes, sSortKey, sSortDir);
-		aSorted.forEach(function (oNode) {
+		aNodes.forEach(function (oNode) {
 			oNode._itop_depth = iDepth;
 			aResult.push(oNode);
 			if (oNode._itop_children.length > 0) {
-				aResult = aResult.concat(_flattenTree(oNode._itop_children, iDepth + 1, sSortKey, sSortDir));
+				aResult = aResult.concat(_flattenTree(oNode._itop_children, iDepth + 1));
 			}
 		});
 		return aResult;
@@ -171,43 +147,6 @@ var iTopDataTableTreeGrouping = (function ($) {
 	}
 
 	/**
-	 * Determine the sort key to use when the user clicks column iColIndex.
-	 * - For '_key_' columns: sort by friendlyname (human-readable label).
-	 * - For all other columns: sort by the '/raw' variant of the attribute.
-	 *
-	 * @param {DataTables.Api} oDt
-	 * @param {number}         iColIndex
-	 * @returns {string|null}
-	 */
-	function _getSortKey(oDt, iColIndex) {
-		var oSettings = oDt.settings()[0];
-		if (iColIndex < 0 || iColIndex >= oSettings.aoColumns.length) {
-			return null;
-		}
-		var oCol = oSettings.aoColumns[iColIndex];
-		if (!oCol) {
-			return null;
-		}
-		var sMData = oCol.mData;
-		if (typeof sMData !== 'string') {
-			return null;
-		}
-		if (sMData.match(/\/_key_$/)) {
-			// Friendly name is always loaded; it sorts better than the numeric DB id
-			return sMData.replace(/\/_key_$/, '/friendlyname');
-		}
-		// External/hierarchical key attributes store a numeric ID in "/raw", use "/friendlyname" instead.
-		// AttributeHierarchicalKey extends AttributeExternalKey but its PHP class name does not contain
-		// "ExternalKey", hence the separate check.
-		if (oCol.metadata && typeof oCol.metadata.attribute_type === 'string' &&
-			(oCol.metadata.attribute_type.indexOf('ExternalKey') !== -1 ||
-			 oCol.metadata.attribute_type.indexOf('HierarchicalKey') !== -1)) {
-			return sMData + '/friendlyname';
-		}
-		return sMData + '/raw';
-	}
-
-	/**
 	 * Initialize hierarchical mode for an already-created DataTable.
 	 *
 	 * The DataTable must have been created with serverSide:false, paging:false,
@@ -232,7 +171,7 @@ var iTopDataTableTreeGrouping = (function ($) {
 			sortedData: [],
 			nodeMap: {},
 			collapsed: new Set(),
-			sortKey: null,
+			sortColIndex: -1,
 			sortDir: 'asc'
 		};
 
@@ -240,7 +179,30 @@ var iTopDataTableTreeGrouping = (function ($) {
 		function _rebuild() {
 			var oTree = _buildTree(oState.allData, oConfig.parentKey);
 			oState.nodeMap = oTree.nodeMap;
-			oState.sortedData = _flattenTree(oTree.roots, 0, oState.sortKey, oState.sortDir);
+			oState.sortedData = _flattenTree(oTree.roots, 0);
+		}
+
+		// ── Fetch sorted data from server and rebuild tree ────────────────────────
+		// bResetCollapsed: true resets expanded/collapsed state (use for full refresh),
+		//                  false preserves it (use for sort-only re-fetch).
+		function _fetchData(bResetCollapsed) {
+			var oParams = $.extend({}, oConfig.ajaxData, {start: 0, end: 0, draw: 1});
+			if (oState.sortColIndex >= 0) {
+				oParams.order = [{column: oState.sortColIndex, dir: oState.sortDir}];
+			}
+			$('#' + sTableId).closest('.dataTables_wrapper').block({
+				message: '<i class="fa fa-sync-alt fa-spin fa-fw"></i>',
+				css: {border: '0px'}
+			});
+			$.post(oConfig.ajaxUrl, oParams)
+				.done(function (oResponse) {
+					oState.allData = (oResponse && oResponse.data) ? oResponse.data : [];
+					if (bResetCollapsed) {
+						oState.collapsed = new Set();
+					}
+					_rebuild();
+					_redraw();
+				});
 		}
 
 		// ── Update DataTable with currently visible rows ───────────────────────────
@@ -292,24 +254,25 @@ var iTopDataTableTreeGrouping = (function ($) {
 				$ths = $('#' + sTableId + ' thead th');
 			}
 
+			var oSettings = oDt.settings()[0];
 			$ths.each(function (iIdx) {
-				var sSortKey = _getSortKey(oDt, iIdx);
-				if (sSortKey) {
+				var oCol = oSettings.aoColumns[iIdx];
+				if (oCol && typeof oCol.mData === 'string') {
 					$(this).addClass('ibo-datatable--tree-sortable');
 				}
 			});
 
 			$ths.off('click.itop-external-key-grouping').on('click.itop-external-key-grouping', function () {
 				var iColIndex = $(this).index();
-				var sSortKey = _getSortKey(oDt, iColIndex);
-				if (!sSortKey) {
+				var oCol = oSettings.aoColumns[iColIndex];
+				if (!oCol || typeof oCol.mData !== 'string') {
 					return;
 				}
 
-				if (oState.sortKey === sSortKey) {
+				if (oState.sortColIndex === iColIndex) {
 					oState.sortDir = oState.sortDir === 'asc' ? 'desc' : 'asc';
 				} else {
-					oState.sortKey = sSortKey;
+					oState.sortColIndex = iColIndex;
 					oState.sortDir = 'asc';
 				}
 
@@ -317,8 +280,8 @@ var iTopDataTableTreeGrouping = (function ($) {
 				$ths.removeClass('ibo-datatable--tree-sort-asc ibo-datatable--tree-sort-desc');
 				$(this).addClass('ibo-datatable--tree-sort-' + oState.sortDir);
 
-				_rebuild();
-				_redraw();
+				// Re-fetch from server with new sort params, preserving collapse state
+				_fetchData(false);
 			});
 		}
 
@@ -341,13 +304,7 @@ var iTopDataTableTreeGrouping = (function ($) {
 
 		// ── Event: refresh (triggered externally via refresh.datatable.itop) ──────
 		$('#' + sTableId).on('refresh.datatable.itop', function () {
-			$.post(oConfig.ajaxUrl, $.extend({}, oConfig.ajaxData, {start: 0, end: 0, draw: 1}))
-				.done(function (oResponse) {
-					oState.allData = (oResponse && oResponse.data) ? oResponse.data : [];
-					oState.collapsed = new Set();
-					_rebuild();
-					_redraw();
-				});
+			_fetchData(true);
 		});
 
 		// ── Bootstrap with pre-loaded initData (no extra round-trip needed) ───────
