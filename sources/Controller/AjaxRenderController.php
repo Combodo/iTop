@@ -116,10 +116,6 @@ class AjaxRenderController
 					foreach ($aColumnsLoad[$sAlias] as $sAttCode) {
 						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-						// Expose the friendly name of external/hierarchical keys so JS can sort by label
-						if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) {
-							$aObj[$sAlias."/".$sAttCode."/friendlyname"] = $aObject[$sAlias]->Get($sAttCode.'_friendlyname');
-						}
 						$bExcludeRawValue = false;
 						// Only retrieve raw (stored) value for simple fields
 						foreach (cmdbAbstractObject::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude) {
@@ -503,6 +499,14 @@ class AjaxRenderController
 			// Add attributes to always load in tables
 			foreach (MetaModel::GetAttributesToAlwaysLoadInTables($sClassName) as $sAttCode) {
 				$aColumnsLoad[$sAlias][] = $sAttCode;
+			}
+
+			// Tree grouping: ensure the parent key attribute is loaded so JS can build parent-child links
+			$sTreeGroupingAttr = $extraParams['tree_grouping_attr'] ?? '';
+			if ($sTreeGroupingAttr !== ''
+				&& MetaModel::IsValidAttCode($sClassName, $sTreeGroupingAttr)
+				&& !in_array($sTreeGroupingAttr, $aColumnsLoad[$sAlias])) {
+				$aColumnsLoad[$sAlias][] = $sTreeGroupingAttr;
 			}
 		}
 		$aQueryParams = isset($aExtraParams['query_params']) ? $aExtraParams['query_params'] : [];
