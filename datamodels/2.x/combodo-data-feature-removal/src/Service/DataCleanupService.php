@@ -35,7 +35,7 @@ class DataCleanupService
 	 */
 	public function GetCleanupSummary(?array $aClasses): array
 	{
-		return $this->ExecuteCleanup($aClasses ?? [], oObjectService: new ObjectServiceSummary());
+		return $this->ExecuteCleanup($aClasses ?? [], [], oObjectService: new ObjectServiceSummary());
 	}
 
 	private function GetNextObjectToDelete(array $aClasses): ?DBObject
@@ -56,6 +56,7 @@ class DataCleanupService
 
 	/**
 	 * @param array $aClasses
+	 * @param array $aPreviousExecutionSummary
 	 * @param \Combodo\iTop\DataFeatureRemoval\Service\iObjectService|null $oObjectService
 	 *
 	 * @return array execution summary
@@ -65,9 +66,10 @@ class DataCleanupService
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function ExecuteCleanup(array $aClasses, ?iObjectService $oObjectService = null): array
+	public function ExecuteCleanup(array $aClasses, array $aPreviousExecutionSummary, ?iObjectService $oObjectService = null): array
 	{
 		$this->oObjectService = $oObjectService ?? new ObjectService();
+		$this->oObjectService->SetSummary($aPreviousExecutionSummary);
 
 		$this->aVisited = [];
 

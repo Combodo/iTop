@@ -40,5 +40,5 @@
   </selected_modules>
   <selected_extensions type="array">
   </selected_extensions>
-  <use_symbolic_links>on</use_symbolic_links>
+  <use_symbolic_links>off</use_symbolic_links>
 </installation>

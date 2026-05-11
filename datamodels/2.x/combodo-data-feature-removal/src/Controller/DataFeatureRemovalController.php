@@ -126,12 +126,13 @@ class DataFeatureRemovalController extends Controller
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
 		$aParams['aClasses'] = $aGetRemovedClasses;
 
-		[$aParams['aDeletionPlanSummary'], $aParams['iQueryCount'], $aParams['bDeletionPossible']] = $this->GetDeletionPlanSummaryTable($aGetRemovedClasses);
-		[$aParams['aDeletionExecutionSummary'], $aParams['bHasDeletionExecution']] = $this->GetExecutionSummaryTable();
-		$aParams['bDeletionNeeded'] = ($aParams['iQueryCount'] > 0);
 		$aParams['aAddedExtensions'] = $aAddedExtensions;
 		$aParams['aRemovedExtensions'] = $aRemovedExtensions;
 		$aParams['aExtensions'] = $this->GetExtensionsTableDiff($aAddedExtensions, $aRemovedExtensions);
+
+		[$aParams['aDeletionPlanSummary'], $aParams['iQueryCount'], $aParams['bDeletionPossible']] = $this->GetDeletionPlanSummaryTable($aGetRemovedClasses);
+		[$aParams['aDeletionExecutionSummary'], $aParams['bHasDeletionExecution']] = $this->GetExecutionSummaryTable();
+		$aParams['bDeletionNeeded'] = ($aParams['iQueryCount'] > 0);
 
 		$this->DisplayPage($aParams, 'AnalysisResult');
 	}
@@ -244,21 +245,7 @@ class DataFeatureRemovalController extends Controller
 		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 
 		$oDataCleanupService = new DataCleanupService();
-		$aDeletionExecutionSummary = $oDataCleanupService->ExecuteCleanup($aClasses);
-
-		foreach ($aDeletionExecutionSummary as $oDeletionExecutionSummaryEntity) {
-			if (isset($this->aDeletionExecutionSummary[$oDeletionExecutionSummaryEntity->sClass])) {
-				/** @var \Combodo\iTop\DataFeatureRemoval\Entity\DataCleanupSummaryEntity $oTotal */
-				$oTotal = $this->aDeletionExecutionSummary[$oDeletionExecutionSummaryEntity->sClass];
-				$oTotal->iTotalUpdateCount += $oDeletionExecutionSummaryEntity->iUpdateCount;
-				$oTotal->iTotalDeleteCount += $oDeletionExecutionSummaryEntity->iDeleteCount;
-				$oTotal->iUpdateCount = $oDeletionExecutionSummaryEntity->iUpdateCount;
-				$oTotal->iDeleteCount = $oDeletionExecutionSummaryEntity->iDeleteCount;
-			} else {
-				$oTotal = $oDeletionExecutionSummaryEntity;
-			}
-			$this->aDeletionExecutionSummary[$oDeletionExecutionSummaryEntity->sClass] = $oTotal;
-		}
+		$this->aDeletionExecutionSummary = $oDataCleanupService->ExecuteCleanup($aClasses, $this->aDeletionExecutionSummary);
 
 		$this->OperationAnalysisResult();
 	}

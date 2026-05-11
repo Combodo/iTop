@@ -29,6 +29,7 @@ class ObjectServiceSummary implements iObjectService
 		}
 		$oDeletionPlanSummaryEntity = $this->aSummary[$sClass];
 		$oDeletionPlanSummaryEntity->iUpdateCount++;
+		$oDeletionPlanSummaryEntity->iTotalUpdateCount++;
 	}
 
 	public function Delete(string $sClass, string $sId): void
@@ -39,6 +40,7 @@ class ObjectServiceSummary implements iObjectService
 		}
 		$oDeletionPlanSummaryEntity = $this->aSummary[$sClass];
 		$oDeletionPlanSummaryEntity->iDeleteCount++;
+		$oDeletionPlanSummaryEntity->iTotalDeleteCount++;
 	}
 
 	public function SetIssue(string $sClass): void
@@ -54,5 +56,17 @@ class ObjectServiceSummary implements iObjectService
 	public function GetSummary(): array
 	{
 		return $this->aSummary;
+	}
+
+	public function SetSummary(array $aSummary): void
+	{
+		$this->aSummary = [];
+		foreach ($aSummary as $sClass => $oPreviousSummaryEntity) {
+			$oSummaryEntity = new DataCleanupSummaryEntity($sClass);
+			$oSummaryEntity->iTotalUpdateCount = $oPreviousSummaryEntity->iTotalUpdateCount;
+			$oSummaryEntity->iTotalDeleteCount = $oPreviousSummaryEntity->iTotalDeleteCount;
+
+			$this->aSummary[$sClass] = $oSummaryEntity;
+		}
 	}
 }

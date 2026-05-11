@@ -15,20 +15,20 @@
         {% EndUIFieldSet %}
         {% if bDeletionPossible %}
             {% UIForm Standard {} %}
-            {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}
-            {% UIInput ForHidden { sName:'operation', sValue:'DoDeletion'} %}
-            {% for sKey, sClass in aClasses %}
-                {% UIInput ForHidden { sName:"classes[" ~ sKey ~ "]", sValue:sClass } %}
-            {% endfor %}
-            {% for sCode, sLabel in aAddedExtensions %}
-                {% UIInput ForHidden { sName:"aAddedExtensions[" ~ sCode ~ "]", sValue:sLabel } %}
-            {% endfor %}
-            {% for sCode, sLabel in aRemovedExtensions %}
-                {% UIInput ForHidden { sName:"aRemovedExtensions[" ~ sCode ~ "]", sValue:sLabel } %}
-            {% endfor %}
-            {% UIToolbar ForButton {} %}
-            {% UIButton ForPrimaryAction {sLabel:'UI:Button:DoDeletion'|dict_s, sName:'btn_deletion', sId:'btn_deletion', bIsSubmit:true} %}
-            {% EndUIToolbar %}
+                {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}
+                {% UIInput ForHidden { sName:'operation', sValue:'DoDeletion'} %}
+                {% for sKey, sClass in aClasses %}
+                    {% UIInput ForHidden { sName:"classes[" ~ sKey ~ "]", sValue:sClass } %}
+                {% endfor %}
+                {% for sCode, sLabel in aAddedExtensions %}
+                    {% UIInput ForHidden { sName:"aAddedExtensions[" ~ sCode ~ "]", sValue:sLabel } %}
+                {% endfor %}
+                {% for sCode, sLabel in aRemovedExtensions %}
+                    {% UIInput ForHidden { sName:"aRemovedExtensions[" ~ sCode ~ "]", sValue:sLabel } %}
+                {% endfor %}
+                {% UIToolbar ForButton {} %}
+                    {% UIButton ForPrimaryAction {sLabel:'UI:Button:DoDeletion'|dict_s, sName:'btn_deletion', sId:'btn_deletion', bIsSubmit:true} %}
+                {% EndUIToolbar %}
             {% EndUIForm %}
         {% else %}
             {% UIAlert ForFailure { sContent: 'DataFeatureRemoval:DeletionPlan:Error:Issues'|dict_s } %}{% EndUIAlert %}
