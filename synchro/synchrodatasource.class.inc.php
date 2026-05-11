@@ -2898,7 +2898,7 @@ class SynchroReplica extends DBObject implements iDisplay
 		return $oBlock;
 	}
 
-	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
+	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = [])
 	{
 		if ($bEditMode) {
 			return;
