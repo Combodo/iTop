@@ -54,7 +54,7 @@
                 "doc.manual_setup": "",
                 "doc.more_information": "",
                 "settings": [],
-                "module_file_path": "\/var\/www\/html\/iTopLegacy\/tests\/php-unit-tests\/unitary-tests\/setup\/ressources\/datamodels\/2.x\/itop-structure\/module.itop-structure.php"
+                "module_file_path": "APPROOTtests\/php-unit-tests\/unitary-tests\/setup\/ressources\/datamodels\/2.x\/itop-structure\/module.itop-structure.php"
             },
             "itop-config-mgmt": {
                 "label": "Configuration Management (CMDB)",
@@ -91,7 +91,7 @@
                 "doc.manual_setup": "",
                 "doc.more_information": "",
                 "settings": [],
-                "module_file_path": "\/var\/www\/html\/iTopLegacy\/tests\/php-unit-tests\/unitary-tests\/setup\/ressources\/datamodels\/2.x\/itop-config-mgmt\/module.itop-config-mgmt.php"
+                "module_file_path": "APPROOT\/tests\/php-unit-tests\/unitary-tests\/setup\/ressources\/datamodels\/2.x\/itop-config-mgmt\/module.itop-config-mgmt.php"
             }
         }
     },
@@ -182,7 +182,7 @@
                 "doc.manual_setup": "",
                 "doc.more_information": "",
                 "settings": [],
-                "module_file_path": "\/var\/www\/html\/iTopLegacy\/tests\/php-unit-tests\/unitary-tests\/setup\/ressources\/datamodels\/2.x\/itop-service-mgmt\/module.itop-service-mgmt.php"
+                "module_file_path": "APPROOT\/tests\/php-unit-tests\/unitary-tests\/setup\/ressources\/datamodels\/2.x\/itop-service-mgmt\/module.itop-service-mgmt.php"
             }
         }
     },

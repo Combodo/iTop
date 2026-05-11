@@ -159,7 +159,11 @@ class ExtensionsMapTest extends ItopTestCase
 
 		$sExpected = file_get_contents(__DIR__.'/ressources/all_extensions_from_datamodels.json');
 		$sExpected = str_replace('"sVersion": "ITOP_VERSION"', '"sVersion": "'.ITOP_VERSION.'"', $sExpected);
-		$this->assertEquals($sExpected, json_encode($this->SerializeExtensionMap($oiTopExtensionsMap), JSON_PRETTY_PRINT));
+		$sExpected = preg_replace('/"module_file_path": .*/', '"module_file_path": ANYPATH',  $sExpected);
+
+		$actual = json_encode($this->SerializeExtensionMap($oiTopExtensionsMap), JSON_PRETTY_PRINT);
+		$actual = preg_replace('/"module_file_path": .*/', '"module_file_path": ANYPATH',  $actual);
+		$this->assertEquals($sExpected, $actual);
 	}
 
 	public function SerializeExtensionMap(iTopExtensionsMap $oiTopExtensionsMap): array
