@@ -151,4 +151,31 @@ class ExtensionsMapTest extends ItopTestCase
 		$this->SetNonPublicProperty($oExtensionsMap, $mapKeyInItopExtensionMap, $aMap);
 	}
 
+	public function testiTopExtensionsMapInit()
+	{
+		$oiTopExtensionsMap = new iTopExtensionsMap(sAppRootForTests:__DIR__."/ressources");
+
+		//file_put_contents(__DIR__.'/ressources/all_extensions_from_datamodels.json', json_encode($this->SerializeExtensionMap($oiTopExtensionsMap), JSON_PRETTY_PRINT));
+
+		$sExpected = file_get_contents(__DIR__.'/ressources/all_extensions_from_datamodels.json');
+		$sExpected = str_replace('"sVersion": "ITOP_VERSION"', '"sVersion": "'.ITOP_VERSION.'"', $sExpected);
+		$this->assertEquals($sExpected, json_encode($this->SerializeExtensionMap($oiTopExtensionsMap), JSON_PRETTY_PRINT));
+	}
+
+	public function SerializeExtensionMap(iTopExtensionsMap $oiTopExtensionsMap): array
+	{
+		$aRes = [];
+		foreach ($oiTopExtensionsMap->GetAllExtensions() as $oExtension) {
+			$aRes[] = [
+				'sCode' => $oExtension->sCode,
+				'sSource' => $oExtension->sSource,
+				'sVersion' => $oExtension->sVersion,
+				'aModules' => $oExtension->aModules,
+				'aModuleVersion' => $oExtension->aModuleVersion,
+				'aModuleInfo' => $oExtension->aModuleInfo,
+			];
+		}
+
+		return $aRes;
+	}
 }

@@ -1,0 +1,107 @@
+<?php
+
+SetupWebPage::AddModule(
+	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
+	'itop-config-mgmt/3.3.0',
+	[
+		// Identification
+		//
+		'label' => 'Configuration Management (CMDB)',
+		'category' => 'business',
+
+		// Setup
+		//
+		'dependencies' => [
+			'itop-structure/2.7.1',
+		],
+		'mandatory' => false,
+		'visible' => true,
+		'installer' => 'ConfigMgmtInstaller',
+
+		// Components
+		//
+		'datamodel' => [
+			'model.itop-config-mgmt.php',
+			'main.itop-config-mgmt.php',
+		],
+		'data.struct' => [
+			'data/en_us.data.itop-brand.xml',
+			'data/en_us.data.itop-networkdevicetype.xml',
+			'data/en_us.data.itop-osfamily.xml',
+			'data/en_us.data.itop-osversion.xml',
+		],
+		'data.sample' => [
+			'data/data.sample.model.xml',
+			'data/data.sample.networkdevicetype.xml',
+			'data/data.sample.servers.xml',
+			'data/data.sample.nw-devices.xml',
+			'data/data.sample.software.xml',
+			'data/data.sample.dbserver.xml',
+			'data/data.sample.dbschema.xml',
+			'data/data.sample.webserver.xml',
+			'data/data.sample.webapp.xml',
+			'data/data.sample.applications.xml',
+			'data/data.sample.applicationsolutionci.xml',
+		],
+
+		// Documentation
+		//
+		'doc.manual_setup' => '',
+		'doc.more_information' => '',
+
+		// Default settings
+		//
+		'settings' => [
+		],
+	]
+);
+
+if (!class_exists('ConfigMgmtInstaller')) {
+	// Module installation handler
+	//
+	class ConfigMgmtInstaller extends ModuleInstallerAPI
+	{
+		public static function BeforeWritingConfig(Config $oConfiguration)
+		{
+			// If you want to override/force some configuration values, do it here
+			return $oConfiguration;
+		}
+
+		/**
+		 * Handler called before creating or upgrading the database schema
+		 * @param $oConfiguration Config The new configuration of the application
+		 * @param $sPreviousVersion string PRevious version number of the module (empty string in case of first install)
+		 * @param $sCurrentVersion string Current version number of the module
+		 */
+		public static function BeforeDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
+		{
+			if (strlen($sPreviousVersion) > 0) {
+				// If you want to migrate data from one format to another, do it here
+				self::RenameEnumValueInDB('Software', 'type', 'DBserver', 'DBServer');
+				self::RenameEnumValueInDB('Software', 'type', 'Webserver', 'WebServer');
+				self::RenameEnumValueInDB('Model', 'type', 'SANswitch', 'SANSwitch');
+				self::RenameEnumValueInDB('Model', 'type', 'IpPhone', 'IPPhone');
+				self::RenameEnumValueInDB('Model', 'type', 'Telephone', 'Phone');
+				self::RenameClassInDB('DBserver', 'DBServer');
+				self::RenameClassInDB('OSfamily', 'OSFamily');
+				self::RenameClassInDB('OSversion', 'OSVersion');
+				self::RenameClassInDB('Webserver', 'WebServer');
+				self::RenameClassInDB('OSpatch', 'OSPatch');
+				self::RenameClassInDB('lnkFunctionalCIToOSpatch', 'lnkFunctionalCIToOSPatch');
+				self::RenameClassInDB('OsLicence', 'OSLicence');
+				self::RenameClassInDB('IOSversion', 'IOSVersion');
+				self::RenameClassInDB('IPinterface', 'IPInterface');
+			}
+		}
+
+		/**
+		 * Handler called after the creation/update of the database schema
+		 * @param $oConfiguration Config The new configuration of the application
+		 * @param $sPreviousVersion string PRevious version number of the module (empty string in case of first install)
+		 * @param $sCurrentVersion string Current version number of the module
+		 */
+		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
+		{
+		}
+	}
+}

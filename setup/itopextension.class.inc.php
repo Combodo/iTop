@@ -141,4 +141,32 @@ class iTopExtension
 		}
 		return true;
 	}
+
+	public function __serialize(): array
+	{
+		return [
+			'sCode' => $this->sCode,
+			'sSource' => $this->sSource,
+			'sVersion' => $this->sVersion,
+			'aModules' => $this->aModules,
+			'aModuleVersion' => $this->aModuleVersion,
+			'aModuleInfo' => $this->aModuleInfo,
+		];
+	}
+
+	public function __unserialize(array $aData): void
+	{
+		$this->sCode = $aData['sCode'] ?? '';
+		$this->sSource = $aData['sSource'] ?? '';
+		$this->sVersion = $aData['sVersion'] ?? '';
+		$this->aModules = $aData['aModules'] ?? '';
+		$this->aModuleVersion = $aData['aModuleVersion'] ?? '';
+		$this->aModuleInfo = $aData['aModuleInfo'] ?? '';
+	}
+
+	public function __toString(): string
+	{
+		return json_encode($this->__serialize(), JSON_PRETTY_PRINT);
+	}
+
 }

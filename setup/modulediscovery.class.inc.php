@@ -355,7 +355,6 @@ class ModuleDiscovery
 	 */
 	protected static function ListModuleFiles($sRelDir, $sRootDir)
 	{
-		static $iDummyClassIndex = 0;
 		$sDirectory = $sRootDir.'/'.$sRelDir;
 
 		if ($hDir = opendir($sDirectory)) {
