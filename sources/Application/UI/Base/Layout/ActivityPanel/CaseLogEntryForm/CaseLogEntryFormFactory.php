@@ -13,7 +13,6 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
-use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm;
 use DBObject;
 use DBObjectSet;
 use Dict;
@@ -87,8 +86,6 @@ class CaseLogEntryFormFactory
 		$oMenu = new PopoverMenu();
 		$sSectionId = 'send-actions';
 		$oMenu->AddSection($sSectionId);
-
-		$sCaseLogEntryFormDataRole = CaseLogEntryForm::BLOCK_CODE;
 
 		// Note: This code is inspired from cmdbAbstract::DisplayModifyForm(), it might be better to factorize it
 		$aTransitions = $oObject->EnumTransitions();
