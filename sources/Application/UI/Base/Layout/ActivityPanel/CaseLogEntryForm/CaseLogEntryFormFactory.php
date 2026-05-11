@@ -39,7 +39,7 @@ class CaseLogEntryFormFactory
 			->AddMainActionButtons(static::PrepareCancelButton());
 
 		$oSaveButton = static::PrepareSaveButton();
-		$oTransitionsMenu = static::PrepareTransitionsSelectionPopoverMenu($oObject, $sCaseLogAttCode);
+		$oTransitionsMenu = static::PrepareTransitionsSelectionPopoverMenu($oObject, $sCaseLogAttCode, $oCaseLogEntryForm->GetId());
 		// Prevent popover menu from landing behind caselog editor
 		$oTransitionsMenu->SetContainer(PopoverMenu::ENUM_CONTAINER_BODY);
 		if (true === $oTransitionsMenu->HasItems()) {
@@ -71,7 +71,16 @@ class CaseLogEntryFormFactory
 		return $oButton;
 	}
 
-	protected static function PrepareTransitionsSelectionPopoverMenu(DBObject $oObject, string $sCaseLogAttCode): PopoverMenu
+	/**
+	 * @param DBObject $oObject
+	 * @param string $sCaseLogAttCode
+	 * @param string $sCaseLogEntryFormId
+	 * @since 3.2.3 Add mandatory $sCaseLogEntryFormId parameter
+	 * @return PopoverMenu
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	protected static function PrepareTransitionsSelectionPopoverMenu(DBObject $oObject, string $sCaseLogAttCode, string $sCaseLogEntryFormId): PopoverMenu
 	{
 		$sObjClass = get_class($oObject);
 
@@ -99,7 +108,7 @@ class CaseLogEntryFormFactory
 								CaseLogEntryForm::BLOCK_CODE.'--add-action--'.$sCaseLogAttCode.'--stimulus--'.$sStimulusCode,
 								Dict::Format('UI:Button:SendAnd', $aStimuli[$sStimulusCode]->GetLabel()),
 								<<<JS
-$(this).closest('[data-role="{$sCaseLogEntryFormDataRole}"]').trigger('save_entry.caselog_entry_form.itop', {stimulus_code: '{$sStimulusCode}'});
+$('#$sCaseLogEntryFormId').trigger('save_entry.caselog_entry_form.itop', {stimulus_code: '{$sStimulusCode}'});
 JS
 							)
 						);
