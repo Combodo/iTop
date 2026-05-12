@@ -1468,9 +1468,10 @@ class RunTimeEnvironment
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
 		// Check that all the extensions have a code
-		foreach ($oExtensionsMap->GetAllExtensions() as $extension) {
-			if (!is_string($extension->sCode) || trim($extension->sCode) === '') {
-				throw new Exception(sprintf('Extension "%s" cannot be installed: Missing extension code', $extension->sLabel));
+		foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
+			if (empty($oExtension->sCode)) {
+				$sExtensionLabel = !empty($oExtension->sLabel) ? $oExtension->sLabel : $oExtension->sSourceDir;
+				throw new Exception(sprintf('Extension "%s" cannot be installed: Missing extension code', $sExtensionLabel));
 			}
 		}
 
