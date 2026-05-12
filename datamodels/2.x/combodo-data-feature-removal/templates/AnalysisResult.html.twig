@@ -36,7 +36,7 @@
     {% else %}
         {% UIAlert ForSuccess { sTitle:'DataFeatureRemoval:CleanupComplete:Title'|dict_s, sContent:'DataFeatureRemoval:CompilComplete'|dict_s, sId:value } %}{% EndUIAlert %}
 
-        {% UIForm Standard {'sId':'launch-setup-form', Action:sLaunchSetupUrl} %}
+        {% UIForm Standard {'sId':'launch-setup-form', Action:sLaunchSetupUrl, 'EncType': 'application/x-www-form-urlencoded'} %}
             {% for sKey, sValue in aSetupParams %}
                 {% UIInput ForHidden { sName:sKey, sValue:sValue } %}
             {% endfor %}
