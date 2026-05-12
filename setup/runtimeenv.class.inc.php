@@ -1467,6 +1467,13 @@ class RunTimeEnvironment
 		// Removed modules are stored as static for FindModules()
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
+		// Check that all the extensions have a code
+		foreach ($oExtensionsMap->GetAllExtensions() as $extension) {
+			if (!is_string($extension->sCode) || trim($extension->sCode) === '') {
+				throw new Exception(sprintf('Extension "%s" cannot be installed: Missing extension code', $extension->sLabel));
+			}
+		}
+
 		$oFactory = new ModelFactory($aDirsToScan);
 
 		$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
@@ -1566,7 +1573,7 @@ class RunTimeEnvironment
 
 	public function ExitMaintenanceMode(): void
 	{
-		if (SetupUtils::IsInMaintenanceMode()){
+		if (SetupUtils::IsInMaintenanceMode()) {
 			SetupUtils::ExitMaintenanceMode();
 		}
 	}

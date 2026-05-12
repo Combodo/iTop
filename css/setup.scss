@@ -699,14 +699,10 @@ body {
   }
 }
 
-  #progress_content {
-    min-height: 200px;
-    overflow: auto;
-    text-align: center;
-    *:not(.message) + .message  {
+  #progress_content *:not(.message) + .message {
       margin-top: 1.5rem;
-    }
   }
+
   #fresh_content{
     border: 0;
     min-height: 300px;
