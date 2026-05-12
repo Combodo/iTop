@@ -18,6 +18,7 @@ use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
 use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
+use ContextTag;
 use Dict;
 use Exception;
 use IssueLog;
@@ -130,6 +131,38 @@ class DataFeatureRemovalController extends Controller
 		$aParams['aRemovedExtensions'] = $aRemovedExtensions;
 		$aParams['aExtensions'] = $this->GetExtensionsTableDiff($aAddedExtensions, $aRemovedExtensions);
 
+		new ContextTag(ContextTag::TAG_SETUP);
+		$aParams['sLaunchSetupUrl'] = utils::GetAbsoluteUrlAppRoot(). 'setup/wizard.php';
+		$aParams['aSetupParams']= [
+			'choice[_0]' =>	"_0",
+			'choice[_1]' =>	"_1",
+			"_class" => "WizStepModulesChoice",
+			"_state" => "4",
+			"_params[authent]" => SetupUtils::CreateSetupToken(),
+			"_params[graphviz_path]" => "/usr/bin/dot",
+			"_params[previous_version_dir]" => "/var/www/html/iTopLegacy/",
+			"_params[db_server]" => "localhost",
+			"_params[db_user]" => "iTop",
+			"_params[db_pwd]" => "blob99",
+			"_params[db_name]" => "gabuzomeuuninstall",
+			"_params[db_prefix]" => "",
+			"_params[db_tls_enabled]" => "",
+			"_params[db_tls_ca]" => "",
+			"_params[install_mode]" => "upgrade",
+			"_params[display_license]" => "",
+			"_params[mode]" => "upgrade",
+			"_params[upgrade_type]" => "use-compatible",
+			"_params[source_dir]" => "/var/www/html/iTopLegacy/datamodels/2.x/",
+			"_params[datamodel_version]" => "3.3.0",
+			"_params[application_url]" => "https://odain.itop-saas.dev/iTopLegacy/",
+			"_params[use_symbolic_links]" => "",
+			"_params[force-uninstall]" => "",
+			"_params[additional_extensions_modules]" => "[]",
+			"_params[selected_components]" => '[{"_0":"_0","_1":"_1","_2":"_2","_3":"_3","_4":"_4"},{"_0":"_0"},{"_0":"_0","_0_0":"_0_0"},{"_0":"_0"},{"_0":"_0","_1":"_1"}]',
+			"_steps" => '[{"class":"WizStepWelcome","state":""},{"class":"WizStepInstallOrUpgrade","state":""},{"class":"WizStepDetectedInfo","state":""},{"class":"WizStepUpgradeMiscParams","state":""},{"class":"WizStepModulesChoice","state":"start_upgrade"},{"class":"WizStepModulesChoice","state":"1"},{"class":"WizStepModulesChoice","state":"2"},{"class":"WizStepModulesChoice","state":"3"}]',
+			"operation" => "next",
+		];
+
 		[$aParams['aDeletionPlanSummary'], $aParams['iQueryCount'], $aParams['bDeletionPossible']] = $this->GetDeletionPlanSummaryTable($aGetRemovedClasses);
 		[$aParams['aDeletionExecutionSummary'], $aParams['bHasDeletionExecution']] = $this->GetExecutionSummaryTable();
 		$aParams['bDeletionNeeded'] = ($aParams['iQueryCount'] > 0);
@@ -141,6 +174,9 @@ class DataFeatureRemovalController extends Controller
 	{
 		$sSourceEnv = MetaModel::GetEnvironment();
 		$sBuildDir = APPROOT."/env-$sSourceEnv-build";
+		if (! is_dir($sBuildDir)) {
+			SetupUtils::builddir($sBuildDir);
+		}
 		$bIsDirEmpty = count(scandir($sBuildDir)) === 2;
 
 		if ($bIsDirEmpty || $bForceCompilation) {
