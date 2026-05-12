@@ -8,7 +8,7 @@ use SetupUtils;
 
 class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 {
-	protected array $aExtensionsByCode;
+	protected array $aExtensionsToRemoveByCode;
 
 	/**
 	 * Toolset for building a run-time environment
@@ -18,7 +18,7 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 	public function __construct($sSourceEnv = 'production', array $aExtensionCodesToRemove = [])
 	{
 		parent::__construct($sSourceEnv, false);
-		$this->aExtensionsByCode = $aExtensionCodesToRemove;
+		$this->aExtensionsToRemoveByCode = $aExtensionCodesToRemove;
 		$this->Prepare($sSourceEnv, $this->sBuildEnv);
 	}
 
@@ -34,7 +34,7 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 		SetupUtils::copydir(APPROOT."/data/$sSourceEnv-modules", APPROOT."/data/$sBuildEnv-modules");
 		SetupUtils::copydir(APPROOT."/conf/$sSourceEnv", APPROOT."/conf/$sBuildEnv");
 
-		$this->DeclareExtensionAsRemoved($this->aExtensionsByCode);
+		$this->DeclareExtensionAsRemoved($this->aExtensionsToRemoveByCode);
 	}
 
 	private function DeclareExtensionAsRemoved(array $aExtensionCodes): void

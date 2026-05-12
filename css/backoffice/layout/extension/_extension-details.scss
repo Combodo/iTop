@@ -63,3 +63,14 @@ $ibo-extension-details--actions--button--padding-x: $ibo-button--padding-x !defa
 .ibo-extension-details--actions:has(.toggler-install:not(:disabled)) .ibo-popover-menu--section a[data-resource-id="force_uninstall"] {
 	display: none;
 }
+
+.ibo-extension-details .ibo-popover-menu ~ .ibo-button{
+	visibility: hidden;
+}
+.ibo-extension-details .ibo-popover-menu:has(.ibo-popover-menu--item) ~ .ibo-button{
+	visibility: visible;
+}
+
+.ibo-extension-details .ibo-toggler--wrapper:has(.ibo-toggler.ibo-is-hidden){
+	visibility: hidden;
+}

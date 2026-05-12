@@ -18,6 +18,9 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$aBadges = [];
 		$bUninstallable = $aExtraFlags['uninstallable'] ?? true;
 		$bMissingFromDisk = $aExtraFlags['missing'] ?? false;
+		$bSelected = $aExtraFlags['selected'] ?? true;
+		$bDisabled = $aExtraFlags['disabled'] ?? false;
+		$bRemote = $aExtraFlags['remote'] ?? false;
 		self::AddExtraBadges($aBadges, $bUninstallable, $bMissingFromDisk);
 		$oBadgeInstalled = BadgeUIBlockFactory::MakeGreen(Dict::S('UI:Layout:ExtensionsDetails:BadgeInstalled'));
 		$oBadgeInstalled->AddCSSClass('checked');
@@ -28,10 +31,22 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 
 		$oExtensionDetails = new ExtensionDetails($sCode, $sLabel, $sDescription, $aMetaData, $aBadges, $sAbout);
 		$oExtensionDetails->GetToggler()->SetIsToggled(true);
-		if (!$bUninstallable) {
+		if ($bMissingFromDisk) {
+			$oExtensionDetails->GetToggler()->SetIsToggled(false);
+			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
+		} elseif (!$bUninstallable || $bRemote) {
 			$oExtensionDetails->AllowForceUninstall();
 			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
 		}
+
+		if (!$bSelected) {
+			$oExtensionDetails->GetToggler()->SetIsToggled(false);
+		}
+		if ($bDisabled) {
+			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
+			$oExtensionDetails->GetToggler()->AddCSSClass('ibo-is-hidden');
+		}
+
 		return $oExtensionDetails;
 	}
 
@@ -39,6 +54,8 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 	{
 		$aBadges = [];
 		$bUninstallable = $aExtraFlags['uninstallable'] ?? true;
+		$bSelected = $aExtraFlags['selected'] ?? false;
+		$bDisabled = $aExtraFlags['disabled'] ?? false;
 		self::AddExtraBadges($aBadges, $bUninstallable, false);
 		$oBadgeInstalled = BadgeUIBlockFactory::MakeGrey(Dict::S('UI:Layout:ExtensionsDetails:BadgeNotInstalled'));
 		$oBadgeInstalled->AddCSSClass('unchecked');
@@ -46,8 +63,17 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$oBadgeToBeUninstalled = BadgeUIBlockFactory::MakeCyan(Dict::S('UI:Layout:ExtensionsDetails:BadgeToBeInstalled'));
 		$oBadgeToBeUninstalled->AddCSSClass('checked');
 		$aBadges[] = $oBadgeToBeUninstalled;
+		$oExtensionDetails = new ExtensionDetails($sCode, $sLabel, $sDescription, $aMetaData, $aBadges, $sAbout);
 
-		return new ExtensionDetails($sCode, $sLabel, $sDescription, $aMetaData, $aBadges, $sAbout);
+		if ($bSelected) {
+			$oExtensionDetails->GetToggler()->SetIsToggled(true);
+		}
+		if ($bDisabled) {
+			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
+			$oExtensionDetails->GetToggler()->AddCSSClass('ibo-is-hidden');
+		}
+
+		return $oExtensionDetails;
 	}
 
 	private static function AddExtraBadges(array &$aBadges, bool $bUninstallable, bool $bMissingFromDisk)

@@ -6,9 +6,21 @@
     {% UIInput ForHidden {sName:'operation', sValue:'Analyze'} %}
     {% UIInput ForHidden {sName:'transaction_id', sValue:sTransactionId} %}
 
-    {% UIFieldSet Standard {sLegend:'DataFeatureRemoval:Features:Title'|dict_s} %}
-        {% UIDataTable ForForm { sRef:'aExtensions', aColumns:aExtensions.Columns, aData:aExtensions.Data} %}{% EndUIDataTable %}
-    {% EndUIFieldSet %}
+	{% UIPanel Neutral { sTitle:'DataFeatureRemoval:Features:Title'|dict_s, sSubTitle: '' } %}
+		{% UIMultiColumn Standard {} %}
+			{% for iColumnIndex in 0..iColumnCount-1 %}
+				{% UIColumn Standard {} %}
+					{% for aExtension in aAvailableExtensions[iColumnIndex] %}
+						{% if aExtension['installed'] %}
+							{% UIExtensionDetails Installed { sCode : aExtension['code'], sLabel : aExtension['label'], sDescription : aExtension['description'], aMetaData : [aExtension['version'], aExtension['source']], aExtraFlags : aExtension['extra_flags']} %}{% EndUIExtensionDetails %}
+						{% else %}
+							{% UIExtensionDetails NotInstalled { sCode : aExtension['code'], sLabel : aExtension['label'], sDescription : aExtension['description'], aMetaData : [aExtension['version'], aExtension['source']], aExtraFlags : aExtension['extra_flags']} %}{% EndUIExtensionDetails %}
+						{% endif %}
+					{% endfor %}
+				{% EndUIColumn %}
+			{% endfor %}
+		{% EndUIMultiColumn %}
+    {% EndUIPanel %}
 
     {% UIToolbar ForButton {} %}
         {% UIButton ForPrimaryAction {sLabel:'UI:Button:Analyze'|dict_s, sName:'btn_apply', sId:'btn_apply', bIsSubmit:true} %}

@@ -486,7 +486,7 @@ class iTopExtensionsMap
 				'default'        => true, // by default offer to install all modules
 				'modules'        => $oExtension->aModules,
 				'mandatory'      => $oExtension->bMandatory,
-				'source_label'   => $this->GetExtensionSourceLabel($oExtension->sSource),
+				'source_label'   => $oExtension->GetExtensionSourceLabel(),
 				'uninstallable'  => $oExtension->CanBeUninstalled(),
 				'missing'        => $oExtension->bRemovedFromDisk,
 				'version'        => $oExtension->sVersion,
@@ -494,22 +494,6 @@ class iTopExtensionsMap
 		}
 
 		return $aRes;
-	}
-
-	protected function GetExtensionSourceLabel($sSource)
-	{
-		$sResult = '';
-		switch ($sSource) {
-			case iTopExtension::SOURCE_MANUAL:
-				$sResult = 'Local extensions folder';
-				break;
-
-			case iTopExtension::SOURCE_REMOTE:
-				$sResult = (ITOP_APPLICATION == 'iTop') ? 'iTop Hub' : 'ITSM Designer';
-				break;
-
-		}
-		return $sResult;
 	}
 
 	/**
