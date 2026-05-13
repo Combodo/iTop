@@ -658,6 +658,16 @@ abstract class User extends cmdbAbstractObject
 		}
 		return false;
 	}
+
+	/**
+	 * Allow a user to be impersonated by another one (generally an administrator) in order to troubleshoot rights issues.
+	 *
+	 * @return bool
+	 */
+	public function CanBeImpersonated(): bool
+	{
+		return true;
+	}
 }
 
 /**
@@ -1063,6 +1073,9 @@ class UserRights
 		$oUser = self::FindUser($sLogin);
 		if ($oUser) {
 			$bRet = true;
+			if (!$oUser->CanBeImpersonated()) {
+				throw new Exception($oUser->GetName().' cannot be impersonated');
+			}
 			if (is_null(self::$m_oRealUser)) {
 				// First impersonation
 				self::$m_oRealUser = self::$m_oUser;
