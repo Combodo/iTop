@@ -6247,12 +6247,26 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * @param array $aChanges
 	 * @param bool $bIsNew
+	 * @param string|null $sStimulusBeingApplied
 	 *
 	 * @return void
 	 * @since 3.1.0
 	 */
 	protected function FireEventAfterWrite(array $aChanges, bool $bIsNew, ?string $sStimulusBeingApplied): void
+	{
+	}
+
+	//////////////
+	/// READ
+	///
+
+	/**
+	 * @return void
+	 * @since 3.3.0
+	 */
+	public function FireEventReadDetails(): void
 	{
 	}
 

@@ -340,6 +340,7 @@ EOF
 
 				$sField = '';
 				$oObj = $aRow[$sAlias];
+				$oObj->FireEventReadDetails();
 				if ($oObj != null) {
 					switch ($sAttCode) {
 						case 'id':

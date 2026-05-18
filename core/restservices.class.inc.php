@@ -625,6 +625,7 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 					}
 
 					while ($oObject = $oObjectSet->Fetch()) {
+						$oObject->FireEventReadDetails();
 						$oResult->AddObject(0, '', $oObject, $aShowFields, RestUtils::HasRequestedExtendedOutput($sShowFields));
 					}
 					$oResult->message = "Found: ".$oObjectSet->Count();
@@ -699,6 +700,7 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 					if ($oElement instanceof RelationObjectNode) {
 						$oObject = $oElement->GetProperty('object');
 						if ($oObject) {
+							$oObject->FireEventReadDetails();
 							if ($bEnableRedundancy && $sDirection == 'down') {
 								// Add only the "reached" objects
 								if ($oElement->GetProperty('is_reached')) {
