@@ -715,15 +715,18 @@ HTML;
 				$oPage->add_header('Content-Security-Policy: sandbox;');
 			}
 
-			ormDocument::DownloadDocument(
-				$oPage,
-				EventNotificationNewsroom::class,
-				$sId,
-				'icon',
-				ormDocument::ENUM_CONTENT_DISPOSITION_INLINE,
-				bAllowAllData: true
-			);
-			$oPage->output();
+			$oEvent = MetaModel::GetObject(EventNotificationNewsroom::class, $sId, false, true);
+			if (($oEvent !== null) && ($oEvent->Get('contact_id') === UserRights::GetContactId())) {
+				ormDocument::DownloadDocument(
+					$oPage,
+					EventNotificationNewsroom::class,
+					$sId,
+					'icon',
+					ormDocument::ENUM_CONTENT_DISPOSITION_INLINE,
+					bAllowAllData: true
+				);
+				$oPage->output();
+			}
 		}
 	}
 
