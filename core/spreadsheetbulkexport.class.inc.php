@@ -233,7 +233,6 @@ EOF
 	public function GetNextChunk(&$aStatus)
 	{
 		$sRetCode = 'run';
-		$iPercentage = 0;
 
 		$oSet = new DBObjectSet($this->oSearch);
 		$oSet->SetLimit($this->iChunkSize, $this->aStatusInfo['position']);
@@ -261,6 +260,7 @@ EOF
 				$sField = '';
 				/** @var \DBObject $oObj */
 				$oObj = $aRow[$sAlias];
+				$oObj->FireEventReadDetails();
 				if ($oObj == null) {
 					$sData .= "<td x:str></td>";
 					continue;

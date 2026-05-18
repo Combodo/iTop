@@ -144,6 +144,7 @@ class HTMLBulkExport extends TabularBulkExport
 				$sAttCode = $aFieldSpec['sAttCode'];
 
 				$oObj = $aRow[$sAlias];
+				$oObj->FireEventReadDetails();
 				$sField = '';
 				if ($oObj) {
 					$sField = $this->GetValue($oObj, $sAttCode);
