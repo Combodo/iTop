@@ -198,6 +198,21 @@ class ormDocumentTest extends ItopDataTestCase
 		$this->assertStringNotContainsString('the object does not exist or you are not allowed to view it', $sAllowedHtml, 'Unexpected error message when rights are sufficient.');
 	}
 
+	/**
+	 * @dataProvider DownloadDocumentRightsProvider
+	 */
+	public function testAllowsDownloadingDocumentWhenBypassingRightsChecksWithAllowAllData(string $sTargetClass, string $sAttCode, string $sData, string $sFileName, ?string $sHostClass)
+	{
+		$iDeniedDocumentId = $this->CreateDownloadTargetInOrg($sTargetClass, $sAttCode, $this->iOrgDifferentFromUser, $sData, $sFileName, $sHostClass);
+
+		$oPageAllowed = new CaptureWebPage();
+		ormDocument::DownloadDocument($oPageAllowed, $sTargetClass, $iDeniedDocumentId, $sAttCode, ormDocument::ENUM_CONTENT_DISPOSITION_INLINE, bAllowAllData: true);
+		$sAllowedHtml = $oPageAllowed->GetHtml();
+
+		$this->assertStringContainsString($sData, $sAllowedHtml, 'Expected file data present when bypassing rights checks.');
+		$this->assertStringNotContainsString("Invalid id ($iDeniedDocumentId) for class '$sTargetClass' - the object does not exist or you are not allowed to view it", $sAllowedHtml, 'Unexpected invalid id error message when bypassing rights checks.');
+	}
+
 	public function DownloadDocumentRightsProvider(): array
 	{
 		return [
