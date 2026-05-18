@@ -17,7 +17,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Summary of the installation tasks
@@ -84,7 +83,7 @@ class WizStepSummary extends AbstractWizStepInstall
 		$oPage->add('<div id="params_summary">');
 
 		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Extensions to be installed">Extensions to be installed</a>');
-		$aExtensionsAdded = json_decode($this->oWizard->GetParameter('extensions_added'), true);
+		$aExtensionsAdded = json_decode($this->oWizard->GetParameter('added_extensions'), true);
 
 		if (count($aExtensionsAdded) > 0) {
 			$sExtensionsAdded = '<ul>';

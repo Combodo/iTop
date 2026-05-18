@@ -1576,11 +1576,13 @@ JS
 	 * @return array
 	 * @throws Exception
 	 */
-	public static function AnalyzeInstallation($oWizard, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
+	public static function AnalyzeInstallation($oWizard, $bAbortOnMissingDependency = false, $aModulesToLoad = null, Config $oConfig = null)
 	{
 		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
 
-		$oConfig = self::GetConfig($oWizard);
+		if (is_null($oConfig)) {
+			$oConfig = self::GetConfig($oWizard);
+		}
 
 		$aDirsToScan = [$oWizard->GetParameter('source_dir', '')];
 

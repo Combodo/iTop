@@ -296,7 +296,7 @@ on the page's parameters
 
 		$sOperation = utils::ReadParam('operation');
 		$this->aParameters = utils::ReadParam('_params', [], false, 'raw_data');
-		$this->aSteps  = json_decode(utils::ReadParam('_steps', '[]', false, 'raw_data'), true /* bAssoc */);
+		$this->SetSteps(json_decode(utils::ReadParam('_steps', '[]', false, 'raw_data'), true));
 
 		switch ($sOperation) {
 			case 'next':
@@ -369,6 +369,11 @@ on the page's parameters
 		}
 		$sOutput .= "}\n";
 		return $sOutput;
+	}
+
+	public function SetSteps(array $aSteps): void
+	{
+		$this->aSteps = $aSteps;
 	}
 
 	/**

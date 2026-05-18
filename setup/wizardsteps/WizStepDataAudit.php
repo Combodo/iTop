@@ -100,39 +100,29 @@ JS);
 	{
 		$sApplicationUrl = utils::GetAbsoluteUrlModulePage('combodo-data-feature-removal', 'index.php');
 
-		$aRemovedExtensions = json_decode($this->oWizard->GetParameter('removed_extensions', '[]'), true);
-		$aHiddenRemovedExtensionInputs = '';
-		if (!is_array($aRemovedExtensions)) {
-			IssueLog::Warning('Posted removed_extensions is not an array');
-			$aRemovedExtensions = [];
-		}
-		foreach ($aRemovedExtensions as $sExtCode => $sExtLabel) {
-			$sSafeExtCode = utils::HtmlEntities($sExtCode);
-			$aHiddenRemovedExtensionInputs .= <<<INPUT
-	<input type="hidden" name="aRemovedExtensions[$sSafeExtCode]" value="$sExtLabel"/>
+		$aParams = [
+			'selected_modules',
+			'selected_extensions',
+			'display_choices',
+			'added_extensions',
+			'removed_extensions',
+			'extensions_not_uninstallable',
+		];
+		$aHiddenInputs = '';
+		foreach ($aParams as $sParamName) {
+			$sElements = $this->oWizard->GetParameter($sParamName, '[]');
+			$aHiddenInputs .= <<<INPUT
+	<input type="hidden" name="$sParamName" value="$sElements"/>
 INPUT;
 		}
 
-		$aAddedExtensions = json_decode($this->oWizard->GetParameter('extensions_added', "[]"), true);
-		$aHiddenAddedExtensionInputs = "";
-		if (!is_array($aAddedExtensions)) {
-			IssueLog::Warning('Posted extensions_added is not an array');
-			$aAddedExtensions = [];
-		}
-		foreach ($aAddedExtensions as $sExtCode => $sExtLabel) {
-			$sSafeExtCode = utils::HtmlEntities($sExtCode);
-			$aHiddenAddedExtensionInputs .= <<<INPUT
-	<input type="hidden" name="aAddedExtensions[$sSafeExtCode]" value="$sExtLabel"/>
-INPUT;
-		}
 		$sUID = Session::Get('setup_token');
 		$oPage->add(
 			<<<HTML
 <form id="data-feature-removal" class="ibo-setup--wizard ibo-is-hidden" method="post" action="$sApplicationUrl">
 	<input type="hidden" name="operation" value="AnalysisResult"/>
 	<input type="hidden" name="setup_token" value="$sUID"/>
-	$aHiddenRemovedExtensionInputs
-	$aHiddenAddedExtensionInputs
+	$aHiddenInputs
 </form>
 HTML
 		);

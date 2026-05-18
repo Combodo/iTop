@@ -38,7 +38,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 	 */
 	protected iTopExtensionsMap $oExtensionsMap;
 
-	private ?array $aSteps = null;
+	protected ?array $aSteps = null;
 
 	protected PhpExpressionEvaluator $oPhpExpressionEvaluator;
 
@@ -51,7 +51,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 	private array $aAnalyzeInstallationModules = [];
 	private ?MissingDependencyException $oMissingDependencyException = null;
 
-	public function __construct(WizardController $oWizard, $sCurrentState)
+	public function __construct(WizardController $oWizard, $sCurrentState, bool $bOverWriteConfig = true)
 	{
 		parent::__construct($oWizard, $sCurrentState);
 		$this->bChoicesFromDatabase = false;
@@ -69,8 +69,10 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 		if ($sConfigPath !== null) {
 			$this->oConfig = new Config($sConfigPath);
 
-			$aParamValues = $oWizard->GetParamForConfigArray();
-			$this->oConfig->UpdateFromParams($aParamValues);
+			if ($bOverWriteConfig) {
+				$aParamValues = $oWizard->GetParamForConfigArray();
+				$this->oConfig->UpdateFromParams($aParamValues);
+			}
 
 			$this->oExtensionsMap->LoadChoicesFromDatabase($this->oConfig);
 			$this->bChoicesFromDatabase = true;
@@ -78,7 +80,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 
 		// Sanity check (not stopper, to let developers go further...)
 		try {
-			$this->aAnalyzeInstallationModules = SetupUtils::AnalyzeInstallation($this->oWizard, true);
+			$this->aAnalyzeInstallationModules = SetupUtils::AnalyzeInstallation($this->oWizard, true, null, $this->oConfig);
 		} catch (MissingDependencyException $e) {
 			$this->oMissingDependencyException = $e;
 			$this->aAnalyzeInstallationModules = SetupUtils::AnalyzeInstallation($this->oWizard);
@@ -192,7 +194,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 				$this->oWizard->SetParameter('selected_modules', json_encode(array_keys($aModules)));
 				$this->oWizard->SetParameter('selected_extensions', json_encode($aExtensions));
 				$this->oWizard->SetParameter('display_choices', $sDisplayChoices);
-				$this->oWizard->SetParameter('extensions_added', json_encode($aExtensionsAdded));
+				$this->oWizard->SetParameter('added_extensions', json_encode($aExtensionsAdded));
 				$this->oWizard->SetParameter('removed_extensions', json_encode($aExtensionsRemoved));
 				$this->oWizard->SetParameter('extensions_not_uninstallable', json_encode(array_keys($aExtensionsNotUninstallable)));
 

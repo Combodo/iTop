@@ -112,10 +112,30 @@ class DataFeatureRemovalController extends Controller
 		}
 
 		// Display changed extensions
-		$aAddedExtensions = utils::ReadPostedParam('aAddedExtensions', []);
-		$aRemovedExtensions = utils::ReadPostedParam('aRemovedExtensions', []);
+		$aHiddenInputNames = [
+			'selected_modules',
+			'selected_extensions',
+			'display_choices',
+			'added_extensions',
+			'removed_extensions',
+			'extensions_not_uninstallable',
+		];
 
-		IssueLog::Info(__METHOD__.' Extensions given in parameter', null, ['aAddedExtensions' => $aAddedExtensions, 'aRemovedExtensions' => $aRemovedExtensions]);
+		$aHiddenInputs = [];
+		foreach ($aHiddenInputNames as $sInputName) {
+			$aHiddenInputs[$sInputName] = utils::ReadPostedParam($sInputName, "[]", utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		}
+		$aParams['aHiddenInputs'] = $aHiddenInputs;
+
+		$aAddedExtensions = json_decode($aHiddenInputs['added_extensions'], true);
+		$aRemovedExtensions = json_decode($aHiddenInputs['removed_extensions'], true);
+
+		$aParams['aAddedExtensions'] = $aAddedExtensions;
+		$aParams['aRemovedExtensions'] = $aRemovedExtensions;
+
+		IssueLog::Info(__METHOD__.' Extensions given in parameter', null, [
+			'added_extensions' => $aAddedExtensions,
+			'removed_extensions' => $aRemovedExtensions]);
 
 		$this->Compile(array_keys($aRemovedExtensions), false);
 
@@ -126,23 +146,15 @@ class DataFeatureRemovalController extends Controller
 
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
 		$aParams['aClasses'] = $aGetRemovedClasses;
-
-		$aParams['aAddedExtensions'] = $aAddedExtensions;
-		$aParams['aRemovedExtensions'] = $aRemovedExtensions;
 		$aParams['aExtensions'] = $this->GetExtensionsTableDiff($aAddedExtensions, $aRemovedExtensions);
 
 		new ContextTag(ContextTag::TAG_SETUP);
 		$aParams['sLaunchSetupUrl'] = utils::GetAbsoluteUrlAppRoot().'setup/wizard.php';
-		$aParams['aSetupParams'] = [
+		$aParams['aSetupParams'] = array_merge([
 			"_class" => "WizStepLandingBeforeAudit",
 			"_params[authent]" => SetupUtils::CreateSetupToken(),
-			'_params[previous_version_dir]' => APPROOT,
-			"_params[install_mode]" => "upgrade",
-			'_params[source_dir]' => APPROOT.'datamodels/2.x/',
-			"_params[selected_components]" => '[{"_0":"_0","_1":"_1","_2":"_2","_3":"_3","_4":"_4"},{"_0":"_0"},{"_0":"_0","_0_0":"_0_0"},{"_0":"_0"},{"_0":"_0","_1":"_1"},{"_0":"_0","_1":"_1"}]',
-			'_steps' => '[{"class":"WizStepWelcome","state":""},{"class":"WizStepInstallOrUpgrade","state":""},{"class":"WizStepDetectedInfo","state":""},{"class":"WizStepUpgradeMiscParams","state":""},{"class":"WizStepModulesChoice","state":"start_upgrade"},{"class":"WizStepModulesChoice","state":"1"},{"class":"WizStepModulesChoice","state":"2"},{"class":"WizStepModulesChoice","state":"3"}]',
 			"operation" => "next",
-		];
+		], $aHiddenInputs);
 
 		[$aParams['aDeletionPlanSummary'], $aParams['iQueryCount'], $aParams['bDeletionPossible']] = $this->GetDeletionPlanSummaryTable($aGetRemovedClasses);
 		[$aParams['aDeletionExecutionSummary'], $aParams['bHasDeletionExecution']] = $this->GetExecutionSummaryTable();
