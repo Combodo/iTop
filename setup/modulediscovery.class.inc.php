@@ -427,13 +427,13 @@ class ModuleDiscovery
 				continue;
 			}
 
-			IssueLog::Info("Module considered as removed", null, ['extension_code' => $oExtension->sCode, 'module_name' => $sModuleName, 'module_version' => $sModuleVersion, ModuleFileReader::MODULE_FILE_PATH => $sCurrentModuleFilePath]);
+			IssueLog::Debug("Module considered as removed", null, ['extension_code' => $oExtension->sCode, 'module_name' => $sModuleName, 'module_version' => $sModuleVersion, ModuleFileReader::MODULE_FILE_PATH => $sCurrentModuleFilePath]);
 			return true;
 		}
 
 		if (count($aNonMatchingPaths) > 0) {
 			//add log for support
-			IssueLog::Info("Module kept as it came from non removed extensions", null, ['module_name' => $sModuleName, 'module_version' => $sModuleVersion, ModuleFileReader::MODULE_FILE_PATH => $sModuleFilePath, 'non_matching_paths' => $aNonMatchingPaths]);
+			IssueLog::Debug("Module kept as it came from non removed extensions", null, ['module_name' => $sModuleName, 'module_version' => $sModuleVersion, ModuleFileReader::MODULE_FILE_PATH => $sModuleFilePath, 'non_matching_paths' => $aNonMatchingPaths]);
 		}
 		IssueLog::Debug(__METHOD__.' Module loaded', null, ['name' => $sModuleName, 'version' => $sModuleVersion]);
 		return false;

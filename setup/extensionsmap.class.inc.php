@@ -170,7 +170,7 @@ class iTopExtensionsMap
 					foreach ($oExtension->aModules as $sModuleName) {
 						$aCurrentModuleConfig = $aModuleConfigs[$sModuleName] ?? null;
 						if (is_null($aCurrentModuleConfig)) {
-							IssueLog::Info("Installation choice comes with missing module file", null, ["choice" => $oExtension->sCode, 'module' => $sModuleName]);
+							IssueLog::Debug("Installation choice comes with missing module file", null, ["choice" => $oExtension->sCode, 'module' => $sModuleName]);
 							continue;
 						}
 						$oExtension->aModuleVersion[$sModuleName] = $aCurrentModuleConfig['module_version'];
@@ -256,7 +256,7 @@ class iTopExtensionsMap
 			$oExtension = $this->GetFromExtensionCode($sCode);
 			if (!is_null($oExtension)) {
 				$aRemovedExtension [] = $oExtension;
-				\IssueLog::Info(__METHOD__.": remove extension locally", null, ['extension_code' => $oExtension->sCode]);
+				\IssueLog::Debug(__METHOD__.": remove extension locally", null, ['extension_code' => $oExtension->sCode]);
 			} else {
 				\IssueLog::Warning(__METHOD__." cannot find extensions", null, ['code' => $sCode]);
 			}

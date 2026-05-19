@@ -60,7 +60,6 @@ class ObjectServiceSummary implements iObjectService
 
 	public function SetSummary(array $aSummary): void
 	{
-		$this->aSummary = [];
 		foreach ($aSummary as $sClass => $oPreviousSummaryEntity) {
 			$oSummaryEntity = new DataCleanupSummaryEntity($sClass);
 			$oSummaryEntity->iTotalUpdateCount = $oPreviousSummaryEntity->iTotalUpdateCount;

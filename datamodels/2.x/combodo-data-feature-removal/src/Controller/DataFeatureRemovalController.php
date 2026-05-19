@@ -10,7 +10,9 @@ namespace Combodo\iTop\DataFeatureRemoval\Controller;
 require_once APPROOT.'setup/feature_removal/SetupAudit.php';
 require_once APPROOT.'setup/feature_removal/DryRemovalRuntimeEnvironment.php';
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
+use Combodo\iTop\DataFeatureRemoval\Entity\DataCleanupSummaryEntity;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalLog;
@@ -133,7 +135,7 @@ class DataFeatureRemovalController extends Controller
 		$aParams['aAddedExtensions'] = $aAddedExtensions;
 		$aParams['aRemovedExtensions'] = $aRemovedExtensions;
 
-		IssueLog::Info(__METHOD__.' Extensions given in parameter', null, [
+		IssueLog::Debug(__METHOD__.' Extensions given in parameter', null, [
 			'added_extensions' => $aAddedExtensions,
 			'removed_extensions' => $aRemovedExtensions]);
 
@@ -159,6 +161,7 @@ class DataFeatureRemovalController extends Controller
 		[$aParams['aDeletionPlanSummary'], $aParams['iQueryCount'], $aParams['bDeletionPossible']] = $this->GetDeletionPlanSummaryTable($aGetRemovedClasses);
 		[$aParams['aDeletionExecutionSummary'], $aParams['bHasDeletionExecution']] = $this->GetExecutionSummaryTable();
 		$aParams['bDeletionNeeded'] = ($aParams['iQueryCount'] > 0);
+		Session::Set('aDeletionExecutionSummary', serialize($this->aDeletionExecutionSummary));
 
 		$this->DisplayPage($aParams, 'AnalysisResult');
 	}
@@ -174,7 +177,7 @@ class DataFeatureRemovalController extends Controller
 
 		if ($bIsDirEmpty || $bForceCompilation) {
 			$oRuntimeEnvironment = new DryRemovalRuntimeEnvironment($sSourceEnv, $aRemovedExtensions);
-			DataFeatureRemovalLog::Info(
+			DataFeatureRemovalLog::Debug(
 				__METHOD__,
 				null,
 				['sSourceEnv' => $sSourceEnv, 'sBuildDir' => $sBuildDir, 'bIsDirEmpty' => $bIsDirEmpty, glob("$sBuildDir/*")]
@@ -194,13 +197,14 @@ class DataFeatureRemovalController extends Controller
 
 		$aColumns = ['Class', 'Total Deleted Count' , 'Total Updated Count', 'Deleted Count' , 'Updated Count'];
 		$aRows = [];
-		foreach ($this->aDeletionExecutionSummary as $sClass => $oDeletionPlanSummaryEntity) {
+		/** @var DataCleanupSummaryEntity $oSummary */
+		foreach ($this->aDeletionExecutionSummary as $sClass => $oSummary) {
 			$aRows[] = [
 				$sClass,
-				$oDeletionPlanSummaryEntity->iTotalDeletedCount,
-				$oDeletionPlanSummaryEntity->iTotalUpdatedCount,
-				$oDeletionPlanSummaryEntity->iDeletedCount,
-				$oDeletionPlanSummaryEntity->iUpdatedCount,
+				$oSummary->iTotalDeleteCount,
+				$oSummary->iTotalUpdateCount,
+				$oSummary->iDeleteCount,
+				$oSummary->iUpdateCount,
 			];
 		}
 
@@ -237,10 +241,22 @@ class DataFeatureRemovalController extends Controller
 	{
 		$this->ValidateTransactionId();
 
+		$this->aDeletionExecutionSummary = unserialize(Session::Get('aDeletionExecutionSummary'));
+		Session::Unset('aDeletionExecutionSummary');
 		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 
 		$oDataCleanupService = new DataCleanupService();
-		$this->aDeletionExecutionSummary = $oDataCleanupService->ExecuteCleanup($aClasses, $this->aDeletionExecutionSummary);
+		$aDeletionExecutionSummary = $oDataCleanupService->ExecuteCleanup($aClasses);
+		foreach ($aDeletionExecutionSummary as $sClass => $oExecutionSummary) {
+			if (!array_key_exists($sClass, $this->aDeletionExecutionSummary)) {
+				$this->aDeletionExecutionSummary[$sClass] = new DataCleanupSummaryEntity($sClass);
+			}
+			$oSummary = $this->aDeletionExecutionSummary[$sClass];
+			$oSummary->iDeleteCount = $oExecutionSummary->iDeleteCount;
+			$oSummary->iUpdateCount = $oExecutionSummary->iUpdateCount;
+			$oSummary->iTotalDeleteCount += $oExecutionSummary->iDeleteCount;
+			$oSummary->iTotalUpdateCount += $oExecutionSummary->iUpdateCount;
+		}
 
 		$this->OperationAnalysisResult();
 	}

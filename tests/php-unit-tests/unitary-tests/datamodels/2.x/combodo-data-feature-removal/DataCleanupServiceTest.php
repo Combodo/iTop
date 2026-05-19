@@ -69,7 +69,7 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 
 		$aClasses = [ 'DFRToRemoveLeaf' ];
 		$oService = new DataCleanupService();
-		$aRes = $oService->ExecuteCleanup($aClasses, []);
+		$aRes = $oService->ExecuteCleanup($aClasses);
 		$aExpected = [
 			['DFRToUpdate', 1, 0 ],
 			['DFRToRemoveLeaf', 0, 1 ],
@@ -97,7 +97,7 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 
 		$aClasses = [ 'DFRToRemoveLeaf' ];
 		$oService = new DataCleanupService();
-		$aRes = $oService->ExecuteCleanup($aClasses, []);
+		$aRes = $oService->ExecuteCleanup($aClasses);
 		$aExpected = [
 			['DFRToUpdate', 3, 0 ],
 			['DFRToRemoveLeaf', 0, 3 ],
@@ -129,7 +129,7 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 
 		$aClasses = ['DFRToRemoveLeaf'];
 		$oService = new DataCleanupService();
-		$aExecutionSummary = $oService->ExecuteCleanup($aClasses, $aExecutionSummary);
+		$aExecutionSummary = $oService->ExecuteCleanup($aClasses);
 
 		$aExpected = [
 			['DFRToUpdate', 3, 0 ],
@@ -149,7 +149,7 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 
 		$aClasses = ['DFRToRemoveLeaf'];
 		$oService = new DataCleanupService();
-		$aExecutionSummary = $oService->ExecuteCleanup($aClasses, $aExecutionSummary);
+		$aExecutionSummary = $oService->ExecuteCleanup($aClasses);
 
 		$aExpected = [
 			['DFRToUpdate', 1, 0, 0, 4 ],
@@ -198,7 +198,7 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 		$this->expectException(DataFeatureRemovalException::class);
 		$this->expectExceptionMessage('Deletion Plan cannot be executed due to issues');
 		$oService = new DataCleanupService();
-		$oService->ExecuteCleanup($aClasses, []);
+		$oService->ExecuteCleanup($aClasses);
 	}
 
 	public function testGetCleanupSummary_ManualDeleteShouldFail()
@@ -310,7 +310,7 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 		$oDeletionPlaService = new DataCleanupService();
 		$this->GivenExecutionLimits($iExecutionCount);
 		$this->SetNonPublicProperty($oDeletionPlaService, 'oExecutionLimits', $this->oExecutionLimits);
-		$aRes = $oDeletionPlaService->ExecuteCleanup($aClasses, []);
+		$aRes = $oDeletionPlaService->ExecuteCleanup($aClasses);
 		$this->AssertSummaryEquals($aExpected, $aRes);
 	}
 
