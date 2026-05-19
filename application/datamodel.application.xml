@@ -519,7 +519,7 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_DB_TRACEABILITY" _delta="define">
+    <event id="EVENT_DATA_EXPORT" _delta="define">
       <name>Object details read from outside iTop</name>
       <description><![CDATA[An object details has been read during an export]]></description>
       <sources>
@@ -529,6 +529,10 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
         <event_datum id="object">
           <description>The object unarchived</description>
           <type>DBObject</type>
+        </event_datum>
+        <event_datum id="attributes">
+          <description>Attribute codes exposed (empty means all attributes)</description>
+          <type>array</type>
         </event_datum>
         <event_datum id="debug_info">
           <description>Debug string</description>
