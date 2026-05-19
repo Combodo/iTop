@@ -108,7 +108,7 @@ class DataFeatureRemovalController extends Controller
 			SetupUtils::EraseSetupToken();
 		} else {
 			//from same module
-			//$this->ValidateTransactionId();
+			$this->ValidateTransactionId();
 		}
 
 		// Display changed extensions
@@ -231,40 +231,6 @@ class DataFeatureRemovalController extends Controller
 			$iQueryCount += $oDeletionPlanSummaryEntity->iUpdateCount;
 		}
 		return [$this->GetTableData($sName, $aColumns, $aRows), $iQueryCount, !$bHasIssues];
-	}
-
-	public function OperationDeletionPlan(): void
-	{
-		$aParams = [];
-		$this->ValidateTransactionId();
-
-		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
-
-		$oDataCleanupService = new DataCleanupService();
-		$aDeletionPlanSummaryEntities = $oDataCleanupService->GetCleanupSummary($aClasses);
-		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount', 'IssueCount'];
-		$aRows = [];
-		$iQueryCount = 0;
-		$bHasIssues = false;
-		foreach ($aDeletionPlanSummaryEntities as $oDeletionPlanSummaryEntity) {
-			$aRows[] = [
-				$oDeletionPlanSummaryEntity->sClass,
-				$oDeletionPlanSummaryEntity->iDeleteCount,
-				$oDeletionPlanSummaryEntity->iUpdateCount,
-				$oDeletionPlanSummaryEntity->iIssueCount,
-			];
-			$bHasIssues |= ($oDeletionPlanSummaryEntity->iIssueCount !== 0);
-			$iQueryCount += $oDeletionPlanSummaryEntity->iDeleteCount;
-			$iQueryCount += $oDeletionPlanSummaryEntity->iUpdateCount;
-		}
-
-		$aParams['sTransactionId'] = utils::GetNewTransactionId();
-		$aParams['aDeletionPlanSummary'] = $this->GetTableData('Extensions', $aColumns, $aRows);
-		$aParams['aClasses'] = $aClasses;
-		$aParams['iQueryCount'] = $iQueryCount;
-		$aParams['bDeletionPossible'] = !$bHasIssues;
-
-		$this->DisplayPage($aParams);
 	}
 
 	public function OperationDoDeletion(): void
