@@ -4,9 +4,11 @@ namespace Combodo\iTop\PhpParser\Evaluation;
 
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileParser;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
+use PhpParser\Comment;
 use PhpParser\ConstExprEvaluator;
 use PhpParser\ExprEvaluator;
 use PhpParser\Node\Expr;
+use PhpParser\Node\Expr\Array_;
 use PhpParser\ParserFactory;
 
 /**
@@ -54,5 +56,32 @@ PHP;
 		} catch (\Throwable $t) {
 			throw new ModuleFileReaderException("Eval of '$sExpr' caused an error:".$t->getMessage());
 		}
+	}
+
+	public function GetArrayWithComments(Array_ $oArray): array
+	{
+		$aRes = [];
+		$i=0;
+		foreach ($oArray->items as $oItem) {
+			/** @var \PhpParser\Node\ArrayItem $oItem **/
+			if(is_null($oItem->key)){
+				$sKey = $i;
+				$i++;
+			} else {
+				$sKey = $this->EvaluateExpression($oItem->key);
+			}
+			foreach ($oItem->getComments() as $oComment) {
+				/** @var \PhpParser\Comment $oComment */
+				$aRes[] = 'StartPhpParserComment'.$oComment->getText().'EndPhpParserComment';
+			}
+			if ($oItem->value instanceof Array_) {
+				$aRes[$sKey] = $this->GetArrayWithComments($oItem->value);
+			} elseif ($oItem->value instanceof Comment) {
+				$aRes[$sKey] = $oItem->value;
+			} else {
+				$aRes[$sKey] = $this->EvaluateExpression($oItem->value);
+			}
+		}
+		return $aRes;
 	}
 }

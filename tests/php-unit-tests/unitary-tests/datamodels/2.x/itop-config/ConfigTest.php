@@ -72,7 +72,6 @@ class ConfigTest extends ItopTestCase
 				'sExpectedContains' => 	"'app_root_url' => 'http://%server(SERVER_NAME)?:localhost%/itop/iTop/'",
 				'aChanges' => [],
 			],
-
 			'preserve set same value' => [
 				'sConfigFile' => __DIR__.'/ConfigTest/config-itop-var.php',
 				'sExpectedContains' => 	"'app_root_url' => 'http://' . (isset(\$_SERVER['SERVER_NAME']) ? \$_SERVER['SERVER_NAME'] : 'localhost') . '/itop/iTop/'",
@@ -90,5 +89,22 @@ class ConfigTest extends ItopTestCase
 				'aChanges' => ['app_root_url' => 'foo'],
 			],
 		];
+	}
+
+	public function testPreserveModuleSettingsOnWriteToFile()
+	{
+		$sTmpFile = tempnam(sys_get_temp_dir(), "target");
+
+		$sConfigFile = __DIR__.'/ConfigTest/config-itop-modulesetting.php';
+		$oConfig = new Config($sConfigFile);
+		$oConfig->WriteToFile($sTmpFile);
+
+		$this->assertFileExists($sTmpFile);
+		$this->assertEquals($this->GetModuleSettingSection($sConfigFile), $this->GetModuleSettingSection($sTmpFile));
+	}
+
+	private function GetModuleSettingSection(string $sFilePath) : string  {
+		preg_match('/\$MyModuleSettings[\w\W]*\/\*\*/m', file_get_contents($sFilePath), $aMatches);
+		return preg_replace(['/[	]+/', '/[ ]+/'],[' ', ' '], $aMatches[0]);
 	}
 }

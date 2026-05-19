@@ -20,6 +20,16 @@
  *
  */
 
+use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
+use PhpParser\Comment;
+use PhpParser\Error;
+use PhpParser\Node\Arg;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\Assign;
+use PhpParser\Node\Expr\Variable;
+use PhpParser\ParserFactory;
+
 define('ITOP_APPLICATION', 'iTop');
 define('ITOP_APPLICATION_SHORT', 'iTop');
 
@@ -2124,6 +2134,29 @@ class Config
 			eval('?'.'>'.trim($sConfigCode));
 			$sNoise = trim(ob_get_contents());
 			ob_end_clean();
+
+			try {
+				$oParser = (new ParserFactory())->createForNewestSupportedVersion();
+				foreach ($oParser->parse($sConfigCode) as $oNode) {
+					if ($oNode instanceof \PhpParser\Node\Stmt\Expression) {
+						/** @var \PhpParser\Node\Stmt\Expression $oNode */
+						$oExpr = $oNode->expr;
+						if ($oExpr instanceof Assign) {
+							/** @var Assign $oExpr */
+							$oVar = $oExpr->var;
+							if ($oVar instanceof Variable && $oVar->name === "MyModuleSettings") {
+								if ($oExpr->expr instanceof Array_) {
+									$oPhpExpressionEvaluator = new PhpExpressionEvaluator();
+									$aArrayWithComments = $oPhpExpressionEvaluator->GetArrayWithComments($oExpr->expr);
+									$MyModuleSettings = array_replace_recursive($aArrayWithComments, $MyModuleSettings);
+								}
+							}
+						}
+					}
+				}
+			} catch (Error $e) {
+				var_dump($e);
+			}
 		} catch (Error $e) {
 			// PHP 7
 			throw new ConfigException(
@@ -2714,6 +2747,13 @@ class Config
 			foreach ($this->m_aModuleSettings as $sModule => $aProperties) {
 				fwrite($hFile, "\t'$sModule' => array (\n");
 				foreach ($aProperties as $sProperty => $value) {
+					if (is_string($value) && false !== strpos($value, 'PhpParserComment')) {
+						$value = preg_replace(["/.*StartPhpParserComment/", "/EndPhpParserComment/"],
+							['', ''],
+							$value);
+						fwrite($hFile, "\t\t$value\n");
+						continue;
+					}
 					$sNiceExport = self::PrettyVarExport($this->oItopConfigParser->GetVarValue('MyModuleSettings', $sProperty), $value, "\t\t");
 					fwrite($hFile, "\t\t'$sProperty' => $sNiceExport,\n");
 				}
@@ -2883,7 +2923,7 @@ class Config
 	}
 
 	/**
-	 * Pretty format a var_export'ed value so that (if possible) the identation is preserved on every line
+	 * Pretty format a var_export'ed value so that (if possible) the indentation is preserved on every line
 	 *
 	 * @param array $aParserValue
 	 * @param mixed $value The value to export
@@ -2900,12 +2940,17 @@ class Config
 		}
 
 		$sExport = var_export($value, true);
+		if (strpos($sExport, 'PhpParserComment')) {
+			$sExport = preg_replace(["/.*StartPhpParserComment/", "/EndPhpParserComment',/"],
+				['', ''],
+				$sExport);
+		}
 		$sNiceExport = str_replace(["\r\n", "\n", "\r"], "\n".$sIndentation, trim($sExport));
 		if (!$bForceIndentation) {
 			/** @var array $aImported */
 			$aImported = null;
 			eval('$aImported='.$sNiceExport.';');
-			// Check if adding the identations at the beginning of each line
+			// Check if adding the indentations at the beginning of each line
 			// did not modify the values (in case of a string containing a line break)
 			if ($aImported != $value) {
 				$sNiceExport = $sExport;
@@ -2914,7 +2959,6 @@ class Config
 
 		return $sNiceExport;
 	}
-
 }
 
 class ConfigPlaceholdersResolver
