@@ -40,25 +40,6 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 	 */
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
-		$this->oWizard->SetParameter('selected_components', '[{"_0":"_0","_1":"_1","_2":"_2","_3":"_3","_4":"_4"},{"_0":"_0"},{"_0":"_0","_0_0":"_0_0"},{"_0":"_0"},{"_0":"_0","_1":"_1"},{"_0":"_0","_1":"_1"}]');
-		$aSteps = json_decode(
-			'[
-				{"class":"WizStepWelcome","state":""},
-				{"class":"WizStepInstallOrUpgrade","state":""},
-				{"class":"WizStepDetectedInfo","state":""},
-				{"class":"WizStepUpgradeMiscParams","state":""},
-				{"class":"WizStepModulesChoice","state":"start_upgrade"},
-				{"class":"WizStepModulesChoice","state":"1"},
-				{"class":"WizStepModulesChoice","state":"2"},
-				{"class":"WizStepModulesChoice","state":"3"}]',
-			true
-		);
-		$this->oWizard->SetSteps($aSteps);
-		$this->aSteps = $aSteps;
-
-		$this->sCurrentState = count($aSteps) - 1;
-		//parent::UpdateWizardStateAndGetNextStep(true);
-
 		$oProductionEnv = new RunTimeEnvironment();
 		$sBuildConfigFile = APPCONF.$oProductionEnv->GetBuildEnv().'/'.ITOP_CONFIG_FILE;
 		@chmod($sBuildConfigFile, 0770); // In case it exists: RWX for owner and group, nothing for others
@@ -78,6 +59,13 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 		$this->oWizard->SaveParameter('added_extensions', []);
 		$this->oWizard->SaveParameter('removed_extensions', []);
 		$this->oWizard->SaveParameter('extensions_not_uninstallable', []);
+
+		$aWizardSteps = $this->GetWizardSteps();
+		$this->oWizard->SetWizardSteps($aWizardSteps);
+		$this->sCurrentState = count($aWizardSteps) - 1;
+
+		$aSelectedComponents = $this->GetSelectedComponents($this->aSteps, $this->oWizard->GetParameter('selected_extensions'));
+		$this->oWizard->SetParameter('selected_components', json_encode($aSelectedComponents));
 
 		return new WizardState(WizStepDataAudit::class);
 	}

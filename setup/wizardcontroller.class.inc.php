@@ -38,7 +38,7 @@ require_once(APPROOT.'setup/extensionsmap.class.inc.php');
 
 class WizardController
 {
-	protected $aSteps;
+	protected $aWizardSteps;
 	protected $sInitialStepClass;
 	protected $sInitialState;
 	protected $aParameters;
@@ -53,7 +53,7 @@ class WizardController
 		$this->sInitialStepClass = $sInitialStepClass;
 		$this->sInitialState = $sInitialState;
 		$this->aParameters = [];
-		$this->aSteps = [];
+		$this->aWizardSteps = [];
 	}
 
 	/**
@@ -62,7 +62,7 @@ class WizardController
 	 */
 	protected function PushStep($aStepInfo)
 	{
-		array_push($this->aSteps, $aStepInfo);
+		array_push($this->aWizardSteps, $aStepInfo);
 	}
 
 	/**
@@ -71,7 +71,7 @@ class WizardController
 	 */
 	protected function PopStep()
 	{
-		return array_pop($this->aSteps);
+		return array_pop($this->aWizardSteps);
 	}
 
 	/**
@@ -235,9 +235,9 @@ HTML;
 			$oPage->add('<input type="hidden" name="_params['.$sCode.']" value="'.utils::EscapeHtml($value).'"/>');
 		}
 
-		$oPage->add('<input type="hidden" name="_steps" value="'.utils::EscapeHtml(json_encode($this->aSteps)).'"/>');
+		$oPage->add('<input type="hidden" name="_steps" value="'.utils::EscapeHtml(json_encode($this->aWizardSteps)).'"/>');
 		$oPage->add('<table style="width:100%;" class="ibo-setup--wizard--buttons-container"><tr>');
-		if ((count($this->aSteps) > 0) && ($oStep->CanMoveBackward())) {
+		if ((count($this->aWizardSteps) > 0) && ($oStep->CanMoveBackward())) {
 			$oPage->add('<td style="text-align: left"><button id="btn_back" class="ibo-button ibo-is-alternative ibo-is-neutral" type="submit" name="operation" value="back"><span class="ibo-button--label">Back</span></button></td>');
 		}
 		if ($oStep->CanMoveForward()) {
@@ -296,7 +296,7 @@ on the page's parameters
 
 		$sOperation = utils::ReadParam('operation');
 		$this->aParameters = utils::ReadParam('_params', [], false, 'raw_data');
-		$this->SetSteps(json_decode(utils::ReadParam('_steps', '[]', false, 'raw_data'), true));
+		$this->SetWizardSteps(json_decode(utils::ReadParam('_steps', '[]', false, 'raw_data'), true));
 
 		switch ($sOperation) {
 			case 'next':
@@ -371,9 +371,9 @@ on the page's parameters
 		return $sOutput;
 	}
 
-	public function SetSteps(array $aSteps): void
+	public function SetWizardSteps(array $aWizardSteps): void
 	{
-		$this->aSteps = $aSteps;
+		$this->aWizardSteps = $aWizardSteps;
 	}
 
 	/**

@@ -120,46 +120,6 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 		return [$aExtensionsAdded, $aExtensionsRemoved, $aExtensionsNotUninstallable];
 	}
 
-	public static function GetSetupComponentsFromExtensions(Config $oConfig, array $aSelectedExtensions): array
-	{
-		$sSourceFile = APPROOT.'datamodels/2.x/installation.xml';
-		$oExtensionsMap = new iTopExtensionsMap();
-		$oExtensionsMap->LoadChoicesFromDatabase($oConfig);
-		$aOptions = $oExtensionsMap->GetAllExtensionsOptionInfo(false);
-
-		if (is_file($sSourceFile)) {
-			$aParams = new XMLParameters($sSourceFile);
-			$aSteps = $aParams->Get('steps', []);
-
-			// Display this step of the wizard only if there is something to display
-			if (count($aOptions) > 0) {
-				$aSteps[] = [
-					'title'       => 'Extensions',
-					'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions or remove installed ones.</h2>',
-					'banner'      => '/images/icons/icons8-puzzle.svg',
-					'options'     => $aOptions,
-				];
-			}
-		} else {
-			//legacy package
-			$aSteps = [
-				[
-					'title'       => 'Modules Selection',
-					'description' => '<h2>Select the modules to install. You can launch the installation again to install new modules, but you cannot remove already installed modules.</h2>',
-					'banner'      => '/images/icons/icons8-apps-tab.svg',
-					'options'     => $aOptions,
-				],
-			];
-		}
-
-		$aRes = [];
-		foreach ($aSteps as $aStep) {
-
-		}
-
-		return [];
-	}
-
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
 		// Accumulates the selected modules:
@@ -204,6 +164,86 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 		}
 		//Unused when going backward
 		return new WizardState(WizStepModulesChoice::class, (string)($index - 1));
+	}
+
+	public function GetWizardSteps(): array
+	{
+		$aSteps = [
+			["class" => "WizStepWelcome","state" => ""],
+			["class" => "WizStepInstallOrUpgrade","state" => ""],
+			["class" => "WizStepDetectedInfo","state" => ""],
+			["class" => "WizStepUpgradeMiscParams","state" => ""],
+		];
+		$i = 0;
+		while (null != $this->GetStepInfo($i)) {
+			$aSteps [] = ["class" => "WizStepModulesChoice","state" => "$i"];
+			$i++;
+		}
+
+		return $aSteps;
+	}
+
+	public function GetSelectedComponents(array $aSteps, string $sSelectedExtensionJson): array
+	{
+		SetupLog::Error(__METHOD__, null, $aSteps);
+		$aExtensions = json_decode($sSelectedExtensionJson, true);
+		$aRes = [];
+		foreach ($aSteps as $i => $aStepInfo) {
+			$aStepRes = [];
+			$this->ProcessOptions("", $aStepInfo, $aExtensions, $aStepRes);
+			$this->ProcessAlternatives("", $aStepInfo, $aExtensions, $aStepRes);
+			$aRes [] = $aStepRes;
+		}
+
+		return $aRes;
+	}
+
+	public function ProcessOptions(string $sCurrentIndex, array $aInfo, array $aExtensions, array &$aStepRes)
+	{
+		$aOptions = $aInfo["options"] ?? null;
+		if (is_null($aOptions) || !is_array($aOptions)) {
+			return;
+		}
+
+		foreach ($aOptions as $i => $aOptionsInfo) {
+			$sExtensionCode = $aOptionsInfo["extension_code"] ?? null;
+
+			if (in_array($sExtensionCode, $aExtensions)) {
+				$sNextIndex = "{$sCurrentIndex}_{$i}";
+				$aStepRes[$sNextIndex] = $sNextIndex;
+
+				$aSubOptions = $aOptionsInfo['sub_options'] ?? null;
+				if (!is_null($aSubOptions) && is_array($aSubOptions)) {
+					$this->ProcessOptions($sNextIndex, $aSubOptions, $aExtensions, $aStepRes);
+				}
+
+				$this->ProcessAlternatives($sNextIndex, $aOptionsInfo, $aExtensions, $aStepRes);
+			}
+		}
+	}
+
+	public function ProcessAlternatives(string $sCurrentIndex, array $aInfo, array $aExtensions, array &$aStepRes)
+	{
+		$aAlternatives = $aInfo["alternatives"] ?? null;
+		if (is_null($aAlternatives) || ! is_array($aAlternatives)) {
+			return;
+		}
+
+		foreach ($aAlternatives as $i => $aAlternativeInfo) {
+			$sExtensionCode = $aAlternativeInfo["extension_code"] ?? null;
+
+			if (in_array($sExtensionCode, $aExtensions)) {
+				$sNextIndex = "{$sCurrentIndex}_{$i}";
+				$aStepRes [$sNextIndex] = $sNextIndex;
+
+				$aSubOptions = $aAlternativeInfo['sub_options'] ?? null;
+				if (!is_null($aSubOptions) && is_array($aSubOptions)) {
+					$this->ProcessOptions($sNextIndex, $aSubOptions, $aExtensions, $aStepRes);
+				}
+
+				break;
+			}
+		}
 	}
 
 	public function Display(SetupPage $oPage): void
