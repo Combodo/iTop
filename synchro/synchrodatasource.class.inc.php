@@ -2797,8 +2797,6 @@ class SynchroReplica extends DBObject implements iDisplay
 	{
 		$oBlock = UIContentBlockUIBlockFactory::MakeStandard('title-for-replica', ['ibo-page-header--replica-title']);
 		$oPage->AddSubBlock($oBlock);
-		$oPage->add_style('.ibo-page-header--replica-title{ display: table;  width: 100%;}');
-		$oPage->add_style('.ibo-page-header--replica-title>.ibo-toolbar--button{ display: table-cell;  vertical-align:middle;}');
 
 		$sId = $this->GetKey();
 		$oTitle = TitleUIBlockFactory::MakeNeutral(Dict::S('Class:SynchroReplica'));

@@ -81,3 +81,13 @@ $ibo-data-synchro-source--synoptics--cell--arrow--border: 2px solid $ibo-data-sy
 .ibo-data-synchro-source--replicas-status--warning{
   margin: $ibo-data-synchro-source--replicas-status--warning--margin;
 }
+
+.ibo-page-header--replica-title{
+  display: table;
+  width: 100%;
+
+  >.ibo-toolbar--button{
+    display: table-cell;
+    vertical-align:middle;
+  }
+}

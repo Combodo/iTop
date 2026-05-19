@@ -53,9 +53,7 @@ try {
 			$iSourceId = utils::ReadParam('datasource', null);
 			if ($iSourceId != null) {
 				$oSource = MetaModel::GetObject('SynchroDataSource', $iSourceId);
-				//$oP->p(Dict::Format('Core:SynchroReplica:BackToDataSource', $oSource->GetHyperlink()).'</a>');
-				//$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::Format('Core:SynchroReplica:BackToDataSource', $oSource->GetName()), ApplicationContext::MakeObjectUrl('SynchroDataSource', $iSourceId));
-				$oBackButton = ButtonUIBlockFactory::MakeLinkNeutral( ApplicationContext::MakeObjectUrl('SynchroDataSource', $iSourceId), Dict::S('Core:SynchroReplica:BackToDataSource'), 'fas fa-chevron-left');
+				$oBackButton = ButtonUIBlockFactory::MakeLinkNeutral( ApplicationContext::MakeObjectUrl('SynchroDataSource', $iSourceId), Dict::Format('Core:SynchroReplica:BackToDataSource',  $oSource->GetName()), 'fas fa-chevron-left');
 				$oP->AddUiBlock($oBackButton);
 				$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::Format('Core:SynchroReplica:ListOfReplicas', $oSource->GetName())));
 			}
