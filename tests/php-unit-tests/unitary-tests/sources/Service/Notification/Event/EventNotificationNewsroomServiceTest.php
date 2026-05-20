@@ -14,6 +14,7 @@ use Ticket;
 use Trigger;
 use TriggerOnObjectMention;
 use UserRequest;
+use UserRights;
 
 class EventNotificationNewsroomServiceTest extends ItopDataTestCase
 {
@@ -117,5 +118,37 @@ class EventNotificationNewsroomServiceTest extends ItopDataTestCase
 
 		$this->assertFalse($bDownloadIcon);
 		$this->assertEquals('', $sHtml);
+	}
+
+	public function testDownloadIconIsTriggeredEvenWhenUserCannotReadIconAttribute(): void
+	{
+		// Create a user with Support Agent Profile
+		$sLogin = uniqid('EventNotificationNewsroomServiceTest');
+		$oUser = $this->CreateContactlessUser($sLogin, self::$aURP_Profiles['Support Agent'], '1234@Abcdefg');
+		$oUser->Set('contactid', $this->oContact->GetKey());
+		UserRights::Login($sLogin);
+
+		$this->oEvent = EventNotificationNewsroomService::MakeEventFromAction(
+			oAction: $this->oAction,
+			iContactId: $this->oContact->GetKey(),
+			iTriggerId: $this->oTrigger->GetKey(),
+			sMessage: 'Test message',
+			sTitle: 'Test event',
+			sUrl: 'https://localhost/itop/pages/UI.php?operation=details&class=UserRequest&id=1',
+			iObjectId: $this->oTicket->GetKey(),
+			sObjectClass: UserRequest::class,
+		);
+		$this->oEvent->DBInsert();
+
+		$iURValue = UserRights::IsActionAllowedOnAttribute(EventNotificationNewsroom::class, 'icon', UR_ACTION_READ, $this->oEvent, $oUser);
+		$this->assertEquals(UR_ALLOWED_NO, $iURValue);
+
+		$oPage = new CaptureWebPage();
+		$bDownloadIcon = EventNotificationNewsroomService::DownloadIcon($oPage, $this->oEvent->GetKey(), $this->oContact->GetKey());
+		$sHtml = $oPage->GetHtml();
+
+		$this->assertTrue($bDownloadIcon);
+		$this->assertNotEquals('', $sHtml);
+		$this->assertStringNotContainsString('the object does not exist or you are not allowed to view it', $sHtml);
 	}
 }
