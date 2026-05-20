@@ -21,6 +21,7 @@ use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
 use Combodo\iTop\Application\WebPage\JsonPPage;
 use Combodo\iTop\Controller\Notifications\NotificationsCenterController;
+use Combodo\iTop\Service\Notification\Event\EventNotificationNewsroomService;
 use Combodo\iTop\Service\Notification\NotificationsRepository;
 use Combodo\iTop\Service\Router\Router;
 use CoreException;
@@ -28,8 +29,8 @@ use DBObjectSearch;
 use DBObjectSet;
 use Dict;
 use EventNotificationNewsroom;
+use Exception;
 use MetaModel;
-use ormDocument;
 use SecurityException;
 use UserRights;
 use utils;
@@ -715,17 +716,8 @@ HTML;
 				$oPage->add_header('Content-Security-Policy: sandbox;');
 			}
 
-			$oEvent = MetaModel::GetObject(EventNotificationNewsroom::class, $sId, false, true);
-			if (($oEvent !== null) && ($oEvent->Get('contact_id') === UserRights::GetContactId())) {
-				ormDocument::DownloadDocument(
-					$oPage,
-					EventNotificationNewsroom::class,
-					$sId,
-					'icon',
-					ormDocument::ENUM_CONTENT_DISPOSITION_INLINE,
-					bAllowAllData: true
-				);
-				$oPage->output();
+			if (EventNotificationNewsroomService::DownloadIcon($oPage, $sId, UserRights::GetContactId()) === true) {
+				$oPage->Output();
 			}
 		}
 	}
