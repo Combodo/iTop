@@ -270,8 +270,7 @@ class DataFeatureRemovalController extends Controller
 		$aExtensionsData = [];
 		if ($bIncludePackageExtensions) {
 			$aExtensionsRef = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetAllExtensionsWithPreviouslyInstalled();
-		}
-		else {
+		} else {
 			$aExtensionsRef = DataFeatureRemoverExtensionService::GetInstance()->ReadItopExtensions();
 		}
 

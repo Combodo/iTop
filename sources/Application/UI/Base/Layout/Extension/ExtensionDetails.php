@@ -188,7 +188,7 @@ class ExtensionDetails extends UIContentBlock
 	protected function InitializePopoverMenu()
 	{
 		$this->oPopoverMenu = new PopoverMenu();
-		$oPopoverOpenButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', 'Show more actions');
+		$oPopoverOpenButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S('UI:Layout:ExtensionsDetails:MoreActions'));
 		$this->oPopoverMenu->SetTogglerFromBlock($oPopoverOpenButton);
 		$this->oMoreActions = new UIContentBlock();
 		$this->oMoreActions->AddSubBlock($this->oPopoverMenu);
@@ -207,7 +207,7 @@ class ExtensionDetails extends UIContentBlock
 	});
 JS,
 			);
-			$this->oPopoverMenu->AddItem('more-actions', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oModifyButton));
+			$this->oPopoverMenu->AddItem('more-details', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oModifyButton));
 		}
 
 	}
@@ -222,7 +222,7 @@ JS,
 	this.remove();
 JS,
 		);
-		$this->oPopoverMenu->AddItem('more-actions', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oForceUninstallButton));
+		$this->oPopoverMenu->AddItem('force-uninstall', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oForceUninstallButton));
 	}
 
 }
