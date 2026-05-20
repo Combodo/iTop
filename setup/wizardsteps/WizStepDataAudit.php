@@ -111,6 +111,7 @@ JS);
 		$aHiddenInputs = '';
 		foreach ($aParams as $sParamName) {
 			$sElements = utils::HtmlEntities($this->oWizard->GetParameter($sParamName, '[]'));
+			$sParamName = utils::HtmlEntities($sParamName);
 			$aHiddenInputs .= <<<INPUT
 	<input type="hidden" name="$sParamName" value="$sElements"/>
 INPUT;

@@ -209,15 +209,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 			$sExtensionCode = $aOptionsInfo["extension_code"] ?? null;
 
 			if (in_array($sExtensionCode, $aExtensions)) {
-				$sNextIndex = "{$sCurrentIndex}_{$i}";
-				$aStepRes[$sNextIndex] = $sNextIndex;
-
-				$aSubOptions = $aOptionsInfo['sub_options'] ?? null;
-				if (!is_null($aSubOptions) && is_array($aSubOptions)) {
-					$this->ProcessOptions($sNextIndex, $aSubOptions, $aExtensions, $aStepRes);
-				}
-
-				$this->ProcessAlternatives($sNextIndex, $aOptionsInfo, $aExtensions, $aStepRes);
+				$aStepRes = $this->ProcessSelectedOption($sCurrentIndex, $i, $aStepRes, $aOptionsInfo, $aExtensions);
 			}
 		}
 	}
@@ -233,17 +225,35 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 			$sExtensionCode = $aAlternativeInfo["extension_code"] ?? null;
 
 			if (in_array($sExtensionCode, $aExtensions)) {
-				$sNextIndex = "{$sCurrentIndex}_{$i}";
-				$aStepRes [$sNextIndex] = $sNextIndex;
-
-				$aSubOptions = $aAlternativeInfo['sub_options'] ?? null;
-				if (!is_null($aSubOptions) && is_array($aSubOptions)) {
-					$this->ProcessOptions($sNextIndex, $aSubOptions, $aExtensions, $aStepRes);
-				}
-
+				$aStepRes = $this->ProcessSelectedOption($sCurrentIndex, $i, $aStepRes, $aAlternativeInfo, $aExtensions);
 				break;
 			}
 		}
+	}
+
+	/**
+	 * @param string $sCurrentIndex
+	 * @param int|string $i
+	 * @param array $aStepRes
+	 * @param mixed $aOptionsInfo
+	 * @param array $aExtensions
+	 *
+	 * @return array
+	 */
+	public function ProcessSelectedOption(string $sCurrentIndex, int|string $i, array $aStepRes, mixed $aOptionsInfo, array $aExtensions): array
+	{
+		$sNextIndex = "{$sCurrentIndex}_{$i}";
+		$aStepRes[$sNextIndex] = $sNextIndex;
+
+		$aSubOptions = $aOptionsInfo['sub_options'] ?? null;
+		if (!is_null($aSubOptions) && is_array($aSubOptions)) {
+			$this->ProcessOptions($sNextIndex, $aSubOptions, $aExtensions, $aStepRes);
+			$this->ProcessAlternatives($sNextIndex, $aSubOptions, $aExtensions, $aStepRes);
+		}
+
+		$this->ProcessAlternatives($sNextIndex, $aOptionsInfo, $aExtensions, $aStepRes);
+
+		return $aStepRes;
 	}
 
 	public function Display(SetupPage $oPage): void
