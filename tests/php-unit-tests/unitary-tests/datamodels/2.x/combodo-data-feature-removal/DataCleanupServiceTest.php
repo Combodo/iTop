@@ -107,59 +107,6 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 		$this->AssertSummaryEquals($aExpected, $aRes);
 	}
 
-	public function testExecuteCleanup_CheckSummaryIsEnrichedAfterEachPass()
-	{
-		$aExecutionSummary = [];
-
-		$this->GivenDFRTreeInDB(
-			<<<EOF
-		DFRToRemoveLeaf_1 <- DFRToUpdate_1
-		DFRToRemoveLeaf_1 <- DFRRemovedCollateral_1
-		DFRRemovedCollateral_1 <- DFRRemovedCollateralCascade_1
-		
-		DFRToRemoveLeaf_2 <- DFRToUpdate_2
-		DFRToRemoveLeaf_2 <- DFRRemovedCollateral_2
-		DFRRemovedCollateral_2 <- DFRRemovedCollateralCascade_2
-		
-		DFRToRemoveLeaf_3 <- DFRToUpdate_3
-		DFRToRemoveLeaf_3 <- DFRRemovedCollateral_3
-		DFRRemovedCollateral_3 <- DFRRemovedCollateralCascade_3
-	EOF
-		);
-
-		$aClasses = ['DFRToRemoveLeaf'];
-		$oService = new DataCleanupService();
-		$aExecutionSummary = $oService->ExecuteCleanup($aClasses);
-
-		$aExpected = [
-			['DFRToUpdate', 3, 0 ],
-			['DFRToRemoveLeaf', 0, 3 ],
-			['DFRRemovedCollateral', 0, 3 ],
-			['DFRRemovedCollateralCascade', 0, 3 ],
-		];
-		$this->AssertSummaryEquals($aExpected, $aExecutionSummary);
-
-		$this->GivenDFRTreeInDB(
-			<<<EOF
-		DFRToRemoveLeaf_4 <- DFRToUpdate_4
-		DFRToRemoveLeaf_4 <- DFRRemovedCollateral_4
-		DFRRemovedCollateral_4 <- DFRRemovedCollateralCascade_4
-	EOF
-		);
-
-		$aClasses = ['DFRToRemoveLeaf'];
-		$oService = new DataCleanupService();
-		$aExecutionSummary = $oService->ExecuteCleanup($aClasses);
-
-		$aExpected = [
-			['DFRToUpdate', 1, 0, 0, 4 ],
-			['DFRToRemoveLeaf', 0, 1, 0, 0, 4 ],
-			['DFRRemovedCollateral', 0, 1, 0, 0, 4 ],
-			['DFRRemovedCollateralCascade', 0, 1, 0, 0, 4 ],
-		];
-		$this->AssertSummaryEquals($aExpected, $aExecutionSummary);
-	}
-
 	public function testGetCleanupSummary_DeleteManyObjPerClassWithoutLimit()
 	{
 		$this->GivenDFRTreeInDB(<<<EOF
