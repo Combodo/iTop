@@ -1488,7 +1488,7 @@
                 <rank>6</rank>
                 <class>ContainerHost</class>
               </dashlet>
-              <dashlet id="ContainerHost" xsi:type="DashletBadge" _delta="define">
+              <dashlet id="ContainerCluster" xsi:type="DashletBadge" _delta="define">
                 <rank>7</rank>
                 <class>ContainerCluster</class>
               </dashlet>
