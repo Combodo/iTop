@@ -107,7 +107,7 @@ abstract class AbstractSetupAudit
 		if (ContextTag::Check(ContextTag::TAG_SETUP)) {
 			SetupLog::Info($sMessage, $sChannel, $aContext);
 		} else {
-			IssueLog::Info($sMessage, $sChannel, $aContext);
+			IssueLog::Debug($sMessage, $sChannel, $aContext);
 		}
 	}
 }

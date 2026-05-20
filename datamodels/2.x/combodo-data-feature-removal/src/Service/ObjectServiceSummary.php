@@ -23,27 +23,29 @@ class ObjectServiceSummary implements iObjectService
 	public function Update(DBObject $oToUpdate, string $sAttCode, $value): void
 	{
 		$sClass = get_class($oToUpdate);
-		DataFeatureRemovalLog::Info('Object to update', null, ['class' => $sClass, 'id' => $oToUpdate->GetKey(), 'code' => $sAttCode, 'value' => "$value"]);
+		DataFeatureRemovalLog::Debug('Object to update', null, ['class' => $sClass, 'id' => $oToUpdate->GetKey(), 'code' => $sAttCode, 'value' => "$value"]);
 		if (! array_key_exists($sClass, $this->aSummary)) {
 			$this->aSummary[$sClass] = new DataCleanupSummaryEntity($sClass);
 		}
 		$oDeletionPlanSummaryEntity = $this->aSummary[$sClass];
 		$oDeletionPlanSummaryEntity->iUpdateCount++;
+		$oDeletionPlanSummaryEntity->iTotalUpdateCount++;
 	}
 
 	public function Delete(string $sClass, string $sId): void
 	{
-		DataFeatureRemovalLog::Info('Object to delete', null, ['class' => $sClass, 'id' => $sId]);
+		DataFeatureRemovalLog::Debug('Object to delete', null, ['class' => $sClass, 'id' => $sId]);
 		if (!array_key_exists($sClass, $this->aSummary)) {
 			$this->aSummary[$sClass] = new DataCleanupSummaryEntity($sClass);
 		}
 		$oDeletionPlanSummaryEntity = $this->aSummary[$sClass];
 		$oDeletionPlanSummaryEntity->iDeleteCount++;
+		$oDeletionPlanSummaryEntity->iTotalDeleteCount++;
 	}
 
 	public function SetIssue(string $sClass): void
 	{
-		DataFeatureRemovalLog::Info('Issue on object', null, ['class' => $sClass]);
+		DataFeatureRemovalLog::Debug('Issue on object', null, ['class' => $sClass]);
 		if (!array_key_exists($sClass, $this->aSummary)) {
 			$this->aSummary[$sClass] = new DataCleanupSummaryEntity($sClass);
 		}
@@ -54,5 +56,16 @@ class ObjectServiceSummary implements iObjectService
 	public function GetSummary(): array
 	{
 		return $this->aSummary;
+	}
+
+	public function SetSummary(array $aSummary): void
+	{
+		foreach ($aSummary as $sClass => $oPreviousSummaryEntity) {
+			$oSummaryEntity = new DataCleanupSummaryEntity($sClass);
+			$oSummaryEntity->iTotalUpdateCount = $oPreviousSummaryEntity->iTotalUpdateCount;
+			$oSummaryEntity->iTotalDeleteCount = $oPreviousSummaryEntity->iTotalDeleteCount;
+
+			$this->aSummary[$sClass] = $oSummaryEntity;
+		}
 	}
 }

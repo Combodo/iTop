@@ -9,23 +9,48 @@
         {% UIDataTable ForForm { sRef:'aExtensions', aColumns:aExtensions.Columns, aData:aExtensions.Data} %}{% EndUIDataTable %}
     {% EndUIFieldSet %}
 
-    {% UIFieldSet Standard {sLegend:'DataFeatureRemoval:DeletionPlan:Title'|dict_s} %}
-        {% UIDataTable ForForm { sRef:'aDeletionPlanSummary', aColumns:aDeletionPlanSummary.Columns, aData:aDeletionPlanSummary.Data} %}{% EndUIDataTable %}
-    {% EndUIFieldSet %}
-
-    {% if bDeletionPossible %}
-        {% UIForm Standard {} %}
-            {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}
-            {% UIInput ForHidden { sName:'operation', sValue:'DoDeletion'} %}
-            {% for sKey, sClass in aClasses %}
-                {% UIInput ForHidden { sName:"classes[" ~ sKey ~ "]", sValue:sClass } %}
-            {% endfor %}
-            {% UIToolbar ForButton {} %}
-                {% UIButton ForPrimaryAction {sLabel:'UI:Button:DoDeletion'|dict_s, sName:'btn_deletion', sId:'btn_deletion', bIsSubmit:true} %}
-            {% EndUIToolbar %}
-        {% EndUIForm %}
+    {% if bDeletionNeeded %}
+        {% UIFieldSet Standard {sLegend:'DataFeatureRemoval:DeletionPlan:Title'|dict_s} %}
+            {% UIDataTable ForForm { sRef:'aDeletionPlanSummary', aColumns:aDeletionPlanSummary.Columns, aData:aDeletionPlanSummary.Data} %}{% EndUIDataTable %}
+        {% EndUIFieldSet %}
+        {% if bDeletionPossible %}
+            {% UIForm Standard {} %}
+                {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}
+                {% UIInput ForHidden { sName:'operation', sValue:'DoDeletion'} %}
+                {% for sKey, sClass in aClasses %}
+                    {% UIInput ForHidden { sName:"classes[" ~ sKey ~ "]", sValue:sClass } %}
+                {% endfor %}
+                {% for sCode, sLabel in aAddedExtensions %}
+                    {% UIInput ForHidden { sName:"aAddedExtensions[" ~ sCode ~ "]", sValue:sLabel } %}
+                {% endfor %}
+                {% for sCode, sLabel in aRemovedExtensions %}
+                    {% UIInput ForHidden { sName:"aRemovedExtensions[" ~ sCode ~ "]", sValue:sLabel } %}
+                {% endfor %}
+                {% for sInputName, sValue in aHiddenInputs %}
+                    {% UIInput ForHidden { sName:sInputName, sValue:sValue } %}
+                {% endfor %}
+                {% UIToolbar ForButton {} %}
+                    {% UIButton ForPrimaryAction {sLabel:'UI:Button:DoDeletion'|dict_s, sName:'btn_deletion', sId:'btn_deletion', bIsSubmit:true} %}
+                {% EndUIToolbar %}
+            {% EndUIForm %}
+        {% else %}
+            {% UIAlert ForFailure { sContent: 'DataFeatureRemoval:DeletionPlan:Error:Issues'|dict_s } %}{% EndUIAlert %}
+        {% endif %}
     {% else %}
-        {{ 'DataFeatureRemoval:DeletionPlan:Error:Issues'|dict_s }}
+        {% UIAlert ForSuccess { sTitle:'DataFeatureRemoval:CleanupComplete:Title'|dict_s, sContent:'DataFeatureRemoval:CompilComplete'|dict_s, sId:value } %}{% EndUIAlert %}
+
+        {% UIForm Standard {'sId':'launch-setup-form', Action:sLaunchSetupUrl, 'EncType': 'application/x-www-form-urlencoded'} %}
+            {% for sKey, sValue in aSetupParams %}
+                {% UIInput ForHidden { sName:sKey, sValue:sValue } %}
+            {% endfor %}
+            {% UIButton ForPrimaryAction {sLabel:'UI:Button:Setup'|dict_s, sName:'btn_setup', sId:'btn_setup', bIsSubmit:true} %}
+        {% EndUIForm %}
+    {% endif %}
+
+    {% if bHasDeletionExecution %}
+        {% UIFieldSet Standard {sLegend:'DataFeatureRemoval:Execution:Title'|dict_s} %}
+            {% UIDataTable ForForm { sRef:'aDeletionExecutionSummary', aColumns:aDeletionExecutionSummary.Columns, aData:aDeletionExecutionSummary.Data} %}{% EndUIDataTable %}
+        {% EndUIFieldSet %}
     {% endif %}
 
     {% UIForm Standard {} %}

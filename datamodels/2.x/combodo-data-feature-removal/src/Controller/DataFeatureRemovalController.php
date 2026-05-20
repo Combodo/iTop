@@ -10,13 +10,17 @@ namespace Combodo\iTop\DataFeatureRemoval\Controller;
 require_once APPROOT.'setup/feature_removal/SetupAudit.php';
 require_once APPROOT.'setup/feature_removal/DryRemovalRuntimeEnvironment.php';
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
+use Combodo\iTop\DataFeatureRemoval\Entity\DataCleanupSummaryEntity;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
+use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalLog;
 use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
 use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
+use ContextTag;
 use Dict;
 use Exception;
 use IssueLog;
@@ -26,9 +30,11 @@ use utils;
 
 class DataFeatureRemovalController extends Controller
 {
-	private array $aSelectedExtensionsForCheck = [];
+	private array $aRemovedExtensionsForCheck = [];
 	private array $aCountClassesToCleanup = [];
 	private array $aAnalysisDataTable = [];
+	private array $aDeletionExecutionSummary = [];
+
 	private int $iCount = 0;
 
 	public function OperationMain($sErrorMessage = null): void
@@ -75,7 +81,7 @@ class DataFeatureRemovalController extends Controller
 		$this->m_sOperation = 'Main';
 
 		try {
-			if (count($this->aSelectedExtensionsForCheck) > 0) {
+			if (count($this->aRemovedExtensionsForCheck) > 0) {
 				$this->Analyze();
 			}
 			$this->OperationMain();
@@ -87,10 +93,8 @@ class DataFeatureRemovalController extends Controller
 
 	private function Analyze(): void
 	{
+		$this->Compile($this->aRemovedExtensionsForCheck);
 		$sSourceEnv = MetaModel::GetEnvironment();
-		$oDryRemovalRuntimeEnvironment = new DryRemovalRuntimeEnvironment($sSourceEnv, $this->aSelectedExtensionsForCheck);
-		$oDryRemovalRuntimeEnvironment->CompileFrom($sSourceEnv);
-
 		$oSetupAudit = new SetupAudit($sSourceEnv);
 		$aGetRemovedClasses = $oSetupAudit->RunDataAudit();
 		IssueLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
@@ -110,56 +114,112 @@ class DataFeatureRemovalController extends Controller
 		}
 
 		// Display changed extensions
-		$aAddedExtensions = utils::ReadPostedParam('aAddedExtensions', []);
-		$aRemovedExtensions = utils::ReadPostedParam('aRemovedExtensions', []);
+		$aHiddenInputNames = [
+			'selected_modules',
+			'selected_extensions',
+			'display_choices',
+			'added_extensions',
+			'removed_extensions',
+			'extensions_not_uninstallable',
+		];
 
-		IssueLog::Info(__METHOD__.' Extensions given in parameter', null, ['aAddedExtensions' => $aAddedExtensions, 'aRemovedExtensions' => $aRemovedExtensions]);
+		$aHiddenInputs = [];
+		foreach ($aHiddenInputNames as $sInputName) {
+			$aHiddenInputs[$sInputName] = utils::ReadPostedParam($sInputName, "[]", utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		}
+		$aParams['aHiddenInputs'] = $aHiddenInputs;
+
+		$aAddedExtensions = json_decode($aHiddenInputs['added_extensions'], true);
+		$aRemovedExtensions = json_decode($aHiddenInputs['removed_extensions'], true);
+
+		$aParams['aAddedExtensions'] = $aAddedExtensions;
+		$aParams['aRemovedExtensions'] = $aRemovedExtensions;
+
+		IssueLog::Debug(__METHOD__.' Extensions given in parameter', null, [
+			'added_extensions' => $aAddedExtensions,
+			'removed_extensions' => $aRemovedExtensions]);
+
+		$this->Compile(array_keys($aRemovedExtensions), false);
 
 		$sSourceEnv = MetaModel::GetEnvironment();
 		$oSetupAudit = new SetupAudit($sSourceEnv);
 		$aGetRemovedClasses = array_keys($oSetupAudit->RunDataAudit());
 		IssueLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
 
-		$oDataCleanupService = new DataCleanupService();
-		$aDeletionPlanSummaryEntities = $oDataCleanupService->GetCleanupSummary($aGetRemovedClasses);
-		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount', 'IssueCount'];
-		$aRows = [];
-		$iQueryCount = 0;
-		$bHasIssues = false;
-		foreach ($aDeletionPlanSummaryEntities as $oDeletionPlanSummaryEntity) {
-			$aRows[] = [
-				$oDeletionPlanSummaryEntity->sClass,
-				$oDeletionPlanSummaryEntity->iDeleteCount,
-				$oDeletionPlanSummaryEntity->iUpdateCount,
-				$oDeletionPlanSummaryEntity->iIssueCount,
-			];
-			$bHasIssues |= ($oDeletionPlanSummaryEntity->iIssueCount !== 0);
-			$iQueryCount += $oDeletionPlanSummaryEntity->iDeleteCount;
-			$iQueryCount += $oDeletionPlanSummaryEntity->iUpdateCount;
-		}
-
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
-		$aParams['aDeletionPlanSummary'] = $this->GetTableData('Extensions', $aColumns, $aRows);
 		$aParams['aClasses'] = $aGetRemovedClasses;
-		$aParams['iQueryCount'] = $iQueryCount;
-		$aParams['bDeletionPossible'] = !$bHasIssues;
-		$aParams['aAddedExtensions'] = $aAddedExtensions;
-		$aParams['aRemovedExtensions'] = $aRemovedExtensions;
 		$aParams['aExtensions'] = $this->GetExtensionsTableDiff($aAddedExtensions, $aRemovedExtensions);
 
-		$this->DisplayPage($aParams);
+		new ContextTag(ContextTag::TAG_SETUP);
+		$aParams['sLaunchSetupUrl'] = utils::GetAbsoluteUrlAppRoot().'setup/wizard.php';
+		$aParams['aSetupParams'] = array_merge([
+			"_class" => "WizStepLandingBeforeAudit",
+			"_params[authent]" => SetupUtils::CreateSetupToken(),
+			"operation" => "next",
+		], $aHiddenInputs);
+
+		[$aParams['aDeletionPlanSummary'], $aParams['iQueryCount'], $aParams['bDeletionPossible']] = $this->GetDeletionPlanSummaryTable($aGetRemovedClasses);
+		[$aParams['aDeletionExecutionSummary'], $aParams['bHasDeletionExecution']] = $this->GetExecutionSummaryTable();
+		$aParams['bDeletionNeeded'] = ($aParams['iQueryCount'] > 0);
+		Session::Set('aDeletionExecutionSummary', serialize($this->aDeletionExecutionSummary));
+
+		$this->DisplayPage($aParams, 'AnalysisResult');
 	}
 
-	public function OperationDeletionPlan(): void
+	private function Compile(array $aRemovedExtensions, bool $bForceCompilation = true): void
 	{
-		$aParams = [];
-		$this->ValidateTransactionId();
+		$sSourceEnv = MetaModel::GetEnvironment();
+		$sBuildDir = APPROOT."/env-$sSourceEnv-build";
+		if (! is_dir($sBuildDir)) {
+			SetupUtils::builddir($sBuildDir);
+		}
+		$bIsDirEmpty = count(scandir($sBuildDir)) === 2;
 
-		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
+		if ($bIsDirEmpty || $bForceCompilation) {
+			$oRuntimeEnvironment = new DryRemovalRuntimeEnvironment($sSourceEnv, $aRemovedExtensions);
+			DataFeatureRemovalLog::Debug(
+				__METHOD__,
+				null,
+				['sSourceEnv' => $sSourceEnv, 'sBuildDir' => $sBuildDir, 'bIsDirEmpty' => $bIsDirEmpty, glob("$sBuildDir/*")]
+			);
+			$oRuntimeEnvironment->CompileFrom($sSourceEnv);
+		}
+	}
 
+	private function GetExecutionSummaryTable(): array
+	{
+		$sName = 'ExcutionSummary';
+
+		$aTableData = [];
+		if (count($this->aDeletionExecutionSummary) === 0) {
+			return [$aTableData, false];
+		}
+
+		$aColumns = ['Class', 'Total Deleted Count' , 'Total Updated Count', 'Deleted Count' , 'Updated Count'];
+		$aRows = [];
+		/** @var DataCleanupSummaryEntity $oSummary */
+		foreach ($this->aDeletionExecutionSummary as $sClass => $oSummary) {
+			$aRows[] = [
+				$sClass,
+				$oSummary->iTotalDeleteCount,
+				$oSummary->iTotalUpdateCount,
+				$oSummary->iDeleteCount,
+				$oSummary->iUpdateCount,
+			];
+		}
+
+		$aTableData = $this->GetTableData($sName, $aColumns, $aRows);
+
+		return [$aTableData, true];
+
+	}
+
+	private function GetDeletionPlanSummaryTable(array $aRemovedClasses): array
+	{
+		$sName = 'DeletionPlanSummary';
 		$oDataCleanupService = new DataCleanupService();
-		$aDeletionPlanSummaryEntities = $oDataCleanupService->GetCleanupSummary($aClasses);
-		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount', 'IssueCount'];
+		$aDeletionPlanSummaryEntities = $oDataCleanupService->GetCleanupSummary($aRemovedClasses);
+		$aColumns = ['Class', 'Delete Count' , 'Update Count', 'Issue Count'];
 		$aRows = [];
 		$iQueryCount = 0;
 		$bHasIssues = false;
@@ -174,39 +234,31 @@ class DataFeatureRemovalController extends Controller
 			$iQueryCount += $oDeletionPlanSummaryEntity->iDeleteCount;
 			$iQueryCount += $oDeletionPlanSummaryEntity->iUpdateCount;
 		}
-
-		$aParams['sTransactionId'] = utils::GetNewTransactionId();
-		$aParams['aDeletionPlanSummary'] = $this->GetTableData('Extensions', $aColumns, $aRows);
-		$aParams['aClasses'] = $aClasses;
-		$aParams['iQueryCount'] = $iQueryCount;
-		$aParams['bDeletionPossible'] = !$bHasIssues;
-
-		$this->DisplayPage($aParams);
+		return [$this->GetTableData($sName, $aColumns, $aRows), $iQueryCount, !$bHasIssues];
 	}
 
 	public function OperationDoDeletion(): void
 	{
-		$aParams = [];
 		$this->ValidateTransactionId();
 
+		$this->aDeletionExecutionSummary = unserialize(Session::Get('aDeletionExecutionSummary'));
+		Session::Unset('aDeletionExecutionSummary');
 		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 
 		$oDataCleanupService = new DataCleanupService();
 		$aDeletionExecutionSummary = $oDataCleanupService->ExecuteCleanup($aClasses);
-		$aColumns = ['Class', 'DeletedCount' , 'UpdatedCount'];
-		$aRows = [];
-		foreach ($aDeletionExecutionSummary as $oDeletionExecutionSummaryEntity) {
-			$aRows[] = [
-				$oDeletionExecutionSummaryEntity->sClass,
-				$oDeletionExecutionSummaryEntity->iDeleteCount,
-				$oDeletionExecutionSummaryEntity->iUpdateCount,
-			];
+		foreach ($aDeletionExecutionSummary as $sClass => $oExecutionSummary) {
+			if (!array_key_exists($sClass, $this->aDeletionExecutionSummary)) {
+				$this->aDeletionExecutionSummary[$sClass] = new DataCleanupSummaryEntity($sClass);
+			}
+			$oSummary = $this->aDeletionExecutionSummary[$sClass];
+			$oSummary->iDeleteCount = $oExecutionSummary->iDeleteCount;
+			$oSummary->iUpdateCount = $oExecutionSummary->iUpdateCount;
+			$oSummary->iTotalDeleteCount += $oExecutionSummary->iDeleteCount;
+			$oSummary->iTotalUpdateCount += $oExecutionSummary->iUpdateCount;
 		}
 
-		$aParams['sTransactionId'] = utils::GetNewTransactionId();
-		$aParams['aDeletionExecutionSummary'] = $this->GetTableData('Extensions', $aColumns, $aRows);
-
-		$this->DisplayPage($aParams);
+		$this->OperationAnalysisResult();
 	}
 
 	private function GetExtensionsTableDiff(array $aAddedExtensions, array $aRemovedExtensions): array
@@ -256,7 +308,7 @@ HTML,
 			if ($oExtension->bRemovedFromDisk) {
 				$sDisabledHtml = 'disabled=""';
 				$sChecked = 'checked';
-			} elseif (in_array($sCode, $this->aSelectedExtensionsForCheck)) {
+			} elseif (in_array($sCode, $this->aRemovedExtensionsForCheck)) {
 				$sChecked = 'checked';
 			}
 
@@ -322,7 +374,7 @@ HTML,
 	 */
 	public function ReadRemovedExtensions(): void
 	{
-		if (count($this->aSelectedExtensionsForCheck) > 0) {
+		if (count($this->aRemovedExtensionsForCheck) > 0) {
 			return;
 		}
 
@@ -330,14 +382,14 @@ HTML,
 		foreach ($aSelectedExtensionsFromUI as $sCode => $aData) {
 			$sValue = $aData['enable'] ?? 'off';
 			if (($sValue) === 'on') {
-				$this->aSelectedExtensionsForCheck[] = $sCode;
+				$this->aRemovedExtensionsForCheck[] = $sCode;
 			}
 		}
 
 		// Add source removed to check
 		foreach (DataFeatureRemoverExtensionService::GetInstance()->ReadItopExtensions() as $sCode => $oExtension) {
 			if ($oExtension->bRemovedFromDisk) {
-				$this->aSelectedExtensionsForCheck[] = $sCode;
+				$this->aRemovedExtensionsForCheck[] = $sCode;
 			}
 		}
 	}

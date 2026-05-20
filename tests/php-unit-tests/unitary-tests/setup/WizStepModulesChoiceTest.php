@@ -1391,4 +1391,16 @@ HTML,
 
 		$this->assertEquals($sExpectedHTML, $oPage->sContent);
 	}
+
+	public function testGetSelectedComponents()
+	{
+		$aParams = new XMLParameters(__DIR__.'/ressources/installation_330.xml');
+		$aSteps = $aParams->Get('steps', []);
+
+		$aSelectedExtensions = ["itop-config-mgmt-core","itop-config-mgmt-datacenter","itop-config-mgmt-end-user","itop-config-mgmt-storage","itop-config-mgmt-virtualization","itop-container-mgmt","itop-service-mgmt-enterprise","itop-ticket-mgmt-simple-ticket","itop-ticket-mgmt-simple-ticket-enhanced-portal","itop-change-mgmt-simple","itop-kown-error-mgmt","itop-problem-mgmt","combodo-oauth2-client","combodo-mfa-extended","combodo-data-replication","combodo-api-playground","combodo-snapshot"];
+		$aRes = $this->oStep->GetSelectedComponents($aSteps, json_encode($aSelectedExtensions));
+
+		$aExpected = json_decode('[{"_0":"_0","_1":"_1","_2":"_2","_3":"_3","_4":"_4","_4_0":"_4_0"},{"_0":"_0"},{"_0":"_0","_0_0":"_0_0"},{"_0":"_0"},{"_0":"_0","_1":"_1"}]', true);
+		$this->assertEquals($aExpected, $aRes);
+	}
 }

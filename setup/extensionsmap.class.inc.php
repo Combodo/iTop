@@ -43,48 +43,53 @@ class iTopExtensionsMap
 	 *
 	 * @param string $sFromEnvironment The environment to scan
 	 * @param array $aExtraDirs extensions dir to scan
+	 * @param array $aExtraDirs extensions dir to scan
+	 *  @param string|null $sAppRootForTests
 	 *
 	 * @return void
 	 */
-	public function __construct(string $sFromEnvironment = ITOP_DEFAULT_ENV, array $aExtraDirs = [])
+	public function __construct(string $sFromEnvironment = ITOP_DEFAULT_ENV, array $aExtraDirs = [], ?string $sAppRootForTests = null)
 	{
 		$this->aExtensions = [];
 		$this->aExtensionsByCode = [];
 		$this->aScannedDirs = [];
-		$this->ScanDisk($sFromEnvironment);
+
+		$sAppRoot = $sAppRootForTests ?? APPROOT;
+		$this->ScanDisk($sFromEnvironment, $sAppRoot);
 
 		$this->aExtraDirs = $aExtraDirs;
-		if (is_dir(APPROOT.'extensions')) {
-			$this->aExtraDirs [] = APPROOT.'extensions';
+		if (is_dir($sAppRoot.'extensions')) {
+			$this->aExtraDirs [] = $sAppRoot.'extensions';
 		}
-		if (is_dir(APPROOT.'data/'.$sFromEnvironment.'-modules')) {
-			$this->aExtraDirs [] = APPROOT.'data/'.$sFromEnvironment.'-modules';
+		if (is_dir($sAppRoot.'data/'.$sFromEnvironment.'-modules')) {
+			$this->aExtraDirs [] = $sAppRoot.'data/'.$sFromEnvironment.'-modules';
 		}
 
 		foreach ($aExtraDirs as $sDir) {
 			$this->ReadDir($sDir, iTopExtension::SOURCE_REMOTE);
 		}
-		$this->CheckDependencies();
+		$this->CheckDependencies($sAppRoot);
 	}
 
 	/**
 	 * Populate the list of available (pseudo)extensions by scanning the disk
 	 * where the iTop files are located
 	 * @param string $sEnvironment
+	 * @param string $sAppRoot
 	 * @return void
 	 */
-	protected function ScanDisk($sEnvironment)
+	protected function ScanDisk($sEnvironment, string $sAppRoot)
 	{
-		if (!$this->ReadInstallationWizard(APPROOT.'/datamodels/2.x')) {
+		if (!$this->ReadInstallationWizard($sAppRoot.'/datamodels/2.x')) {
 			$this->bHasXmlInstallationFile = false;
 			//no installation xml found in 2.x: let's read all extensions in 2.x first
-			if (!$this->ReadDir(APPROOT.'datamodels/2.x', iTopExtension::SOURCE_WIZARD)) {
+			if (!$this->ReadDir($sAppRoot.'datamodels/2.x', iTopExtension::SOURCE_WIZARD)) {
 				//nothing found in 2.x : fallback read in 1.x (flat structure)
-				$this->ReadDir(APPROOT.'datamodels/1.x', iTopExtension::SOURCE_WIZARD);
+				$this->ReadDir($sAppRoot.'datamodels/1.x', iTopExtension::SOURCE_WIZARD);
 			}
 		}
-		$this->ReadDir(APPROOT.'extensions', iTopExtension::SOURCE_MANUAL);
-		$this->ReadDir(APPROOT.'data/'.$sEnvironment.'-modules', iTopExtension::SOURCE_REMOTE);
+		$this->ReadDir($sAppRoot.'extensions', iTopExtension::SOURCE_MANUAL);
+		$this->ReadDir($sAppRoot.'data/'.$sEnvironment.'-modules', iTopExtension::SOURCE_REMOTE);
 	}
 
 	/**
@@ -99,24 +104,58 @@ class iTopExtensionsMap
 			return false;
 		}
 
+		$aModuleConfigs = [];
+		$this->ListModuleFiles(basename($sDir), dirname($sDir), $aModuleConfigs);
+
 		$oXml = new XMLParameters($sDir.'/installation.xml');
 		foreach ($oXml->Get('steps') as $aStepInfo) {
 			if (array_key_exists('options', $aStepInfo)) {
-				$this->ProcessWizardChoices($aStepInfo['options']);
+				$this->ProcessWizardChoices($aStepInfo['options'], $aModuleConfigs);
 			}
 			if (array_key_exists('alternatives', $aStepInfo)) {
-				$this->ProcessWizardChoices($aStepInfo['alternatives']);
+				$this->ProcessWizardChoices($aStepInfo['alternatives'], $aModuleConfigs);
 			}
 		}
+
 		return true;
+	}
+
+	private function ListModuleFiles(string $sRelDir, string $sRootDir, array &$aRes): void
+	{
+		$sDirectory = $sRootDir.'/'.$sRelDir;
+
+		if ($hDir = opendir($sDirectory)) {
+			// This is the correct way to loop over the directory. (according to the documentation)
+			while (($sFile = readdir($hDir)) !== false) {
+				$aMatches = [];
+				if (is_dir($sDirectory.'/'.$sFile)) {
+					if (($sFile != '.') && ($sFile != '..') && ($sFile != '.svn') && ($sFile != 'vendor')) {
+						$this->ListModuleFiles($sRelDir.'/'.$sFile, $sRootDir, $aRes);
+					}
+				} elseif (preg_match('/^module\.(.*).php$/i', $sFile, $aMatches)) {
+					try {
+						$aModuleInfo = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sDirectory.'/'.$sFile);
+						$sModuleId = $aModuleInfo[ModuleFileReader::MODULE_INFO_ID];
+						list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+						$aModuleConfig = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG];
+						$aModuleConfig['module_version'] = $sModuleVersion;
+						$aRes[$sModuleName] = $aModuleConfig;
+					} catch (ModuleFileReaderException $e) {
+						continue;
+					}
+				}
+			}
+			closedir($hDir);
+		}
 	}
 
 	/**
 	 * Helper to process a "choice" array read from the installation.xml file
 	 * @param array $aChoices
+	 * @param array $aModuleConfigs
 	 * @return void
 	 */
-	protected function ProcessWizardChoices($aChoices)
+	protected function ProcessWizardChoices($aChoices, $aModuleConfigs)
 	{
 		foreach ($aChoices as $aChoiceInfo) {
 			if (array_key_exists('extension_code', $aChoiceInfo)) {
@@ -128,13 +167,23 @@ class iTopExtensionsMap
 				if (array_key_exists('modules', $aChoiceInfo)) {
 					// Some wizard choices are not associated with any module
 					$oExtension->aModules = $aChoiceInfo['modules'];
+					foreach ($oExtension->aModules as $sModuleName) {
+						$aCurrentModuleConfig = $aModuleConfigs[$sModuleName] ?? null;
+						if (is_null($aCurrentModuleConfig)) {
+							IssueLog::Debug("Installation choice comes with missing module file", null, ["choice" => $oExtension->sCode, 'module' => $sModuleName]);
+							continue;
+						}
+						$oExtension->aModuleVersion[$sModuleName] = $aCurrentModuleConfig['module_version'];
+						unset($aCurrentModuleConfig['module_version']);
+						$oExtension->aModuleInfo[$sModuleName] = $aCurrentModuleConfig;
+					}
 				}
 				if (array_key_exists('sub_options', $aChoiceInfo)) {
 					if (array_key_exists('options', $aChoiceInfo['sub_options'])) {
-						$this->ProcessWizardChoices($aChoiceInfo['sub_options']['options']);
+						$this->ProcessWizardChoices($aChoiceInfo['sub_options']['options'], $aModuleConfigs);
 					}
 					if (array_key_exists('alternatives', $aChoiceInfo['sub_options'])) {
-						$this->ProcessWizardChoices($aChoiceInfo['sub_options']['alternatives']);
+						$this->ProcessWizardChoices($aChoiceInfo['sub_options']['alternatives'], $aModuleConfigs);
 					}
 				}
 				$this->AddExtension($oExtension);
@@ -207,7 +256,7 @@ class iTopExtensionsMap
 			$oExtension = $this->GetFromExtensionCode($sCode);
 			if (!is_null($oExtension)) {
 				$aRemovedExtension [] = $oExtension;
-				\IssueLog::Info(__METHOD__.": remove extension locally", null, ['extension_code' => $oExtension->sCode]);
+				\IssueLog::Debug(__METHOD__.": remove extension locally", null, ['extension_code' => $oExtension->sCode]);
 			} else {
 				\IssueLog::Warning(__METHOD__." cannot find extensions", null, ['code' => $sCode]);
 			}
@@ -334,19 +383,19 @@ class iTopExtensionsMap
 	/**
 	 * Check if some extension contains a module with missing dependencies...
 	 * If so, populate the aMissingDepenencies array
+	 *  @param string $sAppRoot
 	 * @return void
 	 */
-	protected function CheckDependencies()
+	protected function CheckDependencies(string $sAppRoot)
 	{
 		$aSearchDirs = [];
 
-		if (is_dir(APPROOT.'/datamodels/2.x')) {
-			$aSearchDirs[] = APPROOT.'/datamodels/2.x';
-		} elseif (is_dir(APPROOT.'/datamodels/1.x')) {
-			$aSearchDirs[] = APPROOT.'/datamodels/1.x';
+		if (is_dir($sAppRoot.'/datamodels/2.x')) {
+			$aSearchDirs[] = $sAppRoot.'/datamodels/2.x';
+		} elseif (is_dir($sAppRoot.'/datamodels/1.x')) {
+			$aSearchDirs[] = $sAppRoot.'/datamodels/1.x';
 		}
 		$aSearchDirs = array_merge($aSearchDirs, $this->aScannedDirs);
-
 		try {
 			ModuleDiscovery::GetModulesOrderedByDependencies($aSearchDirs, true);
 		} catch (MissingDependencyException $e) {

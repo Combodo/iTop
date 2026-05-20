@@ -99,6 +99,7 @@ class RunTimeEnvironment
 			$this->sBuildEnv = $sEnvironment.'-build';
 		}
 		$this->oExtensionsMap = null;
+		SetupLog::Enable(APPROOT.'log/setup.log');
 	}
 
 	/**

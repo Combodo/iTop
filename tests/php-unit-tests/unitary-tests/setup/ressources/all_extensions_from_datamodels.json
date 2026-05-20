@@ -1,0 +1,316 @@
+[
+    {
+        "sCode": "itop-config-mgmt-core",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-structure",
+            "itop-config-mgmt",
+            "itop-attachments",
+            "itop-profiles-itil",
+            "itop-welcome-itil",
+            "itop-tickets",
+            "itop-files-information",
+            "combodo-db-tools",
+            "itop-core-update",
+            "itop-hub-connector",
+            "itop-oauth-client",
+            "combodo-backoffice-darkmoon-theme",
+            "combodo-backoffice-fullmoon-high-contrast-theme",
+            "combodo-backoffice-fullmoon-protanopia-deuteranopia-theme",
+            "combodo-backoffice-fullmoon-tritanopia-theme",
+            "itop-themes-compat",
+            "combodo-my-account",
+            "combodo-my-account-user-info",
+            "combodo-oauth2-client",
+            "itop-attribute-class-set",
+            "itop-attribute-encrypted-password",
+            "itop-ui-copypaste"
+        ],
+        "aModuleVersion": {
+            "itop-structure": "3.3.0",
+            "itop-config-mgmt": "3.3.0"
+        },
+        "aModuleInfo": {
+            "itop-structure": {
+                "label": "Core iTop Structure",
+                "category": "business",
+                "dependencies": [],
+                "mandatory": true,
+                "visible": false,
+                "installer": "StructureInstaller",
+                "datamodel": [
+                    "main.itop-structure.php"
+                ],
+                "data.struct": [],
+                "data.sample": [
+                    "data\/data.sample.organizations.xml",
+                    "data\/data.sample.locations.xml",
+                    "data\/data.sample.persons.xml",
+                    "data\/data.sample.teams.xml",
+                    "data\/data.sample.contactteam.xml",
+                    "data\/data.sample.contacttype.xml"
+                ],
+                "doc.manual_setup": "",
+                "doc.more_information": "",
+                "settings": [],
+                "module_file_path": "APPROOTtests\/php-unit-tests\/unitary-tests\/setup\/ressources\/datamodels\/2.x\/itop-structure\/module.itop-structure.php"
+            },
+            "itop-config-mgmt": {
+                "label": "Configuration Management (CMDB)",
+                "category": "business",
+                "dependencies": [
+                    "itop-structure\/2.7.1"
+                ],
+                "mandatory": false,
+                "visible": true,
+                "installer": "ConfigMgmtInstaller",
+                "datamodel": [
+                    "model.itop-config-mgmt.php",
+                    "main.itop-config-mgmt.php"
+                ],
+                "data.struct": [
+                    "data\/en_us.data.itop-brand.xml",
+                    "data\/en_us.data.itop-networkdevicetype.xml",
+                    "data\/en_us.data.itop-osfamily.xml",
+                    "data\/en_us.data.itop-osversion.xml"
+                ],
+                "data.sample": [
+                    "data\/data.sample.model.xml",
+                    "data\/data.sample.networkdevicetype.xml",
+                    "data\/data.sample.servers.xml",
+                    "data\/data.sample.nw-devices.xml",
+                    "data\/data.sample.software.xml",
+                    "data\/data.sample.dbserver.xml",
+                    "data\/data.sample.dbschema.xml",
+                    "data\/data.sample.webserver.xml",
+                    "data\/data.sample.webapp.xml",
+                    "data\/data.sample.applications.xml",
+                    "data\/data.sample.applicationsolutionci.xml"
+                ],
+                "doc.manual_setup": "",
+                "doc.more_information": "",
+                "settings": [],
+                "module_file_path": "APPROOT\/tests\/php-unit-tests\/unitary-tests\/setup\/ressources\/datamodels\/2.x\/itop-config-mgmt\/module.itop-config-mgmt.php"
+            }
+        }
+    },
+    {
+        "sCode": "itop-config-mgmt-datacenter",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-datacenter-mgmt"
+        ],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-config-mgmt-end-user",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-endusers-devices"
+        ],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-config-mgmt-storage",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-storage-mgmt"
+        ],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-container-mgmt",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-container-mgmt"
+        ],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-config-mgmt-virtualization",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-virtualization-mgmt"
+        ],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-service-mgmt-enterprise",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-service-mgmt"
+        ],
+        "aModuleVersion": {
+            "itop-service-mgmt": "3.3.0"
+        },
+        "aModuleInfo": {
+            "itop-service-mgmt": {
+                "label": "Service Management",
+                "category": "business",
+                "dependencies": [
+                    "itop-tickets\/2.0.0"
+                ],
+                "mandatory": false,
+                "visible": true,
+                "installer": "ServiceMgmtInstaller",
+                "datamodel": [],
+                "data.struct": [],
+                "data.sample": [
+                    "data\/data.sample.organizations.xml",
+                    "data\/data.sample.contracts.xml",
+                    "data\/data.sample.servicefamilies.xml",
+                    "data\/data.sample.services.xml",
+                    "data\/data.sample.serviceelements.xml",
+                    "data\/data.sample.sla.xml",
+                    "data\/data.sample.slt.xml",
+                    "data\/data.sample.sltsla.xml",
+                    "data\/data.sample.contractservice.xml",
+                    "data\/data.sample.deliverymodelcontact.xml"
+                ],
+                "doc.manual_setup": "",
+                "doc.more_information": "",
+                "settings": [],
+                "module_file_path": "APPROOT\/tests\/php-unit-tests\/unitary-tests\/setup\/ressources\/datamodels\/2.x\/itop-service-mgmt\/module.itop-service-mgmt.php"
+            }
+        }
+    },
+    {
+        "sCode": "itop-service-mgmt-service-provider",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-service-mgmt-provider"
+        ],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-ticket-mgmt-simple-ticket-enhanced-portal",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-portal",
+            "itop-portal-base"
+        ],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-ticket-mgmt-simple-ticket",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-request-mgmt"
+        ],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-ticket-mgmt-itil-user-request",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-request-mgmt-itil"
+        ],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-ticket-mgmt-itil-incident",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-incident-mgmt-itil"
+        ],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-ticket-mgmt-itil-enhanced-portal",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-portal",
+            "itop-portal-base"
+        ],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-ticket-mgmt-itil",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-ticket-mgmt-none",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-change-mgmt-simple",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-change-mgmt"
+        ],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-change-mgmt-itil",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-change-mgmt-itil"
+        ],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-change-mgmt-none",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-kown-error-mgmt",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-faq-light",
+            "itop-knownerror-mgmt"
+        ],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    },
+    {
+        "sCode": "itop-problem-mgmt",
+        "sSource": "datamodels",
+        "sVersion": "ITOP_VERSION",
+        "aModules": [
+            "itop-problem-mgmt"
+        ],
+        "aModuleVersion": [],
+        "aModuleInfo": []
+    }
+]

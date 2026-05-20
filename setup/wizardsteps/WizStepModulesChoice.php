@@ -25,7 +25,7 @@ use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 /**
  * Choice of the modules to be installed
  */
-class WizStepModulesChoice extends WizardStep
+class WizStepModulesChoice extends AbstractWizStepInstall
 {
 	protected static string $SEP = '_';
 	protected bool $bUpgrade = false;
@@ -38,7 +38,7 @@ class WizStepModulesChoice extends WizardStep
 	 */
 	protected iTopExtensionsMap $oExtensionsMap;
 
-	private ?array $aSteps = null;
+	protected ?array $aSteps = null;
 
 	protected PhpExpressionEvaluator $oPhpExpressionEvaluator;
 
@@ -51,7 +51,7 @@ class WizStepModulesChoice extends WizardStep
 	private array $aAnalyzeInstallationModules = [];
 	private ?MissingDependencyException $oMissingDependencyException = null;
 
-	public function __construct(WizardController $oWizard, $sCurrentState)
+	public function __construct(WizardController $oWizard, $sCurrentState, bool $bOverWriteConfig = true)
 	{
 		parent::__construct($oWizard, $sCurrentState);
 		$this->bChoicesFromDatabase = false;
@@ -69,8 +69,10 @@ class WizStepModulesChoice extends WizardStep
 		if ($sConfigPath !== null) {
 			$this->oConfig = new Config($sConfigPath);
 
-			$aParamValues = $oWizard->GetParamForConfigArray();
-			$this->oConfig->UpdateFromParams($aParamValues);
+			if ($bOverWriteConfig) {
+				$aParamValues = $oWizard->GetParamForConfigArray();
+				$this->oConfig->UpdateFromParams($aParamValues);
+			}
 
 			$this->oExtensionsMap->LoadChoicesFromDatabase($this->oConfig);
 			$this->bChoicesFromDatabase = true;
@@ -78,7 +80,7 @@ class WizStepModulesChoice extends WizardStep
 
 		// Sanity check (not stopper, to let developers go further...)
 		try {
-			$this->aAnalyzeInstallationModules = SetupUtils::AnalyzeInstallation($this->oWizard, true);
+			$this->aAnalyzeInstallationModules = SetupUtils::AnalyzeInstallation($this->oWizard, true, null, $this->oConfig);
 		} catch (MissingDependencyException $e) {
 			$this->oMissingDependencyException = $e;
 			$this->aAnalyzeInstallationModules = SetupUtils::AnalyzeInstallation($this->oWizard);
@@ -118,17 +120,6 @@ class WizStepModulesChoice extends WizardStep
 		return [$aExtensionsAdded, $aExtensionsRemoved, $aExtensionsNotUninstallable];
 	}
 
-	public function IsDataAuditEnabled(): bool
-	{
-		$sPath = APPROOT.'env-production';
-		if (!is_dir($sPath)) {
-			SetupLog::Info("Reinstallation of an iTop from a backup (No env-production found). Setup data audit disabled");
-
-			return false;
-		}
-		return true;
-	}
-
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
 		// Accumulates the selected modules:
@@ -163,7 +154,7 @@ class WizStepModulesChoice extends WizardStep
 				$this->oWizard->SetParameter('selected_modules', json_encode(array_keys($aModules)));
 				$this->oWizard->SetParameter('selected_extensions', json_encode($aExtensions));
 				$this->oWizard->SetParameter('display_choices', $sDisplayChoices);
-				$this->oWizard->SetParameter('extensions_added', json_encode($aExtensionsAdded));
+				$this->oWizard->SetParameter('added_extensions', json_encode($aExtensionsAdded));
 				$this->oWizard->SetParameter('removed_extensions', json_encode($aExtensionsRemoved));
 				$this->oWizard->SetParameter('extensions_not_uninstallable', json_encode(array_keys($aExtensionsNotUninstallable)));
 
@@ -173,6 +164,96 @@ class WizStepModulesChoice extends WizardStep
 		}
 		//Unused when going backward
 		return new WizardState(WizStepModulesChoice::class, (string)($index - 1));
+	}
+
+	public function GetWizardSteps(): array
+	{
+		$aSteps = [
+			["class" => "WizStepWelcome","state" => ""],
+			["class" => "WizStepInstallOrUpgrade","state" => ""],
+			["class" => "WizStepDetectedInfo","state" => ""],
+			["class" => "WizStepUpgradeMiscParams","state" => ""],
+		];
+		$i = 0;
+		while (null != $this->GetStepInfo($i)) {
+			$aSteps [] = ["class" => "WizStepModulesChoice","state" => "$i"];
+			$i++;
+		}
+
+		return $aSteps;
+	}
+
+	public function GetSelectedComponents(array $aSteps, string $sSelectedExtensionJson): array
+	{
+		SetupLog::Error(__METHOD__, null, $aSteps);
+		$aExtensions = json_decode($sSelectedExtensionJson, true);
+		$aRes = [];
+		foreach ($aSteps as $i => $aStepInfo) {
+			$aStepRes = [];
+			$this->ProcessOptions("", $aStepInfo, $aExtensions, $aStepRes);
+			$this->ProcessAlternatives("", $aStepInfo, $aExtensions, $aStepRes);
+			$aRes [] = $aStepRes;
+		}
+
+		return $aRes;
+	}
+
+	public function ProcessOptions(string $sCurrentIndex, array $aInfo, array $aExtensions, array &$aStepRes)
+	{
+		$aOptions = $aInfo["options"] ?? null;
+		if (is_null($aOptions) || !is_array($aOptions)) {
+			return;
+		}
+
+		foreach ($aOptions as $i => $aOptionsInfo) {
+			$sExtensionCode = $aOptionsInfo["extension_code"] ?? null;
+
+			if (in_array($sExtensionCode, $aExtensions)) {
+				$aStepRes = $this->ProcessSelectedOption($sCurrentIndex, $i, $aStepRes, $aOptionsInfo, $aExtensions);
+			}
+		}
+	}
+
+	public function ProcessAlternatives(string $sCurrentIndex, array $aInfo, array $aExtensions, array &$aStepRes)
+	{
+		$aAlternatives = $aInfo["alternatives"] ?? null;
+		if (is_null($aAlternatives) || ! is_array($aAlternatives)) {
+			return;
+		}
+
+		foreach ($aAlternatives as $i => $aAlternativeInfo) {
+			$sExtensionCode = $aAlternativeInfo["extension_code"] ?? null;
+
+			if (in_array($sExtensionCode, $aExtensions)) {
+				$aStepRes = $this->ProcessSelectedOption($sCurrentIndex, $i, $aStepRes, $aAlternativeInfo, $aExtensions);
+				break;
+			}
+		}
+	}
+
+	/**
+	 * @param string $sCurrentIndex
+	 * @param int|string $i
+	 * @param array $aStepRes
+	 * @param mixed $aOptionsInfo
+	 * @param array $aExtensions
+	 *
+	 * @return array
+	 */
+	public function ProcessSelectedOption(string $sCurrentIndex, int|string $i, array $aStepRes, mixed $aOptionsInfo, array $aExtensions): array
+	{
+		$sNextIndex = "{$sCurrentIndex}_{$i}";
+		$aStepRes[$sNextIndex] = $sNextIndex;
+
+		$aSubOptions = $aOptionsInfo['sub_options'] ?? null;
+		if (!is_null($aSubOptions) && is_array($aSubOptions)) {
+			$this->ProcessOptions($sNextIndex, $aSubOptions, $aExtensions, $aStepRes);
+			$this->ProcessAlternatives($sNextIndex, $aSubOptions, $aExtensions, $aStepRes);
+		}
+
+		$this->ProcessAlternatives($sNextIndex, $aOptionsInfo, $aExtensions, $aStepRes);
+
+		return $aStepRes;
 	}
 
 	public function Display(SetupPage $oPage): void
@@ -861,7 +942,7 @@ EOF
 			return 'Non-uninstallable extension missing';
 		}
 
-		if ($this->GetStepInfo(1 + $this->GetStepIndex()) === null && $this->IsDataAuditEnabled()) {
+		if ($this->GetStepInfo(1 + $this->GetStepIndex()) === null) {
 			return 'Check compatibility';
 		}
 

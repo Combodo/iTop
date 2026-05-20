@@ -18,4 +18,5 @@ require_once(APPROOT.'setup/wizardsteps/WizStepInstallMiscParams.php');
 require_once(APPROOT.'setup/wizardsteps/WizStepModulesChoice.php');
 require_once(APPROOT.'setup/wizardsteps/WizStepSummary.php');
 require_once(APPROOT.'setup/wizardsteps/WizStepUpgradeMiscParams.php');
+require_once(APPROOT.'setup/wizardsteps/WizStepLandingBeforeAudit.php');
 require_once(APPROOT.'setup/wizardcontroller.class.inc.php');

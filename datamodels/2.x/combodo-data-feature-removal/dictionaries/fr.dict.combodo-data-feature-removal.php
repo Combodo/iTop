@@ -21,6 +21,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'DataFeatureRemoval:Helper:Desc2' => 'Analyse si des données ou des dépendances empêchent l’activation ou la désactivation d’une fonctionnalité.',
 
 	'DataFeatureRemoval:Features:Title' => 'Fonctionnalités',
+	'DataFeatureRemoval:Execution:Title' => 'Suppressions',
 	'DataFeatureRemoval:Analysis:Title' => 'Résultat de l’analyse',
 	'DataFeatureRemoval:Analysis:SubTitle' => '%1$s élément(s) à nettoyer avant de poursuivre',
 
@@ -34,6 +35,9 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'DataFeatureRemoval:Table:Analysis:FeatureName' => 'Fonctionnalité',
 	'DataFeatureRemoval:Table:Analysis:Module' => 'Module',
 	'DataFeatureRemoval:Table:Analysis:Occurrence' => 'Occurrence',
+
+	'DataFeatureRemoval:CleanupComplete:Title' => 'All clear.',
+	'DataFeatureRemoval:CompilComplete' => 'Compilation successful. No Cleanup needed. You can proceed to setup.',
 
 	'UI:Button:Analyze' => 'Analyser',
 	'UI:Button:ModifyChoices' => 'Modifier les choix',
