@@ -165,7 +165,7 @@
       </fields>
       <event_listeners>
         <event_listener id="evtCheckSourceAndDestination">
-          <event>EVENT_ENUM_TRANSITIONS</event>
+          <event>EVENT_DB_CHECK_TO_WRITE</event>
           <rank>10</rank>
           <callback>evtCheckSourceAndDestination</callback>
         </event_listener>
@@ -184,10 +184,10 @@
 	  $oSource = MetaModel::GetObject(FunctionalCI::class, $this->Get('source_id'), true,true);
 	  $oDestination = MetaModel::GetObject(FunctionalCI::class, $this->Get('destination_id'), true,true);
     if ($oSource instanceof DataFlow) {
-      $this->AddCheckIssue(Dict:Format('Class:DataFlow/Error:CheckSource', $oSource->GetName()));
+      $this->AddCheckIssue(Dict::Format('Class:DataFlow/Error:CheckSource', $oSource->GetName()));
     }
     if ($oDestination instanceof DataFlow) {
-      $this->AddCheckIssue(Dict:Format('Class:DataFlow/Error:CheckDestination', $oDestination->GetName()));
+      $this->AddCheckIssue(Dict::Format('Class:DataFlow/Error:CheckDestination', $oDestination->GetName()));
     }
 	}      ]]></code>
         </method>
@@ -340,12 +340,12 @@
       <relations>
         <relation id="impacts">
           <neighbours>
-            <neighbour id="functionalci ">
+            <neighbour id="functionalci">
               <query_down><![CDATA[SELECT FunctionalCI WHERE :this->destination_impact = 'yes' AND id = :this->destination_id]]></query_down>
               <query_up><![CDATA[SELECT DataFlow AS f JOIN FunctionalCI AS ci ON f.destination_id = ci.id WHERE f.destination_impact = 'yes' AND ci.id=:this->id]]></query_up>
               <direction>both</direction>
             </neighbour>
-            <neighbour id="contact ">
+            <neighbour id="contact">
               <attribute>contacts_list</attribute>
               <direction>down</direction>
             </neighbour>
@@ -353,7 +353,7 @@
         </relation>
         <relation id="dataflows">
           <neighbours>
-            <neighbour id="functionalci ">
+            <neighbour id="functionalci">
               <query_down><![CDATA[SELECT FunctionalCI WHERE id = :this->destination_id]]></query_down>
               <query_up><![CDATA[SELECT DataFlow AS f WHERE f.destination_id = :this->id]]></query_up>
               <direction>both</direction>
