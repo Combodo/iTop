@@ -175,7 +175,9 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 			["class" => "WizStepUpgradeMiscParams","state" => ""],
 		];
 		$i = 0;
+		$this->aSteps = null;
 		while (null != $this->GetStepInfo($i)) {
+			$this->aSteps = null;
 			$aSteps [] = ["class" => "WizStepModulesChoice","state" => "$i"];
 			$i++;
 		}
@@ -709,7 +711,6 @@ EOF
 				// Found an "installation.xml" file, let's use this definition for the wizard
 				$aParams = new XMLParameters($this->GetSourceFilePath());
 				$this->aSteps = $aParams->Get('steps', []);
-
 				if ($index + 1 >= count($this->aSteps)) {
 					//make sure we also cache next step as well
 					$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo($bRemoteExtensionsShouldBeMandatory);

@@ -6,7 +6,6 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use iTopExtensionsMap;
 use iTopExtensionsMapFake;
 use ModuleDiscovery;
-use WepPageFake;
 use WizardController;
 use WizStepModulesChoiceFake;
 use XMLParameters;
@@ -1427,6 +1426,27 @@ HTML,
 		];
 
 		for ($i = 0;$i <= 5; $i++) {
+			$expected [] = ["class" => "WizStepModulesChoice","state" => "".$i];
+		}
+		$this->assertEquals($expected, $this->oWizStepModulesChoiceFake->GetWizardSteps());
+	}
+
+	public function testGetWizardStepsWithoutAnyExtension()
+	{
+		$this->oWizard->SetParameter('source_dir', __DIR__.'/ressources');
+		$oExtensionMap = $this->createMock(iTopExtensionsMap::class);
+		$oExtensionMap->expects(self::any())->method('GetAllExtensionsOptionInfo')->willReturn([]);
+
+		$this->oWizStepModulesChoiceFake->setExtensionMap($oExtensionMap);
+
+		$expected = [
+			["class" => "WizStepWelcome","state" => ""],
+			["class" => "WizStepInstallOrUpgrade","state" => ""],
+			["class" => "WizStepDetectedInfo","state" => ""],
+			["class" => "WizStepUpgradeMiscParams","state" => ""],
+		];
+
+		for ($i = 0;$i <= 4; $i++) {
 			$expected [] = ["class" => "WizStepModulesChoice","state" => "".$i];
 		}
 		$this->assertEquals($expected, $this->oWizStepModulesChoiceFake->GetWizardSteps());
