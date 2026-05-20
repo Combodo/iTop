@@ -477,7 +477,7 @@ class RunTimeEnvironment
 		}
 
 		$aModulesToLoad = $this->GetModulesToLoad($this->sFinalEnv, $aDirsToCompile);
-		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile, false, $aModulesToLoad);
+		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile, true, $aModulesToLoad);
 
 		// Do load the required modules
 		//
@@ -1634,6 +1634,7 @@ class RunTimeEnvironment
 	protected function GetModulesToLoad(string $sSourceEnv, array $aSearchDirs): ?array
 	{
 		if (is_null($this->GetExtensionMap())) {
+			SetupLog::Error(__METHOD__ .  '================' . __LINE__);
 			return null;
 		}
 
@@ -1641,6 +1642,7 @@ class RunTimeEnvironment
 
 		$aChoices = $this->GetExtensionMap()->GetChoicesFromDatabase($oSourceConfig);
 		if (false === $aChoices) {
+			SetupLog::Error(__METHOD__ .  '================' . __LINE__);
 			return null;
 		}
 		$sSourceDir = $oSourceConfig->Get('source_dir');
@@ -1666,6 +1668,7 @@ class RunTimeEnvironment
 			$aModulesToLoad[] = $sModuleName;
 		}
 
+		SetupLog::Error(__METHOD__ .  '================' . __LINE__, null, [$aChoices, $aModuleIdsToLoad]);
 		return $aModulesToLoad;
 	}
 
