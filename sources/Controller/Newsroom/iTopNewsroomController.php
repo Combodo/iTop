@@ -16,10 +16,12 @@ use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectSummary;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\WebPage\DownloadPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
 use Combodo\iTop\Application\WebPage\JsonPPage;
 use Combodo\iTop\Controller\Notifications\NotificationsCenterController;
+use Combodo\iTop\Service\Notification\Event\EventNotificationNewsroomService;
 use Combodo\iTop\Service\Notification\NotificationsRepository;
 use Combodo\iTop\Service\Router\Router;
 use CoreException;
@@ -27,6 +29,7 @@ use DBObjectSearch;
 use DBObjectSet;
 use Dict;
 use EventNotificationNewsroom;
+use Exception;
 use MetaModel;
 use SecurityException;
 use UserRights;
@@ -376,9 +379,10 @@ JS
 			$oEventBlock->SetCSSColorClass($sReadColor);
 			$oEventBlock->SetSubTitle($sReadLabel);
 			$oEventBlock->SetClassLabel('');
+			/** @var \ormDocument $oImage */
 			$oImage = $oEvent->Get('icon');
 			if (!$oImage->IsEmpty()) {
-				$sIconUrl = $oImage->GetDisplayURL(get_class($oEvent), $iEventId, 'icon');
+				$sIconUrl = self::GetDisplayIconUrl($iEventId, $oImage->GetSignature());
 				$oEventBlock->SetIcon($sIconUrl, Panel::ENUM_ICON_COVER_METHOD_COVER, true);
 			}
 
@@ -542,7 +546,7 @@ $sMessage
 HTML;
 
 				$sIcon = $oMessage->Get('icon') !== null ?
-					$oMessage->Get('icon')->GetDisplayURL(EventNotificationNewsroom::class, $oMessage->GetKey(), 'icon') :
+					$this->GetDisplayIconUrl($oMessage->GetKey(), $oMessage->Get('icon')->GetSignature()) :
 					Branding::GetCompactMainLogoAbsoluteUrl();
 				$aMessages[] = [
 					'id'         => $oMessage->GetKey(),
@@ -690,6 +694,35 @@ HTML;
 	}
 
 	/**
+	 * Display the icon of an EventNotificationNewsroom
+	 * (copy of ajax.render.php?operation=display_document but with the bAllowAllData parameter set to true in order to bypass the data access restrictions since the icon is not a critical information)
+	 * @return void
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
+	public function OperationViewIcon(): void
+	{
+		$sId = utils::ReadParam('id', '');
+		if (!empty($sId)) {
+			$oPage = new DownloadPage('');
+			// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
+			// so we're resetting its value ! (see N°3416)
+			$oPage->add_xframe_options('');
+			$iCacheSec = (int)utils::ReadParam('cache', 0);
+			$oPage->set_cache($iCacheSec);
+
+			// N°4129 - Prevent XSS attacks & other script executions
+			if (utils::GetConfig()->Get('security.disable_inline_documents_sandbox') === false) {
+				$oPage->add_header('Content-Security-Policy: sandbox;');
+			}
+
+			if (EventNotificationNewsroomService::DownloadIcon($oPage, $sId, UserRights::GetContactId()) === true) {
+				$oPage->Output();
+			}
+		}
+	}
+
+	/**
 	 * @param string $sAction
 	 *
 	 * @return string[]
@@ -780,5 +813,10 @@ HTML;
 		}
 
 		return $aReturnData;
+	}
+
+	protected function GetDisplayIconUrl(string $sId, string $sSignature): string
+	{
+		return utils::GetAbsoluteUrlAppRoot()."pages/UI.php?route=itopnewsroom.view_icon&id=$sId&s=$sSignature&cache=86400";
 	}
 }
