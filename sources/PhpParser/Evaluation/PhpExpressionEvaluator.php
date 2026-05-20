@@ -61,10 +61,10 @@ PHP;
 	public function GetArrayWithComments(Array_ $oArray): array
 	{
 		$aRes = [];
-		$i=0;
+		$i = 0;
 		foreach ($oArray->items as $oItem) {
 			/** @var \PhpParser\Node\ArrayItem $oItem **/
-			if(is_null($oItem->key)){
+			if (is_null($oItem->key)) {
 				$sKey = $i;
 				$i++;
 			} else {

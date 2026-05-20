@@ -2748,9 +2748,11 @@ class Config
 				fwrite($hFile, "\t'$sModule' => array (\n");
 				foreach ($aProperties as $sProperty => $value) {
 					if (is_string($value) && false !== strpos($value, 'PhpParserComment')) {
-						$value = preg_replace(["/.*StartPhpParserComment/", "/EndPhpParserComment/"],
+						$value = preg_replace(
+							["/.*StartPhpParserComment/", "/EndPhpParserComment/"],
 							['', ''],
-							$value);
+							$value
+						);
 						fwrite($hFile, "\t\t$value\n");
 						continue;
 					}
@@ -2941,9 +2943,11 @@ class Config
 
 		$sExport = var_export($value, true);
 		if (strpos($sExport, 'PhpParserComment')) {
-			$sExport = preg_replace(["/.*StartPhpParserComment/", "/EndPhpParserComment',/"],
+			$sExport = preg_replace(
+				["/.*StartPhpParserComment/", "/EndPhpParserComment',/"],
 				['', ''],
-				$sExport);
+				$sExport
+			);
 		}
 		$sNiceExport = str_replace(["\r\n", "\n", "\r"], "\n".$sIndentation, trim($sExport));
 		if (!$bForceIndentation) {

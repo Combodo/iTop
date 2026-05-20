@@ -103,8 +103,9 @@ class ConfigTest extends ItopTestCase
 		$this->assertEquals($this->GetModuleSettingSection($sConfigFile), $this->GetModuleSettingSection($sTmpFile));
 	}
 
-	private function GetModuleSettingSection(string $sFilePath) : string  {
+	private function GetModuleSettingSection(string $sFilePath): string
+	{
 		preg_match('/\$MyModuleSettings[\w\W]*\/\*\*/m', file_get_contents($sFilePath), $aMatches);
-		return preg_replace(['/[	]+/', '/[ ]+/'],[' ', ' '], $aMatches[0]);
+		return preg_replace(['/[	]+/', '/[ ]+/'], [' ', ' '], $aMatches[0]);
 	}
 }
