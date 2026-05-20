@@ -181,8 +181,8 @@
         <type>EventListener</type>
           <code><![CDATA[	public function evtCheckSourceAndDestination(Combodo\iTop\Service\Events\EventData $oEventData)
 	{
-	  $oSource = MetaModel::GetObject(FunctionalCI::class, $this->Get('source_id'), true,true);
-	  $oDestination = MetaModel::GetObject(FunctionalCI::class, $this->Get('destination_id'), true,true);
+	  $oSource = MetaModel::GetObject(FunctionalCI::class, $this->Get('source_id'), false, true);
+	  $oDestination = MetaModel::GetObject(FunctionalCI::class, $this->Get('destination_id'), false, true);
     if ($oSource instanceof DataFlow) {
       $this->AddCheckIssue(Dict::Format('Class:DataFlow/Error:CheckSource', $oSource->GetName()));
     }
