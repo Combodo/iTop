@@ -21,10 +21,12 @@ use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use ContextTag;
+use CoreException;
 use Dict;
 use Exception;
 use IssueLog;
 use MetaModel;
+use MissingDependencyException;
 use SetupUtils;
 use utils;
 
@@ -55,6 +57,7 @@ class DataFeatureRemovalController extends Controller
 		$aParams['sSetupUrl'] = utils::GetAbsoluteUrlAppRoot().'setup';
 		$aParams['iCount'] = $this->iCount;
 
+		Session::Set('bForceCompilation', true);
 		$this->AddLinkedStylesheet(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/css/DataFeatureRemoval.css');
 		$this->AddLinkedScript(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/js/DataFeatureRemoval.js');
 		$this->DisplayPage($aParams);
@@ -77,6 +80,7 @@ class DataFeatureRemovalController extends Controller
 		$this->aAnalysisDataTable =  $this->GetTableData('Analysis', $aColumns, $aData);
 	}
 
+	/*
 	public function OperationAnalyze(): void
 	{
 		$iCount = $this->ReadExtensionsDiff();
@@ -103,6 +107,7 @@ class DataFeatureRemovalController extends Controller
 		IssueLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
 		$this->aCountClassesToCleanup = $aGetRemovedClasses;
 	}
+	*/
 
 	public function OperationAnalysisResult(): void
 	{
@@ -133,7 +138,14 @@ class DataFeatureRemovalController extends Controller
 		$aParams['aHiddenInputs'] = $aHiddenInputs;
 
 		$aAddedExtensions = json_decode($aHiddenInputs['added_extensions'], true);
+
 		$aRemovedExtensions = json_decode($aHiddenInputs['removed_extensions'], true);
+		if (count($aRemovedExtensions) == 0) {
+			$this->ReadExtensionsDiff();
+			$aRemovedExtensions = $this->aRemovedExtensionsForCheck;
+		}
+
+		$aRemoveExtensionCodes = array_keys($aRemovedExtensions);
 
 		$aParams['aAddedExtensions'] = $aAddedExtensions;
 		$aParams['aRemovedExtensions'] = $aRemovedExtensions;
@@ -142,17 +154,29 @@ class DataFeatureRemovalController extends Controller
 			'added_extensions' => $aAddedExtensions,
 			'removed_extensions' => $aRemovedExtensions]);
 
-		$this->Compile(array_keys($aRemovedExtensions), false);
+		$aParams['sTransactionId'] = utils::GetNewTransactionId();
+		$aParams['iColumnCount'] = $this->iColumnCount;
+		$aParams['aAvailableExtensions'] = $this->SplitArrayIntoColumns($this->GetExtensionsDiff($aAddedExtensions, $aRemovedExtensions), $this->iColumnCount);
+
+		$bForceCompilation = Session::Get('bForceCompilation', false);
+		try {
+			$this->Compile($aRemoveExtensionCodes, $bForceCompilation);
+		} catch (CoreException $e) {
+			$aParams['DataFeatureRemovalErrorMessage'] = $e->getHtmlDesc();
+			$this->DisplayPage($aParams, 'AnalysisResult');
+			return;
+		} catch (Exception $e) {
+			$aParams['DataFeatureRemovalErrorMessage'] = $e->getMessage();
+			$this->DisplayPage($aParams, 'AnalysisResult');
+			return;
+		}
 
 		$sSourceEnv = MetaModel::GetEnvironment();
 		$oSetupAudit = new SetupAudit($sSourceEnv);
 		$aGetRemovedClasses = array_keys($oSetupAudit->RunDataAudit());
 		IssueLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
 
-		$aParams['sTransactionId'] = utils::GetNewTransactionId();
 		$aParams['aClasses'] = $aGetRemovedClasses;
-		$aParams['iColumnCount'] = $this->iColumnCount;
-		$aParams['aAvailableExtensions'] = $this->SplitArrayIntoColumns($this->GetExtensionsDiff($aAddedExtensions, $aRemovedExtensions), $this->iColumnCount);
 
 		new ContextTag(ContextTag::TAG_SETUP);
 		$aParams['sLaunchSetupUrl'] = utils::GetAbsoluteUrlAppRoot().'setup/wizard.php';
@@ -170,6 +194,13 @@ class DataFeatureRemovalController extends Controller
 		$this->DisplayPage($aParams, 'AnalysisResult');
 	}
 
+	/**
+* @param array $aRemovedExtensions
+* @param bool $bForceCompilation
+* @return void
+* @throws \ConfigException
+* @throws \CoreException
+	 */
 	private function Compile(array $aRemovedExtensions, bool $bForceCompilation = true): void
 	{
 		$sSourceEnv = MetaModel::GetEnvironment();

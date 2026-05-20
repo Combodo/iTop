@@ -15,21 +15,5 @@
         {{ 'DataFeatureRemoval:Helper:Desc2'|dict_s }}
     {% EndUIAlert %}
 
-    {% if null != DataFeatureRemovalErrorMessage %}
-        <div id="feature_removal_error_msg_div" style="display:block">
-            {% UIAlert ForFailure { sTitle:'DataFeatureRemoval:Failure:Title'|dict_s, sId: 'feature_removal_error_msg', sContent:DataFeatureRemovalErrorMessage } %}
-            {% EndUIAlert %}
-        </div>
-    {% endif %}
-
     {% include 'Features.html.twig' %}
-    {% include 'ExtensionRemovalData.html.twig' %}
-
-    {% if not bHasData %}
-        {% UIToolbar ForButton {} %}
-            <a href="{{ sSetupUrl }}">
-            {% UIButton ForPrimaryAction {sLabel:'UI:Button:Setup'|dict_s, sName:'btn_setup', sId:'btn_setup', bIsSubmit:false} %}
-            </a>
-        {% EndUIToolbar %}
-    {% endif %}
 {% EndUIPanel %}
