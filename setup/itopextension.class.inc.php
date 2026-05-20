@@ -174,6 +174,7 @@ class iTopExtension
 		return match ($this->sSource) {
 			self::SOURCE_MANUAL => 'Local extensions folder',
 			self::SOURCE_REMOTE => (ITOP_APPLICATION == 'iTop') ? 'iTop Hub' : 'ITSM Designer',
+			self::SOURCE_WIZARD => 'iTop package',
 			default => '',
 		};
 	}

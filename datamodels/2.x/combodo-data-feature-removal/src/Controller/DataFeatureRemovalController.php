@@ -31,20 +31,23 @@ use utils;
 class DataFeatureRemovalController extends Controller
 {
 	private array $aRemovedExtensionsForCheck = [];
+	private ?array $aExtensionsToCheck = null;
+	private bool $bForcedUninstallation = false;
 	private array $aCountClassesToCleanup = [];
 	private array $aAnalysisDataTable = [];
 	private array $aDeletionExecutionSummary = [];
 
 	private int $iCount = 0;
+	private int $iColumnCount = 2;
 
 	public function OperationMain($sErrorMessage = null): void
 	{
 		$aParams = [];
 
-		$this->ReadRemovedExtensions();
 		$this->AddAnalyzeParams();
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
-		$aParams['aExtensions'] = $this->GetExtensionsTableToSelect();
+		$aParams['iColumnCount'] = $this->iColumnCount;
+		$aParams['aAvailableExtensions'] = $this->SplitArrayIntoColumns($this->GetAvailableExtensions(), $this->iColumnCount);
 		$aParams['aAnalysisDataTable'] = $this->aAnalysisDataTable;
 		$aParams['aClasses'] = array_keys($this->aCountClassesToCleanup);
 		$aParams['DataFeatureRemovalErrorMessage'] = $sErrorMessage;
@@ -76,12 +79,11 @@ class DataFeatureRemovalController extends Controller
 
 	public function OperationAnalyze(): void
 	{
-		$this->ReadRemovedExtensions();
+		$iCount = $this->ReadExtensionsDiff();
 
 		$this->m_sOperation = 'Main';
-
 		try {
-			if (count($this->aRemovedExtensionsForCheck) > 0) {
+			if ($iCount > 0) {
 				$this->Analyze();
 			}
 			$this->OperationMain();
@@ -93,7 +95,8 @@ class DataFeatureRemovalController extends Controller
 
 	private function Analyze(): void
 	{
-		$this->Compile($this->aRemovedExtensionsForCheck);
+		//TODO : Run data audit with added extension too, not just removed ones
+		$this->Compile($this->aExtensionsToCheck['to_be_removed']);
 		$sSourceEnv = MetaModel::GetEnvironment();
 		$oSetupAudit = new SetupAudit($sSourceEnv);
 		$aGetRemovedClasses = $oSetupAudit->RunDataAudit();
@@ -148,7 +151,8 @@ class DataFeatureRemovalController extends Controller
 
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
 		$aParams['aClasses'] = $aGetRemovedClasses;
-		$aParams['aExtensions'] = $this->GetExtensionsTableDiff($aAddedExtensions, $aRemovedExtensions);
+		$aParams['iColumnCount'] = $this->iColumnCount;
+		$aParams['aAvailableExtensions'] = $this->SplitArrayIntoColumns($this->GetExtensionsDiff($aAddedExtensions, $aRemovedExtensions), $this->iColumnCount);
 
 		new ContextTag(ContextTag::TAG_SETUP);
 		$aParams['sLaunchSetupUrl'] = utils::GetAbsoluteUrlAppRoot().'setup/wizard.php';
@@ -261,72 +265,52 @@ class DataFeatureRemovalController extends Controller
 		$this->OperationAnalysisResult();
 	}
 
-	private function GetExtensionsTableDiff(array $aAddedExtensions, array $aRemovedExtensions): array
+	private function GetAvailableExtensions(bool $bIncludePackageExtensions = false): array
 	{
-		$aExtensions = [];
-		$aColumns = ['', 'Name', 'code', 'Badge' ];
-
-		foreach ($aAddedExtensions as $sAddedExtensionCode => $sAddedExtensionLabel) {
-			$aExtensions[] = [
-				<<<HTML
-<input type="checkbox" disabled class="extension_check" checked/>
-HTML,
-				$sAddedExtensionLabel,
-				$sAddedExtensionCode,
-				Dict::S('UI:Layout:ExtensionsDetails:BadgeToBeInstalled'),
-			];
+		$aExtensionsData = [];
+		if ($bIncludePackageExtensions) {
+			$aExtensionsRef = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetAllExtensionsWithPreviouslyInstalled();
 		}
-		foreach ($aRemovedExtensions as $sAddedExtensionCode => $sAddedExtensionLabel) {
-			$aExtensions[] = [
-				<<<HTML
-<input type="checkbox" disabled class="extension_check"/>
-HTML,
-				$sAddedExtensionLabel,
-				$sAddedExtensionCode,
-				Dict::S('UI:Layout:ExtensionsDetails:BadgeToBeUninstalled'),
-			];
+		else {
+			$aExtensionsRef = DataFeatureRemoverExtensionService::GetInstance()->ReadItopExtensions();
 		}
 
-		return $this->GetTableData('Extensions', $aColumns, $aExtensions);
+		foreach ($aExtensionsRef as $oExtension) {
+			/** @var \iTopExtension $oExtension */
+			$aExtensionsData[$oExtension->sCode] = [
+				'version' => $oExtension->sVersion,
+				'label' => $oExtension->sLabel,
+				'code' => $oExtension->sCode,
+				'description' => $oExtension->sDescription,
+				'source' => $oExtension->GetExtensionSourceLabel(),
+				'installed' => $oExtension->bInstalled,
+				'extra_flags' => [
+					'uninstallable' => $oExtension->CanBeUninstalled(),
+					'remote' => $oExtension->IsRemote(),
+					'missing' => $oExtension->bRemovedFromDisk,
+				],
+
+			];
+		}
+
+		return $aExtensionsData;
 	}
 
-	/**
-	 * Get installed extensions from disk
-	 *
-	 * @return array structure for twig datatable
-	 */
-	private function GetExtensionsTableToSelect(): array
+	private function GetExtensionsDiff(array $aAddedExtensions, array $aRemovedExtensions): array
 	{
 		$aExtensions = [];
-		$aColumns = ['', 'Version', 'Name', 'Code'];
-
-		foreach (DataFeatureRemoverExtensionService::GetInstance()->ReadItopExtensions() as $sCode => $oExtension) {
-			/** @var \iTopExtension $oExtension */
-
-			$sChecked = '';
-			$sDisabledHtml = '';
-			if ($oExtension->bRemovedFromDisk) {
-				$sDisabledHtml = 'disabled=""';
-				$sChecked = 'checked';
-			} elseif (in_array($sCode, $this->aRemovedExtensionsForCheck)) {
-				$sChecked = 'checked';
+		foreach ($this->GetAvailableExtensions(true) as $sCode => $aExtension) {
+			$aExtension['extra_flags']['disabled'] = true;
+			if (isset($aAddedExtensions[$sCode])) {
+				$aExtension['extra_flags']['selected'] = true;
+				$aExtensions[$sCode] = $aExtension;
+			} elseif (isset($aRemovedExtensions[$sCode])) {
+				$aExtension['extra_flags']['selected'] = false;
+				$aExtensions[$sCode] = $aExtension;
 			}
-
-			$sLabel = $oExtension->sLabel;
-			$sVersion = $oExtension->sVersion;
-			$sIdEnable = "aExtensions[$sCode][enable]";
-
-			$aExtensions[] = [
-				<<<HTML
-<input type="checkbox" $sDisabledHtml class="extension_check" $sChecked id="$sIdEnable" name="$sIdEnable"/>
-HTML,
-				$sVersion,
-				$sLabel,
-				$sCode,
-			];
 		}
 
-		return $this->GetTableData('Extensions', $aColumns, $aExtensions);
+		return $aExtensions;
 	}
 
 	private function GetTableData(string $sTableName, array $aColumns, array $aData): array
@@ -370,27 +354,56 @@ HTML,
 	}
 
 	/**
-	 * @return void
+	 * Read extensions selected from posted parameters
+	 * @return int Number of extensions to be added or removed
 	 */
-	public function ReadRemovedExtensions(): void
+	public function ReadExtensionsDiff(): int
 	{
-		if (count($this->aRemovedExtensionsForCheck) > 0) {
-			return;
+		if (!is_null($this->aExtensionsToCheck)) {
+			return count($this->aExtensionsToCheck['to_be_installed']) + count($this->aExtensionsToCheck['to_be_removed']);
 		}
 
-		$aSelectedExtensionsFromUI = utils::ReadPostedParam('aExtensions', []);
-		foreach ($aSelectedExtensionsFromUI as $sCode => $aData) {
-			$sValue = $aData['enable'] ?? 'off';
-			if (($sValue) === 'on') {
-				$this->aRemovedExtensionsForCheck[] = $sCode;
+		$aAvailableExtensions = $this->GetAvailableExtensions();
+		$aSelectedExtensionsFromUI = utils::ReadPostedParam('aSelectedExtensions', []);
+		$this->aExtensionsToCheck = [
+			'to_be_installed' => [],
+			'to_be_removed' => [],
+		];
+		foreach ($aAvailableExtensions as $sCode => &$aExtensionData) {
+			if (!isset($aSelectedExtensionsFromUI[$sCode])) {
+				continue;
 			}
-		}
 
-		// Add source removed to check
-		foreach (DataFeatureRemoverExtensionService::GetInstance()->ReadItopExtensions() as $sCode => $oExtension) {
-			if ($oExtension->bRemovedFromDisk) {
-				$this->aRemovedExtensionsForCheck[] = $sCode;
+			if ($aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCode] !== 'on') {
+				$aExtensionData['extra_flags']['selected'] = false;
+				$this->aExtensionsToCheck['to_be_removed'][] = $sCode;
+				if (!$aExtensionData['extra_flags']['uninstallable'] || $aExtensionData['extra_flags']['remote']) {
+					$this->bForcedUninstallation = true;
+				}
+			} elseif (!$aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCode] === 'on') {
+				$aExtensionData['extra_flags']['selected'] = true;
+				$this->aExtensionsToCheck['to_be_installed'][] = $sCode;
 			}
 		}
+		return count($this->aExtensionsToCheck['to_be_installed']) + count($this->aExtensionsToCheck['to_be_removed']);
+	}
+
+	/**
+	 * Divide an array into several sub arrays, distributing elements so that every sub array has an equal amount of elements
+	 * @param mixed[] $aInput
+	 * @param int $iColNumber
+	 *
+	 * @return array[]
+	 */
+	private function SplitArrayIntoColumns(array $aInput, int $iColNumber)
+	{
+		$aOutput = array_fill(0, $iColNumber, []);
+		$iIndex = 0;
+		foreach ($aInput as $mItem) {
+			//Split extensions in $iColNumber columns
+			$aOutput[$iIndex % $this->iColumnCount][] = $mItem;
+			$iIndex++;
+		}
+		return $aOutput;
 	}
 }

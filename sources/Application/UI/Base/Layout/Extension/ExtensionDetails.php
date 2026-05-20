@@ -33,7 +33,7 @@ class ExtensionDetails extends UIContentBlock
 		$this->sCode = $sCode;
 		$this->sLabel = $sLabel;
 		$this->sDescription = $sDescription;
-		$this->aMetaData = $aMetaData;
+		$this->aMetaData = array_filter($aMetaData);
 		$this->aBadges = $aBadges;
 		$this->sAbout = $sAbout;
 		$this->InitializeToggler();
@@ -105,7 +105,7 @@ class ExtensionDetails extends UIContentBlock
 	 */
 	public function SetMetaData(array $aMetaData): static
 	{
-		$this->aMetaData = $aMetaData;
+		$this->aMetaData = array_filter($aMetaData);
 		return $this;
 	}
 

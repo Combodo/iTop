@@ -14,7 +14,7 @@ use MetaModel;
 class DataFeatureRemoverExtensionService
 {
 	private static DataFeatureRemoverExtensionService $oInstance;
-
+	private ?iTopExtensionsMap $oMap = null;
 	private array $aItopExtensions = [];
 	private array $aIncludingExtensionsByModuleName = [];
 
@@ -61,14 +61,24 @@ class DataFeatureRemoverExtensionService
 	}
 
 	/**
+	 * @return \iTopExtensionsMap
+	 */
+	public function GetExtensionMap(): iTopExtensionsMap
+	{
+		if (is_null($this->oMap)) {
+			$this->oMap = new iTopExtensionsMap();
+			$this->oMap->LoadInstalledExtensionsFromDatabase(MetaModel::GetConfig());
+		}
+		return $this->oMap;
+	}
+
+	/**
 	 * @return iTopExtension[]
 	 */
 	public function ReadItopExtensions(): array
 	{
 		if (count($this->aItopExtensions) === 0) {
-			$oExtensionsMap = new iTopExtensionsMap();
-			$oExtensionsMap->LoadInstalledExtensionsFromDatabase(MetaModel::GetConfig());
-			$this->aItopExtensions = $oExtensionsMap->GetAllExtensionsToDisplayInSetup(true);
+			$this->aItopExtensions = $this->GetExtensionMap()->GetAllExtensionsToDisplayInSetup(true);
 
 			uasort($this->aItopExtensions, function (iTopExtension $oiTopExtension1, iTopExtension $oiTopExtension2) {
 				return strcmp($oiTopExtension1->sLabel, $oiTopExtension2->sLabel);
