@@ -13,7 +13,8 @@ use XMLParameters;
 
 class WizStepModulesChoiceTest extends ItopTestCase
 {
-	private WizStepModulesChoiceFake $oStep;
+	private WizStepModulesChoiceFake $oWizStepModulesChoiceFake;
+	private WizardController $oWizard;
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -22,7 +23,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 		require_once __DIR__.'/iTopExtensionsMapFake.php';
 		require_once __DIR__.'/WizStepModulesChoiceFake.php';
 
-		$this->oStep = new WizStepModulesChoiceFake(new WizardController('', ''), '');
+		$this->oWizard = new WizardController('', '');
+		$this->oWizStepModulesChoiceFake = new WizStepModulesChoiceFake($this->oWizard, '');
 		ModuleDiscovery::ResetCache();
 	}
 
@@ -373,8 +375,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 	 */
 	public function testComputeChoiceFlags($aExtensionsOnDiskOrDb, $aWizardStepDefinition, $bIsCurrentSelected, $bDisableUninstallChecks, $aExpectedFlags)
 	{
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
-		$aFlags = $this->oStep->ComputeChoiceFlags($aWizardStepDefinition, '_0', $bIsCurrentSelected ? ['_0' => '_0'] : [], false, $bDisableUninstallChecks, true);
+		$this->oWizStepModulesChoiceFake->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
+		$aFlags = $this->oWizStepModulesChoiceFake->ComputeChoiceFlags($aWizardStepDefinition, '_0', $bIsCurrentSelected ? ['_0' => '_0'] : [], false, $bDisableUninstallChecks, true);
 		$this->assertEquals($aExpectedFlags, $aFlags);
 	}
 
@@ -495,8 +497,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 	 */
 	public function testGetAddedAndRemovedExtensions($aExtensionsOnDiskOrDb, $aSelectedExtensions, $aExpectedAddedList, $aExpectedRemovedList)
 	{
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
-		[$aAddedList, $aRemovedList, $aNotUninstallableList] = $this->oStep->GetAddedAndRemovedExtensions($aSelectedExtensions);
+		$this->oWizStepModulesChoiceFake->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
+		[$aAddedList, $aRemovedList, $aNotUninstallableList] = $this->oWizStepModulesChoiceFake->GetAddedAndRemovedExtensions($aSelectedExtensions);
 		$this->assertEquals($aExpectedAddedList, $aAddedList);
 		$this->assertEquals($aExpectedRemovedList, $aRemovedList);
 	}
@@ -688,7 +690,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'installed' => false,
 			],
 		];
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
+		$this->oWizStepModulesChoiceFake->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
 
 		$aStepInfo = [
 			'title' => 'Extensions',
@@ -729,7 +731,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 
 		$aModules = [];
 		$aExtensions = [];
-		$this->oStep->GetSelectedModules($aStepInfo, $aSelectedExtensions, $aModules, '', '', $aExtensions);
+		$this->oWizStepModulesChoiceFake->GetSelectedModules($aStepInfo, $aSelectedExtensions, $aModules, '', '', $aExtensions);
 		$this->assertEquals($aExpectedModules, $aModules);
 		$this->assertEquals($aExpectedExtensions, $aExtensions);
 	}
@@ -745,7 +747,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 			],
 		];
 
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
+		$this->oWizStepModulesChoiceFake->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
 
 		$aStepInfo = [
 			'title' => 'Extensions',
@@ -774,7 +776,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 
 		$aModules = [];
 		$aExtensions = [];
-		$this->oStep->GetSelectedModules($aStepInfo, $aSelectedExtensions, $aModules, '', '', $aExtensions);
+		$this->oWizStepModulesChoiceFake->GetSelectedModules($aStepInfo, $aSelectedExtensions, $aModules, '', '', $aExtensions);
 		$this->assertEquals($aExpectedModules, $aModules);
 		$this->assertEquals($aExpectedExtensions, $aExtensions);
 	}
@@ -795,7 +797,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				],
 			],
 		];
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
+		$this->oWizStepModulesChoiceFake->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
 
 		$aStepInfo = [
 			'title' => 'Extensions',
@@ -824,7 +826,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 
 		$aModules = [];
 		$aExtensions = [];
-		$this->oStep->GetSelectedModules($aStepInfo, $aSelectedExtensions, $aModules, '', '', $aExtensions);
+		$this->oWizStepModulesChoiceFake->GetSelectedModules($aStepInfo, $aSelectedExtensions, $aModules, '', '', $aExtensions);
 		$this->assertEquals($aExpectedModules, $aModules);
 		$this->assertEquals($aExpectedExtensions, $aExtensions);
 	}
@@ -842,7 +844,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'installed' => false,
 			],
 		];
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
+		$this->oWizStepModulesChoiceFake->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
 
 		$aStepInfo = [
 			'options' => [
@@ -886,7 +888,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 
 		$aModules = [];
 		$aExtensions = [];
-		$this->oStep->GetSelectedModules($aStepInfo, $aSelectedExtensions, $aModules, '', '', $aExtensions);
+		$this->oWizStepModulesChoiceFake->GetSelectedModules($aStepInfo, $aSelectedExtensions, $aModules, '', '', $aExtensions);
 		$this->assertEquals($aExpectedModules, $aModules);
 		$this->assertEquals($aExpectedExtensions, $aExtensions);
 	}
@@ -898,7 +900,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'installed' => false,
 			],
 		];
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
+		$this->oWizStepModulesChoiceFake->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
 
 		//GetSelectedModules
 		$aStepInfo = [
@@ -925,13 +927,13 @@ class WizStepModulesChoiceTest extends ItopTestCase
 		$aExtensions = [];
 		$this->expectException('Exception');
 		$this->expectExceptionMessage('Extension combodo-sample does not have any module associated');
-		$this->oStep->GetSelectedModules($aStepInfo, ['_0' => '_0'], $aModules, '', '', $aExtensions);
+		$this->oWizStepModulesChoiceFake->GetSelectedModules($aStepInfo, ['_0' => '_0'], $aModules, '', '', $aExtensions);
 	}
 
 	public function testGetSelectedModulesShouldNotThrowAnExceptionWhenAMandatoryModuleIsMissing()
 	{
 		$aExtensionsMapData = [];
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
+		$this->oWizStepModulesChoiceFake->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
 
 		//GetSelectedModules
 		$aStepInfo = [
@@ -956,7 +958,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 
 		$aModules = [];
 		$aExtensions = [];
-		$this->oStep->GetSelectedModules($aStepInfo, ['_0' => '_0'], $aModules, '', '', $aExtensions);
+		$this->oWizStepModulesChoiceFake->GetSelectedModules($aStepInfo, ['_0' => '_0'], $aModules, '', '', $aExtensions);
 		$this->assertCount(0, $aModules);
 		$this->assertCount(1, $aExtensions);
 
@@ -1380,14 +1382,14 @@ HTML,
 				'installed' => true,
 			],
 		];
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
+		$this->oWizStepModulesChoiceFake->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
 		$aStepInfo = [
 			'options' => $aStepOptions,
 			'alternatives' => $aStepAlternatives,
 		];
 		$oPage = new \WebPageFake();
 
-		$this->oStep->DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $aDefaults);
+		$this->oWizStepModulesChoiceFake->DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $aDefaults);
 
 		$this->assertEquals($sExpectedHTML, $oPage->sContent);
 	}
@@ -1398,9 +1400,35 @@ HTML,
 		$aSteps = $aParams->Get('steps', []);
 
 		$aSelectedExtensions = ["itop-config-mgmt-core","itop-config-mgmt-datacenter","itop-config-mgmt-end-user","itop-config-mgmt-storage","itop-config-mgmt-virtualization","itop-container-mgmt","itop-service-mgmt-enterprise","itop-ticket-mgmt-simple-ticket","itop-ticket-mgmt-simple-ticket-enhanced-portal","itop-change-mgmt-simple","itop-kown-error-mgmt","itop-problem-mgmt","combodo-oauth2-client","combodo-mfa-extended","combodo-data-replication","combodo-api-playground","combodo-snapshot"];
-		$aRes = $this->oStep->GetSelectedComponents($aSteps, json_encode($aSelectedExtensions));
+		$aRes = $this->oWizStepModulesChoiceFake->GetSelectedComponents($aSteps, json_encode($aSelectedExtensions));
 
 		$aExpected = json_decode('[{"_0":"_0","_1":"_1","_2":"_2","_3":"_3","_4":"_4","_4_0":"_4_0"},{"_0":"_0"},{"_0":"_0","_0_0":"_0_0"},{"_0":"_0"},{"_0":"_0","_1":"_1"}]', true);
 		$this->assertEquals($aExpected, $aRes);
+	}
+
+	public function testGetWizardSteps()
+	{
+		$this->oWizard->SetParameter('source_dir', __DIR__.'/ressources');
+		$aExtensionsOnDiskOrDb = [
+			'itop-ext-not-installed' => [
+				'installed' => false,
+			],
+			'itop-ext-installed' => [
+				'installed' => true,
+			],
+		];
+		$this->oWizStepModulesChoiceFake->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
+
+		$expected = [
+			["class" => "WizStepWelcome","state" => ""],
+			["class" => "WizStepInstallOrUpgrade","state" => ""],
+			["class" => "WizStepDetectedInfo","state" => ""],
+			["class" => "WizStepUpgradeMiscParams","state" => ""],
+		];
+
+		for ($i = 0;$i <= 5; $i++) {
+			$expected [] = ["class" => "WizStepModulesChoice","state" => "".$i];
+		}
+		$this->assertEquals($expected, $this->oWizStepModulesChoiceFake->GetWizardSteps());
 	}
 }
