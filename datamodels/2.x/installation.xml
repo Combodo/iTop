@@ -94,15 +94,6 @@
             </options>
           </sub_options>
 				</choice>
-        <choice>
-          <extension_code>itop-flow-map</extension_code>
-          <title>Data flow</title>
-          <description>Map data flows between applications</description>
-          <modules type="array">
-            <module>itop-flow-map</module>
-          </modules>
-          <default>false</default>
-        </choice>
 			</options>
 		</step>
 		<step>
