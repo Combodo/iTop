@@ -1480,19 +1480,19 @@
           <cell id="1" _delta="must_exist">
             <rank>1</rank>
             <dashlets>
-              <dashlet id="container_43" xsi:type="DashletBadge" _delta="define">
+              <dashlet id="ContainerApplication" xsi:type="DashletBadge" _delta="define">
                 <rank>5</rank>
                 <class>ContainerApplication</class>
               </dashlet>
-              <dashlet id="container_44" xsi:type="DashletBadge" _delta="define">
+              <dashlet id="ContainerHost" xsi:type="DashletBadge" _delta="define">
                 <rank>6</rank>
                 <class>ContainerHost</class>
               </dashlet>
-              <dashlet id="container_45" xsi:type="DashletBadge" _delta="define">
+              <dashlet id="ContainerHost" xsi:type="DashletBadge" _delta="define">
                 <rank>7</rank>
                 <class>ContainerCluster</class>
               </dashlet>
-              <dashlet id="container_46" xsi:type="DashletBadge" _delta="define">
+              <dashlet id="ContainerImage" xsi:type="DashletBadge" _delta="define">
                 <rank>8</rank>
                 <class>ContainerImage</class>
               </dashlet>
@@ -1507,11 +1507,11 @@
           <cell id="0">
             <rank>0</rank>
             <dashlets>
-              <dashlet id="container_21" xsi:type="DashletBadge" _delta="define">
+              <dashlet id="ContainerType" xsi:type="DashletBadge" _delta="define">
                 <rank>21</rank>
                 <class>ContainerType</class>
               </dashlet>
-              <dashlet id="container_22" xsi:type="DashletBadge" _delta="define">
+              <dashlet id="ContainerImageType" xsi:type="DashletBadge" _delta="define">
                 <rank>22</rank>
                 <class>ContainerImageType</class>
               </dashlet>

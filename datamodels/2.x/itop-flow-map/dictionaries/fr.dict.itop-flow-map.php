@@ -9,6 +9,12 @@
 
 Dict::Add('FR FR', 'French', 'Français', [
 
+	'Relation:dataflows/Description'    => 'Flux de données entre CIs',
+	'Relation:dataflows/DownStream'     => 'Flux sortants...',
+	'Relation:dataflows/DownStream+'    => 'Carte des flux vers l\'aval',
+	'Relation:dataflows/UpStream'       => 'Flux entrants...',
+	'Relation:dataflows/UpStream+'      => 'Carte des flux vers l\'amont',
+
 	'Class:FunctionalCI/Attribute:dataflows' => 'Flux de données',
 	'Class:FunctionalCI/Attribute:dataflows+' => 'Flux de données dont cet objet est la source ou la destination',
 	'FunctionalCI:DataFlow:Title' => 'Flux de données',
@@ -19,7 +25,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 	'Class:DataFlow'                                             => 'Flux de Données',
 	'Class:DataFlow+'                                            => 'Modélise les données transférées entre instances d\'application ou plus généralement entre CIs.',
-	'Class:DataFlow/Name' => '%1$s - %2$s',
+	'Class:DataFlow/ComplementaryName' => '%1$s - %2$s',
 	'Class:DataFlow/Attribute:name'                              => 'Nom',
 	'Class:DataFlow/Attribute:name+'                          => 'Identifie le flux de données',
 	'Class:DataFlow/Attribute:source_id'                         => 'Source',
@@ -40,8 +46,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DataFlow/Attribute:destination_impact/Value:no+' => 'Si le flux s\'arrête, le destinataire n\'est pas impacté',
 	'Class:DataFlow/Attribute:dataflowtype_id'                           => 'Type de flux',
 	'Class:DataFlow/Attribute:dataflowtype_id+'                          => 'Typologie du flux',
-	'Class:DataFlow/Attribute:description'                       => 'Description',
-	'Class:DataFlow/Attribute:description+'                      => '',
 	'Class:DataFlow/Attribute:status'                            => 'Etat',
 	'Class:DataFlow/Attribute:status+'                           => '',
 	'Class:DataFlow/Attribute:status/Value:active'               => 'actif',
@@ -66,6 +70,9 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DataFlow/Attribute:contacts_list+' => 'Eg: flow owner, technical support, etc.',
 	'Class:DataFlow/Error:CheckSource' => 'La source d\'un flux de données ne peut pas être un flux de données elle-même. Choisissez un autre CI source que %1$s',
 	'Class:DataFlow/Error:CheckDestination' => 'La destination d\'un flux de données ne peut pas être un flux de données elle-même. Choisissez un autre CI destination que %1$s',
+
+	'Class:DataFlowType' => 'Type de flux',
+	'Class:DataFlowType+' => 'Typologie des flux de données',
 
 /*
 	'Class:DataFlow/Attribute:source_id_friendlyname'            => 'source_id_friendlyname',

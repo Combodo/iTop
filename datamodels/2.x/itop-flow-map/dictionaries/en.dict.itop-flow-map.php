@@ -9,6 +9,12 @@
 
 Dict::Add('EN US', 'English', 'English', [
 
+	'Relation:dataflows/Description'    => 'DataFlows between CIs',
+	'Relation:dataflows/DownStream'     => 'Outbound flows...',
+	'Relation:dataflows/DownStream+'    => 'Flow map looking downstream',
+	'Relation:dataflows/UpStream'       => 'Inbound flows...',
+	'Relation:dataflows/UpStream+'      => 'Flow map looking upstream',
+
 	'Class:FunctionalCI/Attribute:dataflows' => 'Data flows',
 	'Class:FunctionalCI/Attribute:dataflows+' => 'Data flows for which this object is the source or the destination',
 	'FunctionalCI:DataFlow:Title' => 'Data flows',
@@ -19,7 +25,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 	'Class:DataFlow' => 'Flow',
 	'Class:DataFlow+' => 'For application flow for example',
-	'Class:DataFlow/Name' => '%1$s - %2$s',
+	'Class:DataFlow/ComplementaryName' => '%1$s - %2$s',
 	'Class:DataFlow/Attribute:name' => 'Name',
 	'Class:DataFlow/Attribute:name+' => 'Identify the transferred data flow',
 	'Class:DataFlow/Attribute:source_id' => 'Source',
@@ -40,8 +46,6 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:DataFlow/Attribute:destination_impact/Value:no+' => 'If the flow stops, the destination is not impacted',
 	'Class:DataFlow/Attribute:dataflowtype_id' => 'Flow type',
 	'Class:DataFlow/Attribute:dataflowtype_id+' => 'Typology of Flow.',
-	'Class:DataFlow/Attribute:description' => 'Description',
-	'Class:DataFlow/Attribute:description+' => '',
 	'Class:DataFlow/Attribute:status' => 'Status',
 	'Class:DataFlow/Attribute:status+' => '',
 	'Class:DataFlow/Attribute:status/Value:active' => 'active',
@@ -66,6 +70,9 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:DataFlow/Attribute:contacts_list+' => 'Eg: flow owner, technical support, etc.',
 	'Class:DataFlow/Error:CheckSource' => 'The source of a data flow cannot be a data flow itself. Choose another source CI than %1$s',
 	'Class:DataFlow/Error:CheckDestination' => 'The destination of a data flow cannot be a data flow itself. Choose another destination CI than %1$s',
+
+	'Class:DataFlowType' => 'Data Flow Type',
+	'Class:DataFlowType+' => 'Typology of Data Flow',
 
 /*
 	'Class:DataFlow/Attribute:source_id_friendlyname'             => 'source_id_friendlyname',

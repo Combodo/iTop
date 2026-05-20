@@ -97,12 +97,6 @@
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <tracking_level>all</tracking_level>
         </field>
-        <field id="description" xsi:type="AttributeHTML">
-          <sql>description</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-          <tracking_level>all</tracking_level>
-        </field>
         <field id="status" xsi:type="AttributeEnum">
           <sql>status</sql>
           <values>
@@ -190,10 +184,10 @@
 	  $oSource = MetaModel::GetObject(FunctionalCI::class, $this->Get('source_id'), true,true);
 	  $oDestination = MetaModel::GetObject(FunctionalCI::class, $this->Get('destination_id'), true,true);
     if ($oSource instanceof DataFlow) {
-      $this->AddCheckIssue(Dict:Format('Class:DataFlow/Error:CheckSource', $oSource->GetName());
+      $this->AddCheckIssue(Dict:Format('Class:DataFlow/Error:CheckSource', $oSource->GetName()));
     }
     if ($oDestination instanceof DataFlow) {
-      $this->AddCheckIssue(Dict:Format('Class:DataFlow/Error:CheckDestination', $oDestination->GetName());
+      $this->AddCheckIssue(Dict:Format('Class:DataFlow/Error:CheckDestination', $oDestination->GetName()));
     }
 	}      ]]></code>
         </method>
@@ -385,6 +379,16 @@
             <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="name">
+            <attributes>
+              <attribute id="name"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields/>
       <methods/>
@@ -464,7 +468,7 @@
           <neighbours>
             <neighbour id="flow">
               <query_down><![CDATA[SELECT DataFlow WHERE source_id = :this->id]]></query_down>
-              <query_up><![CDATA[SELECT FunctionalCI AS ci WHERE ci.id = :this->source_id]]></query_up>
+              <query_up><![CDATA[SELECT FunctionalCI AS ci JOIN DataFlow AS f ON f.source_id = ci.id WHERE f.id = :this->id]]></query_up>
               <direction>both</direction>
             </neighbour>
           </neighbours>
@@ -566,9 +570,24 @@
         <cells>
           <cell id="3" delta="if_exists">
             <dashlets>
-              <dashlet id="DataFlow_20" xsi:type="DashletBadge" _delta="define">
+              <dashlet id="DataFlow" xsi:type="DashletBadge" _delta="define">
                 <rank>20</rank>
                 <class>DataFlow</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+    <menu id="Typology" xsi:type="DashboardMenuNode" _delta="must_exist">
+      <definition>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="DataFlowType" xsi:type="DashletBadge" _delta="define">
+                <rank>23</rank>
+                <class>DataFlowType</class>
               </dashlet>
             </dashlets>
           </cell>
