@@ -24,7 +24,6 @@ use ContextTag;
 use CoreException;
 use Dict;
 use Exception;
-use IssueLog;
 use MetaModel;
 use MissingDependencyException;
 use SetupUtils;
@@ -32,7 +31,6 @@ use utils;
 
 class DataFeatureRemovalController extends Controller
 {
-	private array $aRemovedExtensionsForCheck = [];
 	private ?array $aExtensionsToCheck = null;
 	private bool $bForcedUninstallation = false;
 	private array $aCountClassesToCleanup = [];
@@ -80,35 +78,6 @@ class DataFeatureRemovalController extends Controller
 		$this->aAnalysisDataTable =  $this->GetTableData('Analysis', $aColumns, $aData);
 	}
 
-	/*
-	public function OperationAnalyze(): void
-	{
-		$iCount = $this->ReadExtensionsDiff();
-
-		$this->m_sOperation = 'Main';
-		try {
-			if ($iCount > 0) {
-				$this->Analyze();
-			}
-			$this->OperationMain();
-		} catch (Exception $e) {
-			IssueLog::Error(__METHOD__, null, ['stack' => $e->getTraceAsString(), 'exception' => $e->getMessage()]);
-			$this->OperationMain($e->getMessage());
-		}
-	}
-
-	private function Analyze(): void
-	{
-		//TODO : Run data audit with added extension too, not just removed ones
-		$this->Compile($this->aExtensionsToCheck['to_be_removed']);
-		$sSourceEnv = MetaModel::GetEnvironment();
-		$oSetupAudit = new SetupAudit($sSourceEnv);
-		$aGetRemovedClasses = $oSetupAudit->RunDataAudit();
-		IssueLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
-		$this->aCountClassesToCleanup = $aGetRemovedClasses;
-	}
-	*/
-
 	public function OperationAnalysisResult(): void
 	{
 		$aParams = [];
@@ -142,7 +111,10 @@ class DataFeatureRemovalController extends Controller
 		$aRemovedExtensions = json_decode($aHiddenInputs['removed_extensions'], true);
 		if (count($aRemovedExtensions) == 0) {
 			$this->ReadExtensionsDiff();
-			$aRemovedExtensions = $this->aRemovedExtensionsForCheck;
+			$aAddedExtensions = $this->aExtensionsToCheck['to_be_installed'];
+			$aHiddenInputs['added_extensions'] = utils::HtmlEntities(json_encode($aAddedExtensions));
+			$aRemovedExtensions = $this->aExtensionsToCheck['to_be_removed'];
+			$aHiddenInputs['removed_extensions'] = utils::HtmlEntities(json_encode($aRemovedExtensions));
 		}
 
 		$aRemoveExtensionCodes = array_keys($aRemovedExtensions);
@@ -150,7 +122,7 @@ class DataFeatureRemovalController extends Controller
 		$aParams['aAddedExtensions'] = $aAddedExtensions;
 		$aParams['aRemovedExtensions'] = $aRemovedExtensions;
 
-		IssueLog::Debug(__METHOD__.' Extensions given in parameter', null, [
+		DataFeatureRemovalLog::Debug(__METHOD__.' Extensions given in parameter', null, [
 			'added_extensions' => $aAddedExtensions,
 			'removed_extensions' => $aRemovedExtensions]);
 
@@ -174,7 +146,7 @@ class DataFeatureRemovalController extends Controller
 		$sSourceEnv = MetaModel::GetEnvironment();
 		$oSetupAudit = new SetupAudit($sSourceEnv);
 		$aGetRemovedClasses = array_keys($oSetupAudit->RunDataAudit());
-		IssueLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
+		DataFeatureRemovalLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
 
 		$aParams['aClasses'] = $aGetRemovedClasses;
 
@@ -377,7 +349,7 @@ class DataFeatureRemovalController extends Controller
 		}
 
 		$sTransactionId = utils::ReadPostedParam('transaction_id', null, utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
-		IssueLog::Debug(__FUNCTION__.": Transaction [$sTransactionId]");
+		DataFeatureRemovalLog::Debug(__FUNCTION__.": Transaction [$sTransactionId]");
 		if (empty($sTransactionId) || !utils::IsTransactionValid($sTransactionId, false)) {
 			throw new DataFeatureRemovalException(Dict::S("iTopUpdate:Error:InvalidToken"));
 		}
@@ -406,13 +378,13 @@ class DataFeatureRemovalController extends Controller
 
 			if ($aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCode] !== 'on') {
 				$aExtensionData['extra_flags']['selected'] = false;
-				$this->aExtensionsToCheck['to_be_removed'][] = $sCode;
+				$this->aExtensionsToCheck['to_be_removed'][$sCode] = $sCode;
 				if (!$aExtensionData['extra_flags']['uninstallable'] || $aExtensionData['extra_flags']['remote']) {
 					$this->bForcedUninstallation = true;
 				}
 			} elseif (!$aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCode] === 'on') {
 				$aExtensionData['extra_flags']['selected'] = true;
-				$this->aExtensionsToCheck['to_be_installed'][] = $sCode;
+				$this->aExtensionsToCheck['to_be_installed'][$sCode] = $sCode;
 			}
 		}
 		return count($this->aExtensionsToCheck['to_be_installed']) + count($this->aExtensionsToCheck['to_be_removed']);
