@@ -15,77 +15,41 @@ $aParams = [
 new ContextTag(ContextTag::TAG_SETUP);
 $sToken = SetupUtils::CreateSetupToken();
 
-$aSelectedModules = [
-	'authent-cas',
-	'authent-external',
-	'authent-ldap',
-	'authent-local',
-	'combodo-backoffice-darkmoon-theme',
-	'combodo-backoffice-fullmoon-high-contrast-theme',
-	'combodo-backoffice-fullmoon-protanopia-deuteranopia-theme',
-	'combodo-backoffice-fullmoon-tritanopia-theme',
-	'combodo-data-feature-removal',
-	'itop-backup',
-	'itop-config',
-	'itop-files-information',
-	'itop-portal-base',
-	'itop-profiles-itil',
-	'itop-sla-computation',
-	'itop-structure',
-	'itop-welcome-itil',
-	'itop-config-mgmt',
-	'itop-attachments',
-	'itop-tickets',
-	'combodo-db-tools',
-	'itop-core-update',
-	'itop-hub-connector',
-	'itop-oauth-client',
-	'itop-themes-compat',
-	'combodo-my-account',
-	'combodo-my-account-user-info',
-	'combodo-oauth2-client',
-	'itop-attribute-class-set',
-	'itop-attribute-encrypted-password',
-	'itop-ui-copypaste',
-	'itop-datacenter-mgmt',
-	'itop-endusers-devices',
-	'itop-storage-mgmt',
-	'itop-virtualization-mgmt',
-	'itop-bridge-cmdb-ticket',
-	'itop-bridge-virtualization-storage',
-	'itop-service-mgmt',
-	'itop-bridge-cmdb-services',
-	'itop-bridge-datacenter-mgmt-services',
-	'itop-bridge-endusers-devices-services',
-	'itop-bridge-storage-mgmt-services',
-	'itop-bridge-virtualization-mgmt-services',
-	'itop-request-mgmt',
-	'itop-portal',
-	'itop-change-mgmt',
-	'itop-faq-light',
-	'itop-knownerror-mgmt',
-	'itop-problem-mgmt',
-	'itop-system-information',
-	'itop-log-mgmt',
-];
+function GetLastestInstallFile(): ?string
+{
+	$aFiles = glob(APPROOT.'/log/install-*.xml');
+	rsort($aFiles);
+	$iLatestCtime = 0;
+	$sLastFilePath = null;
+	foreach ($aFiles as $sFilePath) {
+		if (is_file($sFilePath)) {
+			$iCurrentCtime = filemtime($sFilePath);
+			if ($iCurrentCtime > $iLatestCtime) {
+				$iLatestCtime = $iCurrentCtime;
+				$sLastFilePath = $sFilePath;
+			}
+		}
+	}
 
-$aSelectedExtensions = [
-	'itop-config-mgmt-core',
-	'itop-config-mgmt-datacenter',
-	'itop-config-mgmt-end-user',
-	'itop-config-mgmt-storage',
-	'itop-config-mgmt-virtualization',
-	'itop-service-mgmt-enterprise',
-	'itop-ticket-mgmt-simple-ticket',
-	'itop-ticket-mgmt-simple-ticket-enhanced-portal',
-	'itop-change-mgmt-simple',
-	'itop-kown-error-mgmt',
-	'itop-problem-mgmt',
-	'itop-system-information',
-	'itop-log-mgmt',
-];
+	return $sLastFilePath;
+}
 
 $aRemovedExtensions = ['itop-container-mgmt' => 'Containerization'];
+
+$sPath = GetLastestInstallFile();
+if (is_null($sPath)) {
+	throw new Exception("$sPath no installation XM. Launch a setup....");
+}
+$aParams = new XMLParameters($sPath);
+$aSelectedModules = array_filter($aParams->Get('selected_modules', []), static function ($element) {
+	global $aRemovedExtensions;
+	return ! array_key_exists($element, $aRemovedExtensions);
+});
+
+$aSelectedExtensions = array_filter($aParams->Get('selected_extensions', []), static function ($element) {
+	global $aRemovedExtensions;
+	return ! array_key_exists($element, $aRemovedExtensions);
+});
 
 $aPostParams = [
 	"auth_user" => 'admin',
