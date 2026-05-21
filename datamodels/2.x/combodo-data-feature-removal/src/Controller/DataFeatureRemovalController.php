@@ -21,16 +21,16 @@ use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use ContextTag;
+use CoreException;
 use Dict;
 use Exception;
-use IssueLog;
 use MetaModel;
+use MissingDependencyException;
 use SetupUtils;
 use utils;
 
 class DataFeatureRemovalController extends Controller
 {
-	private array $aRemovedExtensionsForCheck = [];
 	private ?array $aExtensionsToCheck = null;
 	private bool $bForcedUninstallation = false;
 	private array $aCountClassesToCleanup = [];
@@ -55,6 +55,7 @@ class DataFeatureRemovalController extends Controller
 		$aParams['sSetupUrl'] = utils::GetAbsoluteUrlAppRoot().'setup';
 		$aParams['iCount'] = $this->iCount;
 
+		Session::Set('bForceCompilation', true);
 		$this->AddLinkedStylesheet(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/css/DataFeatureRemoval.css');
 		$this->AddLinkedScript(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/js/DataFeatureRemoval.js');
 		$this->DisplayPage($aParams);
@@ -75,33 +76,6 @@ class DataFeatureRemovalController extends Controller
 		}
 
 		$this->aAnalysisDataTable =  $this->GetTableData('Analysis', $aColumns, $aData);
-	}
-
-	public function OperationAnalyze(): void
-	{
-		$iCount = $this->ReadExtensionsDiff();
-
-		$this->m_sOperation = 'Main';
-		try {
-			if ($iCount > 0) {
-				$this->Analyze();
-			}
-			$this->OperationMain();
-		} catch (Exception $e) {
-			IssueLog::Error(__METHOD__, null, ['stack' => $e->getTraceAsString(), 'exception' => $e->getMessage()]);
-			$this->OperationMain($e->getMessage());
-		}
-	}
-
-	private function Analyze(): void
-	{
-		//TODO : Run data audit with added extension too, not just removed ones
-		$this->Compile($this->aExtensionsToCheck['to_be_removed']);
-		$sSourceEnv = MetaModel::GetEnvironment();
-		$oSetupAudit = new SetupAudit($sSourceEnv);
-		$aGetRemovedClasses = $oSetupAudit->RunDataAudit();
-		IssueLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
-		$this->aCountClassesToCleanup = $aGetRemovedClasses;
 	}
 
 	public function OperationAnalysisResult(): void
@@ -133,26 +107,48 @@ class DataFeatureRemovalController extends Controller
 		$aParams['aHiddenInputs'] = $aHiddenInputs;
 
 		$aAddedExtensions = json_decode($aHiddenInputs['added_extensions'], true);
+
 		$aRemovedExtensions = json_decode($aHiddenInputs['removed_extensions'], true);
+		if (count($aRemovedExtensions) == 0) {
+			$this->ReadExtensionsDiff();
+			$aAddedExtensions = $this->aExtensionsToCheck['to_be_installed'];
+			$aHiddenInputs['added_extensions'] = utils::HtmlEntities(json_encode($aAddedExtensions));
+			$aRemovedExtensions = $this->aExtensionsToCheck['to_be_removed'];
+			$aHiddenInputs['removed_extensions'] = utils::HtmlEntities(json_encode($aRemovedExtensions));
+		}
+
+		$aRemoveExtensionCodes = array_keys($aRemovedExtensions);
 
 		$aParams['aAddedExtensions'] = $aAddedExtensions;
 		$aParams['aRemovedExtensions'] = $aRemovedExtensions;
 
-		IssueLog::Debug(__METHOD__.' Extensions given in parameter', null, [
+		DataFeatureRemovalLog::Debug(__METHOD__.' Extensions given in parameter', null, [
 			'added_extensions' => $aAddedExtensions,
 			'removed_extensions' => $aRemovedExtensions]);
 
-		$this->Compile(array_keys($aRemovedExtensions), false);
+		$aParams['sTransactionId'] = utils::GetNewTransactionId();
+		$aParams['iColumnCount'] = $this->iColumnCount;
+		$aParams['aAvailableExtensions'] = $this->SplitArrayIntoColumns($this->GetExtensionsDiff($aAddedExtensions, $aRemovedExtensions), $this->iColumnCount);
+
+		$bForceCompilation = Session::Get('bForceCompilation', false);
+		try {
+			$this->Compile($aRemoveExtensionCodes, $bForceCompilation);
+		} catch (CoreException $e) {
+			$aParams['DataFeatureRemovalErrorMessage'] = $e->getHtmlDesc();
+			$this->DisplayPage($aParams, 'AnalysisResult');
+			return;
+		} catch (Exception $e) {
+			$aParams['DataFeatureRemovalErrorMessage'] = $e->getMessage();
+			$this->DisplayPage($aParams, 'AnalysisResult');
+			return;
+		}
 
 		$sSourceEnv = MetaModel::GetEnvironment();
 		$oSetupAudit = new SetupAudit($sSourceEnv);
 		$aGetRemovedClasses = array_keys($oSetupAudit->RunDataAudit());
-		IssueLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
+		DataFeatureRemovalLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
 
-		$aParams['sTransactionId'] = utils::GetNewTransactionId();
 		$aParams['aClasses'] = $aGetRemovedClasses;
-		$aParams['iColumnCount'] = $this->iColumnCount;
-		$aParams['aAvailableExtensions'] = $this->SplitArrayIntoColumns($this->GetExtensionsDiff($aAddedExtensions, $aRemovedExtensions), $this->iColumnCount);
 
 		new ContextTag(ContextTag::TAG_SETUP);
 		$aParams['sLaunchSetupUrl'] = utils::GetAbsoluteUrlAppRoot().'setup/wizard.php';
@@ -170,6 +166,13 @@ class DataFeatureRemovalController extends Controller
 		$this->DisplayPage($aParams, 'AnalysisResult');
 	}
 
+	/**
+* @param array $aRemovedExtensions
+* @param bool $bForceCompilation
+* @return void
+* @throws \ConfigException
+* @throws \CoreException
+	 */
 	private function Compile(array $aRemovedExtensions, bool $bForceCompilation = true): void
 	{
 		$sSourceEnv = MetaModel::GetEnvironment();
@@ -346,7 +349,7 @@ class DataFeatureRemovalController extends Controller
 		}
 
 		$sTransactionId = utils::ReadPostedParam('transaction_id', null, utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
-		IssueLog::Debug(__FUNCTION__.": Transaction [$sTransactionId]");
+		DataFeatureRemovalLog::Debug(__FUNCTION__.": Transaction [$sTransactionId]");
 		if (empty($sTransactionId) || !utils::IsTransactionValid($sTransactionId, false)) {
 			throw new DataFeatureRemovalException(Dict::S("iTopUpdate:Error:InvalidToken"));
 		}
@@ -375,13 +378,13 @@ class DataFeatureRemovalController extends Controller
 
 			if ($aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCode] !== 'on') {
 				$aExtensionData['extra_flags']['selected'] = false;
-				$this->aExtensionsToCheck['to_be_removed'][] = $sCode;
+				$this->aExtensionsToCheck['to_be_removed'][$sCode] = $sCode;
 				if (!$aExtensionData['extra_flags']['uninstallable'] || $aExtensionData['extra_flags']['remote']) {
 					$this->bForcedUninstallation = true;
 				}
 			} elseif (!$aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCode] === 'on') {
 				$aExtensionData['extra_flags']['selected'] = true;
-				$this->aExtensionsToCheck['to_be_installed'][] = $sCode;
+				$this->aExtensionsToCheck['to_be_installed'][$sCode] = $sCode;
 			}
 		}
 		return count($this->aExtensionsToCheck['to_be_installed']) + count($this->aExtensionsToCheck['to_be_removed']);

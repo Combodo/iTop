@@ -477,7 +477,7 @@ class RunTimeEnvironment
 		}
 
 		$aModulesToLoad = $this->GetModulesToLoad($this->sFinalEnv, $aDirsToCompile);
-		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile, false, $aModulesToLoad);
+		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile, true, $aModulesToLoad);
 
 		// Do load the required modules
 		//
