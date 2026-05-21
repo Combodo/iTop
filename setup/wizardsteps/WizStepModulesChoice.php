@@ -181,7 +181,6 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 			$aSteps [] = ["class" => "WizStepModulesChoice","state" => "$i"];
 			$i++;
 		}
-		$aSteps [] = ["class" => "WizStepModulesChoice","state" => "$i"];
 
 		return $aSteps;
 	}
