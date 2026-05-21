@@ -337,7 +337,7 @@
              <item id="destination_id">
               <rank>30</rank>
             </item>
-              <item id="frequency">
+              <item id="execution_frequency">
                 <rank>40</rank>
               </item>
           </items>
