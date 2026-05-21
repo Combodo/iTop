@@ -148,6 +148,7 @@ class CMDBSourceTest extends ItopTestCase
 			'String simple default' => ['ticket', 'finalclass', "varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'Ticket'"],
 			'String numeric default' => ['datacenterdevice', 'redundancy', "varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '1'"],
 //			'String required' => ['', '', "varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''"], // does not seem to exist in iTop model?
+			'Text nullable' => ['ticket', 'private_log', 'longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL'],
 			'Enum simple' => ['physicaldevice', 'status', "enum('stock','implementation','production','obsolete') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'production'"],
 			'Enum numbers' => ['ticket_request', 'priority', "enum('1','2','3','4') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '4'"],
 			'Datetime nullable' => ['ticket', 'last_update', "datetime DEFAULT NULL"],
