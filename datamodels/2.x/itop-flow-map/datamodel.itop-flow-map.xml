@@ -328,12 +328,18 @@
         </default_search>
         <summary>
           <items>
-            <item id="org_id">
+            <item id="business_criticity">
               <rank>10</rank>
             </item>
-            <item id="description">
+            <item id="source_id">
               <rank>20</rank>
             </item>
+             <item id="destination_id">
+              <rank>30</rank>
+            </item>
+              <item id="frequency">
+                <rank>40</rank>
+              </item>
           </items>
         </summary>
       </presentation>

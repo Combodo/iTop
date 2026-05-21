@@ -11,9 +11,9 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 	'Relation:dataflows/Description'    => 'Flux de données entre CIs',
 	'Relation:dataflows/DownStream'     => 'Flux sortants...',
-	'Relation:dataflows/DownStream+'    => 'Carte des flux vers l\'aval',
+	'Relation:dataflows/DownStream+'    => 'Carte des flux sortants depuis',
 	'Relation:dataflows/UpStream'       => 'Flux entrants...',
-	'Relation:dataflows/UpStream+'      => 'Carte des flux vers l\'amont',
+	'Relation:dataflows/UpStream+'      => 'Carte des flux entrants vers',
 
 	'Class:FunctionalCI/Attribute:dataflows' => 'Flux de données',
 	'Class:FunctionalCI/Attribute:dataflows+' => 'Flux de données dont cet objet est la source ou la destination',

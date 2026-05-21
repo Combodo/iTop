@@ -11,9 +11,9 @@ Dict::Add('EN US', 'English', 'English', [
 
 	'Relation:dataflows/Description'    => 'DataFlows between CIs',
 	'Relation:dataflows/DownStream'     => 'Outbound flows...',
-	'Relation:dataflows/DownStream+'    => 'Flow map looking downstream',
+	'Relation:dataflows/DownStream+'    => 'Outbound flows map from',
 	'Relation:dataflows/UpStream'       => 'Inbound flows...',
-	'Relation:dataflows/UpStream+'      => 'Flow map looking upstream',
+	'Relation:dataflows/UpStream+'      => 'Inbound flows map to',
 
 	'Class:FunctionalCI/Attribute:dataflows' => 'Data flows',
 	'Class:FunctionalCI/Attribute:dataflows+' => 'Data flows for which this object is the source or the destination',
