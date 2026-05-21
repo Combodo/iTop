@@ -169,4 +169,18 @@ class iTopExtension
 		return json_encode($this->__serialize(), JSON_PRETTY_PRINT);
 	}
 
+	public function GetExtensionSourceLabel(): string
+	{
+		return match ($this->sSource) {
+			self::SOURCE_MANUAL => 'Local extensions folder',
+			self::SOURCE_REMOTE => (ITOP_APPLICATION == 'iTop') ? 'iTop Hub' : 'ITSM Designer',
+			self::SOURCE_WIZARD => 'iTop package',
+			default => '',
+		};
+	}
+
+	public function IsRemote(): string
+	{
+		return $this->sSource === self::SOURCE_REMOTE;
+	}
 }

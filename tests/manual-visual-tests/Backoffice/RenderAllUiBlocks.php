@@ -639,6 +639,9 @@ $oPage->AddUiBlock($oMultiCol);
 $oExtensionDetailInstalledFromFactory = ExtensionDetailsUIBlockFactory::MakeInstalled('itop-sample', 'My extension v2', 'This is for test only', ['v1.1.1', 'Designer', '12/12/2012'], ['uninstallable' => false,'missing' => true]);
 $oColumnLeft->AddSubBlock($oExtensionDetailInstalledFromFactory);
 
+$oExtensionDetailInstalledFromFactory = ExtensionDetailsUIBlockFactory::MakeInstalled('itop-not-uninstallable', 'You cannot uninstall me', 'Click force uninstall to uninstall me', ['v9.9.9', 'Void', '12/12/2012'], ['uninstallable' => false,'missing' => false]);
+$oColumnLeft->AddSubBlock($oExtensionDetailInstalledFromFactory);
+
 $oExtensionDetailInstalledWithLongTitle = ExtensionDetailsUIBlockFactory::MakeNotInstalled('itop-sample', 'My extension with a very long title', 'This is for test only', ['v1.1.1', 'Designer', '12/12/2012'], ['uninstallable' => false]);
 $oColumnRight->AddSubBlock($oExtensionDetailInstalledWithLongTitle);
 $oPage->add('<hr id="page_bottom"/>');

@@ -20,4 +20,5 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Layout:ExtensionsDetails:MenuAboutTitle' => 'About %1$s~~',
 	'UI:Layout:ExtensionsDetails:MenuAbout' => 'More informations~~',
 	'UI:Layout:ExtensionsDetails:MenuForce' => 'Force uninstall~~',
+	'UI:Layout:ExtensionsDetails:MoreActions' => 'Show more actions~~',
 ]);

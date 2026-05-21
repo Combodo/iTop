@@ -33,7 +33,7 @@ class ExtensionDetails extends UIContentBlock
 		$this->sCode = $sCode;
 		$this->sLabel = $sLabel;
 		$this->sDescription = $sDescription;
-		$this->aMetaData = $aMetaData;
+		$this->aMetaData = array_filter($aMetaData);
 		$this->aBadges = $aBadges;
 		$this->sAbout = $sAbout;
 		$this->InitializeToggler();
@@ -105,7 +105,7 @@ class ExtensionDetails extends UIContentBlock
 	 */
 	public function SetMetaData(array $aMetaData): static
 	{
-		$this->aMetaData = $aMetaData;
+		$this->aMetaData = array_filter($aMetaData);
 		return $this;
 	}
 
@@ -179,32 +179,37 @@ class ExtensionDetails extends UIContentBlock
 
 	protected function InitializeToggler()
 	{
+		$sName = 'aSelectedExtensions['.$this->GetCode().']';
 		$this->oToggler = new Toggler();
-		$this->oToggler->SetName('ExtensionToggler');
+		$this->oToggler->SetName($sName);
 		$this->oToggler->AddCSSClass('toggler-install');
 	}
 
 	protected function InitializePopoverMenu()
 	{
-		$sModalLabel = Dict::Format('UI:Layout:ExtensionsDetails:MenuAboutTitle', $this->sLabel);
-		$sModalText = $this->sAbout;
-		$oModifyButton = new JSButtonItem(
-			'extension_details',
-			Dict::S('UI:Layout:ExtensionsDetails:MenuAbout'),
-			<<<JS
+		$this->oPopoverMenu = new PopoverMenu();
+		$oPopoverOpenButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S('UI:Layout:ExtensionsDetails:MoreActions'));
+		$this->oPopoverMenu->SetTogglerFromBlock($oPopoverOpenButton);
+		$this->oMoreActions = new UIContentBlock();
+		$this->oMoreActions->AddSubBlock($this->oPopoverMenu);
+		$this->oMoreActions->AddSubBlock($oPopoverOpenButton);
+
+		if (mb_strlen($this->sAbout) > 0) {
+			$sModalLabel = Dict::Format('UI:Layout:ExtensionsDetails:MenuAboutTitle', $this->sLabel);
+			$sModalText = $this->sAbout;
+			$oModifyButton = new JSButtonItem(
+				'extension_details',
+				Dict::S('UI:Layout:ExtensionsDetails:MenuAbout'),
+				<<<JS
 	CombodoModal.OpenModal({
 		title: '$sModalLabel',
 		content: '$sModalText',
 	});
 JS,
-		);
-		$this->oPopoverMenu = new PopoverMenu();
-		$this->oPopoverMenu->AddItem('more-actions', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oModifyButton));
-		$oPopoverOpenButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', 'Show more actions');
-		$this->oPopoverMenu->SetTogglerFromBlock($oPopoverOpenButton);
-		$this->oMoreActions = new UIContentBlock();
-		$this->oMoreActions->AddSubBlock($this->oPopoverMenu);
-		$this->oMoreActions->AddSubBlock($oPopoverOpenButton);
+			);
+			$this->oPopoverMenu->AddItem('more-details', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oModifyButton));
+		}
+
 	}
 
 	public function AllowForceUninstall()
@@ -213,10 +218,11 @@ JS,
 			'force_uninstall',
 			Dict::S('UI:Layout:ExtensionsDetails:MenuForce'),
 			<<<JS
-	this.closest('.ibo-extension-details').querySelector('input[type=checkbox]').disabled = false
+	this.closest('.ibo-extension-details').querySelector('input[type=checkbox]').disabled = false;
+	this.remove();
 JS,
 		);
-		$this->oPopoverMenu->AddItem('more-actions', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oForceUninstallButton));
+		$this->oPopoverMenu->AddItem('force-uninstall', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oForceUninstallButton));
 	}
 
 }

@@ -20,4 +20,5 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Layout:ExtensionsDetails:MenuAboutTitle' => 'À propos de  %1$s',
 	'UI:Layout:ExtensionsDetails:MenuAbout' => 'Plus d\'informations',
 	'UI:Layout:ExtensionsDetails:MenuForce' => 'Forcer la désinstallation',
+	'UI:Layout:ExtensionsDetails:MoreActions' => 'Plus d\'actions',
 ]);
