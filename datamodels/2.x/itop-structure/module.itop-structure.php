@@ -99,6 +99,22 @@ if (!class_exists('StructureInstaller')) {
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
+			// Load localized structural data: contact types and contract types
+			static::LoadLocalizedData(
+				$sPreviousVersion,
+				$sCurrentVersion,
+				$oConfiguration,
+				'3.3.0',
+				dirname(__FILE__)."/data/{{language_code}}.data.itop-contacttype.xml"
+			);
+			static::LoadLocalizedData(
+				$sPreviousVersion,
+				$sCurrentVersion,
+				$oConfiguration,
+				'3.3.0',
+				dirname(__FILE__)."/data/{{language_code}}.data.itop-contracttype.xml"
+			);
+
 			// Default language will be used for actions
 			// Note: There is a issue when upgrading, default language cannot be retrieved from the passed configuration, we have to read it from the disk
 			if (utils::IsNullOrEmptyString($sPreviousVersion)) {

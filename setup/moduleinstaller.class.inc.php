@@ -331,7 +331,16 @@ abstract class ModuleInstallerAPI
 			(version_compare($sPreviousVersion, $sCurrentVersion, '<')
 				&& version_compare($sPreviousVersion, $sFirstLoadingVersion, '<'))) {
 
-			$sFileName = self::GetLocalizedFileName($oConfiguration, $sFilePattern);
+			// Note: There is an issue when upgrading, default language cannot be retrieved from the passed configuration, we have to read it from the disk
+			if (utils::IsNullOrEmptyString($sPreviousVersion)) {
+				// Fresh install
+				$sDefaultLanguage = $oConfiguration->GetDefaultLanguage();
+			} else {
+				// Upgrade
+				$sDefaultLanguage = utils::GetConfig(true)->GetDefaultLanguage();
+			}
+
+			$sFileName = self::GetLocalizedFileName($sDefaultLanguage, $sFilePattern);
 			if ($sFileName !== '') {
 				SetupLog::Info("Loading file: $sFileName");
 				self::XMLFileLoad($sFileName);
@@ -360,33 +369,16 @@ abstract class ModuleInstallerAPI
 	}
 
 	/**
-	 * @param \Config $oConfiguration
+	 * @param string $sLanguage The language code to use for localization (e.g. 'EN US')
 	 * @param string $sFilePattern The full path+name of the file to localize, with {{language_code}} as placeholder for the language code (e.g. 'data.sample.{{language_code}}.xml')
 	 *
 	 * @return string The localized file name if found, or an empty string if not found
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
-	public static function GetLocalizedFileName(Config $oConfiguration, string $sFilePattern): string
+	public static function GetLocalizedFileName($sLanguage, string $sFilePattern): string
 	{
-		$sLang = null;
-		if (is_object($oConfiguration)) {
-			$sLang = str_replace(' ', '_', strtolower($oConfiguration->GetDefaultLanguage()));
-		}
-		/**  Old code relying on reading the file instead of using the configuration passed object
-		* Try to get app. language from configuration fil (app. upgrade)
-		$sConfigFileName = APPCONF.'production/'.ITOP_CONFIG_FILE;
-		if (file_exists($sConfigFileName)) {
-			 $oFileConfig = new Config($sConfigFileName);
-			 if (is_object($oFileConfig)) {
-				 $sLang = str_replace(' ', '_', strtolower($oFileConfig->GetDefaultLanguage()));
-			 }
-		}
-		 **/
-		// - I still no language, get the default one
-		if (null === $sLang) {
-			$sLang = str_replace(' ', '_', strtolower($oConfiguration->GetDefaultLanguage()));
-		}
+		$sLang = str_replace(' ', '_', strtolower($sLanguage));
 		$sFileName = str_replace('{{language_code}}', $sLang, $sFilePattern);
 		if (!file_exists($sFileName)) {
 			$sLang = 'en_us';
