@@ -309,4 +309,94 @@ abstract class ModuleInstallerAPI
 
 		CMDBSource::CacheReset($sOrigTable);
 	}
+
+	/**
+	 * @param string $sPreviousVersion The previous version of the module (empty string will force the loading)
+	 * @param string $sCurrentVersion The current version of the module
+	 * @param \Config $oConfiguration
+	 * @param string $sFirstLoadingVersion The first module version for which the data loading should be performed (e.g. '3.0.0')
+	 * @param string $sFilePattern The pattern of the file to load, with {{language_code}} as placeholder for the language code (e.g. 'data.sample.{{language_code}}.xml')
+	 *
+	 * @return void
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
+	public static function LoadLocalizedData(string $sPreviousVersion, string $sCurrentVersion, Config $oConfiguration, string $sFirstLoadingVersion, string $sFilePattern): void
+	{
+		// It's not very clear if it makes sense to test a particular version,
+		// as the loading mechanism checks object existence using reconc_keys
+		// and do not recreate them, nor update existing.
+		// Without test, new entries added to the data files, would be automatically loaded
+		if (($sPreviousVersion === '') ||
+			(version_compare($sPreviousVersion, $sCurrentVersion, '<')
+				&& version_compare($sPreviousVersion, $sFirstLoadingVersion, '<'))) {
+
+			$sFileName = self::GetLocalizedFileName($oConfiguration, $sFilePattern);
+			if ($sFileName !== '') {
+				SetupLog::Info("Loading file: $sFileName");
+				self::XMLFileLoad($sFileName);
+			}
+		}
+	}
+
+	/**
+	 * @param array|string $sFileName
+	 * @param \XMLDataLoader $oDataLoader
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public static function XMLFileLoad(string $sFileName): void
+	{
+		if (file_exists($sFileName)) {
+			$oDataLoader = new XMLDataLoader();
+			CMDBObject::SetTrackInfo("Loading XML data from $sFileName");
+			$oMyChange = CMDBObject::GetCurrentChange();
+			SetupLog::Info("Loading file: $sFileName");
+			$oDataLoader->StartSession($oMyChange);
+			$oDataLoader->LoadFile($sFileName, false, true);
+			$oDataLoader->EndSession();
+		}
+	}
+
+	/**
+	 * @param \Config $oConfiguration
+	 * @param string $sFilePattern The full path+name of the file to localize, with {{language_code}} as placeholder for the language code (e.g. 'data.sample.{{language_code}}.xml')
+	 *
+	 * @return string The localized file name if found, or an empty string if not found
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
+	public static function GetLocalizedFileName(Config $oConfiguration, string $sFilePattern): string
+	{
+		$sLang = null;
+		if (is_object($oConfiguration)) {
+			$sLang = str_replace(' ', '_', strtolower($oConfiguration->GetDefaultLanguage()));
+		}
+		/**  Old code relying on reading the file instead of using the configuration passed object
+		* Try to get app. language from configuration fil (app. upgrade)
+		$sConfigFileName = APPCONF.'production/'.ITOP_CONFIG_FILE;
+		if (file_exists($sConfigFileName)) {
+			 $oFileConfig = new Config($sConfigFileName);
+			 if (is_object($oFileConfig)) {
+				 $sLang = str_replace(' ', '_', strtolower($oFileConfig->GetDefaultLanguage()));
+			 }
+		}
+		 **/
+		// - I still no language, get the default one
+		if (null === $sLang) {
+			$sLang = str_replace(' ', '_', strtolower($oConfiguration->GetDefaultLanguage()));
+		}
+		$sFileName = str_replace('{{language_code}}', $sLang, $sFilePattern);
+		if (!file_exists($sFileName)) {
+			$sLang = 'en_us';
+			$sFileName = str_replace('{{language_code}}', $sLang, $sFilePattern);
+		}
+		if (file_exists($sFileName)) {
+			return $sFileName;
+		} else {
+			SetupLog::Warning("No data file matching the pattern $sFilePattern and language_code $sLang was found.");
+			return '';
+		}
+	}
 }

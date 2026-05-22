@@ -4,11 +4,12 @@ namespace Combodo\iTop\Test\UnitTest\Setup;
 
 use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Config;
 use MetaModel;
 use ModuleInstallerAPI;
 
 /**
- * Class ModuleInstallerAPITest
+ * Class ModuleInstallerAPI
  *
  * @covers ModuleInstallerAPI
  *
@@ -281,5 +282,106 @@ SQL
 		ModuleInstallerAPI::MoveColumnInDB($sOrigTable, $sDstNonExistingColName, $sOrigTable, $sOrigColName);
 
 		$this->assertEquals($sOrigValue, $sDstValue, "Data was not moved as expected");
+	}
+
+	/**
+	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 */
+	public function testLoadLocalizedData_LoadsOnFirstInstall(): void
+	{
+		// Given
+		[$oConfig, $sOrgName, $sTmpDir, $sPattern] = $this->PrepareLocalizedDataTestContext('XML_Load_FirstInstall_', 'fr_fr');
+		$this->CreateLocalizedDataFile($sTmpDir, "en_us", $sOrgName);
+		$this->CreateLocalizedDataFile($sTmpDir, "fr_fr", $sOrgName);
+		// When no previous version, and current version higher than the first loading version
+		ModuleInstallerAPI::LoadLocalizedData('', '3.3.0', $oConfig, '3.0.0', $sPattern);
+		// Then data loaded
+		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 0);
+		$this->AssertOrganizationCountByName($sOrgName, 'fr_fr', 1);
+	}
+
+	/**
+	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 */
+	public function testLoadLocalizedData_DoesNotLoadWhenVersionConditionIsNotMet(): void
+	{
+		// Given
+		[$oConfig, $sOrgName, $sTmpDir, $sPattern] = $this->PrepareLocalizedDataTestContext('XML_Load_NoLoad_', 'en_us');
+		$this->CreateLocalizedDataFile($sTmpDir, "en_us", $sOrgName);
+
+		// When a previous version that is lower than the first loading version, but higher or equal to the current version
+		ModuleInstallerAPI::LoadLocalizedData('3.0.0', '3.1.0', $oConfig, '3.0.0', $sPattern);
+		// Then no data loaded
+		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 0);
+	}
+
+	/**
+	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 */
+	public function testLoadLocalizedData_FallbacksToEnUsWhenLanguageFileIsMissing(): void
+	{
+		[$oConfig, $sOrgName, $sTmpDir, $sPattern] = $this->PrepareLocalizedDataTestContext('XML_Load_Fallback_', 'fr_fr');
+		// Intentionally create ONLY en_us file
+		$this->CreateLocalizedDataFile($sTmpDir, 'en_us', $sOrgName);
+		// When loading localized data in fr_fr, but only en_us file exists
+		ModuleInstallerAPI::LoadLocalizedData('', '3.3.0', $oConfig, '3.0.0', $sPattern);
+
+		$this->AssertOrganizationCountByName($sOrgName, 'fr_fr', 0);
+		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 1);
+	}
+
+	/**
+	 * Prepare common context for LoadLocalizedData tests.
+	 *
+	 * @return array{0: Config, 1: string, 2: string, 3: string, 4: string}
+	 */
+	private function PrepareLocalizedDataTestContext(string $sOrgNamePrefix, string $sLanguage): array
+	{
+		$oConfig = MetaModel::GetConfig();
+		$oConfig->SetDefaultLanguage($sLanguage);
+		$this->assertNotNull($oConfig);
+
+		$sOrgName = $sOrgNamePrefix.uniqid();
+
+		$sTmpDir = static::CreateTmpdir();
+		$this->aFileToClean[] = $sTmpDir;
+		$sPattern = $sTmpDir.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml';
+
+		return [$oConfig, $sOrgName, $sTmpDir, $sPattern];
+	}
+
+	private function CreateLocalizedDataFile(string $sDir, string $sLang, string $sOrgName): string
+	{
+		$sFilePath = $sDir.DIRECTORY_SEPARATOR.'data.'.$sLang.'.xml';
+		file_put_contents($sFilePath, $this->BuildOrganizationXml($sOrgName, $sLang));
+
+		return $sFilePath;
+	}
+
+	private function BuildOrganizationXml(string $sOrgName, string $sLang): string
+	{
+		$iId = random_int(100000, 999999);
+		$sOrgNameXml = htmlspecialchars($sOrgName, ENT_XML1);
+
+		return <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+	<Organization alias="Organization" id="{$iId}">
+		<name>{$sOrgNameXml}</name>
+		<code>{$sLang}</code>
+		<status>active</status>
+	</Organization>
+</Set>
+XML;
+	}
+
+	private function AssertOrganizationCountByName(string $sOrgName, string $sLanguage, int $iExpectedCount): void
+	{
+		$sOrgTable = MetaModel::DBGetTable('Organization');
+		$iCount = (int) CMDBSource::QueryToScalar(
+			"SELECT COUNT(*) FROM `{$sOrgTable}` WHERE `name` = ".CMDBSource::Quote($sOrgName)." AND `code` = ".CMDBSource::Quote($sLanguage)
+		);
+
+		$this->assertEquals($iExpectedCount, $iCount);
 	}
 }
