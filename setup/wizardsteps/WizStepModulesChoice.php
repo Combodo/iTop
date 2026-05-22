@@ -80,7 +80,9 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 
 		// Sanity check (not stopper, to let developers go further...)
 		try {
-			$this->aAnalyzeInstallationModules = SetupUtils::AnalyzeInstallation($this->oWizard, true, null, $this->oConfig);
+			$aModulesToLoad = json_decode($oWizard->GetParameter('selected_modules'), true) ?? null;
+			SetupLog::Error(__METHOD__, null, [$aModulesToLoad]);
+			$this->aAnalyzeInstallationModules = SetupUtils::AnalyzeInstallation($this->oWizard, true, $aModulesToLoad, $this->oConfig);
 		} catch (MissingDependencyException $e) {
 			$this->oMissingDependencyException = $e;
 			$this->aAnalyzeInstallationModules = SetupUtils::AnalyzeInstallation($this->oWizard);
@@ -187,7 +189,6 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 
 	public function GetSelectedComponents(array $aSteps, string $sSelectedExtensionJson): array
 	{
-		SetupLog::Error(__METHOD__, null, $aSteps);
 		$aExtensions = json_decode($sSelectedExtensionJson, true);
 		$aRes = [];
 		foreach ($aSteps as $i => $aStepInfo) {

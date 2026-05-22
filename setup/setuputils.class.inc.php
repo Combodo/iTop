@@ -1576,7 +1576,7 @@ JS
 	 * @return array
 	 * @throws Exception
 	 */
-	public static function AnalyzeInstallation($oWizard, $bAbortOnMissingDependency = false, $aModulesToLoad = null, Config $oConfig = null)
+	public static function AnalyzeInstallation($oWizard, $bAbortOnMissingDependency = false, $aModulesToLoad = null, ?Config $oConfig = null)
 	{
 		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
 
