@@ -1640,10 +1640,24 @@ class RunTimeEnvironment
 		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
 
 		$aChoices = $this->GetExtensionMap()->GetChoicesFromDatabase($oSourceConfig);
+		return $this->GetModulesToLoadFromChoices($oSourceConfig, $aChoices, $aSearchDirs);
+	}
+
+	/**
+	 * Return modules based on installation choices+package
+* @param \Config $oConfig
+* @param array|bool $aChoices
+* @param array $aSearchDirs
+* @return array|null
+* @throws \ModuleInstallationException
+	 */
+	public function GetModulesToLoadFromChoices(Config $oConfig, array|bool $aChoices, array $aSearchDirs): ?array
+	{
 		if (false === $aChoices) {
 			return null;
 		}
-		$sSourceDir = $oSourceConfig->Get('source_dir');
+
+		$sSourceDir = $oConfig->Get('source_dir');
 
 		$sInstallFilePath = APPROOT.$sSourceDir.'/installation.xml';
 		if (! is_file($sInstallFilePath)) {

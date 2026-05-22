@@ -26,6 +26,7 @@ use Dict;
 use Exception;
 use MetaModel;
 use MissingDependencyException;
+use RunTimeEnvironment;
 use SetupUtils;
 use utils;
 
@@ -36,6 +37,7 @@ class DataFeatureRemovalController extends Controller
 	private array $aCountClassesToCleanup = [];
 	private array $aAnalysisDataTable = [];
 	private array $aDeletionExecutionSummary = [];
+	private ?RuntimeEnvironment $oRuntimeEnvironment = null;
 
 	private int $iCount = 0;
 	private int $iColumnCount = 2;
@@ -92,8 +94,8 @@ class DataFeatureRemovalController extends Controller
 
 		// Display changed extensions
 		$aHiddenInputNames = [
-			'selected_modules',
 			'selected_extensions',
+			'selected_modules',
 			'display_choices',
 			'added_extensions',
 			'removed_extensions',
@@ -109,12 +111,15 @@ class DataFeatureRemovalController extends Controller
 		$aAddedExtensions = json_decode($aHiddenInputs['added_extensions'], true);
 
 		$aRemovedExtensions = json_decode($aHiddenInputs['removed_extensions'], true);
-		if (count($aRemovedExtensions) == 0) {
+		if ("[]" === $aHiddenInputs['selected_modules']) {
+			//it does not come from setup
+			// we get extensions from 1st screen uiblocks
 			$this->ReadExtensionsDiff();
 			$aAddedExtensions = $this->aExtensionsToCheck['to_be_installed'];
-			$aHiddenInputs['added_extensions'] = utils::HtmlEntities(json_encode($aAddedExtensions));
+			$aHiddenInputs['added_extensions'] = $this->ConvertIntoSetupFormat($aAddedExtensions);
+
 			$aRemovedExtensions = $this->aExtensionsToCheck['to_be_removed'];
-			$aHiddenInputs['removed_extensions'] = utils::HtmlEntities(json_encode($aRemovedExtensions));
+			$aHiddenInputs['removed_extensions'] = $this->ConvertIntoSetupFormat($aRemovedExtensions);
 		}
 
 		$aRemoveExtensionCodes = array_keys($aRemovedExtensions);
@@ -143,6 +148,18 @@ class DataFeatureRemovalController extends Controller
 			return;
 		}
 
+		if ("[]" === $aHiddenInputs['selected_modules']) {
+			//to make setup redirection work, we need to pass complex data structures to setup wizards (ie extension/module lists)
+			$oConfig = MetaModel::GetConfig();
+			$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, $aAddedExtensions, $aRemovedExtensions);
+			$aHiddenInputs['selected_extensions'] = $this->ConvertIntoSetupFormat($aSelectedExtensions);
+
+			$oRunTimeEnvironment = $this->GetRuntimeEnvironment($aRemovedExtensions);
+			$aSearchDirs = [$oRunTimeEnvironment->GetBuildDir()];
+			$aSelectedModules = $oRunTimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions, $aSearchDirs);
+			$aHiddenInputs['selected_modules'] = $this->ConvertIntoSetupFormat($aSelectedModules);
+		}
+
 		$sSourceEnv = MetaModel::GetEnvironment();
 		$oSetupAudit = new SetupAudit($sSourceEnv);
 		$aGetRemovedClasses = array_keys($oSetupAudit->RunDataAudit());
@@ -166,6 +183,11 @@ class DataFeatureRemovalController extends Controller
 		$this->DisplayPage($aParams, 'AnalysisResult');
 	}
 
+	private function ConvertIntoSetupFormat(array $aData): string
+	{
+		return json_encode($aData);
+	}
+
 	/**
 * @param array $aRemovedExtensions
 * @param bool $bForceCompilation
@@ -183,14 +205,23 @@ class DataFeatureRemovalController extends Controller
 		$bIsDirEmpty = count(scandir($sBuildDir)) === 2;
 
 		if ($bIsDirEmpty || $bForceCompilation) {
-			$oRuntimeEnvironment = new DryRemovalRuntimeEnvironment($sSourceEnv, $aRemovedExtensions);
 			DataFeatureRemovalLog::Debug(
 				__METHOD__,
 				null,
 				['sSourceEnv' => $sSourceEnv, 'sBuildDir' => $sBuildDir, 'bIsDirEmpty' => $bIsDirEmpty, glob("$sBuildDir/*")]
 			);
-			$oRuntimeEnvironment->CompileFrom($sSourceEnv);
+			$this->GetRuntimeEnvironment($aRemovedExtensions)->CompileFrom($sSourceEnv);
 		}
+	}
+
+	private function GetRuntimeEnvironment(array $aRemovedExtensions): RunTimeEnvironment
+	{
+		if (is_null($this->oRuntimeEnvironment)) {
+			$sSourceEnv = MetaModel::GetEnvironment();
+			$this->oRuntimeEnvironment = new DryRemovalRuntimeEnvironment($sSourceEnv, $aRemovedExtensions);
+		}
+
+		return $this->oRuntimeEnvironment;
 	}
 
 	private function GetExecutionSummaryTable(): array
@@ -378,13 +409,15 @@ class DataFeatureRemovalController extends Controller
 
 			if ($aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCode] !== 'on') {
 				$aExtensionData['extra_flags']['selected'] = false;
-				$this->aExtensionsToCheck['to_be_removed'][$sCode] = $sCode;
+				$sLabel = $aAvailableExtensions[$sCode]['label'];
+				$this->aExtensionsToCheck['to_be_removed'][$sCode] = $sLabel;
 				if (!$aExtensionData['extra_flags']['uninstallable'] || $aExtensionData['extra_flags']['remote']) {
 					$this->bForcedUninstallation = true;
 				}
 			} elseif (!$aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCode] === 'on') {
 				$aExtensionData['extra_flags']['selected'] = true;
-				$this->aExtensionsToCheck['to_be_installed'][$sCode] = $sCode;
+				$sLabel = $aAvailableExtensions[$sCode]['label'];
+				$this->aExtensionsToCheck['to_be_installed'][$sCode] = $sLabel;
 			}
 		}
 		return count($this->aExtensionsToCheck['to_be_installed']) + count($this->aExtensionsToCheck['to_be_removed']);

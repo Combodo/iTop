@@ -637,6 +637,25 @@ class iTopExtensionsMap
 		}
 	}
 
+	/**
+	 * Return list of extensions  (ie installation choices + added - removed)
+* @param string[] $aAddedExtensions
+* @param string[] $aRemovedExtensions
+* @return string[] :
+	 */
+	public function GetSelectedExtensions(Config $oConfig, array $aAddedExtensions, array $aRemovedExtensions): array
+	{
+		$aDbChoices = self::GetChoicesFromDatabase($oConfig);
+
+		foreach ($aDbChoices as $i => $sChoice) {
+			if (in_array($sChoice, $aRemovedExtensions)) {
+				unset($aDbChoices[$i]);
+			}
+		}
+
+		return array_merge($aDbChoices, $aAddedExtensions);
+	}
+
 	public function GetExtraDirs(): array
 	{
 		return $this->aExtraDirs;
