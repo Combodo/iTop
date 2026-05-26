@@ -99,7 +99,7 @@ if (!class_exists('StructureInstaller')) {
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			// Load localized structural data: contact types and contract types
+			// Load localized structural data: contact types and document types
 			static::LoadLocalizedData(
 				$sPreviousVersion,
 				$sCurrentVersion,
@@ -112,7 +112,7 @@ if (!class_exists('StructureInstaller')) {
 				$sCurrentVersion,
 				$oConfiguration,
 				'3.3.0',
-				dirname(__FILE__)."/data/{{language_code}}.data.itop-contracttype.xml"
+				dirname(__FILE__)."/data/{{language_code}}.data.itop-documenttype.xml"
 			);
 
 			// Default language will be used for actions

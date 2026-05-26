@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+  <ContractType alias="ContractType" id="78">
+    <name>Hosting</name>
+  </ContractType>
+  <ContractType alias="ContractType" id="79">
+    <name>IT outsourcing</name>
+  </ContractType>
+  <ContractType alias="ContractType" id="77">
+    <name>Maintenance</name>
+  </ContractType>
+  <ContractType alias="ContractType" id="76">
+    <name>Support</name>
+  </ContractType>
+</Set>

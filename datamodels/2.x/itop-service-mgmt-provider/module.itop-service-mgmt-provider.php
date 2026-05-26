@@ -87,6 +87,14 @@ if (!class_exists('ServiceMgmtProviderInstaller')) {
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
+			// Load localized structural data: contract types
+			static::LoadLocalizedData(
+				$sPreviousVersion,
+				$sCurrentVersion,
+				$oConfiguration,
+				'3.3.0',
+				dirname(__FILE__)."/data/{{language_code}}.data.itop-contracttype.xml"
+			);
 		}
 	}
 }

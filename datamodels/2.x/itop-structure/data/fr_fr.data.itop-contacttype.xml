@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+  <ContactType alias="ContactType" id="75">
+    <name>Administrateur</name>
+  </ContactType>
+  <ContactType alias="ContactType" id="73">
+    <name>Acheteur</name>
+  </ContactType>
+  <ContactType alias="ContactType" id="1">
+    <name>Responsable de la relation client</name>
+  </ContactType>
+  <ContactType alias="ContactType" id="2">
+    <name>Helpdesk</name>
+  </ContactType>
+  <ContactType alias="ContactType" id="3">
+    <name>Manager</name>
+  </ContactType>
+  <ContactType alias="ContactType" id="74">
+    <name>Commercial</name>
+  </ContactType>
+  <ContactType alias="ContactType" id="4">
+    <name>Agent de support</name>
+  </ContactType>
+  <ContactType alias="ContactType" id="5">
+    <name>Support niveau 1</name>
+  </ContactType>
+  <ContactType alias="ContactType" id="6">
+    <name>Chef d'équipe</name>
+  </ContactType>
+</Set>
