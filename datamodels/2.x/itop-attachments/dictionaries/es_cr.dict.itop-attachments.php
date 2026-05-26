@@ -81,11 +81,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:TriggerOnAttachmentDownload' => 'Disparador (al descargar el archivo adjunto del objeto)',
 	'Class:TriggerOnAttachmentDownload+' => 'Disparador al descargar el archivo adjunto del objeto de [una clase secundaria de] la clase dada',
-	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
-	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
+	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment creation)~~',
+	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment creation~~',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email~~',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
-	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
-	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
+	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment deletion)~~',
+	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment deletion~~',
 	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',
 ]);
