@@ -91,5 +91,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
 	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (Bij het verwijderen van een bijlage)',
 	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger bij het verwijderen van een bijlage van een object van de opgegeven klasse (of subklasse ervan)',
+	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email' => 'Add deleted file in email~~',
+	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email+' => 'If checked, the deleted file will be automatically attached to the email when an email action is triggered~~',
 	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',
 ]);
