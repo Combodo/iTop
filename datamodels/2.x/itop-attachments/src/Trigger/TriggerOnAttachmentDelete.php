@@ -34,11 +34,9 @@ class TriggerOnAttachmentDelete extends TriggerOnObject
 		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeBoolean("file_in_email", ["sql" => 'file_in_email', "is_null_allowed" => false, "default_value" => 'true', "allowed_values" => null, "depends_on" => [], "always_load_in_tables" => false]));
-
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', ['description', 'context', 'filter', 'action_list', 'target_class','file_in_email']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', ['description', 'context', 'filter', 'action_list', 'target_class']); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', ['finalclass', 'target_class']); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', ['description', 'target_class']); // Criteria of the std search form
