@@ -4,11 +4,12 @@ namespace Combodo\iTop\Test\UnitTest\Setup;
 
 use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Config;
 use MetaModel;
 use ModuleInstallerAPI;
 
 /**
- * Class ModuleInstallerAPITest
+ * Class ModuleInstallerAPI
  *
  * @covers ModuleInstallerAPI
  *
@@ -281,5 +282,190 @@ SQL
 		ModuleInstallerAPI::MoveColumnInDB($sOrigTable, $sDstNonExistingColName, $sOrigTable, $sOrigColName);
 
 		$this->assertEquals($sOrigValue, $sDstValue, "Data was not moved as expected");
+	}
+
+	/**
+	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 */
+	public function testLoadLocalizedData_LoadsOnFirstInstall(): void
+	{
+		// Given
+		[$oConfig, $sOrgName, $sTmpDir, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_FirstInstall_', 'fr_fr');
+		$this->GivenLocalizedDataFile($sTmpDir, "en_us", $sOrgName);
+		$this->GivenLocalizedDataFile($sTmpDir, "fr_fr", $sOrgName);
+		// When no previous version, and current version higher than the first loading version
+		ModuleInstallerAPI::LoadLocalizedData($oConfig, '', '3.3.0', '3.0.0', $sPattern);
+		// Then data loaded
+		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 0);
+		$this->AssertOrganizationCountByName($sOrgName, 'fr_fr', 1);
+	}
+
+	/**
+	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 */
+	public function testLoadLocalizedData_DoesNotLoadWhenVersionConditionIsNotMet(): void
+	{
+		// Given
+		[$oConfig, $sOrgName, $sTmpDir, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_NoLoad_', 'en_us');
+		$this->GivenLocalizedDataFile($sTmpDir, "en_us", $sOrgName);
+
+		// When a previous version that is lower than the first loading version, but higher or equal to the current version
+		ModuleInstallerAPI::LoadLocalizedData($oConfig, '3.0.0', '3.1.0', '3.0.0', $sPattern);
+		// Then no data loaded
+		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 0);
+	}
+
+	/**
+	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 */
+	public function testLoadLocalizedData_FallbacksToEnUsWhenLanguageFileIsMissing(): void
+	{
+		[$oConfig, $sOrgName, $sTmpDir, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_Fallback_', 'fr_fr');
+		// Intentionally create ONLY en_us file
+		$this->GivenLocalizedDataFile($sTmpDir, 'en_us', $sOrgName);
+		// When loading localized data in fr_fr, but only en_us file exists
+		ModuleInstallerAPI::LoadLocalizedData($oConfig, '', '3.3.0', '3.0.0', $sPattern);
+
+		$this->AssertOrganizationCountByName($sOrgName, 'fr_fr', 0);
+		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 1);
+	}
+
+	/**
+	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 * @dataProvider LoadLocalizedData_ValidVersionFormatsProvider
+	 */
+	public function testLoadLocalizedData_AcceptsSupportedVersionFormats(string $sCurrentVersion, string $sFirstLoadingVersion): void
+	{
+		[$oConfig, $sOrgName, $sTmpDir, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_ValidVersion_', 'en_us');
+		$this->GivenLocalizedDataFile($sTmpDir, 'en_us', $sOrgName);
+
+		ModuleInstallerAPI::LoadLocalizedData($oConfig, '', $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
+
+		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 1);
+	}
+
+	public function LoadLocalizedData_ValidVersionFormatsProvider(): array
+	{
+		return [
+			'Current version with suffix' => ['3.2-dev', '3.0.0'],
+			'Current version x.y.z' => ['1.2.4', '1.0'],
+			'Current version x.y.z-suffix' => ['2.3.3-beta', '2.0.0'],
+			'Current version x.y.z-1' => ['1.2.4-1', '1.0.3-2'],
+		];
+	}
+
+	/**
+	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 * @dataProvider LoadLocalizedData_InvalidParametersProvider
+	 */
+	public function testLoadLocalizedData_ThrowsOnInvalidParameters(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, string $sPattern, string $sExpectedMessage): void
+	{
+		$oConfig = MetaModel::GetConfig();
+		$this->assertNotNull($oConfig);
+
+		$this->expectException(\CoreUnexpectedValue::class);
+		$this->expectExceptionMessage($sExpectedMessage);
+
+		ModuleInstallerAPI::LoadLocalizedData($oConfig, $sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
+	}
+
+	public function LoadLocalizedData_InvalidParametersProvider(): array
+	{
+		$sTmpDir = static::CreateTmpdir();
+		$this->aFileToClean[] = $sTmpDir;
+
+		return [
+			'Invalid previous version format' => [
+				'previous' => 'v3.2',
+				'current' => '3.2.0',
+				'first' => '3.0.0',
+				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml',
+				'message' => 'sPreviousVersion',
+			],
+			'Invalid current version format' => [
+				'previous' => '',
+				'current' => '3',
+				'first' => '3.0.0',
+				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml',
+				'message' => 'sCurrentVersion',
+			],
+			'Invalid first loading version format' => [
+				'previous' => '',
+				'current' => '3.2.0',
+				'first' => '3.0.0-beta.1',
+				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml',
+				'message' => 'sFirstLoadingVersion',
+			],
+			'Missing strict placeholder' => [
+				'previous' => '',
+				'current' => '3.2.0',
+				'first' => '3.0.0',
+				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.{{LANGUAGE_CODE}}.xml',
+				'message' => "{{language_code}}",
+			],
+			'Parent directory does not exist' => [
+				'previous' => '',
+				'current' => '3.2.0',
+				'first' => '3.0.0',
+				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'missing'.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml',
+				'message' => 'parent directory',
+			],
+		];
+	}
+
+	/**
+	 * Prepare common context for LoadLocalizedData tests.
+	 *
+	 * @return array{0: Config, 1: string, 2: string, 3: string, 4: string}
+	 */
+	private function GivenLocalizedDataTestContext(string $sOrgNamePrefix, string $sLanguage): array
+	{
+		$oConfig = MetaModel::GetConfig();
+		$oConfig->SetDefaultLanguage($sLanguage);
+		$this->assertNotNull($oConfig);
+
+		$sOrgName = $sOrgNamePrefix.uniqid();
+
+		$sTmpDir = static::CreateTmpdir();
+		$this->aFileToClean[] = $sTmpDir;
+		$sPattern = $sTmpDir.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml';
+
+		return [$oConfig, $sOrgName, $sTmpDir, $sPattern];
+	}
+
+	private function GivenLocalizedDataFile(string $sDir, string $sLang, string $sOrgName): string
+	{
+		$sFilePath = $sDir.DIRECTORY_SEPARATOR.'data.'.$sLang.'.xml';
+		file_put_contents($sFilePath, $this->BuildOrganizationXml($sOrgName, $sLang));
+
+		return $sFilePath;
+	}
+
+	private function BuildOrganizationXml(string $sOrgName, string $sLang): string
+	{
+		$iId = random_int(100000, 999999);
+		$sOrgNameXml = htmlspecialchars($sOrgName, ENT_XML1);
+
+		return <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+	<Organization alias="Organization" id="{$iId}">
+		<name>{$sOrgNameXml}</name>
+		<code>{$sLang}</code>
+		<status>active</status>
+	</Organization>
+</Set>
+XML;
+	}
+
+	private function AssertOrganizationCountByName(string $sOrgName, string $sLanguage, int $iExpectedCount): void
+	{
+		$oSet = new \DBObjectSet(
+			\DBSearch::FromOQL("SELECT Organization WHERE name = :org_name AND code = :language"),
+			[],
+			['org_name' => $sOrgName, 'language' => $sLanguage]
+		);
+		$iCount = $oSet->Count();
+		$this->assertEquals($iExpectedCount, $iCount, "Found $iCount changes for objects with name '{$sOrgName}' and language '{$sLanguage}', expected {$iExpectedCount}");
 	}
 }
