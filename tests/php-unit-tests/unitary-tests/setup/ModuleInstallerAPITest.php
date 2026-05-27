@@ -331,6 +331,89 @@ SQL
 	}
 
 	/**
+	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 * @dataProvider LoadLocalizedData_ValidVersionFormatsProvider
+	 */
+	public function testLoadLocalizedData_AcceptsSupportedVersionFormats(string $sCurrentVersion, string $sFirstLoadingVersion): void
+	{
+		[$oConfig, $sOrgName, $sTmpDir, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_ValidVersion_', 'en_us');
+		$this->GivenLocalizedDataFile($sTmpDir, 'en_us', $sOrgName);
+
+		ModuleInstallerAPI::LoadLocalizedData($oConfig, '', $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
+
+		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 1);
+	}
+
+	public function LoadLocalizedData_ValidVersionFormatsProvider(): array
+	{
+		return [
+			'Current version with suffix' => ['3.2-dev', '3.0.0'],
+			'Current version x.y.z' => ['1.2.4', '1.0'],
+			'Current version x.y.z-suffix' => ['2.3.3-beta', '2.0.0'],
+			'Current version x.y.z-1' => ['1.2.4-1', '1.0.3-2'],
+		];
+	}
+
+	/**
+	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 * @dataProvider LoadLocalizedData_InvalidParametersProvider
+	 */
+	public function testLoadLocalizedData_ThrowsOnInvalidParameters(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, string $sPattern, string $sExpectedMessage): void
+	{
+		$oConfig = MetaModel::GetConfig();
+		$this->assertNotNull($oConfig);
+
+		$this->expectException(\CoreUnexpectedValue::class);
+		$this->expectExceptionMessage($sExpectedMessage);
+
+		ModuleInstallerAPI::LoadLocalizedData($oConfig, $sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
+	}
+
+	public function LoadLocalizedData_InvalidParametersProvider(): array
+	{
+		$sTmpDir = static::CreateTmpdir();
+		$this->aFileToClean[] = $sTmpDir;
+
+		return [
+			'Invalid previous version format' => [
+				'previous' => 'v3.2',
+				'current' => '3.2.0',
+				'first' => '3.0.0',
+				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml',
+				'message' => 'sPreviousVersion',
+			],
+			'Invalid current version format' => [
+				'previous' => '',
+				'current' => '3',
+				'first' => '3.0.0',
+				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml',
+				'message' => 'sCurrentVersion',
+			],
+			'Invalid first loading version format' => [
+				'previous' => '',
+				'current' => '3.2.0',
+				'first' => '3.0.0-beta.1',
+				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml',
+				'message' => 'sFirstLoadingVersion',
+			],
+			'Missing strict placeholder' => [
+				'previous' => '',
+				'current' => '3.2.0',
+				'first' => '3.0.0',
+				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.{{LANGUAGE_CODE}}.xml',
+				'message' => "{{language_code}}",
+			],
+			'Parent directory does not exist' => [
+				'previous' => '',
+				'current' => '3.2.0',
+				'first' => '3.0.0',
+				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'missing'.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml',
+				'message' => 'parent directory',
+			],
+		];
+	}
+
+	/**
 	 * Prepare common context for LoadLocalizedData tests.
 	 *
 	 * @return array{0: Config, 1: string, 2: string, 3: string, 4: string}

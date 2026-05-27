@@ -320,9 +320,12 @@ abstract class ModuleInstallerAPI
 	 * @return void
 	 * @throws \ConfigException
 	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 */
 	public static function LoadLocalizedData(Config $oConfiguration, string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, string $sFilePattern): void
 	{
+		self::AssertLoadLocalizedDataParametersAreValid($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion, $sFilePattern);
+
 		// It's not very clear if it makes sense to test a particular version,
 		// as the loading mechanism checks object existence using reconc_keys
 		// and do not recreate them, nor update existing.
@@ -348,6 +351,42 @@ abstract class ModuleInstallerAPI
 	}
 
 	/**
+	 * @throws \CoreUnexpectedValue
+	 */
+	private static function AssertLoadLocalizedDataParametersAreValid(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, string $sFilePattern): void
+	{
+		if (($sPreviousVersion !== '') && !self::IsValidLocalizedDataVersion($sPreviousVersion)) {
+			throw new CoreUnexpectedValue("LoadLocalizedData expects sPreviousVersion to be empty or match x.y[.z][-name], got '{$sPreviousVersion}'");
+		}
+
+		if (!self::IsValidLocalizedDataVersion($sCurrentVersion)) {
+			throw new CoreUnexpectedValue("LoadLocalizedData expects sCurrentVersion to match x.y[.z][-name], got '{$sCurrentVersion}'");
+		}
+
+		if (!self::IsValidLocalizedDataVersion($sFirstLoadingVersion)) {
+			throw new CoreUnexpectedValue("LoadLocalizedData expects sFirstLoadingVersion to match x.y[.z][-name], got '{$sFirstLoadingVersion}'");
+		}
+
+		if (utils::IsNullOrEmptyString($sFilePattern)) {
+			throw new CoreUnexpectedValue('LoadLocalizedData expects sFilePattern to be a non-empty string');
+		}
+
+		if (substr_count($sFilePattern, '{{language_code}}') !== 1) {
+			throw new CoreUnexpectedValue("LoadLocalizedData expects sFilePattern to contain the exact placeholder '{{language_code}}' exactly once");
+		}
+
+		$sParentDirectory = dirname($sFilePattern);
+		if (!is_dir($sParentDirectory)) {
+			throw new CoreUnexpectedValue("LoadLocalizedData expects sFilePattern parent directory to exist, got '{$sParentDirectory}'");
+		}
+	}
+
+	private static function IsValidLocalizedDataVersion(string $sVersion): bool
+	{
+		return (preg_match('/^\d+\.\d+(?:\.\d+)?(?:-[A-Za-z0-9]+)?$/', $sVersion) === 1);
+	}
+
+	/**
 	 * @param array|string $sFileName
 	 * @param \XMLDataLoader $oDataLoader
 	 *
@@ -356,15 +395,16 @@ abstract class ModuleInstallerAPI
 	 */
 	public static function XMLFileLoad(string $sFileName): void
 	{
-		if (file_exists($sFileName)) {
-			$oDataLoader = new XMLDataLoader();
-			CMDBObject::SetTrackInfo("Loading XML data from $sFileName");
-			$oMyChange = CMDBObject::GetCurrentChange();
-			SetupLog::Info("Loading objects in DB from file: $sFileName");
-			$oDataLoader->StartSession($oMyChange);
-			$oDataLoader->LoadFile($sFileName, false, true);
-			$oDataLoader->EndSession();
+		if (!file_exists($sFileName)) {
+			throw new Exception("File $sFileName not found");
 		}
+		$oDataLoader = new XMLDataLoader();
+		CMDBObject::SetTrackInfo("Loading XML data from $sFileName");
+		$oMyChange = CMDBObject::GetCurrentChange();
+		SetupLog::Info("Loading objects in DB from file: $sFileName");
+		$oDataLoader->StartSession($oMyChange);
+		$oDataLoader->LoadFile($sFileName, false, true);
+		$oDataLoader->EndSession();
 	}
 
 	/**

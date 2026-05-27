@@ -105,14 +105,14 @@ if (!class_exists('StructureInstaller')) {
 				$sPreviousVersion,
 				$sCurrentVersion,
 				'3.3.0',
-				dirname(__FILE__)."/data/{{language_code}}.data.itop-contacttype.xml"
+				__DIR__."/data/{{language_code}}.data.itop-contacttype.xml"
 			);
 			static::LoadLocalizedData(
 				$oConfiguration,
 				$sPreviousVersion,
 				$sCurrentVersion,
 				'3.3.0',
-				dirname(__FILE__)."/data/{{language_code}}.data.itop-documenttype.xml"
+				__DIR__."/data/{{language_code}}.data.itop-documenttype.xml"
 			);
 
 			// Default language will be used for actions

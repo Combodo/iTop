@@ -90,7 +90,7 @@ if (!class_exists('ServiceMgmtInstaller')) {
 				$sPreviousVersion,
 				$sCurrentVersion,
 				'3.3.0',
-				dirname(__FILE__)."/data/{{language_code}}.data.itop-contracttype.xml"
+				__DIR__."/data/{{language_code}}.data.itop-contracttype.xml"
 			);
 		}
 	}
