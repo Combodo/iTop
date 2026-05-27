@@ -17,6 +17,7 @@ SetupWebPage::AddModule(
 		//
 		'dependencies' => [
 			'itop-config-mgmt/3.2.0',
+			'itop-structure/3.2.0||itop-virtualization/3.2.0||itop-container-mgmt/3.2.0',
 		],
 		'mandatory' => false,
 		'visible' => true,

@@ -486,7 +486,7 @@
         <details>
           <items>
             <item id="dataflows" _delta="define">
-              <rank>25</rank>
+              <rank>125</rank>
             </item>
           </items>
         </details>
@@ -497,7 +497,7 @@
         <details>
           <items>
             <item id="dataflows" _delta="define">
-              <rank>25</rank>
+              <rank>115</rank>
             </item>
           </items>
         </details>
@@ -508,7 +508,7 @@
         <details>
           <items>
             <item id="dataflows" _delta="define">
-              <rank>25</rank>
+              <rank>165</rank>
             </item>
           </items>
         </details>
@@ -519,7 +519,7 @@
         <details>
           <items>
             <item id="dataflows" _delta="define">
-              <rank>25</rank>
+              <rank>165</rank>
             </item>
           </items>
         </details>
@@ -530,7 +530,40 @@
         <details>
           <items>
             <item id="dataflows" _delta="define">
-              <rank>25</rank>
+              <rank>115</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="Server" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>105</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="VirtualMachine" _delta="if_exists">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>165</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="ContainerApplication" _delta="if_exists">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>75</rank>
             </item>
           </items>
         </details>
@@ -541,7 +574,7 @@
         <details>
           <items>
             <item id="dataflows" _delta="define">
-              <rank>25</rank>
+              <rank>125</rank>
             </item>
           </items>
         </details>
@@ -552,7 +585,7 @@
         <details>
           <items>
             <item id="dataflows" _delta="define">
-              <rank>25</rank>
+              <rank>165</rank>
             </item>
           </items>
         </details>
@@ -563,7 +596,7 @@
         <details>
           <items>
             <item id="dataflows" _delta="define">
-              <rank>25</rank>
+              <rank>155</rank>
             </item>
           </items>
         </details>
