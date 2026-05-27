@@ -381,6 +381,42 @@ class iTopExtensionsMap
 	}
 
 	/**
+	 * Return the list of extensions found in a given directory (not recursively)
+	 *
+	 * @param string $sSearchDir The directory to scan
+	 *
+	 * @return string[]|bool
+	 */
+	public function GetExtensionsFromDir($sSearchDir): array|bool
+	{
+		if (!is_readable($sSearchDir)) {
+			return false;
+		}
+
+		$aExtensions = [];
+		$hDir = opendir($sSearchDir);
+		if ($hDir !== false) {
+
+			// Then scan the other files and subdirectories
+			while (($sDir = readdir($hDir)) !== false) {
+				if (($sDir === '.') || ($sDir === '..') || !is_dir($sSearchDir.$sDir)) {
+					continue;
+				}
+
+				// First check if there is an extension.xml file in this directory
+				if (is_readable($sSearchDir.$sDir.'/extension.xml')) {
+					$oXml = new XMLParameters($sSearchDir.$sDir.'/extension.xml');
+					$aExtensions[] = $oXml->Get('extension_code');
+				}
+			}
+
+			closedir($hDir);
+		}
+
+		return $aExtensions;
+	}
+
+	/**
 	 * Check if some extension contains a module with missing dependencies...
 	 * If so, populate the aMissingDepenencies array
 	 *  @param string $sAppRoot
