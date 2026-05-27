@@ -101,16 +101,16 @@ if (!class_exists('StructureInstaller')) {
 		{
 			// Load localized structural data: contact types and document types
 			static::LoadLocalizedData(
+				$oConfiguration,
 				$sPreviousVersion,
 				$sCurrentVersion,
-				$oConfiguration,
 				'3.3.0',
 				dirname(__FILE__)."/data/{{language_code}}.data.itop-contacttype.xml"
 			);
 			static::LoadLocalizedData(
+				$oConfiguration,
 				$sPreviousVersion,
 				$sCurrentVersion,
-				$oConfiguration,
 				'3.3.0',
 				dirname(__FILE__)."/data/{{language_code}}.data.itop-documenttype.xml"
 			);

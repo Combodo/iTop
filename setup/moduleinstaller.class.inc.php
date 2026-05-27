@@ -311,9 +311,9 @@ abstract class ModuleInstallerAPI
 	}
 
 	/**
+	 * @param \Config $oConfiguration
 	 * @param string $sPreviousVersion The previous version of the module (empty string will force the loading)
 	 * @param string $sCurrentVersion The current version of the module
-	 * @param \Config $oConfiguration
 	 * @param string $sFirstLoadingVersion The first module version for which the data loading should be performed (e.g. '3.0.0')
 	 * @param string $sFilePattern The pattern of the file to load, with {{language_code}} as placeholder for the language code (e.g. 'data.sample.{{language_code}}.xml')
 	 *
@@ -321,7 +321,7 @@ abstract class ModuleInstallerAPI
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
-	public static function LoadLocalizedData(string $sPreviousVersion, string $sCurrentVersion, Config $oConfiguration, string $sFirstLoadingVersion, string $sFilePattern): void
+	public static function LoadLocalizedData(Config $oConfiguration, string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, string $sFilePattern): void
 	{
 		// It's not very clear if it makes sense to test a particular version,
 		// as the loading mechanism checks object existence using reconc_keys
@@ -342,7 +342,6 @@ abstract class ModuleInstallerAPI
 
 			$sFileName = self::GetLocalizedFileName($sDefaultLanguage, $sFilePattern);
 			if ($sFileName !== '') {
-				SetupLog::Info("Loading file: $sFileName");
 				self::XMLFileLoad($sFileName);
 			}
 		}
@@ -361,7 +360,7 @@ abstract class ModuleInstallerAPI
 			$oDataLoader = new XMLDataLoader();
 			CMDBObject::SetTrackInfo("Loading XML data from $sFileName");
 			$oMyChange = CMDBObject::GetCurrentChange();
-			SetupLog::Info("Loading file: $sFileName");
+			SetupLog::Info("Loading objects in DB from file: $sFileName");
 			$oDataLoader->StartSession($oMyChange);
 			$oDataLoader->LoadFile($sFileName, false, true);
 			$oDataLoader->EndSession();

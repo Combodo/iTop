@@ -89,9 +89,9 @@ if (!class_exists('ServiceMgmtProviderInstaller')) {
 		{
 			// Load localized structural data: contract types
 			static::LoadLocalizedData(
+				$oConfiguration,
 				$sPreviousVersion,
 				$sCurrentVersion,
-				$oConfiguration,
 				'3.3.0',
 				dirname(__FILE__)."/data/{{language_code}}.data.itop-contracttype.xml"
 			);

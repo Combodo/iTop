@@ -56,13 +56,11 @@ class TicketsInstaller extends ModuleInstallerAPI
 				if (!MetaModel::IsValidClass($oTrigger->Get('target_class'))) {
 					$oTrigger->DBDelete();
 				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
 		// Load localized structural data: predefined query phrases for notifications
-		static::LoadLocalizedData($sPreviousVersion, $sCurrentVersion, $oConfiguration, '3.0.0', dirname(__FILE__)."/data/{{language_code}}.data.itop-tickets.xml");
+		static::LoadLocalizedData($oConfiguration, $sPreviousVersion, $sCurrentVersion, '3.0.0', dirname(__FILE__)."/data/{{language_code}}.data.itop-tickets.xml");
 	}
 }
-
