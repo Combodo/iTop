@@ -31,6 +31,7 @@ abstract class AbstractWizStepInstall extends WizardStep
 		$aSelectedExtensions = json_decode($this->oWizard->GetParameter('selected_extensions'), true);
 		$sBackupDestination = '';
 		$sPreviousConfigurationFile = '';
+		$bCopySetupFiles = $this->oWizard->GetParameter('copy_setup_files', true);
 		$sDBName = $this->oWizard->GetParameter('db_name');
 		if ($sMode == 'upgrade') {
 			$sPreviousVersionDir = $this->oWizard->GetParameter('previous_version_dir', '');
@@ -45,7 +46,6 @@ abstract class AbstractWizStepInstall extends WizardStep
 				$sBackupDestination = $this->oWizard->GetParameter('db_backup_path', '');
 			}
 		} else {
-
 			$sDBNewName = $this->oWizard->GetParameter('db_new_name', '');
 			if ($sDBNewName != '') {
 				$sDBName = $sDBNewName; // Database will be created
@@ -54,7 +54,7 @@ abstract class AbstractWizStepInstall extends WizardStep
 
 		$sSourceDir = $this->oWizard->GetParameter('source_dir');
 		if (($sMode == 'upgrade') && ($this->oWizard->GetParameter('upgrade_type') == 'keep-previous')) {
-			$sPreviousVersionDir = $this->oWizard->GetParameter('previous_version_dir');
+			//$sPreviousVersionDir = $this->oWizard->GetParameter('previous_version_dir');
 			//$aCopies[] = ['source' => $sSourceDir, 'destination' => 'modules']; // Source is an absolute path, destination is relative to APPROOT
 			//$aCopies[] = ['source' => $sPreviousVersionDir.'/portal', 'destination' => 'portal']; // Source is an absolute path, destination is relative to APPROOT
 			$sSourceDir = APPROOT.'modules';
@@ -72,7 +72,7 @@ abstract class AbstractWizStepInstall extends WizardStep
 			'source_dir' => str_replace(APPROOT, '', $sSourceDir),
 			'datamodel_version' => $this->oWizard->GetParameter('datamodel_version'), //TODO: let the installer compute this automatically...
 			'previous_configuration_file' => $sPreviousConfigurationFile,
-			'extensions_dir' => 'extensions',
+			'extensions_dir' => $this->oWizard->GetParameter('extensions_dir', 'extensions'),
 			'target_env' => 'production',
 			'workspace_dir' => '',
 			'database' =>  [
@@ -106,6 +106,10 @@ abstract class AbstractWizStepInstall extends WizardStep
 				'destination' => $sBackupDestination,
 				'configuration_file' => $sPreviousConfigurationFile,
 			];
+		}
+
+		if ($bCopySetupFiles) {
+			$aInstallParams['optional_steps']['copy'] = true;
 		}
 
 		return $aInstallParams;

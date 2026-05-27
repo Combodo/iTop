@@ -28,6 +28,19 @@ class DataAuditSequencer extends StepSequencer
 {
 	public const DATA_AUDIT_FAILED = 100;
 
+	protected const LABELS = [
+		'copy' => 'Copying data model files',
+		'compile' => 'Compiling the data model',
+		'setup-audit' => 'Checking data consistency with the new data model',
+		'complete' => 'Check Completed',
+	];
+	protected const SUCCESS_LABELS = [
+		'copy' => 'Data model files copied',
+		'compile' => 'Data model compilation completed',
+		'setup-audit' => 'Data consistency check completed',
+		'complete' => 'All checks completed',
+	];
+
 	/**
 	 * @inherit
 	 */
@@ -43,11 +56,11 @@ class DataAuditSequencer extends StepSequencer
 			SetupLog::Info("##### STEP {$sStep} start");
 			switch ($sStep) {
 				case '':
-					return $this->GetNextStep('copy', 'Copying data model files', 5);
+					return $this->ComputeNextStep($sStep);
 
 				case 'copy':
 					$this->oRunTimeEnvironment->CopySetupFiles();
-					return $this->GetNextStep('compile', 'Compiling the data model', 20, 'Copying...', 'Data model files copied');
+					return $this->ComputeNextStep($sStep);
 
 				case 'compile':
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
@@ -55,7 +68,7 @@ class DataAuditSequencer extends StepSequencer
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
 					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', []);
 					$bUseSymbolicLinks = $this->oParams->Get('use_symbolic_links', null) === 'on';
-					$sMessage = $bUseSymbolicLinks ? 'Using symbolic links instead of copying data model files (for developers only!)' : '';
+					MetaModel::ResetAllCaches($this->oRunTimeEnvironment->GetBuildEnv());
 					$this->oRunTimeEnvironment->DoCompile(
 						$aRemovedExtensionCodes,
 						$aSelectedModules,
@@ -63,23 +76,18 @@ class DataAuditSequencer extends StepSequencer
 						$sExtensionDir,
 						$bUseSymbolicLinks
 					);
-
-					if ($this->IsDataAuditRequired()) {
-						return $this->GetNextStep('setup-audit', 'Checking data consistency with the new data model', 70, $sMessage, 'Data model compilation completed');
-					}
-					return $this->GetNextStep('complete', 'Check Completed', 100, '', 'Data model compilation completed');
+					return $this->ComputeNextStep($sStep);
 
 				case 'setup-audit':
-					if ($this->IsDataAuditRequired()) {
-						$this->oRunTimeEnvironment->DataToCleanupAudit();
-					}
-					return $this->GetNextStep('complete', 'Check Completed', 100, '', 'Data consistency check completed');
+					$this->oRunTimeEnvironment->DataToCleanupAudit();
+					return $this->ComputeNextStep($sStep);
 
 				case 'complete':
-					return $this->GetNextStep('', 'Completed', 100, '', 'All checks completed');
+					return $this->GetNextStep('', 'Completed', 100);
 
 				default:
 					return $this->GetNextStep('', "Unknown setup step '$sStep'.", 100, '', '', self::ERROR);
+
 			}
 		} catch (Exception $e) {
 			SetupLog::Exception("$sStep failed", $e);
@@ -111,5 +119,20 @@ class DataAuditSequencer extends StepSequencer
 
 		$sFinalEnvDir = APPROOT.'env-'.$this->oRunTimeEnvironment->GetFinalEnv();
 		return is_dir($sFinalEnvDir);
+	}
+
+	public function GetStepNames(): array
+	{
+		$aStepNames = [''];
+		if (array_key_exists('copy', $this->oParams->Get('optional_steps', []))) {
+			$aStepNames[] = 'copy';
+		}
+		$aStepNames[] = 'compile';
+		if ($this->IsDataAuditRequired()) {
+			$aStepNames[] = 'setup-audit';
+		}
+		$aStepNames[] = 'complete';
+
+		return $aStepNames;
 	}
 }

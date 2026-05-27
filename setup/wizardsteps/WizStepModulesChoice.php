@@ -191,7 +191,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 	{
 		$aExtensions = json_decode($sSelectedExtensionJson, true);
 		$aRes = [];
-		foreach ($aSteps as $i => $aStepInfo) {
+		foreach ($aSteps as $aStepInfo) {
 			$aStepRes = [];
 			$this->ProcessOptions("", $aStepInfo, $aExtensions, $aStepRes);
 			$this->ProcessAlternatives("", $aStepInfo, $aExtensions, $aStepRes);

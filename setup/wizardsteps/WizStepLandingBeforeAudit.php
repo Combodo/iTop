@@ -53,12 +53,8 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 		$this->oWizard->SetParameter('db_tls_enabled', $oConfig->Get('db_tls.enabled'));
 		$this->oWizard->SetParameter('db_tls_ca', $oConfig->Get('db_tls.ca') ?? '');
 
-		$this->oWizard->SaveParameter('selected_modules', '[]');
-		$this->oWizard->SaveParameter('selected_extensions', '[]');
-		$this->oWizard->SaveParameter('display_choices', '[]');
-		$this->oWizard->SaveParameter('added_extensions', '[]');
-		$this->oWizard->SaveParameter('removed_extensions', '[]');
-		$this->oWizard->SaveParameter('extensions_not_uninstallable', '[]');
+		$this->oWizard->SetParameter('display_choices', '[]');
+		$this->oWizard->SetParameter('extensions_not_uninstallable', '[]');
 
 		$aWizardSteps = $this->GetWizardSteps();
 		$this->oWizard->SetWizardSteps($aWizardSteps);

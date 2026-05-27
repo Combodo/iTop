@@ -193,6 +193,36 @@ abstract class StepSequencer
 		return $oConfig;
 	}
 
+	public function GetStepAfterWithPercent($sCurrentStep): array
+	{
+		$aAllStepNames = $this->GetStepNames();
+		$iKey = array_search($sCurrentStep, $aAllStepNames);
+		$iNextStepIndex = $iKey + 1;
+		$sNextStep = $aAllStepNames[$iNextStepIndex] ?? '';
+		return [$sNextStep, $this->ComputePercent($aAllStepNames, $iNextStepIndex)];
+	}
+
+	public function ComputePercent(array $aAllStepNames, $iKey): int
+	{
+		$iCount = count($aAllStepNames);
+		if ($iKey >= $iCount) {
+			return 100;
+		}
+
+		$iRes =  100 * $iKey / $iCount;
+		return (int) $iRes;
+	}
+
+	protected function ComputeNextStep(string $sCurrentStep, string $sMessage = ''): array
+	{
+		[$sNextStep, $iPercent] = $this->GetStepAfterWithPercent($sCurrentStep);
+		$sLabel = static::LABELS[$sNextStep] ?? '';
+		$sCurrentStepSuccessMessage = static::SUCCESS_LABELS[$sCurrentStep] ?? '';
+		return $this->GetNextStep($sNextStep, $sLabel, $iPercent, $sMessage, $sCurrentStepSuccessMessage);
+	}
+
+	abstract public function GetStepNames(): array;
+
 	/**
 	 * Executes the next step of the installation and reports about the progress
 	 * and the next step to perform

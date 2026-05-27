@@ -1345,7 +1345,7 @@ class RunTimeEnvironment
 
 	public function CopySetupFiles(): void
 	{
-		$sSourceEnv = ITOP_DEFAULT_ENV;
+		$sSourceEnv = $this->sFinalEnv;
 		$sDestinationEnv = $this->sBuildEnv;
 
 		if ($sDestinationEnv != $sSourceEnv) {
@@ -1448,12 +1448,12 @@ class RunTimeEnvironment
 		}
 
 		if (!is_dir($sSourcePath)) {
-			throw new Exception("Failed to find the source directory '$sSourcePath', please check the rights of the web server");
+			throw new CoreException("Failed to find the source directory '$sSourcePath', please check the rights of the web server");
 		}
 
 		if (!is_dir($sBuildPath)) {
 			if (!mkdir($sBuildPath)) {
-				throw new Exception("Failed to create directory '$sBuildPath', please check the rights of the web server");
+				throw new CoreException("Failed to create directory '$sBuildPath', please check the rights of the web server");
 			} else {
 				// adjust the rights if and only if the directory was just created
 				// owner:rwx user/group:rx
@@ -1472,7 +1472,7 @@ class RunTimeEnvironment
 		foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
 			if (empty($oExtension->sCode)) {
 				$sExtensionLabel = !empty($oExtension->sLabel) ? $oExtension->sLabel : $oExtension->sSourceDir;
-				throw new Exception(sprintf('Extension "%s" cannot be installed: Missing extension code', $sExtensionLabel));
+				throw new CoreException(sprintf('Extension "%s" cannot be installed: Missing extension code', $sExtensionLabel));
 			}
 		}
 

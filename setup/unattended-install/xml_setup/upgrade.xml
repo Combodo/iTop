@@ -5,6 +5,7 @@
     <log-parameters>1</log-parameters>
     <migrate-before>1</migrate-before>
     <migrate-after>1</migrate-after>
+    <copy>1</copy>
   </optional_steps>
   <source_dir>datamodels/2.x/</source_dir>
   <datamodel_version>3.3.0</datamodel_version>

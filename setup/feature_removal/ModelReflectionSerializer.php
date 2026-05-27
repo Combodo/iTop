@@ -42,7 +42,7 @@ class ModelReflectionSerializer
 		$sCommandLine = sprintf("$sPHPExec %s/get_model_reflection.php --env=%s", __DIR__, escapeshellarg($sEnv));
 		exec($sCommandLine, $sOutput, $iRes);
 		if ($iRes != 0) {
-			$this->LogErrorWithProperLogger("Cannot get classes", null, ['env' => $sEnv, 'code' => $iRes, "output" => $sOutput]);
+			$this->LogErrorWithProperLogger("Cannot get classes", null, ['env' => $sEnv, 'code' => $iRes, "output" => $sOutput, 'cmd' => $sCommandLine]);
 			throw new CoreException("Cannot get classes from env ".$sEnv);
 		}
 

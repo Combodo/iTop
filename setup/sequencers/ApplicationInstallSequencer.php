@@ -120,23 +120,19 @@ class ApplicationInstallSequencer extends StepSequencer
 					$aAdminParams = $this->oParams->Get('admin_account');
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
 					$sMode = $this->oParams->Get('mode');
-
 					$this->oRunTimeEnvironment->AfterDBCreate($this->GetConfig(), $sMode, $aSelectedModules, $aAdminParams);
 					return $this->ComputeNextStep($sStep);
 
 				case 'load-data':
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
 					$bSampleData = ($this->oParams->Get('sample_data', 0) == 1);
-
 					$this->oRunTimeEnvironment->DoLoadData($this->GetConfig(), $bSampleData, $aSelectedModules);
-
 					return $this->ComputeNextStep($sStep);
 
 				case 'create-config':
 					$sDataModelVersion = $this->oParams->Get('datamodel_version', '0.0.0');
 					$aSelectedModuleCodes = $this->oParams->Get('selected_modules', []);
 					$aSelectedExtensionCodes = $this->oParams->Get('selected_extensions', []);
-
 					$this->oRunTimeEnvironment->DoCreateConfig(
 						$this->GetConfig(),
 						$sDataModelVersion,
@@ -213,33 +209,5 @@ class ApplicationInstallSequencer extends StepSequencer
 		];
 		$aStepNames = array_merge($aStepNames, $aOthers);
 		return $aStepNames;
-	}
-
-	public function GetStepAfterWithPercent($sCurrentStep): array
-	{
-		$aAllStepNames = $this->GetStepNames();
-		$iKey = array_search($sCurrentStep, $aAllStepNames);
-		$iNextStepIndex = $iKey + 1;
-		$sNextStep = $aAllStepNames[$iNextStepIndex] ?? '';
-		return [$sNextStep, $this->ComputePercent($aAllStepNames, $iNextStepIndex)];
-	}
-
-	public function ComputePercent(array $aAllStepNames, $iKey): int
-	{
-		$iCount = count($aAllStepNames);
-		if ($iKey >= $iCount) {
-			return 100;
-		}
-
-		$iRes =  100 * $iKey / $iCount;
-		return (int) $iRes;
-	}
-
-	private function ComputeNextStep(string $sCurrentStep, string $sMessage = ''): array
-	{
-		[$sNextStep, $iPercent] = $this->GetStepAfterWithPercent($sCurrentStep);
-		$sLabel = self::LABELS[$sNextStep] ?? '';
-		$sCurrentStepSuccessMessage = self::SUCCESS_LABELS[$sCurrentStep] ?? '';
-		return $this->GetNextStep($sNextStep, $sLabel, $iPercent, $sMessage, $sCurrentStepSuccessMessage);
 	}
 }

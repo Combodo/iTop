@@ -387,7 +387,7 @@ class iTopExtensionsMap
 	 *
 	 * @return string[]|bool
 	 */
-	public function GetExtensionsFromDir($sSearchDir): array|bool
+	public function GetExtensionsFromDir(string $sSearchDir): array|bool
 	{
 		if (!is_readable($sSearchDir)) {
 			return false;
@@ -417,10 +417,64 @@ class iTopExtensionsMap
 	}
 
 	/**
+	 * Read (recursively) a directory to find if it contains extensions (or modules)
+	 *
+	 * @param string $sSearchDir The directory to scan
+	 *
+	 * @return string[] list of modules
+	 * @throws \CoreException
+	 */
+	public function GetModulesFromDir(string $sSearchDir): array
+	{
+		if (!is_readable($sSearchDir)) {
+			throw new CoreException("Cannot read directory: $sSearchDir");
+		}
+
+		$aModules = [];
+		$hDir = opendir($sSearchDir);
+		if ($hDir === false) {
+			throw new CoreException("Cannot open directory: $sSearchDir");
+		}
+
+		$aSubDirectories = [];
+		// Then scan the other files and subdirectories
+		while (($sFile = readdir($hDir)) !== false) {
+			if (($sFile !== '.') && ($sFile !== '..')) {
+				$aMatches = [];
+				if (is_dir($sSearchDir.'/'.$sFile)) {
+					// Recurse after parsing all the regular files
+					$aSubDirectories[] = $sSearchDir.'/'.$sFile;
+				} elseif (preg_match('/^module\.(.*).php$/i', $sFile)) {
+					// Found a module
+					try {
+						$aModuleInfo = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sSearchDir.'/'.$sFile);
+					} catch (ModuleFileReaderException $e) {
+						throw new CoreException("Cannot read module file: $sFile", oPrevious: $e);
+					}
+					$sModuleId = $aModuleInfo[ModuleFileReader::MODULE_INFO_ID];
+					[$sModuleName] = ModuleDiscovery::GetModuleName($sModuleId);
+					$aModules[$sModuleName] = $sModuleName;
+				}
+			}
+		}
+		closedir($hDir);
+		foreach ($aSubDirectories as $sDir) {
+			// Recurse inside the subdirectories
+			$aSubModules = $this->GetModulesFromDir($sDir);
+			$aModules = array_merge($aModules, $aSubModules);
+		}
+
+		return $aModules;
+	}
+
+	/**
 	 * Check if some extension contains a module with missing dependencies...
 	 * If so, populate the aMissingDepenencies array
-	 *  @param string $sAppRoot
+	 *
+	 * @param string $sAppRoot
+	 *
 	 * @return void
+	 * @throws \Exception
 	 */
 	protected function CheckDependencies(string $sAppRoot)
 	{
