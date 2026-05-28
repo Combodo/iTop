@@ -32,7 +32,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'DataFeatureRemoval:DeletionPlan:Error:Issues' => 'Some objects must be deleted manually prior to cleanup',
 
 	'DataFeatureRemoval:Table:Analysis:ClassName' => 'Element to remove',
-	'DataFeatureRemoval:Table:Analysis:FeatureName' => 'Feature name',
+	'DataFeatureRemoval:Table:Analysis:FeatureName' => 'Extension name',
 	'DataFeatureRemoval:Table:Analysis:Module' => 'Module name',
 	'DataFeatureRemoval:Table:Analysis:Occurrence' => 'Occurrence',
 

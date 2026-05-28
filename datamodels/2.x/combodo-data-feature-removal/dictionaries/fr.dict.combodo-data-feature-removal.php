@@ -32,7 +32,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'DataFeatureRemoval:DeletionPlan:Error:Issues' => 'Certains objets doivent être supprimés manuellement avant le nettoyage',
 
 	'DataFeatureRemoval:Table:Analysis:ClassName' => 'Élément à supprimer',
-	'DataFeatureRemoval:Table:Analysis:FeatureName' => 'Fonctionnalité',
+	'DataFeatureRemoval:Table:Analysis:FeatureName' => 'Extension',
 	'DataFeatureRemoval:Table:Analysis:Module' => 'Module',
 	'DataFeatureRemoval:Table:Analysis:Occurrence' => 'Occurrence',
 
@@ -40,12 +40,12 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'DataFeatureRemoval:CompilComplete' => 'Compilation successful. No Cleanup needed. You can proceed to setup.',
 
 	'UI:Button:Analyze' => 'Analyser',
-	'UI:Button:ModifyChoices' => 'Modifier les choix',
+	'UI:Button:ModifyChoices' => 'Modifier la sélection',
 	'UI:Button:AnalyzeAndSetup' => 'Analyser et ouvrir l’assistant de configuration',
-	'UI:Button:PlanDeletion' => 'Préparer le plan de suppression',
+	'UI:Button:PlanDeletion' => 'Supprimer les données',
 	'UI:Button:DoDeletion' => 'Supprimer les données',
-	'UI:Button:BackToMain' => 'Retour à la suppression de fonctionnalités',
-	'UI:Button:Setup' => 'Retour à l’assistant de configuration',
+	'UI:Button:BackToMain' => 'Modifier la sélection',
+	'UI:Button:Setup' => 'Lancer le setup',
 
 	'UI:Action:ForceUninstall' => 'Forcer la désinstallation',
 	'UI:Action:MoreInfo' => 'Plus d’informations',
