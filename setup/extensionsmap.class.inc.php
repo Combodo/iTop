@@ -406,7 +406,7 @@ class iTopExtensionsMap
 				// First check if there is an extension.xml file in this directory
 				if (is_readable($sSearchDir.$sDir.'/extension.xml')) {
 					$oXml = new XMLParameters($sSearchDir.$sDir.'/extension.xml');
-					$aExtensions[] = $oXml->Get('extension_code');
+					$aExtensions[$oXml->Get('extension_code')] = $oXml->Get('label');
 				}
 			}
 

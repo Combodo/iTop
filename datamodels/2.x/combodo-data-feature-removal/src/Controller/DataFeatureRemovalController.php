@@ -25,7 +25,6 @@ use CoreException;
 use Dict;
 use Exception;
 use MetaModel;
-use MissingDependencyException;
 use RunTimeEnvironment;
 use SetupUtils;
 use utils;
@@ -94,17 +93,18 @@ class DataFeatureRemovalController extends Controller
 
 		// Display changed extensions
 		$aHiddenInputNames = [
-			'selected_extensions',
-			'selected_modules',
-			'display_choices',
-			'added_extensions',
-			'removed_extensions',
-			'extensions_not_uninstallable',
+			'selected_extensions' => '[]',
+			'selected_modules' => '[]',
+			'display_choices' => '[]',
+			'added_extensions' => '[]',
+			'removed_extensions' => '[]',
+			'extensions_not_uninstallable' => '[]',
+			'copy_setup_files' => 1,
 		];
 
 		$aHiddenInputs = [];
-		foreach ($aHiddenInputNames as $sInputName) {
-			$aHiddenInputs[$sInputName] = utils::ReadPostedParam($sInputName, "[]", utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		foreach ($aHiddenInputNames as $sInputName => $defaultValue) {
+			$aHiddenInputs[$sInputName] = utils::ReadPostedParam($sInputName, $defaultValue, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 		}
 		$aParams['aHiddenInputs'] = $aHiddenInputs;
 
@@ -169,11 +169,15 @@ class DataFeatureRemovalController extends Controller
 
 		new ContextTag(ContextTag::TAG_SETUP);
 		$aParams['sLaunchSetupUrl'] = utils::GetAbsoluteUrlAppRoot().'setup/wizard.php';
-		$aParams['aSetupParams'] = array_merge([
+		$aParams['aSetupParams'] = [
 			"_class" => "WizStepLandingBeforeAudit",
-			"_params[authent]" => SetupUtils::CreateSetupToken(),
 			"operation" => "next",
-		], $aHiddenInputs);
+			"_params[authent]" => SetupUtils::CreateSetupToken(),
+		];
+
+		foreach ($aHiddenInputs as $sInputName => $sInputValue) {
+			$aParams['aSetupParams']["_params[$sInputName]"] = $sInputValue;
+		}
 
 		[$aParams['aDeletionPlanSummary'], $aParams['iQueryCount'], $aParams['bDeletionPossible']] = $this->GetDeletionPlanSummaryTable($aGetRemovedClasses);
 		[$aParams['aDeletionExecutionSummary'], $aParams['bHasDeletionExecution']] = $this->GetExecutionSummaryTable();

@@ -101,16 +101,17 @@ JS);
 		$sApplicationUrl = utils::GetAbsoluteUrlModulePage('combodo-data-feature-removal', 'index.php');
 
 		$aParams = [
-			'selected_modules',
-			'selected_extensions',
-			'display_choices',
-			'added_extensions',
-			'removed_extensions',
-			'extensions_not_uninstallable',
+			'selected_modules' => '[]',
+			'selected_extensions' => '[]',
+			'display_choices' => '[]',
+			'added_extensions' => '[]',
+			'removed_extensions' => '[]',
+			'extensions_not_uninstallable' => '[]',
+			'copy_setup_files' => 1,
 		];
 		$aHiddenInputs = '';
-		foreach ($aParams as $sParamName) {
-			$sElements = utils::HtmlEntities($this->oWizard->GetParameter($sParamName, '[]'));
+		foreach ($aParams as $sParamName => $defaultValue) {
+			$sElements = utils::HtmlEntities($this->oWizard->GetParameter($sParamName, $defaultValue));
 			$sParamName = utils::HtmlEntities($sParamName);
 			$aHiddenInputs .= <<<INPUT
 	<input type="hidden" name="$sParamName" value="$sElements"/>
