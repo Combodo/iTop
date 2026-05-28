@@ -351,6 +351,50 @@
 	  }]]></code>
           <arguments/>
         </method>
+        <method id="UpdateChildTicketLog">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function UpdateChildTicketLog($sChildClass, $sChildParentAttCode, $aLogAttCodes)
+{
+    if (!MetaModel::IsValidClass($sChildClass) || (!MetaModel::IsValidAttCode($sChildClass, $sChildParentAttCode) {
+        ErrorLog::Debug("Invalid class ($sChildClass) or attribute code ($sChildParentAttCode) provided to UpdateChildTicketLog","DataModel");
+        return true; // Do nothing
+    }
+    $oAttDef = MetaModel::GetAttributeDef(get_class($this), $sChildParentAttCode);
+    if (!$oAttDef instanceof AttributeExternalKey ||  ($oAttDef->GetTargetClass() !== get_class($this))) {
+        ErrorLog::Debug("Attribute $sChildParentAttCode should be an external key of class $sChildClass, pointing to class ".get_class($this),"DataModel");
+        return true; // Do nothing
+    }
+
+    $sParentClass = get_class($this);
+    $aParentEntries = [];
+    $aChildEntries = [];
+    foreach ($aLogAttCodes as $sAttCode) {
+        if (MetaModel::IsValidAttCode($sParentClass, $sAttCode) && (get_class(MetaModel::GetAttributeDef($sParentClass, $sAttCode)) == 'AttributeCaseLog')
+        && MetaModel::IsValidAttCode($sChildClass, $sAttCode) && (get_class(MetaModel::GetAttributeDef($sChildClass, $sAttCode)) == 'AttributeCaseLog')
+        && !IsNullOrEmptyString($this->Get($sAttCode)->GetModifiedEntry('html'))) ) {
+                $aParentEntries[$sAttCode] = $this->Get($sAttCode)->GetModifiedEntry('html');
+                $aChildEntries[$sAttCode] = Dict::Format("Class:$sParentClass:LogFromParentPrefix", $this->Get('ref')).$aParentEntries[$sAttCode];
+            }
+        }
+    }
+		if ($aParentEntries == []) {
+        return true; // nothing to update
+    }
+
+		$sOQL = "SELECT :ticket_class WHERE :parent_code=:ticket";
+		$oChildSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData($sOQL), [], ['ticket_class' => $sChildClass, 'parent_code' => $sChildParentAttCode, 'ticket' => $this->GetKey()]);
+		while($oChild = $oChildSet->Fetch()) {
+        foreach ($aChildEntries as $sAttCode => $sEntry) {
+            $oChild->Set($sAttCode, $sEntry);
+        }
+        $oChild->DBUpdate();
+		}
+		return true;
+
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
