@@ -14,6 +14,8 @@ class CoreException extends Exception
 	/**
 	 * CoreException constructor.
 	 *
+	 * ATTENTION: Logging here will break the CI
+	 *
 	 * @param string $sIssue error message
 	 * @param array|null $aContextData key/value array, value MUST implements _toString
 	 * @param string $sImpact
@@ -56,7 +58,6 @@ class CoreException extends Exception
 			$sMessage .= implode(', ', $aContextItems);
 		}
 		parent::__construct($sMessage, 0, $oPrevious);
-		//IssueLog::Exception($sIssue, $this, null, $aContextData ?? []);
 	}
 
 	/**
