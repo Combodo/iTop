@@ -56,7 +56,7 @@ class CoreException extends Exception
 			$sMessage .= implode(', ', $aContextItems);
 		}
 		parent::__construct($sMessage, 0, $oPrevious);
-		IssueLog::Exception($sIssue, $this, null, $aContextData ?? []);
+		//IssueLog::Exception($sIssue, $this, null, $aContextData ?? []);
 	}
 
 	/**
