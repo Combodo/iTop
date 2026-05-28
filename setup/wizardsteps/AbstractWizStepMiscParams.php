@@ -44,12 +44,29 @@ abstract class AbstractWizStepMiscParams extends WizardStep
 	{
 		$sChecked = $this->oWizard->GetParameter('force-uninstall', false) ? ' checked ' : '';
 		$oPage->add('<fieldset>');
-		$oPage->add('<legend>Advanced parameters</legend>');
-		$oPage->p('<input id="force-uninstall" type="checkbox"'.$sChecked.' name="force-uninstall"><label for="force-uninstall">&nbsp;Disable uninstallation checks for extensions');
-		$oPage->add('</fieldset>');
 
+		$oPage->add('<div id="prefix_option" class="collapsable-options">');
+		$oPage->add('<span data-role="setup-collapsable-options--toggler"><label style="font-weight: normal;">Advanced parameters</label></span>');
+		$oPage->add('<div class="" style="display:none">');
+		$oPage->add('<input id="force-uninstall" type="checkbox"'.$sChecked.' name="force-uninstall"><label for="force-uninstall">&nbsp;Unlock any extension uninstallation</label>');
+		$oPage->add('<div class="message message-warning">This could result in data corruption and application crashes.</div>');
+		$oPage->add('</div>');
+		$oPage->add('</div>');
+		$oPage->add('</fieldset>');
+		$oPage->add_style(
+			<<<CSS
+#force-uninstall:not(:checked) ~ .message-warning{
+	display:none;
+}
+CSS
+		);
 		$oPage->add_ready_script(
 			<<<'JS'
+$("[data-role=\"setup-collapsable-options--toggler\"").on('click', function() {
+	var $tbody = $(this).closest("div");
+	$tbody.children().not(":first-child").toggle();
+	$tbody.toggleClass('setup-is-opened');
+});
 $("#force-uninstall").on("click", function() {
 	let $this = $(this);
 	let bForceUninstall = $this.prop("checked");

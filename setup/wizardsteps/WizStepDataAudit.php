@@ -134,14 +134,16 @@ HTML
 		if (isset($aRes['error_code']) && $aRes['error_code'] === DataAuditSequencer::DATA_AUDIT_FAILED) {
 			$oPage->add_ready_script(
 				<<<EOF
-	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').before('<td style="text-align:center;"><button class="ibo-button ibo-is-alternative ibo-is-neutral" type="submit" name="operation" value="next"><span class="ibo-button--label">Ignore and continue</span></button></td>');
-	
-	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').after('<td style="text-align:center;"><span id="submit-wait" class="ibo-spinner ibo-is-inline ibo-is-hidden ibo-spinner ibo-block" data-role="ibo-spinner"><i class="ibo-spinner--icon fas fa-sync-alt fa-spin" aria-hidden="true"></i></span>&nbsp;<button id="goto-data-feature-removal" class="default ibo-button ibo-is-regular ibo-is-primary" type="button"><span class="ibo-button--label">Go to backoffice</span></button></td>');
+	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').before('<td style="text-align:center;"><button class="ibo-button ibo-is-alternative ibo-is-neutral" type="submit" name="operation" value="next" id="ignore_and_continue"><span class="ibo-button--label">Ignore and continue</span></button></td>');
+	$('#ignore_and_continue').on('click', function() {
+		return confirm("If you skip the cleanup you won't be able to run the process later. You'll have to migrate or delete unconsistent data manually.");
+	});
+	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').after('<td style="text-align:center;"><span id="submit-wait" class="ibo-spinner ibo-is-inline ibo-is-hidden ibo-spinner ibo-block" data-role="ibo-spinner"><i class="ibo-spinner--icon fas fa-sync-alt fa-spin" aria-hidden="true"></i></span>&nbsp;<button id="goto-data-feature-removal" class="default ibo-button ibo-is-regular ibo-is-primary" type="button"><span class="ibo-button--label">Cleanup my data</span></button></td>');
 	$('#goto-data-feature-removal').on("click", function() {
 		$('#goto-data-feature-removal').prop('disabled', true);
 		$('#submit-wait').removeClass("ibo-is-hidden");
 		$('#data-feature-removal').submit();
-	})
+	});
 	
 	$("#wiz_form").data("installation_status", "cleanup_needed");
 	$('#btn_next').hide();

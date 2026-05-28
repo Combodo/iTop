@@ -3,14 +3,14 @@
 
 
 
-{% UIPanel ForInformation { sTitle:'DataFeatureRemoval:Analysis:Title'|dict_s} %}
+{% UIPanel ForInformation { sTitle:'DataFeatureRemoval:Analysis:Title'|dict_s, sSubTitle: 'DataFeatureRemoval:Analysis:Subtitle'|dict_s} %}
     {% if null != DataFeatureRemovalErrorMessage %}
         <div id="feature_removal_error_msg_div" style="display:block">
             {% UIAlert ForFailure { sTitle:'DataFeatureRemoval:Failure:Title'|dict_s, sId: 'feature_removal_error_msg', sContent:DataFeatureRemovalErrorMessage } %}
             {% EndUIAlert %}
         </div>
 
-        {% UIPanel Neutral { sTitle:'DataFeatureRemoval:Features:Title'|dict_s, sSubTitle: '' } %}
+        {% UIPanel Neutral { sTitle:'DataFeatureRemoval:Result:Title'|dict_s, sSubTitle: '' } %}
             {% UIMultiColumn Standard {} %}
                 {% for iColumnIndex in 0..iColumnCount-1 %}
                     {% UIColumn Standard {} %}
@@ -26,7 +26,7 @@
             {% EndUIMultiColumn %}
         {% EndUIPanel %}
     {% else %}
-        {% UIPanel Neutral { sTitle:'DataFeatureRemoval:Features:Title'|dict_s, sSubTitle: '' } %}
+        {% UIPanel Neutral { sTitle:'DataFeatureRemoval:Result:Title'|dict_s, sSubTitle: '' } %}
             {% UIMultiColumn Standard {} %}
                 {% for iColumnIndex in 0..iColumnCount-1 %}
                     {% UIColumn Standard {} %}

@@ -10,22 +10,22 @@
 */
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Menu:DataFeatureRemovalMenu' => 'Suppression de fonctionnalités',
-	'combodo-data-feature-removal/Operation:Main/Title' => 'Suppression de fonctionnalités',
+	'Menu:DataFeatureRemovalMenu' => 'Gestion des extensions',
+	'combodo-data-feature-removal/Operation:Main/Title' => 'Gestion des extensions',
 
-	'DataFeatureRemoval:Main:Title' => 'Suppression de fonctionnalités',
-	'DataFeatureRemoval:Main:SubTitle' => 'Préparez les fonctionnalités que vous souhaitez activer ou désactiver lors d’une prochaine configuration',
-	'DataFeatureRemoval:Failure:Title' => 'Erreurs lors de la simulation de suppression de fonctionnalités',
-	'DataFeatureRemoval:Helper:Title' => 'Activez ou désactivez les fonctionnalités installées dans votre iTop.',
-	'DataFeatureRemoval:Helper:Desc1' => 'Cette étape prépare l’assistant de configuration à activer ou désactiver des fonctionnalités.',
-	'DataFeatureRemoval:Helper:Desc2' => 'Analyse si des données ou des dépendances empêchent l’activation ou la désactivation d’une fonctionnalité.',
+	'DataFeatureRemoval:Main:Title' => 'Gestion des extensions',
+	'DataFeatureRemoval:Main:SubTitle' => 'Sélectionner les extensions à installer sur votre iTop',
+	'DataFeatureRemoval:Failure:Title' => 'Erreurs lors de la simulation de suppression d\'extensions',
+	'DataFeatureRemoval:Helper:Title' => 'Activez ou désactivez les extensions installées dans votre iTop.',
 
-	'DataFeatureRemoval:Features:Title' => 'Fonctionnalités',
+	'DataFeatureRemoval:Features:Title' => 'Extensions',
+	'DataFeatureRemoval:Result:Title' => 'Modification demandée',
 	'DataFeatureRemoval:Execution:Title' => 'Suppressions',
 	'DataFeatureRemoval:Analysis:Title' => 'Résultat de l’analyse',
+	'DataFeatureRemoval:Analysis:Subtitle' => 'Vérifier les éléments à nettoyer',
 	'DataFeatureRemoval:Analysis:SubTitle' => '%1$s élément(s) à nettoyer avant de poursuivre',
 
-	'DataFeatureRemoval:DeletionPlan:Title' => 'Plan de suppression',
+	'DataFeatureRemoval:DeletionPlan:Title' => 'Plan de suppression des données',
 	'DataFeatureRemoval:DeletionPlan:SubTitle' => '%1$s ligne(s) à nettoyer avant de poursuivre',
 	'DataFeatureRemoval:DoDeletion:Title' => 'Exécuter la suppression',
 	'DataFeatureRemoval:DoDeletion:SubTitle' => 'Supprime toutes les entrées de la base de données',

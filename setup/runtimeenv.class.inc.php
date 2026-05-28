@@ -1339,7 +1339,7 @@ class RunTimeEnvironment
 		$iCount = $oSetupAudit->GetDataToCleanupCount();
 
 		if ($iCount > 0) {
-			throw new Exception("$iCount elements require data adjustments or cleanup in the backoffice prior to upgrading iTop", DataAuditSequencer::DATA_AUDIT_FAILED);
+			throw new Exception("$iCount elements require data adjustments or cleanup in the backoffice", DataAuditSequencer::DATA_AUDIT_FAILED);
 		}
 	}
 
