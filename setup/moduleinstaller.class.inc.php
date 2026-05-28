@@ -374,11 +374,6 @@ abstract class ModuleInstallerAPI
 		if (substr_count($sFilePattern, '{{language_code}}') !== 1) {
 			throw new CoreUnexpectedValue("LoadLocalizedData expects sFilePattern to contain the exact placeholder '{{language_code}}' exactly once");
 		}
-
-		$sParentDirectory = dirname($sFilePattern);
-		if (!is_dir($sParentDirectory)) {
-			throw new CoreUnexpectedValue("LoadLocalizedData expects sFilePattern parent directory to exist, got '{$sParentDirectory}'");
-		}
 	}
 
 	private static function IsValidLocalizedDataVersion(string $sVersion): bool
