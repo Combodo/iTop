@@ -10,29 +10,29 @@
  */
 
 Dict::Add('EN US', 'English', 'English', [
-	'Menu:DataFeatureRemovalMenu' => 'Features Removal',
-	'combodo-data-feature-removal/Operation:Main/Title' => 'Features Removal',
+	'Menu:DataFeatureRemovalMenu' => 'Extension management',
+	'combodo-data-feature-removal/Operation:Main/Title' => 'Extension management',
 
-	'DataFeatureRemoval:Main:Title' => 'Features Removal',
-	'DataFeatureRemoval:Main:SubTitle' => 'Prepare features you want to enable/disable in a future setup',
-	'DataFeatureRemoval:Failure:Title' => 'Feature dry removal errors',
-	'DataFeatureRemoval:Helper:Title' => 'Enable or disable features that are installed in your iTop.',
-	'DataFeatureRemoval:Helper:Desc1' => 'It will prepare the setup step that proceeds to feature enabling or disabling.',
-	'DataFeatureRemoval:Helper:Desc2' => 'Analyze if there are any data or dependency preventing you from enabling/disabling a feature.',
+	'DataFeatureRemoval:Main:Title' => 'Extension management',
+	'DataFeatureRemoval:Main:SubTitle' => 'Toggle extensions installed on your iTop',
+	'DataFeatureRemoval:Failure:Title' => 'Extensions dry removal errors',
+	'DataFeatureRemoval:Helper:Title' => 'Analyze if there are any data or dependency preventing you from adding/removing an extension.',
 
-	'DataFeatureRemoval:Features:Title' => 'Features',
+	'DataFeatureRemoval:Features:Title' => 'Extensions',
+	'DataFeatureRemoval:Result:Title' => 'Modification requested',
 	'DataFeatureRemoval:Execution:Title' => 'Deletion Executions',
 	'DataFeatureRemoval:Analysis:Title' => 'Analysis result',
+	'DataFeatureRemoval:Analysis:Subtitle' => 'Review all elements requiring attention',
 	'DataFeatureRemoval:Analysis:SubTitle' => '%1$s element(s) to clean before continuing',
 
-	'DataFeatureRemoval:DeletionPlan:Title' => 'Deletion plan',
+	'DataFeatureRemoval:DeletionPlan:Title' => 'Data deletion plan',
 	'DataFeatureRemoval:DeletionPlan:SubTitle' => '%1$s rows to clean before continuing',
 	'DataFeatureRemoval:DoDeletion:Title' => 'Do deletion',
 	'DataFeatureRemoval:DoDeletion:SubTitle' => 'Remove all the entries from the database',
 	'DataFeatureRemoval:DeletionPlan:Error:Issues' => 'Some objects must be deleted manually prior to cleanup',
 
 	'DataFeatureRemoval:Table:Analysis:ClassName' => 'Element to remove',
-	'DataFeatureRemoval:Table:Analysis:FeatureName' => 'Feature name',
+	'DataFeatureRemoval:Table:Analysis:FeatureName' => 'Extension name',
 	'DataFeatureRemoval:Table:Analysis:Module' => 'Module name',
 	'DataFeatureRemoval:Table:Analysis:Occurrence' => 'Occurrence',
 
@@ -40,12 +40,12 @@ Dict::Add('EN US', 'English', 'English', [
 	'DataFeatureRemoval:CompilComplete' => 'Compilation successful. No Cleanup needed. You can proceed to setup.',
 
 	'UI:Button:Analyze' => 'Analyze',
-	'UI:Button:ModifyChoices' => 'Modify Choices',
+	'UI:Button:ModifyChoices' => 'Change my selection',
 	'UI:Button:AnalyzeAndSetup' => 'Analyze and go to setup',
-	'UI:Button:PlanDeletion' => 'Prepare deletion plan',
-	'UI:Button:DoDeletion' => 'Delete data',
-	'UI:Button:BackToMain' => 'Back to Feature Removal',
-	'UI:Button:Setup' => 'Back to setup',
+	'UI:Button:PlanDeletion' => 'Proceed with deletion',
+	'UI:Button:DoDeletion' => 'Proceed with deletion',
+	'UI:Button:BackToMain' => 'Change my selection',
+	'UI:Button:Setup' => 'Run setup',
 
 	'UI:Action:ForceUninstall' => 'Force uninstall',
 	'UI:Action:MoreInfo' => 'More information',
