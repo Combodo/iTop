@@ -1317,7 +1317,7 @@
           <code><![CDATA[	public function UpdateChildRequestLog()
 	{
     if (MetaModel::IsValidClass('UserRequest')) {
-        return parent::UpdateChildTicketLog('UserRequest', 'parent_request_id', ['public_log', 'private_log']);
+        return $this->UpdateChildTicketLog('UserRequest', 'parent_incident_id', ['public_log' => 'public_log', 'private_log' => 'private_log'] );
     }
     return true;
 	}]]></code>
@@ -1329,7 +1329,7 @@
           <type>LifecycleAction</type>
           <code><![CDATA[	public function UpdateChildIncidentLog()
 	{
-	  return parent::UpdateChildTicketLog('Incident', 'parent_incident_id', ['public_log', 'private_log']);
+	  return $this->UpdateChildTicketLog('Incident', 'parent_incident_id', ['public_log' => 'public_log', 'private_log' => 'private_log']);
 	}]]></code>
         </method>
         <method id="ComputeImpactedItems">

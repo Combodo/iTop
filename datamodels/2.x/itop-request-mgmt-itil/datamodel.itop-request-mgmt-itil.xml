@@ -1452,8 +1452,17 @@
           <type>LifecycleAction</type>
           <code><![CDATA[	public function UpdateChildRequestLog()
 {
-    return parent::UpdateChildTicketLog('UserRequest', 'parent_request_id', ['public_log', 'private_log']);
+    return $this->UpdateChildTicketLog('UserRequest', 'parent_request_id', ['public_log' => 'public_log', 'private_log' => 'private_log' ]);
 }]]></code>
+        </method>
+        <method id="UpdateChildIncidentLog">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function UpdateChildIncidentLog()
+	{
+	  return $this->UpdateChildTicketLog('Incident', 'parent_request_id', ['public_log' => 'public_log', 'private_log' => 'private_log']);
+	}]]></code>
         </method>
         <method id="ComputeImpactedItems">
           <static>false</static>
@@ -1490,6 +1499,7 @@
         parent::OnUpdate();
 		$this->Set('last_update', time());
 		$this->UpdateChildRequestLog();
+		$this->UpdateChildIncidentLog();
 	}]]></code>
         </method>
       </methods>

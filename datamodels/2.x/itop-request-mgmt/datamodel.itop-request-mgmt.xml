@@ -1487,10 +1487,7 @@
           <type>LifecycleAction</type>
           <code><![CDATA[	public function UpdateChildRequestLog()
 {
-    return $this->UpdateChildTicketLog('UserRequest', 'parent_request_id',
-        ['public_log' => 'public_log',
-        'private_log' => 'private_log',
-        ]);
+        return $this->UpdateChildTicketLog('UserRequest', 'parent_request_id', ['public_log' => 'public_log', 'private_log' => 'private_log'] );
 	}]]></code>
         </method>
         <method id="ComputeImpactedItems">
