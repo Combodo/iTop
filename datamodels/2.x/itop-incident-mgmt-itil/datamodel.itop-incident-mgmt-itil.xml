@@ -1316,30 +1316,10 @@
           <type>LifecycleAction</type>
           <code><![CDATA[	public function UpdateChildRequestLog()
 	{
-        if (!MetaModel::IsValidClass('UserRequest')) return true; // Do nothing
-  
-		$sParentEntryPublic = $this->Get('public_log')->GetModifiedEntry('html');
-		$sParentEntryPrivate = $this->Get('private_log')->GetModifiedEntry('html');
-		if (IsNullOrEmptyString($sParentEntryPublic) && IsNullOrEmptyString($sParentEntryPrivate)) {
-        return true; // nothing to update
+    if (MetaModel::IsValidClass('UserRequest')) {
+        return parent::UpdateChildTicketLog('UserRequest', 'parent_request_id', ['public_log', 'private_log']);
     }
-    $sChildEntryPublic = Dict::Format('Class:Incident:PublicLogFromParentPrefix', $this->Get('ref')).$sParentLogPublic;
-		$sChildEntryPrivate = Dict::Format('Class:Incident:PrivateLogFromParentPrefix', $this->Get('ref')).$sParentLogPrivate;
-
-		$sOQL = "SELECT UserRequest WHERE parent_incident_id=:ticket";
-		$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData($sOQL), [], ['ticket' => $this->GetKey()]);
-
-		while($oRequest = $oChildRequestSet->Fetch()) {
-        if ($sParentLogPublic != '') {
-				    $oRequest->Set('public_log', $sChildEntryPublic);
-				}
-        if ($sParentLogPrivate != '') {
-            $oRequest->Set('private_log', $sChildEntryPrivate);
-        }
-				$oRequest->DBUpdate();
-		}
-		return true;
-
+    return true;
 	}]]></code>
         </method>
 
@@ -1349,43 +1329,7 @@
           <type>LifecycleAction</type>
           <code><![CDATA[	public function UpdateChildIncidentLog()
 	{
-		$oLog = $this->Get('public_log');
-		$sLogPublic = $oLog->GetModifiedEntry('html');
-		if ($sLogPublic != '')
-		{
-			$sOQL = "SELECT Incident WHERE parent_incident_id=:ticket";
-			$oChildIncidentSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
-							array(),
-							array(
-								'ticket' => $this->GetKey(),
-								)
-							);
-			while($oIncident = $oChildIncidentSet->Fetch())
-			{
-				$oIncident->set('public_log',$sLogPublic);
-				$oIncident->DBUpdate();
-			}
-
-		}
-		$oLog = $this->Get('private_log');
-		$sLogPrivate = $oLog->GetModifiedEntry('html');
-		if ($sLogPrivate != '')
-		{
-			$sOQL = "SELECT Incident WHERE parent_incident_id=:ticket";
-			$oChildIncidentSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
-							array(),
-							array(
-								'ticket' => $this->GetKey(),
-								)
-							);
-			while($oIncident = $oChildIncidentSet->Fetch())
-			{
-				$oIncident->set('private_log',$sLogPrivate);
-				$oIncident->DBUpdate();
-			}
-		}
-		return true;
-
+	  return parent::UpdateChildTicketLog('Incident', 'parent_incident_id', ['public_log', 'private_log']);
 	}]]></code>
         </method>
         <method id="ComputeImpactedItems">

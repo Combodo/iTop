@@ -41,6 +41,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'Menu:UserRequest:MyWorkOrders+' => 'All work orders assigned to me',
 	'Class:Problem:KnownProblemList' => 'Known problems',
 	'Tickets:Related:OpenIncidents' => 'Open incidents',
+	'Class:UserRequest/Method:UpdateChildTicketWith:public_log' => 'Public log entry from parent User Request %1$s:',
+	'Class:UserRequest/Method:UpdateChildTicketWith:private_log' => 'Private log entry from parent User Request %1$s:',
 ]);
 
 // Dictionnay conventions

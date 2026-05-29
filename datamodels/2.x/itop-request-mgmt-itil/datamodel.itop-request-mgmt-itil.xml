@@ -1452,27 +1452,7 @@
           <type>LifecycleAction</type>
           <code><![CDATA[	public function UpdateChildRequestLog()
 {
-		$sParentEntryPublic = $this->Get('public_log')->GetModifiedEntry('html');
-		$sParentEntryPrivate = $this->Get('private_log')->GetModifiedEntry('html');
-		if (IsNullOrEmptyString($sParentEntryPublic) && IsNullOrEmptyString($sParentEntryPrivate)) {
-        return true; // nothing to update
-    }
-    $sChildEntryPublic = Dict::Format('Class:UserRequest:PublicLogFromParentPrefix', $this->Get('ref')).$sParentLogPublic;
-		$sChildEntryPrivate = Dict::Format('Class:UserRequest:PrivateLogFromParentPrefix', $this->Get('ref')).$sParentLogPrivate;
-
-		$sOQL = "SELECT UserRequest WHERE parent_request_id=:ticket";
-		$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData($sOQL), [], ['ticket' => $this->GetKey()]);
-
-		while($oRequest = $oChildRequestSet->Fetch()) {
-        if ($sParentLogPublic != '') {
-				    $oRequest->Set('public_log', $sChildEntryPublic);
-				}
-        if ($sParentLogPrivate != '') {
-            $oRequest->Set('private_log', $sChildEntryPrivate);
-        }
-				$oRequest->DBUpdate();
-		}
-		return true;
+    return parent::UpdateChildTicketLog('UserRequest', 'parent_request_id', ['public_log', 'private_log']);
 }]]></code>
         </method>
         <method id="ComputeImpactedItems">
