@@ -34,7 +34,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		if ($bMissingFromDisk) {
 			$oExtensionDetails->GetToggler()->SetIsToggled(false);
 			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
-		} elseif (!$bUninstallable || $bRemote) {
+		} elseif ((!$bUninstallable || $bRemote) && !$bDisabled) {
 			$oExtensionDetails->AllowForceUninstall();
 			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
 		}
