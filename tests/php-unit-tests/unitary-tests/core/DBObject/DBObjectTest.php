@@ -22,8 +22,6 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Attachment;
 use AttributeDateTime;
-use Combodo\iTop\Application\WebPage\iTopWebPage;
-use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreException;
@@ -39,7 +37,6 @@ use Team;
 use User;
 use UserRequest;
 use UserRights;
-use utils;
 
 /**
  * @group specificOrgInSampleData
@@ -524,7 +521,7 @@ class DBObjectTest extends ItopDataTestCase
 
 		$oAdminUser = MetaModel::GetObjectByName(User::class, 'admin', false);
 		if (is_null($oAdminUser)) {
-			$oAdminUser = $this->CreateUser('admin', 1);
+			$oAdminUser = $this->CreateUser('admin', 1, 'Zydw&%&h25F4');
 		}
 
 		/** @var Person $oPersonObject */
