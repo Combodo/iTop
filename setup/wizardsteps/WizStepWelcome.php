@@ -117,15 +117,13 @@ HTML
 	 *
 	 * @return void
 	 */
-	public function PreFormDisplay(SetupPage $oPage)
+	public function PostFormDisplay(SetupPage $oPage)
 	{
 		if ($this->bCanMoveForward) {
 			$sBuildConfigFile = APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE;
 			if (file_exists($sBuildConfigFile)) {
 				$oPage->add(
 					<<<HTML
-				<fieldset>
-					<legend>Fast track</legend>
 					<form method="post">
 						<input type="hidden" name="_class" value="WizStepLandingBeforeAudit"/>
 						<input type="hidden" name="operation" value="next"/>
@@ -134,14 +132,10 @@ HTML
 						<input type="hidden" name="_params[authent]" value="{$this->sUID}"/>
 						<table style="width:100%;" class="ibo-setup--wizard--buttons-container">
 						<tr>
-							<td style="text-align: right"><button type="submit" class="ibo-button ibo-is-regular ibo-is-secondary">Skip to Compatibility checking</button></td>
+							<td style="text-align: right"><button type="submit" class="ibo-button ibo-is-regular ibo-is-secondary">Keep current choices</button></td>
 						</tr>
 						</table>
 					</form>
-				</fieldset>
-				<fieldset>
-					<legend>Normal track</legend>
-				</fieldset>
 HTML
 				);
 			}
