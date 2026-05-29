@@ -196,6 +196,8 @@ class WizardController
 		SetupLog::Info("=== Setup screen: ".$oStep->GetTitle().' ('.get_class($oStep).')');
 		$oPage = new SetupPage($oStep->GetTitle());
 		$oPage->LinkScriptFromAppRoot('setup/setup.js');
+		$oStep->PreFormDisplay($oPage);
+
 		$oPage->add('<form id="wiz_form" class="ibo-setup--wizard" method="post">');
 		$oPage->add('<div class="ibo-setup--wizard--content">');
 		$oStep->Display($oPage);
@@ -263,8 +265,8 @@ EOF
 		$oPage->output();
 	}
 	/**
-	 * Make the wizard run: Start, Next or Back depending WizardUpdateButtons();
-on the page's parameters
+	 * Make the wizard run: 'Start', 'Next' or 'Back' depending WizardUpdateButtons();
+	 * on the page's parameters
 	 */
 	public function Run()
 	{

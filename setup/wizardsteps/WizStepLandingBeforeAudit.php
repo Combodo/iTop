@@ -52,6 +52,17 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 	 */
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
+		if ($this->oWizard->GetParameter('skip_wizard', false)) {
+			$oRuntimeEnv = new RunTimeEnvironment();
+			$sBuildConfigFile = APPCONF.$oRuntimeEnv->GetBuildEnv().'/'.ITOP_CONFIG_FILE;
+			$oConfig = new Config($sBuildConfigFile);
+			$oExtensionMap = iTopExtensionsMap::GetExtensionsMap($oRuntimeEnv->GetBuildEnv());
+			$aExtensionsFromDatabase = $oExtensionMap->GetChoicesFromDatabase($oConfig);
+			$this->oWizard->SetParameter('selected_extensions', json_encode($aExtensionsFromDatabase));
+			$adModulesFromDatabase = ModuleInstallationRepository::GetInstance()->ReadComputeInstalledModules($oConfig);
+			$this->oWizard->SetParameter('selected_modules', json_encode(array_keys($adModulesFromDatabase)));
+		}
+
 		$aWizardSteps = $this->GetWizardSteps();
 		$this->oWizard->SetWizardSteps($aWizardSteps);
 		$this->sCurrentState = count($aWizardSteps) - 1;
