@@ -234,43 +234,60 @@ class DataAuditSequencerTest extends ItopTestCase
 
 		$aAdditionalParams = [
 			'mode' => 'update',
-			'optional_steps' => ['setup-audit' => true ],
+			'optional_steps' => ['copy' => true, 'setup-audit' => true ],
 		];
 		$oSequencer = new DataAuditSequencer($this->GivenParams($aAdditionalParams), $oRunTimeEnvironment);
-		$aRes = $oSequencer->ExecuteStep('setup-audit');
-		$aExpected = [
-			'status' => 1,
-			'message' => '',
-			'next-step' => 'complete',
-			'next-step-label' => 'Check Completed',
-			'prev-step-success-message' => 'Data consistency check completed',
-			'percentage-completed' => 100,
+
+		$expected = [
+			'',
+			'copy',
+			'compile',
+			'complete',
 		];
-		$this->assertEquals($aExpected, $aRes);
+		$this->assertEquals($expected, $oSequencer->GetStepNames());
 	}
 
 	public function testNoAuditInFreshInstallMode()
 	{
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
-		$oRunTimeEnvironment->expects($this->never())->method('GetFinalEnv')
-			->willReturn('gabuzomeu');
+		$oRunTimeEnvironment->expects($this->never())->method('GetFinalEnv');
 		$oRunTimeEnvironment->expects($this->never())->method('DataToCleanupAudit');
 		$aAdditionalParams = [
-			'mode' => 'update',
-			'optional_steps' => ['setup-audit' => true ],
+			'mode' => 'install',
+			'optional_steps' => ['copy' => true, 'setup-audit' => true ],
 		];
 		$oSequencer = new DataAuditSequencer($this->GivenParams($aAdditionalParams), $oRunTimeEnvironment);
 
-		$aRes = $oSequencer->ExecuteStep('setup-audit');
-		$aExpected = [
-			'status' => 1,
-			'message' => '',
-			'next-step' => 'complete',
-			'next-step-label' => 'Check Completed',
-			'prev-step-success-message' => 'Data consistency check completed',
-			'percentage-completed' => 100,
+		$expected = [
+			'',
+			'copy',
+			'compile',
+			'complete',
 		];
-		$this->assertEquals($aExpected, $aRes);
+		$this->assertEquals($expected, $oSequencer->GetStepNames());
+	}
+
+	public function testGetStepNamesForAllSteps()
+	{
+		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
+		$oRunTimeEnvironment->expects($this->once())->method('GetApplicationVersion')
+			->willReturn(['product_version' => ITOP_VERSION_FULL]);
+		$oRunTimeEnvironment->expects($this->any())->method('GetFinalEnv')
+			->willReturn('production');
+		$aAdditionalParams = [
+			'mode' => 'update',
+			'optional_steps' => ['copy' => true, 'setup-audit' => true ],
+		];
+		$oSequencer = new DataAuditSequencer($this->GivenParams($aAdditionalParams), $oRunTimeEnvironment);
+
+		$expected = [
+			'',
+			'copy',
+			'compile',
+			'setup-audit',
+			'complete',
+		];
+		$this->assertEquals($expected, $oSequencer->GetStepNames());
 	}
 
 	private function GivenParams(array $aAdditionalParams = []): PHPParameters
