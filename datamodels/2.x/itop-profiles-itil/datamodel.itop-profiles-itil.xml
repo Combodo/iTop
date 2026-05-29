@@ -85,6 +85,21 @@
           <class id="Attachment"/>
         </classes>
       </group>
+      <group id="Ticket" _delta="define">
+        <classes>
+          <class id="Ticket"/>
+        </classes>
+      </group>
+      <group id="FunctionalCI" _delta="define">
+        <classes>
+          <class id="FunctionalCI"/>
+        </classes>
+      </group>
+      <group id="ServiceFamily" _delta="define">
+        <classes>
+          <class id="ServiceFamily"/>
+        </classes>
+      </group>
       <group id="Portal" _delta="define">
         <classes>
           <class id="lnkFunctionalCIToTicket"/>
@@ -205,6 +220,42 @@
       </group>
     </groups>
     <profiles>
+      <profile id="5500" _delta="define">
+        <name>ReadOnlyCI</name>
+        <description>This read-only profile allows to see CIs objects.</description>
+        <groups>
+          <group id="FunctionalCI">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+            </actions>
+          </group>
+        </groups>
+      </profile>
+      <profile id="5501" _delta="define">
+        <name>ReadOnlyTicket</name>
+        <description>This read-only profile allows to see Ticket objects.</description>
+        <groups>
+          <group id="Ticket">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+            </actions>
+          </group>
+        </groups>
+      </profile>
+      <profile id="5502" _delta="define">
+        <name>ReadOnlyCatalog</name>
+        <description>This read-only profile allows to see ServiceFamily objects.</description>
+        <groups>
+          <group id="ServiceFamily">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+            </actions>
+          </group>
+        </groups>
+      </profile>
       <profile id="117" _delta="define">
         <name>SuperUser</name>
         <description>This profile allows all actions which are not Administrator restricted.</description>

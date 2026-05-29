@@ -34,6 +34,7 @@ use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
 use DeleteException;
+use Dict;
 use MetaModel;
 use UserLocal;
 use UserRights;
@@ -96,6 +97,127 @@ class UserRightsTest extends ItopDataTestCase
 		return $oUser;
 	}
 
+	/**
+	 * @param array $aProfileIds
+	 * @param array $aShouldBeAllowedToSeeClass
+	 * @param array $aShouldBeAllowedToEditClass
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @dataProvider ReadOnlyProvider
+	 */
+	public function testReadOnlyUser(array $aProfileIds, array $aShouldBeAllowedToSeeClass, array $aShouldBeAllowedToEditClass): void
+	{
+
+		$oUser = $this->GivenUserWithProfiles('test1', $aProfileIds);
+		$oUser->DBInsert();
+		$_SESSION = [];
+		UserRights::Login($oUser->Get('login'));
+
+		$aClassesToTest = ['FunctionalCI', 'Ticket', 'ServiceFamily'];
+
+		foreach ($aClassesToTest as $sClass) {
+			$bShouldBeAllowedToSee = in_array($sClass, $aShouldBeAllowedToSeeClass);
+			$bIsAllowedReading = (bool)UserRights::IsActionAllowed($sClass, UR_ACTION_READ);
+
+			$this->assertSame(
+				$bShouldBeAllowedToSee,
+				$bIsAllowedReading,
+				"User with profiles ".implode(',', $aProfileIds)." should ".($bShouldBeAllowedToSee ? "" : "NOT ")."be allowed to see class $sClass"
+			);
+
+			$bShouldBeAllowedToEdit = in_array($sClass, $aShouldBeAllowedToEditClass);
+
+			$bIsAllowedEditing = (bool)UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY);
+
+			$this->assertSame($bIsAllowedEditing, $bShouldBeAllowedToEdit,
+				"User with profiles ".implode(',', $aProfileIds)." should ".($bShouldBeAllowedToEdit ? "" : "NOT ")."be allowed to edit class $sClass"
+			);
+		}
+	}
+	protected function ReadOnlyProvider() : array {
+		return [
+			'CI' => [
+				'ProfilesId' => [
+					5500,
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'FunctionalCI',
+				],
+				'ShouldBeAllowedToEditClasses' => []
+			],
+			'Tickets' => [
+				'ProfilesId' => [
+					5501,
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'Ticket',
+				],
+				'ShouldBeAllowedToEditClasses' => []
+			],
+			'Catalog' => [
+				'ProfilesId' => [
+					5502,
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'ServiceFamily',
+				],
+				'ShouldBeAllowedToEditClasses' => []
+			],
+			'CI and Tickets' => [
+				'ProfilesId' => [
+					5500, 5501,
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'FunctionalCI', 'Ticket',
+				],
+				'ShouldBeAllowedToEditClasses' => []
+			],
+			'CI and Catalog' => [
+				'ProfilesId' => [
+					5500, 5502,
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'FunctionalCI', 'ServiceFamily',
+				],
+				'ShouldBeAllowedToEditClasses' => []
+			],
+			'Tickets and Catalog' => [
+				'ProfilesId' => [
+					5501, 5502,
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'Ticket', 'ServiceFamily',
+				],
+				'ShouldBeAllowedToEditClasses' => []
+			],
+			'Tickets and Catalog + profile Ccnfiguration Manager' => [
+				'ProfilesId' => [
+					5501, 5502, 3
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'FunctionalCI', 'Ticket', 'ServiceFamily',
+				],
+				'ShouldBeAllowedToEditClasses' => ['FunctionalCI']
+			],
+			'CI, Tickets and Catalog' => [
+				'ProfilesId' => [
+					5500, 5501, 5502,
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'FunctionalCI', 'Ticket', 'ServiceFamily',
+				],
+				'ShouldBeAllowedToEditClasses' => []
+			],
+		];
+	}
 	public function testIsLoggedIn()
 	{
 		$this->assertFalse(UserRights::IsLoggedIn());
@@ -433,7 +555,7 @@ class UserRightsTest extends ItopDataTestCase
 		$oUser = $this->GivenUserWithProfiles('test1', [$iProfileId, 2]);
 
 		$this->expectException(CoreCannotSaveObjectException::class);
-		$this->expectExceptionMessage('Profile "Portal user" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)');
+		$this->expectExceptionMessage(Dict::Format('Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice', PORTAL_PROFILE_NAME));
 		$oUser->DBInsert();
 
 	}
