@@ -23,7 +23,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:ResetPwd-Error-WrongLogin'    => '\'%1$s\' 用户名无效',
 	'UI:ResetPwd-Error-NotPossible'   => '外部账号不允许重置密码.',
 	'UI:ResetPwd-Error-FixedPwd'      => '此账号不允许重置密码.',
-	'UI:ResetPwd-Error-NoContact'     => '此账号没有关联到人员.',
+	'UI:ResetPwd-Error-NoContact'     => '此账号没有关联到个体.',
 	'UI:ResetPwd-Error-NoEmailAtt'    => '此账号未关联邮箱地址,请联系管理员.',
 	'UI:ResetPwd-Error-NoEmail'       => '缺少邮箱地址. 请联系管理员.',
 	'UI:ResetPwd-Error-Send'          => '邮件发送存在技术原因. 请联系管理员.',
