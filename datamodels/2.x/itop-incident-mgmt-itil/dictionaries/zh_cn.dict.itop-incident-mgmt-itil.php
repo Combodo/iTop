@@ -21,6 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:IncidentManagement' => '事件管理',
 	'Menu:IncidentManagement+' => '事件管理',
@@ -130,7 +131,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Incident/Attribute:servicesubcategory_id+' => '',
 	'Class:Incident/Attribute:servicesubcategory_name' => '子服务名称',
 	'Class:Incident/Attribute:servicesubcategory_name+' => '',
-	'Class:Incident/Attribute:escalation_flag' => '是否升级',
+	'Class:Incident/Attribute:escalation_flag' => '升级标识',
 	'Class:Incident/Attribute:escalation_flag+' => '',
 	'Class:Incident/Attribute:escalation_flag/Value:no' => '否',
 	'Class:Incident/Attribute:escalation_flag/Value:no+' => '否',
@@ -150,10 +151,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Incident/Attribute:tto+' => '响应时间',
 	'Class:Incident/Attribute:ttr' => 'TTR',
 	'Class:Incident/Attribute:ttr+' => '解决时限',
-	'Class:Incident/Attribute:tto_time_spent' => 'TTO time spent~~',
-	'Class:Incident/Attribute:tto_time_spent+' => '~~',
-	'Class:Incident/Attribute:ttr_time_spent' => 'TTR time spent~~',
-	'Class:Incident/Attribute:ttr_time_spent+' => '~~',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO 耗时',
+	'Class:Incident/Attribute:tto_time_spent+' => 'TTO 耗时',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR 耗时',
+	'Class:Incident/Attribute:ttr_time_spent+' => 'TTR 耗时',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'TTO截止日期',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => '',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA TTO合格',
@@ -169,7 +170,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Incident/Attribute:time_spent' => '耗时',
 	'Class:Incident/Attribute:time_spent+' => '',
 	'Class:Incident/Attribute:resolution_code' => '解决方式',
-	'Class:Incident/Attribute:resolution_code+' => '',
+	'Class:Incident/Attribute:resolution_code+' => '为解决这个事件而做了什么?',
 	'Class:Incident/Attribute:resolution_code/Value:assistance' => '外部支持',
 	'Class:Incident/Attribute:resolution_code/Value:assistance+' => '外部支持',
 	'Class:Incident/Attribute:resolution_code/Value:bug fixed' => '缺陷修复',
@@ -204,7 +205,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Incident/Attribute:related_request_list+' => '此事件相关的所有需求',
 	'Class:Incident/Attribute:child_incidents_list' => '子事件',
 	'Class:Incident/Attribute:child_incidents_list+' => '此事件相关的所有衍生事件',
-	'Class:Incident/Attribute:public_log' => '评论',
+	'Class:Incident/Attribute:public_log' => '公共日志',
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => '用户满意度',
 	'Class:Incident/Attribute:user_satisfaction+' => '',
@@ -218,7 +219,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Incident/Attribute:user_satisfaction/Value:4+' => '非常不满意',
 	'Class:Incident/Attribute:user_comment' => '用户评论',
 	'Class:Incident/Attribute:user_comment+' => '',
-	'Class:Incident/Attribute:parent_incident_id_friendlyname' => '父级事件名称',
+	'Class:Incident/Attribute:parent_incident_id_friendlyname' => '父级事件昵称',
 	'Class:Incident/Attribute:parent_incident_id_friendlyname+' => '',
 	'Class:Incident/Stimulus:ev_assign' => '分配',
 	'Class:Incident/Stimulus:ev_assign+' => '',
@@ -239,6 +240,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Incident/Stimulus:ev_reopen' => '重新打开',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => '无法分配父级事件给自己',
+
 	'Class:Incident/Method:ResolveChildTickets' => '解决子工单',
 	'Class:Incident/Method:ResolveChildTickets+' => '递归解决子工单 (自动解决), 并调整相关字段与父级工单保持一致: 服务, 团队, 办理人, 解决方案',
 	'Tickets:Related:OpenIncidents' => '打开的事件',
