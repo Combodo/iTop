@@ -21,6 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 // Dictionnary conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -32,6 +33,7 @@
 // Class:<class_name>/Stimulus:<stimulus_code>+
 // Class:<class_name>/UniquenessRule:<rule_code>
 // Class:<class_name>/UniquenessRule:<rule_code>+
+
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
@@ -39,12 +41,14 @@
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
+
 //
 // Class: Organization
 //
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Organization' => '组织',
-	'Class:Organization+' => '',
+	'Class:Organization+' => 'It can be a customer, a provider, your company or departments within your company. Organizations can be structured hierarchically. Users can be limited to objects belonging to some organizations only.~~',
 	'Class:Organization/Attribute:name' => '名称',
 	'Class:Organization/Attribute:name+' => '常用名称',
 	'Class:Organization/Attribute:code' => '编码',
@@ -91,7 +95,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Location/Attribute:org_name' => '所属组织名称',
 	'Class:Location/Attribute:org_name+' => '',
 	'Class:Location/Attribute:address' => '地址',
-	'Class:Location/Attribute:address+' => '地址',
+	'Class:Location/Attribute:address+' => '邮政地址',
 	'Class:Location/Attribute:postal_code' => '邮编',
 	'Class:Location/Attribute:postal_code+' => '邮政编码',
 	'Class:Location/Attribute:city' => '城市',
@@ -110,7 +114,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Contact' => '联系人',
-	'Class:Contact+' => '',
+	'Class:Contact+' => '抽象类. 联系人可以与工单和功能配置项关联，用于不同的目的，例如事件分配和通知.',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
 	'Class:Contact/Attribute:name' => '名称',
 	'Class:Contact/Attribute:name+' => '',
@@ -129,7 +133,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Contact/Attribute:phone' => '电话',
 	'Class:Contact/Attribute:phone+' => '',
 	'Class:Contact/Attribute:notify' => '通知',
-	'Class:Contact/Attribute:notify+' => '',
+	'Class:Contact/Attribute:notify+' => 'Flag which can be used by each notification~~',
 	'Class:Contact/Attribute:notify/Value:no' => '否',
 	'Class:Contact/Attribute:notify/Value:no+' => '否',
 	'Class:Contact/Attribute:notify/Value:yes' => '是',
@@ -137,7 +141,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Contact/Attribute:function' => '职责',
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => '配置项',
-	'Class:Contact/Attribute:cis_list+' => '此联系人关联的所有配置项',
+	'Class:Contact/Attribute:cis_list+' => '此联系人相关的所有配置项',
 	'Class:Contact/Attribute:finalclass' => '联系人类型',
 	'Class:Contact/Attribute:finalclass+' => '根本属性的名称',
 ]);
@@ -147,9 +151,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:Person' => '人员',
-	'Class:Person+' => '',
-	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:Person' => '个体',
+	'Class:Person+' => 'A type of Contact used to describe physical persons. Persons can be grouped into Teams. Persons can be linked to other configuration items (eg. to describe who to contact in case of incident with an application).
+Other usage: the caller of a User request is a Person as well as the agent assigned to resolve it.~~',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => '姓',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => '名',
@@ -167,11 +172,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Person/Attribute:manager_name' => '名称',
 	'Class:Person/Attribute:manager_name+' => '',
 	'Class:Person/Attribute:team_list' => '团队',
-	'Class:Person/Attribute:team_list+' => '这人员归属的所有团队',
+	'Class:Person/Attribute:team_list+' => '这个体归属的所有团队',
 	'Class:Person/Attribute:tickets_list' => '工单',
 	'Class:Person/Attribute:tickets_list+' => '此人发起的所有工单',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Create a %4$s for %2$s~~',
 	'Class:Person/Attribute:user_list' => '用户',
-	'Class:Person/Attribute:user_list+' => '所有关联到此人员的用户',
+	'Class:Person/Attribute:user_list+' => '此个体相关的所有用户',
 	'Class:Person/Attribute:manager_id_friendlyname' => '直属上级姓名',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => '头像',
@@ -180,7 +186,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Person/UniquenessRule:employee_number' => '\'$this->org_name$\' 内已经有人占用了这个员工号',
 	'Class:Person/UniquenessRule:name+' => '同一组织内的员工姓名必须唯一',
 	'Class:Person/UniquenessRule:name' => '\'$this->org_name$\' 内已经有人叫这个名字',
-	'Class:Person/Error:ChangingOrgDenied' => '无法移动此人员到组织 \'%1$s\' 因为这将终端其用户门户的访问, 其关联的用户没有被授权访问此组织',
+	'Class:Person/Error:ChangingOrgDenied' => '无法移动此个体到组织 \'%1$s\' 因为这将终端其用户门户的访问, 其关联的用户没有被授权访问此组织',
 ]);
 
 //
@@ -189,19 +195,19 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Team' => '团队',
-	'Class:Team+' => '',
+	'Class:Team+' => 'A type of Contact. Often used to group Persons, but not only. Teams are expected to watch Tickets dispatched to them, and assign it to an agent, usually a member of that team.~~',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => '成员',
 	'Class:Team/Attribute:persons_list+' => '此团队包含的所有成员',
-	'Class:Team/Attribute:overview' => 'Overview~~',
-	'Team:Overview' => 'Tickets and CIs managed by the team~~',
-	'Team:Overview:ActiveTickets' => 'Active tickets~~',
-	'Team:Overview:FunctionalCIs-ByType' => 'Functional CIs~~',
-	'Team:Overview:UserRequest-ByStatus' => 'User requests by status~~',
-	'Team:Overview:UserRequest-ClosedByMonth' => 'User requests closed in last 12 months~~',
-	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months~~',
+	'Class:Team/Attribute:overview' => '概览',
+	'Team:Overview' => '此团队管理的工单和配置项',
+	'Team:Overview:ActiveTickets' => '活跃的工单',
+	'Team:Overview:FunctionalCIs-ByType' => '功能配置项',
+	'Team:Overview:UserRequest-ByStatus' => '用户请求状态',
+	'Team:Overview:UserRequest-ClosedByMonth' => '过去12个月关闭的需求',
+	'Team:Overview:UserRequest-ClosedByAgent' => '过去12个月由办理人关闭的需求',
 	'Class:Team/Attribute:tickets_list' => '工单',
-	'Class:Team/Attribute:tickets_list+' => '此团队的所有工单',
+	'Class:Team/Attribute:tickets_list+' => '此团队分配到的所有工单',
 ]);
 
 //
@@ -210,7 +216,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Document' => '文档',
-	'Class:Document+' => '',
+	'Class:Document+' => 'Abstract class. A document that can be shared across multiple objects, making it easy and quick to retrieve from all relevant locations.~~',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Document/Attribute:name' => '名称',
 	'Class:Document/Attribute:name+' => '',
@@ -235,7 +241,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Document/Attribute:status/Value:published' => '正式',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => '配置项',
-	'Class:Document/Attribute:cis_list+' => '此文档关联的所有配置项',
+	'Class:Document/Attribute:cis_list+' => '此文档相关的所有配置项',
 	'Class:Document/Attribute:finalclass' => '文档类型',
 	'Class:Document/Attribute:finalclass+' => '根本属性的名称',
 ]);
@@ -246,7 +252,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:DocumentFile' => '文档文件',
-	'Class:DocumentFile+' => '',
+	'Class:DocumentFile+' => 'It\'s a type of Document which includes an uploaded file (in any format: Word, PDF, Spreadsheet, etc.).~~',
 	'Class:DocumentFile/Attribute:file' => '文件',
 	'Class:DocumentFile/Attribute:file+' => '',
 ]);
@@ -257,7 +263,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:DocumentNote' => '文档笔记',
-	'Class:DocumentNote+' => '',
+	'Class:DocumentNote+' => 'Used to store a text document. HTML formatting is supported using the WYSIWYG editor. Search can be performed on its content.~~',
 	'Class:DocumentNote/Attribute:text' => '正文',
 	'Class:DocumentNote/Attribute:text+' => '',
 ]);
@@ -268,7 +274,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:DocumentWeb' => '文档网页',
-	'Class:DocumentWeb+' => '',
+	'Class:DocumentWeb+' => 'Hyperlinks to external applications or documents, acting as pointers to external resources. You cannot search in their content from '.ITOP_APPLICATION_SHORT,
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
 ]);
@@ -279,10 +285,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Typology' => '拓扑',
-	'Class:Typology+' => '',
+	'Class:Typology+' => 'Abstract class. ExternalKeyAttribute to a Typology subclass are used in place of an EnumAttribute, to have more dynamic values.~~',
 	'Class:Typology/Attribute:name' => '名称',
 	'Class:Typology/Attribute:name+' => '',
-	'Class:Typology/Attribute:finalclass' => '拓扑类型',
+	'Class:Typology/Attribute:finalclass' => '拓扑子类型',
 	'Class:Typology/Attribute:finalclass+' => '根本属性的名称',
 ]);
 
@@ -292,7 +298,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:DocumentType' => '文档类型',
-	'Class:DocumentType+' => '',
+	'Class:DocumentType+' => 'Typology. A classification system used to organize and logically group documents~~',
 ]);
 
 //
@@ -301,7 +307,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ContactType' => '联系人类型',
-	'Class:ContactType+' => '',
+	'Class:ContactType+' => 'Typology to organize your Contacts and group them logically for you.~~',
 ]);
 
 //
@@ -309,15 +315,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:lnkPersonToTeam' => '关联 人员/团队',
-	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam' => '链接 个体/团队',
+	'Class:lnkPersonToTeam+' => 'This link indicates when a Person is a member of a Team.~~',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
 	'Class:lnkPersonToTeam/Name+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_id' => '团队',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_name' => '团队名称',
 	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
-	'Class:lnkPersonToTeam/Attribute:person_id' => '人员',
+	'Class:lnkPersonToTeam/Attribute:person_id' => '个体',
 	'Class:lnkPersonToTeam/Attribute:person_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:person_name' => '姓名',
 	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
@@ -338,7 +344,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:Catalogs+' => '数据类型',
 	'Menu:Audit' => '审计',
 	'Menu:Audit+' => '审计',
-	'Menu:CSVImport' => 'CSV导入',
+	'Menu:CSVImport' => 'CSV 导入',
 	'Menu:CSVImport+' => '批量创建或更新',
 	'Menu:Organization' => '组织',
 	'Menu:Organization+' => '所有组织',
@@ -351,8 +357,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:Contact' => '联系人',
 	'Menu:Contact+' => '联系人',
 	'Menu:Contact:Count' => '%1$d 个联系人',
-	'Menu:Person' => '人员',
-	'Menu:Person+' => '所有人员',
+	'Menu:Person' => '个体',
+	'Menu:Person+' => '所有个体',
 	'Menu:Team' => '团队',
 	'Menu:Team+' => '所有团队',
 	'Menu:Document' => '文档',
@@ -383,6 +389,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 // Themes
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'theme:fullmoon' => '满月',
-	'theme:test-red' => '测试 (红色)',
+	'theme:fullmoon' => 'Full moon',
+	'theme:test-red' => 'Test instance (Red)',
 ]);
