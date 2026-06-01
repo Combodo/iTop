@@ -1039,6 +1039,7 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'Combodo\\iTop\\Service\\Router\\Exception\\RouteNotFoundException' => __DIR__ . '/../..' . '/sources/Service/Router/Exception/RouteNotFoundException.php',
         'Combodo\\iTop\\Service\\Router\\Exception\\RouterException' => __DIR__ . '/../..' . '/sources/Service/Router/Exception/RouterException.php',
         'Combodo\\iTop\\Service\\Router\\Router' => __DIR__ . '/../..' . '/sources/Service/Router/Router.php',
+        'Combodo\\iTop\\Service\\Startup\\StartupService' => __DIR__ . '/../..' . '/sources/Service/Startup/StartupService.php',
         'Combodo\\iTop\\Service\\SummaryCard\\SummaryCardService' => __DIR__ . '/../..' . '/sources/Service/SummaryCard/SummaryCardService.php',
         'Combodo\\iTop\\Service\\TemporaryObjects\\TemporaryObjectConfig' => __DIR__ . '/../..' . '/sources/Service/TemporaryObjects/TemporaryObjectConfig.php',
         'Combodo\\iTop\\Service\\TemporaryObjects\\TemporaryObjectGC' => __DIR__ . '/../..' . '/sources/Service/TemporaryObjects/TemporaryObjectGC.php',
