@@ -1947,7 +1947,7 @@ class MenuBlock extends DisplayBlock
 					$sSelectedClassName = MetaModel::GetName($sSelectedClass);
 
 					// Check rights on class
-					$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sSelectedClass)) && UserRights::IsActionAllowed($sSelectedClass, UR_ACTION_BULK_MODIFY) && (($oReflectionClass->IsSubclassOf('cmdbAbstractObject') || $sSelectedClass === 'SynchroReplica'));
+					$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sSelectedClass)) && UserRights::IsActionAllowed($sSelectedClass, UR_ACTION_BULK_MODIFY) && (($oReflectionClass->IsSubclassOf(cmdbAbstractObject::class) || $sSelectedClass === SynchroReplica::class));
 					$bIsBulkDeleteAllowed = (bool) UserRights::IsActionAllowed($sSelectedClass, UR_ACTION_BULK_DELETE);
 
 					// Refine filter on selected class so bullk actions occur on the right class
