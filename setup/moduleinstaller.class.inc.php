@@ -395,7 +395,7 @@ abstract class ModuleInstallerAPI
 		$sLang = str_replace(' ', '_', strtolower($sLanguage));
 		$sFileName = str_replace('{{language_code}}', $sLang, $sFilePattern);
 		if (!file_exists($sFileName)) {
-			etupLog::Debug("No data file found matching the pattern $sFilePattern and language_code $sLang. Trying with 'en_us' as fallback.");
+			SetupLog::Debug("No data file found matching the pattern $sFilePattern and language_code $sLang. Trying with 'en_us' as fallback.");
 			$sLang = 'en_us';
 			$sFileName = str_replace('{{language_code}}', $sLang, $sFilePattern);
 		}
