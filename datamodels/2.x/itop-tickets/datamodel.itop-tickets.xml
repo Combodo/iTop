@@ -387,7 +387,7 @@
 			if (MetaModel::IsValidAttCode($sParentClass, $sParentAttCode) && MetaModel::GetAttributeDef($sParentClass, $sParentAttCode) instanceof AttributeCaseLog
 			&& MetaModel::IsValidAttCode($sChildClass, $sChildAttCode) &&  MetaModel::GetAttributeDef($sChildClass, $sChildAttCode) instanceof AttributeCaseLog
 			&& (!utils::IsNullOrEmptyString($this->Get($sParentAttCode)->GetModifiedEntry('html')))) {
-				$aChildEntries[$sChildAttCode] = Dict::Format('Class:'.$sParentClass.'/Method:UpdateChildTicketWith:'.$sParentAttCode, $this->Get('ref')).' '.$this->Get($sParentAttCode)->GetModifiedEntry('html');
+			  $aChildEntries[$sChildAttCode] = Dict::Format('Class:'.$sParentClass.'/Method:UpdateChildTicketWith:'.$sParentAttCode, $this->GetKey(), $this->Get('ref')).$this->Get($sParentAttCode)->GetModifiedEntry('html');
 			}
 		}
 		if ($aChildEntries == []) {

@@ -44,6 +44,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Open incidents by status',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Open incidents by agent',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Open incidents by customer',
+	'Class:Incident/Method:UpdateChildTicketWith:public_log' => '<i><u>Public log entry from parent Incident %2$s:</u></i><br><br>',
+	'Class:Incident/Method:UpdateChildTicketWith:private_log' => '<i>Private log entry from parent Incident [[Incident:%1$s]]:</i><br><br>',
 ]);
 
 // Dictionnay conventions

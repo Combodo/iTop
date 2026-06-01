@@ -37,6 +37,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Open requests by customer',
 	'Class:UserRequest:KnownErrorList' => 'Known Errors',
 	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket',
+	'Class:UserRequest/Method:UpdateChildTicketWith:public_log' => '<i><u>Public log entry from parent User Request %2$s:</u></i><br><br>',
+	'Class:UserRequest/Method:UpdateChildTicketWith:private_log' => '<i>Private log entry from parent User Request [[UserRequest:%1$s]]:</i><br><br>',
 ]);
 
 // Dictionnay conventions
