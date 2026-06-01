@@ -525,7 +525,7 @@ JS
 				$sSynchroTagId = 'synchro_icon-'.$this->GetKey();
 				$aTags[$sSynchroTagId] = ['title' => $sTip, 'css_classes' => 'ibo-object-details--tag--synchronized', 'decoration_classes' => 'fas fa-lock', 'label' => $sLabel];
 				if (UserRights::IsActionAllowed(SynchroReplica::class, UR_ACTION_READ)) {
-					$oDBSearch = DBObjectSearch::FromOQL('SELECT SynchroReplica WHERE dest_class=:sClass AND dest_id=:id');;
+					$oDBSearch = DBObjectSearch::FromOQL('SELECT SynchroReplica WHERE dest_class=:sClass AND dest_id=:id');
 					$sFilter = rawurlencode($oDBSearch->serialize(false,['sClass'=>get_class($this),'id'=>$this->GetKey()]));
 					$sUrlSearchReplica = 'UI.php?operation=search&filter='.$sFilter;
 					$oPage->add_ready_script("$('#$sSynchroTagId').on('click',function() {window.location = '$sUrlSearchReplica' });");
