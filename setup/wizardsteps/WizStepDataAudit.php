@@ -54,14 +54,18 @@ class WizStepDataAudit extends WizStepInstall
 		}
 	}
 
+	/**
+	 * Tells whether this step/state allows to go back or not
+	 * @return boolean True if the '<< Back' button should be displayed
+	 */
+	public function CanMoveBackward()
+	{
+		return false;
+	}
+
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
 		return new WizardState(WizStepSummary::class);
-	}
-
-	public function CanComeBack()
-	{
-		return false;
 	}
 
 	public function Display(SetupPage $oPage): void
@@ -128,18 +132,37 @@ INPUT;
 </form>
 HTML
 		);
+
+		$sButtonLabel = $this->oWizard->GetParameter('return_button_label', '');
+		SetupLog::Info(__METHOD__.": return_button_label [$sButtonLabel]");
+		$sButtonUrl = $this->oWizard->GetParameter('return_button_url', '');
+		if ($sButtonLabel !== '') {
+			$oPage->add_ready_script(
+				<<<JS
+	$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').after('<td style="text-align:center;"><button id="return-button" class="ibo-button ibo-is-alternative ibo-is-neutral ibo-is-hidden" type="button" onclick="window.location.href=\'$sButtonUrl\'"><span class="ibo-button--label">$sButtonLabel</span></button></td>');
+JS
+			);
+		}
 	}
 
 	protected function AddProgressErrorScript($oPage, $aRes)
 	{
+		$oPage->add_ready_script(
+			<<<JS
+    if ($('#return-button').length > 0) {
+		$('#return-button').removeClass('ibo-is-hidden');
+    }
+JS
+		);
+
 		if (isset($aRes['error_code']) && $aRes['error_code'] === DataAuditSequencer::DATA_AUDIT_FAILED) {
 			$oPage->add_ready_script(
-				<<<EOF
-	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').before('<td style="text-align:center;"><button class="ibo-button ibo-is-alternative ibo-is-neutral" type="submit" name="operation" value="next" id="ignore_and_continue"><span class="ibo-button--label">Ignore and continue</span></button></td>');
+				<<<JS
+	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').after('<td style="text-align:center;"><button class="ibo-button ibo-is-alternative ibo-is-neutral" type="submit" name="operation" value="next" id="ignore_and_continue"><span class="ibo-button--label">Ignore and continue</span></button></td>');
 	$('#ignore_and_continue').on('click', function() {
 		return confirm("If you skip the cleanup you won't be able to run the process later. You'll have to migrate or delete unconsistent data manually.");
 	});
-	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').after('<td style="text-align:center;"><span id="submit-wait" class="ibo-spinner ibo-is-inline ibo-is-hidden ibo-spinner ibo-block" data-role="ibo-spinner"><i class="ibo-spinner--icon fas fa-sync-alt fa-spin" aria-hidden="true"></i></span>&nbsp;<button id="goto-data-feature-removal" class="default ibo-button ibo-is-regular ibo-is-primary" type="button"><span class="ibo-button--label">Cleanup my data</span></button></td>');
+	$('.ibo-setup--wizard--buttons-container tr td:nth-child(3)').after('<td style="text-align:center;"><span id="submit-wait" class="ibo-spinner ibo-is-inline ibo-is-hidden ibo-spinner ibo-block" data-role="ibo-spinner"><i class="ibo-spinner--icon fas fa-sync-alt fa-spin" aria-hidden="true"></i></span>&nbsp;<button id="goto-data-feature-removal" class="default ibo-button ibo-is-regular ibo-is-primary" type="button"><span class="ibo-button--label">Cleanup my data</span></button></td>');
 	$('#goto-data-feature-removal').on("click", function() {
 		$('#goto-data-feature-removal').prop('disabled', true);
 		$('#submit-wait').removeClass("ibo-is-hidden");
@@ -148,7 +171,7 @@ HTML
 	
 	$("#wiz_form").data("installation_status", "cleanup_needed");
 	$('#btn_next').hide();
-EOF
+JS
 			);
 		}
 
@@ -161,6 +184,10 @@ EOF
 
 	public function JSCanMoveBackward()
 	{
+		if ($this->oWizard->GetParameter('return_button_label', '') !== '') {
+			return 'return false;';
+		}
+
 		return 'return  ["not started", "error", "cleanup_needed"].indexOf($("#wiz_form").data("installation_status")) !== -1;';
 	}
 }

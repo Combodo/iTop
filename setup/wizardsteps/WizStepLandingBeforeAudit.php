@@ -24,6 +24,9 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 		$oWizard->SaveParameter('use_symbolic_links', MFCompiler::UseSymbolicLinks());
 		$oWizard->SaveParameter('force-uninstall', '');
 
+		$oWizard->SaveParameter('return_button_label', '');
+		$oWizard->SaveParameter('return_button_url', '');
+
 		// should be done at the end
 		parent::__construct($oWizard, $sCurrentState, false);
 	}
@@ -84,7 +87,7 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 		return 'Next';
 	}
 
-	public function CanComeBack()
+	public function CanMoveBackward()
 	{
 		return false;
 	}
