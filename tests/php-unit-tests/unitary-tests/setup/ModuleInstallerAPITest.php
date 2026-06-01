@@ -286,47 +286,87 @@ SQL
 
 	/**
 	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 * @dataProvider LoadLocalizedData_RequiredLanguageProvider
 	 */
-	public function testLoadLocalizedData_LoadsOnFirstInstall(): void
+	public function testLoadLocalizedData_LoadRequiredLanguageOnFirstInstall(string $sRequiredLanguage, array $aAvailableLanguages, array $aExpectedCountByLanguage): void
 	{
 		// Given
-		[$oConfig, $sOrgName, $sTmpDir, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_FirstInstall_', 'fr_fr');
-		$this->GivenLocalizedDataFile($sTmpDir, "en_us", $sOrgName);
-		$this->GivenLocalizedDataFile($sTmpDir, "fr_fr", $sOrgName);
+		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_RequiredLanguage_', $sRequiredLanguage, $aAvailableLanguages);
+
 		// When no previous version, and current version higher than the first loading version
 		ModuleInstallerAPI::LoadLocalizedData($oConfig, '', '3.3.0', '3.0.0', $sPattern);
+
 		// Then data loaded
-		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 0);
-		$this->AssertOrganizationCountByName($sOrgName, 'fr_fr', 1);
+		foreach ($aExpectedCountByLanguage as $sLanguage => $iExpectedCount) {
+			$this->AssertOrganizationCountByName($sOrgName, $sLanguage, $iExpectedCount);
+		}
+	}
+
+	public function LoadLocalizedData_RequiredLanguageProvider(): array
+	{
+		return [
+			'Required fr_fr and file exists' => [
+				'required language' => 'fr_fr',
+				'available languages' => ['en_us', 'fr_fr'],
+				'expected counts' => ['en_us' => 0, 'fr_fr' => 1],
+			],
+			'Required en_us and file exists' => [
+				'required language' => 'en_us',
+				'available languages' => ['en_us', 'fr_fr'],
+				'expected counts' => ['en_us' => 1, 'fr_fr' => 0],
+			],
+			'Required fr_fr but fallback to en_us' => [
+				'required language' => 'fr_fr',
+				'available languages' => ['en_us'],
+				'expected counts' => ['en_us' => 1, 'fr_fr' => 0],
+			],
+			'Required de_de and file exists' => [
+				'required language' => 'de_de',
+				'available languages' => ['en_us', 'fr_fr', 'de_de'],
+				'expected counts' => ['en_us' => 0, 'fr_fr' => 0, 'de_de' => 1],
+			],
+			'Required de_de but fallback to en_us' => [
+				'required language' => 'de_de',
+				'available languages' => ['en_us', 'fr_fr'],
+				'expected counts' => ['en_us' => 1, 'fr_fr' => 0, 'de_de' => 0],
+			],
+		];
 	}
 
 	/**
 	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 * @dataProvider LoadLocalizedData_VersionConditionNotMetProvider
 	 */
-	public function testLoadLocalizedData_DoesNotLoadWhenVersionConditionIsNotMet(): void
+	public function testLoadLocalizedData_DoesNotLoadWhenVersionConditionIsNotMet(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion): void
 	{
 		// Given
-		[$oConfig, $sOrgName, $sTmpDir, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_NoLoad_', 'en_us');
-		$this->GivenLocalizedDataFile($sTmpDir, "en_us", $sOrgName);
-
-		// When a previous version that is lower than the first loading version, but higher or equal to the current version
-		ModuleInstallerAPI::LoadLocalizedData($oConfig, '3.0.0', '3.1.0', '3.0.0', $sPattern);
+		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_NoLoad_', 'en_us', ['en_us']);
+		// When version gate conditions are not met
+		ModuleInstallerAPI::LoadLocalizedData($oConfig, $sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
 		// Then no data loaded
 		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 0);
 	}
 
+	public function LoadLocalizedData_VersionConditionNotMetProvider(): array
+	{
+		return [
+			'Equal versions (reinstall)' => ['3.1.0', '3.1.0', '3.0.0'],
+			'Downgrade attempt' => ['3.2.0', '3.1.0', '3.0.0'],
+			'Upgrade but first loading version already passed' => ['3.1.0', '3.2.0', '3.0.0'],
+			'Upgrade with boundary equality on first loading version' => ['3.0.0', '3.1.0', '3.0.0'],
+		];
+	}
 	/**
 	 * @covers \ModuleInstallerAPI::LoadLocalizedData
 	 */
-	public function testLoadLocalizedData_FallbacksToEnUsWhenLanguageFileIsMissing(): void
+	public function testLoadLocalizedData_AlwaysLoadWhenFistLoadingVersionEmpty(): void
 	{
-		[$oConfig, $sOrgName, $sTmpDir, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_Fallback_', 'fr_fr');
-		// Intentionally create ONLY en_us file
-		$this->GivenLocalizedDataFile($sTmpDir, 'en_us', $sOrgName);
-		// When loading localized data in fr_fr, but only en_us file exists
-		ModuleInstallerAPI::LoadLocalizedData($oConfig, '', '3.3.0', '3.0.0', $sPattern);
+		// Given
+		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_NoLoad_', 'en_us', ['en_us']);
 
-		$this->AssertOrganizationCountByName($sOrgName, 'fr_fr', 0);
+		// When a previous version that is lower than the first loading version, but higher or equal to the current version
+		ModuleInstallerAPI::LoadLocalizedData($oConfig, '3.0.0', '3.1.0', '', $sPattern);
+		// Then no data loaded
 		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 1);
 	}
 
@@ -336,8 +376,7 @@ SQL
 	 */
 	public function testLoadLocalizedData_AcceptsSupportedVersionFormats(string $sCurrentVersion, string $sFirstLoadingVersion): void
 	{
-		[$oConfig, $sOrgName, $sTmpDir, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_ValidVersion_', 'en_us');
-		$this->GivenLocalizedDataFile($sTmpDir, 'en_us', $sOrgName);
+		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_ValidVersion_', 'en_us', ['en_us']);
 
 		ModuleInstallerAPI::LoadLocalizedData($oConfig, '', $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
 
@@ -352,6 +391,34 @@ SQL
 			'Current version x.y.z-suffix' => ['2.3.3-beta', '2.0.0'],
 			'Current version x.y.z-1' => ['1.2.4-1', '1.0.3-2'],
 		];
+	}
+	// Test when a file is loaded twice because of the version conditions, it doesn't create duplicates (idempotent loading)
+	public function testLoadLocalizedData_IdempotentLoading(): void
+	{
+		// Given
+		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_Idempotent_', 'en_us', ['en_us']);
+
+		// When LoadLocalizedData is called twice with conditions that would load the file both times
+		ModuleInstallerAPI::LoadLocalizedData($oConfig, '', '3.1.0', '3.0.0', $sPattern);
+		ModuleInstallerAPI::LoadLocalizedData($oConfig, '3.1.0', '3.2.0', '', $sPattern);
+
+		// Then no duplicate data loaded
+		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 1);
+	}
+
+	/**
+	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 * @dataProvider LoadLocalizedData_InvalidParametersProvider
+	 */
+	public function testLoadLocalizedData_ThrowsOnInvalidParameters(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, string $sPattern, string $sExpectedMessage): void
+	{
+		$oConfig = MetaModel::GetConfig();
+		$this->assertNotNull($oConfig);
+
+		$this->expectException(\CoreUnexpectedValue::class);
+		$this->expectExceptionMessage($sExpectedMessage);
+
+		ModuleInstallerAPI::LoadLocalizedData($oConfig, $sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
 	}
 
 	public function LoadLocalizedData_InvalidParametersProvider(): array
@@ -388,13 +455,6 @@ SQL
 				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.{{LANGUAGE_CODE}}.xml',
 				'message' => "{{language_code}}",
 			],
-			'Parent directory does not exist' => [
-				'previous' => '',
-				'current' => '3.2.0',
-				'first' => '3.0.0',
-				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'missing'.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml',
-				'message' => 'parent directory',
-			],
 		];
 	}
 
@@ -403,7 +463,7 @@ SQL
 	 *
 	 * @return array{0: Config, 1: string, 2: string, 3: string, 4: string}
 	 */
-	private function GivenLocalizedDataTestContext(string $sOrgNamePrefix, string $sLanguage): array
+	private function GivenLocalizedDataTestContext(string $sOrgNamePrefix, string $sLanguage, array $aAvailableLanguages = []): array
 	{
 		$oConfig = MetaModel::GetConfig();
 		$oConfig->SetDefaultLanguage($sLanguage);
@@ -415,7 +475,11 @@ SQL
 		$this->aFileToClean[] = $sTmpDir;
 		$sPattern = $sTmpDir.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml';
 
-		return [$oConfig, $sOrgName, $sTmpDir, $sPattern];
+		foreach ($aAvailableLanguages as $sAvailableLanguage) {
+			$this->GivenLocalizedDataFile($sTmpDir, $sAvailableLanguage, $sOrgName);
+		}
+
+		return [$oConfig, $sOrgName, $sPattern];
 	}
 
 	private function GivenLocalizedDataFile(string $sDir, string $sLang, string $sOrgName): string

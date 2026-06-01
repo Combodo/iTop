@@ -311,7 +311,7 @@ abstract class ModuleInstallerAPI
 
 	/**
 	 * @param \Config $oConfiguration
-	 * @param string $sPreviousVersion The previous version of the module (empty string will force the loading)
+	 * @param string $sPreviousVersion The previous version of the module (empty string in case of first install)
 	 * @param string $sCurrentVersion The current version of the module
 	 * @param string $sFirstLoadingVersion The first module version for which the data loading should be performed (e.g. '3.0.0')
 	 * @param string $sFilePattern The pattern of the file to load, with {{language_code}} as placeholder for the language code (e.g. 'data.sample.{{language_code}}.xml')
@@ -321,55 +321,39 @@ abstract class ModuleInstallerAPI
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public static function LoadLocalizedData(Config $oConfiguration, string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, string $sFilePattern): void
+	public static function LoadLocalizedData(Config $oConfiguration, ?string $sPreviousVersion, ?string $sCurrentVersion, string $sFirstLoadingVersion, string $sFilePattern): void
 	{
 		self::AssertLoadLocalizedDataParametersAreValid($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion, $sFilePattern);
 
-		// It's not very clear if it makes sense to test a particular version,
-		// as the loading mechanism checks object existence using reconc_keys
-		// and do not recreate them, nor update existing.
-		// Without test, new entries added to the data files, would be automatically loaded
+		// The loading is done only if
+		// - it's a first install of the module
+		// - or it's an upgrade of that module (PreviousVersion is less than the CurrentVersion), which means that we are really upgrading (and not reinstalling the same version or downgrading), and
+		//    - either the FirstLoadingVersion is between the PreviousVersion and the CurrentVersion
+		//    - or the FirstLoadingVersion is empty, forcing the loading on all upgrades,
 		if (($sPreviousVersion === '') ||
-			(version_compare($sPreviousVersion, $sCurrentVersion, '<')
-				&& version_compare($sPreviousVersion, $sFirstLoadingVersion, '<'))) {
+		(version_compare($sPreviousVersion, $sCurrentVersion, '<') &&
+			(($sFirstLoadingVersion === '') || version_compare($sPreviousVersion, $sFirstLoadingVersion, '<')))) {
 
-			// Note: There is an issue when upgrading, default language cannot be retrieved from the passed configuration, we have to read it from the disk
-			if (utils::IsNullOrEmptyString($sPreviousVersion)) {
-				// Fresh install
-				$sDefaultLanguage = $oConfiguration->GetDefaultLanguage();
-			} else {
-				// Upgrade
-				$sDefaultLanguage = utils::GetConfig(true)->GetDefaultLanguage();
-			}
-
+			$sDefaultLanguage = $oConfiguration->GetDefaultLanguage();
 			$sFileName = self::GetLocalizedFileName($sDefaultLanguage, $sFilePattern);
-			if ($sFileName !== '') {
-				self::XMLFileLoad($sFileName);
-			}
+			self::XMLFileLoad($sFileName);
 		}
 	}
 
 	/**
 	 * @throws \CoreUnexpectedValue
 	 */
-	private static function AssertLoadLocalizedDataParametersAreValid(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, string $sFilePattern): void
+	private static function AssertLoadLocalizedDataParametersAreValid(?string $sPreviousVersion, ?string $sCurrentVersion, string $sFirstLoadingVersion, string $sFilePattern): void
 	{
 		if (($sPreviousVersion !== '') && !self::IsValidLocalizedDataVersion($sPreviousVersion)) {
 			throw new CoreUnexpectedValue("LoadLocalizedData expects sPreviousVersion to be empty or match x.y[.z][-name], got '{$sPreviousVersion}'");
 		}
-
 		if (!self::IsValidLocalizedDataVersion($sCurrentVersion)) {
 			throw new CoreUnexpectedValue("LoadLocalizedData expects sCurrentVersion to match x.y[.z][-name], got '{$sCurrentVersion}'");
 		}
-
-		if (!self::IsValidLocalizedDataVersion($sFirstLoadingVersion)) {
+		if (($sFirstLoadingVersion !== '') && !self::IsValidLocalizedDataVersion($sFirstLoadingVersion)) {
 			throw new CoreUnexpectedValue("LoadLocalizedData expects sFirstLoadingVersion to match x.y[.z][-name], got '{$sFirstLoadingVersion}'");
 		}
-
-		if (utils::IsNullOrEmptyString($sFilePattern)) {
-			throw new CoreUnexpectedValue('LoadLocalizedData expects sFilePattern to be a non-empty string');
-		}
-
 		if (substr_count($sFilePattern, '{{language_code}}') !== 1) {
 			throw new CoreUnexpectedValue("LoadLocalizedData expects sFilePattern to contain the exact placeholder '{{language_code}}' exactly once");
 		}
@@ -406,8 +390,6 @@ abstract class ModuleInstallerAPI
 	 * @param string $sFilePattern The full path+name of the file to localize, with {{language_code}} as placeholder for the language code (e.g. 'data.sample.{{language_code}}.xml')
 	 *
 	 * @return string The localized file name if found, or an empty string if not found
-	 * @throws \ConfigException
-	 * @throws \CoreException
 	 */
 	public static function GetLocalizedFileName($sLanguage, string $sFilePattern): string
 	{
