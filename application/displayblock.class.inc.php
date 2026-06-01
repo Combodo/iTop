@@ -1958,7 +1958,7 @@ class MenuBlock extends DisplayBlock
 					// Action label dict code has a specific suffix for "Link" / "Remote" aliases to allow dedicated labels in linksets.
 					$sActionLabelCodeSuffix = in_array($sSelectedAlias, ['Link', 'Remote']) ? $sSelectedAlias : 'Class';
 					if ($bIsBulkModifyAllowed) {
-						if($sSelectedClass === 'SynchroReplica'){
+						if($sSelectedClass === SynchroReplica::class){
 							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:UnlinkAll:', Dict::S('Class:SynchroReplica/Action:unlink_all'),'unlink');
 							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:UnLinkSynchroAll:', Dict::S('Class:SynchroReplica/Action:unlinksynchro_all'),'unlinksynchro');
 							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:SynchroAll:', Dict::S('Class:SynchroReplica/Action:synchro_all'),'synchro');
