@@ -80,7 +80,7 @@ class SynchroReplicaController extends Controller
 		foreach ($aSelectObject as $iId) {
 			set_time_limit(intval($iLoopTimeLimit));
 			/** @var \cmdbAbstractObject $oObj */
-			$oReplica = MetaModel::GetObject('SynchroReplica', $iId);
+			$oReplica = MetaModel::GetObject(SynchroReplica::class, $iId);
 			$bResult = true;
 			try {
 				if (in_array($sOperation, ['unlink', 'unlinksynchro'])) {
