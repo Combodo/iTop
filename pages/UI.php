@@ -5,8 +5,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\BulkHelper;
 use Combodo\iTop\Application\Helper\SearchHelper;
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\Helper\SynchroReplicaHelper;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
@@ -23,7 +25,6 @@ use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Application\WelcomePopup\WelcomePopupService;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
-use Combodo\iTop\Controller\Links\SynchroReplicaController;
 use Combodo\iTop\Controller\WelcomePopupController;
 use Combodo\iTop\Service\Router\Router;
 
@@ -577,35 +578,35 @@ try {
 				///////////////////////////////////////////////////////////////////////////////////////////
 
 			case 'select_for_modify_all': // Select the list of objects to be modified (bulk modify)
-				UI::OperationSelectForModifyAll($oP);
+				BulkHelper::OperationSelectForModifyAll($oP);
 				break;
 				///////////////////////////////////////////////////////////////////////////////////////////
 
 			case 'form_for_modify_all': // Form to modify multiple objects (bulk modify)
-				UI::OperationFormForModifyAll($oP, $oAppContext);
+				BulkHelper::OperationFormForModifyAll($oP, $oAppContext);
 				break;
 
 			case 'form_for_unlink_all': // Form to modify multiple objects (bulk modify)
-				SynchroReplicaController::OperationUnlinkAll($oP, $oAppContext,'unlink');
+				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext,'unlink');
 				break;
 			case 'form_for_unlinksynchro_all': // Form to modify multiple objects (bulk modify)
-				SynchroReplicaController::OperationUnlinkAll($oP, $oAppContext,'unlinksynchro');
+				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext,'unlinksynchro');
 				break;
 			case 'form_for_synchro_all': // Form to modify multiple objects (bulk modify)
-				SynchroReplicaController::OperationUnlinkAll($oP, $oAppContext,'synchro');
+				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext,'synchro');
 				break;
 
 			case 'form_for_allowdelete_all': // Form to modify multiple objects (bulk modify)
-				SynchroReplicaController::OperationUnlinkAll($oP, $oAppContext,'allowdelete');
+				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext,'allowdelete');
 				break;
 			case 'form_for_denydelete_all': // Form to modify multiple objects (bulk modify)
-				SynchroReplicaController::OperationUnlinkAll($oP, $oAppContext,'denydelete');
+				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext,'denydelete');
 				break;
 
 				///////////////////////////////////////////////////////////////////////////////////////////
 
 			case 'preview_or_modify_all': // Preview or apply bulk modify
-				UI::OperationPreviewOrModifyAll($oP, $oAppContext);
+				BulkHelper::OperationPreviewOrModifyAll($oP, $oAppContext);
 				break;
 
 				///////////////////////////////////////////////////////////////////////////////////////////
@@ -644,7 +645,7 @@ try {
 					'title' => Dict::S('UI:BulkDeleteTitle'),
 				];
 				$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_DELETE);
-				UI::DisplayMultipleSelectionForm($oP, $oFilter, 'bulk_delete', $oChecker, [], $aDisplayParams);
+				BulkHelper::DisplayMultipleSelectionForm($oP, $oFilter, 'bulk_delete', $oChecker, [], $aDisplayParams);
 				break;
 
 				///////////////////////////////////////////////////////////////////////////////////////////

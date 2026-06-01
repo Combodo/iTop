@@ -21,7 +21,7 @@
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
-use UI;
+use Combodo\iTop\Application\Helper\BulkHelper;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -45,7 +45,7 @@ try {
 			if ($iId == null) {
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
 			}
-			$oReplica = MetaModel::GetObject('SynchroReplica', $iId);
+			$oReplica = MetaModel::GetObject(SynchroReplica::class, $iId);
 			$oReplica->DisplayDetails($oP);
 			break;
 
@@ -79,7 +79,7 @@ try {
 			if ($iId == null) {
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
 			}
-			$oReplica = MetaModel::GetObject('SynchroReplica', $iId);
+			$oReplica = MetaModel::GetObject(SynchroReplica::class, $iId);
 			$oReplica->UnLink();
 
 			$oStatLog = $oReplica->ReSynchro();
@@ -93,7 +93,7 @@ try {
 			if ($iId == null) {
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
 			}
-			$oReplica = MetaModel::GetObject('SynchroReplica', $iId);
+			$oReplica = MetaModel::GetObject(SynchroReplica::class, $iId);
 			$oReplica->UnLink();
 
 			$oReplica->DisplayDetails($oP);
@@ -104,7 +104,7 @@ try {
 			if ($iId == null) {
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
 			}
-			$oReplica = MetaModel::GetObject('SynchroReplica', $iId);
+			$oReplica = MetaModel::GetObject(SynchroReplica::class, $iId);
 			$oStatLog = $oReplica->ReSynchro();
 			$oReplica->DisplayDetails($oP);
 			break;
@@ -114,7 +114,7 @@ try {
 			if ($iId == null) {
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
 			}
-			$oReplica = MetaModel::GetObject('SynchroReplica', $iId);
+			$oReplica = MetaModel::GetObject(SynchroReplica::class, $iId);
 			$oStatLog = $oReplica->Set('status_dest_creator',1);
 			$oReplica->DisplayDetails($oP);
 			break;
@@ -124,29 +124,29 @@ try {
 			if ($iId == null) {
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
 			}
-			$oReplica = MetaModel::GetObject('SynchroReplica', $iId);
+			$oReplica = MetaModel::GetObject(SynchroReplica::class, $iId);
 			$oStatLog = $oReplica->Set('status_dest_creator', 0);
 			$oReplica->DisplayDetails($oP);
 			break;
 
 		case 'select_for_unlink_all': // Select the list of objects to be modified (bulk modify)
-			UI::OperationSelectForModifyAll($oP,'UI:UnlinkAllTabTitle', 'UI:UnlinkAllPageTitle', 'form_for_unlink_all');
+			BulkHelper::OperationSelectForModifyAll($oP,'UI:UnlinkAllTabTitle', 'UI:UnlinkAllPageTitle', 'form_for_unlink_all');
 			break;
 
 		case 'select_for_unlinksynchro_all': // Select the list of objects to be modified (bulk modify)
-			UI::OperationSelectForModifyAll($oP,'UI:UnlinkSynchroAllTabTitle', 'UI:UnlinkSynchroAllPageTitle', 'form_for_unlinksynchro_all');
+			BulkHelper::OperationSelectForModifyAll($oP,'UI:UnlinkSynchroAllTabTitle', 'UI:UnlinkSynchroAllPageTitle', 'form_for_unlinksynchro_all');
 			break;
 
 		case 'select_for_synchro_all': // Select the list of objects to be modified (bulk modify)
-			UI::OperationSelectForModifyAll($oP,'UI:SynchroAllTabTitle', 'UI:SynchroAllPageTitle','form_for_synchro_all');
+			BulkHelper::OperationSelectForModifyAll($oP,'UI:SynchroAllTabTitle', 'UI:SynchroAllPageTitle','form_for_synchro_all');
 			break;
 
 		case 'select_for_allowdelete_all': // Select the list of objects to be modified (bulk modify)
-			UI::OperationSelectForModifyAll($oP,'UI:AllowDeleteAllTabTitle', 'UI:AllowDeleteAllPageTitle','form_for_allowdelete_all');
+			BulkHelper::OperationSelectForModifyAll($oP,'UI:AllowDeleteAllTabTitle', 'UI:AllowDeleteAllPageTitle','form_for_allowdelete_all');
 			break;
 
 		case 'select_for_denydelete_all': // Select the list of objects to be modified (bulk modify)
-			UI::OperationSelectForModifyAll($oP,'UI:DenyDeleteAllTabTitle', 'UI:DenyDeleteAllPageTitle','form_for_denydelete_all');
+			BulkHelper::OperationSelectForModifyAll($oP,'UI:DenyDeleteAllTabTitle', 'UI:DenyDeleteAllPageTitle','form_for_denydelete_all');
 			break;
 	}
 } catch (CoreException $e) {

@@ -1,13 +1,25 @@
 <?php
 
+namespace Combodo\iTop\Application\Helper;
+
+use ActionChecker;
+use ApplicationContext;
+use ApplicationException;
+use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
+use DBObjectSearch;
+use DBSearch;
+use Dict;
+use DisplayBlock;
+use MetaModel;
+use utils;
 
-class UI
+class BulkHelper
 {
 	/**
 	 * Operation select_for_modify_all

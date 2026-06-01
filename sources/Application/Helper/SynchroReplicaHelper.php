@@ -1,10 +1,9 @@
 <?php
 
-namespace Combodo\iTop\Controller\Links;
+namespace Combodo\iTop\Application\Helper;
 
 use ApplicationContext;
 use ApplicationException;
-use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
@@ -13,22 +12,11 @@ use Dict;
 use Exception;
 use iTopWebPage;
 use MetaModel;
+use SynchroReplica;
 use utils;
 
-class SynchroReplicaController extends Controller
+class SynchroReplicaHelper
 {
-	public const ROUTE_NAMESPACE = 'synchroreplica';
-
-	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [])
-	{
-		$sViewPath = APPROOT.'synchro';
-		parent::__construct($sViewPath, $sModuleName, $aAdditionalPaths);
-
-		// Previously in index.php
-		$this->DisableInDemoMode();
-		$this->AllowOnlyAdmin();
-		$this->CheckAccess();
-	}
 
 	public static function OperationUnlinkAll(iTopWebPage $oP, ApplicationContext $oAppContext, $sOperation = 'unlink'): void
 	{
@@ -44,10 +32,6 @@ class SynchroReplicaController extends Controller
 			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObject[]'));
 		}
 		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-		$aContext = array(
-			'filter'    => utils::EscapeHtml($sFilter),
-			'selectObj' => $aSelectObject,
-		);
 
 		$aHeaders = array(
 			'object' => array('label' => MetaModel::GetName($sClass), 'description' => Dict::S('UI:ModifiedObject')),
@@ -61,7 +45,6 @@ class SynchroReplicaController extends Controller
 			),
 		);
 		$aRows = array();
-
 
 		$sHeaderTitle = Dict::Format('UI:Modify_N_ObjectsOf_Class', count($aSelectObject), MetaModel::GetName($sClass));
 		$sClassIcon = MetaModel::GetClassIcon($sClass, false);
@@ -103,10 +86,6 @@ class SynchroReplicaController extends Controller
 				$bResult = false;
 				$aErrors[] = $e->getMessage();
 			}
-			catch (Error $e) {
-				$bResult = false;
-				$aErrors[] = $e->getMessage();
-			}
 
 			$sStatus = $bResult ? Dict::S('UI:BulkModifyStatusModified') : Dict::S('UI:BulkModifyStatusSkipped');
 
@@ -132,7 +111,5 @@ class SynchroReplicaController extends Controller
 
 		$oP->AddUiBlock($oPanel);
 		$oP->AddSubBlock(ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Done')))->SetOnClickJsCode("window.location.href='$sCancelUrl'")->AddCSSClass('mt-5');
-
-
 	}
 }
