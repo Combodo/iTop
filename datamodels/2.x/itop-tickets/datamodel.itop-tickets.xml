@@ -375,7 +375,7 @@
         ErrorLog::Debug("Invalid class ($sChildClass) or attribute code ($sChildParentAttCode) provided to UpdateChildTicketLog","DataModel");
         return true; // Do nothing
     }
-    $oAttDef = MetaModel::GetAttributeDef(get_class($this), $sChildParentAttCode);
+    $oAttDef = MetaModel::GetAttributeDef($sChildClass, $sChildParentAttCode);
     if (!$oAttDef instanceof AttributeExternalKey ||  ($oAttDef->GetTargetClass() !== get_class($this))) {
         ErrorLog::Debug("Attribute $sChildParentAttCode should be an external key of class $sChildClass, pointing to class ".get_class($this),"DataModel");
         return true; // Do nothing
