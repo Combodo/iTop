@@ -2402,7 +2402,7 @@ class SynchroReplica extends DBObject implements iDisplay
 	 */
 	public function ReSynchro(): SynchroLog
 	{
-		$oDataSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
+		$oDataSource = MetaModel::GetObject(SynchroDataSource::class, $this->Get('sync_source_id'));
 
 		$oStatLog = new SynchroLog();
 		$oStatLog->Set('sync_source_id', $oDataSource->GetKey());
