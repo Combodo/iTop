@@ -54,10 +54,20 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 	 */
 	abstract public function GetDatamodelDeltaAbsPath(): string;
 
+	/**
+	 * @return array<string, string> : dict extensions folders by their code
+	 */
+	public function GetAdditionalFeaturePaths(): array
+	{
+		return [];
+	}
+
 	protected function setUp(): void
 	{
 		static::LoadRequiredItopFiles();
-		$this->oEnvironment = new UnitTestRunTimeEnvironment('production', $this->GetTestEnvironment());
+		if (is_null($this->oEnvironment)) {
+			$this->oEnvironment = new UnitTestRunTimeEnvironment($this->GetTestEnvironment());
+		}
 
 		parent::setUp();
 	}
@@ -123,7 +133,6 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 		// Note: To improve performances, we compile all XML deltas from test cases derived from this class and make a single environment where everything will be ran at once.
 		//       This requires XML deltas to be compatible, but it is a known and accepted trade-off. See PR #457
 		if (false === $this->IsEnvironmentReady()) {
-
 			$this->debug("Preparing custom environment '$sTestEnv' with the following datamodel files:");
 			foreach ($this->oEnvironment->GetCustomDatamodelFiles() as $sCustomDatamodelFile) {
 				$this->debug("  - $sCustomDatamodelFile");
@@ -155,24 +164,36 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 			$oTestConfig->ChangeModulesPath($sSourceEnv, $sTestEnv);
 			// - Switch DB name to a dedicated one so we don't mess with the original one
 			$sTestEnvSanitizedForDBName = preg_replace('/[^\d\w]/', '', $sTestEnv);
-			$oTestConfig->Set('db_name', $oTestConfig->Get('db_name').'_'.$sTestEnvSanitizedForDBName);
+			$sPreviousDB = $oTestConfig->Get('db_name');
+			$sNewDB = $sPreviousDB.'_'.$sTestEnvSanitizedForDBName;
+			$oTestConfig->Set('db_name', $sNewDB);
 
 			// - Compile env. based on the existing 'production' env.
-			$oEnvironment = new UnitTestRunTimeEnvironment($sSourceEnv, $sTestEnv);
-			$oEnvironment->WriteConfigFileSafe($oTestConfig);
-			$oEnvironment->CompileFrom($sSourceEnv);
+			//$oEnvironment = new UnitTestRunTimeEnvironment($sSourceEnv, $sTestEnv);
+			$this->oEnvironment->WriteConfigFileSafe($oTestConfig);
+			$this->oEnvironment->CompileFrom($sSourceEnv);
 
 			// - Force re-creating a fresh DB
 			CMDBSource::InitFromConfig($oTestConfig);
-			if (CMDBSource::IsDB($oTestConfig->Get('db_name'))) {
+			if (CMDBSource::IsDB($sNewDB)) {
 				CMDBSource::DropDB();
 			}
-			CMDBSource::CreateDB($oTestConfig->Get('db_name'));
+			CMDBSource::CreateDB($sNewDB);
 			MetaModel::Startup($sConfFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sTestEnv);
 			// N°7446 For some reason we need to create the DB schema before starting the MM, then only we can create the tables.
 			MetaModel::DBCreate();
 
+			// Make sure that runtime environment is complete
+			// RunTimeEnvironment::AnalyzeInstallation would not return core modules otherwise...
+			CMDBSource::DropTable("priv_module_install");
+			CMDBSource::Query("CREATE TABLE $sNewDB.priv_module_install SELECT * FROM $sPreviousDB.priv_module_install");
+
+			CMDBSource::DropTable("priv_extension_install");
+			CMDBSource::Query("CREATE TABLE $sNewDB.priv_extension_install SELECT * FROM $sPreviousDB.priv_extension_install");
+
 			$this->debug("Custom environment '$sTestEnv' is ready!");
+		} else {
+			$this->debug("Custom environment '$sTestEnv' READY BUILT:");
 		}
 
 		parent::PrepareEnvironment();

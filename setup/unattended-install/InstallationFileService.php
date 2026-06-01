@@ -1,12 +1,12 @@
 <?php
 
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/setup/setuppage.class.inc.php');
-require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
-require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
+require_once(APPROOT.'/setup/wizardsteps_autoload.php');
 
 class InstallationFileService
 {
@@ -32,7 +32,7 @@ class InstallationFileService
 	 * @param bool $bInstallationOptionalChoicesChecked : this option is used only when no extensions are selected (ie empty
 	 *     $aSelectedExtensions)
 	 */
-	public function __construct(string $sInstallationPath, string $sTargetEnvironment = 'production', array $aSelectedExtensions = [], bool $bInstallationOptionalChoicesChecked = true)
+	public function __construct(string $sInstallationPath, string $sTargetEnvironment = ITOP_DEFAULT_ENV, array $aSelectedExtensions = [], bool $bInstallationOptionalChoicesChecked = true)
 	{
 		$this->sInstallationPath = $sInstallationPath;
 		$this->aSelectedModules = [];
@@ -71,12 +71,12 @@ class InstallationFileService
 		return $this->aAfterComputationSelectedExtensions;
 	}
 
-	public function SetItopExtensionsMap(ItopExtensionsMap $oItopExtensionsMap): void
+	public function SetItopExtensionsMap(iTopExtensionsMap $oItopExtensionsMap): void
 	{
 		$this->oItopExtensionsMap = $oItopExtensionsMap;
 	}
 
-	public function GetItopExtensionsMap(): ItopExtensionsMap
+	public function GetItopExtensionsMap(): iTopExtensionsMap
 	{
 		if (is_null($this->oItopExtensionsMap)) {
 			$this->oItopExtensionsMap = new iTopExtensionsMap($this->sTargetEnvironment);
@@ -259,7 +259,7 @@ class InstallationFileService
 	{
 		$sProductionModuleDir = APPROOT.'data/'.$this->sTargetEnvironment.'-modules/';
 
-		$aAvailableModules = $this->GetProductionEnv()->AnalyzeInstallation(MetaModel::GetConfig(), $this->GetExtraDirs(), false, null);
+		$aAvailableModules = $this->GetProductionEnv()->AnalyzeInstallation(MetaModel::GetConfig(), $this->GetExtraDirs());
 
 		$this->aAutoSelectModules = [];
 		foreach ($aAvailableModules as $sModuleId => $aModule) {
@@ -287,7 +287,7 @@ class InstallationFileService
 
 	public function ProcessAutoSelectModules(): void
 	{
-		$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
+		$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], ModuleFileReader::STATIC_CALL_AUTOSELECT_WHITELIST);
 
 		foreach ($this->GetAutoSelectModules() as $sModuleId => $aModule) {
 			try {

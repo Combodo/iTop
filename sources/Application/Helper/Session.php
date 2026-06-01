@@ -8,7 +8,6 @@
 namespace Combodo\iTop\Application\Helper;
 
 use Combodo\iTop\SessionTracker\SessionHandler;
-use utils;
 
 /**
  * Session management
@@ -22,58 +21,54 @@ class Session
 	/** @var int|null */
 	public static $iSessionId = null;
 	/** @var bool */
-	protected static $bIsInitialized = false;
-	/** @var bool */
-	protected static $bSessionStarted = false;
-	/** @var bool */
 	public static $bAllowCLI = false;
 
 	public static function Start()
 	{
-		if (self::IsModeCLI()) {
+		if (session_status() === PHP_SESSION_DISABLED) {
 			return;
 		}
 
-		if (!self::$bIsInitialized) {
-			SessionHandler::session_set_save_handler();
-			session_name('itop-'.md5(APPROOT));
+		if (self::IsInitialized()) {
+			// Session already started
+			self::$iSessionId = session_id();
+			return;
 		}
 
-		self::$bIsInitialized = true;
-		if (!self::$bSessionStarted) {
-			if (!is_null(self::$iSessionId)) {
-				if (session_id(self::$iSessionId) === false) {
-					session_regenerate_id(true);
-				}
+		SessionHandler::session_set_save_handler();
+		session_name('itop-'.md5(APPROOT));
+
+		if (!is_null(self::$iSessionId)) {
+			if (session_id(self::$iSessionId) === false) {
+				session_regenerate_id(true);
 			}
-			self::$bSessionStarted = session_start();
-			self::$iSessionId = session_id();
 		}
+		session_start();
+		self::$iSessionId = session_id();
 	}
 
 	public static function RegenerateId($bDeleteOldSession = false)
 	{
-		if (self::IsModeCLI()) {
+		if (session_status() === PHP_SESSION_DISABLED || headers_sent()) {
 			return;
 		}
 
 		session_regenerate_id($bDeleteOldSession);
-		if (self::$bSessionStarted) {
+		if (session_status() === PHP_SESSION_ACTIVE) {
 			self::WriteClose();
 		}
-		self::$bSessionStarted = session_start();
+		session_start();
 		self::$iSessionId = session_id();
 	}
 
 	public static function WriteClose()
 	{
-		if (self::IsModeCLI()) {
+		if (session_status() === PHP_SESSION_DISABLED) {
 			return;
 		}
 
-		if (self::$bSessionStarted) {
+		if (session_status() === PHP_SESSION_ACTIVE) {
 			session_write_close();
-			self::$bSessionStarted = false;
 		}
 	}
 
@@ -96,7 +91,7 @@ class Session
 			$sSessionVar = &$sSessionVar[$key];
 		}
 		$sSessionVar = $value;
-		if (!self::$bSessionStarted) {
+		if (session_status() !== PHP_SESSION_ACTIVE) {
 			self::Start();
 			$_SESSION = $aSession;
 			self::WriteClose();
@@ -124,7 +119,7 @@ class Session
 					$sPrevKey = $sKey;
 				}
 			}
-			if (!self::$bSessionStarted) {
+			if (session_status() !== PHP_SESSION_ACTIVE) {
 				self::Start();
 				unset($sSessionVar[$sKey]);
 				$_SESSION = $aSession;
@@ -192,14 +187,6 @@ class Session
 	}
 
 	/**
-	 * @return bool
-	 */
-	public static function IsInitialized(): bool
-	{
-		return self::$bIsInitialized;
-	}
-
-	/**
 	 * @return bool|string
 	 */
 	public static function GetLog()
@@ -207,13 +194,8 @@ class Session
 		return print_r($_SESSION, true);
 	}
 
-	private static function IsModeCLI(): bool
+	public static function IsInitialized(): bool
 	{
-		if (self::$bAllowCLI) {
-
-			return false;
-		}
-
-		return utils::IsModeCLI();
+		return session_status() === PHP_SESSION_ACTIVE || headers_sent();
 	}
 }

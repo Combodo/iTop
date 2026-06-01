@@ -360,10 +360,10 @@ class DesignElement extends \DOMElement
 	 * @param string $sTagName
 	 * @param string|null $sDefault
 	 *
-	 * @return string
+	 * @return null|string
 	 * @throws \DOMFormatException
 	 */
-	public function GetChildText($sTagName, $sDefault = null)
+	public function GetChildText($sTagName, $sDefault = null): ?string
 	{
 		$sRet = $sDefault;
 		if ($oChild = $this->GetOptionalElement($sTagName)) {

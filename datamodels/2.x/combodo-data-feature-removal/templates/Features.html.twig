@@ -1,0 +1,28 @@
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+
+{% UIForm Standard {} %}
+    {% UIInput ForHidden {sName:'operation', sValue:'AnalysisResult'} %}
+    {% UIInput ForHidden {sName:'transaction_id', sValue:sTransactionId} %}
+
+	{% UIPanel Neutral { sTitle:'DataFeatureRemoval:Features:Title'|dict_s, sSubTitle: '' } %}
+		{% UIMultiColumn Standard {} %}
+			{% for iColumnIndex in 0..iColumnCount-1 %}
+				{% UIColumn Standard {} %}
+					{% for aExtension in aAvailableExtensions[iColumnIndex] %}
+						{% if aExtension['installed'] %}
+							{% UIExtensionDetails Installed { sCode : aExtension['code'], sLabel : aExtension['label'], sDescription : aExtension['description'], aMetaData : [aExtension['version'], aExtension['source']], aExtraFlags : aExtension['extra_flags']} %}{% EndUIExtensionDetails %}
+						{% else %}
+							{% UIExtensionDetails NotInstalled { sCode : aExtension['code'], sLabel : aExtension['label'], sDescription : aExtension['description'], aMetaData : [aExtension['version'], aExtension['source']], aExtraFlags : aExtension['extra_flags']} %}{% EndUIExtensionDetails %}
+						{% endif %}
+					{% endfor %}
+				{% EndUIColumn %}
+			{% endfor %}
+		{% EndUIMultiColumn %}
+    {% EndUIPanel %}
+
+    {% UIToolbar ForButton {} %}
+        {% UIButton ForPrimaryAction {sLabel:'UI:Button:Analyze'|dict_s, sName:'btn_apply', sId:'btn_apply', bIsSubmit:true} %}
+    {% EndUIToolbar %}
+{% EndUIForm %}

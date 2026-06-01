@@ -24,6 +24,8 @@ class Form extends UIContentBlock
 	protected $sOnSubmitJsCode;
 	/** @var string */
 	protected $sAction;
+	/** @var string */
+	protected $sEncType = "multipart/form-data";
 
 	public function __construct(?string $sId = null)
 	{
@@ -63,6 +65,27 @@ class Form extends UIContentBlock
 	{
 		$this->sAction = $sAction;
 		return $this;
+	}
+
+	/**
+	 * Override default enctype (default : "multipart/form-data")
+		* @param string $sEncType
+		* @return $this
+	 *  @since 3.3.0
+	 */
+	public function SetEncType(string $sEncType)
+	{
+		$this->sEncType = $sEncType;
+		return $this;
+	}
+
+	/**
+* @return string
+	 *  @since 3.3.0
+	 */
+	public function GetEncType(): string
+	{
+		return $this->sEncType;
 	}
 
 }

@@ -1,0 +1,14 @@
+{# @copyright   Copyright (C) 2010-2026 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% UIPanel ForInformation { sTitle:'DataFeatureRemoval:DoDeletion:Title'|dict_s, sSubTitle: 'DataFeatureRemoval:DoDeletion:SubTitle'|dict_s } %}
+    {% UIDataTable ForForm { sRef:'aDeletionExecutionSummary', aColumns:aDeletionExecutionSummary.Columns, aData:aDeletionExecutionSummary.Data} %}{% EndUIDataTable %}
+{% EndUIPanel %}
+
+{% UIForm Standard {} %}
+    {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}
+    {% UIInput ForHidden { sName:'operation', sValue:'Main'} %}
+    {% UIToolbar ForButton {} %}
+        {% UIButton ForPrimaryAction {sLabel:'UI:Button:BackToMain'|dict_s, sName:'btn_back_to_main', sId:'btn_back_to_main', bIsSubmit:true} %}
+    {% EndUIToolbar %}
+{% EndUIForm %}

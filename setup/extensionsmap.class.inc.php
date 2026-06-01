@@ -3,143 +3,11 @@
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
+require_once(APPROOT.'/setup/itopextension.class.inc.php');
 require_once(APPROOT.'/setup/parameters.class.inc.php');
 require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once(APPROOT.'/setup/modulediscovery.class.inc.php');
 require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
-/**
- * Basic helper class to describe an extension, with some characteristics and a list of modules
- */
-class iTopExtension
-{
-	public const SOURCE_WIZARD = 'datamodels';
-	public const SOURCE_MANUAL = 'extensions';
-	public const SOURCE_REMOTE = 'data';
-
-	/**
-	 * @var string
-	 */
-	public $sCode;
-
-	/**
-	 * @var string
-	 */
-	public $sVersion;
-
-	/**
-	 * @var string
-	 */
-	public $sInstalledVersion;
-
-	/**
-	 * @var string
-	 */
-	public $sLabel;
-
-	/**
-	 * @var string
-	 */
-	public $sDescription;
-
-	/**
-	 * @var string
-	 */
-	public $sSource;
-
-	/**
-	 * @var bool
-	 */
-	public $bMandatory;
-
-	/**
-	 * @var string
-	 */
-	public $sMoreInfoUrl;
-
-	/**
-	 * @var bool
-	 */
-	public $bMarkedAsChosen;
-	/**
-	 * If null, check if at least one module cannot be uninstalled
-	 * @var bool|null
-	 */
-	public ?bool $bCanBeUninstalled = null;
-
-	/**
-	 * @var bool
-	 */
-	public $bVisible;
-
-	/**
-	 * @var string[]
-	 */
-	public $aModules;
-
-	/**
-	 * @var string[]
-	 */
-	public $aModuleVersion;
-
-	/**
-	 * @var string[]
-	 */
-	public $aModuleInfo;
-
-	/**
-	 * @var string
-	 */
-	public $sSourceDir;
-
-	/**
-	 *
-	 * @var string[]
-	 */
-	public $aMissingDependencies;
-	/**
-	 * @var bool
-	 */
-	public bool $bInstalled = false;
-	/**
-	 * @var bool
-	 */
-	public bool $bRemovedFromDisk = false;
-
-	public function __construct()
-	{
-		$this->sCode = '';
-		$this->sLabel = '';
-		$this->sDescription = '';
-		$this->sSource = self::SOURCE_WIZARD;
-		$this->bMandatory = false;
-		$this->sMoreInfoUrl = '';
-		$this->bMarkedAsChosen = false;
-		$this->sVersion = ITOP_VERSION;
-		$this->sInstalledVersion = '';
-		$this->aModules = [];
-		$this->aModuleVersion = [];
-		$this->aModuleInfo = [];
-		$this->sSourceDir = '';
-		$this->bVisible = true;
-		$this->aMissingDependencies = [];
-	}
-
-	/**
-	 * @since 3.3.0
-	 * @return bool
-	 */
-	public function CanBeUninstalled(): bool
-	{
-		if (!is_null($this->bCanBeUninstalled)) {
-			return $this->bCanBeUninstalled;
-		}
-		foreach ($this->aModuleInfo as $sModuleCode => $aModuleInfo) {
-			$this->bCanBeUninstalled = $aModuleInfo['uninstallable'] === 'yes';
-			return $this->bCanBeUninstalled;
-		}
-		return true;
-	}
-}
 
 /**
  * Helper class to discover all available extensions on a given iTop system
@@ -148,49 +16,80 @@ class iTopExtensionsMap
 {
 	/**
 	 * The list of all discovered extensions
-	 * @param string $sFromEnvironment The environment to scan
-	 * @param bool $bNormailizeOldExtension true to "magically" convert some well-known old extensions (i.e. a set of modules) to the new iTopExtension format
-	 * @return void
+	 *  @var array $aExtensions
 	 */
 	protected $aExtensions;
 	/**
 	 * The list of all currently installed extensions
-	 * @var array|null
+	 * @var array $aInstalledExtensions
 	 */
-	protected ?array $aInstalledExtensions = null;
+	protected array $aInstalledExtensions;
 
+	protected array $aExtensionsByCode;
 	/**
 	 * The list of directories browsed using the ReadDir method when building the map
 	 * @var string[]
 	 */
 	protected $aScannedDirs;
 
-	public function __construct($sFromEnvironment = 'production', $aExtraDirs = [])
+	/** @var bool $bHasXmlInstallationFile : false when legacy 1.x package with no installation.xml */
+	protected $bHasXmlInstallationFile = true;
+
+	//extension dirs apart from package
+	protected array $aExtraDirs = [];
+
+	/**
+	 * The list of all discovered extensions
+	 *
+	 * @param string $sFromEnvironment The environment to scan
+	 * @param array $aExtraDirs extensions dir to scan
+	 * @param array $aExtraDirs extensions dir to scan
+	 *  @param string|null $sAppRootForTests
+	 *
+	 * @return void
+	 */
+	public function __construct(string $sFromEnvironment = ITOP_DEFAULT_ENV, array $aExtraDirs = [], ?string $sAppRootForTests = null)
 	{
 		$this->aExtensions = [];
+		$this->aExtensionsByCode = [];
 		$this->aScannedDirs = [];
-		$this->ScanDisk($sFromEnvironment);
+
+		$sAppRoot = $sAppRootForTests ?? APPROOT;
+		$this->ScanDisk($sFromEnvironment, $sAppRoot);
+
+		$this->aExtraDirs = $aExtraDirs;
+		if (is_dir($sAppRoot.'extensions')) {
+			$this->aExtraDirs [] = $sAppRoot.'extensions';
+		}
+		if (is_dir($sAppRoot.'data/'.$sFromEnvironment.'-modules')) {
+			$this->aExtraDirs [] = $sAppRoot.'data/'.$sFromEnvironment.'-modules';
+		}
+
 		foreach ($aExtraDirs as $sDir) {
 			$this->ReadDir($sDir, iTopExtension::SOURCE_REMOTE);
 		}
-		$this->CheckDependencies($sFromEnvironment);
+		$this->CheckDependencies($sAppRoot);
 	}
 
 	/**
 	 * Populate the list of available (pseudo)extensions by scanning the disk
 	 * where the iTop files are located
 	 * @param string $sEnvironment
+	 * @param string $sAppRoot
 	 * @return void
 	 */
-	protected function ScanDisk($sEnvironment)
+	protected function ScanDisk($sEnvironment, string $sAppRoot)
 	{
-		if (!$this->ReadInstallationWizard(APPROOT.'/datamodels/2.x') && !$this->ReadInstallationWizard(APPROOT.'/datamodels/2.x')) {
-			if (!$this->ReadDir(APPROOT.'/datamodels/2.x', iTopExtension::SOURCE_WIZARD)) {
-				$this->ReadDir(APPROOT.'/datamodels/1.x', iTopExtension::SOURCE_WIZARD);
+		if (!$this->ReadInstallationWizard($sAppRoot.'/datamodels/2.x')) {
+			$this->bHasXmlInstallationFile = false;
+			//no installation xml found in 2.x: let's read all extensions in 2.x first
+			if (!$this->ReadDir($sAppRoot.'datamodels/2.x', iTopExtension::SOURCE_WIZARD)) {
+				//nothing found in 2.x : fallback read in 1.x (flat structure)
+				$this->ReadDir($sAppRoot.'datamodels/1.x', iTopExtension::SOURCE_WIZARD);
 			}
 		}
-		$this->ReadDir(APPROOT.'/extensions', iTopExtension::SOURCE_MANUAL);
-		$this->ReadDir(APPROOT.'/data/'.$sEnvironment.'-modules', iTopExtension::SOURCE_REMOTE);
+		$this->ReadDir($sAppRoot.'extensions', iTopExtension::SOURCE_MANUAL);
+		$this->ReadDir($sAppRoot.'data/'.$sEnvironment.'-modules', iTopExtension::SOURCE_REMOTE);
 	}
 
 	/**
@@ -205,41 +104,86 @@ class iTopExtensionsMap
 			return false;
 		}
 
+		$aModuleConfigs = [];
+		$this->ListModuleFiles(basename($sDir), dirname($sDir), $aModuleConfigs);
+
 		$oXml = new XMLParameters($sDir.'/installation.xml');
 		foreach ($oXml->Get('steps') as $aStepInfo) {
 			if (array_key_exists('options', $aStepInfo)) {
-				$this->ProcessWizardChoices($aStepInfo['options']);
+				$this->ProcessWizardChoices($aStepInfo['options'], $aModuleConfigs);
 			}
 			if (array_key_exists('alternatives', $aStepInfo)) {
-				$this->ProcessWizardChoices($aStepInfo['alternatives']);
+				$this->ProcessWizardChoices($aStepInfo['alternatives'], $aModuleConfigs);
 			}
 		}
+
 		return true;
+	}
+
+	private function ListModuleFiles(string $sRelDir, string $sRootDir, array &$aRes): void
+	{
+		$sDirectory = $sRootDir.'/'.$sRelDir;
+
+		if ($hDir = opendir($sDirectory)) {
+			// This is the correct way to loop over the directory. (according to the documentation)
+			while (($sFile = readdir($hDir)) !== false) {
+				$aMatches = [];
+				if (is_dir($sDirectory.'/'.$sFile)) {
+					if (($sFile != '.') && ($sFile != '..') && ($sFile != '.svn') && ($sFile != 'vendor')) {
+						$this->ListModuleFiles($sRelDir.'/'.$sFile, $sRootDir, $aRes);
+					}
+				} elseif (preg_match('/^module\.(.*).php$/i', $sFile, $aMatches)) {
+					try {
+						$aModuleInfo = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sDirectory.'/'.$sFile);
+						$sModuleId = $aModuleInfo[ModuleFileReader::MODULE_INFO_ID];
+						list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+						$aModuleConfig = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG];
+						$aModuleConfig['module_version'] = $sModuleVersion;
+						$aRes[$sModuleName] = $aModuleConfig;
+					} catch (ModuleFileReaderException $e) {
+						continue;
+					}
+				}
+			}
+			closedir($hDir);
+		}
 	}
 
 	/**
 	 * Helper to process a "choice" array read from the installation.xml file
 	 * @param array $aChoices
+	 * @param array $aModuleConfigs
 	 * @return void
 	 */
-	protected function ProcessWizardChoices($aChoices)
+	protected function ProcessWizardChoices($aChoices, $aModuleConfigs)
 	{
 		foreach ($aChoices as $aChoiceInfo) {
 			if (array_key_exists('extension_code', $aChoiceInfo)) {
 				$oExtension = new iTopExtension();
 				$oExtension->sCode = $aChoiceInfo['extension_code'];
+				$oExtension->bCanBeUninstalled = !isset($aChoiceInfo['uninstallable']) || $aChoiceInfo['uninstallable'] === 'yes';
 				$oExtension->sLabel = $aChoiceInfo['title'];
 				$oExtension->sDescription = $aChoiceInfo['description'];
 				if (array_key_exists('modules', $aChoiceInfo)) {
 					// Some wizard choices are not associated with any module
 					$oExtension->aModules = $aChoiceInfo['modules'];
+					foreach ($oExtension->aModules as $sModuleName) {
+						$aCurrentModuleConfig = $aModuleConfigs[$sModuleName] ?? null;
+						if (is_null($aCurrentModuleConfig)) {
+							IssueLog::Debug("Installation choice comes with missing module file", null, ["choice" => $oExtension->sCode, 'module' => $sModuleName]);
+							continue;
+						}
+						$oExtension->aModuleVersion[$sModuleName] = $aCurrentModuleConfig['module_version'];
+						unset($aCurrentModuleConfig['module_version']);
+						$oExtension->aModuleInfo[$sModuleName] = $aCurrentModuleConfig;
+					}
 				}
 				if (array_key_exists('sub_options', $aChoiceInfo)) {
 					if (array_key_exists('options', $aChoiceInfo['sub_options'])) {
-						$this->ProcessWizardChoices($aChoiceInfo['sub_options']['options']);
+						$this->ProcessWizardChoices($aChoiceInfo['sub_options']['options'], $aModuleConfigs);
 					}
 					if (array_key_exists('alternatives', $aChoiceInfo['sub_options'])) {
-						$this->ProcessWizardChoices($aChoiceInfo['sub_options']['alternatives']);
+						$this->ProcessWizardChoices($aChoiceInfo['sub_options']['alternatives'], $aModuleConfigs);
 					}
 				}
 				$this->AddExtension($oExtension);
@@ -261,6 +205,7 @@ class iTopExtensionsMap
 					// This "new" extension is "newer" than the previous one, let's replace the previous one
 					unset($this->aExtensions[$key]);
 					$this->aExtensions[$oNewExtension->sCode.'/'.$oNewExtension->sVersion] = $oNewExtension;
+					$this->aExtensionsByCode[$oNewExtension->sCode] = $oNewExtension;
 					return;
 				} else {
 					// This "new" extension is not "newer" than the previous one, let's ignore it
@@ -270,6 +215,22 @@ class iTopExtensionsMap
 		}
 		// Finally it's not a duplicate, let's add it to the list
 		$this->aExtensions[$oNewExtension->sCode.'/'.$oNewExtension->sVersion] = $oNewExtension;
+		$this->aExtensionsByCode[$oNewExtension->sCode] = $oNewExtension;
+	}
+
+	public function RemoveExtension(string $sCode): void
+	{
+		$oExtension = $this->GetFromExtensionCode($sCode);
+		if (is_null($oExtension)) {
+			\IssueLog::Error(__METHOD__.": cannot find extension to remove", null, [$sCode]);
+
+			return;
+		}
+
+		\IssueLog::Debug(__METHOD__.": remove extension from map", null, [$oExtension->sCode => $oExtension->sSourceDir]);
+
+		unset($this->aExtensions[$oExtension->sCode.'/'.$oExtension->sVersion]);
+		unset($this->aExtensionsByCode[$sCode]);
 	}
 
 	/**
@@ -280,12 +241,28 @@ class iTopExtensionsMap
 	 */
 	public function GetFromExtensionCode(string $sExtensionCode): ?iTopExtension
 	{
-		foreach ($this->aExtensions as $oExtension) {
-			if ($oExtension->sCode === $sExtensionCode) {
-				return $oExtension;
+		return $this->aExtensionsByCode[$sExtensionCode] ?? null;
+	}
+
+	/**
+	* @param array<string> $aExtensionCodes
+	* @return void
+	*/
+	public function DeclareExtensionAsRemoved(array $aExtensionCodes): void
+	{
+		$aRemovedExtension = [];
+		foreach ($aExtensionCodes as $sCode) {
+			/** @var \iTopExtension $oExtension */
+			$oExtension = $this->GetFromExtensionCode($sCode);
+			if (!is_null($oExtension)) {
+				$aRemovedExtension [] = $oExtension;
+				\IssueLog::Debug(__METHOD__.": remove extension locally", null, ['extension_code' => $oExtension->sCode]);
+			} else {
+				\IssueLog::Warning(__METHOD__." cannot find extensions", null, ['code' => $sCode]);
 			}
 		}
-		return null;
+
+		ModuleDiscovery::DeclareRemovedExtensions($aRemovedExtension);
 	}
 
 	/**
@@ -346,19 +323,15 @@ class iTopExtensionsMap
 						// to this extension
 						$sModuleId = $aModuleInfo[ModuleFileReader::MODULE_INFO_ID];
 						list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
-						if ($sModuleVersion == '') {
-							// Provide a default module version since version is mandatory when recording ExtensionInstallation
-							$sModuleVersion = '0.0.1';
-						}
 						$aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['uninstallable'] ??= 'yes';
 
-						if (($sParentExtensionId !== null) && (array_key_exists($sParentExtensionId, $this->aExtensions)) && ($this->aExtensions[$sParentExtensionId] instanceof iTopExtension)) {
-							// Already inside an extension, let's add this module the list of modules belonging to this extension
-							$this->aExtensions[$sParentExtensionId]->aModules[] = $sModuleName;
-							$this->aExtensions[$sParentExtensionId]->aModuleVersion[$sModuleName] = $sModuleVersion;
-							$this->aExtensions[$sParentExtensionId]->aModuleInfo[$sModuleName] = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG];
-						} else {
-							// Not already inside a folder containing an 'extension.xml' file
+						$oExtension = null;
+						if ($sParentExtensionId !== null) {
+							$oExtension = $this->aExtensions[$sParentExtensionId] ?? null;
+						}
+
+						if (is_null($oExtension)) {
+							// Not already inside an folder containing an 'extension.xml' file
 
 							// Ignore non-visible modules and auto-select ones, since these are never prompted
 							// as a choice to the end-user
@@ -382,6 +355,13 @@ class iTopExtensionsMap
 							$oExtension->sSourceDir = $sSearchDir;
 							$oExtension->bVisible = $bVisible;
 							$this->AddExtension($oExtension);
+						} else {
+							$oExtension->aModules[] = $sModuleName;
+							$oExtension->aModuleVersion[$sModuleName] = $sModuleVersion;
+							$oExtension->aModuleInfo[$sModuleName] = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG];
+
+							$this->aExtensions[$sParentExtensionId] = $oExtension;
+							$this->aExtensionsByCode[$oExtension->sCode] = $oExtension;
 						}
 
 						closedir($hDir);
@@ -401,24 +381,113 @@ class iTopExtensionsMap
 	}
 
 	/**
+	 * Return the list of extensions found in a given directory (not recursively)
+	 *
+	 * @param string $sSearchDir The directory to scan
+	 *
+	 * @return string[]|bool
+	 */
+	public function GetExtensionsFromDir(string $sSearchDir): array|bool
+	{
+		if (!is_readable($sSearchDir)) {
+			return false;
+		}
+
+		$aExtensions = [];
+		$hDir = opendir($sSearchDir);
+		if ($hDir !== false) {
+
+			// Then scan the other files and subdirectories
+			while (($sDir = readdir($hDir)) !== false) {
+				if (($sDir === '.') || ($sDir === '..') || !is_dir($sSearchDir.$sDir)) {
+					continue;
+				}
+
+				// First check if there is an extension.xml file in this directory
+				if (is_readable($sSearchDir.$sDir.'/extension.xml')) {
+					$oXml = new XMLParameters($sSearchDir.$sDir.'/extension.xml');
+					$aExtensions[$oXml->Get('extension_code')] = $oXml->Get('label');
+				}
+			}
+
+			closedir($hDir);
+		}
+
+		return $aExtensions;
+	}
+
+	/**
+	 * Read (recursively) a directory to find if it contains extensions (or modules)
+	 *
+	 * @param string $sSearchDir The directory to scan
+	 *
+	 * @return string[] list of modules
+	 * @throws \CoreException
+	 */
+	public function GetModulesFromDir(string $sSearchDir): array
+	{
+		if (!is_readable($sSearchDir)) {
+			throw new CoreException("Cannot read directory: $sSearchDir");
+		}
+
+		$aModules = [];
+		$hDir = opendir($sSearchDir);
+		if ($hDir === false) {
+			throw new CoreException("Cannot open directory: $sSearchDir");
+		}
+
+		$aSubDirectories = [];
+		// Then scan the other files and subdirectories
+		while (($sFile = readdir($hDir)) !== false) {
+			if (($sFile !== '.') && ($sFile !== '..')) {
+				$aMatches = [];
+				if (is_dir($sSearchDir.'/'.$sFile)) {
+					// Recurse after parsing all the regular files
+					$aSubDirectories[] = $sSearchDir.'/'.$sFile;
+				} elseif (preg_match('/^module\.(.*).php$/i', $sFile)) {
+					// Found a module
+					try {
+						$aModuleInfo = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sSearchDir.'/'.$sFile);
+					} catch (ModuleFileReaderException $e) {
+						throw new CoreException("Cannot read module file: $sFile", oPrevious: $e);
+					}
+					$sModuleId = $aModuleInfo[ModuleFileReader::MODULE_INFO_ID];
+					[$sModuleName] = ModuleDiscovery::GetModuleName($sModuleId);
+					$aModules[$sModuleName] = $sModuleName;
+				}
+			}
+		}
+		closedir($hDir);
+		foreach ($aSubDirectories as $sDir) {
+			// Recurse inside the subdirectories
+			$aSubModules = $this->GetModulesFromDir($sDir);
+			$aModules = array_merge($aModules, $aSubModules);
+		}
+
+		return $aModules;
+	}
+
+	/**
 	 * Check if some extension contains a module with missing dependencies...
 	 * If so, populate the aMissingDepenencies array
-	 * @param string $sFromEnvironment
+	 *
+	 * @param string $sAppRoot
+	 *
 	 * @return void
+	 * @throws \Exception
 	 */
-	protected function CheckDependencies($sFromEnvironment)
+	protected function CheckDependencies(string $sAppRoot)
 	{
 		$aSearchDirs = [];
 
-		if (is_dir(APPROOT.'/datamodels/2.x')) {
-			$aSearchDirs[] = APPROOT.'/datamodels/2.x';
-		} elseif (is_dir(APPROOT.'/datamodels/1.x')) {
-			$aSearchDirs[] = APPROOT.'/datamodels/1.x';
+		if (is_dir($sAppRoot.'/datamodels/2.x')) {
+			$aSearchDirs[] = $sAppRoot.'/datamodels/2.x';
+		} elseif (is_dir($sAppRoot.'/datamodels/1.x')) {
+			$aSearchDirs[] = $sAppRoot.'/datamodels/1.x';
 		}
 		$aSearchDirs = array_merge($aSearchDirs, $this->aScannedDirs);
-
 		try {
-			$aAllModules = ModuleDiscovery::GetAvailableModules($aSearchDirs, true);
+			ModuleDiscovery::GetModulesOrderedByDependencies($aSearchDirs, true);
 		} catch (MissingDependencyException $e) {
 			// Some modules have missing dependencies
 			// Let's check what is the impact at the "extensions" level
@@ -459,6 +528,65 @@ class iTopExtensionsMap
 	}
 
 	/**
+	 * @param bool $bKeepExtensionsHavingMissingDependencies
+	 * @param bool $bRemoteExtensionsShouldBeMandatory
+	 *
+	 * @return \iTopExtension[]
+	 */
+	public function GetAllExtensionsToDisplayInSetup(bool $bKeepExtensionsHavingMissingDependencies = false, bool $bRemoteExtensionsShouldBeMandatory = true): array
+	{
+		// all extensions are loaded at first screen when no installation xml: flat display
+		//otherwhile wizard screen displays choice screens along extension tree (cf installation.xml)
+		$aRes = [];
+		foreach ($this->GetAllExtensionsWithPreviouslyInstalled() as $oExtension) {
+			/** @var \iTopExtension $oExtension */
+			if (! $oExtension->bVisible) {
+				//skip hidden extensions
+				continue;
+			}
+
+			if ($this->bHasXmlInstallationFile && $oExtension->sSource === iTopExtension::SOURCE_WIZARD) {
+				//skip extensions handled in installation previous choice screens (defined in installation.xml)
+				continue;
+			}
+
+			if (! $bKeepExtensionsHavingMissingDependencies && count($oExtension->aMissingDependencies) > 0) {
+				//skip extensions with dependency issues
+				continue;
+			}
+
+			if (!$oExtension->bMandatory && $bRemoteExtensionsShouldBeMandatory) {
+				$oExtension->bMandatory = ($oExtension->sSource === iTopExtension::SOURCE_REMOTE);
+			}
+			$aRes[$oExtension->sCode] = $oExtension;
+		}
+
+		return $aRes;
+	}
+
+	public function GetAllExtensionsOptionInfo(bool $bRemoteExtensionsShouldBeMandatory = true): array
+	{
+		$aRes = [];
+		foreach ($this->GetAllExtensionsToDisplayInSetup(false, $bRemoteExtensionsShouldBeMandatory) as $sCode => $oExtension) {
+			$aRes[] = [
+				'extension_code' => $oExtension->sCode,
+				'title'          => $oExtension->sLabel,
+				'description'    => $oExtension->sDescription,
+				'more_info'      => $oExtension->sMoreInfoUrl,
+				'default'        => true, // by default offer to install all modules
+				'modules'        => $oExtension->aModules,
+				'mandatory'      => $oExtension->bMandatory,
+				'source_label'   => $oExtension->GetExtensionSourceLabel(),
+				'uninstallable'  => $oExtension->CanBeUninstalled(),
+				'missing'        => $oExtension->bRemovedFromDisk,
+				'version'        => $oExtension->sVersion,
+			];
+		}
+
+		return $aRes;
+	}
+
+	/**
 	 * Mark the given extension as chosen
 	 * @param string $sExtensionCode The code of the extension (code without version number)
 	 * @param bool $bMark The value to set for the bMarkAsChosen flag
@@ -466,11 +594,9 @@ class iTopExtensionsMap
 	 */
 	public function MarkAsChosen($sExtensionCode, $bMark = true)
 	{
-		foreach ($this->aExtensions as $oExtension) {
-			if ($oExtension->sCode == $sExtensionCode) {
-				$oExtension->bMarkedAsChosen = $bMark;
-				break;
-			}
+		$oExtension = $this->GetFromExtensionCode($sExtensionCode);
+		if (!is_null($oExtension)) {
+			$oExtension->bMarkedAsChosen = $bMark;
 		}
 	}
 
@@ -481,11 +607,11 @@ class iTopExtensionsMap
 	 */
 	public function IsMarkedAsChosen($sExtensionCode)
 	{
-		foreach ($this->aExtensions as $oExtension) {
-			if ($oExtension->sCode == $sExtensionCode) {
-				return $oExtension->bMarkedAsChosen;
-			}
+		$oExtension = $this->GetFromExtensionCode($sExtensionCode);
+		if (!is_null($oExtension)) {
+			return $oExtension->bMarkedAsChosen;
 		}
+
 		return false;
 	}
 
@@ -497,11 +623,9 @@ class iTopExtensionsMap
 	 */
 	protected function SetInstalledVersion($sExtensionCode, $sInstalledVersion)
 	{
-		foreach ($this->aExtensions as $oExtension) {
-			if ($oExtension->sCode == $sExtensionCode) {
-				$oExtension->sInstalledVersion = $sInstalledVersion;
-				break;
-			}
+		$oExtension = $this->GetFromExtensionCode($sExtensionCode);
+		if (!is_null($oExtension)) {
+			$oExtension->sInstalledVersion = $sInstalledVersion;
 		}
 	}
 
@@ -527,14 +651,19 @@ class iTopExtensionsMap
 	 */
 	public function LoadChoicesFromDatabase(Config $oConfig)
 	{
-		foreach ($this->LoadInstalledExtensionsFromDatabase($oConfig) as $oExtension) {
+		$aLoadInstalledExtensionsFromDatabase = $this->LoadInstalledExtensionsFromDatabase($oConfig);
+		if (false === $aLoadInstalledExtensionsFromDatabase) {
+			return false;
+		}
+
+		foreach ($aLoadInstalledExtensionsFromDatabase as $oExtension) {
 			$this->MarkAsChosen($oExtension->sCode);
 			$this->SetInstalledVersion($oExtension->sCode, $oExtension->sVersion);
 		}
 		return true;
 	}
 
-	protected function LoadInstalledExtensionsFromDatabase(Config $oConfig): array|false
+	public function LoadInstalledExtensionsFromDatabase(Config $oConfig): array|false
 	{
 		try {
 			if (CMDBSource::DBName() === null) {
@@ -577,6 +706,51 @@ class iTopExtensionsMap
 		}
 	}
 
+	public static function GetChoicesFromDatabase(Config $oConfig): array|false
+	{
+		try {
+			if (CMDBSource::DBName() === null) {
+				CMDBSource::InitFromConfig($oConfig);
+			}
+			$sLatestInstallationDate = CMDBSource::QueryToScalar("SELECT max(installed) FROM ".$oConfig->Get('db_subname')."priv_extension_install");
+			$aDBInfo = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_extension_install WHERE installed = '".$sLatestInstallationDate."'");
+
+			$aChoices = [];
+			foreach ($aDBInfo as $aExtensionInfo) {
+				$aChoices[] = $aExtensionInfo['code'];
+			}
+
+			return $aChoices;
+		} catch (MySQLException $e) {
+			// No database or erroneous information
+			return false;
+		}
+	}
+
+	/**
+	 * Return list of extensions  (ie installation choices + added - removed)
+* @param string[] $aAddedExtensions
+* @param string[] $aRemovedExtensions
+* @return string[] :
+	 */
+	public function GetSelectedExtensions(Config $oConfig, array $aAddedExtensions, array $aRemovedExtensions): array
+	{
+		$aDbChoices = self::GetChoicesFromDatabase($oConfig);
+
+		foreach ($aDbChoices as $i => $sChoice) {
+			if (in_array($sChoice, $aRemovedExtensions)) {
+				unset($aDbChoices[$i]);
+			}
+		}
+
+		return array_merge($aDbChoices, $aAddedExtensions);
+	}
+
+	public function GetExtraDirs(): array
+	{
+		return $this->aExtraDirs;
+	}
+
 	/**
 	 * Tells if the given module name is "chosen" since it is part of a "chosen" extension (in the specified source dir)
 	 * @param string $sModuleNameToFind
@@ -585,8 +759,6 @@ class iTopExtensionsMap
 	 */
 	public function ModuleIsChosenAsPartOfAnExtension($sModuleNameToFind, $sInSourceOnly = iTopExtension::SOURCE_REMOTE)
 	{
-		$bChosen = false;
-
 		foreach ($this->GetAllExtensions() as $oExtension) {
 			if (($oExtension->sSource == $sInSourceOnly) &&
 				($oExtension->bMarkedAsChosen == true) &&

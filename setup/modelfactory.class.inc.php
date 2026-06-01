@@ -308,18 +308,20 @@ class MFModule
 	{
 		$aDictionaries = [];
 		foreach ([$this->sRootDir, $this->sRootDir.'/dictionaries'] as $sRootDir) {
-			if ($hDir = @opendir($sRootDir)) {
-				while (($sFile = readdir($hDir)) !== false) {
-					$aMatches = [];
-					if (preg_match(
-						"/^[^\\.]+.dict.".$this->sName.'.php$/i',
-						$sFile,
-						$aMatches
-					)) { // Dictionary files are named like <Lang>.dict.<ModuleName>.php
-						$aDictionaries[] = $sRootDir.'/'.$sFile;
+			if (is_dir($sRootDir)) {
+				if ($hDir = @opendir($sRootDir)) {
+					while (($sFile = readdir($hDir)) !== false) {
+						$aMatches = [];
+						if (preg_match(
+							"/^[^\\.]+.dict.".$this->sName.'.php$/i',
+							$sFile,
+							$aMatches
+						)) { // Dictionary files are named like <Lang>.dict.<ModuleName>.php
+							$aDictionaries[] = $sRootDir.'/'.$sFile;
+						}
 					}
+					closedir($hDir);
 				}
-				closedir($hDir);
 			}
 		}
 
@@ -1071,15 +1073,23 @@ class ModelFactory
 	 */
 	public function LoadModule(MFModule $oModule, $aLanguages = [])
 	{
+		$sRootDir = null;
+		$sModuleName = null;
+		$sModuleVersion = null;
+
 		try {
-			$aDataModels = $oModule->GetDataModelFiles();
+			$sRootDir = $oModule->GetRootDir();
+			$sModuleVersion = $oModule->GetVersion();
 			$sModuleName = $oModule->GetName();
+			SetupLog::Debug("Loading module", null, [ $sModuleName, $sModuleVersion, $sRootDir]);
+			$aDataModels = $oModule->GetDataModelFiles();
+
 			self::$aLoadedModules[] = $oModule;
 
 			// For persistence in the cache
 			$oModuleNode = $this->oDOMDocument->CreateElement('module');
 			$oModuleNode->setAttribute('id', $oModule->GetId());
-			$oModuleNode->appendChild($this->oDOMDocument->CreateElement('root_dir', $oModule->GetRootDir()));
+			$oModuleNode->appendChild($this->oDOMDocument->CreateElement('root_dir', $sRootDir));
 			$oModuleNode->appendChild($this->oDOMDocument->CreateElement('label', $oModule->GetLabel()));
 
 			$oModules = $this->oRoot->getElementsByTagName('loaded_modules')->item(0);
@@ -1168,6 +1178,7 @@ class ModelFactory
 					]);
 			}
 		} catch (Exception $e) {
+			SetupLog::Exception("Cannot load module", $e, null, [ $sModuleName, $sModuleVersion, $sRootDir]);
 			$aLoadedModuleNames = [];
 			foreach (self::$aLoadedModules as $oLoadedModule) {
 				$aLoadedModuleNames[] = $oLoadedModule->GetName().':'.$oLoadedModule->GetVersion();
@@ -1277,7 +1288,7 @@ class ModelFactory
 		if ($bExcludeWorkspace) {
 			$aModules = [];
 			foreach (self::$aLoadedModules as $oModule) {
-				if (!$oModule instanceof MFWorkspace) {
+				if (!class_exists('MFWorkspace') || !$oModule instanceof MFWorkspace) {
 					$aModules[] = $oModule;
 				}
 			}
@@ -1801,7 +1812,7 @@ EOF
 	 */
 	public function FindModules()
 	{
-		$aAvailableModules = ModuleDiscovery::GetAvailableModules($this->aRootDirs);
+		$aAvailableModules = ModuleDiscovery::GetModulesOrderedByDependencies($this->aRootDirs);
 		$aResult = [];
 		foreach ($aAvailableModules as $sId => $aModule) {
 			$oModule = new MFModule($sId, $aModule['root_dir'], $aModule['label'], isset($aModule['auto_select']));
@@ -2146,8 +2157,8 @@ EOF;
 	}
 
 	/**
-	 * Combination of AddChildNode or RedefineChildNode... it depends
-	 * This should become the preferred way of doing things (instead of implementing a test + the call to one of the APIs!
+	 * Combination of AddChildNode or RedefineChildNode... it depends on existing nodes
+	 * This should become the preferred way of doing things (instead of implementing a test and the call to one of the APIs!)
 	 *
 	 * @param MFElement $oNode The node (including all subnodes) to set
 	 * @param string $sSearchId Optional Id of the node to SearchMenuNode

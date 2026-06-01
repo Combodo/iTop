@@ -7,15 +7,16 @@ use CoreException;
 use Exception;
 use ParseError;
 use PhpParser\Error;
+use PhpParser\Node\Arg;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Scalar\String_;
+use PhpParser\Node\Stmt\ElseIf_;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\If_;
 use PhpParser\ParserFactory;
-use PhpParser\Node\Expr\Assign;
-use PhpParser\Node\Stmt\ElseIf_;
-use PhpParser\Node\Expr\Array_;
-use PhpParser\Node\Scalar\String_;
-use PhpParser\Node\Arg;
+use SetupLog;
 
 require_once __DIR__.'/ModuleFileReaderException.php';
 require_once APPROOT.'sources/PhpParser/Evaluation/PhpExpressionEvaluator.php';
@@ -36,9 +37,14 @@ class ModuleFileReader
 	public const MODULE_INFO_PATH = 0;
 	public const MODULE_INFO_ID = 1;
 	public const MODULE_INFO_CONFIG = 2;
+	public const MODULE_FILE_PATH = "module_file_path";
 
 	public const STATIC_CALLWHITELIST = [
 		"utils::GetItopVersionWikiSyntax",
+	];
+
+	public const STATIC_CALL_AUTOSELECT_WHITELIST = [
+		"SetupInfo::ModuleIsSelected",
 	];
 
 	protected function __construct()
@@ -48,21 +54,23 @@ class ModuleFileReader
 
 	final public static function GetInstance(): ModuleFileReader
 	{
-		if (!isset(static::$oInstance)) {
-			static::$oInstance = new static();
+		if (!isset(self::$oInstance)) {
+			self::$oInstance = new ModuleFileReader();
 		}
 
-		return static::$oInstance;
+		return self::$oInstance;
 	}
 
 	final public static function SetInstance(?ModuleFileReader $oInstance): void
 	{
-		static::$oInstance = $oInstance;
+		self::$oInstance = $oInstance;
 	}
 
 	/**
 	 * Read the information from a module file (module.xxx.php)
-	 * @param string $sModuleFile
+	 *
+	 * @param string $sModuleFilePath
+	 *
 	 * @return array
 	 * @throws ModuleFileReaderException
 	 */
@@ -108,7 +116,9 @@ class ModuleFileReader
 	 * Read the information from a module file (module.xxx.php)
 	 * Warning: this method is using eval() function to load the ModuleInstallerAPI classes.
 	 * Current method is never called at design/runtime. It is acceptable to use it during setup only.
-	 * @param string $sModuleFile
+	 *
+	 * @param string $sModuleFilePath
+	 *
 	 * @return array
 	 * @throws ModuleFileReaderException
 	 */
@@ -134,6 +144,7 @@ class ModuleFileReader
 			}
 			// Replace the main function call by an assignment to a variable, as an array...
 			$sModuleFileContents = str_replace(['SetupWebPage::AddModule', 'ModuleDiscovery::AddModule'], '$aModuleInfo = array', $sModuleFileContents);
+			SetupLog::Debug(__METHOD__, null, ['module_file' => $sModuleFilePath]);
 			eval($sModuleFileContents); // Assigns $aModuleInfo
 
 			if (count($aModuleInfo) === 0) {
@@ -164,7 +175,7 @@ class ModuleFileReader
 	private function CompleteModuleInfoWithFilePath(array &$aModuleInfo)
 	{
 		if (count($aModuleInfo) == 3) {
-			$aModuleInfo[static::MODULE_INFO_CONFIG]['module_file_path'] = $aModuleInfo[static::MODULE_INFO_PATH];
+			$aModuleInfo[static::MODULE_INFO_CONFIG][self::MODULE_FILE_PATH] = $aModuleInfo[static::MODULE_INFO_PATH];
 		}
 	}
 
@@ -175,15 +186,21 @@ class ModuleFileReader
 		}
 
 		$sModuleInstallerClass = $aModuleInfo['installer'];
+		if (strlen($sModuleInstallerClass) === 0) {
+			return null;
+		}
+
 		if (!class_exists($sModuleInstallerClass)) {
-			$sModuleFilePath = $aModuleInfo['module_file_path'];
+			$sModuleFilePath = $aModuleInfo[self::MODULE_FILE_PATH];
 			$this->ReadModuleFileInformationUnsafe($sModuleFilePath);
 		}
 
 		if (!class_exists($sModuleInstallerClass)) {
+			\IssueLog::Error(__METHOD__, null, $aModuleInfo);
 			throw new CoreException("Wrong installer class: '$sModuleInstallerClass' is not a PHP class - Module: ".$aModuleInfo['label']);
 		}
 		if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI')) {
+			\IssueLog::Error(__METHOD__, null, $aModuleInfo);
 			throw new CoreException("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aModuleInfo['label']);
 		}
 
@@ -192,7 +209,7 @@ class ModuleFileReader
 
 	/**
 	 * @param string $sModuleFilePath
-	 * @param \PhpParser\Node\Expr\Assign $oAssignation
+	 * @param \PhpParser\Node\Stmt\Expression $oExpression
 	 *
 	 * @return array|null
 	 * @throws ModuleFileReaderException

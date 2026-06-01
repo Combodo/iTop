@@ -22,6 +22,8 @@ use Combodo\iTop\Application\EventRegister\ApplicationEvents;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
+use Combodo\iTop\Setup\ModuleDependency\Module;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 
 require_once APPROOT.'core/modulehandler.class.inc.php';
 require_once APPROOT.'core/querymodifier.class.inc.php';
@@ -128,7 +130,7 @@ abstract class MetaModel
 	/** @var array */
 	private static $m_aClassToFile = [];
 	/** @var string */
-	protected static $m_sEnvironment = 'production';
+	protected static $m_sEnvironment = ITOP_DEFAULT_ENV;
 
 	/**
 	 * Objects currently created/updated.
@@ -460,6 +462,43 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 
 		return call_user_func([$sClass, 'GetClassDescription'], $sClass);
+	}
+
+	/**
+	 * @param string $sClass
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 */
+	final public static function GetModuleName($sClass)
+	{
+		try {
+			$oReflectionClass = new ReflectionClass($sClass);
+			$sDir = realpath(dirname($oReflectionClass->getFileName()));
+			$sApproot = realpath(APPROOT);
+			while (($sDir !== $sApproot) && (str_contains($sDir, $sApproot))) {
+				$aFiles = glob("$sDir/module.*.php");
+				if (count($aFiles) > 1) {
+					return 'core';
+				}
+
+				if (count($aFiles) == 0) {
+					$sDir = realpath(dirname($sDir));
+					continue;
+				}
+
+				$sModuleFilePath = $aFiles[0];
+				$aModuleInfo = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
+				$sModuleId = $aModuleInfo[ModuleFileReader::MODULE_INFO_ID];
+				list($sModuleName, ) = ModuleDiscovery::GetModuleName($sModuleId);
+
+				return $sModuleName;
+			}
+		} catch (\Exception $e) {
+			throw new CoreException("Cannot find class module", ['class' => $sClass], '', $e);
+		}
+
+		return 'core';
 	}
 
 	/**
@@ -5709,7 +5748,7 @@ abstract class MetaModel
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \Exception
 	 */
-	public static function Startup($config, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false, $sEnvironment = 'production')
+	public static function Startup($config, $bModelOnly = false, $bAllowCache = true, $bTraceSourceFiles = false, $sEnvironment = ITOP_DEFAULT_ENV)
 	{
 		// Startup on a new environment is not supported
 		static $bStarted = false;

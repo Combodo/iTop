@@ -5108,8 +5108,8 @@ abstract class DBObject implements iDisplay
 	protected function GetReferencingObjectsForDeletion($bAllowAllData = false)
 	{
 		$aDependentObjects = [];
-		$aRererencingMe = MetaModel::EnumReferencingClasses(get_class($this));
-		foreach ($aRererencingMe as $sRemoteClass => $aExtKeys) {
+		$aReferencingMe = MetaModel::EnumReferencingClasses(get_class($this));
+		foreach ($aReferencingMe as $sRemoteClass => $aExtKeys) {
 			/** @var \AttributeExternalKey $oExtKeyAttDef */
 			foreach ($aExtKeys as $sExtKeyAttCode => $oExtKeyAttDef) {
 				// skip if external key doesn't require the deletion cascading

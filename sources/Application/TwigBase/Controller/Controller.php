@@ -127,6 +127,7 @@ abstract class Controller extends AbstractController
 	 */
 	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [], array $aThemes = ['application/forms/itop_console_layout.html.twig', 'application/forms/wip_form_demonstrator.html.twig'])
 	{
+		IssueLog::Enable(APPROOT.'log/error.log');
 		$this->aLinkedScripts = [];
 		$this->aLinkedStylesheets = [];
 		$this->aSaas = [];

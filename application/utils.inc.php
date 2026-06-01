@@ -284,9 +284,7 @@ class utils
 		}
 		// Read and record the value for switching the archive mode
 		$iCurrent = self::ReadParam('with-archive', $iDefault);
-		if (Session::IsInitialized()) {
-			Session::Set('archive_mode', $iCurrent);
-		}
+		Session::Set('archive_mode', $iCurrent);
 		// Read and use the value for the current page (web services)
 		$iCurrent = self::ReadParam('with_archive', $iCurrent, true);
 		self::$bPageMode = ($iCurrent == 1);
@@ -976,7 +974,7 @@ class utils
 			return self::$oConfig;
 		}
 
-		$sProductionEnvConfigPath = self::GetConfigFilePath('production');
+		$sProductionEnvConfigPath = self::GetConfigFilePath(ITOP_DEFAULT_ENV);
 		if (file_exists($sProductionEnvConfigPath)) {
 			$oProductionEnvDiskConfig = new Config($sProductionEnvConfigPath);
 			self::SetConfig($oProductionEnvDiskConfig);
@@ -3190,6 +3188,32 @@ TXT
 			foreach ($data as $value) {
 				self::AssertNoIncompleteClassDetected($value);
 			}
+		}
+	}
+
+	/**
+	 * Read memory limit from the php.ini file
+	 *
+	 * @return int Memory limit in bytes
+	 */
+	public static function GetMemoryLimit(): int
+	{
+		$sLimit = ini_get('memory_limit');
+		if ($sLimit == '-1') {
+			return 128 * 1048576;
+		}
+		switch (substr($sLimit, -1)) {
+			case 'M':
+			case 'm':
+				return (int)$sLimit * 1048576;
+			case 'K':
+			case 'k':
+				return (int)$sLimit * 1024;
+			case 'G':
+			case 'g':
+				return (int)$sLimit * 1073741824;
+			default:
+				return (int)$sLimit;
 		}
 	}
 }

@@ -186,9 +186,7 @@ function collect_configuration()
 
 	// iTop modules
 	$oConfig = MetaModel::GetConfig();
-	$sLatestInstallationDate = CMDBSource::QueryToScalar("SELECT max(installed) FROM ".$oConfig->Get('db_subname')."priv_module_install");
-	// Get the latest installed modules, without the "root" ones (iTop version and datamodel version)
-	$aInstalledModules = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_module_install WHERE installed = '".$sLatestInstallationDate."' AND parent_id != 0");
+	$aInstalledModules = ModuleInstallationRepository::GetInstance()->ReadFromDB($oConfig);
 
 	foreach ($aInstalledModules as $aDBInfo) {
 		$aConfiguration['itop_modules'][$aDBInfo['name']] = $aDBInfo['version'];

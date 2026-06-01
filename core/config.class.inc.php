@@ -20,9 +20,6 @@
  *
  */
 
-use Combodo\iTop\Config\Validator\iTopConfigAstValidator;
-use Combodo\iTop\Config\Validator\iTopConfigSyntaxValidator;
-
 define('ITOP_APPLICATION', 'iTop');
 define('ITOP_APPLICATION_SHORT', 'iTop');
 
@@ -1182,8 +1179,8 @@ class Config
 		'tracking_level_linked_set_default' => [
 			'type' => 'integer',
 			'description' => 'Default tracking level if not explicitly set at the attribute level, for AttributeLinkedSet (defaults to NONE in case of a fresh install, LIST otherwise - this to preserve backward compatibility while upgrading from a version older than 2.0.3 - see TRAC #936)',
-			'default' => LINKSET_TRACKING_LIST,
-			'value' => LINKSET_TRACKING_LIST,
+			'default' => LINKSET_TRACKING_NONE,
+			'value' => LINKSET_TRACKING_NONE,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
@@ -2755,14 +2752,13 @@ class Config
 	 *
 	 * @param array $aParamValues
 	 * @param ?string $sModulesDir
-	 * @param bool $bPreserveModuleSettings
 	 *
 	 * @return void The current object is modified directly
 	 *
 	 * @throws \Exception
 	 * @throws \CoreException
 	 */
-	public function UpdateFromParams($aParamValues, $sModulesDir = null, $bPreserveModuleSettings = false)
+	public function UpdateFromParams($aParamValues, $sModulesDir = null)
 	{
 		if (isset($aParamValues['application_path'])) {
 			$this->Set('app_root_url', $aParamValues['application_path']);
@@ -2810,7 +2806,10 @@ class Config
 		} else {
 			$aSelectedModules = null;
 		}
-		$this->UpdateIncludes($sModulesDir, $aSelectedModules);
+
+		if (! is_null($sModulesDir)) {
+			$this->UpdateIncludes($sModulesDir, $aSelectedModules);
+		}
 
 		if (isset($aParamValues['source_dir'])) {
 			$this->Set('source_dir', $aParamValues['source_dir']);
@@ -2828,17 +2827,13 @@ class Config
 	 *
 	 * @throws Exception
 	 */
-	public function UpdateIncludes($sModulesDir, $aSelectedModules = null)
+	public function UpdateIncludes(string $sModulesDir, $aSelectedModules = null)
 	{
-		if ($sModulesDir === null) {
-			return;
-		}
-
 		// Initialize the arrays below with default values for the application...
 		$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
 		$aAddOns = $oEmptyConfig->GetAddOns();
 
-		$aModules = ModuleDiscovery::GetAvailableModules([APPROOT.$sModulesDir]);
+		$aModules = ModuleDiscovery::GetModulesOrderedByDependencies([APPROOT.$sModulesDir]);
 		foreach ($aModules as $sModuleId => $aModuleInfo) {
 			list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
 			if (is_null($aSelectedModules) || in_array($sModuleName, $aSelectedModules)) {
