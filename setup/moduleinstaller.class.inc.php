@@ -355,7 +355,7 @@ abstract class ModuleInstallerAPI
 			throw new CoreUnexpectedValue("LoadLocalizedData expects sFirstLoadingVersion to match x.y[.z][-name], got '{$sFirstLoadingVersion}'");
 		}
 		if (substr_count($sFilePattern, '{{language_code}}') !== 1) {
-			throw new CoreUnexpectedValue("LoadLocalizedData expects sFilePattern to contain the exact placeholder '{{language_code}}' exactly once");
+			throw new CoreUnexpectedValue("LoadLocalizedData expects $sFilePattern to contain the exact placeholder '{{language_code}}' exactly once");
 		}
 	}
 
@@ -366,7 +366,6 @@ abstract class ModuleInstallerAPI
 
 	/**
 	 * @param array|string $sFileName
-	 * @param \XMLDataLoader $oDataLoader
 	 *
 	 * @return void
 	 * @throws \Exception
@@ -396,6 +395,7 @@ abstract class ModuleInstallerAPI
 		$sLang = str_replace(' ', '_', strtolower($sLanguage));
 		$sFileName = str_replace('{{language_code}}', $sLang, $sFilePattern);
 		if (!file_exists($sFileName)) {
+			etupLog::Debug("No data file found matching the pattern $sFilePattern and language_code $sLang. Trying with 'en_us' as fallback.");
 			$sLang = 'en_us';
 			$sFileName = str_replace('{{language_code}}', $sLang, $sFilePattern);
 		}
