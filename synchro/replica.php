@@ -52,7 +52,7 @@ try {
 		case 'oql':
 			$iSourceId = utils::ReadParam('datasource', null);
 			if ($iSourceId != null) {
-				$oSource = MetaModel::GetObject('SynchroDataSource', $iSourceId);
+				$oSource = MetaModel::GetObject(SynchroDataSource::class, $iSourceId);
 				$oBackButton = ButtonUIBlockFactory::MakeLinkNeutral( ApplicationContext::MakeObjectUrl('SynchroDataSource', $iSourceId), Dict::Format('Core:SynchroReplica:BackToDataSource',  $oSource->GetName()), 'fas fa-chevron-left');
 				$oP->AddUiBlock($oBackButton);
 				$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::Format('Core:SynchroReplica:ListOfReplicas', $oSource->GetName())));
