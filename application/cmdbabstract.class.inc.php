@@ -3800,35 +3800,6 @@ HTML;
 	}
 
     /**
-     * get the posted value or if not exists the existing value
-     * function added for use in GetAttributeFlags (to manage dynamic readonly attributes)
-     * this is used to get the current value display in screen
-     * @since 3.3.0
-     * @param $sAttCode
-     */
-    public function GetCurrentValueInScreen($sAttCode)
-    {
-        if (array_key_exists($sAttCode, $this->aPostedValues)) {
-            return $this->aPostedValues[$sAttCode];
-        }
-        return $this->Get($sAttCode);
-    }
-
-    /*
-     * checks if the value of the attribute has been modified in screen
-     * function added for use in GetAttributeFlags (useful to manage dynamic readonly attributes)
-     *  @since 3.3.0
-     * @param $sAttCode
-     */
-    public function IsModifiedValueInScreen($sAttCode)
-    {
-        if (array_key_exists($sAttCode, $this->aPostedValues)) {
-            return $this->aPostedValues[$sAttCode] != $this->Get($sAttCode);
-        }
-        return false;
-    }
-
-    /**
 	 * Compute the attribute flags depending on the object state
 	 */
 	public function GetFormAttributeFlags($sAttCode)
