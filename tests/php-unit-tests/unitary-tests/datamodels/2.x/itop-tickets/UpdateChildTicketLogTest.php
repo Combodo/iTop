@@ -39,7 +39,7 @@ class UpdateChildTicketLogTest extends ItopDataTestCase
 		$oParentTicket->DBUpdate();
 
 		// Then the log should be copied to all descendants and contain parent references recursively
-		$this->AssertLogContainsAncestorReferencesRecursively($iParentTicket, $aChildrenTree[$iParentTicket], 'public_log', $sParentPublicLogEntry);
+		$this->AssertLogContainsParentsRefOrKeyRecursively($iParentTicket, $aChildrenTree[$iParentTicket], 'public_log', $sParentPublicLogEntry);
 	}
 
 	public function testUpdateChildTicketLog_PrivateAndPublicLog(): void
@@ -56,14 +56,14 @@ class UpdateChildTicketLogTest extends ItopDataTestCase
 		$oParentTicket->DBUpdate();
 
 		// Then both logs should be copied to all descendants and keep ancestor references recursively
-		$this->AssertLogContainsAncestorReferencesRecursively($iParentTicket, $aChildrenTree[$iParentTicket], 'public_log', $sParentPublicLogEntry);
-		$this->AssertLogContainsAncestorReferencesRecursively($iParentTicket, $aChildrenTree[$iParentTicket], 'private_log', $sParentPrivateLogEntry);
+		$this->AssertLogContainsParentsRefOrKeyRecursively($iParentTicket, $aChildrenTree[$iParentTicket], 'public_log', $sParentPublicLogEntry);
+		$this->AssertLogContainsParentsRefOrKeyRecursively($iParentTicket, $aChildrenTree[$iParentTicket], 'private_log', $sParentPrivateLogEntry);
 	}
 
-	public function testUpdateChildTicketLog_PrivateLogOnThreeLevels(): void
+	public function testUpdateChildTicketLog_PrivateLogOnMultipleLevels(): void
 	{
 		//Given a parent ticket with two child ticket
-		list($iParentTicket, $aChildrenTree) = $this->GivenUserRequests(1, 3);
+		list($iParentTicket, $aChildrenTree) = $this->GivenUserRequests(1, 4);
 		$sParentPrivateLogEntry = 'This is a private log entry for the parent ticket.';
 
 		// When I enter both a public_log and a private_log entry for the parent ticket
@@ -71,8 +71,69 @@ class UpdateChildTicketLogTest extends ItopDataTestCase
 		$oParentTicket->Set('private_log', $sParentPrivateLogEntry);
 		$oParentTicket->DBUpdate();
 
-		// Then the private log should be copied on each level with parent + grand-parent references
-		$this->AssertLogContainsAncestorReferencesRecursively($iParentTicket, $aChildrenTree[$iParentTicket], 'private_log', $sParentPrivateLogEntry);
+		// Then the private log should be copied on each level with parent + grand-parent +... references
+		$this->AssertLogContainsParentsRefOrKeyRecursively($iParentTicket, $aChildrenTree[$iParentTicket], 'private_log', $sParentPrivateLogEntry);
+	}
+
+	private function AssertLogContainsParentsRefOrKeyRecursively(int $iParentTicket, array $aChildrenTree, string $sLogAttCode, string $sExpectedEntry, array $aAncestors = []): void
+	{
+		$oParentTicket = MetaModel::GetObject('UserRequest', $iParentTicket);
+		$aAncestorsToFind = array_merge($aAncestors, [[
+			'id' => (string) $iParentTicket,
+			'ref' => (string) $oParentTicket->Get('ref'),
+		]]);
+
+		foreach ($aChildrenTree as $iChildOrIndex => $aChildNodeOrId) {
+			if (is_array($aChildNodeOrId)) {
+				$iChildTicket = (int) $iChildOrIndex;
+				$aGrandChildrenTree = $aChildNodeOrId;
+			} else {
+				$iChildTicket = (int) $aChildNodeOrId;
+				$aGrandChildrenTree = [];
+			}
+
+			$oChildTicket = MetaModel::GetObject('UserRequest', $iChildTicket);
+			$sLastLogEntry = $oChildTicket->Get($sLogAttCode)->GetLatestEntry();
+			$this->assertNotEmpty($sLastLogEntry, "The $sLogAttCode entry was not copied to child ticket #$iChildTicket.");
+			$this->assertStringContainsString($sExpectedEntry, $sLastLogEntry, "The $sLogAttCode entry on child ticket #$iChildTicket does not contain the original parent entry.");
+			foreach ($aAncestorsToFind as $aAncestor) {
+				$bContainsAncestorRef = strpos($sLastLogEntry, $aAncestor['ref']) !== false;
+				$bContainsAncestorId = strpos($sLastLogEntry, $aAncestor['id']) !== false;
+				$this->assertTrue(
+					$bContainsAncestorRef || $bContainsAncestorId,
+					"The $sLogAttCode entry on child ticket #$iChildTicket does not contain ancestor ref '{$aAncestor['ref']}' nor ancestor id '{$aAncestor['id']}'."
+				);
+			}
+
+			if ($aGrandChildrenTree !== []) {
+				$this->AssertLogContainsParentsRefOrKeyRecursively($iChildTicket, $aGrandChildrenTree, $sLogAttCode, $sExpectedEntry, $aAncestorsToFind);
+			}
+		}
+	}
+	/**
+	 * @return array
+	 * @throws \Exception
+	 */
+	private function GivenUserRequests(int $iCount, int $iLevel = 2): array
+	{
+		$iOrg = $this->GivenObjectInDB('Organization', [
+			'name' => 'Test Organization for Log Update',
+		]);
+		// Given a parent ticket
+		$iParentTicket = $this->GivenObjectInDB('UserRequest', [
+			'title'       => 'Parent Ticket for Log Update Test',
+			'description' => 'This is the parent ticket for testing log updates.',
+			'org_id'      => $iOrg,
+			'ref'         => 'R-00001',
+		]);
+
+		$iRemainingLevels = max(0, $iLevel - 1);
+		$iRefCounter = 1;
+		$aChildrenTree = [
+			$iParentTicket => $this->GivenChildTicketsRecursive($iParentTicket, $iCount, $iRemainingLevels, $iOrg, $iRefCounter),
+		];
+
+		return [$iParentTicket, $aChildrenTree];
 	}
 
 	private function GivenChildTicketsRecursive(int $iParentTicket, int $iCount, int $iRemainingLevels, int $iOrg, int &$iRefCounter): array
@@ -101,59 +162,5 @@ class UpdateChildTicketLogTest extends ItopDataTestCase
 		}
 
 		return $aChildren;
-	}
-
-	private function AssertLogContainsAncestorReferencesRecursively(int $iParentTicket, array $aChildrenTree, string $sLogAttCode, string $sExpectedEntry, array $aAncestorRefs = []): void
-	{
-		$oParentTicket = MetaModel::GetObject('UserRequest', $iParentTicket);
-		$sParentRef = $oParentTicket->Get('ref');
-		$aRefsToFind = array_merge($aAncestorRefs, [$sParentRef]);
-
-		foreach ($aChildrenTree as $iChildOrIndex => $aChildNodeOrId) {
-			if (is_array($aChildNodeOrId)) {
-				$iChildTicket = (int) $iChildOrIndex;
-				$aGrandChildrenTree = $aChildNodeOrId;
-			} else {
-				$iChildTicket = (int) $aChildNodeOrId;
-				$aGrandChildrenTree = [];
-			}
-
-			$oChildTicket = MetaModel::GetObject('UserRequest', $iChildTicket);
-			$sLastLogEntry = $oChildTicket->Get($sLogAttCode)->GetLatestEntry();
-			$this->assertNotEmpty($sLastLogEntry, "The $sLogAttCode entry was not copied to child ticket #$iChildTicket.");
-			$this->assertStringContainsString($sExpectedEntry, $sLastLogEntry, "The $sLogAttCode entry on child ticket #$iChildTicket does not contain the original parent entry.");
-			foreach ($aRefsToFind as $sExpectedRef) {
-				$this->assertStringContainsString($sExpectedRef, $sLastLogEntry, "The $sLogAttCode entry on child ticket #$iChildTicket does not contain ancestor reference $sExpectedRef.");
-			}
-
-			if ($aGrandChildrenTree !== []) {
-				$this->AssertLogContainsAncestorReferencesRecursively($iChildTicket, $aGrandChildrenTree, $sLogAttCode, $sExpectedEntry, $aRefsToFind);
-			}
-		}
-	}
-	/**
-	 * @return array
-	 * @throws \Exception
-	 */
-	private function GivenUserRequests(int $iCount, int $iLevel = 2): array
-	{
-		$iOrg = $this->GivenObjectInDB('Organization', [
-			'name' => 'Test Organization for Log Update',
-		]);
-		// Given a parent ticket
-		$iParentTicket = $this->GivenObjectInDB('UserRequest', [
-			'title'       => 'Parent Ticket for Log Update Test',
-			'description' => 'This is the parent ticket for testing log updates.',
-			'org_id'      => $iOrg,
-			'ref'         => 'R-00001',
-		]);
-
-		$iRemainingLevels = max(0, $iLevel - 1);
-		$iRefCounter = 1;
-		$aChildrenTree = [
-			$iParentTicket => $this->GivenChildTicketsRecursive($iParentTicket, $iCount, $iRemainingLevels, $iOrg, $iRefCounter),
-		];
-
-		return [$iParentTicket, $aChildrenTree];
 	}
 }
