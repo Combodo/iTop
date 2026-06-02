@@ -70,7 +70,7 @@ $oKPI->ComputeAndReport("Session Start");
 
 $sSwitchEnv = utils::ReadParam('switch_env', null);
 $bAllowCache = true;
-$sEnv = StartupService::SetItopEnvironment($sSwitchEnv, $bAllowCache);
+$sEnv = (new StartupService())->SetItopEnvironment($sSwitchEnv, $bAllowCache);
 $sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
 try {
 	MetaModel::Startup($sConfigFile, false /* $bModelOnly */, $bAllowCache, false /* $bTraceSourceFiles */, $sEnv);

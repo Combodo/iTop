@@ -10,14 +10,14 @@ class StartupService
 {
 	/**
 	 * @param string|null $sSwitchEnv
-	 * @param bool $bAllowCache
+	 * @param bool $bAllowCache - whether to allow cache or not (will be set to false if the environment is switched)
 	 *
 	 * @return string
 	 * @throws CoreException
 	 */
-	public static function SetItopEnvironment(?string $sSwitchEnv, bool &$bAllowCache): string
+	public function SetItopEnvironment(?string $sSwitchEnv, bool &$bAllowCache): string
 	{
-		if (static::IsBuildEnvironment($sSwitchEnv)) {
+		if ($this->IsBuildEnvironment($sSwitchEnv)) {
 			$oException = new CoreException("Switching to environment '$sSwitchEnv' is not allowed since it is a build environment");
 			IssueLog::Exception("Trying to switch to environment '$sSwitchEnv' is not allowed since it is a build environment", $oException);
 			throw $oException;
@@ -51,7 +51,7 @@ class StartupService
 		return $sEnv;
 	}
 
-	public static function IsBuildEnvironment(?string $sEnv): bool
+	public function IsBuildEnvironment(?string $sEnv): bool
 	{
 		return $sEnv != null && str_ends_with($sEnv, '-build');
 	}
