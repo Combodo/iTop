@@ -26,6 +26,7 @@ use Dict;
 use Exception;
 use MetaModel;
 use RunTimeEnvironment;
+use SecurityException;
 use SetupUtils;
 use utils;
 
@@ -83,10 +84,11 @@ class DataFeatureRemovalController extends Controller
 	{
 		$aParams = [];
 
-		if (SetupUtils::IsSessionSetupTokenValid()) {
+		try {
 			//from setup wizard/mtp
+			SetupUtils::CheckSetupToken();
 			SetupUtils::EraseSetupToken();
-		} else {
+		} catch (SecurityException $e) {
 			//from same module
 			$this->ValidateTransactionId();
 		}
@@ -100,6 +102,8 @@ class DataFeatureRemovalController extends Controller
 			'removed_extensions' => '[]',
 			'extensions_not_uninstallable' => '[]',
 			'copy_setup_files' => 1,
+			'return_button_label' => '',
+			'return_button_url' => '',
 		];
 
 		$aHiddenInputs = [];

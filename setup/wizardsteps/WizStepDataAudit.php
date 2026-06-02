@@ -112,6 +112,8 @@ JS);
 			'removed_extensions' => '[]',
 			'extensions_not_uninstallable' => '[]',
 			'copy_setup_files' => 1,
+			'return_button_label' => '',
+			'return_button_url' => '',
 		];
 		$aHiddenInputs = '';
 		foreach ($aParams as $sParamName => $defaultValue) {
@@ -127,7 +129,7 @@ INPUT;
 			<<<HTML
 <form id="data-feature-removal" class="ibo-setup--wizard ibo-is-hidden" method="post" action="$sApplicationUrl">
 	<input type="hidden" name="operation" value="AnalysisResult"/>
-	<input type="hidden" name="setup_token" value="$sUID"/>
+	<input type="hidden" name="authent" value="$sUID"/>
 	$aHiddenInputs
 </form>
 HTML

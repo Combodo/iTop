@@ -87,11 +87,15 @@
         {% endif %}
     {% endif %}
 
-    {% UIForm Standard {} %}
-        {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}
-        {% UIInput ForHidden { sName:'operation', sValue:'Main'} %}
-        {% UIToolbar ForButton {} %}
-            {% UIButton ForPrimaryAction {sLabel:'UI:Button:BackToMain'|dict_s, sName:'btn_back', sId:'btn_back', bIsSubmit:true} %}
-        {% EndUIToolbar %}
-    {% EndUIForm %}
+    {% if aHiddenInputs.return_button_label != '' %}
+        {% UIButton ForAlternativeSecondaryAction { sLabel:aHiddenInputs.return_button_label, OnClickJsCode: 'window.location.href="' ~ aHiddenInputs.return_button_url ~ '"'} %}
+    {% else %}
+        {% UIForm Standard {} %}
+            {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}
+            {% UIInput ForHidden { sName:'operation', sValue:'Main'} %}
+            {% UIToolbar ForButton {} %}
+                {% UIButton ForPrimaryAction {sLabel:'UI:Button:BackToMain'|dict_s, sName:'btn_back', sId:'btn_back', bIsSubmit:true} %}
+            {% EndUIToolbar %}
+        {% EndUIForm %}
+    {% endif %}
 {% EndUIPanel %}
