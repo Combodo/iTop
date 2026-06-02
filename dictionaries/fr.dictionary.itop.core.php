@@ -161,6 +161,14 @@ Opérateurs :<br/>
 	'Core:Context=CRON+' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal',
 	'Core:Context=GUI:Portal+' => 'GUI:Portal',
+
+	'Core:GetQuota:Error' => 'Erreur lors de la récupération du quota des %1$s',
+	'Core:ConsoleUsers' => 'utilisateurs console',
+	'Core:DisabledUsers' => 'utilisateurs désactivés',
+	'Core:PortalUsers' => 'utilisateurs du portail',
+	'Core:BusinessPartnerUser' => 'utilisateurs partenaires business',
+	'Core:ReadOnlyUsers' => 'utilisateurs en lecture seule',
+	'Core:ApplicationUsers' => 'utilisateurs applicatifs',
 ]);
 
 //////////////////////////////////////////////////////////////////////

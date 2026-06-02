@@ -216,6 +216,14 @@ Operators:<br/>
 	'Core:Context=GUI:Console' => 'Console',
 	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal',
+
+	'Core:GetQuota:Error' => 'Error while getting %1$s quota',
+	'Core:ConsoleUsers' => 'console users',
+	'Core:DisabledUsers' => 'disabled users',
+	'Core:PortalUsers' => 'portal users',
+	'Core:BusinessPartnerUser' => 'business partner users',
+	'Core:ReadOnlyUsers' => 'read-only users',
+	'Core:ApplicationUsers' => 'application users',
 ]);
 
 //////////////////////////////////////////////////////////////////////
