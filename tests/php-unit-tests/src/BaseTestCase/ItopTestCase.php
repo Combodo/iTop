@@ -686,7 +686,9 @@ abstract class ItopTestCase extends KernelTestCase
 		$this->aLastCurlGetInfo = $info;
 		$sErrorMsg = curl_error($ch);
 		$iErrorCode = curl_errno($ch);
-		curl_close($ch);
+		if (PHP_VERSION_ID < 80000) {
+			curl_close($ch);
+		}
 
 		\IssueLog::Info(__METHOD__, null, ['url' => $sUrl, 'error' => $sErrorMsg, 'error_code' => $iErrorCode, 'post_fields' => $aPostFields, 'info' => $info]);
 
