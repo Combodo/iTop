@@ -285,7 +285,7 @@ SQL
 	}
 
 	/**
-	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 * @covers \ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion
 	 * @dataProvider LoadLocalizedData_RequiredLanguageProvider
 	 */
 	public function testLoadLocalizedData_LoadRequiredLanguageOnFirstInstall(string $sRequiredLanguage, array $aAvailableLanguages, array $aExpectedCountByLanguage): void
@@ -294,7 +294,7 @@ SQL
 		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_RequiredLanguage_', $sRequiredLanguage, $aAvailableLanguages);
 
 		// When no previous version, and current version higher than the first loading version
-		ModuleInstallerAPI::LoadLocalizedData($oConfig, '', '3.3.0', '3.0.0', $sPattern);
+		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '', '3.3.0', '3.0.0', $sPattern);
 
 		// Then data loaded
 		foreach ($aExpectedCountByLanguage as $sLanguage => $iExpectedCount) {
@@ -334,7 +334,7 @@ SQL
 	}
 
 	/**
-	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 * @covers \ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion
 	 * @dataProvider LoadLocalizedData_VersionConditionNotMetProvider
 	 */
 	public function testLoadLocalizedData_DoesNotLoadWhenVersionConditionIsNotMet(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion): void
@@ -342,7 +342,7 @@ SQL
 		// Given
 		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_NoLoad_', 'en_us', ['en_us']);
 		// When version gate conditions are not met
-		ModuleInstallerAPI::LoadLocalizedData($oConfig, $sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
+		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, $sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
 		// Then no data loaded
 		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 0);
 	}
@@ -354,31 +354,20 @@ SQL
 			'Downgrade attempt' => ['3.2.0', '3.1.0', '3.0.0'],
 			'Upgrade but first loading version already passed' => ['3.1.0', '3.2.0', '3.0.0'],
 			'Upgrade with boundary equality on first loading version' => ['3.0.0', '3.1.0', '3.0.0'],
+			'Upgrade but first loading version empty' => ['3.1.0', '3.2.0', ''],
+
 		];
 	}
-	/**
-	 * @covers \ModuleInstallerAPI::LoadLocalizedData
-	 */
-	public function testLoadLocalizedData_AlwaysLoadWhenFistLoadingVersionEmpty(): void
-	{
-		// Given
-		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_NoLoad_', 'en_us', ['en_us']);
-
-		// When a previous version that is lower than the first loading version, but higher or equal to the current version
-		ModuleInstallerAPI::LoadLocalizedData($oConfig, '3.0.0', '3.1.0', '', $sPattern);
-		// Then no data loaded
-		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 1);
-	}
 
 	/**
-	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 * @covers \ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion
 	 * @dataProvider LoadLocalizedData_ValidVersionFormatsProvider
 	 */
 	public function testLoadLocalizedData_AcceptsSupportedVersionFormats(string $sCurrentVersion, string $sFirstLoadingVersion): void
 	{
 		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_ValidVersion_', 'en_us', ['en_us']);
 
-		ModuleInstallerAPI::LoadLocalizedData($oConfig, '', $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
+		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '', $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
 
 		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 1);
 	}
@@ -387,8 +376,8 @@ SQL
 	{
 		return [
 			'Current version with suffix' => ['3.2-dev', '3.0.0'],
-			'Current version x.y.z' => ['1.2.4', '1.0'],
-			'Current version x.y.z-suffix' => ['2.3.3-beta', '2.0.0'],
+			'Current version x.y.z' => ['10.12.140-Tagada34', '1.0'],
+			'Current version x.y.z-suffix' => ['2.3.3-beta', '2.3.3-alpha'],
 			'Current version x.y.z-1' => ['1.2.4-1', '1.0.3-2'],
 		];
 	}
@@ -399,15 +388,15 @@ SQL
 		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_Idempotent_', 'en_us', ['en_us']);
 
 		// When LoadLocalizedData is called twice with conditions that would load the file both times
-		ModuleInstallerAPI::LoadLocalizedData($oConfig, '', '3.1.0', '3.0.0', $sPattern);
-		ModuleInstallerAPI::LoadLocalizedData($oConfig, '3.1.0', '3.2.0', '', $sPattern);
+		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '', '3.1.0', '3.0.0', $sPattern);
+		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '3.1.0', '3.2.0', '', $sPattern);
 
 		// Then no duplicate data loaded
 		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 1);
 	}
 
 	/**
-	 * @covers \ModuleInstallerAPI::LoadLocalizedData
+	 * @covers \ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion
 	 * @dataProvider LoadLocalizedData_InvalidParametersProvider
 	 */
 	public function testLoadLocalizedData_ThrowsOnInvalidParameters(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, string $sPattern, string $sExpectedMessage): void
@@ -418,7 +407,7 @@ SQL
 		$this->expectException(\CoreUnexpectedValue::class);
 		$this->expectExceptionMessage($sExpectedMessage);
 
-		ModuleInstallerAPI::LoadLocalizedData($oConfig, $sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
+		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, $sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
 	}
 
 	public function LoadLocalizedData_InvalidParametersProvider(): array

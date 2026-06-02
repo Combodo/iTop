@@ -61,6 +61,6 @@ class TicketsInstaller extends ModuleInstallerAPI
 			}
 		}
 		// Load localized structural data: predefined query phrases for notifications
-		static::LoadLocalizedData($oConfiguration, $sPreviousVersion, $sCurrentVersion, '3.0.0', __DIR__."/data/{{language_code}}.data.itop-tickets.xml");
+		static::LoadLocalizedDataOnCrossingVersion($oConfiguration, $sPreviousVersion, $sCurrentVersion, '3.0.0', __DIR__."/data/{{language_code}}.data.itop-tickets.xml");
 	}
 }

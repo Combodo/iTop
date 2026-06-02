@@ -25,10 +25,10 @@ SetupWebPage::AddModule(
 			'main.itop-config-mgmt.php',
 		],
 		'data.struct' => [
-			'data/data.itop-brand.xml',
-			'data/data.itop-networkdevicetype.xml',
-			'data/data.itop-osfamily.xml',
-			'data/data.itop-osversion.xml',
+			'data/en_us.data.itop-brand.xml',
+			'data/en_us.data.itop-networkdevicetype.xml',
+			'data/en_us.data.itop-osfamily.xml',
+			'data/en_us.data.itop-osversion.xml',
 		],
 		'data.sample' => [
 			'data/data.sample.model.xml',
@@ -106,6 +106,7 @@ if (!class_exists('ConfigMgmtInstaller')) {
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
+
 		}
 	}
 }
