@@ -29,6 +29,9 @@ abstract class StepSequencer
 	protected RunTimeEnvironment $oRunTimeEnvironment;
 	protected string $sSourceDesc;
 
+	protected const LABELS = [];
+	protected const SUCCESS_LABELS = [];
+
 	/**
 	 * @param \Parameters $oParams
 	 * @param \RunTimeEnvironment|null $oRunTimeEnvironment
