@@ -340,13 +340,14 @@ class ormDocument
 	 * @param string $sContentDisposition Either 'inline' or 'attachment'
 	 * @param string $sSecretField The attcode of the field containing a "secret" to be provided in order to retrieve the file
 	 * @param string $sSecretValue The value of the secret to be compared with the value of the attribute $sSecretField
+	 * @param bool $bAllowAllData If true, no rights filtering is applied
 	 *
 	 * @return void
 	 */
-	public static function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachment', $sSecretField = null, $sSecretValue = null)
+	public static function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachment', $sSecretField = null, $sSecretValue = null, $bAllowAllData = false)
 	{
 		try {
-			$oObj = MetaModel::GetObject($sClass, $id, false, false);
+			$oObj = MetaModel::GetObject($sClass, $id, false, $bAllowAllData);
 			if (!is_object($oObj)) {
 				// If access to the document is not granted, check if the access to the host object is allowed
 				$oObj = MetaModel::GetObject($sClass, $id, false, true);
