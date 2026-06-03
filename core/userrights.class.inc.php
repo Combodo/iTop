@@ -1541,8 +1541,8 @@ class UserRights
 	 */
 	public static function IsActionAllowed($sClass, $iActionCode, $oInstanceSet = null, $oUser = null)
 	{
-		// When initializing, we need to let everything pass through
-		if (is_null($oUser) && !self::CheckLogin()) {
+		// When initializing, we need to let everything pass trough
+		if (!self::CheckLogin()) {
 			return UR_ALLOWED_YES;
 		}
 
