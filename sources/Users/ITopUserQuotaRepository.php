@@ -2,18 +2,20 @@
 
 namespace Combodo\iTop\Users;
 
+use ArchivedObjectException;
 use CoreException;
 use CoreUnexpectedValue;
 use DBObjectSearch;
 use DBObjectSet;
-use DBSearch;
 use DBUnionSearch;
 use Dict;
 use DictExceptionMissingString;
+use DictExceptionUnknownLanguage;
 use Exception;
 use IssueLog;
 use MetaModel;
 use MySQLException;
+use OQLException;
 use User;
 use UserRights;
 
@@ -28,10 +30,14 @@ class ITopUserQuotaRepository
 	 * @param bool $bAllData
 	 * @param string $sExcludedFinalClasses
 	 *
-	 * @return DBObjectSearch|DBUnionSearch|null
+	 * @return array
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 * @throws DictExceptionMissingString
+	 * @throws MySQLException
 	 * @throws Exception
 	 */
-	public function GetConsoleUsers(string $sExcludedUsers = '', string $sExcludedProfiles = '', bool $bAllData = true, string $sExcludedFinalClasses = 'UserToken, UserRemoteSaaS'): null|DBObjectSearch|DBUnionSearch
+	public function GetConsoleUsers(string $sExcludedUsers = '', string $sExcludedProfiles = '', bool $bAllData = true, string $sExcludedFinalClasses = 'UserToken, UserRemoteSaaS'): array
 	{
 		$sOQLInQuotaUser = "
         SELECT User AS u
@@ -52,14 +58,17 @@ class ITopUserQuotaRepository
 			throw new Exception(Dict::Format('Core:GetQuota:Error', Dict::S('Core:ConsoleUsers')));
 		}
 
-		// TODO remove read only users
-		return $oFilter;
+		$aConsoleUsers = $this->GetUsersFromFilter($oFilter);
+		$aPortalUsers = $this->GetPortalUsers();
+		$aReadOnlyUsers = $this->GetReadOnlyUsers();
+
+		return array_diff($aConsoleUsers, $aPortalUsers, $aReadOnlyUsers);
 	}
 
 	/**
 	 * @throws Exception
 	 */
-	public function GetApplicationUsers(bool $bAllData = true): null|DBObjectSearch|DBUnionSearch
+	public function GetApplicationUsers(bool $bAllData = true): array
 	{
 		$sOQLApplicationUser = 'SELECT UserToken';
 		try {
@@ -70,14 +79,13 @@ class ITopUserQuotaRepository
 			throw new Exception(Dict::Format('Core:GetQuota:Error', Dict::S('Core:ApplicationUsers')));
 		}
 
-		return $oFilter;
-
+		return $this->GetUsersFromFilter($oFilter);
 	}
 
 	/**
 	 * @throws Exception
 	 */
-	public function GetDisabledUsers(bool $bAllData = true): null|DBObjectSearch|DBUnionSearch
+	public function GetDisabledUsers(bool $bAllData = true): array
 	{
 		$sOQLDisabledUser = "
 		SELECT User AS u
@@ -91,34 +99,46 @@ class ITopUserQuotaRepository
 			throw new Exception(Dict::Format('Core:GetQuota:Error', Dict::S('Core:DisabledUsers')));
 		}
 
-		return $oFilter;
+		return $this->GetUsersFromFilter($oFilter);
 	}
 
-private function IsUserReadOnly(User $oUser, string $sClassCategory)
+	/**
+	 * @throws CoreException
+	 * @throws MySQLException
+	 * @throws CoreUnexpectedValue
+	 * @throws OQLException
+	 * @throws ArchivedObjectException
+	 * @throws DictExceptionUnknownLanguage
+	 */
+	private function IsUserReadOnly(User $oUser, string $sClassCategory): bool
 {
+	if ($oUser->Get('status') == 'disabled') {
+		return false;
+	}
+
+	// check if user is a portal user
+	$oProfileLinks = $oUser->Get('profile_list');
+	while ($oLink = $oProfileLinks->Fetch()) {
+		$iProfileId = $oLink->Get('profileid');
+		if (!$iProfileId) {
+			continue;
+		}
+		$oProfile = MetaModel::GetObject('URP_Profiles', $iProfileId, false);
+		if ($oProfile && $oProfile->Get('name') === PORTAL_PROFILE_NAME) {
+			return false;
+		}
+	}
+
+	// login (mandatory to compute rights)
 	UserRights::Login($oUser->GetName());
 
 	foreach (MetaModel::GetClasses($sClassCategory) as $sClass) {
-		$aClassStimuli = MetaModel::EnumStimuli($sClass);
-		if (count($aClassStimuli) > 0) {
-			$aStimuli = [];
-			foreach ($aClassStimuli as $sStimulusCode => $oStimulus) {
-				if (UserRights::IsStimulusAllowed($sClass, $sStimulusCode, null, $oUser)) {
-					$aStimuli[] =
-						$oStimulus->GetLabel();
-				}
-			}
-			$sStimuli = implode(', ', $aStimuli);
-		} else {
-			$sStimuli = '';
-		}
-
+		// no need to check stimulis for now since users can't execute stimulus without UR_ACTION_MODIFY
 		if (
 			UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, null, $oUser) ||
 			UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, null, $oUser) ||
 			UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, null, $oUser) ||
-			UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, null, $oUser) ||
-			$sStimuli != ''
+			UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, null, $oUser)
 		 ) {
 			UserRights::Logoff();
 			return false;
@@ -136,31 +156,32 @@ private function IsUserReadOnly(User $oUser, string $sClassCategory)
 	public function GetReadOnlyUsers(): array
 	{
 		$aReadOnlyUsers = [];
-		$oAllUsersFilter = $this->GetAllUsers();
-		$aAllUsers = $this->GetUsersFromFilter($oAllUsersFilter);
+		$aAllUsers = $this->GetAllUsers();
 		/** @var User $oUser */
 		foreach ($aAllUsers as $oUser) {
 			$bIsReadOnlyUser = true;
-
 			if (!$this->IsUserReadOnly($oUser, 'bizmodel') ||
 				!$this->IsUserReadOnly($oUser, 'grant_by_profile')) {
 				$bIsReadOnlyUser = false;
 			}
-
 			if ($bIsReadOnlyUser) {
 				$aReadOnlyUsers[] = $oUser;
 			}
-
 		}
 
-		// TODO remove disabled users
-		return $aReadOnlyUsers;
+		// remove portal users
+		$aPortalUsers = $this->GetPortalUsers();
+		$aReadOnlyUsers = array_diff($aReadOnlyUsers, $aPortalUsers);
+		// remove disabled users
+		$aDisabledUsers = $this->GetDisabledUsers();
+
+		return array_diff($aReadOnlyUsers, $aDisabledUsers);
 	}
 
 	/**
 	 * @throws Exception
 	 */
-	public function getPortalUsers(bool $bAllData = true): null|DBObjectSearch|DBUnionSearch
+	public function GetPortalUsers(bool $bAllData = true): array
 	{
 		$sOQLPortalUser = '
         SELECT User AS u
@@ -177,7 +198,7 @@ private function IsUserReadOnly(User $oUser, string $sClassCategory)
 		}
 
 		// TODO remove read only users
-		return $oFilter;
+		return $this->GetUsersFromFilter($oFilter);
 	}
 
 	/**
@@ -192,7 +213,7 @@ private function IsUserReadOnly(User $oUser, string $sClassCategory)
 			return $aUsers;
 		}
 		$oSet = new DBObjectSet($oFilter, $aOrderBy, $aArgs);
-		while ($oUser = $oSet->fetch()) {
+		while ($oUser = $oSet->Fetch()) {
 			$aUsers[] = $oUser;
 		}
 
@@ -202,7 +223,7 @@ private function IsUserReadOnly(User $oUser, string $sClassCategory)
 	/**
 	 * @throws Exception
 	 */
-	public function GetAllUsers(bool $bAllData = true): DBUnionSearch|DBObjectSearch|DBSearch|null
+	public function GetAllUsers(bool $bAllData = true): array
 	{
 		$sOqlUser = 'SELECT User';
 
@@ -213,9 +234,8 @@ private function IsUserReadOnly(User $oUser, string $sClassCategory)
 			IssueLog::Error('combodo-users-quota-slave/GetUsersNotInQuota : '.$e->getMessage(), 'combodo-users-quota');
 			throw new Exception(Dict::S('CombodoUserQuota:Error'));
 		}
-
-		return $oFilter;
-
+		
+		return $this->GetUsersFromFilter($oFilter);
 	}
 
 }

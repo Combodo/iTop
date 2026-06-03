@@ -2,119 +2,53 @@
 
 namespace Users;
 
-use CMDBObjectSet;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Combodo\iTop\Users\ITopUserQuotaRepository;
-use DBObjectSearch;
-use MetaModel;
 use User;
 
 class ITopUserQuotaRepositoryTest extends ItopDataTestCase{
-
-	private static bool $bDatasetInitialized = false;
-
 	protected function setUp(): void
 	{
 		parent::setUp();
+		$this->CreateReadOnlyUsers();
 
-		if (self::$bDatasetInitialized) {
-			return;
-		}
-
-		$this->createUsersQuotaDataset();
-		self::$bDatasetInitialized = true;
 	}
 
-
-	/**	 * Creates a deterministic dataset for quota tests.	 * Users are created only once (idempotent on login).	 */
-	private function createUsersQuotaDataset(): void
+	private function CreateReadOnlyUsers()
 	{
-		// Keep names unique and easy to clean up later if needed.
-		$sPrefix = 'quota_test_';
-
-		// Create one user per quota "kind".
-		// NOTE: profile names can vary by iTop distribution; we try common ones.
-		$this->createUserIfMissing($sPrefix.'console', true, ['Administrator', 'Configuration Administrator']);
-		$this->createUserIfMissing($sPrefix.'portal', true, ['Portal user', 'Portal User']);
-		$this->createUserIfMissing($sPrefix.'readonly', true, ['ReadOnlyCI']);
-		$this->createUserIfMissing($sPrefix.'application', true, ['Service Desk Agent', 'Change Manager', 'Administrator']);
-		$this->createUserIfMissing($sPrefix.'disabled', false, ['Service Desk Agent', 'Administrator']);
-		$this->createUserIfMissing($sPrefix.'disabled', false, ['Service Desk Agent', 'Administrator']);
-
-
-
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration ReadOnly']);
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Ticket ReadOnly']);
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Service Catalog ReadOnly']);
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration ReadOnly', 'Ticket ReadOnly']);
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Ticket ReadOnly', 'Service Catalog ReadOnly']);
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration ReadOnly', 'Ticket ReadOnly', 'Service Catalog ReadOnly']);
 	}
 
-	private function createUserIfMissing(string $sLogin, bool $bEnabled, array $aCandidateProfileNames): void
-	{
-		if ($this->findUserByLogin($sLogin) !== null) {
-			return;
-		}
-
-		$iProfileId = $this->findFirstProfileIdByNames($aCandidateProfileNames);
-		$this->assertNotNull(
-			$iProfileId,
-			sprintf('Could not find any profile among: %s', implode(', ', $aCandidateProfileNames))
-		);
-
-		$oOrg = MetaModel::NewObject('Organization');
-		$oOrg->Set('name', 'Quota Test Org');
-		$oOrg->DBInsert();
-
-		$oPerson = MetaModel::NewObject('Person');
-		$oPerson->Set('name', strtoupper($sLogin));
-		$oPerson->Set('first_name', 'Quota');
-		$oPerson->Set('org_id', $oOrg->GetKey());
-		$oPerson->Set('email', $sLogin.'@example.invalid');
-		$oPerson->DBInsert();
-
-		$oUser = MetaModel::NewObject('UserLocal');
-		$oUser->Set('login', $sLogin);
-		$oUser->Set('password', 'QuotaTest#123');
-		$oUser->Set('contactid', $oPerson->GetKey());
-		$oUser->Set('status', $bEnabled ? 'enabled' : 'disabled');
-
-		$oProfileList = $oUser->Get('profile_list');
-		$oLink = MetaModel::NewObject('URP_UserProfile');
-		$oLink->Set('profileid', $iProfileId);
-		$oProfileList->AddItem($oLink);
-		$oUser->Set('profile_list', $oProfileList);
-
-		$oUser->DBInsert();
+	private function CreateDisabledUser() {
+		$sUser = $this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration Manager']);
+		// get user by login
+		$oUser = \MetaModel::GetObjectByName('User', $sUser);
+		$oUser->Set('status', 'disabled');
+		$oUser->DBUpdate();
 	}
 
-	private function findFirstProfileIdByNames(array $aProfileNames): ?int
-	{
-		foreach ($aProfileNames as $sProfileName) {
-			$oSearch = DBObjectSearch::FromOQL('SELECT URP_Profiles WHERE name = :name');
-			$oSet = new CMDBObjectSet($oSearch, [], ['name' => $sProfileName]);
-			$oProfile = $oSet->Fetch();
-			if ($oProfile !== false && $oProfile !== null) {
-				return (int) $oProfile->GetKey();
-			}
-		}
-		return null;
-	}
-
-	private function findUserByLogin(string $sLogin): ?User
-	{
-		$oSearch = DBObjectSearch::FromOQL('SELECT User WHERE login = :login');
-		$oSet = new CMDBObjectSet($oSearch, [], ['login' => $sLogin]);
-		$oUser = $oSet->Fetch();
-		return ($oUser instanceof User) ? $oUser : null;
-	}
-
-
+	/**
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \Exception
+	 */
 	public function testNotDuplicateInDifferentQuotas(): void
 	{
 		$oITopUserRepository = new ITopUserQuotaRepository();
 
 		$aQuotaUsers = [
-			'console' => $oITopUserRepository->GetUsersFromFilter($oITopUserRepository->GetConsoleUsers()),
-			'portal' => $oITopUserRepository->GetUsersFromFilter($oITopUserRepository->GetPortalUsers()),
-			'disabled' => $oITopUserRepository->GetUsersFromFilter($oITopUserRepository->GetDisabledUsers()),
+			'console' => $oITopUserRepository->GetConsoleUsers(),
+			'portal' => $oITopUserRepository->GetPortalUsers(),
+			'disabled' => $oITopUserRepository->GetDisabledUsers(),
 			'readonly' => $oITopUserRepository->GetReadOnlyUsers(),
-			'application' => $oITopUserRepository->GetUsersFromFilter($oITopUserRepository->GetApplicationUsers()),
+			'application' => $oITopUserRepository->GetApplicationUsers(),
 		];
 
 		$aUserToQuotas = [];
@@ -143,20 +77,15 @@ class ITopUserQuotaRepositoryTest extends ItopDataTestCase{
 	public function testAllUsersAreInQuota () {
 		$oITopUserRepository = new ITopUserQuotaRepository();
 
-		$oConsoleUsersFilter = $oITopUserRepository->GetConsoleUsers();
-		$aConsoleUsers = $oITopUserRepository->GetUsersFromFilter($oConsoleUsersFilter);
-		$oPortalUsersFilter = $oITopUserRepository->GetPortalUsers();
-		$aPortalUsers = $oITopUserRepository->GetUsersFromFilter($oPortalUsersFilter);
-		$oDisabledUsersFilter = $oITopUserRepository->GetDisabledUsers();
-		$aDisabledUsers = $oITopUserRepository->GetUsersFromFilter($oDisabledUsersFilter);
+		$aConsoleUsers = $oITopUserRepository->GetConsoleUsers();
+		$aPortalUsers = $oITopUserRepository->GetPortalUsers();
+		$aDisabledUsers = $oITopUserRepository->GetDisabledUsers();
 		$aReadOnlyUsers = $oITopUserRepository->GetReadOnlyUsers();
-		$oApplicationUsersFilter = $oITopUserRepository->GetApplicationUsers();
-		$aApplicationUsers = $oITopUserRepository->GetUsersFromFilter($oApplicationUsersFilter);
+		$aApplicationUsers = $oITopUserRepository->GetApplicationUsers();
 
 		$aAllUsersFromQuota = array_merge($aConsoleUsers, $aPortalUsers, $aDisabledUsers, $aReadOnlyUsers, $aApplicationUsers);
 
-		$oAllUsersFilter = $oITopUserRepository->GetAllUsers();
-		$aAllUsersFromOQL = $oITopUserRepository->GetUsersFromFilter($oAllUsersFilter);
+		$aAllUsersFromOQL = $oITopUserRepository->GetAllUsers();
 
 		$this->assertEmpty(array_merge(array_diff($aAllUsersFromQuota, $aAllUsersFromOQL), array_diff($aAllUsersFromOQL, $aAllUsersFromQuota)));
 	}
@@ -165,15 +94,11 @@ class ITopUserQuotaRepositoryTest extends ItopDataTestCase{
 	{
 		$oITopUserRepository = new ITopUserQuotaRepository();
 
-		$oConsoleUsersFilter = $oITopUserRepository->GetConsoleUsers();
-		$aConsoleUsers = $oITopUserRepository->GetUsersFromFilter($oConsoleUsersFilter);
-		$oPortalUsersFilter = $oITopUserRepository->GetPortalUsers();
-		$aPortalUsers = $oITopUserRepository->GetUsersFromFilter($oPortalUsersFilter);
-		$oDisabledUsersFilter = $oITopUserRepository->GetDisabledUsers();
-		$aDisabledUsers = $oITopUserRepository->GetUsersFromFilter($oDisabledUsersFilter);
+		$aConsoleUsers = $oITopUserRepository->GetConsoleUsers();
+		$aPortalUsers = $oITopUserRepository->GetPortalUsers();
+		$aDisabledUsers = $oITopUserRepository->GetDisabledUsers();
 		$aReadOnlyUsers = $oITopUserRepository->GetReadOnlyUsers();
-		$oApplicationUsersFilter = $oITopUserRepository->GetApplicationUsers();
-		$aApplicationUsers = $oITopUserRepository->GetUsersFromFilter($oApplicationUsersFilter);
+		$aApplicationUsers = $oITopUserRepository->GetApplicationUsers();
 
 		$aAllQuotaUsers = array_merge($aConsoleUsers, $aPortalUsers, $aDisabledUsers, $aReadOnlyUsers, $aApplicationUsers);
 

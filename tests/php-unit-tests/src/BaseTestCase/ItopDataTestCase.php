@@ -87,8 +87,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 */
 	public const DEFAULT_TEST_ENVIRONMENT = 'production';
 	public const USE_TRANSACTION = true;
-	public const CREATE_TEST_ORG = false;
-
 	protected static $aURP_Profiles = [
 		'Administrator'         => 1,
 		'Portal user'           => 2,
@@ -103,7 +101,12 @@ abstract class ItopDataTestCase extends ItopTestCase
 		'Document author'       => 11,
 		'Portal power user'     => 12,
 		'REST Services User'    => 1024,
+		'Configuration ReadOnly' => 5500,
+		'Ticket ReadOnly' => 5501,
+		'Service Catalog ReadOnly' => 5502,
 	];
+
+	public const CREATE_TEST_ORG = false;
 
 	/**
 	 * This method is called before the first test of this test class is run (in the current process).
