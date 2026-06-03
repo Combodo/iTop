@@ -81,13 +81,13 @@ class ApplicationInstallSequencer extends StepSequencer
 					return $this->ComputeNextStep($sStep);
 
 				case 'log-parameters':
-					if (array_key_exists($sStep, $this->oParams->Get('optional_steps', []))) {
+					if ($this->HasOptionalStep($sStep)) {
 						$this->DoLogParameters();
 					}
 					return $this->ComputeNextStep($sStep);
 
 				case 'backup':
-					if (array_key_exists($sStep, $this->oParams->Get('optional_steps', []))) {
+					if ($this->HasOptionalStep($sStep, false)) {
 						$aBackupOptions = $this->oParams->Get('optional_steps')['backup'];
 						// __DB__-%Y-%m-%d
 						$sDestination = $aBackupOptions['destination'];
@@ -100,7 +100,7 @@ class ApplicationInstallSequencer extends StepSequencer
 
 				case 'migrate-before':
 					$this->oRunTimeEnvironment->EnterMaintenanceMode($this->GetConfig());
-					if (array_key_exists($sStep, $this->oParams->Get('optional_steps', []))) {
+					if ($this->HasOptionalStep($sStep)) {
 						$this->oRunTimeEnvironment->MigrateDataBeforeUpdateStructure($this->oParams->Get('mode'), $this->GetConfig());
 					}
 					return $this->ComputeNextStep($sStep);
@@ -111,7 +111,7 @@ class ApplicationInstallSequencer extends StepSequencer
 					return $this->ComputeNextStep($sStep);
 
 				case 'migrate-after':
-					if (array_key_exists($sStep, $this->oParams->Get('optional_steps', []))) {
+					if ($this->HasOptionalStep($sStep)) {
 						$this->oRunTimeEnvironment->MigrateDataAfterUpdateStructure($this->oParams->Get('mode'), $this->GetConfig());
 					}
 					return $this->ComputeNextStep($sStep);
