@@ -191,13 +191,17 @@ class ApplicationInstallSequencer extends StepSequencer
 	public function GetStepNames(): array
 	{
 		$aStepNames = [ ''];
-		foreach (['log-parameters', 'backup', 'migrate-before'] as $sStepName) {
-			if (array_key_exists($sStepName, $this->oParams->Get('optional_steps', []))) {
-				$aStepNames [] = $sStepName;
-			}
+		if ($this->HasOptionalStep('log-parameters')) {
+			$aStepNames [] = 'log-parameters';
+		}
+		if ($this->HasOptionalStep('backup', false)) {
+			$aStepNames [] = 'backup';
+		}
+		if ($this->HasOptionalStep('migrate-before')) {
+			$aStepNames [] = 'migrate-before';
 		}
 		$aStepNames [] = 'db-schema';
-		if (array_key_exists('migrate-after', $this->oParams->Get('optional_steps', []))) {
+		if ($this->HasOptionalStep('migrate-after')) {
 			$aStepNames [] = 'migrate-after';
 		}
 

@@ -233,4 +233,26 @@ abstract class StepSequencer
 	 * @return array (status => , message => , percentage-completed => , next-step => , next-step-label => )
 	 */
 	abstract public function ExecuteStep($sStep = '', $sInstallComment = null): array;
+
+	/**
+	 * Check whether an optional step is enabled in the "optional_steps" parameters. If optional_steps is not set, use $bDefaultValue as its default value
+	 *
+	 * @param $sStep
+	 * @param bool $bDefaultValue
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
+	protected function HasOptionalStep($sStep, bool $bDefaultValue = true)
+	{
+		$aOptionalSteps = $this->oParams->Get('optional_steps', null);
+		if (is_null($aOptionalSteps)) {
+			return $bDefaultValue;
+		}
+		if (is_array($aOptionalSteps)) {
+			return array_key_exists($sStep, $aOptionalSteps) && filter_var($aOptionalSteps[$sStep], FILTER_VALIDATE_BOOLEAN);
+		}
+		throw new Exception('Incorrect value for parameter optional_steps');
+	}
+
 }
