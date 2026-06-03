@@ -250,7 +250,7 @@ abstract class StepSequencer
 			return $bDefaultValue;
 		}
 		if (is_array($aOptionalSteps)) {
-			return array_key_exists($sStep, $aOptionalSteps) && filter_var($aOptionalSteps[$sStep], FILTER_VALIDATE_BOOLEAN);
+			return array_key_exists($sStep, $aOptionalSteps);
 		}
 		throw new Exception('Incorrect value for parameter optional_steps');
 	}
