@@ -88,16 +88,8 @@
       <group id="Ticket" _delta="define">
         <classes>
           <class id="Ticket"/>
-        </classes>
-      </group>
-      <group id="FunctionalCI" _delta="define">
-        <classes>
-          <class id="FunctionalCI"/>
-        </classes>
-      </group>
-      <group id="ServiceFamily" _delta="define">
-        <classes>
-          <class id="ServiceFamily"/>
+          <class id="WorkOrder"/>
+          <class id="Attachment"/>
         </classes>
       </group>
       <group id="Portal" _delta="define">
@@ -221,10 +213,16 @@
     </groups>
     <profiles>
       <profile id="5500" _delta="define">
-        <name>ReadOnlyCI</name>
+        <name>Configuration ReadOnly</name>
         <description>This read-only profile allows to see CIs objects.</description>
         <groups>
-          <group id="FunctionalCI">
+          <group id="Configuration">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+            </actions>
+          </group>
+          <group id="General">
             <actions>
               <action id="action:read">allow</action>
               <action id="action:bulk read">allow</action>
@@ -233,7 +231,7 @@
         </groups>
       </profile>
       <profile id="5501" _delta="define">
-        <name>ReadOnlyTicket</name>
+        <name>Ticket ReadOnly</name>
         <description>This read-only profile allows to see Ticket objects.</description>
         <groups>
           <group id="Ticket">
@@ -242,13 +240,25 @@
               <action id="action:bulk read">allow</action>
             </actions>
           </group>
+          <group id="General">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+            </actions>
+          </group>
         </groups>
       </profile>
       <profile id="5502" _delta="define">
-        <name>ReadOnlyCatalog</name>
-        <description>This read-only profile allows to see ServiceFamily objects.</description>
+        <name>Service Catalog ReadOnly</name>
+        <description>This read-only profile allows to see Service Catalog objects.</description>
         <groups>
-          <group id="ServiceFamily">
+          <group id="Service">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+            </actions>
+          </group>
+          <group id="General">
             <actions>
               <action id="action:read">allow</action>
               <action id="action:bulk read">allow</action>
