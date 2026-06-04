@@ -102,7 +102,7 @@ class DataAuditSequencer extends StepSequencer
 
 	protected function IsDataAuditRequired(): bool
 	{
-		if (! array_key_exists('setup-audit', $this->oParams->Get('optional_steps', []))) {
+		if (!$this->HasOptionalStep('setup-audit', false)) {
 			return false;
 		}
 
@@ -124,7 +124,7 @@ class DataAuditSequencer extends StepSequencer
 	public function GetStepNames(): array
 	{
 		$aStepNames = [''];
-		if (array_key_exists('copy', $this->oParams->Get('optional_steps', []))) {
+		if ($this->HasOptionalStep('copy')) {
 			$aStepNames[] = 'copy';
 		}
 		$aStepNames[] = 'compile';
