@@ -108,7 +108,7 @@ JS);
 		$aParams = [
 			'selected_modules' => '[]',
 			'selected_extensions' => '[]',
-			'display_choices' => '[]',
+			'display_choices' => '',
 			'added_extensions' => '[]',
 			'removed_extensions' => '[]',
 			'extensions_not_uninstallable' => '[]',

@@ -39,7 +39,8 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 	 */
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
-		$sBuildConfigFile = APPCONF.$this->oRuntimeEnv->GetBuildEnv().'/'.ITOP_CONFIG_FILE;
+		// Change the rights to production config file !
+		$sBuildConfigFile = APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE;
 		@chmod($sBuildConfigFile, 0770); // In case it exists: RWX for owner and group, nothing for others
 
 		$oConfig = new Config($sBuildConfigFile);
