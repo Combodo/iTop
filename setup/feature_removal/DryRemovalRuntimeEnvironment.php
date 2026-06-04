@@ -15,7 +15,7 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 	 *
 	 *  @param string $sSourceEnv: environment from which setup is inspired to simulate extension removal and usee CompileFrom...
 	 */
-	public function __construct($sSourceEnv = 'production', array $aExtensionCodesToRemove = [])
+	public function __construct($sSourceEnv = ITOP_DEFAULT_ENV, array $aExtensionCodesToRemove = [])
 	{
 		parent::__construct($sSourceEnv, false);
 		$this->aExtensionsToRemoveByCode = $aExtensionCodesToRemove;

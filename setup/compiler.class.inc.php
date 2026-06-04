@@ -290,9 +290,9 @@ class MFCompiler
 		} else {
 			$oConfig = null;
 		}
-		if (($this->sEnvironment == ITOP_DEFAULT_ENV) && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
-			SetupUtils::EnterMaintenanceMode($oConfig);
-		}
+		//		if (($this->sEnvironment == ITOP_DEFAULT_ENV) && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
+		//			SetupUtils::EnterMaintenanceMode($oConfig);
+		//		}
 		if ($bUseSymbolicLinks || $bSkipTempDir) {
 			// Skip the creation of a temporary dictionary, not compatible with symbolic links
 			$sTempTargetDir = $sFinalTargetDir;
@@ -313,9 +313,9 @@ class MFCompiler
 				// Cleanup the temporary directory
 				SetupUtils::rrmdir($sTempTargetDir);
 			}
-			if (($this->sEnvironment == ITOP_DEFAULT_ENV) && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
-				SetupUtils::ExitMaintenanceMode();
-			}
+			//			if (($this->sEnvironment == ITOP_DEFAULT_ENV) && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
+			//				SetupUtils::ExitMaintenanceMode();
+			//			}
 			throw $e;
 		}
 
@@ -323,9 +323,9 @@ class MFCompiler
 			// Move the results to the target directory
 			SetupUtils::movedir($sTempTargetDir, $sFinalTargetDir);
 		}
-		if (($this->sEnvironment == ITOP_DEFAULT_ENV) && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
-			SetupUtils::ExitMaintenanceMode();
-		}
+		//		if (($this->sEnvironment == ITOP_DEFAULT_ENV) && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
+		//			SetupUtils::ExitMaintenanceMode();
+		//		}
 
 		// Reset the opcache since otherwise the PHP "model" files may still be cached !!
 		// In case of bad luck (this happens **sometimes** - see N. 550), we may analyze the database structure

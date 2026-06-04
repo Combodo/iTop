@@ -106,6 +106,7 @@ class DataFeatureRemovalController extends Controller
 			'force-uninstall' => "",
 			'use_symbolic_links' => MFCompiler::UseSymbolicLinks() ? 'on' : '',
 			'return_button_label' => '',
+			'target_env' => ITOP_DEFAULT_ENV,
 		];
 
 		$aHiddenInputs = [];

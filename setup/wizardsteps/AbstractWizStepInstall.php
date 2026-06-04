@@ -73,7 +73,7 @@ abstract class AbstractWizStepInstall extends WizardStep
 			'datamodel_version' => $this->oWizard->GetParameter('datamodel_version'), //TODO: let the installer compute this automatically...
 			'previous_configuration_file' => $sPreviousConfigurationFile,
 			'extensions_dir' => $this->oWizard->GetParameter('extensions_dir', 'extensions'),
-			'target_env' => 'production',
+			'target_env' => $this->oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV),
 			'workspace_dir' => '',
 			'database' =>  [
 				'server' => $this->oWizard->GetParameter('db_server'),

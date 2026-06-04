@@ -396,9 +396,11 @@ class RunTimeEnvironment
 		$sBuildConfigFile = APPCONF.$this->sBuildEnv.'/'.ITOP_CONFIG_FILE;
 
 		// Write the config file
-		@chmod($sBuildConfigFile, 0770); // In case it exists: RWX for owner and group, nothing for others
+		if (is_file($sBuildConfigFile)) {
+			chmod($sBuildConfigFile, 0770); // In case it exists: RWX for owner and group, nothing for others
+		}
 		$oConfig->WriteToFile($sBuildConfigFile);
-		@chmod($sBuildConfigFile, 0440); // Read-only for owner and group, nothing for others
+		chmod($sBuildConfigFile, 0440); // Read-only for owner and group, nothing for others
 	}
 
 	/**
@@ -1331,11 +1333,11 @@ class RunTimeEnvironment
 
 	public function DataToCleanupAudit()
 	{
-		$oSetupAudit = new SetupAudit(ITOP_DEFAULT_ENV, $this->sBuildEnv);
+		$oSetupAudit = new SetupAudit($this->GetFinalEnv(), $this->GetBuildEnv());
 
 		//Make sure the MetaModel is started before analysing for issues
-		$sConfFile = utils::GetConfigFilePath(ITOP_DEFAULT_ENV);
-		MetaModel::Startup($sConfFile, false, false); // Start on production environment
+		$sConfFile = utils::GetConfigFilePath($this->GetFinalEnv());
+		MetaModel::Startup($sConfFile, false, false); // Start on environment
 		$oSetupAudit->RunDataAudit(true);
 		$iCount = $oSetupAudit->GetDataToCleanupCount();
 
@@ -1471,7 +1473,7 @@ class RunTimeEnvironment
 			SetupUtils::tidydir($sBuildPath);
 		}
 
-		$oExtensionsMap = new iTopExtensionsMap(ITOP_DEFAULT_ENV, $aDirsToScan);
+		$oExtensionsMap = new iTopExtensionsMap($this->GetFinalEnv(), $aDirsToScan);
 		// Removed modules are stored as static for FindModules()
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
@@ -1572,7 +1574,7 @@ class RunTimeEnvironment
 
 	public function EnterReadOnlyMode(Config $oConfig)
 	{
-		if ($this->GetFinalEnv() != 'production') {
+		if ($this->GetFinalEnv() != ITOP_DEFAULT_ENV) {
 			return;
 		}
 
@@ -1592,7 +1594,7 @@ class RunTimeEnvironment
 
 	public function ExitReadOnlyMode()
 	{
-		if ($this->GetFinalEnv() != 'production') {
+		if ($this->GetFinalEnv() != ITOP_DEFAULT_ENV) {
 			return;
 		}
 

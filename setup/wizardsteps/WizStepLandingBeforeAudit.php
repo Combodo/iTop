@@ -7,10 +7,12 @@
 
 class WizStepLandingBeforeAudit extends WizStepModulesChoice
 {
+	private RunTimeEnvironment $oRuntimeEnv;
+
 	public function __construct(WizardController $oWizard, $sCurrentState)
 	{
-		$oProductionEnv = new RunTimeEnvironment();
-		$sBuildConfigFile = APPCONF.$oProductionEnv->GetBuildEnv().'/'.ITOP_CONFIG_FILE;
+		$this->oRuntimeEnv = new RunTimeEnvironment($oWizard->GetParameter('target_env'));
+		$sBuildConfigFile = APPCONF.$this->oRuntimeEnv->GetBuildEnv().'/'.ITOP_CONFIG_FILE;
 		$this->oConfig = new Config($sBuildConfigFile);
 
 		$oWizard->SetParameter('previous_version_dir', APPROOT);
@@ -37,8 +39,7 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 	 */
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
-		$oProductionEnv = new RunTimeEnvironment();
-		$sBuildConfigFile = APPCONF.$oProductionEnv->GetBuildEnv().'/'.ITOP_CONFIG_FILE;
+		$sBuildConfigFile = APPCONF.$this->oRuntimeEnv->GetBuildEnv().'/'.ITOP_CONFIG_FILE;
 		@chmod($sBuildConfigFile, 0770); // In case it exists: RWX for owner and group, nothing for others
 
 		$oConfig = new Config($sBuildConfigFile);

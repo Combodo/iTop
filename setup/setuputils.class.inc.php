@@ -158,7 +158,7 @@ class SetupUtils
 		if (utils::IsModeCLI()) {
 			$aWritableDirs = ['log', 'data'];
 		} else {
-			$aWritableDirs = ['log', 'env-production', 'env-production-build', 'conf', 'data'];
+			$aWritableDirs = ['log', 'env-production', 'env-production-build', 'env-test', 'env-test-build', 'conf', 'data'];
 		}
 		$aWritableDirsErrors = self::CheckWritableDirs($aWritableDirs);
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
@@ -527,10 +527,14 @@ class SetupUtils
 	 *
 	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	public static function CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir = null)
+	public static function CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir = null, string $sEnvironment = ITOP_DEFAULT_ENV)
 	{
 		$aResult = [];
 		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckBackupPrerequisites');
+
+		if ($sEnvironment !== ITOP_DEFAULT_ENV) {
+			$aResult[] = new CheckResult(CheckResult::ERROR, "Can only backup ".ITOP_DEFAULT_ENV." environment");
+		}
 
 		// zip extension
 		//
@@ -1592,13 +1596,13 @@ JS
 		if (is_dir($oWizard->GetParameter('copy_extensions_from'))) {
 			$aDirsToScan[] = $oWizard->GetParameter('copy_extensions_from');
 		}
-		$sExtraDir = utils::GetDataPath().'production-modules/';
+		$sExtraDir = utils::GetDataPath().$oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV).'-modules/';
 		if (is_dir($sExtraDir)) {
 			$aDirsToScan[] = $sExtraDir;
 		}
-		$oProductionEnv = new RunTimeEnvironment();
+		$oProductionEnv = new RunTimeEnvironment($oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV));
 		$aRemovedExtensionCodes = json_decode($oWizard->GetParameter('removed_extensions'), true) ?? [];
-		$oExtensionsMap = new iTopExtensionsMap(ITOP_DEFAULT_ENV, $aDirsToScan);
+		$oExtensionsMap = new iTopExtensionsMap($oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV), $aDirsToScan);
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aDirsToScan, $bAbortOnMissingDependency, $aModulesToLoad);
@@ -1615,9 +1619,12 @@ JS
 	}
 
 	/**
+	 * Get version of production application
+	 *
 	 * @param WizardController $oWizard
 	 *
 	 * @return array|bool
+	 * @throws \CoreException
 	 */
 	public static function GetApplicationVersion($oWizard)
 	{

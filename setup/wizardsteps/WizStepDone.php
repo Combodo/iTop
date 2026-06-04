@@ -17,6 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
@@ -95,7 +96,7 @@ class WizStepDone extends WizardStep
 		// Load the data model only, in order to load env-production/core/main.php to get the XML parameters (needed by GetModuleSettings below)
 		// But main.php may also contain classes (defined without any module), and thus requiring the full data model
 		// to be loaded to prevent "class not found" errors...
-		$oProductionEnv = new RunTimeEnvironment(ITOP_DEFAULT_ENV);
+		$oProductionEnv = new RunTimeEnvironment($this->oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV));
 		$oProductionEnv->InitDataModel($oConfig, true);
 		$sIframeUrl = $oConfig->GetModuleSetting('itop-hub-connector', 'setup_url', '');
 

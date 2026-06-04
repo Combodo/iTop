@@ -102,7 +102,8 @@ JS);
 	 */
 	public function PostFormDisplay(SetupPage $oPage)
 	{
-		$sApplicationUrl = utils::GetAbsoluteUrlModulePage('combodo-data-feature-removal', 'index.php');
+		$sEnvironment = $this->oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV);
+		$sApplicationUrl = utils::GetAbsoluteUrlModulePage('combodo-data-feature-removal', 'index.php', ['switch_env' => $sEnvironment], $sEnvironment);
 
 		$aParams = [
 			'selected_modules' => '[]',
@@ -113,6 +114,7 @@ JS);
 			'extensions_not_uninstallable' => '[]',
 			'copy_setup_files' => 1,
 			'return_button_label' => '',
+			'target_env' => ITOP_DEFAULT_ENV,
 			'force-uninstall' => "",
 			'use_symbolic_links' => "",
 		];
@@ -124,7 +126,6 @@ JS);
 	<input type="hidden" name="$sParamName" value="$sElements"/>
 INPUT;
 		}
-
 		$sUID = Session::Get('setup_token');
 		$oPage->add(
 			<<<HTML
