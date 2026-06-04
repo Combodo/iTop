@@ -65,11 +65,11 @@
                 {% UIFileSelect Standard {sName: 'file', sId: 'file','AddCSSClass':'ibo-is-hidden'} %}
 
                 {% UIAlert ForWarning {'sId':'dobackup-warning', 'IsHidden':true} %}
-                    {{ 'iTopUpdate:UI:DoBackup:Warning'|dict_s }}
+                    {{ 'iTopUpdate:UI:Backup:Warning'|dict_s }}
                 {% EndUIAlert %}
 
                 {% UIContentBlock Standard {'aContainerClasses':['ibo-font-ral-nor-150']} %}
-                    {% UIInput Standard {'sType':'checkbox', 'sId':'doBackup', 'sName':'doBackup', 'sValue':'1', 'IsChecked':true, 'CSSClasses':['ibo-input-checkbox', 'ibo-input--label-left'], 'Label':'iTopUpdate:UI:DoBackup:Label'|dict_s} %}
+                    {% UIInput Standard {'sType':'checkbox', 'sId':'doBackup', 'sName':'doBackup', 'sValue':'1', 'IsChecked':true, 'CSSClasses':['ibo-input-checkbox', 'ibo-input--label-left'], 'Label':'iTopUpdate:UI:Backup:Label'|dict_s} %}
                 {% EndUIContentBlock %}
 
                 {% UIContentBlock Standard {'aContainerClasses':['ibo-font-ral-nor-150']} %}

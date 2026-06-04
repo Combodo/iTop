@@ -8,6 +8,7 @@ $ibo-toggler--wrapper--height: 20px !default;
 
 $ibo-toggler--slider--border-radius: $ibo-border-radius-900 !default;
 $ibo-toggler--slider--background-color: $ibo-color-secondary-600 !default;
+$ibo-toggler--slider--disabled--background-color: $ibo-color-secondary-200 !default;
 
 $ibo-toggler--slider--before--left: 3px !default;
 $ibo-toggler--slider--before--bottom: 3px !default;
@@ -17,6 +18,7 @@ $ibo-toggler--slider--before--border-radius: $ibo-border-radius-full !default;
 $ibo-toggler--slider--before--background-color: $ibo-color-grey-100 !default;
 
 $ibo-toggler--slider--checked--background-color: $ibo-color-primary-600 !default;
+$ibo-toggler--slider--checked-disabled--background-color: $ibo-color-primary-200 !default;
 $ibo-toggler--slider--focus--box-shadow: 0 0 1px $ibo-color-primary-600 !default;
 
 $ibo-toggler--label--margin-left: 4px !default;
@@ -59,6 +61,13 @@ $ibo-toggler--label--margin-left: 4px !default;
 
 .ibo-toggler--wrapper input:checked + .ibo-toggler--slider {
   background-color: $ibo-toggler--slider--checked--background-color;
+}
+
+.ibo-toggler--wrapper input:disabled + .ibo-toggler--slider {
+  background-color: $ibo-toggler--slider--disabled--background-color;
+}
+.ibo-toggler--wrapper input:checked:disabled + .ibo-toggler--slider {
+  background-color: $ibo-toggler--slider--checked-disabled--background-color;
 }
 
 input:focus + .ibo-toggler--slider {

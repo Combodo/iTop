@@ -4,8 +4,10 @@ namespace Combodo\iTop\Service\Notification\Event;
 
 use Action;
 use Combodo\iTop\Application\Branding;
+use Combodo\iTop\Application\WebPage\WebPage;
 use EventNotificationNewsroom;
 use MetaModel;
+use ormDocument;
 use utils;
 
 /**
@@ -70,5 +72,32 @@ class EventNotificationNewsroomService
 		}
 
 		return $oEvent;
+	}
+
+	/**
+	 * @param \Combodo\iTop\Application\WebPage\WebPage $oPage
+	 * @param string $sId
+	 * @param int $iContactId
+	 *
+	 * @return bool Returns true if the download has been launched, false otherwise (e.g. if the event doesn't exist or doesn't belong to the current user)
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	public static function DownloadIcon(WebPage $oPage, string $sId, int $iContactId): bool
+	{
+		$oEvent = MetaModel::GetObject(EventNotificationNewsroom::class, $sId, false, true);
+		if (($oEvent !== null) && ($oEvent->Get('contact_id') === $iContactId)) {
+			ormDocument::DownloadDocument(
+				$oPage,
+				EventNotificationNewsroom::class,
+				$sId,
+				'icon',
+				ormDocument::ENUM_CONTENT_DISPOSITION_INLINE,
+				bAllowAllData: true
+			);
+			return true;
+		}
+
+		return false;
 	}
 }

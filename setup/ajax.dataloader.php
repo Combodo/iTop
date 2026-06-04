@@ -127,7 +127,7 @@ header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");    // Date in the past
 /**
  * Main program
  */
-$sOperation = Utils::ReadParam('operation', '');
+$sOperation = utils::ReadParam('operation', '');
 try {
 	SetupUtils::CheckSetupToken();
 
@@ -138,8 +138,7 @@ try {
 			ini_set('display_errors', true);
 			ini_set('display_startup_errors', true);
 
-			require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
-			require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
+			require_once(APPROOT.'/setup/wizardsteps_autoload.php');
 
 			$sClass = utils::ReadParam('step_class', '');
 			$sState = utils::ReadParam('step_state', '');
@@ -150,12 +149,12 @@ try {
 			if (is_subclass_of($sClass, 'WizardStep')) {
 				/** @var WizardStep $oStep */
 				$oStep = new $sClass($oDummyController, $sState);
-				$sConfigFile = utils::GetConfigFilePath();
+				$sConfigFile = utils::GetConfigFilePath(ITOP_DEFAULT_ENV);
 				if (file_exists($sConfigFile) && !is_writable($sConfigFile) && $oStep->RequiresWritableConfig()) {
-					$sRelativePath = utils::GetConfigFilePathRelative();
-					$oPage->error("<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.");
-					$oPage->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.");
-					$oPage->output();
+					$sRelativePath = utils::GetConfigFilePathRelative(ITOP_DEFAULT_ENV);
+					$sErrorMsg = "<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.";
+					$sErrorMsg .= "The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.";
+					throw new Exception($sErrorMsg);
 				} else {
 					$oStep->AsyncAction($oPage, $sActionCode, $aParams);
 				}
@@ -164,7 +163,7 @@ try {
 			break;
 
 		case 'toggle_use_symbolic_links':
-			$sUseSymbolicLinks = Utils::ReadParam('bUseSymbolicLinks', false);
+			$sUseSymbolicLinks = utils::ReadParam('bUseSymbolicLinks', false);
 			$bUseSymbolicLinks = ($sUseSymbolicLinks === 'true');
 			MFCompiler::SetUseSymbolicLinksFlag($bUseSymbolicLinks);
 			echo "toggle useSymbolicLinks flag : $bUseSymbolicLinks";
@@ -181,9 +180,5 @@ try {
 }
 
 if (function_exists('memory_get_peak_usage')) {
-	if ($sOperation == 'file') {
-		SetupLog::Info("loading file '$sFileName', peak memory usage. ".memory_get_peak_usage());
-	} else {
-		SetupLog::Info("operation '$sOperation', peak memory usage. ".memory_get_peak_usage());
-	}
+	SetupLog::Info("operation '$sOperation', peak memory usage. ".memory_get_peak_usage());
 }

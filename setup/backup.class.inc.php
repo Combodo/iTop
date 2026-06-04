@@ -136,7 +136,7 @@ class DBBackup
 	/**
 	 * Create a normalized backup name, depending on the current date/time and Database
 	 *
-	 * @param string sMySQLBinDir  Name and path, eventually containing itop placeholders + time formatting specs
+	 * @param string $sMySQLBinDir Name and path, eventually containing itop placeholders + time formatting specs
 	 */
 	public function SetMySQLBinDir($sMySQLBinDir)
 	{

@@ -97,7 +97,7 @@ class DBRestore extends DBBackup
 	 *
 	 * @uses \RunTimeEnvironment::CompileFrom()
 	 */
-	public function RestoreFromCompressedBackup($sFile, $sEnvironment = 'production')
+	public function RestoreFromCompressedBackup($sFile, $sEnvironment = ITOP_DEFAULT_ENV)
 	{
 		$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
 		IssueLog::Info("Backup Restore - Acquiring the LOCK 'restore.$sEnvironment'");

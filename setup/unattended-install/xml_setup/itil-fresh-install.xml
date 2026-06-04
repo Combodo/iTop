@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <installation>
   <mode>install</mode>
-  <preinstall>
-  </preinstall>
+  <optional_steps>
+    <log-parameters>1</log-parameters>
+    <migrate-before>1</migrate-before>
+    <migrate-after>1</migrate-after>
+    <copy>1</copy>
+  </optional_steps>
   <source_dir>datamodels/2.x/</source_dir>
-  <datamodel_version>2.7.0</datamodel_version>
-  <previous_configuration_file>/var/www/html/iTop/conf/production/config-itop.php</previous_configuration_file>
+  <datamodel_version>3.3.0</datamodel_version>
   <extensions_dir>extensions</extensions_dir>
   <target_env>production</target_env>
   <workspace_dir></workspace_dir>
@@ -50,4 +53,5 @@
     <item>itop-config-mgmt-core</item>
     <item>itop-kown-error-mgmt</item>
   </selected_extensions>
+  <use_symbolic_links>off</use_symbolic_links>
 </installation>

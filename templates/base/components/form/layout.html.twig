@@ -1,4 +1,4 @@
-<form method="post" enctype="multipart/form-data" id="{{ oUIBlock.GetId() }}"
+<form method="post" enctype="{{ oUIBlock.GetEncType() }}" id="{{ oUIBlock.GetId() }}"
       class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}"
       data-role="ibo-form"
         {% if oUIBlock.GetOnSubmitJsCode() %}

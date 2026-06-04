@@ -17,5 +17,10 @@ function AppUpgradeCopyFiles($sSourceDir)
 	$sSource = realpath($sSourceDir.'/datamodels/2.x/itop-core-update');
 	if ($sSource !== false) {
 		CoreUpdater::CopyDir($sSource, APPROOT.'env-production/itop-core-update');
+	} else {
+		$sSource = realpath($sSourceDir.'/datamodels/1.x/itop-core-update');
+		if ($sSource !== false) {
+			CoreUpdater::CopyDir($sSource, APPROOT.'env-production/itop-core-update');
+		}
 	}
 }

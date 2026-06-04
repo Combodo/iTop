@@ -268,7 +268,7 @@ class UserLocalTest extends ItopDataTestCase
 		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'));
 
 		//INSERT
-		$oUserLocal->Set('password', 'fooBar1???');
+		$oUserLocal->Set('password', 'Zydw&%&h25F4');
 		$oUserLocal->DBWrite();
 		$this->assertEquals($oNow, $oUserLocal->Get('password_renewed_date'), 'INSERT sets the "password_renewed_date" to the current date');
 
@@ -280,13 +280,13 @@ class UserLocalTest extends ItopDataTestCase
 
 		//UPDATE password
 		$oUserLocal = MetaModel::GetObject(UserLocal::class, $oUserLocal->GetKey());
-		$oUserLocal->Set('password', 'fooBar1???1');
+		$oUserLocal->Set('password', 'Zydw&%&h25F5');
 		$oUserLocal->DBWrite();
 		$this->assertEquals($oExpectedAfter, $oUserLocal->Get('password_renewed_date'), 'UPDATE "password" fields trigger automatic change of the  "password_renewed_date" field');
 
 		//UPDATE both password & password_renewed_date
 		$oUserLocal = MetaModel::GetObject(UserLocal::class, $oUserLocal->GetKey());
-		$oUserLocal->Set('password', 'fooBar1???2');
+		$oUserLocal->Set('password', 'Zydw&%&h25F6');
 		$oUserLocal->Set('password_renewed_date', $oBefore);
 		$oUserLocal->DBWrite();
 		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'), 'UPDATE can target and change both "password" and "password_renewed_date"');
@@ -337,7 +337,7 @@ class UserLocalTest extends ItopDataTestCase
 		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'));
 
 		//INSERT
-		$oUserLocal->Set('password', 'fooBar1???');
+		$oUserLocal->Set('password', 'Zydw&%&h25F4');
 		$oUserLocal->DBWrite();
 		$this->assertEquals($oNow, $oUserLocal->Get('password_renewed_date'), 'INSERT sets the "password_renewed_date" to the current date');
 

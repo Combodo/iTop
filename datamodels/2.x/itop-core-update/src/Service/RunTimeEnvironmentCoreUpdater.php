@@ -11,7 +11,6 @@ require_once(APPROOT."setup/runtimeenv.class.inc.php");
 
 use Config;
 use Exception;
-use ModelFactory;
 use RunTimeEnvironment;
 use SetupUtils;
 
@@ -25,33 +24,31 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 	 *
 	 * @throws \Exception
 	 */
-	public function __construct($sEnvironment = 'production', $bAutoCommit = true)
+	public function __construct($sEnvironment = ITOP_DEFAULT_ENV, $bAutoCommit = true)
 	{
 		parent::__construct($sEnvironment, $bAutoCommit);
 
-		if ($sEnvironment != $this->sTargetEnv) {
-			if (is_dir(APPROOT.'/env-'.$this->sTargetEnv)) {
-				SetupUtils::rrmdir(APPROOT.'/env-'.$this->sTargetEnv);
+		if ($sEnvironment != $this->sBuildEnv) {
+			if (is_dir(APPROOT.'/env-'.$this->sBuildEnv)) {
+				SetupUtils::rrmdir(APPROOT.'/env-'.$this->sBuildEnv);
 			}
-			if (is_dir(APPROOT.'/data/'.$this->sTargetEnv.'-modules')) {
-				SetupUtils::rrmdir(APPROOT.'/data/'.$this->sTargetEnv.'-modules');
+			if (is_dir(APPROOT.'/data/'.$this->sBuildEnv.'-modules')) {
+				SetupUtils::rrmdir(APPROOT.'/data/'.$this->sBuildEnv.'-modules');
 			}
-			SetupUtils::copydir(APPROOT.'/data/'.$sEnvironment.'-modules', APPROOT.'/data/'.$this->sTargetEnv.'-modules');
+			SetupUtils::copydir(APPROOT.'/data/'.$sEnvironment.'-modules', APPROOT.'/data/'.$this->sBuildEnv.'-modules');
 		}
 	}
 
 	/**
-	 * @param $sTargetEnv
+	 * @param $sBuildEnv
 	 *
 	 * @throws \Exception
 	 */
-	public function CheckDirectories($sTargetEnv)
+	public function CheckDirectories($sBuildEnv)
 	{
-		$sTargetDir = APPROOT.'env-'.$sTargetEnv;
-		$sBuildDir = $sTargetDir.'-build';
-
-		self::CheckDirectory($sTargetDir);
-		self::CheckDirectory($sBuildDir);
+		$sCurrentEnvDir = APPROOT.'env-'.$sBuildEnv;
+		self::CheckDirectory($sCurrentEnvDir);
+		self::CheckDirectory($sCurrentEnvDir.'-build');
 	}
 
 	/**
@@ -83,12 +80,12 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 	{
 		// Clone the default 'production' config file
 		//
-		$oConfig = clone($this->GetConfig('production'));
+		$oConfig = clone($this->GetConfig(ITOP_DEFAULT_ENV));
 
-		$oConfig->UpdateIncludes('env-'.$this->sTargetEnv);
+		$oConfig->UpdateIncludes('env-'.$this->sBuildEnv);
 
 		if (is_null($sEnvironmentLabel)) {
-			$sEnvironmentLabel = $this->sTargetEnv;
+			$sEnvironmentLabel = $this->sBuildEnv;
 		}
 		$oConfig->Set('app_env_label', $sEnvironmentLabel, 'application updater');
 
@@ -104,7 +101,7 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 	protected function GetConfig($sEnvironment = null)
 	{
 		if (is_null($sEnvironment)) {
-			$sEnvironment = $this->sTargetEnv;
+			$sEnvironment = $this->sBuildEnv;
 		}
 		$sFile = APPCONF.$sEnvironment.'/'.ITOP_CONFIG_FILE;
 		if (file_exists($sFile)) {
@@ -115,37 +112,4 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 		}
 		throw new Exception('No configuration file available');
 	}
-
-	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir)
-	{
-		$aRet =  parent::GetMFModulesToCompile($sSourceEnv, $sSourceDir);
-
-		// Add new mandatory modules from datamodel 2.x only
-		$sSourceDirFull = APPROOT.$sSourceDir;
-		if (!is_dir($sSourceDirFull)) {
-			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
-		}
-		$aDirsToCompile = [$sSourceDirFull];
-
-		$oFactory = new ModelFactory($aDirsToCompile);
-		$aModules = $oFactory->FindModules();
-		$aAvailableModules = [];
-		/** @var \MFModule $oModule */
-		foreach ($aModules as $oModule) {
-			$aAvailableModules[$oModule->GetName()] = $oModule;
-		}
-		// TODO check the auto-selected modules here
-		foreach ($this->oExtensionsMap->GetAllExtensions() as $oExtension) {
-			if ($oExtension->bMarkedAsChosen) {
-				foreach ($oExtension->aModules as $sModuleName) {
-					if (!isset($aRet[$sModuleName]) && isset($aAvailableModules[$sModuleName])) {
-						$aRet[$sModuleName] = $aAvailableModules[$sModuleName];
-					}
-				}
-			}
-		}
-
-		return $aRet;
-	}
-
 }

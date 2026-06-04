@@ -19,16 +19,16 @@ class ModuleDependencySort
 
 	final public static function GetInstance(): ModuleDependencySort
 	{
-		if (!isset(static::$oInstance)) {
-			static::$oInstance = new static();
+		if (!isset(self::$oInstance)) {
+			self::$oInstance = new ModuleDependencySort();
 		}
 
-		return static::$oInstance;
+		return self::$oInstance;
 	}
 
 	final public static function SetInstance(?ModuleDependencySort $oInstance): void
 	{
-		static::$oInstance = $oInstance;
+		self::$oInstance = $oInstance;
 	}
 
 	/**
@@ -140,35 +140,34 @@ class ModuleDependencySort
 			}
 			//include all modules
 			$iInDegreeCounterIncludingOutsideModules = count($oModule->GetUnresolvedDependencyModuleNames());
-			$aCountDepsByModuleId[$sModuleId] = [$iInDegreeCounter, $iInDegreeCounterIncludingOutsideModules, $sModuleId];
+			$aCountDepsByModuleId[$sModuleId] = new ModuleCountDepency($sModuleId, $iInDegreeCounter, $iInDegreeCounterIncludingOutsideModules);
 		}
 
 		$aRes = [];
 		while (count($aUnresolvedDependencyModules) > 0) {
 			asort($aCountDepsByModuleId);
 
-			uasort($aCountDepsByModuleId, function (array $aDeps1, array $aDeps2) {
-				//compare $iInDegreeCounter
-				$res = $aDeps1[0] - $aDeps2[0];
+			uasort($aCountDepsByModuleId, function (ModuleCountDepency $oModuleCountDepency1, ModuleCountDepency $oModuleCountDepency2) {
+				$res = $oModuleCountDepency1->iInDegreeCounter - $oModuleCountDepency2->iInDegreeCounter;
 				if ($res != 0) {
 					return $res;
 				}
 
-				//compare $iInDegreeCounterIncludingOutsideModules
-				$res = $aDeps1[1] - $aDeps2[1];
+				$res = $oModuleCountDepency1->iInDegreeCounterIncludingOutsideModules - $oModuleCountDepency2->iInDegreeCounterIncludingOutsideModules;
 				if ($res != 0) {
 					return $res;
 				}
 
 				//alphabetical order at least
-				return strcmp($aDeps1[2], $aDeps2[2]);
+				return strcmp($oModuleCountDepency1->sModuleId, $oModuleCountDepency2->sModuleId);
 			});
 
 			$bOneLoopAtLeast = false;
-			foreach ($aCountDepsByModuleId as $sModuleId => $iInDegreeCounter) {
+			foreach ($aCountDepsByModuleId as $sModuleId => $oModuleCountDepency) {
+				/** @var ModuleCountDepency $oModuleCountDepency */
 				$oModule = $aUnresolvedDependencyModules[$sModuleId];
 
-				if ($bOneLoopAtLeast && $iInDegreeCounter > 0) {
+				if ($bOneLoopAtLeast && ($oModuleCountDepency->iInDegreeCounter > 0)) {
 					break;
 				}
 
@@ -183,10 +182,10 @@ class ModuleDependencySort
 						if (!array_key_exists($sModuleId2, $aCountDepsByModuleId)) {
 							continue;
 						}
-						$aDepCount = $aCountDepsByModuleId[$sModuleId2];
-						$iInDegreeCounter = $aDepCount[0] - 1;
-						$iInDegreeCounterIncludingOutsideModules = $aDepCount[1];
-						$aCountDepsByModuleId[$sModuleId2] = [$iInDegreeCounter, $iInDegreeCounterIncludingOutsideModules, $sModuleId2];
+						/** @var ModuleCountDepency $oModuleCountDepency2 */
+						$oModuleCountDepency2 = $aCountDepsByModuleId[$sModuleId2];
+						$iInDegreeCounter = $oModuleCountDepency2->iInDegreeCounter - 1;
+						$aCountDepsByModuleId[$sModuleId2] = new ModuleCountDepency($sModuleId2, $iInDegreeCounter, $oModuleCountDepency2->iInDegreeCounterIncludingOutsideModules);
 					}
 
 					unset($aDependsOnModuleName[$oModule->GetModuleName()]);
@@ -198,4 +197,19 @@ class ModuleDependencySort
 
 		$aUnresolvedDependencyModules = $aRes;
 	}
+}
+
+class ModuleCountDepency
+{
+	public string $sModuleId;
+	public int $iInDegreeCounter;
+	public int $iInDegreeCounterIncludingOutsideModules;
+
+	public function __construct(string $sModuleId, int $iInDegreeCounter, int $iInDegreeCounterIncludingOutsideModules)
+	{
+		$this->iInDegreeCounter = $iInDegreeCounter;
+		$this->iInDegreeCounterIncludingOutsideModules = $iInDegreeCounterIncludingOutsideModules;
+		$this->sModuleId = $sModuleId;
+	}
+
 }

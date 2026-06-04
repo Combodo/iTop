@@ -58,7 +58,7 @@ class CheckResult
 
 	/**
 	 * @param \CheckResult[] $aResults
-	 * @param string[] $aCheckResultSeverities list of CheckResult object severities to keep
+	 * @param array $aCheckResultSeverities list of CheckResult object severities to keep
 	 *
 	 * @return \CheckResult[] only elements that have one of the passed severity
 	 *
@@ -254,32 +254,23 @@ class SetupUtils
 
 		if (!utils::IsModeCLI()) {
 			$sUploadTmpDir = self::GetUploadTmpDir();
-			if (empty($sUploadTmpDir)) {
-				$sUploadTmpDir = '/tmp';
-				$aResult[] = new CheckResult(
-					CheckResult::WARNING,
-					"Temporary directory for files upload is not defined (upload_tmp_dir), assuming that $sUploadTmpDir is used."
-				);
-			}
 			// check that the upload directory is indeed writable from PHP
-			if (!empty($sUploadTmpDir)) {
-				if (!file_exists($sUploadTmpDir)) {
+			if (!file_exists($sUploadTmpDir)) {
+				$aResult[] = new CheckResult(
+					CheckResult::ERROR,
+					"Temporary directory for files upload ($sUploadTmpDir) does not exist or cannot be read by PHP."
+				);
+			} else {
+				if (!is_writable($sUploadTmpDir)) {
 					$aResult[] = new CheckResult(
 						CheckResult::ERROR,
-						"Temporary directory for files upload ($sUploadTmpDir) does not exist or cannot be read by PHP."
+						"Temporary directory for files upload ($sUploadTmpDir) is not writable."
 					);
 				} else {
-					if (!is_writable($sUploadTmpDir)) {
-						$aResult[] = new CheckResult(
-							CheckResult::ERROR,
-							"Temporary directory for files upload ($sUploadTmpDir) is not writable."
-						);
-					} else {
-						$aResult[] = new CheckResult(
-							CheckResult::TRACE,
-							"Info - Temporary directory for files upload ($sUploadTmpDir) is writable."
-						);
-					}
+					$aResult[] = new CheckResult(
+						CheckResult::TRACE,
+						"Info - Temporary directory for files upload ($sUploadTmpDir) is writable."
+					);
 				}
 			}
 		}
@@ -467,6 +458,7 @@ class SetupUtils
 			);
 
 			$sPhpNextMinVersion = self::PHP_NEXT_MIN_VERSION; // mandatory before PHP 5.5 (arbitrary expressions), keeping compat because we're in the setup !
+			// @phpstan-ignore empty.variable
 			if (!empty($sPhpNextMinVersion)) {
 				if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>=')) {
 					$aResult[] = new CheckResult(
@@ -518,7 +510,7 @@ class SetupUtils
 		}
 		require_once(APPROOT.'setup/modulediscovery.class.inc.php');
 		try {
-			ModuleDiscovery::GetAvailableModules($aDirsToScan, true, $aSelectedModules);
+			ModuleDiscovery::GetModulesOrderedByDependencies($aDirsToScan, true, $aSelectedModules);
 		} catch (Exception $e) {
 			$aResult[] = new CheckResult(CheckResult::ERROR, $e->getMessage());
 		}
@@ -599,7 +591,7 @@ class SetupUtils
 		// create and test destination location
 		//
 		$sDestDir = dirname($sDBBackupPath);
-		setuputils::builddir($sDestDir);
+		SetupUtils::builddir($sDestDir);
 		if (!is_dir($sDestDir)) {
 			$aResult[] = new CheckResult(CheckResult::ERROR, "$sDestDir does not exist and could not be created.");
 		}
@@ -826,6 +818,11 @@ class SetupUtils
 		}
 	}
 
+	public static function CopyFile(string $sSource, string $sDest, bool $bUseSymbolicLinks = false): bool
+	{
+		return self::copydir($sSource, $sDest, $bUseSymbolicLinks);
+	}
+
 	/**
 	 * Helper to copy a directory to a target directory, skipping .SVN files (for developer's comfort!)
 	 * Returns true if successful
@@ -835,11 +832,13 @@ class SetupUtils
 	 * @return bool
 	 * @throws Exception
 	 */
-	public static function copydir($sSource, $sDest, $bUseSymbolicLinks = false)
+	public static function copydir(string $sSource, string $sDest, bool $bUseSymbolicLinks = false): bool
 	{
 		if (is_dir($sSource)) {
 			if (!is_dir($sDest)) {
 				mkdir($sDest, 0777 /* Default */, true);
+			} else {
+				SetupUtils::tidydir($sDest);
 			}
 			$aFiles = scandir($sSource);
 			if (sizeof($aFiles) > 0) {
@@ -848,25 +847,19 @@ class SetupUtils
 						// Skip
 						continue;
 					}
-
-					if (is_dir($sSource.'/'.$sFile)) {
+					$sSourcePath = $sSource.'/'.$sFile;
+					$sDestPath = $sDest.'/'.$sFile;
+					if (is_dir($sSourcePath)) {
 						// Recurse
-						self::copydir($sSource.'/'.$sFile, $sDest.'/'.$sFile, $bUseSymbolicLinks);
+						self::copydir($sSourcePath, $sDestPath, $bUseSymbolicLinks);
+					} elseif (is_link($sSourcePath)) {
+						$sLinkPath = readlink($sSourcePath);
+						symlink($sLinkPath, $sDestPath);
 					} else {
 						if ($bUseSymbolicLinks) {
-							if (function_exists('symlink')) {
-								if (file_exists($sDest.'/'.$sFile)) {
-									unlink($sDest.'/'.$sFile);
-								}
-								symlink($sSource.'/'.$sFile, $sDest.'/'.$sFile);
-							} else {
-								throw(new Exception("Error, cannot *copy* '$sSource/$sFile' to '$sDest/$sFile' using symbolic links, 'symlink' is not supported on this system."));
-							}
+							symlink($sSourcePath, $sDestPath);
 						} else {
-							if (is_link($sDest.'/'.$sFile)) {
-								unlink($sDest.'/'.$sFile);
-							}
-							copy($sSource.'/'.$sFile, $sDest.'/'.$sFile);
+							copy($sSourcePath, $sDestPath);
 						}
 					}
 				}
@@ -874,11 +867,10 @@ class SetupUtils
 			return true;
 		} elseif (is_file($sSource)) {
 			if ($bUseSymbolicLinks) {
-				if (function_exists('symlink')) {
-					return symlink($sSource, $sDest);
-				} else {
-					throw(new Exception("Error, cannot *copy* '$sSource' to '$sDest' using symbolic links, 'symlink' is not supported on this system."));
-				}
+				return symlink($sSource, $sDest);
+			} elseif (is_link($sSource)) {
+				$sLinkPath = readlink($sSource);
+				return symlink($sLinkPath, $sDest);
 			} else {
 				return copy($sSource, $sDest);
 			}
@@ -932,7 +924,7 @@ class SetupUtils
 			$aResult['found'] = true;
 		} elseif (file_exists($sDir.'/conf/production/config-itop.php')) {
 			$sSourceDir = $sDir;
-			$sSourceEnvironment = 'production';
+			$sSourceEnvironment = ITOP_DEFAULT_ENV;
 			$sConfigFile = $sDir.'/conf/production/config-itop.php';
 			$aResult['found'] = true;
 		}
@@ -1368,6 +1360,7 @@ EOF
 			);
 
 			$sMySqlNextMinVersion = self::MYSQL_NEXT_MIN_VERSION; // mandatory before PHP 5.5 (arbitrary expressions), keeping compat because we're in the setup !
+			// @phpstan-ignore empty.variable
 			if (!empty($sMySqlNextMinVersion)) {
 				if (version_compare($sDBVersion, self::MYSQL_NEXT_MIN_VERSION, '>=')) {
 					$aResult['checks'][] = new CheckResult(
@@ -1555,17 +1548,8 @@ JS
 		return $sHtml;
 	}
 
-	/**
-	 * @param \WizardController $oWizard
-	 * @param bool $bAbortOnMissingDependency ...
-	 * @param array $aModulesToLoad List of modules to search for, defaults to all if ommitted
-	 *
-	 * @return array
-	 * @throws Exception
-	 */
-	public static function AnalyzeInstallation($oWizard, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
+	public static function GetConfig(WizardController $oWizard)
 	{
-		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
 		$oConfig = new Config();
 		$sSourceDir = $oWizard->GetParameter('source_dir', '');
 
@@ -1579,8 +1563,28 @@ JS
 
 		$aParamValues = $oWizard->GetParamForConfigArray();
 		$aParamValues['source_dir'] = $sRelativeSourceDir;
-		$oConfig->UpdateFromParams($aParamValues, null);
-		$aDirsToScan = [$sSourceDir];
+		$oConfig->UpdateFromParams($aParamValues);
+
+		return $oConfig;
+	}
+
+	/**
+	 * @param \WizardController $oWizard
+	 * @param bool $bAbortOnMissingDependency ...
+	 * @param array $aModulesToLoad List of modules to search for, defaults to all if ommitted
+	 *
+	 * @return array
+	 * @throws Exception
+	 */
+	public static function AnalyzeInstallation($oWizard, $bAbortOnMissingDependency = false, $aModulesToLoad = null, ?Config $oConfig = null)
+	{
+		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
+
+		if (is_null($oConfig)) {
+			$oConfig = self::GetConfig($oWizard);
+		}
+
+		$aDirsToScan = [$oWizard->GetParameter('source_dir', '')];
 
 		if (is_dir(APPROOT.'extensions')) {
 			$aDirsToScan[] = APPROOT.'extensions';
@@ -1593,6 +1597,10 @@ JS
 			$aDirsToScan[] = $sExtraDir;
 		}
 		$oProductionEnv = new RunTimeEnvironment();
+		$aRemovedExtensionCodes = json_decode($oWizard->GetParameter('removed_extensions'), true) ?? [];
+		$oExtensionsMap = new iTopExtensionsMap(ITOP_DEFAULT_ENV, $aDirsToScan);
+		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
+
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aDirsToScan, $bAbortOnMissingDependency, $aModulesToLoad);
 
 		foreach ($aAvailableModules as $key => $aModule) {
@@ -1618,7 +1626,7 @@ JS
 
 		$aParamValues = $oWizard->GetParamForConfigArray();
 		$aParamValues['source_dir'] = '';
-		$oConfig->UpdateFromParams($aParamValues, null);
+		$oConfig->UpdateFromParams($aParamValues);
 
 		$oProductionEnv = new RunTimeEnvironment();
 		return $oProductionEnv->GetApplicationVersion($oConfig);
@@ -1679,8 +1687,8 @@ JS
 	 * @param string $sSourceDir Relative path to the directory to check under $sBaseDir
 	 * @param $aManifest
 	 * @param array $aExcludeNames
-	 * @param Hash $aResult Used for recursion
-	 * @return hash Hash array ('added' => array(), 'removed' => array(), 'modified' => array())
+	 * @param array $aResult Used for recursion
+	 * @return array array ('added' => array(), 'removed' => array(), 'modified' => array())
 	 * @internal param array $aDOMManifest Array of array('path' => relative_path 'size'=> iSize, 'md5' => sHexMD5)
 	 */
 	public static function CheckDirAgainstManifest($sBaseDir, $sSourceDir, $aManifest, $aExcludeNames = ['.svn', '.git'], $aResult = null)
@@ -1805,7 +1813,7 @@ JS
 	/**
 	 * @param string $sInstalledVersion
 	 * @param string $sSourceDir
-	 * @return bool|hash
+	 * @return bool|array
 	 * @throws Exception
 	 */
 	public static function CheckVersion($sInstalledVersion, $sSourceDir)
@@ -1993,14 +2001,7 @@ JS
 				return;
 			}
 			// Use mutex to check if cron is running
-			$oMutex = new iTopMutex(
-				'cron'.$oConfig->Get('db_name').$oConfig->Get('db_subname'),
-				$oConfig->Get('db_host'),
-				$oConfig->Get('db_user'),
-				$oConfig->Get('db_pwd'),
-				$oConfig->Get('db_tls.enabled'),
-				$oConfig->Get('db_tls.ca')
-			);
+			$oMutex = self::GetCronMutex($oConfig);
 			$iCount = 1;
 			$iStarted = time();
 			$iMaxDuration = $oConfig->Get('cron_max_execution_time');
@@ -2016,6 +2017,26 @@ JS
 		} catch (Exception $e) {
 			// Ignore errors
 		}
+	}
+
+	/**
+	 * @param \Config $oConfig
+	 *
+	 * @return \iTopMutex
+	 * @since 3.3.0
+	 */
+	public static function GetCronMutex(Config $oConfig): iTopMutex
+	{
+		$oMutex = new iTopMutex(
+			'cron'.$oConfig->Get('db_name').$oConfig->Get('db_subname'),
+			$oConfig->Get('db_host'),
+			$oConfig->Get('db_user'),
+			$oConfig->Get('db_pwd'),
+			$oConfig->Get('db_tls.enabled'),
+			$oConfig->Get('db_tls.ca')
+		);
+
+		return $oMutex;
 	}
 
 	/**
@@ -2146,7 +2167,7 @@ class SetupInfo
 	/**
 	 * Called by the setup process to initializes the list of selected modules. Do not call this method
 	 * from an 'auto_select' rule
-	 * @param hash $aModules
+	 * @param array $aModules
 	 * @return void
 	 */
 	public static function SetSelectedModules($aModules)

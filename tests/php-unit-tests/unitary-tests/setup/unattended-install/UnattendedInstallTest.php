@@ -39,7 +39,9 @@ class UnattendedInstallTest extends ItopDataTestCase
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 
 		$sJson = curl_exec($ch);
-		curl_close($ch);
+		if (PHP_VERSION_ID < 80000) {
+			curl_close($ch);
+		}
 		return $sJson;
 	}
 	public function testCallUnattendedInstallFromHttp()

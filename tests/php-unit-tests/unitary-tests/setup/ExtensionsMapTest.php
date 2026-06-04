@@ -3,6 +3,7 @@
 namespace Combodo\iTop\Test\UnitTest\Integration;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use iTopExtension;
 use ItopExtensionsMap;
 use ModuleDiscovery;
 
@@ -23,4 +24,162 @@ class ExtensionsMapTest extends ItopTestCase
 		$this->assertGreaterThan(0, count($aExtensions));
 	}
 
+	public function testGetAllExtensionsToDisplayInSetup()
+	{
+		$oExtensionsMap = $this->GiveExtensionMapWithAllTypeOfExtensions();
+
+		$aExtensions = $oExtensionsMap->GetAllExtensionsToDisplayInSetup();
+		$expected = [
+			'installed_ext1',
+			'ext1',
+		];
+		$this->assertEquals($expected, array_keys($aExtensions));
+	}
+
+	public function testGetAllExtensionsToDisplayInSetup_WithExtensionsHavingDependencyIssues()
+	{
+		$oExtensionsMap = $this->GiveExtensionMapWithAllTypeOfExtensions();
+
+		$aExtensions = $oExtensionsMap->GetAllExtensionsToDisplayInSetup(true);
+		$expected = [
+			'installed_ext1',
+			'installed_ext_with_deps_issues',
+			'ext1',
+			'ext_with_deps_issues',
+		];
+		$this->assertEquals($expected, array_keys($aExtensions));
+	}
+
+	public function testGetAllExtensionsToDisplayInSetup_LegacyPackage()
+	{
+		$oExtensionsMap = $this->GiveExtensionMapWithAllTypeOfExtensions();
+
+		$this->SetNonPublicProperty($oExtensionsMap, 'bHasXmlInstallationFile', false);
+		$aExtensions = $oExtensionsMap->GetAllExtensionsToDisplayInSetup();
+		$expected = [
+			'installed_ext1',
+			'installed_ext_in_package',
+			'ext1',
+			'ext_in_package',
+		];
+		$this->assertEquals($expected, array_keys($aExtensions));
+	}
+
+	public function testGetAllExtensionsToDisplayInSetup_LegacyPackage_WithExtensionsHavingDependencyIssues()
+	{
+		$oExtensionsMap = $this->GiveExtensionMapWithAllTypeOfExtensions();
+
+		$this->SetNonPublicProperty($oExtensionsMap, 'bHasXmlInstallationFile', false);
+		$aExtensions = $oExtensionsMap->GetAllExtensionsToDisplayInSetup(true);
+		$expected = [
+			'installed_ext1',
+			'installed_ext_in_package',
+			'installed_ext_with_deps_issues',
+			'ext1',
+			'ext_in_package',
+			'ext_with_deps_issues',
+		];
+		$this->assertEquals($expected, array_keys($aExtensions));
+	}
+
+	private function GiveExtensionMapWithAllTypeOfExtensions(): iTopExtensionsMap
+	{
+		$oExtensionsMap = new iTopExtensionsMap();
+		$this->SetNonPublicProperty($oExtensionsMap, 'aInstalledExtensions', []);
+		$this->SetNonPublicProperty($oExtensionsMap, 'aExtensions', []);
+
+		$this->AddExtension(
+			$oExtensionsMap,
+			$this->GivenExtension("installed_ext1", "123", true, iTopExtension::SOURCE_REMOTE, true, []),
+			'aInstalledExtensions'
+		);
+		$this->AddExtension(
+			$oExtensionsMap,
+			$this->GivenExtension("installed_notvisible", "123", false, iTopExtension::SOURCE_REMOTE, true, []),
+			'aInstalledExtensions'
+		);
+		$this->AddExtension(
+			$oExtensionsMap,
+			$this->GivenExtension("installed_ext_in_package", "123", true, iTopExtension::SOURCE_WIZARD, true, []),
+			'aInstalledExtensions'
+		);
+		$this->AddExtension(
+			$oExtensionsMap,
+			$this->GivenExtension("installed_ext_with_deps_issues", "123", true, iTopExtension::SOURCE_REMOTE, true, ["aa"]),
+			'aInstalledExtensions'
+		);
+		$this->AddExtension(
+			$oExtensionsMap,
+			$this->GivenExtension("ext1", "123", true, iTopExtension::SOURCE_REMOTE, true, []),
+			'aExtensions'
+		);
+		$this->AddExtension(
+			$oExtensionsMap,
+			$this->GivenExtension("notvisible", "123", false, iTopExtension::SOURCE_REMOTE, true, []),
+			'aExtensions'
+		);
+		$this->AddExtension(
+			$oExtensionsMap,
+			$this->GivenExtension("ext_in_package", "123", true, iTopExtension::SOURCE_WIZARD, true, []),
+			'aExtensions'
+		);
+		$this->AddExtension(
+			$oExtensionsMap,
+			$this->GivenExtension("ext_with_deps_issues", "123", true, iTopExtension::SOURCE_REMOTE, true, ["aa"]),
+			'aExtensions'
+		);
+
+		return $oExtensionsMap;
+	}
+
+	private function GivenExtension(string $sCode, string $sVersion, bool $bVisible, string $sSource, bool $bMandatory, array $aMissingDependencies = []): iTopExtension
+	{
+		$oExt = new iTopExtension();
+		$oExt->sCode = $sCode;
+		$oExt->sVersion = $sVersion;
+		$oExt->bVisible = $bVisible;
+		$oExt->sSource = $sSource;
+		$oExt->aMissingDependencies = $aMissingDependencies;
+		$oExt->bMandatory = $bMandatory;
+		return $oExt;
+	}
+
+	private function AddExtension(iTopExtensionsMap $oExtensionsMap, iTopExtension $oExt, string $mapKeyInItopExtensionMap)
+	{
+		$aMap = $this->GetNonPublicProperty($oExtensionsMap, $mapKeyInItopExtensionMap);
+		$aMap[$oExt->sCode.'/'.$oExt->sVersion] = $oExt;
+		$this->SetNonPublicProperty($oExtensionsMap, $mapKeyInItopExtensionMap, $aMap);
+	}
+
+	public function testiTopExtensionsMapInit()
+	{
+		$oiTopExtensionsMap = new iTopExtensionsMap(sAppRootForTests:__DIR__."/ressources");
+
+		//file_put_contents(__DIR__.'/ressources/all_extensions_from_datamodels.json', json_encode($this->SerializeExtensionMap($oiTopExtensionsMap), JSON_PRETTY_PRINT));
+
+		$sExpected = file_get_contents(__DIR__.'/ressources/all_extensions_from_datamodels.json');
+		$sExpected = str_replace('"sVersion": "ITOP_VERSION"', '"sVersion": "'.ITOP_VERSION.'"', $sExpected);
+		$sExpected = preg_replace('/"module_file_path": .*/', '"module_file_path": ANYPATH', $sExpected);
+
+		$actual = json_encode($this->SerializeExtensionMap($oiTopExtensionsMap), JSON_PRETTY_PRINT);
+		$actual = preg_replace('/"module_file_path": .*/', '"module_file_path": ANYPATH', $actual);
+		$this->assertEquals($sExpected, $actual);
+	}
+
+	public function SerializeExtensionMap(iTopExtensionsMap $oiTopExtensionsMap): array
+	{
+		$aRes = [];
+		foreach ($oiTopExtensionsMap->GetAllExtensions() as $oExtension) {
+			$aRes[] = [
+				'sCode' => $oExtension->sCode,
+				'sSource' => $oExtension->sSource,
+				'sVersion' => $oExtension->sVersion,
+				'aModules' => $oExtension->aModules,
+				'aModuleVersion' => $oExtension->aModuleVersion,
+				'aModuleInfo' => $oExtension->aModuleInfo,
+			];
+		}
+
+		return $aRes;
+	}
 }

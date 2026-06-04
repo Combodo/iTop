@@ -131,7 +131,7 @@ try {
 			$oPage = new JsonPage();
 			$oPage->SetOutputDataOnly(true);
 
-			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
+			$sEnvironment = utils::ReadParam('environment', ITOP_DEFAULT_ENV, false, 'raw_data');
 			$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
 			if ($oRestoreMutex->IsLocked()) {
 				DisplayErrorAndDie($oPage, '<p>'.Dict::S('bkp-restore-running').'</p>');
@@ -156,7 +156,7 @@ try {
 			require_once(APPROOT.'/setup/backup.class.inc.php');
 			require_once(__DIR__.'/dbrestore.class.inc.php');
 
-			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
+			$sEnvironment = utils::ReadParam('environment', ITOP_DEFAULT_ENV, false, 'raw_data');
 			try {
 				set_time_limit(0);
 

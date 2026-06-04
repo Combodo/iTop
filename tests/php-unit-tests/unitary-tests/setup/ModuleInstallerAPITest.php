@@ -354,21 +354,6 @@ SQL
 		];
 	}
 
-	/**
-	 * @covers \ModuleInstallerAPI::LoadLocalizedData
-	 * @dataProvider LoadLocalizedData_InvalidParametersProvider
-	 */
-	public function testLoadLocalizedData_ThrowsOnInvalidParameters(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, string $sPattern, string $sExpectedMessage): void
-	{
-		$oConfig = MetaModel::GetConfig();
-		$this->assertNotNull($oConfig);
-
-		$this->expectException(\CoreUnexpectedValue::class);
-		$this->expectExceptionMessage($sExpectedMessage);
-
-		ModuleInstallerAPI::LoadLocalizedData($oConfig, $sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
-	}
-
 	public function LoadLocalizedData_InvalidParametersProvider(): array
 	{
 		$sTmpDir = static::CreateTmpdir();

@@ -1,0 +1,17 @@
+{# @copyright   Copyright (C) 2010-2025 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{#  Usable variables: #}
+{#     * sTitle => page title #}
+{#     * sMessage => success message #}
+{#     * sError => error message #}
+
+{# DataFeatureRemoval #}
+
+{% UIPanel ForInformation { sTitle:'DataFeatureRemoval:Main:Title'|dict_s, sSubTitle: 'DataFeatureRemoval:Main:SubTitle'|dict_s } %}
+
+    {% UIAlert ForInformation { sTitle:'DataFeatureRemoval:Helper:Title'|dict_s } %}
+    {% EndUIAlert %}
+
+    {% include 'Features.html.twig' %}
+{% EndUIPanel %}

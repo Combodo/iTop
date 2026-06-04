@@ -197,6 +197,7 @@ abstract class ItopTestCase extends KernelTestCase
 			}
 
 			SetupUtils::tidydir($sPath);
+			SetupUtils::rrmdir($sPath);
 		}
 	}
 
@@ -705,7 +706,9 @@ abstract class ItopTestCase extends KernelTestCase
 		$this->aLastCurlGetInfo = $info;
 		$sErrorMsg = curl_error($ch);
 		$iErrorCode = curl_errno($ch);
-		curl_close($ch);
+		if (PHP_VERSION_ID < 80000) {
+			curl_close($ch);
+		}
 
 		\IssueLog::Info(__METHOD__, null, ['url' => $sUrl, 'error' => $sErrorMsg, 'error_code' => $iErrorCode, 'post_fields' => $aPostFields, 'info' => $info]);
 
@@ -738,6 +741,19 @@ abstract class ItopTestCase extends KernelTestCase
 		);
 
 		return $this->CallUrl($sUrl, $aPostFields, $aCurlOptions, $bXDebugEnabled);
+	}
+
+	/**
+	 * Return a temporary file path. that will be cleaned up by tearDown()
+	 *
+	 * @return string: temporary file path: file prefix include phpunit test method name
+	 */
+	public function GetTemporaryFilePath(): string
+	{
+		$sPrefix = $this->getName(false);
+		$sPath = tempnam(sys_get_temp_dir(), $sPrefix);
+		$this->aFileToClean[] = $sPath;
+		return $sPath;
 	}
 
 	/**

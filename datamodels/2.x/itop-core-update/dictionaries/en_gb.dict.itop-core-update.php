@@ -59,8 +59,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'iTopUpdate:UI:History' => 'Versions History',
 	'iTopUpdate:UI:Progress' => 'Progress of the upgrade',
 
-	'iTopUpdate:UI:DoBackup:Label' => 'Backup files and database',
-	'iTopUpdate:UI:DoBackup:Warning' => 'Backup is not recommended due to limited available disk space',
+	'iTopUpdate:UI:Backup:Label' => 'Backup files and database',
+	'iTopUpdate:UI:Backup:Warning' => 'Backup is not recommended due to limited available disk space',
 
 	'iTopUpdate:UI:DiskFreeSpace' => 'Disk free space',
 	'iTopUpdate:UI:ItopDiskSpace' => ITOP_APPLICATION_SHORT.' disk space',

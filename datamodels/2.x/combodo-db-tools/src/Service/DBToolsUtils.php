@@ -10,6 +10,7 @@ namespace Combodo\iTop\DBTools\Service;
 use CMDBSource;
 use DBObjectSearch;
 use DBObjectSet;
+use IssueLog;
 
 class DBToolsUtils
 {

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension format="1.0">
+  <extension_code>finalclass_ext2</extension_code>
+  <company>Combodo SARL</company>
+  <author><![CDATA[Odain]]></author>
+  <label><![CDATA[Ext For Test]]></label>
+  <description><![CDATA[Ext For Test]]></description>
+  <version>6.6.6</version>
+  <modules type="array">
+    <module>
+      <id>finalclass_ext2_module1</id>
+      <version>tags/6.6.6</version>
+    </module>
+  </modules>
+  <release_date>2023-07-19</release_date>
+  <version_description><![CDATA[
+      ]]></version_description>
+  <itop_version_min>3.2.0</itop_version_min>
+  <status></status>
+  <mandatory>false</mandatory>
+  <more_info_url></more_info_url>
+</extension>

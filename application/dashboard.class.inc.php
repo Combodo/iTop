@@ -497,7 +497,7 @@ EOF
 	 * @param array $aExtraParams
 	 * @param bool $bCanEdit
 	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout
+	 * @return null|\Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = [], $bCanEdit = true)
 	{

@@ -29,7 +29,7 @@ if (!class_exists('DOMDocument')) {
 	 */
 	class DOMDocument
 	{
-		public function __construct()
+		public function __construct(string $version = "1.0", string $encoding = "")
 		{
 			throw new Exception('The dom extension is not enabled');
 		}
@@ -45,7 +45,7 @@ if (!class_exists('DOMElement')) {
 	 */
 	class DOMElement
 	{
-		public function __construct()
+		public function __construct(string $qualifiedName, ?string $value = null, string $namespace = "")
 		{
 			throw new Exception('The dom extension is not enabled');
 		}

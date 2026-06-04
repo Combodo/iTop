@@ -27,12 +27,6 @@
             <module>combodo-backoffice-fullmoon-protanopia-deuteranopia-theme</module>
             <module>combodo-backoffice-fullmoon-tritanopia-theme</module>
             <module>itop-themes-compat</module>
-            <module>combodo-my-account</module>
-            <module>combodo-my-account-user-info</module>
-            <module>combodo-oauth2-client</module>
-            <module>itop-attribute-class-set</module>
-            <module>itop-attribute-encrypted-password</module>
-            <module>itop-ui-copypaste</module>
 					</modules>
 					<mandatory>true</mandatory>
 				</choice>
@@ -241,7 +235,7 @@
 				<choice>
 					<extension_code>itop-problem-mgmt</extension_code>
 					<title>Problem Management</title>
-					<description>Select this option track "Problems" in iTop.</description>
+					<description>Select this option to track "Problems" in iTop.</description>
 					<modules type="array">
 						<module>itop-problem-mgmt</module>
 					</modules>

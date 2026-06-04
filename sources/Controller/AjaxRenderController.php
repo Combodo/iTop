@@ -1037,10 +1037,10 @@ EOF
 			if ($sModuleId == '_Root_') {
 				continue;
 			}
-			if ($aModuleData['version_db'] == '') {
+			if ($aModuleData['installed_version'] == '') {
 				continue;
 			}
-			$oPage->add('InstalledModule/'.$sModuleId.': '.$aModuleData['version_db']."\n");
+			$oPage->add('InstalledModule/'.$sModuleId.': '.$aModuleData['installed_version']."\n");
 		}
 
 		$oPage->add('===== end =====');

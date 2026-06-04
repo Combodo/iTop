@@ -126,7 +126,7 @@ function ExecuteMainOperation($oP)
 	if (MetaModel::GetConfig()->Get('demo_mode')) {
 		$oP->p("Sorry, iTop is in demonstration mode: the feature is disabled");
 	} else {
-		$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
+		$sEnvironment = utils::ReadParam('environment', ITOP_DEFAULT_ENV, false, 'raw_data');
 		$oRestore->RestoreFromCompressedBackup($sBackupFile, $sEnvironment);
 	}
 }

@@ -56,7 +56,7 @@ $sMode = $oParams->Get('mode');
 
 $sTargetEnvironment = $oParams->Get('target_env', '');
 if ($sTargetEnvironment == '') {
-	$sTargetEnvironment = 'production';
+	$sTargetEnvironment = ITOP_DEFAULT_ENV;
 }
 
 $sXmlSetupBaseName = basename($sParamFile);
@@ -82,7 +82,7 @@ if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)) {
 	$aComputedExtensions = $oInstallationFileService->GetAfterComputationSelectedExtensions();
 	if (! $bInstallationChoicesProvided) {
 		$sMsg = "Computed installation choices";
-		echo "$sMsg:\n".implode(',', $aComputedExtensions)."\n\n";
+		echo "$sMsg:\n".implode(",\n", $aComputedExtensions)."\n\n";
 		SetupLog::Info($sMsg, null, $aComputedExtensions);
 		$oParams->Set('selected_extensions', $aComputedExtensions);
 	}
@@ -97,8 +97,8 @@ if (! is_null($sInstallationXmlPath) && is_file($sInstallationXmlPath)) {
 	$sMsg = "Modules to install listed in $sXmlSetupBaseName (selected_modules section)";
 }
 
-sort($aSelectedModules);
-echo "$sMsg:\n".implode(',', $aSelectedModules)."\n\n";
+//sort($aSelectedModules);
+echo "$sMsg:\n".implode(",\n", $aSelectedModules)."\n\n";
 SetupLog::Info($sMsg, null, $aSelectedModules);
 
 // Configuration file
@@ -218,7 +218,7 @@ if ($sMode == 'install') {
 	//use settings from itop conf
 	$sTargetEnvironment = $oParams->Get('target_env', '');
 	if ($sTargetEnvironment == '') {
-		$sTargetEnvironment = 'production';
+		$sTargetEnvironment = ITOP_DEFAULT_ENV;
 	}
 	$sTargetDir = APPROOT.'env-'.$sTargetEnvironment;
 }
@@ -271,23 +271,34 @@ $bFoundIssues = false;
 
 $bInstall = utils::ReadParam('install', true, true /* CLI allowed */);
 if ($bInstall) {
+	if (! isset($_SESSION)) {
+		$_SESSION = [];
+	}
+
 	echo "Starting the unattended installation...\n";
-	$oWizard = new ApplicationInstaller($oParams);
-	$bRes = $oWizard->ExecuteAllSteps();
+	$oWizard = new DataAuditSequencer($oParams);
+	$sComment = "Done by Unattended Install";
+	$bRes = $oWizard->ExecuteAllSteps(sComment:$sComment);
+
+	if ($bRes) {
+		$oWizard = new ApplicationInstallSequencer($oParams);
+		$bRes = $oWizard->ExecuteAllSteps(sComment:$sComment);
+	}
+
 	if (!$bRes) {
 		echo "\nencountered installation issues!";
 		$bFoundIssues = true;
 	} else {
 		try {
-			$oMysqli = CMDBSource::GetMysqliInstance($sDBServer, $sDBUser, $sDBPwd, null, $bDBTlsEnabled, $sDBTlsCa, true);
-			if ($oMysqli->select_db($sDBName)) {
-				// Check the presence of a table to record information about the MTP (from the Designer)
-				$sDesignerUpdatesTable = $sDBPrefix.'priv_designer_update';
-				$sSQL = "SELECT id FROM `$sDesignerUpdatesTable`";
-				if ($oMysqli->query($sSQL) !== false) {
-					// Record the Designer Udpates in the priv_designer_update table
-					$sDeltaFile = APPROOT.'data/'.$sTargetEnvironment.'.delta.xml';
-					if (is_readable($sDeltaFile)) {
+			$sDeltaFile = APPROOT.'data/'.$sTargetEnvironment.'.delta.xml';
+			if (is_readable($sDeltaFile)) {
+				$oMysqli = CMDBSource::GetMysqliInstance($sDBServer, $sDBUser, $sDBPwd, null, $bDBTlsEnabled, $sDBTlsCa, true);
+				if ($oMysqli->select_db($sDBName)) {
+					// Check the presence of a table to record information about the MTP (from the Designer)
+					$sDesignerUpdatesTable = $sDBPrefix.'priv_designer_update';
+					$sSQL = "SELECT id FROM `$sDesignerUpdatesTable`";
+					if ($oMysqli->query($sSQL) !== false) {
+						// Record the Designer Udpates in the priv_designer_update table
 						// Retrieve the revision
 						$oDoc = new DOMDocument();
 						$oDoc->load($sDeltaFile);
@@ -301,12 +312,7 @@ if ($bInstall) {
 							} else {
 								echo "\nFailed to record designer updates(".$oMysqli->error.").\n";
 							}
-						} else {
-							echo "\nFailed to read the revision from $sDeltaFile file. No designer update information will be recorded.\n";
-
 						}
-					} else {
-						echo "\nNo $sDeltaFile file (or the file is not accessible). No designer update information to record.\n";
 					}
 				}
 			}
@@ -340,8 +346,7 @@ if (! $bFoundIssues) {
 	$sLogMsg = "installed!";
 
 	if ($bUseItopConfig && is_file("$sConfigFile.backup")) {
-		echo "\nuse config file provided by backup in $sConfigFile.";
-		copy("$sConfigFile.backup", $sConfigFile);
+		unlink("$sConfigFile.backup");
 	}
 
 	SetupLog::Info($sLogMsg);

@@ -21,8 +21,8 @@
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\Page;
-use Combodo\iTop\DesignElement;
 use Combodo\iTop\DesignDocument;
+use Combodo\iTop\DesignElement;
 use Combodo\iTop\PropertyType\PropertyTypeDesign;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
@@ -188,19 +188,6 @@ class MFCompiler
 	}
 
 	/**
-	 * @return bool if flag is present true, false otherwise
-	 *
-	 * @uses \file_exists()
-	 * @uses USE_SYMBOLIC_LINKS_FILE_PATH
-	 *
-	 * @since 3.0.0 N°4092
-	 */
-	public static function IsUseSymbolicLinksFlagPresent(): bool
-	{
-		return (file_exists(static::USE_SYMBOLIC_LINKS_FILE_PATH));
-	}
-
-	/**
 	 * This is to check if the functionality can be used. As this is really only useful for developers,
 	 * this is strictly limited and not available on any iTop instance !
 	 *
@@ -214,17 +201,22 @@ class MFCompiler
 	 *
 	 * @since 3.0.0 N°4092
 	 */
-	public static function CanUseSymbolicLinksFlagBeUsed(): bool
+	public static function CanUseSymbolicLinks(): bool
 	{
-		if (false === utils::IsDevelopmentEnvironment()) {
-			return false;
-		}
+		return utils::IsDevelopmentEnvironment();
+	}
 
-		if (false === function_exists('symlink')) {
-			return false;
-		}
-
-		return true;
+	/**
+	 * @return bool if flag is present true, false otherwise
+	 *
+	 * @uses \file_exists()
+	 * @uses USE_SYMBOLIC_LINKS_FILE_PATH
+	 *
+	 * @since 3.0.0 N°4092
+	 */
+	public static function UseSymbolicLinks(): bool
+	{
+		return (file_exists(static::USE_SYMBOLIC_LINKS_FILE_PATH));
 	}
 
 	/**
@@ -236,7 +228,7 @@ class MFCompiler
 	 */
 	public static function SetUseSymbolicLinksFlag(bool $bUseSymbolicLinks): void
 	{
-		$bIsUseSymlinksFlagPresent = (static::IsUseSymbolicLinksFlagPresent());
+		$bIsUseSymlinksFlagPresent = self::UseSymbolicLinks();
 
 		if ($bUseSymbolicLinks) {
 			if ($bIsUseSymlinksFlagPresent) {
@@ -279,11 +271,11 @@ class MFCompiler
 	 * @return void
 	 * @throws Exception
 	 */
-	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = null, $bSkipTempDir = false)
+	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = null, $bSkipTempDir = false, $bEnterMaintenanceMode = true)
 	{
 		if (is_null($bUseSymbolicLinks)) {
 			$bUseSymbolicLinks = false;
-			if (self::CanUseSymbolicLinksFlagBeUsed() && self::IsUseSymbolicLinksFlagPresent()) {
+			if (self::CanUseSymbolicLinks() && self::UseSymbolicLinks()) {
 				// We are only overriding the useSymLinks option if the consumer didn't specify anything
 				// The toolkit always send this parameter for example, but not the Designer Connector
 				$bUseSymbolicLinks = true;
@@ -298,8 +290,7 @@ class MFCompiler
 		} else {
 			$oConfig = null;
 		}
-		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
-
+		if (($this->sEnvironment == ITOP_DEFAULT_ENV) && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
 			SetupUtils::EnterMaintenanceMode($oConfig);
 		}
 		if ($bUseSymbolicLinks || $bSkipTempDir) {
@@ -322,7 +313,7 @@ class MFCompiler
 				// Cleanup the temporary directory
 				SetupUtils::rrmdir($sTempTargetDir);
 			}
-			if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
+			if (($this->sEnvironment == ITOP_DEFAULT_ENV) && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
 				SetupUtils::ExitMaintenanceMode();
 			}
 			throw $e;
@@ -332,7 +323,7 @@ class MFCompiler
 			// Move the results to the target directory
 			SetupUtils::movedir($sTempTargetDir, $sFinalTargetDir);
 		}
-		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
+		if (($this->sEnvironment == ITOP_DEFAULT_ENV) && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
 			SetupUtils::ExitMaintenanceMode();
 		}
 
@@ -1571,13 +1562,6 @@ EOF;
 			foreach ($aStatesOrder as $sState => $foo) {
 				$oState = $aStates[$sState];
 				$oInitialStatePath = $oState->GetOptionalElement('initial_state_path');
-				if ($oInitialStatePath) {
-					$aInitialStatePath = [];
-					foreach ($oInitialStatePath->getElementsByTagName('state_ref') as $oIntermediateState) {
-						$aInitialStatePath[] = "'".$oIntermediateState->GetText()."'";
-					}
-					$sInitialStatePath = 'Array('.implode(', ', $aInitialStatePath).')';
-				}
 
 				$sLifecycle .= "		MetaModel::Init_DefineState(\n";
 				$sLifecycle .= "			\"".$sState."\",\n";
@@ -1606,6 +1590,11 @@ EOF;
 
 				$sLifecycle .= "				),\n";
 				if (!is_null($oInitialStatePath)) {
+					$aInitialStatePath = [];
+					foreach ($oInitialStatePath->getElementsByTagName('state_ref') as $oIntermediateState) {
+						$aInitialStatePath[] = "'".$oIntermediateState->GetText()."'";
+					}
+					$sInitialStatePath = 'Array('.implode(', ', $aInitialStatePath).')';
 					$sLifecycle .= "				\"initial_state_path\" => $sInitialStatePath,\n";
 				}
 				$sLifecycle .= "			)\n";
@@ -2496,6 +2485,8 @@ EOF
 
 		// Generate SCSS declaration
 		$sScss = "";
+		$sMainColorCssVariableName = null;
+		$sComplementaryColorCssVariableName = null;
 		if ($bHasAtLeastOneColor) {
 			if ($bHasMainColor) {
 				$sMainColorScssVariableName = "\$$sCssRegularClass--main-color";
@@ -2512,8 +2503,10 @@ EOF
 				$sCssAlternativeClassComplementaryColorDeclaration = "--ibo-complementary-color: #{{$sMainColorScssVariableName}};";
 			} else {
 				$sMainColorScssVariableDeclaration = null;
+				$sMainColorCssVariableDeclaration = null;
 
 				$sCssRegularClassMainColorDeclaration = null;
+				$sCssRegularClassMainColor100Declaration = null;
 				$sCssRegularClassMainColor900Declaration = null;
 
 				$sCssAlternativeClassComplementaryColorDeclaration = null;
@@ -2655,6 +2648,9 @@ CSS;
 					foreach ($oDashboardDefinition->childNodes as $oNode) {
 						$oDefNode = $oXMLDoc->importNode($oNode, true); // layout, cells, etc Nodes and below
 						$oRootNode->appendChild($oDefNode);
+					}
+					if (!is_dir($sTempTargetDir.'/'.$sModuleRelativeDir)) {
+						SetupUtils::builddir($sTempTargetDir.'/'.$sModuleRelativeDir);
 					}
 					$oXMLDoc->save($sTempTargetDir.'/'.$sModuleRelativeDir.'/'.$sFileName);
 				}
@@ -3362,6 +3358,9 @@ EOF;
 
 		$bDataXmlPrecompiledFileExists = false;
 		clearstatcache();
+
+		$iDataXmlFileLastModified = 0;
+		$sDataXmlProvidedPrecompiledFile = '';
 		if (!empty($sPrecompiledFileUri)) {
 			$sDataXmlProvidedPrecompiledFile = $sTempTargetDir.DIRECTORY_SEPARATOR.$sPrecompiledFileUri;
 			$bDataXmlPrecompiledFileExists = file_exists($sDataXmlProvidedPrecompiledFile) ;
@@ -3375,7 +3374,6 @@ EOF;
 					APPROOT.DIRECTORY_SEPARATOR.'extensions/',
 				];
 
-				$iDataXmlFileLastModified = 0;
 				foreach ($aDirToCheck as $sDir) {
 					$sCurrentFile = $sDir.DIRECTORY_SEPARATOR.$sPrecompiledFileUri;
 					if (is_file($sCurrentFile)) {

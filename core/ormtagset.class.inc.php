@@ -43,24 +43,24 @@ final class ormTagSet extends ormSet
 
 	/**
 	 *
-	 * @param array $aTagCodes
+	 * @param array|null $aItems
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue when a code is invalid
 	 */
-	public function SetValues($aTagCodes)
+	public function SetValues($aItems)
 	{
-		if (is_null($aTagCodes)) {
-			$aTagCodes = [];
+		if (is_null($aItems)) {
+			$aItems = [];
 		}
-		if (!is_array($aTagCodes)) {
-			throw new CoreUnexpectedValue("Wrong value {$aTagCodes} for {$this->sClass}:{$this->sAttCode}");
+		if (!is_array($aItems)) {
+			throw new CoreUnexpectedValue("Wrong value {$aItems} for {$this->sClass}:{$this->sAttCode}");
 		}
 
 		$oTags = [];
 		$iCount = 0;
 		$bError = false;
-		foreach ($aTagCodes as $sTagCode) {
+		foreach ($aItems as $sTagCode) {
 			$iCount++;
 			if (($this->iLimit != 0) && ($iCount > $this->iLimit)) {
 				$bError = true;

@@ -21,8 +21,8 @@ use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
+use ContextTag;
 use DBSearch;
-use DeprecatedCallsLog;
 use Dict;
 use ExecutionKPI;
 use IssueLog;
@@ -1814,7 +1814,7 @@ JS;
 				}
 			}
 			if ((count($this->a_dict_entries) > 0) || (count($this->a_dict_entries_prefixes) > 0)) {
-				if (class_exists('Dict')) {
+				if (class_exists('Dict') && !ContextTag::Check(ContextTag::TAG_SETUP)) {
 					// The dictionary may not be available for example during the setup...
 					// Create a specific dictionary file and load it as a JS script
 					$sSignature = $this->get_dict_signature();
