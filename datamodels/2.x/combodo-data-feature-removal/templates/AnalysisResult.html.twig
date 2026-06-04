@@ -88,7 +88,7 @@
     {% endif %}
 
     {% if aHiddenInputs.return_button_label != '' %}
-        {% UIButton ForAlternativeSecondaryAction { sLabel:aHiddenInputs.return_button_label, OnClickJsCode: 'window.location.href="' ~ aHiddenInputs.return_button_url ~ '"'} %}
+        {% UIButton ForAlternativeSecondaryAction { sLabel:aHiddenInputs.return_button_label, OnClickJsCode: 'window.location.href="' ~ sReturnButtonURL ~ '"'} %}
     {% else %}
         {% UIForm Standard {} %}
             {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}

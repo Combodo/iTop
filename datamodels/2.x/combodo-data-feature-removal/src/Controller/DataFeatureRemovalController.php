@@ -103,7 +103,6 @@ class DataFeatureRemovalController extends Controller
 			'extensions_not_uninstallable' => '[]',
 			'copy_setup_files' => 1,
 			'return_button_label' => '',
-			'return_button_url' => '',
 		];
 
 		$aHiddenInputs = [];
@@ -181,6 +180,10 @@ class DataFeatureRemovalController extends Controller
 
 		foreach ($aHiddenInputs as $sInputName => $sInputValue) {
 			$aParams['aSetupParams']["_params[$sInputName]"] = $sInputValue;
+		}
+
+		if ($aHiddenInputs['return_button_label'] !== '') {
+			$aParams['sReturnButtonURL'] = utils::GetAbsoluteUrlModulePage('itsm-designer-connector', 'launch.php');
 		}
 
 		[$aParams['aDeletionPlanSummary'], $aParams['iQueryCount'], $aParams['bDeletionPossible']] = $this->GetDeletionPlanSummaryTable($aGetRemovedClasses);

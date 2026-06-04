@@ -113,7 +113,6 @@ JS);
 			'extensions_not_uninstallable' => '[]',
 			'copy_setup_files' => 1,
 			'return_button_label' => '',
-			'return_button_url' => '',
 		];
 		$aHiddenInputs = '';
 		foreach ($aParams as $sParamName => $defaultValue) {
@@ -136,9 +135,8 @@ HTML
 		);
 
 		$sButtonLabel = $this->oWizard->GetParameter('return_button_label', '');
-		SetupLog::Info(__METHOD__.": return_button_label [$sButtonLabel]");
-		$sButtonUrl = $this->oWizard->GetParameter('return_button_url', '');
 		if ($sButtonLabel !== '') {
+			$sButtonUrl = utils::GetAbsoluteUrlModulePage('itsm-designer-connector', 'launch.php');
 			$oPage->add_ready_script(
 				<<<JS
 	$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').after('<td style="text-align:center;"><button id="return-button" class="ibo-button ibo-is-alternative ibo-is-neutral ibo-is-hidden" type="button" onclick="window.location.href=\'$sButtonUrl\'"><span class="ibo-button--label">$sButtonLabel</span></button></td>');
