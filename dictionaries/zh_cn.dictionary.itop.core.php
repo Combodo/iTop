@@ -1307,7 +1307,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ResourceSystemMenu+' => '',
 ]);
 
-// addion translation for zh_cn
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN'
-));
+// additional translation for zh_cn
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
+]);
