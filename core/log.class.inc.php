@@ -614,6 +614,12 @@ class LogChannels
 	 * @since 3.2.0
 	 */
 	public const SECURITY = 'Security';
+
+	/**
+	 * @var string
+	 * @since 3.3.0
+	 */
+	public const EXCEPTION = 'Exception';
 }
 
 abstract class LogAPI
@@ -708,8 +714,14 @@ abstract class LogAPI
 
 	private static function PrepareErrorLog(string $sMessage, throwable $oException, array $aContext, bool $isPrevious = false): array
 	{
-		$aContext['Error Message'] = $oException->getMessage();
-		$aContext['Stack Trace'] = $oException->getTraceAsString();
+		$aContext['exception'] = get_class($oException);
+		$aContext['message'] = $oException->getMessage();
+		$aContext['stack'] = $oException->getTraceAsString();
+
+		if(method_exists($oException, 'GetContext')) {
+			$aContext = array_merge($aContext, $oException->GetContext());
+		}
+
 		return ['message' => ($isPrevious ? "Previous " : '')."Exception: $sMessage", 'context' => $aContext];
 	}
 

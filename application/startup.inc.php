@@ -16,6 +16,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\ExceptionHandlerHelper;
 use Combodo\iTop\Application\Helper\Session;
 
 require_once(APPROOT.'core/cmdbobject.class.inc.php');
@@ -63,6 +64,9 @@ register_shutdown_function(function () {
 		}
 	}
 });
+
+set_exception_handler([ExceptionHandlerHelper::class, 'HandleException']);
+
 $oKPI = new ExecutionKPI();
 Session::Start();
 $oKPI->ComputeAndReport("Session Start");

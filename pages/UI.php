@@ -19,12 +19,12 @@ use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
-use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Application\WelcomePopup\WelcomePopupService;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
 use Combodo\iTop\Controller\WelcomePopupController;
+use Combodo\iTop\Exception\ItopException;
 use Combodo\iTop\Service\Router\Router;
 
 /**
@@ -1303,39 +1303,9 @@ try {
 	$oKPI->ComputeAndReport('Compute page');
 	$oP->output();
 } catch (Exception $e) {
-	$oErrorPage = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
-	if ($e instanceof SecurityException) {
-		$oErrorPage->add("<h1>".Dict::S('UI:SystemIntrusion')."</h1>\n");
-	} else {
-		$oErrorPage->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
-	}
-	$sErrorDetails = ($e instanceof CoreException) ? $e->getHtmlDesc() : $e->getMessage();
-	$oErrorPage->error(Dict::Format('UI:Error_Details', utils::EscapeHtml($sErrorDetails)), $e);
-	$oErrorPage->output();
-
-	$sErrorStackTrace = ($e instanceof CoreException) ? $e->getFullStackTraceAsString() : $e->getTraceAsString();
-	if (MetaModel::IsLogEnabledIssue()) {
-		if (MetaModel::IsValidClass('EventIssue')) {
-			try {
-				$oLog = new EventIssue();
-
-				$oLog->Set('message', $e->getMessage());
-				$oLog->Set('userinfo', '');
-				$sIssue = ($e instanceof CoreException) ? $e->GetIssue() : 'PHP Exception';
-				$oLog->Set('issue', $sIssue);
-				$oLog->Set('impact', 'Page could not be displayed');
-				$oLog->Set('callstack', $sErrorStackTrace);
-				$aData = ($e instanceof CoreException) ? $e->getContextData() : [];
-				$oLog->Set('data', $aData);
-				$oLog->DBInsertNoReload();
-			} catch (Exception $e) {
-				IssueLog::Exception("Failed to log issue into the DB", $e);
-			}
-		}
-	}
-
-	$sOperationToLog = $operation ?? 'N/A';
-	IssueLog::Debug('UI.php operation='.$sOperationToLog.', error='.$e->getMessage()."\n".$sErrorStackTrace, LogChannels::CONSOLE);
+	throw new ItopException("Unable to handle UI operation", previous: $e, aContext: [
+		'operation' => ($operation ?? 'N/A'),
+	]);
 }
 
 class UI

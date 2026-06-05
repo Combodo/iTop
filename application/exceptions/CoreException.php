@@ -5,7 +5,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class CoreException extends Exception
+use Combodo\iTop\Exception\ItopException;
+
+class CoreException extends ItopException
 {
 	protected $m_sIssue;
 	protected $m_sImpact;
