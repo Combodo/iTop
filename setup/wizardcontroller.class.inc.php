@@ -151,10 +151,10 @@ class WizardController
 		$sCurrentState = utils::ReadParam('_state', $this->sInitialState);
 		$oStep = $this->GetWizardStep($sCurrentStepClass, $sCurrentState);
 		if ($oStep->ValidateParams()) {
-			if ($oStep->CanComeBack()) {
+			$aPossibleSteps = $oStep->GetPossibleSteps();
+			if ($oStep->CanMoveBackward()) {
 				$this->PushStep(['class' => $sCurrentStepClass, 'state' => $sCurrentState]);
 			}
-			$aPossibleSteps = $oStep->GetPossibleSteps();
 			$oWizardState = $oStep->UpdateWizardStateAndGetNextStep(true); // true => moving forward
 			if (in_array($oWizardState->GetNextStep(), $aPossibleSteps)) {
 				$oNextStep = $this->GetWizardStep($oWizardState->GetNextStep(), $oWizardState->GetState());
@@ -237,8 +237,12 @@ HTML;
 
 		$oPage->add('<input type="hidden" name="_steps" value="'.utils::EscapeHtml(json_encode($this->aWizardSteps)).'"/>');
 		$oPage->add('<table style="width:100%;" class="ibo-setup--wizard--buttons-container"><tr>');
-		if ((count($this->aWizardSteps) > 0) && ($oStep->CanMoveBackward())) {
-			$oPage->add('<td style="text-align: left"><button id="btn_back" class="ibo-button ibo-is-alternative ibo-is-neutral" type="submit" name="operation" value="back"><span class="ibo-button--label">Back</span></button></td>');
+		if (count($this->aWizardSteps) > 0) {
+			if ($oStep->CanMoveBackward()) {
+				$oPage->add('<td style="text-align: left"><button id="btn_back" class="ibo-button ibo-is-alternative ibo-is-neutral" type="submit" name="operation" value="back"><span class="ibo-button--label">Back</span></button></td>');
+			} else {
+				$oPage->add('<td style="text-align: left"><button id="btn_back" class="ibo-button ibo-is-alternative ibo-is-neutral ibo-is-hidden" type="submit" name="operation" value="back"><span class="ibo-button--label">Back</span></button></td>');
+			}
 		}
 		if ($oStep->CanMoveForward()) {
 			$oPage->add('<td style="text-align:right;"><button id="btn_next" class="default ibo-button ibo-is-regular ibo-is-primary" type="submit" name="operation" value="next"><span class="ibo-button--label">'.utils::EscapeHtml($oStep->GetNextButtonLabel()).'</span></button></td>');

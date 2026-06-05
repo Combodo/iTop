@@ -54,6 +54,13 @@ class WizStepInstall extends AbstractWizStepInstall
 		}
 	}
 
+	public function CanMoveBackward()
+	{
+		$sLabel = $this->oWizard->GetParameter('return_button_label', '');
+		SetupLog::Info(__METHOD__.": return_button_label [$sLabel]");
+		return $sLabel === '';
+	}
+
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
 		return new WizardState(WizStepDone::class);
@@ -109,6 +116,20 @@ JS);
 JS);
 	}
 
+	public function PostFormDisplay(SetupPage $oPage)
+	{
+		$sButtonLabel = $this->oWizard->GetParameter('return_button_label', '');
+		SetupLog::Info(__METHOD__.": return_button_label [$sButtonLabel]");
+		if ($sButtonLabel !== '') {
+			$sButtonUrl = utils::GetAbsoluteUrlModulePage('itsm-designer-connector', 'launch.php');
+			$oPage->add_ready_script(
+				<<<JS
+	$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').after('<td style="text-align:center;"><button id="return-button" class="ibo-button ibo-is-alternative ibo-is-neutral ibo-is-hidden" type="button" onclick="window.location.href=\'$sButtonUrl\'"><span class="ibo-button--label">$sButtonLabel</span></button></td>');
+JS
+			);
+		}
+	}
+
 	/**
 	 * @throws \Exception
 	 */
@@ -125,27 +146,25 @@ JS);
 			// Tell the web page to move the progress bar and to launch the next step
 			$sMessage = addslashes(utils::EscapeHtml($aRes['next-step-label']));
 			$oPage->add_ready_script(
-				<<<EOF
-	$("#wiz_form").data("installation_status", "running");
-	WizardUpdateButtons();
-	$('#setup_msg').html('$sMessage');
-	$('#progress').progression( {Current:{$aRes['percentage-completed']}, Maximum: 100} );
-	
-	//$("#percentage").html('{$aRes['percentage-completed']} % completed<br/>{$aRes['next-step-label']}');
-	ExecuteStep('{$aRes['next-step']}');
-EOF
+				<<<JS
+				$("#wiz_form").data("installation_status", "running");
+				WizardUpdateButtons();
+				$('#setup_msg').html('$sMessage');
+				$('#progress').progression( {Current:{$aRes['percentage-completed']}, Maximum: 100} );
+				
+				//$("#percentage").html('{$aRes['percentage-completed']} % completed<br/>{$aRes['next-step-label']}');
+				ExecuteStep('{$aRes['next-step']}');
+JS
 			);
 			static::AddPrevStepSuccessMessage($oPage, $aRes['prev-step-success-message']);
 		} elseif ($aRes['status'] !== StepSequencer::ERROR) {
 			// Installation complete, move to the next step of the wizard
 			$oPage->add_ready_script(
-				<<<EOF
-	$("#wiz_form").data("installation_status", "completed");
-	$('#progress').progression( {Current:100, Maximum: 100} );
-	WizardUpdateButtons();
-	$("#btn_next").off("click.install");
-	$("#btn_next").trigger('click');
-EOF
+				<<<JS
+				$('#progress').progression( {Current:100, Maximum: 100} );
+				$("#wiz_form").data("installation_status", "completed");
+				$("#btn_next").trigger('click');
+JS
 			);
 			static::AddPrevStepSuccessMessage($oPage, $aRes['prev-step-success-message']);
 		} else {
@@ -153,12 +172,12 @@ EOF
 			$sMessage = addslashes(utils::EscapeHtml($aRes['message']));
 			$sMessage = str_replace("\n", '<br>', $sMessage);
 			$oPage->add_ready_script(
-				<<<EOF
-	$("#wiz_form").data("installation_status", "error");
-	$("#progress .progress").addClass('progress-error');
-	WizardUpdateButtons();
-	$('#setup_error').html('$sMessage').show();
-EOF
+				<<<JS
+				$("#wiz_form").data("installation_status", "error");
+				$("#progress .progress").addClass('progress-error');
+				WizardUpdateButtons();
+				$('#setup_error').html('$sMessage').show();
+JS
 			);
 			$this->AddProgressErrorScript($oPage, $aRes);
 		}
@@ -166,7 +185,13 @@ EOF
 
 	protected function AddProgressErrorScript($oPage, $aRes)
 	{
-
+		$oPage->add_ready_script(
+			<<<JS
+    if ($('#return-button').length > 0) {
+		$('#return-button').removeClass('ibo-is-hidden');
+    }
+JS
+		);
 	}
 
 	/**

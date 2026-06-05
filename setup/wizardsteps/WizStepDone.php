@@ -144,6 +144,11 @@ class WizStepDone extends WizardStep
 		return false;
 	}
 
+	public function JSCanMoveBackward()
+	{
+		return 'return false;';
+	}
+
 	/**
 	 * Tells whether this step of the wizard requires that the configuration file be writable
 	 * @return bool True if the wizard will possibly need to modify the configuration at some point

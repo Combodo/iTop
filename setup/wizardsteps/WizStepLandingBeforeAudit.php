@@ -84,7 +84,7 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 		return 'Next';
 	}
 
-	public function CanComeBack()
+	public function CanMoveBackward()
 	{
 		return false;
 	}

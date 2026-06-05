@@ -26,17 +26,17 @@ function WizardAsyncAction(sActionCode, oParams, OnErrorFunction)
 function WizardUpdateButtons()
 {
 	if (CanMoveForward()) {
-		$("#btn_next").prop('disabled', false);
+		$("#btn_next").removeClass('ibo-is-hidden');
 	}
 	else {
-		$("#btn_next").prop('disabled', true);
+		$("#btn_next").addClass('ibo-is-hidden');
 	}
 
 	if (CanMoveBackward()) {
-		$("#btn_back").prop('disabled', false);
+		$("#btn_back").removeClass('ibo-is-hidden');
 	}
 	else {
-		$("#btn_back").prop('disabled', true);
+		$("#btn_back").addClass('ibo-is-hidden');
 	}
 }
 

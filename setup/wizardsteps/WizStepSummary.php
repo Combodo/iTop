@@ -57,6 +57,14 @@ class WizStepSummary extends AbstractWizStepInstall
 		}
 	}
 
+	public function CanMoveBackward()
+	{
+		$sLabel = $this->oWizard->GetParameter('return_button_label', '');
+		SetupLog::Info(__METHOD__.": return_button_label [$sLabel]");
+
+		return $sLabel === '';
+	}
+
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
 		$this->oWizard->SaveParameter('db_backup', false);
@@ -242,6 +250,19 @@ JS
 		);
 	}
 
+	public function PostFormDisplay(SetupPage $oPage)
+	{
+		$sButtonLabel = $this->oWizard->GetParameter('return_button_label', '');
+		if ($sButtonLabel !== '') {
+			$sButtonUrl = utils::GetAbsoluteUrlModulePage('itsm-designer-connector', 'launch.php');
+			$oPage->add_ready_script(
+				<<<JS
+	$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').after('<td style="text-align:center;"><button id="return-button" class="ibo-button ibo-is-alternative ibo-is-neutral" type="button" onclick="window.location.href=\'$sButtonUrl\'"><span class="ibo-button--label">$sButtonLabel</span></button></td>');
+JS
+			);
+		}
+	}
+
 	/**
 	 * Tells whether the "Next" button should be enabled interactively
 	 * @return string A piece of javascript code returning either true or false
@@ -257,7 +278,11 @@ JS
 	 */
 	public function JSCanMoveBackward()
 	{
-		return 'return true;';
+		if ($this->oWizard->GetParameter('return_button_label', '') === '') {
+			return 'return true;';
+		}
+
+		return 'return false;';
 	}
 
 }
