@@ -108,4 +108,24 @@ class ConfigTest extends ItopTestCase
 		preg_match('/\$MyModuleSettings[\w\W]*\/\*\*/m', file_get_contents($sFilePath), $aMatches);
 		return preg_replace(['/[	]+/', '/[ ]+/'], [' ', ' '], $aMatches[0]);
 	}
+
+	public function testConfEvaluationIsTheSameWithPreviousAndCurrentAlgo()
+	{
+		$sTmpFile = $this->GetTemporaryFilePath();
+		$sConfigFile = __DIR__.'/ConfigTest/config-without-comments.php';
+		$oConfig = new Config($sConfigFile, true, true);
+		$oConfig->WriteToFile($sTmpFile);
+
+		$this->assertEquals(file_get_contents($sConfigFile), file_get_contents($sTmpFile));
+	}
+
+	public function testConfSavePreserveCommentsInModuleSettings()
+	{
+		$sTmpFile = $this->GetTemporaryFilePath();
+		$sConfigFile = __DIR__.'/ConfigTest/config-with-comments.php';
+		$oConfig = new Config($sConfigFile, true, true);
+		$oConfig->WriteToFile($sTmpFile);
+
+		$this->assertEquals(file_get_contents($sConfigFile), file_get_contents($sTmpFile));
+	}
 }

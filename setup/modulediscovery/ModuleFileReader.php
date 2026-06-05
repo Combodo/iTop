@@ -260,11 +260,11 @@ class ModuleFileReader
 		}
 
 		$aModuleConfig = $this->oPhpExpressionEvaluator->EvaluateExpression($oModuleConfigInfo->value);
-		if (isset($aModuleConfig['settings'])) {
+		/*if (isset($aModuleConfig['settings'])) {
 			$oPhpExpressionEvaluator = new PhpExpressionEvaluator();
 			$aArrayWithComments = $oPhpExpressionEvaluator->GetArrayWithComments($oModuleConfigInfo->value);
 			$aModuleConfig['settings'] = array_replace_recursive($aArrayWithComments['settings'], $aModuleConfig['settings']);
-		}
+		}*/
 
 		if (! is_array($aModuleConfig)) {
 			throw new ModuleFileReaderException("3rd parameter to SetupWebPage::AddModule not an array: ".get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
