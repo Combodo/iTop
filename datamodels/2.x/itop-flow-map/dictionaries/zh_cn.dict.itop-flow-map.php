@@ -27,7 +27,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:DataFlow+' => 'For application flow for example~~',
 	'Class:DataFlow/Name' => '%1$s',
 	'Class:DataFlow/Attribute:name' => '名称',
-	'Class:DataFlow/Attribute:name_id+' => '已传输的数据',
+	'Class:DataFlow/Attribute:name+' => '已传输的数据',
 	'Class:DataFlow/Attribute:source_id' => '数据源',
 	'Class:DataFlow/Attribute:source_id+' => '数据流的源头配置项',
 	'Class:DataFlow/Attribute:source_impact' => '数据源影响?',
