@@ -94,9 +94,9 @@ EOF
 			}
 		}
 		$sStyle = 'style="display:none;overflow:auto;"';
-		$sToggleButtons = '<button type="button" id="show_details" class="ibo-button ibo-is-secondary ibo-is-neutral" onclick="$(\'#details\').toggle(); $(this).toggle(); $(\'#hide_details\').toggle();"><span class="ibo-button--icon fa fa-caret-down"></span><span class="ibo-button--label">Show details</span></button><button type="button" id="hide_details" class="ibo-button ibo-is-secondary ibo-is-neutral" style="display:none;" onclick="$(\'#details\').toggle(); $(this).toggle(); $(\'#show_details\').toggle();"><span class="ibo-button--icon fa fa-caret-up"></span><span class="ibo-button--label">Hide details</span></button>';
+		$sToggleButtons = '<button type="button" id="show_details" class="ibo-button ibo-is-alternative ibo-is-neutral" onclick="$(\'#details\').toggle(); $(this).toggle(); $(\'#hide_details\').toggle();"><span class="ibo-button--icon fa fa-caret-down"></span><span class="ibo-button--label">Show details</span></button><button type="button" id="hide_details" class="ibo-button ibo-is-alternative ibo-is-neutral" style="display:none;" onclick="$(\'#details\').toggle(); $(this).toggle(); $(\'#show_details\').toggle();"><span class="ibo-button--icon fa fa-caret-up"></span><span class="ibo-button--label">Hide details</span></button>';
 		if (count($aErrors) > 0) {
-			$sStyle = 'overflow:auto;"';
+			$sStyle = 'style="overflow:auto;"';
 			$sTitle = count($aErrors).' Error(s), '.count($aWarnings).' Warning(s).';
 			$sH2Class = 'text-error';
 		} elseif (count($aWarnings) > 0) {

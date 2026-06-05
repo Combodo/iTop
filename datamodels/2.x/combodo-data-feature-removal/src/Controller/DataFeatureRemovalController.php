@@ -111,6 +111,10 @@ class DataFeatureRemovalController extends Controller
 		}
 		$aParams['aHiddenInputs'] = $aHiddenInputs;
 
+		if ($aHiddenInputs['return_button_label'] !== '') {
+			$aParams['sReturnButtonURL'] = utils::GetAbsoluteUrlModulePage('itsm-designer-connector', 'launch.php');
+		}
+
 		$aAddedExtensions = json_decode($aHiddenInputs['added_extensions'], true);
 
 		$aRemovedExtensions = json_decode($aHiddenInputs['removed_extensions'], true);
