@@ -101,10 +101,10 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 		$aExpected = [
 			'status' => 1,
 			'message' => '',
-			'next-step' => 'db-schema',
-			'next-step-label' => 'Updating database schema',
+			'next-step' => 'migrate-before',
+			'next-step-label' => 'Migrate data before database upgrade',
 			'prev-step-success-message' => 'Parameters logged',
-			'percentage-completed' => 16,
+			'percentage-completed' => 22,
 		];
 		$this->assertEquals($aExpected, $aRes);
 	}
@@ -284,7 +284,7 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 			'next-step' => 'load-data',
 			'next-step-label' => 'Loading data',
 			'prev-step-success-message' => 'Post-creation data loaded',
-			'percentage-completed' => 50,
+			'percentage-completed' => 66,
 		];
 		$this->assertEquals($aExpected, $aRes);
 	}
@@ -306,7 +306,7 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 			'next-step' => 'create-config',
 			'next-step-label' => 'Creating the configuration File',
 			'prev-step-success-message' => 'Data loaded',
-			'percentage-completed' => 66,
+			'percentage-completed' => 77,
 			'status' => 1,
 		];
 		$this->assertEquals($aExpected, $aRes);
@@ -330,7 +330,7 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 			'next-step' => 'commit',
 			'next-step-label' => 'Finalize',
 			'prev-step-success-message' => 'Configuration file created',
-			'percentage-completed' => 83,
+			'percentage-completed' => 88,
 			'status' => 1,
 		];
 		$this->assertEquals($aExpected, $aRes);
@@ -485,7 +485,10 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 		$this->GivenApplicationInstallSequencer([], true);
 		$expected = [
 			'',
+			'log-parameters',
+			'migrate-before',
 			'db-schema',
+			'migrate-after',
 			'after-db-create',
 			'load-data',
 			'create-config',
@@ -497,11 +500,11 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 	public function testGetStepAfterWithPercent()
 	{
 		$this->GivenApplicationInstallSequencer([], true);
-		$this->assertEquals(['db-schema', 16], $this->oSequencer->GetStepAfterWithPercent(''));
-		$this->assertEquals(['after-db-create', 33], $this->oSequencer->GetStepAfterWithPercent('db-schema'));
-		$this->assertEquals(['load-data', 50], $this->oSequencer->GetStepAfterWithPercent('after-db-create'));
-		$this->assertEquals(['create-config', 66], $this->oSequencer->GetStepAfterWithPercent('load-data'));
-		$this->assertEquals(['commit', 83], $this->oSequencer->GetStepAfterWithPercent('create-config'));
+		$this->assertEquals(['log-parameters', 11], $this->oSequencer->GetStepAfterWithPercent(''));
+		$this->assertEquals(['migrate-after', 44], $this->oSequencer->GetStepAfterWithPercent('db-schema'));
+		$this->assertEquals(['load-data', 66], $this->oSequencer->GetStepAfterWithPercent('after-db-create'));
+		$this->assertEquals(['create-config', 77], $this->oSequencer->GetStepAfterWithPercent('load-data'));
+		$this->assertEquals(['commit', 88], $this->oSequencer->GetStepAfterWithPercent('create-config'));
 		$this->assertEquals(['', 100], $this->oSequencer->GetStepAfterWithPercent('commit'));
 	}
 
