@@ -217,7 +217,7 @@ Operators:<br/>
 	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal',
 
-	'Core:GetQuota:Error' => 'Error while getting %1$s quota',
+	'Core:GetCountingUsers:Error' => 'Error while getting %1$s quota',
 	'Core:ConsoleUsers' => 'console users',
 	'Core:DisabledUsers' => 'disabled users',
 	'Core:PortalUsers' => 'portal users',

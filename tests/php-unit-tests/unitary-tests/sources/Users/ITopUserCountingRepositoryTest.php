@@ -3,10 +3,11 @@
 namespace Users;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use Combodo\iTop\Users\ITopUserQuotaRepository;
+use Combodo\iTop\Users\ITopUserCountingRepository;
 use User;
 
-class ITopUserQuotaRepositoryTest extends ItopDataTestCase{
+class ITopUserCountingRepositoryTest extends ItopDataTestCase
+{
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -24,7 +25,8 @@ class ITopUserQuotaRepositoryTest extends ItopDataTestCase{
 		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration ReadOnly', 'Ticket ReadOnly', 'Service Catalog ReadOnly']);
 	}
 
-	private function CreateDisabledUser() {
+	private function CreateDisabledUser()
+	{
 		$sUser = $this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration Manager']);
 		// get user by login
 		$oUser = \MetaModel::GetObjectByName('User', $sUser);
@@ -39,11 +41,11 @@ class ITopUserQuotaRepositoryTest extends ItopDataTestCase{
 	 * @throws \MySQLException
 	 * @throws \Exception
 	 */
-	public function testNotDuplicateInDifferentQuotas(): void
+	public function testNotDuplicateInDifferentCountsCategories(): void
 	{
-		$oITopUserRepository = new ITopUserQuotaRepository();
+		$oITopUserRepository = new ITopUserCountingRepository();
 
-		$aQuotaUsers = [
+		$aCountedUsers = [
 			'console' => $oITopUserRepository->GetConsoleUsers(),
 			'portal' => $oITopUserRepository->GetPortalUsers(),
 			'disabled' => $oITopUserRepository->GetDisabledUsers(),
@@ -51,31 +53,32 @@ class ITopUserQuotaRepositoryTest extends ItopDataTestCase{
 			'application' => $oITopUserRepository->GetApplicationUsers(),
 		];
 
-		$aUserToQuotas = [];
-		foreach ($aQuotaUsers as $sQuota => $aUsers) {
+		$aCountedUserFormated = [];
+		foreach ($aCountedUsers as $sCountedCategory => $aUsers) {
 			foreach ($aUsers as $oUser) {
 				$sUserId = (string) $oUser->GetKey();
-				$aUserToQuotas[$sUserId][$sQuota] = true;
+				$aCountedUserFormated[$sUserId][$sCountedCategory] = true;
 			}
 		}
 
 		$aDuplicates = [];
-		foreach ($aUserToQuotas as $sUserId => $aQuotas) {
-			$aQuotaNames = array_keys($aQuotas);
-			if (count($aQuotaNames) > 1) {
-				sort($aQuotaNames);
-				$aDuplicates[] = sprintf('User #%s appears in: %s', $sUserId, implode(', ', $aQuotaNames));
+		foreach ($aCountedUserFormated as $sUserId => $aCountedCategory) {
+			$aCountedCategoryName = array_keys($aCountedCategory);
+			if (count($aCountedCategoryName) > 1) {
+				sort($aCountedCategoryName);
+				$aDuplicates[] = sprintf('User #%s appears in: %s', $sUserId, implode(', ', $aCountedCategoryName));
 			}
 		}
 
 		$this->assertEmpty(
 			$aDuplicates,
-			"Some users are counted in multiple quotas:\n- ".implode("\n- ", $aDuplicates)
+			"Some users are counted in multiple categories:\n- ".implode("\n- ", $aDuplicates)
 		);
 	}
 
-	public function testAllUsersAreInQuota () {
-		$oITopUserRepository = new ITopUserQuotaRepository();
+	public function testAllUsersAreCounted()
+	{
+		$oITopUserRepository = new ITopUserCountingRepository();
 
 		$aConsoleUsers = $oITopUserRepository->GetConsoleUsers();
 		$aPortalUsers = $oITopUserRepository->GetPortalUsers();
@@ -83,16 +86,16 @@ class ITopUserQuotaRepositoryTest extends ItopDataTestCase{
 		$aReadOnlyUsers = $oITopUserRepository->GetReadOnlyUsers();
 		$aApplicationUsers = $oITopUserRepository->GetApplicationUsers();
 
-		$aAllUsersFromQuota = array_merge($aConsoleUsers, $aPortalUsers, $aDisabledUsers, $aReadOnlyUsers, $aApplicationUsers);
+		$aAllUsersFromMergedCounts = array_merge($aConsoleUsers, $aPortalUsers, $aDisabledUsers, $aReadOnlyUsers, $aApplicationUsers);
 
 		$aAllUsersFromOQL = $oITopUserRepository->GetAllUsers();
 
-		$this->assertEmpty(array_merge(array_diff($aAllUsersFromQuota, $aAllUsersFromOQL), array_diff($aAllUsersFromOQL, $aAllUsersFromQuota)));
+		$this->assertEmpty(array_merge(array_diff($aAllUsersFromMergedCounts, $aAllUsersFromOQL), array_diff($aAllUsersFromOQL, $aAllUsersFromMergedCounts)));
 	}
 
-	public function testAllUsersInQuotaAreUsersObjects ()
+	public function testAllCountedUsersAreUsersObjects()
 	{
-		$oITopUserRepository = new ITopUserQuotaRepository();
+		$oITopUserRepository = new ITopUserCountingRepository();
 
 		$aConsoleUsers = $oITopUserRepository->GetConsoleUsers();
 		$aPortalUsers = $oITopUserRepository->GetPortalUsers();
@@ -100,12 +103,11 @@ class ITopUserQuotaRepositoryTest extends ItopDataTestCase{
 		$aReadOnlyUsers = $oITopUserRepository->GetReadOnlyUsers();
 		$aApplicationUsers = $oITopUserRepository->GetApplicationUsers();
 
-		$aAllQuotaUsers = array_merge($aConsoleUsers, $aPortalUsers, $aDisabledUsers, $aReadOnlyUsers, $aApplicationUsers);
+		$aCountedUsers = array_merge($aConsoleUsers, $aPortalUsers, $aDisabledUsers, $aReadOnlyUsers, $aApplicationUsers);
 
-		foreach ($aAllQuotaUsers as $oUser) {
+		foreach ($aCountedUsers as $oUser) {
 			$this->assertInstanceOf(User::class, $oUser);
 		}
-		
 
 	}
 

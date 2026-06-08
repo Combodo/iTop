@@ -1052,7 +1052,7 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'Combodo\\iTop\\SessionTracker\\SessionGC' => __DIR__ . '/../..' . '/sources/SessionTracker/SessionGC.php',
         'Combodo\\iTop\\SessionTracker\\SessionHandler' => __DIR__ . '/../..' . '/sources/SessionTracker/SessionHandler.php',
         'Combodo\\iTop\\SessionTracker\\iSessionHandlerExtension' => __DIR__ . '/../..' . '/sources/SessionTracker/iSessionHandlerExtension.php',
-        'Combodo\\iTop\\Users\\ITopUserQuotaRepository' => __DIR__ . '/../..' . '/sources/Users/ITopUserQuotaRepository.php',
+        'Combodo\\iTop\\Users\\ITopUserCountingRepository' => __DIR__ . '/../..' . '/sources/Users/ITopUserCountingRepository.php',
         'CompileCSSService' => __DIR__ . '/../..' . '/application/compilecssservice.class.inc.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Config' => __DIR__ . '/../..' . '/core/config.class.inc.php',
