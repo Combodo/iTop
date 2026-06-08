@@ -113,6 +113,8 @@ JS);
 			'extensions_not_uninstallable' => '[]',
 			'copy_setup_files' => 1,
 			'return_button_label' => '',
+			'force-uninstall' => "",
+			'use_symbolic_links' => "",
 		];
 		$aHiddenInputs = '';
 		foreach ($aParams as $sParamName => $defaultValue) {

@@ -25,6 +25,7 @@ use CoreException;
 use Dict;
 use Exception;
 use MetaModel;
+use MFCompiler;
 use RunTimeEnvironment;
 use SecurityException;
 use SetupUtils;
@@ -102,6 +103,8 @@ class DataFeatureRemovalController extends Controller
 			'removed_extensions' => '[]',
 			'extensions_not_uninstallable' => '[]',
 			'copy_setup_files' => 1,
+			'force-uninstall' => "",
+			'use_symbolic_links' => MFCompiler::UseSymbolicLinks() ? 'on' : '',
 			'return_button_label' => '',
 		];
 
@@ -122,6 +125,7 @@ class DataFeatureRemovalController extends Controller
 			//it does not come from setup
 			// we get extensions from 1st screen uiblocks
 			$this->ReadExtensionsDiff();
+			$aHiddenInputs['force-uninstall'] = $this->bForcedUninstallation ? 'on' : '';
 			$aAddedExtensions = $this->aExtensionsToCheck['to_be_installed'];
 			$aHiddenInputs['added_extensions'] = $this->ConvertIntoSetupFormat($aAddedExtensions);
 
@@ -158,7 +162,7 @@ class DataFeatureRemovalController extends Controller
 		if ("[]" === $aHiddenInputs['selected_modules']) {
 			//to make setup redirection work, we need to pass complex data structures to setup wizards (ie extension/module lists)
 			$oConfig = MetaModel::GetConfig();
-			$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, $aAddedExtensions, $aRemovedExtensions);
+			$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
 			$aHiddenInputs['selected_extensions'] = $this->ConvertIntoSetupFormat($aSelectedExtensions);
 
 			$oRunTimeEnvironment = $this->GetRuntimeEnvironment($aRemovedExtensions);
@@ -200,7 +204,12 @@ class DataFeatureRemovalController extends Controller
 
 	private function ConvertIntoSetupFormat(array $aData): string
 	{
-		return json_encode($aData);
+		$aNewData = [];
+		foreach ($aData as $k => $sVal) {
+			$aNewData[] = sprintf('"%s":"%s"', $k, $sVal);
+		}
+
+		return "{".implode(',', $aNewData)."}";
 	}
 
 	/**
@@ -426,7 +435,7 @@ class DataFeatureRemovalController extends Controller
 				$aExtensionData['extra_flags']['selected'] = false;
 				$sLabel = $aAvailableExtensions[$sCode]['label'];
 				$this->aExtensionsToCheck['to_be_removed'][$sCode] = $sLabel;
-				if (!$aExtensionData['extra_flags']['uninstallable'] || $aExtensionData['extra_flags']['remote']) {
+				if (! $this->bForcedUninstallation && $aExtensionData['extra_flags']['uninstallable']) {
 					$this->bForcedUninstallation = true;
 				}
 			} elseif (!$aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCode] === 'on') {

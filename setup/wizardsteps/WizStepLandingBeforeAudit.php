@@ -21,9 +21,6 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 		$oWizard->SetParameter('datamodel_version', ITOP_CORE_VERSION);
 		$oWizard->SetParameter('upgrade_type', 'use-compatible');
 
-		$oWizard->SaveParameter('use_symbolic_links', MFCompiler::UseSymbolicLinks());
-		$oWizard->SaveParameter('force-uninstall', '');
-
 		// should be done at the end
 		parent::__construct($oWizard, $sCurrentState, false);
 	}

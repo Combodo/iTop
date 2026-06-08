@@ -34,7 +34,9 @@ function GetLastestInstallFile(): ?string
 	return $sLastFilePath;
 }
 
-$aRemovedExtensions = ['itop-container-mgmt' => 'Containerization'];
+$aRemovedExtensions = [
+	'itop-container-mgmt' => 'Containerization',
+];
 
 $sPath = GetLastestInstallFile();
 if (is_null($sPath)) {
@@ -56,10 +58,12 @@ $aPostParams = [
 	"auth_pwd" => 'admin',
 	'login_mode' => 'form',
 	'operation' => 'AnalysisResult',
-	'setup_token' => $sToken,
+	'authent' => $sToken,
 	'selected_modules' => utils::HtmlEntities(json_encode($aSelectedModules)),
 	'selected_extensions' => utils::HtmlEntities(json_encode($aSelectedExtensions)),
 	'removed_extensions' => utils::HtmlEntities(json_encode($aRemovedExtensions)),
+	'force-uninstall' => "on",
+	'use_symbolic_links' => "",
 ];
 
 $sHiddenPostedInput = "";

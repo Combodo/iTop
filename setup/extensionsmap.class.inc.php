@@ -736,7 +736,6 @@ class iTopExtensionsMap
 	public function GetSelectedExtensions(Config $oConfig, array $aAddedExtensions, array $aRemovedExtensions): array
 	{
 		$aDbChoices = self::GetChoicesFromDatabase($oConfig);
-
 		foreach ($aDbChoices as $i => $sChoice) {
 			if (in_array($sChoice, $aRemovedExtensions)) {
 				unset($aDbChoices[$i]);
