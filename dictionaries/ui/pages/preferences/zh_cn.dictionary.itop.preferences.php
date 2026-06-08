@@ -54,6 +54,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Preferences:ChooseAPlaceholder+'                                => '请选择一个占位图片, 将在用户联系人没有设定头像图片时显示',
 	'UI:Preferences:ChooseAPlaceholder:Success:Message'                 => '您的占位图片已成功更新',
 	'UI:Preferences:Notifications'                                      => '通知',
-    'UI:Preferences:Notifications+'                                     => '在 <a href="%1$s">这里</a>配置您想要收到的通知.',
+	'UI:Preferences:Notifications+'                                     => '在 <a href="%1$s">这里</a>配置您想要收到的通知.',
 
 ]);

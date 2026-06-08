@@ -56,10 +56,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:AuditRule/Attribute:query'                   => '要运行的查询',
 	'Class:AuditRule/Attribute:query+'                  => '要运行的OQL表达式',
 	'Class:AuditRule/Attribute:valid_flag'              => '返回的对象:',
-	'Class:AuditRule/Attribute:valid_flag+'             => '查询返回的对象是否有效?
-"有效对象": then objects in error are those part of the scope and not in the list of valid objects,
-"无效对象": then objects in error are the invalid objects which are part of the scope~~',
-    'Class:AuditRule/Attribute:valid_flag/Value:true'   => '有效对象',
+	'Class:AuditRule/Attribute:valid_flag+'             => 'Does the query to run returns valid or invalid objects?
+"Valid objects": then objects in error are those part of the scope and not in the list of valid objects,
+"Invalid objects": then objects in error are the invalid objects which are part of the scope',
+	'Class:AuditRule/Attribute:valid_flag/Value:true'   => '有效对象',
 	'Class:AuditRule/Attribute:valid_flag/Value:true+'  => 'Then objects in error are those part of the scope and not in the list of valid objects~~',
 	'Class:AuditRule/Attribute:valid_flag/Value:false'  => '无效对象',
 	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'Then objects in error are the invalid objects which are part of the scope~~',
@@ -415,7 +415,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'BooleanLabel:no' => '否',
 	'UI:WelcomeMenu:Title' => '欢迎使用'.ITOP_APPLICATION_SHORT,
 	'UI:WelcomeMenu:AllOpenRequests' => '所有打开的需求: %1$d',
-    'UI:WelcomeMenu:MyCalls'         => '我办理的需求',
+	'UI:WelcomeMenu:MyCalls'         => '我办理的需求',
 	'UI:WelcomeMenu:OpenIncidents'   => '所有打开的事件: %1$d',
 	'UI:WelcomeMenu:AllConfigItems'  => '配置项: %1$d',
 	'UI:WelcomeMenu:MyIncidents'     => '分配给我的事件',
@@ -469,7 +469,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:InputFile:NoFileSelected'    => '未选择文件',
 	'UI:InputFile:SelectFile'        => '请选择文件',
 
-    'UI:SearchToggle'                                    => '搜索',
+	'UI:SearchToggle'                                    => '搜索',
 	'UI:ClickToCreateNew'                                => '新建%1$s',
 	'UI:SearchFor_Class'                                 => '搜索%1$s ',
 	'UI:NoObjectToDisplay'                               => '没有可显示的对象.',
@@ -489,7 +489,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Error:UploadStoppedByExtension_FileName'         => '上传因为扩展名被停止. (原文件名 = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code'             => '文件上传失败, 原因未知. (错误代码 = "%1$s").',
 
-    'UI:Error:1ParametersMissing'                         => '错误: 必须为此操作指定以下参数: %1$s.',
+	'UI:Error:1ParametersMissing'                         => '错误: 必须为此操作指定以下参数: %1$s.',
 	'UI:Error:2ParametersMissing'                         => '错误: 必须为此操作指定以下参数: %1$s和%2$s.',
 	'UI:Error:3ParametersMissing'                         => '错误: 必须为此操作指定以下参数: %1$s, %2$s和%3$s.',
 	'UI:Error:4ParametersMissing'                         => '错误: 必须为此操作指定以下参数: %1$s, %2$s, %3$s和%4$s.',
@@ -512,9 +512,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Error:InvalidToken'                               => '错误: 所请求的操作已执行 (没有CSRF token)',
 	'UI:Error:TwigController'                             => 'Internal error in form controller~~',
 
-    'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP提供者%1$s不存在 (email_transport_smtp.oauth.provider)',
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP提供者%1$s不存在 (email_transport_smtp.oauth.provider)',
 
-    'UI:GroupBy:Count'              => '个数',
+	'UI:GroupBy:Count'              => '个数',
 	'UI:GroupBy:Count+'             => '项目数',
 	'UI:CountOfObjects'             => '%1$d个对象符合指定的条件.',
 	'UI_CountOfObjectsShort'        => '%1$d个对象.',
@@ -630,7 +630,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:CSVImport:SelectClass'                => '请选择要导入的类别:',
 	'UI:CSVImport:AdvancedMode'               => '高级模式',
 	'UI:CSVImport:AdvancedMode+'              => '在高级模式中, 对象的"id" (主键) 可以被用来修改和重命名对象.'.
-        '不管怎样, 列 "id" (如果存在) 只能被用做一个搜索条件, 不能与其它搜索条件混用.',
+		'不管怎样, 列 "id" (如果存在) 只能被用做一个搜索条件, 不能与其它搜索条件混用.',
 	'UI:CSVImport:SelectAClassFirst'          => '要配置映射, 请先选择一个类型.',
 	'UI:CSVImport:HeaderFields'               => '字段',
 	'UI:CSVImport:HeaderMappings'             => '映射',
@@ -645,7 +645,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:UniversalSearch:Error'                => '错误: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass'  => '选择要搜索的类别: ',
 
-    'UI:CSVReport-Value-Modified' => '已修改',
+	'UI:CSVReport-Value-Modified' => '已修改',
 	'UI:CSVReport-Value-SetIssue' => '属性值不合法',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' 值不合法',
 	'UI:CSVReport-Value-NoMatch' => '没有匹配到值 \'%1$s\'',
@@ -654,7 +654,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser' => '对象 \'%1$s\' 在您当前角色下没有找到',
 	'UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser' => '一些对象 \'%1$s\' 在您当前角色下不可见',
 
-    'UI:CSVReport-Value-Missing'                => '缺少必填项',
+	'UI:CSVReport-Value-Missing'                => '缺少必填项',
 	'UI:CSVReport-Value-Ambiguous'              => '模糊匹配: 找到 %1$s 个对象',
 	'UI:CSVReport-Row-Unchanged'                => '保持不变',
 	'UI:CSVReport-Row-Created'                  => '新建',
@@ -680,7 +680,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:CSVReport-Value-Issue-NoValue'          => 'No value',
 	'UI:CSVReport-Row-Issue-NbField'            => 'Not the expected number of columns (found: %1$s, expected: %2$s)',
 
-    'UI:CSVReport-Icon-Unchanged'         => '保持不变',
+	'UI:CSVReport-Icon-Unchanged'         => '保持不变',
 	'UI:CSVReport-Icon-Modified'          => '修改',
 	'UI:CSVReport-Icon-Missing'           => '丢失',
 	'UI:CSVReport-Object-MissingToUpdate' => '丢失对象: 将被更新',
@@ -695,14 +695,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:CSVReport-Stats-Created'          => '%1$.0f %% 已加载的对象将会被创建.',
 	'UI:CSVReport-Stats-Modified'         => '%1$.0f %% 已加载的对象将会被修改.',
 
-    'UI:CSVExport:AdvancedMode' => '高级模式',
+	'UI:CSVExport:AdvancedMode' => '高级模式',
 	'UI:CSVExport:AdvancedMode+' => '高级模式下, 导出将包含额外的列: 对象id, 外键id以及要使一致的属性.',
 	'UI:CSVExport:LostChars' => '编码问题',
 	'UI:CSVExport:LostChars+' => '已下载文件将使用编码 %1$s. 系统检测到一些字符与该格式不兼容. 这些字符将被替换为子集 (例如重读字符将丢失音调), 或者被丢弃. 您可以从浏览器中复制粘贴数据. 或者联系管理员更改字符编码 (参阅参数 \'csv_file_default_charset\').',
 
-    'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB审计',
+	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB审计',
 
-    'UI:Audit:Interactive:All:Title'              => '审计结果',
+	'UI:Audit:Interactive:All:Title'              => '审计结果',
 	'UI:Audit:Interactive:All:SubTitle'           => '全量审计: 包括所有规则, 所有类别, 所有审计域',
 	'UI:Audit:Interactive:All:BreadCrumb'         => '全量审计',
 	'UI:Audit:Interactive:All:BreadCrumb+'        => '所有规则的审计结果',
@@ -722,7 +722,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Audit:Interactive:Button:Back'            => '返回审计',
 	'UI:Audit:Interactive:Button:Configuration'   => '审计配置',
 
-    'UI:Audit:ViewRules'                        => '检查规则',
+	'UI:Audit:ViewRules'                        => '检查规则',
 	'UI:Audit:HeaderAuditRule'                  => '审计规则',
 	'UI:Audit:HeaderNbObjects'                  => '# 对象',
 	'UI:Audit:HeaderNbErrors'                   => '# 错误',
@@ -739,7 +739,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Audit:Dashboard:ObjectsValidated'       => '对象已验证',
 	'UI:Audit:AuditCategory:Subtitle'           => '%2$s个中有%1$s个错误 - %3$s%%',
 
-    'UI:RunQuery:Title'                 => ITOP_APPLICATION_SHORT.' - OQL查询评估',
+	'UI:RunQuery:Title'                 => ITOP_APPLICATION_SHORT.' - OQL查询评估',
 	'UI:RunQuery:QueryExamples'         => '示例查询',
 	'UI:RunQuery:QueryResults'          => '查询结果',
 	'UI:RunQuery:HeaderPurpose'         => '目的',
@@ -888,9 +888,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => '请确认要删除下列%2$s类型的%1$d个对象.',
 	'UI:Delete:Confirm_Object' => '请确认要删除%1$s.',
 	'UI:Delete:Confirm_Count_ObjectsOf_Class' => '请确认要删除下列%2$s类型的%1$d个对象.',
-	'UI:WelcomeToITop' => '欢迎使用'.ITOP_APPLICATION, 
-    'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s 详细内容',
-    'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - 错误',
+	'UI:WelcomeToITop' => '欢迎使用'.ITOP_APPLICATION,
+	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s 详细内容',
+	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - 错误',
 	'UI:ObjectDoesNotExist' => '抱歉, 此对象不存在 (或无权浏览此对象).',
 	'UI:ObjectArchived' => '对象已被归档. 请启用归档模式或联系管理员.',
 	'Tag:Archived' => '已归档',
@@ -930,7 +930,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:FatalErrorMessage' => '致命错误, '.ITOP_APPLICATION_SHORT.'无法继续.',
 	'UI:Error_Details' => '错误: %1$s.',
 
-    'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.'用户管理 - 角色映射',
+	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.'用户管理 - 角色映射',
 	'UI:UserManagement:Class' => '类型',
 	'UI:UserManagement:Class+' => '对象的类型',
 	'UI:UserManagement:ProjectedObject' => '对象',
@@ -965,52 +965,52 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:UserManagement:NoLifeCycleApplicable+' => '此类型未定义生命周期',
 	'UI:UserManagement:GrantMatrix' => '授权矩阵',
 
-    'Menu:SystemTools' => '系统',
+	'Menu:SystemTools' => '系统',
 
-    'UI:ChangeManagementMenu' => '变更管理',
+	'UI:ChangeManagementMenu' => '变更管理',
 	'UI:ChangeManagementMenu+' => '变更管理',
 	'UI:ChangeManagementMenu:Title' => '变更概况',
 	'UI-ChangeManagementMenu-ChangesByType' => '按类别划分的变更',
 	'UI-ChangeManagementMenu-ChangesByStatus' => '按状态划分的变更',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => '尚未分配的变更',
 
-    'UI:ConfigurationManagementMenu' => '配置管理',
+	'UI:ConfigurationManagementMenu' => '配置管理',
 	'UI:ConfigurationManagementMenu+' => '配置管理',
 	'UI:ConfigurationManagementMenu:Title' => '基础架构概况',
 	'UI-ConfigurationManagementMenu-InfraByType' => '按类别划分基础架构对象',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => '按状态划分基础架构对象',
 
-    'UI:ConfigMgmtMenuOverview:Title' => '配置管理仪表盘',
+	'UI:ConfigMgmtMenuOverview:Title' => '配置管理仪表盘',
 	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => '按状态配置项目',
 	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => '按类别配置项目',
 
-    'UI:RequestMgmtMenuOverview:Title' => '需求管理仪表盘',
+	'UI:RequestMgmtMenuOverview:Title' => '需求管理仪表盘',
 	'UI-RequestManagementOverview-RequestByService' => '按服务划分需求',
 	'UI-RequestManagementOverview-RequestByPriority' => '按优先级划分需求',
 	'UI-RequestManagementOverview-RequestUnassigned' => '尚未分配给办理人的需求',
 
-    'UI:IncidentMgmtMenuOverview:Title' => '事件管理仪表盘',
+	'UI:IncidentMgmtMenuOverview:Title' => '事件管理仪表盘',
 	'UI-IncidentManagementOverview-IncidentByService' => '按服务级划分事件',
 	'UI-IncidentManagementOverview-IncidentByPriority' => '按优先级划分事件',
 	'UI-IncidentManagementOverview-IncidentUnassigned' => '尚未分配给办理人的事件',
 
-    'UI:ChangeMgmtMenuOverview:Title' => '变更管理仪表盘',
+	'UI:ChangeMgmtMenuOverview:Title' => '变更管理仪表盘',
 	'UI-ChangeManagementOverview-ChangeByType' => '按类别划分变更',
 	'UI-ChangeManagementOverview-ChangeUnassigned' => '尚未分配给办理人的变更',
 	'UI-ChangeManagementOverview-ChangeWithOutage' => '变更引起的停机',
 
-    'UI:ServiceMgmtMenuOverview:Title' => '服务管理仪表盘',
+	'UI:ServiceMgmtMenuOverview:Title' => '服务管理仪表盘',
 	'UI-ServiceManagementOverview-CustomerContractToRenew' => '客户合同需在30日内更新',
 	'UI-ServiceManagementOverview-ProviderContractToRenew' => '供应商合同需在30日内更新',
 
-    'UI:ContactsMenu' => '联系人',
+	'UI:ContactsMenu' => '联系人',
 	'UI:ContactsMenu+' => '联系人',
 	'UI:ContactsMenu:Title' => '联系人概况',
 	'UI-ContactsMenu-ContactsByLocation' => '按地点划分联系人',
 	'UI-ContactsMenu-ContactsByType' => '按类别划分联系人',
 	'UI-ContactsMenu-ContactsByStatus' => '按状态划分联系人',
 
-    'UI:NotificationsMenu:Title' => '配置通知',
+	'UI:NotificationsMenu:Title' => '配置通知',
 	'UI:NotificationsMenu:Help' => '帮助',
 	'UI:NotificationsMenu:HelpContent' => '<p>在'.ITOP_APPLICATION_SHORT.'中, 通知可以被自定义. 它们基于两个对象集: <i>触发器和操作</i>.</p>
 <p><i><b>触发器</b></i>定义了什么时候发送通知. '.ITOP_APPLICATION_SHORT.'内核自带一些触发器, 另一些触发器可由扩展提供:
@@ -1042,22 +1042,22 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:NotificationsMenu:Actions:Action' => '其它操作',
 	'UI:NotificationsMenu:AvailableActions' => '有效的操作',
 
-    'Menu:TagAdminMenu' => '标签配置',
+	'Menu:TagAdminMenu' => '标签配置',
 	'Menu:TagAdminMenu+' => '标签值管理',
 	'UI:TagAdminMenu:Title' => '标签配置',
 	'UI:TagAdminMenu:NoTags' => '未配置标签',
 	'UI:TagSetFieldData:Error' => '错误: %1$s',
 
-    'UI:iTopVersion:Short' => '%1$s 版本 %2$s',
+	'UI:iTopVersion:Short' => '%1$s 版本 %2$s',
 	'UI:iTopVersion:Long' => '%1$s 版本 %2$s-%3$s 创建于 %4$s',
 	'UI:PropertiesTab' => '属性',
 
-    'UI:OpenDocumentInNewWindow_' => '打开',
+	'UI:OpenDocumentInNewWindow_' => '打开',
 	'UI:DownloadDocument_' => '下载',
 	'UI:Document:NoPreview' => '此类型文档无法预览',
 	'UI:Download-CSV' => '下载 %1$s',
 
-    'UI:DeadlineMissedBy_duration' => '超过 %1$s',
+	'UI:DeadlineMissedBy_duration' => '超过 %1$s',
 	'UI:Deadline_LessThan1Min' => '< 1分钟',
 	'UI:Deadline_Minutes' => '%1$d分钟',
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
@@ -1179,7 +1179,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:ArchiveMode:Banner+' => '已归档的对象可见但不允许修改',
 	'UI:FavoriteOrganizations' => '快速访问',
 	'UI:FavoriteOrganizations+' => '进入组织下的列表,可实现通过下拉菜单快速访问.'.
-        '请注意,这并不是一个安全设置, 其它组织的对象依然可以通过选择 "所有组织" 下拉列表看到.',
+		'请注意,这并不是一个安全设置, 其它组织的对象依然可以通过选择 "所有组织" 下拉列表看到.',
 	'UI:FavoriteLanguage' => '语言',
 	'UI:Favorites:SelectYourLanguage' => '选择语言',
 	'UI:FavoriteOtherSettings' => '其它设置',
@@ -1203,7 +1203,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Toggle:SwitchToStandardDashboard' => '切换到标准仪表盘',
 	'UI:Toggle:SwitchToCustomDashboard' => '切换到自定义仪表盘',
 
-    'UI:ConfigureThisList' => '配置列表...',
+	'UI:ConfigureThisList' => '配置列表...',
 	'UI:ListConfigurationTitle' => '列表配置',
 	'UI:ColumnsAndSortOrder' => '列和排序顺序:',
 	'UI:UseDefaultSettings' => '使用默认配置',
@@ -1219,10 +1219,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Button:MoveUp' => '上移',
 	'UI:Button:MoveDown' => '下移',
 
-    'UI:OQL:UnknownClassAndFix' => '未知类型 "%1$s". 您可以试试 "%2$s".',
+	'UI:OQL:UnknownClassAndFix' => '未知类型 "%1$s". 您可以试试 "%2$s".',
 	'UI:OQL:UnknownClassNoFix' => '未知类型 "%1$s"',
 
-    'UI:Dashboard:EditCustom' => '编辑自定义版本...',
+	'UI:Dashboard:EditCustom' => '编辑自定义版本...',
 	'UI:Dashboard:CreateCustom' => '新建自定义版本...',
 	'UI:Dashboard:DeleteCustom' => '删除自定义版本...',
 	'UI:Dashboard:RevertConfirm' => '每个地方都会恢复到初始版本. 请确认您要这样做.',
@@ -1238,7 +1238,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:DashletCreation:DashletType' => '仪表类型',
 	'UI:DashletCreation:EditNow' => '编辑仪表盘',
 
-    'UI:DashboardEdit:Title' => '仪表盘编辑器',
+	'UI:DashboardEdit:Title' => '仪表盘编辑器',
 	'UI:DashboardEdit:DashboardTitle' => '标题',
 	'UI:DashboardEdit:AutoReload' => '自动刷新',
 	'UI:DashboardEdit:AutoReloadSec' => '自动刷新间隔 (秒)',
@@ -1246,38 +1246,38 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:DashboardEdit:Revert' => '撤回',
 	'UI:DashboardEdit:Apply' => '应用',
 
-    'UI:DashboardEdit:Layout' => '布局',
+	'UI:DashboardEdit:Layout' => '布局',
 	'UI:DashboardEdit:Properties' => '仪表盘属性',
 	'UI:DashboardEdit:Dashlets' => '可用的仪表',
 	'UI:DashboardEdit:DashletProperties' => '仪表属性',
 
-    'UI:Form:Property' => '属性',
+	'UI:Form:Property' => '属性',
 	'UI:Form:Value' => '值',
 
-    'UI:DashletUnknown:Label' => '未知',
+	'UI:DashletUnknown:Label' => '未知',
 	'UI:DashletUnknown:Description' => '未知仪表盘 (可能已卸载)',
 	'UI:DashletUnknown:RenderText:View' => '此仪表盘无法渲染.',
 	'UI:DashletUnknown:RenderText:Edit' => '此仪表盘无法渲染 (类型 "%1$s"). 请与管理员确认其可用.',
 	'UI:DashletUnknown:RenderNoDataText:Edit' => '此仪表盘无预览 (类型 "%1$s").',
 	'UI:DashletUnknown:Prop-XMLConfiguration' => '配置 (显示为纯 XML)',
 
-    'UI:DashletProxy:Label' => '代理',
+	'UI:DashletProxy:Label' => '代理',
 	'UI:DashletProxy:Description' => '代理仪表',
 	'UI:DashletProxy:RenderNoDataText:Edit' => '第三方组件无法预览 (类型 "%1$s").',
 	'UI:DashletProxy:Prop-XMLConfiguration' => '配置 (显示为纯 XML)',
 
-    'UI:DashletPlainText:Label' => '文本',
+	'UI:DashletPlainText:Label' => '文本',
 	'UI:DashletPlainText:Description' => '纯文本 (无格式)',
 	'UI:DashletPlainText:Prop-Text' => '内容',
 	'UI:DashletPlainText:Prop-Text:Default' => '请在这里输入内容...',
 
-    'UI:DashletObjectList:Label' => '对象列表',
+	'UI:DashletObjectList:Label' => '对象列表',
 	'UI:DashletObjectList:Description' => '对象列表仪表盘',
 	'UI:DashletObjectList:Prop-Title' => '标题',
 	'UI:DashletObjectList:Prop-Query' => '查询',
 	'UI:DashletObjectList:Prop-Menu' => '菜单',
 
-    'UI:DashletGroupBy:Prop-Title' => '标题',
+	'UI:DashletGroupBy:Prop-Title' => '标题',
 	'UI:DashletGroupBy:Prop-Query' => '查询',
 	'UI:DashletGroupBy:Prop-Style' => '样式',
 	'UI:DashletGroupBy:Prop-GroupBy' => '分组...',
@@ -1288,28 +1288,28 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (小时)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (月)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Year' => '%1$s (年)',
-    'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (星期数)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (星期数)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (月天数)',
 	'UI:DashletGroupBy:MissingGroupBy' => '请选择对象的分组字段',
 
-    'UI:DashletGroupByPie:Label' => '饼图',
+	'UI:DashletGroupByPie:Label' => '饼图',
 	'UI:DashletGroupByPie:Description' => '饼图',
 	'UI:DashletGroupByBars:Label' => '柱状图',
 	'UI:DashletGroupByBars:Description' => '柱状图',
 	'UI:DashletGroupByTable:Label' => '分组 (表)',
 	'UI:DashletGroupByTable:Description' => '列表 (以字段分组)',
 
-    // New in 2.5
-    'UI:DashletGroupBy:Prop-Function' => '聚合函数',
+	// New in 2.5
+	'UI:DashletGroupBy:Prop-Function' => '聚合函数',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => '函数属性',
 	'UI:DashletGroupBy:Prop-OrderDirection' => '方向',
 	'UI:DashletGroupBy:Prop-OrderField' => '排序',
 	'UI:DashletGroupBy:Prop-Limit' => '限制',
 
-    'UI:DashletGroupBy:Order:asc' => '升序',
+	'UI:DashletGroupBy:Order:asc' => '升序',
 	'UI:DashletGroupBy:Order:desc' => '降序',
 
-    'UI:GroupBy:count' => '个数',
+	'UI:GroupBy:count' => '个数',
 	'UI:GroupBy:count+' => '项目数',
 	'UI:GroupBy:sum' => '总数',
 	'UI:GroupBy:sum+' => '%1$s 之和',
@@ -1328,7 +1328,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:DashletHeaderStatic:Prop-Icon' => '图标',
 	'UI:DashletIcon:None' => '无',
 
-    'UI:DashletHeaderDynamic:Label' => '统计标头',
+	'UI:DashletHeaderDynamic:Label' => '统计标头',
 	'UI:DashletHeaderDynamic:Description' => '统计标头 (分组...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => '标题',
 	'UI:DashletHeaderDynamic:Prop-Title:Default' => '联系人',
@@ -1339,11 +1339,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:DashletHeaderDynamic:Prop-GroupBy' => '分组依据',
 	'UI:DashletHeaderDynamic:Prop-Values' => '值',
 
-    'UI:DashletBadge:Label' => '证件',
+	'UI:DashletBadge:Label' => '证件',
 	'UI:DashletBadge:Description' => '新建/查询的对象图标',
 	'UI:DashletBadge:Prop-Class' => '类型',
 
-    'DayOfWeek-Sunday'          => '周日',
+	'DayOfWeek-Sunday'          => '周日',
 	'DayOfWeek-Monday'          => '周一',
 	'DayOfWeek-Tuesday'         => '周二',
 	'DayOfWeek-Wednesday'       => '周三',
@@ -1363,8 +1363,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Month-11'                  => '十一月',
 	'Month-12'                  => '十二月',
 
-    // Short version for the DatePicker
-    'DayOfWeek-Sunday-Min'      => '日',
+	// Short version for the DatePicker
+	'DayOfWeek-Sunday-Min'      => '日',
 	'DayOfWeek-Monday-Min'      => '一',
 	'DayOfWeek-Tuesday-Min'     => '二',
 	'DayOfWeek-Wednesday-Min'   => '三',
@@ -1386,7 +1386,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Calendar-FirstDayOfWeek'   => '0',
 	// 0 = Sunday, 1 = Monday, etc...
 
-    'UI:Menu:ShortcutList'                                  => '创建快捷方式...',
+	'UI:Menu:ShortcutList'                                  => '创建快捷方式...',
 	'UI:Menu:FilterList'                                    => '显示条件查询列表',
 	'UI:ShortcutRenameDlg:Title'                            => '重命名快捷方式',
 	'UI:ShortcutListDlg:Title'                              => '为此列表创建快捷方式',
@@ -1406,12 +1406,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ShortcutOQL/Attribute:auto_reload_sec'           => '自动刷新间隔 (秒)',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip'       => '最小值是 %1$d 秒',
 
-    'UI:FillAllMandatoryFields' => '请填写所有的必填项.',
+	'UI:FillAllMandatoryFields' => '请填写所有的必填项.',
 	'UI:ValueMustBeSet'         => '必填',
 	'UI:ValueMustBeChanged' => '必须修改这个值',
 	'UI:ValueInvalidFormat' => '格式无效',
 
-    'UI:CSVImportConfirmTitle' => '请确认本次操作',
+	'UI:CSVImportConfirmTitle' => '请确认本次操作',
 	'UI:CSVImportConfirmMessage' => '请确认是否继续?',
 	'UI:CSVImportError_items' => '错误: %1$d',
 	'UI:CSVImportCreated_items' => '创建: %1$d',
@@ -1441,22 +1441,22 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:AddAnExisting_Class' => '添加 %1$s...',
 	'UI:SelectionOf_Class' => '选择 %1$s',
 
-    'UI:AboutBox' => '关于'.ITOP_APPLICATION_SHORT.'...',
+	'UI:AboutBox' => '关于'.ITOP_APPLICATION_SHORT.'...',
 	'UI:About:Title' => '关于'.ITOP_APPLICATION_SHORT, 'UI:About:DataModel' => '数据模型',
 	'UI:About:DataModel' => '数据模型',
-    'UI:About:Support' => '支持信息',
+	'UI:About:Support' => '支持信息',
 	'UI:About:Licenses' => '许可证',
 	'UI:About:InstallationOptions' => '已安装的模块',
 	'UI:About:ManualExtensionSource' => '扩展',
 	'UI:About:Extension_Version' => '版本: %1$s',
 	'UI:About:RemoteExtensionSource' => '数据',
 
-    'UI:DisconnectedDlgMessage' => '您已断开. 要继续使用,需要重新验证您的用户名和密码.',
+	'UI:DisconnectedDlgMessage' => '您已断开. 要继续使用,需要重新验证您的用户名和密码.',
 	'UI:DisconnectedDlgTitle' => '警告!',
 	'UI:LoginAgain' => '再次登录',
 	'UI:StayOnThePage' => '保持在当前页面',
 
-    'ExcelExporter:ExportMenu' => 'Excel 导出...',
+	'ExcelExporter:ExportMenu' => 'Excel 导出...',
 	'ExcelExporter:ExportDialogTitle' => 'Excel 导出',
 	'ExcelExporter:ExportButton' => '导出',
 	'ExcelExporter:DownloadButton' => '下载 %1$s',
@@ -1469,7 +1469,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'portal:legacy_portal' => '终端用户门户',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.'后台管理界面',
 
-    'UI:CurrentObjectIsLockedBy_User' => '对象被锁定, 因为正在修改%1$s.',
+	'UI:CurrentObjectIsLockedBy_User' => '对象被锁定, 因为正在修改%1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => '此对象正在被%1$s修改. 您的修改无法提交以避免冲突.',
 	'UI:CurrentObjectIsSoftLockedBy_User' => '此对象当前正在被%1$s修改. 在其修改结束后您将能提交您的修改.',
 	'UI:CurrentObjectLockExpired' => '并发修改的锁定期已过.',
@@ -1477,44 +1477,44 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:ConcurrentLockKilled' => '阻止并发修改当前对象的锁定已被删除.',
 	'UI:Menu:KillConcurrentLock' => '消除并发修改锁定!',
 
-    'UI:Menu:ExportPDF' => '导出PDF...',
+	'UI:Menu:ExportPDF' => '导出PDF...',
 	'UI:Menu:PrintableVersion' => '打印友好的版本',
 
-    'UI:BrowseInlineImages' => '浏览图片...',
+	'UI:BrowseInlineImages' => '浏览图片...',
 	'UI:UploadInlineImageLegend' => '上传新图片',
 	'UI:SelectInlineImageToUpload' => '选择要上传的图片',
 	'UI:AvailableInlineImagesLegend' => '可用的图片',
 	'UI:NoInlineImage' => '服务器上没有图片. 使用上面的 "浏览" 按钮, 从您的电脑上选择并上传到服务器.',
 	'UI:MissingInlineImage' => '缺少图片',
 
-    'UI:ToggleFullScreen' => '切换最大化/最小化',
+	'UI:ToggleFullScreen' => '切换最大化/最小化',
 	'UI:Button:ResetImage' => '恢复之前的图片',
 	'UI:Button:RemoveImage' => '移除图片',
 	'UI:Button:UploadImage' => '从硬盘上传图像',
 	'UI:UploadNotSupportedInThisMode' => '本模式下不支持修改文件或图片.',
 
-    'UI:Button:RemoveDocument' => '移除文档',
+	'UI:Button:RemoveDocument' => '移除文档',
 
-    // Search form
-    'UI:Search:Toggle' => '折叠/展开',
+	// Search form
+	'UI:Search:Toggle' => '折叠/展开',
 	'UI:Search:AutoSubmit:DisabledHint' => '此类别已禁用自动提交',
 	'UI:Search:Obsolescence:DisabledHint' => '根据您的设置, 废弃的数据会被隐藏',
 	'UI:Search:NoAutoSubmit:ExplainText' => '在搜索框中添加规则, 或者单击对象按钮查看对象.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => '添加条件',
 	// - Add new criteria button
-    'UI:Search:AddCriteria:List:RecentlyUsed:Title' => '最近使用',
+	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => '最近使用',
 	'UI:Search:AddCriteria:List:MostPopular:Title' => '最常用',
 	'UI:Search:AddCriteria:List:Others:Title' => '其它',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => '还没有.',
 
-    // - Criteria header actions
-    'UI:Search:Criteria:Toggle' => '折叠/展开',
+	// - Criteria header actions
+	'UI:Search:Criteria:Toggle' => '折叠/展开',
 	'UI:Search:Criteria:Remove' => '移除',
 	'UI:Search:Criteria:Locked' => '已锁定',
 
 	// - Criteria titles
 	//   - Default widget
-    'UI:Search:Criteria:Title:Default:Any' => '%1$s: 任何',
+	'UI:Search:Criteria:Title:Default:Any' => '%1$s: 任何',
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s 为空',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s 不为空',
 	'UI:Search:Criteria:Title:Default:Equals' => '%1$s 等于 %2$s',
@@ -1538,22 +1538,22 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	//   - Numeric widget
 	//   None yet
 	//   - DateTime widget
-    'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
 	//   - Enum widget
-    'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
+	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s 和 %3$s 其他',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: 任何',
 	//   - TagSet widget
-    'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
+	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
 	//   - External key widget
-    'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s 已定义',
+	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s 已定义',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s 未定义',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s 和 %3$s 其他',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: 任何',
 	//   - Hierarchical key widget
-    'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s 已定义',
+	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s 已定义',
 	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s 未定义',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
 	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
@@ -1561,28 +1561,28 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: 任何',
 
 	// - Criteria operators
-	//   - Default widget    
-    'UI:Search:Criteria:Operator:Default:Empty' => '为空',
+	//   - Default widget
+	'UI:Search:Criteria:Operator:Default:Empty' => '为空',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => '非空',
 	'UI:Search:Criteria:Operator:Default:Equals' => '等于',
 	'UI:Search:Criteria:Operator:Default:Between' => '之间',
 	//   - String widget
-    'UI:Search:Criteria:Operator:String:Contains' => '包含',
+	'UI:Search:Criteria:Operator:String:Contains' => '包含',
 	'UI:Search:Criteria:Operator:String:StartsWith' => '起始为',
 	'UI:Search:Criteria:Operator:String:EndsWith' => '结尾是',
 	'UI:Search:Criteria:Operator:String:RegExp' => '正则表达式.',
 	//   - Numeric widget
-    'UI:Search:Criteria:Operator:Numeric:Equals' => '等于',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => '等于',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => '大于',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => '大于/等于',
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => '小于',
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => '小于/等于',
 	'UI:Search:Criteria:Operator:Numeric:Different' => '不同',
 	//   - Tag Set Widget
-    'UI:Search:Criteria:Operator:TagSet:Matches' => '匹配',
+	'UI:Search:Criteria:Operator:TagSet:Matches' => '匹配',
 
-    // - Other translations
-    'UI:Search:Value:Filter:Placeholder' => '筛选器...',
+	// - Other translations
+	'UI:Search:Value:Filter:Placeholder' => '筛选器...',
 	'UI:Search:Value:Search:Placeholder' => '搜索...',
 	'UI:Search:Value:Autocomplete:StartTyping' => '开始输入值.',
 	'UI:Search:Value:Autocomplete:Wait' => '请稍候...',
@@ -1591,7 +1591,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => '全选/全不选',
 
 	// - Widget other translations
-    'UI:Search:Criteria:Numeric:From' => '从',
+	'UI:Search:Criteria:Numeric:From' => '从',
 	'UI:Search:Criteria:Numeric:Until' => '到',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => '任何',
 	'UI:Search:Criteria:Numeric:PlaceholderUntil' => '任何',
@@ -1605,12 +1605,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => '任何日期',
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => '将会包含选中对象的子集.',
 
-    'UI:Search:Criteria:Raw:Filtered' => '已筛选',
+	'UI:Search:Criteria:Raw:Filtered' => '已筛选',
 	'UI:Search:Criteria:Raw:FilteredOn' => '基于%1$s筛选',
 
 	'UI:StateChanged' => '状态已改变',
 
-    'UI:AddSubTree' => '添加条目',
+	'UI:AddSubTree' => '添加条目',
 ]);
 
 //
@@ -1621,16 +1621,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Expression:Operator:OR' => ' 或 ',
 	'Expression:Operator:=' => ': ',
 
-    'Expression:Unit:Short:DAY' => '日',
+	'Expression:Unit:Short:DAY' => '日',
 	'Expression:Unit:Short:WEEK' => '周',
 	'Expression:Unit:Short:MONTH' => '月',
 	'Expression:Unit:Short:YEAR' => '年',
 
-    'Expression:Unit:Long:DAY' => '日',
+	'Expression:Unit:Long:DAY' => '日',
 	'Expression:Unit:Long:HOUR' => '小时',
 	'Expression:Unit:Long:MINUTE' => '分钟',
 
-    'Expression:Verb:NOW' => '现在',
+	'Expression:Verb:NOW' => '现在',
 	'Expression:Verb:ISNULL' => ': 未定义',
 ]);
 

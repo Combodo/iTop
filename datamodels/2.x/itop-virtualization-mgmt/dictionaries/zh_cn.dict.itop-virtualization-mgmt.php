@@ -43,7 +43,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Cloud+' => '由云供应商运营的虚拟化主机. 它可以托管虚拟机和容器宿主机.',
 	'Class:Cloud/Attribute:provider_id' => '供应商',
 	'Class:Cloud/Attribute:logo' => 'Logo',
-	'Class:Cloud/Attribute:logo+' => '在影响分析图中显示此云平台时用作对象图标~~',
+	'Class:Cloud/Attribute:logo+' => '在影响分析图中显示此云平台时用作对象图标',
 	'Class:Cloud/Attribute:provider_id+' => '谁提供云平台',
 	'Class:Cloud/Attribute:location_id' => '位置',
 	'Class:Cloud/Attribute:location_id+' => '云平台的位置',

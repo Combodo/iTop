@@ -151,7 +151,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:PhysicalDevice/Attribute:model_id+' => '',
 	'Class:PhysicalDevice/Attribute:model_end_of_support' => '型号过保日期',
 	'Class:PhysicalDevice/Attribute:model_end_of_support+' => '当硬件型号不再被制造商支持时，如果此信息在型号上有所记录.',
-    'Class:PhysicalDevice/Attribute:model_name' => '型号名称',
+	'Class:PhysicalDevice/Attribute:model_name' => '型号名称',
 	'Class:PhysicalDevice/Attribute:model_name+' => '',
 	'Class:PhysicalDevice/Attribute:asset_number' => '资产编号',
 	'Class:PhysicalDevice/Attribute:asset_number+' => '',
@@ -323,7 +323,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Server/Attribute:osversion_name+' => '',
 	'Class:Server/Attribute:os_end_of_support' => 'OS 过保时间',
 	'Class:Server/Attribute:os_end_of_support+' => '厂商不再为该操作系统版本提供补丁的时间.',
-    'Class:Server/Attribute:oslicence_id' => 'OS 许可证',
+	'Class:Server/Attribute:oslicence_id' => 'OS 许可证',
 	'Class:Server/Attribute:oslicence_id+' => '',
 	'Class:Server/Attribute:oslicence_name' => 'OS 许可证名称',
 	'Class:Server/Attribute:oslicence_name+' => '',
@@ -401,7 +401,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:PC/Attribute:osversion_name+' => '',
 	'Class:PC/Attribute:os_end_of_support' => 'OS 过保时间',
 	'Class:PC/Attribute:os_end_of_support+' => '厂商不再为该操作系统版本提供补丁的时间.',
-    'Class:PC/Attribute:cpu' => 'CPU',
+	'Class:PC/Attribute:cpu' => 'CPU',
 	'Class:PC/Attribute:cpu+' => '',
 	'Class:PC/Attribute:ram' => '内存',
 	'Class:PC/Attribute:ram+' => '',
@@ -593,7 +593,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:SoftwareInstance/Attribute:software_name+' => '',
 	'Class:SoftwareInstance/Attribute:software_end_of_support' => '软件过保时间',
 	'Class:SoftwareInstance/Attribute:software_end_of_support+' => '厂商为此软件版本提供补丁的最后日期.',
-    'Class:SoftwareInstance/Attribute:softwarelicence_id' => '软件许可证',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id' => '软件许可证',
 	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '',
 	'Class:SoftwareInstance/Attribute:softwarelicence_name' => '许可证名称',
 	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '',
@@ -792,7 +792,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:VirtualMachine/Attribute:osversion_name+' => '',
 	'Class:VirtualMachine/Attribute:os_end_of_support' => 'OS 过保日期',
 	'Class:VirtualMachine/Attribute:os_end_of_support+' => '厂商不再支持该操作系统版本时的日期.',
-    'Class:VirtualMachine/Attribute:oslicence_id' => 'OS 许可证',
+	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS 许可证',
 	'Class:VirtualMachine/Attribute:oslicence_id+' => '',
 	'Class:VirtualMachine/Attribute:oslicence_name' => '名称',
 	'Class:VirtualMachine/Attribute:oslicence_name+' => '',
@@ -901,7 +901,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Tape' => '磁带',
-	'Class:Tape+' => '磁带(或盒式磁带) 在 ' . ITOP_APPLICATION_SHORT . ' 中是磁带库的一部分，可移除的存储介质.',
+	'Class:Tape+' => '磁带(或盒式磁带) 在 '.ITOP_APPLICATION_SHORT.' 中是磁带库的一部分，可移除的存储介质.',
 	'Class:Tape/Attribute:name' => '名称',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => '描述',
@@ -1088,8 +1088,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:OSVersion/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
 	'Class:OSVersion/Attribute:ospatches_list' => 'OS 补丁',
 	'Class:OSVersion/Attribute:ospatches_list+' => 'All the OS patches for this OS version~~',
-    'Class:OSVersion/UniquenessRule:name_osfamily+' => 'OS 家族的名称必须唯一',
-	'Class:OSVersion/UniquenessRule:name_osfamily' => '此 OS 版本已在 OS 家族中存在~~',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'OS 家族的名称必须唯一',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => '此 OS 版本已在 OS 家族中存在',
 ]);
 
 //
@@ -1101,7 +1101,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:OSFamily+' => '分类. 物理机、虚拟机、PC 的 "OS 家族" 属性可能的值列表.',
 	'Class:OSFamily/Attribute:osversions_list' => 'OS 版本',
 	'Class:OSFamily/Attribute:osversions_list+' => '此 OS 家族的所有 OS 版本',
-    'Class:OSFamily/UniquenessRule:name+' => '名称必须唯一',
+	'Class:OSFamily/UniquenessRule:name+' => '名称必须唯一',
 	'Class:OSFamily/UniquenessRule:name' => '此 OS 家族已存在',
 ]);
 
@@ -1114,11 +1114,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Brand+' => '分类. 物理设备 "品牌" 的可能的值列表.',
 	'Class:Brand/Attribute:iosversions_list' => 'IOS 版本',
 	'Class:Brand/Attribute:iosversions_list+' => '此品牌的所有 IOS 版本',
-    'Class:Brand/Attribute:logo' => 'Logo',
+	'Class:Brand/Attribute:logo' => 'Logo',
 	'Class:Brand/Attribute:logo+' => '',
 	'Class:Brand/Attribute:models_list' => '型号',
 	'Class:Brand/Attribute:models_list+' => '此品牌的所有型号',
-    'Class:Brand/Attribute:physicaldevices_list' => '物理设备',
+	'Class:Brand/Attribute:physicaldevices_list' => '物理设备',
 	'Class:Brand/Attribute:physicaldevices_list+' => '此品牌的所有物理设备',
 	'Class:Brand/UniquenessRule:name+' => '名称必须唯一',
 	'Class:Brand/UniquenessRule:name' => '此品牌已存在',
@@ -1142,7 +1142,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Model/Attribute:type+' => '',
 	'Class:Model/Attribute:end_of_support' => '过保日期',
 	'Class:Model/Attribute:end_of_support+' => '厂商提供补丁和支持的最后时间.',
-    'Class:Model/Attribute:type/Value:PowerSource' => '电源',
+	'Class:Model/Attribute:type/Value:PowerSource' => '电源',
 	'Class:Model/Attribute:type/Value:PowerSource+' => '电源',
 	'Class:Model/Attribute:type/Value:DiskArray' => '磁盘阵列',
 	'Class:Model/Attribute:type/Value:DiskArray+' => '磁盘阵列',
@@ -1212,7 +1212,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:IOSVersion/Attribute:end_of_support+' => '厂商提供补丁的最后时间.',
 	'Class:IOSVersion/Attribute:networkdevices_list' => '网络设备',
 	'Class:IOSVersion/Attribute:networkdevices_list+' => '运行此 IOS 版本的所有网络设备',
-    'Class:IOSVersion/UniquenessRule:name_brand+' => '名称在品牌中必须唯一',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => '名称在品牌中必须唯一',
 	'Class:IOSVersion/UniquenessRule:name_brand' => '此 IOS 版本已存在于此品牌',
 ]);
 
@@ -1405,7 +1405,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:PhysicalInterface/Attribute:org_id+' => '',
 	'Class:PhysicalInterface/Attribute:location_id' => '位置',
 	'Class:PhysicalInterface/Attribute:location_id+' => '',
-    'Class:PhysicalInterface/Attribute:vlans_list' => 'VLAN',
+	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLAN',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
 ]);
 

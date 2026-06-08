@@ -613,11 +613,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ActionEmail/Attribute:to+'                      => 'To: an OQL query returning objects having an email field.
 While editing, click on the magnifier to get pertinent examples.
 You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.~~',
-    'Class:ActionEmail/Attribute:cc'                        => '抄送',
+	'Class:ActionEmail/Attribute:cc'                        => '抄送',
 	'Class:ActionEmail/Attribute:cc+'                      => 'Carbon Copy: an OQL query returning objects having an email field.
 While editing, click on the magnifier to get pertinent examples.
 You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.~~',
-    'Class:ActionEmail/Attribute:bcc'                       => '密抄',
+	'Class:ActionEmail/Attribute:bcc'                       => '密抄',
 	'Class:ActionEmail/Attribute:bcc+'                      => '密送: 返回含有邮箱字段对象的OQL查询.
 编辑时可点击放大镜图标获取参考示例',
 	'Class:ActionEmail/Attribute:subject'                   => '主题',
@@ -933,7 +933,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => '所有允许删除此类型对象的用户',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => '没有人',
 
-    'SynchroDataSource:Description' => '描述',
+	'SynchroDataSource:Description' => '描述',
 	'SynchroDataSource:Reconciliation' => '搜索 &amp; 使一致',
 	'SynchroDataSource:Deletion' => '删除规则',
 	'SynchroDataSource:Status' => '状态',
@@ -1082,18 +1082,18 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Core:ExecProcess:Code255' => 'PHP错误 (解析, 或运行时)',
 
 	// Attribute Duration
-    'Core:Duration_Seconds' => '%1$ds',
+	'Core:Duration_Seconds' => '%1$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
-    'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
-    'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
+	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
+	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 
-    // Explain working time computing
-    'Core:ExplainWTC:ElapsedTime' => '耗时 (储存为 "%1$s")',
+	// Explain working time computing
+	'Core:ExplainWTC:ElapsedTime' => '耗时 (储存为 "%1$s")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => '在 "%1$s" 上消耗的时间',
 	'Core:ExplainWTC:StopWatch-Deadline' => '"%1$s" 的期限截止于%2$d%%',
 
 	// Bulk export
-    'Core:BulkExport:MissingParameter_Param' => '缺少参数 "%1$s"',
+	'Core:BulkExport:MissingParameter_Param' => '缺少参数 "%1$s"',
 	'Core:BulkExport:InvalidParameter_Query' => '参数 "query" 的值无效. 在查询薄中没有找到对应编号: "%1$s" 的记录.',
 	'Core:BulkExport:ExportFormatPrompt' => '导出格式:',
 	'Core:BulkExportOf_Class' => '%1$s 导出',
@@ -1171,7 +1171,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TagSetFieldData' => '类型%1$s的%2$s',
 	'Class:TagSetFieldData+' => '',
 
-    'Class:TagSetFieldData/Attribute:code' => '代码',
+	'Class:TagSetFieldData/Attribute:code' => '代码',
 	'Class:TagSetFieldData/Attribute:code+' => '内部代码. 必须至少包含3个数字或字母',
 	'Class:TagSetFieldData/Attribute:label' => '标签',
 	'Class:TagSetFieldData/Attribute:label+' => '显示的标签',
@@ -1181,7 +1181,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TagSetFieldData/Attribute:obj_class' => '对象类型',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => '字段编码',
 
-    'Core:TagSetFieldData:ErrorDeleteUsedTag' => '已使用的标签无法删除',
+	'Core:TagSetFieldData:ErrorDeleteUsedTag' => '已使用的标签无法删除',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => '标签编码或名称必须唯一',
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => '标签编码必须介于3到%1$d个字符, 以字母开头.',
 	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => '输入的标签编码为内部保留字',
