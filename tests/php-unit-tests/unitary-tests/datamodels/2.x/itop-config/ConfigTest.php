@@ -24,6 +24,7 @@ namespace Combodo\iTop\Test\UnitTest\Module\iTopConfig;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Config;
+use http\Encoding\Stream\Inflate;
 
 class ConfigTest extends ItopTestCase
 {
@@ -91,32 +92,44 @@ class ConfigTest extends ItopTestCase
 		];
 	}
 
-	public function testPreserveModuleSettingsOnWriteToFile()
-	{
-		$sTmpFile = tempnam(sys_get_temp_dir(), "target");
-
-		$sConfigFile = __DIR__.'/ConfigTest/config-itop-modulesetting.php';
-		$oConfig = new Config($sConfigFile);
-		$oConfig->WriteToFile($sTmpFile);
-
-		$this->assertFileExists($sTmpFile);
-		$this->assertEquals($this->GetModuleSettingSection($sConfigFile), $this->GetModuleSettingSection($sTmpFile));
-	}
-
 	private function GetModuleSettingSection(string $sFilePath): string
 	{
 		preg_match('/\$MyModuleSettings[\w\W]*\/\*\*/m', file_get_contents($sFilePath), $aMatches);
 		return preg_replace(['/[	]+/', '/[ ]+/'], [' ', ' '], $aMatches[0]);
 	}
 
-	public function testConfEvaluationIsTheSameWithPreviousAndCurrentAlgo()
+	public static function ConfEvaluationIsTheSameWithPreviousAndCurrentAlgoProvider() {
+		return [
+			'comments in module settings' => ['config-with-comments.php'],
+			'nominal case' => ['config-without-comments.php'],
+		];
+	}
+
+	/**
+	 * @dataProvider ConfEvaluationIsTheSameWithPreviousAndCurrentAlgoProvider
+	 */
+	public function ConfEvaluationIsTheSameWithPreviousAndCurrentAlgo($sFile, $sExpectedContentFile)
 	{
 		$sTmpFile = $this->GetTemporaryFilePath();
-		$sConfigFile = __DIR__.'/ConfigTest/config-without-comments.php';
-		$oConfig = new Config($sConfigFile, true, true);
+		$sConfigFile = __DIR__."/ConfigTest/$sFile";
+		$oConfig = new Config($sConfigFile, true, false, false);
 		$oConfig->WriteToFile($sTmpFile);
 
-		$this->assertEquals(file_get_contents($sConfigFile), file_get_contents($sTmpFile));
+		$sExpected = file_get_contents(__DIR__."/ConfigTest/$sExpectedContentFile");
+		$sExpected = preg_replace('|\?\>\n|', '?>', $sExpected);
+
+		$this->assertEquals($sExpected, file_get_contents($sTmpFile));
+	}
+
+	public function testConfEvaluationIsTheSameWithPreviousAndCurrentAlgo()
+	{
+		$sFile = 'config-without-comments.php';
+		$this->ConfEvaluationIsTheSameWithPreviousAndCurrentAlgo($sFile, $sFile);
+	}
+
+	public function testConfEvaluationIsTheSameWithPreviousAndCurrentAlgoEvenWithCommentsInMopduleSettings()
+	{
+		$this->ConfEvaluationIsTheSameWithPreviousAndCurrentAlgo('config-without-comments.php', 'config-with-comments-afterevaluatonwithoutcomments.php');
 	}
 
 	public function testConfSavePreserveCommentsInModuleSettings()
@@ -126,6 +139,10 @@ class ConfigTest extends ItopTestCase
 		$oConfig = new Config($sConfigFile, true, true);
 		$oConfig->WriteToFile($sTmpFile);
 
-		$this->assertEquals(file_get_contents($sConfigFile), file_get_contents($sTmpFile));
+		$sExpected = file_get_contents($sConfigFile);
+		$sExpected = preg_replace('|\?\>\n|', '?>', $sExpected);
+		$sExpected = preg_replace('|.*COMMENT NOT PRESERVED HERE.*|', '', $sExpected);
+
+		$this->assertEquals($sExpected, file_get_contents($sTmpFile));
 	}
 }

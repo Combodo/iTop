@@ -66,7 +66,7 @@ $MySettings = array(
 
 	// date_and_time_format: Format for date and time display (per language)
 	//	default: array (
-	//		  'default' =>
+	//		  'default' => 
 	//		  array (
 	//		    'date' => 'Y-m-d',
 	//		    'time' => 'H:i:s',
@@ -256,8 +256,8 @@ $MyModuleSettings = array(
 		'base_dn' => 'dc=yourcompany,dc=com',
 		'user_query' => '(&(uid=%1$s)(inetuserstatus=ACTIVE))',
 		'options' => array (
-			17 => 3,
-			8 => 0,
+		  17 => 3,
+		  8 => 0,
 		),
 		'start_tls' => false,
 		'debug' => false,
@@ -266,7 +266,7 @@ $MyModuleSettings = array(
 	),
 	'itop-attachments' => array (
 		'allowed_classes' => array (
-			0 => 'Ticket',
+		  0 => 'Ticket',
 		),
 		'position' => 'relations',
 		'preview_max_width' => 290,

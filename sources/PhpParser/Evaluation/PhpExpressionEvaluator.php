@@ -58,7 +58,7 @@ PHP;
 		}
 	}
 
-	public function GetArrayWithComments(Array_ $oArray): array
+	public function GetArray(Array_ $oArray, bool $bPreserveComments = true): array
 	{
 		$aRes = [];
 		$i = 0;
@@ -70,14 +70,19 @@ PHP;
 			} else {
 				$sKey = $this->EvaluateExpression($oItem->key);
 			}
-			foreach ($oItem->getComments() as $oComment) {
-				/** @var \PhpParser\Comment $oComment */
-				$aRes[] = 'StartPhpParserComment'.$oComment->getText().'EndPhpParserComment';
+
+			if ($bPreserveComments) {
+				foreach ($oItem->getComments() as $oComment) {
+					/** @var \PhpParser\Comment $oComment */
+					$aRes[] = 'StartPhpParserComment'.$oComment->getText().'EndPhpParserComment';
+				}
 			}
 			if ($oItem->value instanceof Array_) {
-				$aRes[$sKey] = $this->GetArrayWithComments($oItem->value);
+				$aRes[$sKey] = $this->GetArray($oItem->value, $bPreserveComments);
 			} elseif ($oItem->value instanceof Comment) {
-				$aRes[$sKey] = $oItem->value;
+				if ($bPreserveComments) {
+					$aRes[$sKey] = $oItem->value;
+				}
 			} else {
 				$aRes[$sKey] = $this->EvaluateExpression($oItem->value);
 			}

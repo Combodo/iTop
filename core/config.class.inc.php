@@ -94,7 +94,7 @@ define('DEFAULT_HASH_ALGO', PASSWORD_DEFAULT);
  * @see utils::GetConfig() to load config from the current env, if metamodel is not loaded
  * @package     iTopORM
  */
-class Config
+#[AllowDynamicProperties] class Config
 {
 	//protected $m_bIsLoaded = false;
 	protected $m_sFile = '';
@@ -2021,6 +2021,7 @@ class Config
 	protected $m_sAppSecret;
 
 	private bool $bPreserveComments;
+	private bool $bLegacyEvaluation;
 
 	/**
 	 * Config constructor.
@@ -2028,13 +2029,15 @@ class Config
 	 * @param string|null $sConfigFile
 	 * @param bool $bLoadConfig
 	 * @param bool $bPreserveComments
+	 * @param bool $bLegacyEvaluation
 	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
-	public function __construct($sConfigFile = null, $bLoadConfig = true, bool $bPreserveComments = false)
+	public function __construct($sConfigFile = null, $bLoadConfig = true, bool $bPreserveComments = false, bool $bLegacyEvaluation = false)
 	{
 		$this->bPreserveComments = $bPreserveComments;
+		$this->bLegacyEvaluation = $bLegacyEvaluation;
 		$this->oConfigPlaceholdersResolver = new ConfigPlaceholdersResolver();
 
 		$this->m_sFile = $sConfigFile;
@@ -2143,21 +2146,23 @@ class Config
 			$sNoise = trim(ob_get_contents());
 			ob_end_clean();
 
-			/*if ($this->bPreserveComments) {
+			if ($this->bPreserveComments || ! $this->bLegacyEvaluation) {
 				try {
 					$oParser = (new ParserFactory())->createForNewestSupportedVersion();
 					foreach ($oParser->parse($sConfigCode) as $oNode) {
 						if ($oNode instanceof \PhpParser\Node\Stmt\Expression) {
 							/** @var \PhpParser\Node\Stmt\Expression $oNode */
-							/*$oExpr = $oNode->expr;
+							$oExpr = $oNode->expr;
 							if ($oExpr instanceof Assign) {
 								/** @var Assign $oExpr */
-								/*$oVar = $oExpr->var;
+								$oVar = $oExpr->var;
 								if ($oVar instanceof Variable && $oVar->name === "MyModuleSettings") {
 									if ($oExpr->expr instanceof Array_) {
 										$oPhpExpressionEvaluator = new PhpExpressionEvaluator();
-										$aArrayWithComments = $oPhpExpressionEvaluator->GetArrayWithComments($oExpr->expr);
-										$MyModuleSettings = array_replace_recursive($aArrayWithComments, $MyModuleSettings);
+										if (! $this->bLegacyEvaluation) {
+											$aArrayWithComments = $oPhpExpressionEvaluator->GetArray($oExpr->expr, $this->bPreserveComments);
+											$MyModuleSettings = array_replace_recursive($aArrayWithComments, $MyModuleSettings);
+										}
 									}
 								}
 							}
@@ -2166,7 +2171,7 @@ class Config
 				} catch (Error $e) {
 					var_dump($e);
 				}
-			}*/
+			}
 		} catch (Error $e) {
 			// PHP 7
 			throw new ConfigException(
@@ -2757,7 +2762,7 @@ class Config
 			foreach ($this->m_aModuleSettings as $sModule => $aProperties) {
 				fwrite($hFile, "\t'$sModule' => array (\n");
 				foreach ($aProperties as $sProperty => $value) {
-					/*if (is_string($value) && false !== strpos($value, 'PhpParserComment')) {
+					if (is_string($value) && false !== strpos($value, 'PhpParserComment')) {
 						$value = preg_replace(
 							["/.*StartPhpParserComment/", "/EndPhpParserComment/"],
 							['', ''],
@@ -2765,7 +2770,7 @@ class Config
 						);
 						fwrite($hFile, "\t\t$value\n");
 						continue;
-					}*/
+					}
 					$sNiceExport = self::PrettyVarExport($this->oItopConfigParser->GetVarValue('MyModuleSettings', $sProperty), $value, "\t\t");
 					fwrite($hFile, "\t\t'$sProperty' => $sNiceExport,\n");
 				}
@@ -2952,13 +2957,13 @@ class Config
 		}
 
 		$sExport = var_export($value, true);
-		/*if (strpos($sExport, 'PhpParserComment')) {
+		if (strpos($sExport, 'PhpParserComment')) {
 			$sExport = preg_replace(
 				["/.*StartPhpParserComment/", "/EndPhpParserComment',/"],
 				['', ''],
 				$sExport
 			);
-		}*/
+		}
 		$sNiceExport = str_replace(["\r\n", "\n", "\r"], "\n".$sIndentation, trim($sExport));
 		if (!$bForceIndentation) {
 			/** @var array $aImported */
