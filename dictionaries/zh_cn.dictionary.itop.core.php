@@ -610,12 +610,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ActionEmail/Attribute:reply_to_label+'           => '固定的显示名或者类似$this->team_id->friendlyname$的占位符.
 如果忽略则使用发件人 (显示名).',
 	'Class:ActionEmail/Attribute:to'                        => '收件人',
-	'Class:ActionEmail/Attribute:to+'                       => '收件人: 返回含有邮箱字段对象的OQL查询.
-编辑时可点击放大镜图标获取参考示例.
-可以使用OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.~~',
+	'Class:ActionEmail/Attribute:to+'                      => 'To: an OQL query returning objects having an email field.
+While editing, click on the magnifier to get pertinent examples.
+You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.~~',
     'Class:ActionEmail/Attribute:cc'                        => '抄送',
-	'Class:ActionEmail/Attribute:cc+'                       => '抄送: 返回含有邮箱字段对象的OQL查询.
-编辑时可点击放大镜图标获取参考示例.
+	'Class:ActionEmail/Attribute:cc+'                      => 'Carbon Copy: an OQL query returning objects having an email field.
+While editing, click on the magnifier to get pertinent examples.
 You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.~~',
     'Class:ActionEmail/Attribute:bcc'                       => '密抄',
 	'Class:ActionEmail/Attribute:bcc+'                      => '密送: 返回含有邮箱字段对象的OQL查询.
