@@ -439,11 +439,10 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 		$this->assertEquals($expected, $this->oSequencer->GetStepNames());
 	}
 
-
 	public function testDefaultOptionalStepsWhenUsingOldParameters()
 	{
 		$aAdditionalParams = [
-
+			'optional_steps' => null,
 		];
 		$this->GivenApplicationInstallSequencer($aAdditionalParams, true);
 
