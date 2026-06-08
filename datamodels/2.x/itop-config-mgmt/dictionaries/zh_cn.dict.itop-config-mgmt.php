@@ -1415,7 +1415,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkPhysicalInterfaceToVLAN' => '链接 物理网卡/VLAN',
-	'Class:lnkPhysicalInterfaceToVLAN+' => 'This link indicates when a network interface is part of a VLAN (虚拟局域网).~~',
+	'Class:lnkPhysicalInterfaceToVLAN+' => 'This link indicates when a network interface is part of a VLAN (虚拟局域网).',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => '物理网卡',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '',
