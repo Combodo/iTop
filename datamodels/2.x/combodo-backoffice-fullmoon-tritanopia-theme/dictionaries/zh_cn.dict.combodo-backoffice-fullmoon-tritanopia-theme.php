@@ -23,5 +23,5 @@
  */
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'theme:fullmoon-tritanopia' => 'Fullmoon (Tritanopia)~~',
+	'theme:fullmoon-tritanopia' => 'Fullmoon (蓝黄色盲)',
 ]);

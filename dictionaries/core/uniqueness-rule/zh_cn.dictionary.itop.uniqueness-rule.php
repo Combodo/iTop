@@ -21,6 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s 已关联至 %3$s: %4$s, 不允许重复关联.',
+	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s 已链接到 %3$s: %4$s, 不允许重复链接.',
 ]);

@@ -17,10 +17,11 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * @copyright Copyright (C) 2010-2024 Combodo SAS
- * @license    https://opensource.org/licenses/AGPL-3.0
- * @author Benjamin Planque <benjamin.planque@combodo.com>
+* @author       Benjamin Planque <benjamin.planque@combodo.com>
+* @copyright   Copyright (C) 2010-2024 Combodo SAS
+* @license     http://opensource.org/licenses/AGPL-3.0
 */
+
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
@@ -31,8 +32,9 @@
 //
 // Class: lnkFunctionalCIToProviderContract
 //
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:lnkFunctionalCIToProviderContract' => '关联功能配置项/供应商合同',
+	'Class:lnkFunctionalCIToProviderContract' => '链接 功能配置项/供应商合同',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => '供应商合同',
@@ -50,9 +52,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:lnkFunctionalCIToService' => '关联 功能配置项/服务',
-	'Class:lnkFunctionalCIToService+' => '',
-	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s~~',
+	'Class:lnkFunctionalCIToService' => '链接 功能配置项/服务',
+	'Class:lnkFunctionalCIToService+' => 'This link models the functional CIs that are required to deliver a Service and whose malfunction would affect the quality of the Service.~~',
+	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToService/Attribute:service_id' => '服务',
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:service_name' => '服务名称',
@@ -80,7 +82,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Document/Attribute:contracts_list' => '合同',
-	'Class:Document/Attribute:contracts_list+' => '此文档关联的所有合同',
+	'Class:Document/Attribute:contracts_list+' => '此文档相关的所有合同',
 	'Class:Document/Attribute:services_list' => '服务',
-	'Class:Document/Attribute:services_list+' => '此文档关联的所有服务',
+	'Class:Document/Attribute:services_list+' => '此文档相关的所有服务',
 ]);

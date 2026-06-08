@@ -109,7 +109,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Change/Attribute:fallback_plan' => '回滚计划',
 	'Class:Change/Attribute:fallback_plan+' => '',
 	'Class:Change/Attribute:related_request_list' => '相关需求',
-	'Class:Change/Attribute:related_request_list+' => '此变更相关的所有用户需求',
+	'Class:Change/Attribute:related_request_list+' => '此变更相关的所有需求',
 	'Class:Change/Attribute:related_incident_list' => '相关事件',
 	'Class:Change/Attribute:related_incident_list+' => '此变更相关的所有事件',
 	'Class:Change/Attribute:related_problems_list' => '相关问题',

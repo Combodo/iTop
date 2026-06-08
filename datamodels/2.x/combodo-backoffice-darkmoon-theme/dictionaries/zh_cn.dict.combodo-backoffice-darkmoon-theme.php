@@ -22,5 +22,5 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'theme:darkmoon' => '暗月',
+	'theme:darkmoon' => 'Dark moon',
 ]);

@@ -21,14 +21,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 //
 // Fieldsets for Virtualization classes
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Virtualization:baseinfo' => 'General~~',
-	'Virtualization:moreinfo' => 'Virtualization specifics~~',
-	'Virtualization:otherinfo' => 'Dates and description~~',
+	'Virtualization:baseinfo' => '基本信息',
+	'Virtualization:moreinfo' => '虚拟化详情',
+	'Virtualization:otherinfo' => '日期和描述',
 ]);
 
 //
@@ -38,13 +39,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Cloud/Name' => '%1$s',
 	'Class:Cloud/ComplementaryName' => '%1$s-%2$s',
-	'Class:Cloud' => 'Cloud~~',
-	'Class:Cloud+' => 'A Virtual Host operated by a Cloud provider. It can host Virtual Machines and Container Hosts.~~',
-	'Class:Cloud/Attribute:logo' => 'Logo~~',
-	'Class:Cloud/Attribute:logo+' => 'Used as object icon when this Cloud is displayed within impact analysis graphs~~',
-	'Class:Cloud/Attribute:provider_id+' => 'Who provides the cloud~~',
-	'Class:Cloud/Attribute:location_id' => 'Location~~',
-	'Class:Cloud/Attribute:location_id+' => 'Where is located the cloud~~',
+	'Class:Cloud' => '云平台',
+	'Class:Cloud+' => '由云供应商运营的虚拟化主机. 它可以托管虚拟机和容器宿主机.',
+	'Class:Cloud/Attribute:provider_id' => '供应商',
+	'Class:Cloud/Attribute:logo' => 'Logo',
+	'Class:Cloud/Attribute:logo+' => '在影响分析图中显示此云平台时用作对象图标~~',
+	'Class:Cloud/Attribute:provider_id+' => '谁提供云平台',
+	'Class:Cloud/Attribute:location_id' => '位置',
+	'Class:Cloud/Attribute:location_id+' => '云平台的位置',
 ]);
 
 //
@@ -52,6 +54,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:LogicalInterface/Attribute:org_id' => 'Organization~~',
-	'Class:LogicalInterface/Attribute:org_id+' => '~~',
+	'Class:LogicalInterface/Name' => '%2$s %1$s',
+	'Class:LogicalInterface/Attribute:org_id' => '组织',
+	'Class:LogicalInterface/Attribute:org_id+' => '',
 ]);

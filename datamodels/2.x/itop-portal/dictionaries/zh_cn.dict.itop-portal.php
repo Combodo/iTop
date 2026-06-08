@@ -21,6 +21,7 @@
  * @license    https://opensource.org/licenses/AGPL-3.0
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  */
+
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
@@ -28,6 +29,7 @@
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'portal:itop-portal' => '标准门户', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
 	'Page:DefaultTitle' => '%1$s - 用户门户',
