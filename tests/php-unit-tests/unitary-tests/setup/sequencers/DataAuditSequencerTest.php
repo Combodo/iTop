@@ -290,6 +290,22 @@ class DataAuditSequencerTest extends ItopTestCase
 		$this->assertEquals($expected, $oSequencer->GetStepNames());
 	}
 
+	public function testDefaultOptionalStepsWhenUsingOldParameters()
+	{
+		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
+		$oParams = $this->GivenParams();
+		$oParams->Set('optional_steps', null);
+		$oSequencer = new DataAuditSequencer($oParams, $oRunTimeEnvironment);
+
+		$expected = [
+			'',
+			'copy',
+			'compile',
+			'complete',
+		];
+		$this->assertEquals($expected, $oSequencer->GetStepNames());
+	}
+
 	private function GivenParams(array $aAdditionalParams = []): PHPParameters
 	{
 		$oParams = new PHPParameters();
