@@ -1407,7 +1407,7 @@ class RunTimeEnvironment
 		self::MakeDirSafe($sBuildDir);
 		$bSkipTempDir = ($this->sFinalEnv != $this->sBuildEnv); // No need for a temporary directory if sBuildEnv is already a temporary directory
 		$oMFCompiler = new MFCompiler($oFactory, $this->sFinalEnv);
-		$oMFCompiler->Compile($sBuildDir, null, $bUseSymLinks, $bSkipTempDir);
+		$oMFCompiler->Compile($sBuildDir, $bUseSymLinks, $bSkipTempDir);
 
 		MetaModel::ResetAllCaches($this->sBuildEnv);
 
@@ -1520,7 +1520,7 @@ class RunTimeEnvironment
 		}
 
 		$oMFCompiler = new MFCompiler($oFactory, $sEnvironment);
-		$oMFCompiler->Compile($sBuildPath, null, $bUseSymbolicLinks, false, false);
+		$oMFCompiler->Compile($sBuildPath, $bUseSymbolicLinks, false);
 		SetupLog::Info("Data model successfully compiled to '$sBuildPath'.");
 
 		$sCacheDir = APPROOT.'/data/cache-'.$sEnvironment.'/';

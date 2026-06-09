@@ -20,7 +20,6 @@
 
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
-use Combodo\iTop\Application\WebPage\Page;
 use Combodo\iTop\DesignDocument;
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\PropertyType\PropertyTypeDesign;
@@ -264,14 +263,13 @@ class MFCompiler
 	 * Compile the data model into PHP files and data structures
 	 *
 	 * @param string $sTargetDir The target directory where to put the resulting files
-	 * @param Page $oP For some output...
 	 * @param bool $bUseSymbolicLinks
 	 * @param bool $bSkipTempDir
 	 *
 	 * @return void
 	 * @throws Exception
 	 */
-	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = null, $bSkipTempDir = false, $bEnterMaintenanceMode = true)
+	public function Compile($sTargetDir, $bUseSymbolicLinks = null, $bSkipTempDir = false)
 	{
 		if (is_null($bUseSymbolicLinks)) {
 			$bUseSymbolicLinks = false;
@@ -283,16 +281,7 @@ class MFCompiler
 		}
 
 		$sFinalTargetDir = $sTargetDir;
-		$bIsAlreadyInMaintenanceMode = SetupUtils::IsInMaintenanceMode();
-		$sConfigFilePath = utils::GetConfigFilePath($this->sEnvironment);
-		if (is_file($sConfigFilePath)) {
-			$oConfig = new Config($sConfigFilePath);
-		} else {
-			$oConfig = null;
-		}
-		//		if (($this->sEnvironment == ITOP_DEFAULT_ENV) && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
-		//			SetupUtils::EnterMaintenanceMode($oConfig);
-		//		}
+
 		if ($bUseSymbolicLinks || $bSkipTempDir) {
 			// Skip the creation of a temporary dictionary, not compatible with symbolic links
 			$sTempTargetDir = $sFinalTargetDir;
@@ -307,15 +296,13 @@ class MFCompiler
 		}
 
 		try {
-			$this->DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks);
+			$this->DoCompile($sTempTargetDir, $sFinalTargetDir, $bUseSymbolicLinks);
 		} catch (Exception $e) {
 			if ($sTempTargetDir != $sFinalTargetDir) {
 				// Cleanup the temporary directory
 				SetupUtils::rrmdir($sTempTargetDir);
 			}
-			//			if (($this->sEnvironment == ITOP_DEFAULT_ENV) && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
-			//				SetupUtils::ExitMaintenanceMode();
-			//			}
+
 			throw $e;
 		}
 
@@ -323,9 +310,6 @@ class MFCompiler
 			// Move the results to the target directory
 			SetupUtils::movedir($sTempTargetDir, $sFinalTargetDir);
 		}
-		//		if (($this->sEnvironment == ITOP_DEFAULT_ENV) && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
-		//			SetupUtils::ExitMaintenanceMode();
-		//		}
 
 		// Reset the opcache since otherwise the PHP "model" files may still be cached !!
 		// In case of bad luck (this happens **sometimes** - see N. 550), we may analyze the database structure
@@ -343,13 +327,14 @@ class MFCompiler
 
 	/**
 	 * Perform the actual "Compilation" of all modules
+	 *
 	 * @param string $sTempTargetDir
 	 * @param string $sFinalTargetDir
-	 * @param Page $oP
 	 * @param bool $bUseSymbolicLinks
+	 *
 	 * @throws Exception
 	 */
-	protected function DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks = false)
+	protected function DoCompile($sTempTargetDir, $sFinalTargetDir, $bUseSymbolicLinks = false)
 	{
 		$aAllClasses = []; // flat list of classes
 		$aModulesInfo = []; // Hash array of module_name => array('version' => string, 'root_dir' => string)
@@ -538,7 +523,7 @@ EOF;
 					}
 					try {
 						/** @var iTopWebPage $oP */
-						$aMenuLines = $this->CompileMenu($oMenuNode, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
+						$aMenuLines = $this->CompileMenu($oMenuNode, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir);
 					} catch (DOMFormatException $e) {
 						throw new Exception("Failed to process menu '$sMenuId', from '$sModuleRootDir': ".$e->getMessage());
 					}
@@ -2581,13 +2566,12 @@ CSS;
 	 * @param string $sTempTargetDir
 	 * @param string $sFinalTargetDir
 	 * @param string $sModuleRelativeDir
-	 * @param iTopWebPage $oP
 	 *
 	 * @return array
 	 * @throws \DOMException
 	 * @throws \DOMFormatException
 	 */
-	protected function CompileMenu($oMenu, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir, $oP)
+	protected function CompileMenu($oMenu, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir)
 	{
 		$this->CompileFiles($oMenu, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, $sModuleRelativeDir);
 
