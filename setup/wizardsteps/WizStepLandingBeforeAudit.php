@@ -11,7 +11,7 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 
 	public function __construct(WizardController $oWizard, $sCurrentState)
 	{
-		$this->oRuntimeEnv = new RunTimeEnvironment($oWizard->GetParameter('target_env'));
+		$this->oRuntimeEnv = new RunTimeEnvironment($oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV));
 		$sBuildConfigFile = APPCONF.$this->oRuntimeEnv->GetBuildEnv().'/'.ITOP_CONFIG_FILE;
 		$this->oConfig = new Config($sBuildConfigFile);
 
