@@ -20,7 +20,7 @@ use User;
 use UserRights;
 
 /**
- *
+ * @description Repository that aims to count users based on their type
  */
 class ITopUserCountingRepository
 {
@@ -37,7 +37,7 @@ class ITopUserCountingRepository
 	 * @throws MySQLException
 	 * @throws Exception
 	 */
-	public function GetConsoleUsers(array $aExcludedUsers = [], array $aExcludedProfiles = [], bool $bAllData = true, array $aExcludedFinalClasses = ['UserToken', 'UserRemoteSaaS']): array
+	public function GetConsoleUsers(array $aExcludedUsers = [], array $aExcludedProfiles = ['Portal user'], bool $bAllData = true, array $aExcludedFinalClasses = ['UserToken', 'UserRemoteSaaS']): array
 	{
 		$sExcludedUsers = $this->ArrayToOQLStringParameter($aExcludedUsers);
 		$sExcludedProfiles = $this->ArrayToOQLStringParameter($aExcludedProfiles);
@@ -57,66 +57,33 @@ class ITopUserCountingRepository
 		try {
 			$oFilter = $bAllData ? DBObjectSearch::FromOQL_AllData($sOQLUserConsole) : DBObjectSearch::FromOQL($sOQLUserConsole);
 		} catch (Exception $e) {
-			IssueLog::Error('Core:GetConsoleUsersQuota:Error : '.$e->getMessage());
-			throw new Exception(Dict::Format('Core:GetQuota:Error', Dict::S('Core:ConsoleUsers')));
+			IssueLog::Error(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:ConsoleUsers')).' - error details : '.$e->getMessage());
+			throw new Exception(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:ConsoleUsers')).'.');
 		}
 
 		$aConsoleUsers = $this->GetUsersFromFilter($oFilter);
-		$aPortalUsers = $this->GetPortalUsers();
 		$aReadOnlyUsers = $this->GetReadOnlyUsers();
-
-		return array_diff($aConsoleUsers, $aPortalUsers, $aReadOnlyUsers);
-	}
-
-	private function ArrayToOQLStringParameter(array $aValues): string
-	{
-		$aQuotedValues = [];
-		foreach ($aValues as $value) {
-			$value = trim((string) $value);
-			if ($value === '') {
-				continue;
-			}
-			$aQuotedValues[] = "'".addslashes($value)."'";
-		}
-
-		return empty($aQuotedValues) ? "''" : implode(', ', $aQuotedValues);
-	}
-
-	/**
-	 * @throws CoreUnexpectedValue
-	 * @throws CoreException
-	 * @throws MySQLException
-	 */
-	public function GetUsersFromFilter(DBObjectSearch|DBUnionSearch|null $oFilter, array $aOrderBy = [], array $aArgs = []): array
-	{
-		$aUsers = [];
-		if (is_null($oFilter)) {
-			return $aUsers;
-		}
-		$oSet = new DBObjectSet($oFilter, $aOrderBy, $aArgs);
-		while ($oUser = $oSet->Fetch()) {
-			$aUsers[] = $oUser;
-		}
-
-		return $aUsers;
+		return array_diff($aConsoleUsers, $aReadOnlyUsers);
 	}
 
 	/**
 	 * @throws Exception
 	 */
-	public function GetPortalUsers(bool $bAllData = true): array
+	public function GetPortalUsers(bool $bAllData = true, array $aExcludedFinalClasses = ['UserToken', 'UserRemoteSaaS']): array
 	{
+		$sExcludedFinalClasses = $this->ArrayToOQLStringParameter($aExcludedFinalClasses);
+
 		$sOQLPortalUser = "
         SELECT User AS u
         JOIN URP_UserProfile AS uup ON uup.userid = u.id
         JOIN URP_Profiles AS up ON uup.profileid = up.id
-		WHERE up.id = '2' AND u.status != 'disabled' ";
+		WHERE up.id = '2' AND u.status != 'disabled' AND u.finalclass NOT IN ($sExcludedFinalClasses)";
 
 		try {
 			$oFilter = $bAllData ? DBObjectSearch::FromOQL_AllData($sOQLPortalUser) : DBObjectSearch::FromOQL($sOQLPortalUser);
 		} catch (Exception $e) {
-			IssueLog::Error('Core:GetConsoleUsersQuota:Error : '.$e->getMessage());
-			throw new Exception(Dict::Format('Core:GetQuota:Error', Dict::S('Core:ApplicationUsers')));
+			IssueLog::Error(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:PortalUsers')).' - error details : '.$e->getMessage());
+			throw new Exception(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:PortalUsers')).'.');
 		}
 
 		return $this->GetUsersFromFilter($oFilter);
@@ -143,13 +110,43 @@ class ITopUserCountingRepository
 			}
 		}
 
-		// remove portal users
-		$aPortalUsers = $this->GetPortalUsers();
-		$aReadOnlyUsers = array_diff($aReadOnlyUsers, $aPortalUsers);
-		// remove disabled users
-		$aDisabledUsers = $this->GetDisabledUsers();
+		$aUserToken = $this->GetApplicationUsers();
+		return array_diff($aReadOnlyUsers, $aUserToken);
+	}
 
-		return array_diff($aReadOnlyUsers, $aDisabledUsers);
+	/**
+	 * @throws Exception
+	 */
+	public function GetDisabledUsers(bool $bAllData = true): array
+	{
+		$sOQLDisabledUser = "
+		SELECT User AS u
+		WHERE u.status = 'disabled'
+		";
+		try {
+			$oFilter = $bAllData ? DBObjectSearch::FromOQL_AllData($sOQLDisabledUser) : DBObjectSearch::FromOQL($sOQLDisabledUser);
+		} catch (Exception $e) {
+			IssueLog::Error(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:DisabledUsers')).' - error details : '.$e->getMessage());
+			throw new Exception(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:DisabledUsers')).'.');
+		}
+
+		return $this->GetUsersFromFilter($oFilter);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function GetApplicationUsers(bool $bAllData = true): array
+	{
+		$sOQLApplicationUser = 'SELECT UserToken';
+		try {
+			$oFilter = $bAllData ? DBObjectSearch::FromOQL_AllData($sOQLApplicationUser) : DBObjectSearch::FromOQL($sOQLApplicationUser);
+		} catch (Exception $e) {
+			IssueLog::Error(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:ApplicationUsers')).' - error details : '.$e->getMessage());
+			throw new Exception(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:ApplicationUsers')).'.');
+		}
+
+		return $this->GetUsersFromFilter($oFilter);
 	}
 
 	/**
@@ -162,8 +159,8 @@ class ITopUserCountingRepository
 		try {
 			$oFilter = $bAllData ? DBObjectSearch::FromOQL_AllData($sOqlUser) : DBObjectSearch::FromOQL($sOqlUser);
 		} catch (Exception $e) {
-			IssueLog::Error('combodo-users-quota-slave/GetUsersNotInQuota : '.$e->getMessage(), 'combodo-users-quota');
-			throw new Exception(Dict::S('CombodoUserQuota:Error'));
+			IssueLog::Error(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:AllUsers')).' - error details : '.$e->getMessage());
+			throw new Exception(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:AllUsers')).'.');
 		}
 
 		return $this->GetUsersFromFilter($oFilter);
@@ -179,28 +176,11 @@ class ITopUserCountingRepository
 	 */
 	private function IsUserReadOnly(User $oUser, string $sClassCategory): bool
 	{
-		if ($oUser->Get('status') == 'disabled') {
-			return false;
-		}
-
-		// check if user is a portal user
-		$oProfileLinks = $oUser->Get('profile_list');
-		while ($oLink = $oProfileLinks->Fetch()) {
-			$iProfileId = $oLink->Get('profileid');
-			if (!$iProfileId) {
-				continue;
-			}
-			$oProfile = MetaModel::GetObject('URP_Profiles', $iProfileId, false);
-			if ($oProfile && $oProfile->Get('name') === PORTAL_PROFILE_NAME) {
-				return false;
-			}
-		}
-
 		// login (mandatory to compute rights)
 		UserRights::Login($oUser->GetName());
 
 		foreach (MetaModel::GetClasses($sClassCategory) as $sClass) {
-			// no need to check stimuli for now since users can't execute stimulus without UR_ACTION_MODIFY
+			// no need to check stimuli for now since users can't execute any without UR_ACTION_MODIFY
 			if (
 				UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, null, $oUser) ||
 				UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, null, $oUser) ||
@@ -216,37 +196,36 @@ class ITopUserCountingRepository
 	}
 
 	/**
-	 * @throws Exception
+	 * @throws CoreUnexpectedValue
+	 * @throws CoreException
+	 * @throws MySQLException
 	 */
-	public function GetDisabledUsers(bool $bAllData = true): array
+	public function GetUsersFromFilter(DBObjectSearch|DBUnionSearch|null $oFilter, array $aOrderBy = [], array $aArgs = []): array
 	{
-		$sOQLDisabledUser = "
-		SELECT User AS u
-		WHERE u.status = 'disabled'
-		";
-		try {
-			$oFilter = $bAllData ? DBObjectSearch::FromOQL_AllData($sOQLDisabledUser) : DBObjectSearch::FromOQL($sOQLDisabledUser);
-		} catch (Exception $e) {
-			IssueLog::Error('Core:GetDisabledUsersQuota:Error : '.$e->getMessage());
-			throw new Exception(Dict::Format('Core:GetQuota:Error', Dict::S('Core:DisabledUsers')));
+		$aUsers = [];
+		if (is_null($oFilter)) {
+			return $aUsers;
+		}
+		$oSet = new DBObjectSet($oFilter, $aOrderBy, $aArgs);
+		while ($oUser = $oSet->Fetch()) {
+			$aUsers[] = $oUser;
 		}
 
-		return $this->GetUsersFromFilter($oFilter);
+		return $aUsers;
 	}
 
-	/**
-	 * @throws Exception
-	 */
-	public function GetApplicationUsers(bool $bAllData = true): array
+	private function ArrayToOQLStringParameter(array $aValues): string
 	{
-		$sOQLApplicationUser = 'SELECT UserToken';
-		try {
-			$oFilter = $bAllData ? DBObjectSearch::FromOQL_AllData($sOQLApplicationUser) : DBObjectSearch::FromOQL($sOQLApplicationUser);
-		} catch (Exception $e) {
-			IssueLog::Error('Core:GetConsoleUsersQuota:Error : '.$e->getMessage());
-			throw new Exception(Dict::Format('Core:GetQuota:Error', Dict::S('Core:ApplicationUsers')));
+		$aQuotedValues = [];
+		foreach ($aValues as $value) {
+			$value = trim((string) $value);
+			if ($value === '') {
+				continue;
+			}
+			$aQuotedValues[] = "'".addslashes($value)."'";
 		}
 
-		return $this->GetUsersFromFilter($oFilter);
+		return empty($aQuotedValues) ? "''" : implode(', ', $aQuotedValues);
 	}
+
 }

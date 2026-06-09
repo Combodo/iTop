@@ -12,6 +12,10 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 	{
 		parent::setUp();
 		$this->CreateReadOnlyUsers();
+		$this->CreateDisabledUsers();
+		$this->CreatePortalUsers();
+		$this->CreateTokenUsers();
+		$this->CreateConsoleUsers();
 
 	}
 
@@ -20,18 +24,48 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration ReadOnly']);
 		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Ticket ReadOnly']);
 		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Service Catalog ReadOnly']);
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration ReadOnly', 'Portal user']);
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Ticket ReadOnly', 'Portal user']);
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Service Catalog ReadOnly', 'Portal user']);
 		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration ReadOnly', 'Ticket ReadOnly']);
 		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Ticket ReadOnly', 'Service Catalog ReadOnly']);
 		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration ReadOnly', 'Ticket ReadOnly', 'Service Catalog ReadOnly']);
 	}
 
-	private function CreateDisabledUser()
+	private function CreateDisabledUsers()
 	{
-		$sUser = $this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration Manager']);
-		// get user by login
-		$oUser = \MetaModel::GetObjectByName('User', $sUser);
+		$iDisabledUser = $this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration Manager'], false);
+		$oUser = \MetaModel::GetObject('User', $iDisabledUser);
 		$oUser->Set('status', 'disabled');
 		$oUser->DBUpdate();
+
+		$iDisabledReadOnlyUser = $this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Ticket ReadOnly'], false);
+		$oUser = \MetaModel::GetObject('User', $iDisabledReadOnlyUser);
+		$oUser->Set('status', 'disabled');
+		$oUser->DBUpdate();
+	}
+
+	private function CreatePortalUsers()
+	{
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Portal user'], false);
+
+		$iDisabledPortalUser = $this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Portal user'], false);
+		$oUser = \MetaModel::GetObject('User', $iDisabledPortalUser);
+		$oUser->Set('status', 'disabled');
+		$oUser->DBUpdate();
+	}
+
+	private function CreateTokenUsers()
+	{
+		$this->GivenTokenUserInDB(['Configuration Manager'], false);
+		$this->GivenTokenUserInDB(['Portal user'], false);
+		$this->GivenTokenUserInDB(['Configuration ReadOnly'], false);
+	}
+
+	private function CreateConsoleUsers()
+	{
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration Manager'], false);
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Administrator'], false);
 	}
 
 	/**
@@ -110,5 +144,4 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 		}
 
 	}
-
 }

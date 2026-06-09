@@ -162,13 +162,14 @@ Opérateurs :<br/>
 	'Core:Context=GUI:Portal' => 'Portal',
 	'Core:Context=GUI:Portal+' => 'GUI:Portal',
 
-	'Core:GetQuota:Error' => 'Erreur lors de la récupération du quota des %1$s',
-	'Core:ConsoleUsers' => 'utilisateurs console',
-	'Core:DisabledUsers' => 'utilisateurs désactivés',
-	'Core:PortalUsers' => 'utilisateurs du portail',
-	'Core:BusinessPartnerUser' => 'utilisateurs partenaires business',
-	'Core:ReadOnlyUsers' => 'utilisateurs en lecture seule',
-	'Core:ApplicationUsers' => 'utilisateurs applicatifs',
+	'Core:GetCountingUsers:Error' => 'Erreur lors du comptage des %1$s',
+	'Core:CountingUsers:ConsoleUsers' => 'utilisateurs console',
+	'Core:CountingUsers:DisabledUsers' => 'utilisateurs désactivés',
+	'Core:CountingUsers:PortalUsers' => 'utilisateurs du portail',
+	'Core:CountingUsers:BusinessPartnerUser' => 'utilisateurs partenaires business',
+	'Core:CountingUsers:ReadOnlyUsers' => 'utilisateurs en lecture seule',
+	'Core:CountingUsers:ApplicationUsers' => 'utilisateurs applicatifs',
+	'Core:CountingUsers:AllUsers' => 'tous les utilisateurs',
 ]);
 
 //////////////////////////////////////////////////////////////////////
