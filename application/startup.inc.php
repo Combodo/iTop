@@ -17,6 +17,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Service\Startup\StartupService;
 
 require_once(APPROOT.'core/cmdbobject.class.inc.php');
 require_once(APPROOT.'application/utils.inc.php');
@@ -69,26 +70,7 @@ $oKPI->ComputeAndReport("Session Start");
 
 $sSwitchEnv = utils::ReadParam('switch_env', null);
 $bAllowCache = true;
-if (($sSwitchEnv != null) && file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE) && (Session::Get('itop_env') !== $sSwitchEnv)) {
-	Session::Set('itop_env', $sSwitchEnv);
-	$sEnv = $sSwitchEnv;
-	$bAllowCache = false;
-	// Reset the opcache since otherwise the PHP "model" files may still be cached !!
-	if (function_exists('opcache_reset')) {
-		// Zend opcode cache
-		opcache_reset();
-	}
-	if (function_exists('apc_clear_cache')) {
-		// APC(u) cache
-		apc_clear_cache();
-	}
-	// TODO: reset the credentials as well ??
-} elseif (Session::IsSet('itop_env')) {
-	$sEnv = Session::Get('itop_env');
-} else {
-	$sEnv = ITOP_DEFAULT_ENV;
-	Session::Set('itop_env', ITOP_DEFAULT_ENV);
-}
+$sEnv = (new StartupService())->SetItopEnvironment($sSwitchEnv, $bAllowCache);
 $sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
 try {
 	MetaModel::Startup($sConfigFile, false /* $bModelOnly */, $bAllowCache, false /* $bTraceSourceFiles */, $sEnv);
