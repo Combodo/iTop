@@ -98,9 +98,6 @@ EOF
 
 		$sJSONData = json_encode($aInstallParams);
 		$oPage->add('<input type="hidden" id="installer_parameters" value="'.utils::EscapeHtml($sJSONData).'"/>');
-
-		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
-		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		if (!$this->CheckDependencies()) {
 			$oPage->error($this->sDependencyIssue);
 			$oPage->add_ready_script(<<<JS

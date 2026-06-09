@@ -85,11 +85,8 @@ class DataFeatureRemovalController extends Controller
 	{
 		$aParams = [];
 
-		try {
-			//from setup wizard/mtp
-			SetupUtils::CheckSetupToken();
-			SetupUtils::EraseSetupToken();
-		} catch (SecurityException $e) {
+		//from setup wizard/mtp
+		if (!SetupUtils::IsSessionSetupTokenValid()) {
 			//from same module
 			$this->ValidateTransactionId();
 		}
@@ -184,7 +181,6 @@ class DataFeatureRemovalController extends Controller
 		$aParams['aSetupParams'] = [
 			"_class" => "WizStepLandingBeforeAudit",
 			"operation" => "next",
-			"_params[authent]" => SetupUtils::CreateSetupToken(),
 		];
 
 		foreach ($aHiddenInputs as $sInputName => $sInputValue) {
@@ -199,6 +195,10 @@ class DataFeatureRemovalController extends Controller
 		[$aParams['aDeletionExecutionSummary'], $aParams['bHasDeletionExecution']] = $this->GetExecutionSummaryTable();
 		$aParams['bDeletionNeeded'] = ($aParams['iQueryCount'] > 0);
 		Session::Set('aDeletionExecutionSummary', serialize($this->aDeletionExecutionSummary));
+
+		if (!$aParams['bHasDeletionNeeded']) {
+			SetupUtils::CreateSetupToken();
+		}
 
 		$this->DisplayPage($aParams, 'AnalysisResult');
 	}

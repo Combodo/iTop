@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\Helper\Session;
-
 require_once(APPROOT.'setup/sequencers/DataAuditSequencer.php');
 
 /**
@@ -77,9 +75,6 @@ class WizStepDataAudit extends WizStepInstall
 
 		$sJSONData = json_encode($aInstallParams);
 		$oPage->add('<input type="hidden" id="installer_parameters" value="'.utils::EscapeHtml($sJSONData).'"/>');
-
-		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
-		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		if (!$this->CheckDependencies()) {
 			$oPage->error($this->sDependencyIssue);
 			$oPage->add_ready_script(<<<JS
@@ -126,12 +121,10 @@ JS);
 	<input type="hidden" name="$sParamName" value="$sElements"/>
 INPUT;
 		}
-		$sUID = Session::Get('setup_token');
 		$oPage->add(
 			<<<HTML
 <form id="data-feature-removal" class="ibo-setup--wizard ibo-is-hidden" method="post" action="$sApplicationUrl">
 	<input type="hidden" name="operation" value="AnalysisResult"/>
-	<input type="hidden" name="authent" value="$sUID"/>
 	$aHiddenInputs
 </form>
 HTML
