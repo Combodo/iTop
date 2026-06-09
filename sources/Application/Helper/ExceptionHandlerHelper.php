@@ -4,11 +4,12 @@ namespace Combodo\iTop\Application\Helper;
 
 use Combodo\iTop\Application\WebPage\ErrorPage;
 use IssueLog;
+use SimpleXMLElement;
 use Throwable;
 
 class ExceptionHandlerHelper
 {
-	static array $aSupportedMimeTypes = [
+	public static array $aSupportedMimeTypes = [
 		'application/json' => 'json',
 		'application/xml'  => 'xml',
 		'text/html'        => 'html',
@@ -17,7 +18,10 @@ class ExceptionHandlerHelper
 
 	public static function HandleException(Throwable $oException)
 	{
-		ob_end_clean();
+		$aStatus = ob_get_status();
+		if (count($aStatus) !== 0) {
+			ob_end_clean();
+		}
 
 		// Log the exception
 		IssueLog::Exception('Fatal error', $oException);
@@ -36,18 +40,23 @@ class ExceptionHandlerHelper
 		header("Content-Type: {$mime}; charset=utf-8");
 		header('Vary: Accept');
 
+		$aData = [
+			'error' => 'Fatal error',
+			'message' => 'We are sorry, an unexpected error has occurred. Please try again later.',
+
+		];
+
 		switch (self::$aSupportedMimeTypes[$mime]) {
 			case 'json':
-//				echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+				echo json_encode($aData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 				break;
 
 			case 'xml':
-				// Version simple: sérialisation minimale
-//				$xml = new SimpleXMLElement('<response/>');
-//				array_walk_recursive((array)$data, function ($value, $key) use ($xml) {
-//					$xml->addChild((string)$key, htmlspecialchars((string)$value, ENT_QUOTES | ENT_XML1, 'UTF-8'));
-//				});
-//				echo $xml->asXML();
+				$oXml = new SimpleXMLElement('<response/>');
+				array_walk_recursive($aData, function ($sValue, $sKey) use ($oXml) {
+					$oXml->addChild((string)$sKey, htmlspecialchars((string)$sValue, ENT_QUOTES | ENT_XML1, 'UTF-8'));
+				});
+				echo $oXml->asXML();
 				break;
 
 			case 'html':
@@ -58,9 +67,9 @@ class ExceptionHandlerHelper
 				break;
 
 			case 'text':
-				echo 'Fatal error';
+				echo "Fatal error\n";
+				echo "We are sorry, an unexpected error has occurred. Please try again later.\n";
 				break;
-
 		}
 	}
 
@@ -88,7 +97,7 @@ class ExceptionHandlerHelper
 			$accepted[] = ['type' => $type, 'q' => $q];
 		}
 
-		usort($accepted, fn($a, $b) => $b['q'] <=> $a['q']);
+		usort($accepted, fn ($a, $b) => $b['q'] <=> $a['q']);
 
 		foreach ($accepted as $a) {
 			foreach ($supportedMimes as $mime) {

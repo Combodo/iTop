@@ -23,7 +23,6 @@ namespace Combodo\iTop\Application\TwigBase\Controller;
 use ApplicationMenu;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\WebPage\AjaxPage;
-use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\AbstractController;
@@ -261,29 +260,29 @@ abstract class Controller extends AbstractController
 	 */
 	public function HandleOperation(): void
 	{
-		try {
-			$this->CheckAccess();
-			$this->m_sOperation = utils::ReadParam('operation', $this->sDefaultOperation);
+		//		try {
+		$this->CheckAccess();
+		$this->m_sOperation = utils::ReadParam('operation', $this->sDefaultOperation);
 
-			if ($this->CallOperation(utils::ToCamelCase($this->m_sOperation))) {
-				return;
-			}
-
-			// Fallback to unchanged names for compatibility
-			if ($this->CallOperation($this->m_sOperation)) {
-				return;
-			}
-
-			$this->DisplayBadRequest();
-		} catch (Exception $e) {
-			http_response_code(500);
-			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
-			$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
-			$oP->add(get_class($e).' : '.utils::EscapeHtml($e->GetMessage()));
-			$oP->output();
-
-			IssueLog::Exception('HandleOperation failed for '.json_encode($this->m_sOperation), $e);
+		if ($this->CallOperation(utils::ToCamelCase($this->m_sOperation))) {
+			return;
 		}
+
+		// Fallback to unchanged names for compatibility
+		if ($this->CallOperation($this->m_sOperation)) {
+			return;
+		}
+
+		$this->DisplayBadRequest();
+		//		} catch (Exception $e) {
+		//			http_response_code(500);
+		//			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
+		//			$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
+		//			$oP->add(get_class($e).' : '.utils::EscapeHtml($e->GetMessage()));
+		//			$oP->output();
+		//
+		//			IssueLog::Exception('HandleOperation failed for '.json_encode($this->m_sOperation), $e);
+		//		}
 	}
 
 	/**
