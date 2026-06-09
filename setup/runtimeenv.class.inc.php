@@ -1336,8 +1336,9 @@ class RunTimeEnvironment
 		$oSetupAudit = new SetupAudit($this->GetFinalEnv(), $this->GetBuildEnv());
 
 		//Make sure the MetaModel is started before analysing for issues
-		$sConfFile = utils::GetConfigFilePath($this->GetFinalEnv());
-		MetaModel::Startup($sConfFile, false, false); // Start on environment
+		$sFinalEnv = $this->GetFinalEnv();
+		$sConfFile = utils::GetConfigFilePath($sFinalEnv);
+		MetaModel::Startup($sConfFile, false, false, false, $sFinalEnv); // Start on environment
 		$oSetupAudit->RunDataAudit(true);
 		$iCount = $oSetupAudit->GetDataToCleanupCount();
 
