@@ -158,7 +158,7 @@ class SetupUtils
 		if (utils::IsModeCLI()) {
 			$aWritableDirs = ['log', 'data'];
 		} else {
-			$aWritableDirs = ['log', 'env-production', 'env-production-build', 'env-test', 'env-test-build', 'conf', 'data'];
+			$aWritableDirs = ['log', 'env-production', 'env-production-build', 'conf', 'data'];
 		}
 		$aWritableDirsErrors = self::CheckWritableDirs($aWritableDirs);
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
