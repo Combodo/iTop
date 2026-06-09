@@ -119,7 +119,8 @@ class WizStepDone extends WizardStep
 			");
 		}
 
-		$sForm = '<div class="ibo-setup--wizard--buttons-container" style="text-align:center"><form method="post" class="ibo-setup--enter-itop" action="'.$this->oWizard->GetParameter('application_url').'pages/UI.php?switch_env='.$this->oWizard->GetParameter('target_env').'">';
+		$sTargetEnv = utils::HtmlEntities($this->oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV));
+		$sForm = '<div class="ibo-setup--wizard--buttons-container" style="text-align:center"><form method="post" class="ibo-setup--enter-itop" action="'.$this->oWizard->GetParameter('application_url').'pages/UI.php?switch_env='.$sTargetEnv.'">';
 		$sForm .= '<input type="hidden" name="auth_user" value="'.utils::EscapeHtml($this->oWizard->GetParameter('admin_user')).'">';
 		$sForm .= '<input type="hidden" name="auth_pwd" value="'.utils::EscapeHtml($this->oWizard->GetParameter('admin_pwd')).'">';
 		$sForm .= "<button id=\"enter_itop\" class=\"ibo-button ibo-is-regular ibo-is-primary\" type=\"submit\">Enter ".ITOP_APPLICATION."</button></div>";
