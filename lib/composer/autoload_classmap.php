@@ -638,6 +638,7 @@ return array(
     'Combodo\\iTop\\Service\\Router\\Exception\\RouteNotFoundException' => $baseDir . '/sources/Service/Router/Exception/RouteNotFoundException.php',
     'Combodo\\iTop\\Service\\Router\\Exception\\RouterException' => $baseDir . '/sources/Service/Router/Exception/RouterException.php',
     'Combodo\\iTop\\Service\\Router\\Router' => $baseDir . '/sources/Service/Router/Router.php',
+    'Combodo\\iTop\\Service\\Startup\\StartupService' => $baseDir . '/sources/Service/Startup/StartupService.php',
     'Combodo\\iTop\\Service\\SummaryCard\\SummaryCardService' => $baseDir . '/sources/Service/SummaryCard/SummaryCardService.php',
     'Combodo\\iTop\\Service\\TemporaryObjects\\TemporaryObjectConfig' => $baseDir . '/sources/Service/TemporaryObjects/TemporaryObjectConfig.php',
     'Combodo\\iTop\\Service\\TemporaryObjects\\TemporaryObjectGC' => $baseDir . '/sources/Service/TemporaryObjects/TemporaryObjectGC.php',
