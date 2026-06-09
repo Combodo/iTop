@@ -37,7 +37,7 @@ class ITopUserCountingRepository
 	 * @throws MySQLException
 	 * @throws Exception
 	 */
-	public function GetConsoleUsers(array $aExcludedUsers = [], array $aExcludedProfiles = ['Portal user'], bool $bAllData = true, array $aExcludedFinalClasses = ['UserToken', 'UserRemoteSaaS']): array
+	public function GetConsoleUsers(array $aExcludedUsers = [], array $aExcludedProfiles = ['Portal user', 'Business partner user'], bool $bAllData = true, array $aExcludedFinalClasses = ['UserToken', 'UserRemoteSaaS']): array
 	{
 		$sExcludedUsers = $this->ArrayToOQLStringParameter($aExcludedUsers);
 		$sExcludedProfiles = $this->ArrayToOQLStringParameter($aExcludedProfiles);
@@ -84,6 +84,29 @@ class ITopUserCountingRepository
 		} catch (Exception $e) {
 			IssueLog::Error(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:PortalUsers')).' - error details : '.$e->getMessage());
 			throw new Exception(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:PortalUsers')).'.');
+		}
+
+		return $this->GetUsersFromFilter($oFilter);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function GetBusinessPartnerUsers(bool $bAllData = true, array $aExcludedFinalClasses = ['UserToken', 'UserRemoteSaaS']): array
+	{
+		$sExcludedFinalClasses = $this->ArrayToOQLStringParameter($aExcludedFinalClasses);
+
+		$sOQLPortalUser = "
+        SELECT User AS u
+        JOIN URP_UserProfile AS uup ON uup.userid = u.id
+        JOIN URP_Profiles AS up ON uup.profileid = up.id
+		WHERE up.id = '40' AND u.status != 'disabled' AND u.finalclass NOT IN ($sExcludedFinalClasses)";
+
+		try {
+			$oFilter = $bAllData ? DBObjectSearch::FromOQL_AllData($sOQLPortalUser) : DBObjectSearch::FromOQL($sOQLPortalUser);
+		} catch (Exception $e) {
+			IssueLog::Error(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:BusinessPartnerUser')).' - error details : '.$e->getMessage());
+			throw new Exception(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:BusinessPartnerUser')).'.');
 		}
 
 		return $this->GetUsersFromFilter($oFilter);

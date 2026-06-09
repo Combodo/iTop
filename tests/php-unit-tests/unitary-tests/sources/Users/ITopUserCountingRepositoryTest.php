@@ -16,6 +16,7 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 		$this->CreatePortalUsers();
 		$this->CreateTokenUsers();
 		$this->CreateConsoleUsers();
+		$this->CreateBusinessPartnerUser();
 
 	}
 
@@ -68,6 +69,12 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Administrator'], false);
 	}
 
+	private function CreateBusinessPartnerUser()
+	{
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Business partner user'], false);
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Business partner user'], false);
+	}
+
 	/**
 	 * @throws \CoreUnexpectedValue
 	 * @throws \DictExceptionMissingString
@@ -85,6 +92,7 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 			'disabled' => $oITopUserRepository->GetDisabledUsers(),
 			'readonly' => $oITopUserRepository->GetReadOnlyUsers(),
 			'application' => $oITopUserRepository->GetApplicationUsers(),
+			'businesspartner' => $oITopUserRepository->GetBusinessPartnerUsers(),
 		];
 
 		$aCountedUserFormated = [];
@@ -119,12 +127,40 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 		$aDisabledUsers = $oITopUserRepository->GetDisabledUsers();
 		$aReadOnlyUsers = $oITopUserRepository->GetReadOnlyUsers();
 		$aApplicationUsers = $oITopUserRepository->GetApplicationUsers();
+		$aBusinessPartnerUsers = $oITopUserRepository->GetBusinessPartnerUsers();
 
-		$aAllUsersFromMergedCounts = array_merge($aConsoleUsers, $aPortalUsers, $aDisabledUsers, $aReadOnlyUsers, $aApplicationUsers);
+		$aAllUsersFromMergedCounts = array_merge($aConsoleUsers, $aPortalUsers, $aDisabledUsers, $aReadOnlyUsers, $aApplicationUsers, $aBusinessPartnerUsers);
 
 		$aAllUsersFromOQL = $oITopUserRepository->GetAllUsers();
 
-		$this->assertEmpty(array_merge(array_diff($aAllUsersFromMergedCounts, $aAllUsersFromOQL), array_diff($aAllUsersFromOQL, $aAllUsersFromMergedCounts)));
+		$this->assertEmpty( // asserts that all users are in both arrays
+			array_merge(
+				array_diff(
+					$aAllUsersFromMergedCounts,
+					$aAllUsersFromOQL
+				),
+				array_diff(
+					$aAllUsersFromOQL,
+					$aAllUsersFromMergedCounts
+				)
+			)
+		);
+
+		// check for cardinality
+		$aMergedCountingUsersIds = [];
+		foreach ($aAllUsersFromMergedCounts as $oUser) {
+			$aMergedCountingUsersIds[] = (int) $oUser->GetKey();
+		}
+
+		$aOqlUsersIds = [];
+		foreach ($aAllUsersFromOQL as $oUser) {
+			$aOqlUsersIds[] = (int) $oUser->GetKey();
+		}
+
+		sort($aMergedCountingUsersIds, SORT_NUMERIC);
+		sort($aOqlUsersIds, SORT_NUMERIC);
+
+		$this->assertSame($aOqlUsersIds, $aMergedCountingUsersIds);
 	}
 
 	public function testAllCountedUsersAreUsersObjects()
@@ -136,6 +172,7 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 		$aDisabledUsers = $oITopUserRepository->GetDisabledUsers();
 		$aReadOnlyUsers = $oITopUserRepository->GetReadOnlyUsers();
 		$aApplicationUsers = $oITopUserRepository->GetApplicationUsers();
+		$aBusinessPartnerUsers = $oITopUserRepository->GetBusinessPartnerUsers();
 
 		$aCountedUsers = array_merge($aConsoleUsers, $aPortalUsers, $aDisabledUsers, $aReadOnlyUsers, $aApplicationUsers);
 

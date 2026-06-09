@@ -100,6 +100,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 		'Service Manager'       => 10,
 		'Document author'       => 11,
 		'Portal power user'     => 12,
+		'Business partner user'     => 40,
 		'REST Services User'    => 1024,
 		'Configuration ReadOnly' => 5500,
 		'Ticket ReadOnly' => 5501,
