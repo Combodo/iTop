@@ -1471,11 +1471,12 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 * @param array $aProfiles Profile names Example: ['Administrator']
 	 * @param string|null $sLogin
 	 * @param string|null $sUserId
+	 * @param bool $bReturnLogin
 	 *
 	 * @return string The unique login
 	 * @throws \Exception
 	 */
-	protected function GivenUserInDB(string $sPassword, array $aProfiles, ?string $sLogin = null, ?string &$sUserId = null): string
+	protected function GivenUserInDB(string $sPassword, array $aProfiles, ?string $sLogin = null, ?string &$sUserId = null, bool $bReturnLogin = true): string
 	{
 		if (is_null($sLogin)) {
 			$sLogin = 'demo_test_'.uniqid(__CLASS__, true);
@@ -1492,7 +1493,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 			'profile_list' => $aProfileList,
 		]);
 
-		return $sLogin;
+		return $bReturnLogin ? $sLogin : $sUserId;
 	}
 
 	/**
