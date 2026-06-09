@@ -2,9 +2,8 @@ function WizardAsyncAction(sActionCode, oParams, OnErrorFunction)
 {
 	var sStepClass = $('#_class').val();
 	var sStepState = $('#_state').val();
-	var sAuthent = $('#authent_token').val();
 	
-	var oMap = { operation: 'async_action', step_class: sStepClass, step_state: sStepState, code: sActionCode, authent : sAuthent, params: oParams };
+	var oMap = { operation: 'async_action', step_class: sStepClass, step_state: sStepState, code: sActionCode, params: oParams };
 	
 	var ErrorFn = OnErrorFunction;
 	$(document).ajaxError(function(event, request, settings) {
