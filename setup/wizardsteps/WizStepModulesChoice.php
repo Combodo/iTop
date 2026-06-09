@@ -58,10 +58,10 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 		$this->oExtensionsMap = new iTopExtensionsMap();
 		$sPreviousSourceDir = $this->oWizard->GetParameter('previous_version_dir', '');
 		$sConfigPath = null;
-		if (($sPreviousSourceDir !== '') && is_readable($sPreviousSourceDir.'/conf/production/config-itop.php')) {
-			$sConfigPath = $sPreviousSourceDir.'/conf/production/config-itop.php';
-		} elseif (is_readable(utils::GetConfigFilePath(ITOP_DEFAULT_ENV))) {
-			$sConfigPath = utils::GetConfigFilePath(ITOP_DEFAULT_ENV);
+		if (($sPreviousSourceDir !== '') && is_readable($sPreviousSourceDir.'/conf/'.ITOP_DEFAULT_ENV.'/config-itop.php')) {
+			$sConfigPath = $sPreviousSourceDir.'/conf/'.ITOP_DEFAULT_ENV.'/config-itop.php';
+		} elseif (is_readable(utils::GetConfigFilePath($this->oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV)))) {
+			$sConfigPath = utils::GetConfigFilePath($this->oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV));
 		}
 
 		// only called if the config file exists : we are updating a previous installation !

@@ -98,7 +98,7 @@ class DataFeatureRemovalController extends Controller
 		$aHiddenInputNames = [
 			'selected_extensions' => '[]',
 			'selected_modules' => '[]',
-			'display_choices' => '[]',
+			'display_choices' => '',
 			'added_extensions' => '[]',
 			'removed_extensions' => '[]',
 			'extensions_not_uninstallable' => '[]',
@@ -106,6 +106,7 @@ class DataFeatureRemovalController extends Controller
 			'force-uninstall' => "",
 			'use_symbolic_links' => MFCompiler::UseSymbolicLinks() ? 'on' : '',
 			'return_button_label' => '',
+			'target_env' => ITOP_DEFAULT_ENV,
 		];
 
 		$aHiddenInputs = [];

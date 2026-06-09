@@ -56,7 +56,7 @@ class InstallationFileService
 	public function GetProductionEnv(): RunTimeEnvironment
 	{
 		if (is_null($this->oProductionEnv)) {
-			$this->oProductionEnv = new RunTimeEnvironment();
+			$this->oProductionEnv = new RunTimeEnvironment($this->sTargetEnvironment);
 		}
 		return $this->oProductionEnv;
 	}
@@ -258,8 +258,9 @@ class InstallationFileService
 	public function ProcessDefaultModules(): void
 	{
 		$sProductionModuleDir = APPROOT.'data/'.$this->sTargetEnvironment.'-modules/';
+		$oConfig = new Config(APPCONF.$this->sTargetEnvironment.'/'.ITOP_CONFIG_FILE);
 
-		$aAvailableModules = $this->GetProductionEnv()->AnalyzeInstallation(MetaModel::GetConfig(), $this->GetExtraDirs());
+		$aAvailableModules = $this->GetProductionEnv()->AnalyzeInstallation($oConfig, $this->GetExtraDirs());
 
 		$this->aAutoSelectModules = [];
 		foreach ($aAvailableModules as $sModuleId => $aModule) {

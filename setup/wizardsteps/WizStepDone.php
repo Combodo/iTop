@@ -17,6 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
@@ -95,7 +96,7 @@ class WizStepDone extends WizardStep
 		// Load the data model only, in order to load env-production/core/main.php to get the XML parameters (needed by GetModuleSettings below)
 		// But main.php may also contain classes (defined without any module), and thus requiring the full data model
 		// to be loaded to prevent "class not found" errors...
-		$oProductionEnv = new RunTimeEnvironment(ITOP_DEFAULT_ENV);
+		$oProductionEnv = new RunTimeEnvironment($this->oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV));
 		$oProductionEnv->InitDataModel($oConfig, true);
 		$sIframeUrl = $oConfig->GetModuleSetting('itop-hub-connector', 'setup_url', '');
 
@@ -118,7 +119,8 @@ class WizStepDone extends WizardStep
 			");
 		}
 
-		$sForm = '<div class="ibo-setup--wizard--buttons-container" style="text-align:center"><form method="post" class="ibo-setup--enter-itop" action="'.$this->oWizard->GetParameter('application_url').'pages/UI.php">';
+		$sTargetEnv = utils::HtmlEntities($this->oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV));
+		$sForm = '<div class="ibo-setup--wizard--buttons-container" style="text-align:center"><form method="post" class="ibo-setup--enter-itop" action="'.$this->oWizard->GetParameter('application_url').'pages/UI.php?switch_env='.$sTargetEnv.'">';
 		$sForm .= '<input type="hidden" name="auth_user" value="'.utils::EscapeHtml($this->oWizard->GetParameter('admin_user')).'">';
 		$sForm .= '<input type="hidden" name="auth_pwd" value="'.utils::EscapeHtml($this->oWizard->GetParameter('admin_pwd')).'">';
 		$sForm .= "<button id=\"enter_itop\" class=\"ibo-button ibo-is-regular ibo-is-primary\" type=\"submit\">Enter ".ITOP_APPLICATION."</button></div>";

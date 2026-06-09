@@ -396,9 +396,11 @@ class RunTimeEnvironment
 		$sBuildConfigFile = APPCONF.$this->sBuildEnv.'/'.ITOP_CONFIG_FILE;
 
 		// Write the config file
-		@chmod($sBuildConfigFile, 0770); // In case it exists: RWX for owner and group, nothing for others
+		if (is_file($sBuildConfigFile)) {
+			chmod($sBuildConfigFile, 0770); // In case it exists: RWX for owner and group, nothing for others
+		}
 		$oConfig->WriteToFile($sBuildConfigFile);
-		@chmod($sBuildConfigFile, 0440); // Read-only for owner and group, nothing for others
+		chmod($sBuildConfigFile, 0440); // Read-only for owner and group, nothing for others
 	}
 
 	/**
@@ -1331,11 +1333,12 @@ class RunTimeEnvironment
 
 	public function DataToCleanupAudit()
 	{
-		$oSetupAudit = new SetupAudit(ITOP_DEFAULT_ENV, $this->sBuildEnv);
+		$oSetupAudit = new SetupAudit($this->GetFinalEnv(), $this->GetBuildEnv());
 
 		//Make sure the MetaModel is started before analysing for issues
-		$sConfFile = utils::GetConfigFilePath(ITOP_DEFAULT_ENV);
-		MetaModel::Startup($sConfFile, false, false); // Start on production environment
+		$sFinalEnv = $this->GetFinalEnv();
+		$sConfFile = utils::GetConfigFilePath($sFinalEnv);
+		MetaModel::Startup($sConfFile, false, false, false, $sFinalEnv); // Start on environment
 		$oSetupAudit->RunDataAudit(true);
 		$iCount = $oSetupAudit->GetDataToCleanupCount();
 
@@ -1350,15 +1353,11 @@ class RunTimeEnvironment
 		$sDestinationEnv = $this->sBuildEnv;
 
 		if ($sDestinationEnv != $sSourceEnv) {
+			if (file_exists(utils::GetDataPath().$sDestinationEnv.'.delta.xml')) {
+				unlink(utils::GetDataPath().$sDestinationEnv.'.delta.xml');
+			}
 			SetupUtils::CopyFile(utils::GetDataPath().$sSourceEnv.'.delta.xml', utils::GetDataPath().$sDestinationEnv.'.delta.xml');
 			SetupUtils::copydir(utils::GetDataPath().$sSourceEnv.'-modules/', utils::GetDataPath().$sDestinationEnv.'-modules/');
-
-			// Copy the config file
-			//
-			$sFinalConfig = APPCONF.$sDestinationEnv.'/config-itop.php';
-			if (is_file($sFinalConfig)) {
-				chmod($sFinalConfig, 0770); // In case it exists: RWX for owner and group, nothing for others
-			}
 			SetupUtils::copydir(APPCONF.$sSourceEnv, APPCONF.$sDestinationEnv);
 			MetaModel::ResetAllCaches($sDestinationEnv);
 		}
@@ -1409,7 +1408,7 @@ class RunTimeEnvironment
 		self::MakeDirSafe($sBuildDir);
 		$bSkipTempDir = ($this->sFinalEnv != $this->sBuildEnv); // No need for a temporary directory if sBuildEnv is already a temporary directory
 		$oMFCompiler = new MFCompiler($oFactory, $this->sFinalEnv);
-		$oMFCompiler->Compile($sBuildDir, null, $bUseSymLinks, $bSkipTempDir);
+		$oMFCompiler->Compile($sBuildDir, $bUseSymLinks, $bSkipTempDir);
 
 		MetaModel::ResetAllCaches($this->sBuildEnv);
 
@@ -1471,7 +1470,7 @@ class RunTimeEnvironment
 			SetupUtils::tidydir($sBuildPath);
 		}
 
-		$oExtensionsMap = new iTopExtensionsMap(ITOP_DEFAULT_ENV, $aDirsToScan);
+		$oExtensionsMap = new iTopExtensionsMap($this->GetFinalEnv(), $aDirsToScan);
 		// Removed modules are stored as static for FindModules()
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
@@ -1522,7 +1521,7 @@ class RunTimeEnvironment
 		}
 
 		$oMFCompiler = new MFCompiler($oFactory, $sEnvironment);
-		$oMFCompiler->Compile($sBuildPath, null, $bUseSymbolicLinks, false, false);
+		$oMFCompiler->Compile($sBuildPath, $bUseSymbolicLinks, false);
 		SetupLog::Info("Data model successfully compiled to '$sBuildPath'.");
 
 		$sCacheDir = APPROOT.'/data/cache-'.$sEnvironment.'/';
@@ -1572,7 +1571,7 @@ class RunTimeEnvironment
 
 	public function EnterReadOnlyMode(Config $oConfig)
 	{
-		if ($this->GetFinalEnv() != 'production') {
+		if ($this->GetFinalEnv() != ITOP_DEFAULT_ENV) {
 			return;
 		}
 
@@ -1592,7 +1591,7 @@ class RunTimeEnvironment
 
 	public function ExitReadOnlyMode()
 	{
-		if ($this->GetFinalEnv() != 'production') {
+		if ($this->GetFinalEnv() != ITOP_DEFAULT_ENV) {
 			return;
 		}
 
