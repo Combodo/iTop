@@ -98,7 +98,7 @@ class DataFeatureRemovalController extends Controller
 		$aHiddenInputNames = [
 			'selected_extensions' => '[]',
 			'selected_modules' => '[]',
-			'display_choices' => '[]',
+			'display_choices' => '',
 			'added_extensions' => '[]',
 			'removed_extensions' => '[]',
 			'extensions_not_uninstallable' => '[]',

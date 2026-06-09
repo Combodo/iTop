@@ -1352,15 +1352,11 @@ class RunTimeEnvironment
 		$sDestinationEnv = $this->sBuildEnv;
 
 		if ($sDestinationEnv != $sSourceEnv) {
+			if (file_exists(utils::GetDataPath().$sDestinationEnv.'.delta.xml')) {
+				unlink(utils::GetDataPath().$sDestinationEnv.'.delta.xml');
+			}
 			SetupUtils::CopyFile(utils::GetDataPath().$sSourceEnv.'.delta.xml', utils::GetDataPath().$sDestinationEnv.'.delta.xml');
 			SetupUtils::copydir(utils::GetDataPath().$sSourceEnv.'-modules/', utils::GetDataPath().$sDestinationEnv.'-modules/');
-
-			// Copy the config file
-			//
-			$sFinalConfig = APPCONF.$sDestinationEnv.'/config-itop.php';
-			if (is_file($sFinalConfig)) {
-				chmod($sFinalConfig, 0770); // In case it exists: RWX for owner and group, nothing for others
-			}
 			SetupUtils::copydir(APPCONF.$sSourceEnv, APPCONF.$sDestinationEnv);
 			MetaModel::ResetAllCaches($sDestinationEnv);
 		}
