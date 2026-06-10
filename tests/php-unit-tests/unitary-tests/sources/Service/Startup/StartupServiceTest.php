@@ -15,6 +15,19 @@ class StartupServiceTest extends ItopTestCase
 		parent::setUp();
 		$this->RequireOnceItopFile('application/utils.inc.php');
 		$this->oStartupService = new StartupService();
+
+		if (!file_exists(APPCONF.'test/'.ITOP_CONFIG_FILE)) {
+			if (!is_dir(APPCONF.'test/')) {
+				mkdir(APPCONF.'test/');
+			}
+			copy(APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE, APPCONF.'test/'.ITOP_CONFIG_FILE);
+		}
+	}
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		unlink(APPCONF.'test/'.ITOP_CONFIG_FILE);
 	}
 
 	public function testSetItopEnvironmentUsesDefaultWhenEnvironmentIsNull(): void
