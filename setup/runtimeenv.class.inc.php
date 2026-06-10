@@ -1482,20 +1482,20 @@ class RunTimeEnvironment
 		$aNoCodeExtensionLabelsThatBreakSetup = [];
 		foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
 			if (in_array($oExtension->sCode, $aSelectedExtensionCodes)) {
-				$oExtension->bMarkedAsChosen = in_array($oExtension->sCode, $aSelectedExtensionCodes);
+				$oExtension->bMarkedAsChosen = true;
 			}
 
 			if (empty($oExtension->sCode)) {
 				if (empty($oExtension->sLabel)) {
 					$sExtensionLabel = $oExtension->sSourceDir;
-					$aNoCodeExtensionSourceDirs = [$oExtension->sSourceDir];
+					$aNoCodeExtensionSourceDirs [] = $oExtension->sSourceDir;
 				} else {
 					$sExtensionLabel = $oExtension->sLabel;
-					$aNoCodeExtensionSourceDirs = [$sExtensionLabel => $oExtension->sSourceDir];
+					$aNoCodeExtensionSourceDirs [$sExtensionLabel] = $oExtension->sSourceDir;
 				}
 
 				if ($oExtension->bMarkedAsChosen) {
-					$aNoCodeExtensionLabelsThatBreakSetup[]= $sExtensionLabel;
+					$aNoCodeExtensionLabelsThatBreakSetup[] = $sExtensionLabel;
 					$bSetupFailure = true;
 				}
 			}
