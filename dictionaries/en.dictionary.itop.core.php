@@ -217,13 +217,14 @@ Operators:<br/>
 	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal',
 
-	'Core:GetCountingUsers:Error' => 'Error while getting %1$s quota',
-	'Core:ConsoleUsers' => 'console users',
-	'Core:DisabledUsers' => 'disabled users',
-	'Core:PortalUsers' => 'portal users',
-	'Core:BusinessPartnerUser' => 'business partner users',
-	'Core:ReadOnlyUsers' => 'read-only users',
-	'Core:ApplicationUsers' => 'application users',
+	'Core:GetCountingUsers:Error'      => 'Error while counting %1$s',
+	'Core:CountingUsers:ConsoleUsers'  => 'console users',
+	'Core:CountingUsers:DisabledUsers' => 'disabled users',
+	'Core:CountingUsers:PortalUsers'   => 'portal users',
+	'Core:CountingUsers:BusinessPartnerUser' => 'business partner users',
+	'Core:CountingUsers:ReadOnlyUsers' => 'read - only users',
+	'Core:CountingUsers:ApplicationUsers' => 'application users',
+	'Core:CountingUsers:AllUsers' => 'all users',
 ]);
 
 //////////////////////////////////////////////////////////////////////

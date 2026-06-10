@@ -94,9 +94,11 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 			'portal' => $oITopUserRepository->GetPortalUsers(),
 			'disabled' => $oITopUserRepository->GetDisabledUsers(),
 			'readonly' => $oITopUserRepository->GetReadOnlyUsers(),
-			'application' => $oITopUserRepository->GetApplicationUsers(),
 			'businesspartner' => $oITopUserRepository->GetBusinessPartnerUsers(),
 		];
+		if (MetaModel::IsValidClass('UserToken')) {
+			$aCountedUsers['application'] = $oITopUserRepository->GetApplicationUsers();
+		}
 
 		$aCountedUserFormated = [];
 		foreach ($aCountedUsers as $sCountedCategory => $aUsers) {
@@ -129,7 +131,9 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 		$aPortalUsers = $oITopUserRepository->GetPortalUsers();
 		$aDisabledUsers = $oITopUserRepository->GetDisabledUsers();
 		$aReadOnlyUsers = $oITopUserRepository->GetReadOnlyUsers();
-		$aApplicationUsers = $oITopUserRepository->GetApplicationUsers();
+		if (MetaModel::IsValidClass('UserToken')) {
+			$aApplicationUsers = $oITopUserRepository->GetApplicationUsers() ?? [];
+		}
 		$aBusinessPartnerUsers = $oITopUserRepository->GetBusinessPartnerUsers();
 
 		$aAllUsersFromMergedCounts = array_merge($aConsoleUsers, $aPortalUsers, $aDisabledUsers, $aReadOnlyUsers, $aApplicationUsers, $aBusinessPartnerUsers);
@@ -174,7 +178,9 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 		$aPortalUsers = $oITopUserRepository->GetPortalUsers();
 		$aDisabledUsers = $oITopUserRepository->GetDisabledUsers();
 		$aReadOnlyUsers = $oITopUserRepository->GetReadOnlyUsers();
-		$aApplicationUsers = $oITopUserRepository->GetApplicationUsers();
+		if (MetaModel::IsValidClass('UserToken')) {
+			$aApplicationUsers = $oITopUserRepository->GetApplicationUsers() ?? [];
+		}
 		$aBusinessPartnerUsers = $oITopUserRepository->GetBusinessPartnerUsers();
 
 		$aCountedUsers = array_merge($aConsoleUsers, $aPortalUsers, $aDisabledUsers, $aReadOnlyUsers, $aApplicationUsers, $aBusinessPartnerUsers);
