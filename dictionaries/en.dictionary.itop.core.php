@@ -221,7 +221,7 @@ Operators:<br/>
 	'Core:CountingUsers:ConsoleUsers'  => 'console users',
 	'Core:CountingUsers:DisabledUsers' => 'disabled users',
 	'Core:CountingUsers:PortalUsers'   => 'portal users',
-	'Core:CountingUsers:BusinessPartnerUser' => 'business partner users',
+	'Core:CountingUsers:BusinessPartnerUsers' => 'business partner users',
 	'Core:CountingUsers:ReadOnlyUsers' => 'read - only users',
 	'Core:CountingUsers:ApplicationUsers' => 'application users',
 	'Core:CountingUsers:AllUsers' => 'all users',

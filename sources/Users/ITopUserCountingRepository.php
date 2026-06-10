@@ -105,8 +105,8 @@ class ITopUserCountingRepository
 		try {
 			$oFilter = $bAllData ? DBObjectSearch::FromOQL_AllData($sOQLPortalUser) : DBObjectSearch::FromOQL($sOQLPortalUser);
 		} catch (Exception $e) {
-			IssueLog::Error(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:BusinessPartnerUser')).' - error details : '.$e->getMessage());
-			throw new Exception(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:BusinessPartnerUser')).'.');
+			IssueLog::Error(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:BusinessPartnerUsers')).' - error details : '.$e->getMessage());
+			throw new Exception(Dict::Format('Core:GetCountingUsers:Error', Dict::S('Core:CountingUsers:BusinessPartnerUsers')).'.');
 		}
 
 		return $this->GetUsersFromFilter($oFilter);

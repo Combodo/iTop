@@ -166,7 +166,7 @@ Opérateurs :<br/>
 	'Core:CountingUsers:ConsoleUsers' => 'utilisateurs console',
 	'Core:CountingUsers:DisabledUsers' => 'utilisateurs désactivés',
 	'Core:CountingUsers:PortalUsers' => 'utilisateurs du portail',
-	'Core:CountingUsers:BusinessPartnerUser' => 'utilisateurs partenaires business',
+	'Core:CountingUsers:BusinessPartnerUsers' => 'utilisateurs partenaires business',
 	'Core:CountingUsers:ReadOnlyUsers' => 'utilisateurs en lecture seule',
 	'Core:CountingUsers:ApplicationUsers' => 'utilisateurs applicatifs',
 	'Core:CountingUsers:AllUsers' => 'tous les utilisateurs',
