@@ -159,8 +159,11 @@ class ITopUserCountingRepository
 	/**
 	 * @throws Exception
 	 */
-	public function GetApplicationUsers(bool $bAllData = true): array
+	public function GetApplicationUsers(bool $bAllData = true): ?array
 	{
+		if (!MetaModel::IsValidClass('UserToken')) {
+			return null;
+		}
 		$sOQLApplicationUser = 'SELECT UserToken';
 		try {
 			$oFilter = $bAllData ? DBObjectSearch::FromOQL_AllData($sOQLApplicationUser) : DBObjectSearch::FromOQL($sOQLApplicationUser);

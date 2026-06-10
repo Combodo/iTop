@@ -4,6 +4,7 @@ namespace Users;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Combodo\iTop\Users\ITopUserCountingRepository;
+use MetaModel;
 use User;
 
 class ITopUserCountingRepositoryTest extends ItopDataTestCase
@@ -14,7 +15,9 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 		$this->CreateReadOnlyUsers();
 		$this->CreateDisabledUsers();
 		$this->CreatePortalUsers();
-		$this->CreateTokenUsers();
+		if (MetaModel::IsValidClass('UserToken')) {
+			$this->CreateTokenUsers();
+		}
 		$this->CreateConsoleUsers();
 		$this->CreateBusinessPartnerUser();
 
@@ -220,23 +223,23 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 	public function RealUseCasesDataProvider()
 	{
 		return [
-			[
+			'User with profiles Support Agent and Configuration ReadOnly'  => [
 				'profiles' => ['Support Agent', 'Configuration ReadOnly'],
 				'expected category' => 'console',
 			],
-			[
+			 'User with profiles Configuration ReadOnly and Service Catalog ReadOnly' => [
 				'profiles' => ['Configuration ReadOnly', 'Service Catalog ReadOnly'],
 				'expected category' => 'readonly',
 			],
-			[[
-				 'profiles' => 'Portal user', 'Service Catalog ReadOnly'],
+			'User with profiles Portal user and Service Catalog ReadOnly' => [
+				 'profiles' => ['Portal user', 'Service Catalog ReadOnly'],
 			 'expected category' => 'portal',
 			],
-			[
+			'User with profiles Support Agent and Portal user' => [
 				'profiles' => ['Support Agent', 'Portal user'],
 				'expected category' => 'portal',
 			],
-			[
+			'User with profiles Configuration Manager and Ticket ReadOnly' => [
 				'profiles' => ['Configuration Manager', 'Ticket ReadOnly'],
 				'expected category' => 'console',
 			],
