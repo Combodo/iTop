@@ -1417,6 +1417,7 @@ class RunTimeEnvironment
 	}
 
 	/**
+	 * @param array $aSelectedExtensionCodes
 	 * @param array $aRemovedExtensionCodes
 	 * @param array $aSelectedModules
 	 * @param string $sSourceDir
@@ -1428,7 +1429,7 @@ class RunTimeEnvironment
 	 * @throws \CoreException
 	 *
 	 */
-	public function DoCompile(array $aRemovedExtensionCodes, array $aSelectedModules, string $sSourceDir, string $sExtensionDir, bool $bUseSymbolicLinks = false): void
+	public function DoCompile(array $aSelectedExtensionCodes, array $aRemovedExtensionCodes, array $aSelectedModules, string $sSourceDir, string $sExtensionDir, bool $bUseSymbolicLinks = false): void
 	{
 		SetupLog::Info('Compiling data model.');
 
@@ -1476,13 +1477,35 @@ class RunTimeEnvironment
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
 		// Check that all the extensions have a code
+		$aNoCodeExtensionSourceDirs = [];
+		$bSetupFailure = false;
 		foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
+			if (in_array($oExtension->sCode, $aSelectedExtensionCodes)) {
+				$oExtension->bMarkedAsChosen = in_array($oExtension->sCode, $aSelectedExtensionCodes);
+			}
+
 			if (empty($oExtension->sCode)) {
-				$sExtensionLabel = !empty($oExtension->sLabel) ? $oExtension->sLabel : $oExtension->sSourceDir;
-				$sErrorMessage = sprintf('Extension "%s" cannot be installed: Missing extension code', $sExtensionLabel);
+				if ($oExtension->bMarkedAsChosen){
+					$bSetupFailure = true;
+				}
+
+				if (empty($oExtension->sLabel)){
+					$aNoCodeExtensionSourceDirs = [$oExtension->sSourceDir];
+				} else {
+					$sExtensionLabel = $oExtension->sLabel;
+					$aNoCodeExtensionSourceDirs = [$sExtensionLabel => $oExtension->sSourceDir];
+				}
+			}
+		}
+
+		if (count($aNoCodeExtensionSourceDirs) >0){
+			if ($bSetupFailure){
+				$sErrorMessage = 'Selected extension(s) cannot be installed: Missing extension code';
 				$e = new CoreException($sErrorMessage);
-				IssueLog::Exception($sErrorMessage, $e);
+				SetupLog::Exception($sErrorMessage, $e, null, $aNoCodeExtensionSourceDirs);
 				throw $e;
+			} else {
+				SetupLog::Warning("Non selected extension(s) cannot be installed: Missing extension code", null, $aNoCodeExtensionSourceDirs);
 			}
 		}
 
