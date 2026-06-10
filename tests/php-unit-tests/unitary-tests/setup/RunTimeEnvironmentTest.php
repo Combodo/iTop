@@ -70,7 +70,7 @@ XML;
 		$oRunTimeEnvironment = $this->CreateRunTimeEnvironment($sToken);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Selected extension(s) cannot be installed: Missing extension code');
+		$this->expectExceptionMessage("Selected extension(s) cannot be installed: Missing extension code (Broken extension)");
 
 		$oRunTimeEnvironment->DoCompile([""], [], [], $sSourceDirRelative, $sExtensionsDirRelative);
 	}
@@ -93,7 +93,7 @@ XML;
 		$oRunTimeEnvironment = $this->CreateRunTimeEnvironment($sToken);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Selected extension(s) cannot be installed: Missing extension code');
+		$this->expectExceptionMessage("Selected extension(s) cannot be installed: Missing extension code ($sExtensionsDirAbsolute)");
 
 		$oRunTimeEnvironment->DoCompile([""], [], [], $sSourceDirRelative, $sExtensionsDirRelative, false);
 	}

@@ -1479,28 +1479,31 @@ class RunTimeEnvironment
 		// Check that all the extensions have a code
 		$aNoCodeExtensionSourceDirs = [];
 		$bSetupFailure = false;
+		$aNoCodeExtensionLabelsThatBreakSetup = [];
 		foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
 			if (in_array($oExtension->sCode, $aSelectedExtensionCodes)) {
 				$oExtension->bMarkedAsChosen = in_array($oExtension->sCode, $aSelectedExtensionCodes);
 			}
 
 			if (empty($oExtension->sCode)) {
-				if ($oExtension->bMarkedAsChosen){
-					$bSetupFailure = true;
-				}
-
-				if (empty($oExtension->sLabel)){
+				if (empty($oExtension->sLabel)) {
+					$sExtensionLabel = $oExtension->sSourceDir;
 					$aNoCodeExtensionSourceDirs = [$oExtension->sSourceDir];
 				} else {
 					$sExtensionLabel = $oExtension->sLabel;
 					$aNoCodeExtensionSourceDirs = [$sExtensionLabel => $oExtension->sSourceDir];
 				}
+
+				if ($oExtension->bMarkedAsChosen) {
+					$aNoCodeExtensionLabelsThatBreakSetup[]= $sExtensionLabel;
+					$bSetupFailure = true;
+				}
 			}
 		}
 
-		if (count($aNoCodeExtensionSourceDirs) >0){
-			if ($bSetupFailure){
-				$sErrorMessage = 'Selected extension(s) cannot be installed: Missing extension code';
+		if (count($aNoCodeExtensionSourceDirs) > 0) {
+			if ($bSetupFailure) {
+				$sErrorMessage = sprintf('Selected extension(s) cannot be installed: Missing extension code (%s)', implode(',', $aNoCodeExtensionLabelsThatBreakSetup));
 				$e = new CoreException($sErrorMessage);
 				SetupLog::Exception($sErrorMessage, $e, null, $aNoCodeExtensionSourceDirs);
 				throw $e;
