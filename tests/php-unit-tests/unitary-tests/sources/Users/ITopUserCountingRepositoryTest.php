@@ -131,9 +131,7 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 		$aPortalUsers = $oITopUserRepository->GetPortalUsers();
 		$aDisabledUsers = $oITopUserRepository->GetDisabledUsers();
 		$aReadOnlyUsers = $oITopUserRepository->GetReadOnlyUsers();
-		if (MetaModel::IsValidClass('UserToken')) {
-			$aApplicationUsers = $oITopUserRepository->GetApplicationUsers() ?? [];
-		}
+		$aApplicationUsers = $oITopUserRepository->GetApplicationUsers() ?? [];
 		$aBusinessPartnerUsers = $oITopUserRepository->GetBusinessPartnerUsers();
 
 		$aAllUsersFromMergedCounts = array_merge($aConsoleUsers, $aPortalUsers, $aDisabledUsers, $aReadOnlyUsers, $aApplicationUsers, $aBusinessPartnerUsers);
@@ -178,9 +176,7 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 		$aPortalUsers = $oITopUserRepository->GetPortalUsers();
 		$aDisabledUsers = $oITopUserRepository->GetDisabledUsers();
 		$aReadOnlyUsers = $oITopUserRepository->GetReadOnlyUsers();
-		if (MetaModel::IsValidClass('UserToken')) {
-			$aApplicationUsers = $oITopUserRepository->GetApplicationUsers() ?? [];
-		}
+		$aApplicationUsers = $oITopUserRepository->GetApplicationUsers() ?? [];
 		$aBusinessPartnerUsers = $oITopUserRepository->GetBusinessPartnerUsers();
 
 		$aCountedUsers = array_merge($aConsoleUsers, $aPortalUsers, $aDisabledUsers, $aReadOnlyUsers, $aApplicationUsers, $aBusinessPartnerUsers);
