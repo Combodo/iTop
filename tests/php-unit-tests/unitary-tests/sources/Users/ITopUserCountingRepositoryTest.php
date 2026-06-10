@@ -35,12 +35,12 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 
 	private function CreateDisabledUsers()
 	{
-		$iDisabledUser = $this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration Manager'], false);
+		$iDisabledUser = $this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration Manager'], bReturnLogin: false);
 		$oUser = \MetaModel::GetObject('User', $iDisabledUser);
 		$oUser->Set('status', 'disabled');
 		$oUser->DBUpdate();
 
-		$iDisabledReadOnlyUser = $this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Ticket ReadOnly'], false);
+		$iDisabledReadOnlyUser = $this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Ticket ReadOnly'], bReturnLogin: false);
 		$oUser = \MetaModel::GetObject('User', $iDisabledReadOnlyUser);
 		$oUser->Set('status', 'disabled');
 		$oUser->DBUpdate();
@@ -50,7 +50,7 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 	{
 		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Portal user'], false);
 
-		$iDisabledPortalUser = $this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Portal user'], false);
+		$iDisabledPortalUser = $this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Portal user'], bReturnLogin: false);
 		$oUser = \MetaModel::GetObject('User', $iDisabledPortalUser);
 		$oUser->Set('status', 'disabled');
 		$oUser->DBUpdate();
@@ -65,14 +65,14 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 
 	private function CreateConsoleUsers()
 	{
-		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration Manager'], false);
-		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Administrator'], false);
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Configuration Manager'], bReturnLogin: false);
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Administrator'], bReturnLogin: false);
 	}
 
 	private function CreateBusinessPartnerUser()
 	{
-		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Business partner user'], false);
-		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Business partner user'], false);
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Business partner user'], bReturnLogin: false);
+		$this->GivenUserInDB('qpf_z17H3232*"ré$"é', ['Business partner user'], bReturnLogin: false);
 	}
 
 	/**
@@ -195,7 +195,7 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 	 */
 	public function testRealUseCases(array $aProfilesList, $sExpectedCategorie)
 	{
-		$iUser = $this->GivenUserInDB('<_ç"éue"ç_u', $aProfilesList, false);
+		$iUser = $this->GivenUserInDB('<_ç"éue"ç_u', $aProfilesList, bReturnLogin: false);
 		$oUser = \MetaModel::GetObject('User', $iUser);
 		$oITopUserRepository = new ITopUserCountingRepository();
 		$aUsers = match ($sExpectedCategorie) {
