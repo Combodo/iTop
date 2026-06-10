@@ -133,8 +133,11 @@ class ITopUserCountingRepository
 			}
 		}
 
-		$aUserToken = $this->GetApplicationUsers();
-		return array_diff($aReadOnlyUsers, $aUserToken);
+		if (MetaModel::IsValidClass('UserToken')) {
+			$aUserToken = $this->GetApplicationUsers();
+			$aReadOnlyUsers = array_diff($aReadOnlyUsers, $aUserToken);
+		}
+		return $aReadOnlyUsers;
 	}
 
 	/**
