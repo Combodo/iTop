@@ -174,11 +174,57 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 		$aApplicationUsers = $oITopUserRepository->GetApplicationUsers();
 		$aBusinessPartnerUsers = $oITopUserRepository->GetBusinessPartnerUsers();
 
-		$aCountedUsers = array_merge($aConsoleUsers, $aPortalUsers, $aDisabledUsers, $aReadOnlyUsers, $aApplicationUsers);
+		$aCountedUsers = array_merge($aConsoleUsers, $aPortalUsers, $aDisabledUsers, $aReadOnlyUsers, $aApplicationUsers, $aBusinessPartnerUsers);
 
 		foreach ($aCountedUsers as $oUser) {
 			$this->assertInstanceOf(User::class, $oUser);
 		}
+	}
 
+	/**
+	 * @param array $aProfilesList
+	 * @param $sExpectedCategorie
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @dataProvider RealUseCasesDataProvider
+	 */
+	public function testRealUseCases(array $aProfilesList, $sExpectedCategorie)
+	{
+		$iUser = $this->GivenUserInDB('<_ç"éue"ç_u', $aProfilesList, false);
+		$oUser = \MetaModel::GetObject('User', $iUser);
+		$oITopUserRepository = new ITopUserCountingRepository();
+		$aUsers = match ($sExpectedCategorie) {
+			'console' => $oITopUserRepository->GetConsoleUsers(),
+			'readonly' => $oITopUserRepository->GetReadOnlyUsers(),
+			'disabled' => $oITopUserRepository->GetDisabledUsers(),
+			'portal' => $oITopUserRepository->GetPortalUsers(),
+			'application' => $oITopUserRepository->GetApplicationUsers(),
+			'businesspartner' => $oITopUserRepository->GetBusinessPartnerUsers(),
+			default => throw new \InvalidArgumentException(sprintf('Unexpected category %s', $sExpectedCategorie)),
+		};
+
+		$bUserInCorrectCategory = false;
+		foreach ($aUsers as $oUserInCategory) {
+			if ($oUserInCategory->GetKey() === $oUser->GetKey()) {
+				$bUserInCorrectCategory = true;
+			}
+		}
+		$this->assertTrue($bUserInCorrectCategory, 'User with profiles '.implode(', ', $aProfilesList).' should be counted as '.$sExpectedCategorie.' user');
+	}
+
+	public function RealUseCasesDataProvider()
+	{
+		return [
+			[['Support Agent', 'Configuration ReadOnly'], 'console'],
+			[['Configuration ReadOnly', 'Service Catalog ReadOnly'], 'readonly'],
+			[['Portal user', 'Service Catalog ReadOnly'], 'portal'],
+			[['Support Agent', 'Portal user'], 'portal'],
+			[['Configuration Manager', 'Ticket ReadOnly'], 'console'],
+		];
 	}
 }
