@@ -135,6 +135,8 @@ try {
 		throw new SecurityException("Invalid session token");
 	}
 
+	$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
+
 	switch ($sOperation) {
 		case 'async_action':
 			ini_set('max_execution_time', max(240, ini_get('max_execution_time')));
