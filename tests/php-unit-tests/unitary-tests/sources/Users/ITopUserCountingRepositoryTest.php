@@ -220,11 +220,26 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 	public function RealUseCasesDataProvider()
 	{
 		return [
-			[['Support Agent', 'Configuration ReadOnly'], 'console'],
-			[['Configuration ReadOnly', 'Service Catalog ReadOnly'], 'readonly'],
-			[['Portal user', 'Service Catalog ReadOnly'], 'portal'],
-			[['Support Agent', 'Portal user'], 'portal'],
-			[['Configuration Manager', 'Ticket ReadOnly'], 'console'],
+			[
+				'profiles' => ['Support Agent', 'Configuration ReadOnly'],
+				'expected category' => 'console',
+			],
+			[
+				'profiles' => ['Configuration ReadOnly', 'Service Catalog ReadOnly'],
+				'expected category' => 'readonly',
+			],
+			[[
+				 'profiles' => 'Portal user', 'Service Catalog ReadOnly'],
+			 'expected category' => 'portal',
+			],
+			[
+				'profiles' => ['Support Agent', 'Portal user'],
+				'expected category' => 'portal',
+			],
+			[
+				'profiles' => ['Configuration Manager', 'Ticket ReadOnly'],
+				'expected category' => 'console',
+			],
 		];
 	}
 }
