@@ -27,7 +27,6 @@ use Exception;
 use MetaModel;
 use MFCompiler;
 use RunTimeEnvironment;
-use SecurityException;
 use SetupUtils;
 use utils;
 
@@ -196,7 +195,7 @@ class DataFeatureRemovalController extends Controller
 		$aParams['bDeletionNeeded'] = ($aParams['iQueryCount'] > 0);
 		Session::Set('aDeletionExecutionSummary', serialize($this->aDeletionExecutionSummary));
 
-		if (!$aParams['bHasDeletionNeeded']) {
+		if (!$aParams['bDeletionNeeded']) {
 			SetupUtils::CreateSetupToken();
 		}
 
