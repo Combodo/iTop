@@ -46,6 +46,13 @@ use utils;
  */
 class UserRightsTest extends ItopDataTestCase
 {
+	public function setUp(): void
+	{
+		parent::setUp();
+
+		utils::GetConfig()->SetModuleSetting('authent-local', 'password_validation.pattern', '');
+	}
+
 	public static $aClasses = [
 		'FunctionalCI'       => ['class' => 'FunctionalCI', 'attcode' => 'name'],
 		'URP_UserProfile'    => ['class' => 'URP_UserProfile', 'attcode' => 'reason'],
@@ -54,11 +61,24 @@ class UserRightsTest extends ItopDataTestCase
 		'ModuleInstallation' => ['class' => 'ModuleInstallation', 'attcode' => 'name'],
 	];
 
-	public function setUp(): void
+	/**
+	 * @param string $sLoginPrefix
+	 * @param int $iProfileId initial profile
+	 *
+	 * @return \DBObject
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	protected function CreateUniqueUserAndLogin(string $sLoginPrefix, int $iProfileId): DBObject
 	{
-		parent::setUp();
+		static $iCount = 0;
+		$sLogin = $sLoginPrefix.$iCount;
+		$iCount++;
 
-		utils::GetConfig()->SetModuleSetting('authent-local', 'password_validation.pattern', '');
+		$oUser = self::CreateUser($sLogin, $iProfileId);
+		$_SESSION = [];
+		UserRights::Login($sLogin);
+		return $oUser;
 	}
 
 	/**
@@ -209,26 +229,19 @@ class UserRightsTest extends ItopDataTestCase
 		$this->assertEquals($aClassActionResult['res'], $bRes);
 	}
 
-	/**
-	 * @param string $sLoginPrefix
-	 * @param int $iProfileId initial profile
+	/*
+	 * FunctionalCI       => bizmodel	searchable
+	 * UserRequest        => bizmodel	searchable	requestmgmt
+	 * URP_UserProfile    => addon/userrights
+	 * UserLocal          => addon/authentication
+	 * ModuleInstallation => core	view_in_gui
 	 *
-	 * @return \DBObject
-	 * @throws \CoreException
-	 * @throws \Exception
+	 * Profiles:
+	 * 1 - Administrator
+	 * 2 - User Portal
+	 * 3 - Configuration manager
+	 *
 	 */
-	protected function CreateUniqueUserAndLogin(string $sLoginPrefix, int $iProfileId): DBObject
-	{
-		static $iCount = 0;
-		$sLogin = $sLoginPrefix.$iCount;
-		$iCount++;
-
-		$oUser = self::CreateUser($sLogin, $iProfileId);
-		$_SESSION = [];
-		UserRights::Login($sLogin);
-		return $oUser;
-	}
-
 	public function ActionAllowedProvider(): array
 	{
 		return [
@@ -276,20 +289,6 @@ class UserRightsTest extends ItopDataTestCase
 		];
 	}
 
-	/*
-	 * FunctionalCI       => bizmodel	searchable
-	 * UserRequest        => bizmodel	searchable	requestmgmt
-	 * URP_UserProfile    => addon/userrights
-	 * UserLocal          => addon/authentication
-	 * ModuleInstallation => core	view_in_gui
-	 *
-	 * Profiles:
-	 * 1 - Administrator
-	 * 2 - User Portal
-	 * 3 - Configuration manager
-	 *
-	 */
-
 	/** Test IsActionAllowedOnAttribute
 	 *
 	 * @dataProvider ActionAllowedOnAttributeProvider
@@ -309,6 +308,14 @@ class UserRightsTest extends ItopDataTestCase
 		$this->assertEquals($aClassActionResult['res'], $bRes);
 	}
 
+	/*
+	 * FunctionalCI       => bizmodel	searchable
+	 * UserRequest        => bizmodel	searchable	requestmgmt
+	 * URP_UserProfile    => addon/userrights   grant_by_profile
+	 * UserLocal          => addon/authentication   grant_by_profile
+	 * ModuleInstallation => core	view_in_gui
+	 *
+	 */
 	public function ActionAllowedOnAttributeProvider(): array
 	{
 		return [
@@ -334,15 +341,6 @@ class UserRightsTest extends ItopDataTestCase
 			'Configuration manager ModuleInstallation' => [3, ['class' => 'ModuleInstallation', 'action' => 2, 'res' => false]],
 		];
 	}
-
-	/*
-	 * FunctionalCI       => bizmodel	searchable
-	 * UserRequest        => bizmodel	searchable	requestmgmt
-	 * URP_UserProfile    => addon/userrights   grant_by_profile
-	 * UserLocal          => addon/authentication   grant_by_profile
-	 * ModuleInstallation => core	view_in_gui
-	 *
-	 */
 
 	/**
 	 * @dataProvider UserCannotLoseConsoleAccessProvider
@@ -487,7 +485,6 @@ class UserRightsTest extends ItopDataTestCase
 		$oUser->DBInsert();
 
 	}
-
 	public function PrivilegedUsersMustHaveBackofficeAccessProvider(): array
 	{
 		return [
@@ -497,7 +494,6 @@ class UserRightsTest extends ItopDataTestCase
 
 		];
 	}
-
 	public function testNonPrivilegedUsersCanBeDeniedFromBackoffice()
 	{
 		$oUser = $this->GivenUserWithProfiles('test1', [5, 2]);
@@ -533,7 +529,6 @@ class UserRightsTest extends ItopDataTestCase
 			'with Admins hidden' => [true],
 		];
 	}
-
 	/**
 	 * @dataProvider NonAdminCannotListAdminProfilesProvider
 	 */
@@ -580,12 +575,6 @@ class UserRightsTest extends ItopDataTestCase
 		);
 	}
 
-	public function FindUserAndAssertItHasBeenFound($sLogin, $iExpectedKey)
-	{
-		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
-		static::assertIsDBObject(\User::class, $iExpectedKey, $oUser, 'FindUser should return the User object corresponding to the login');
-	}
-
 	public function testFindUser_ExistingExternalUser()
 	{
 		$sLogin = 'AnExternalUser'.uniqid();
@@ -621,6 +610,11 @@ class UserRightsTest extends ItopDataTestCase
 		);
 	}
 
+	public function FindUserAndAssertItHasBeenFound($sLogin, $iExpectedKey)
+	{
+		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
+		static::assertIsDBObject(\User::class, $iExpectedKey, $oUser, 'FindUser should return the User object corresponding to the login');
+	}
 	public function FindUserAndAssertItWasNotFound($sLogin)
 	{
 		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
