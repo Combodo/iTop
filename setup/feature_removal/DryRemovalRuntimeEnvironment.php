@@ -2,6 +2,7 @@
 
 namespace Combodo\iTop\Setup\FeatureRemoval;
 
+use Config;
 use iTopExtensionsMap;
 use RunTimeEnvironment;
 use SetupUtils;
@@ -36,7 +37,11 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 		SetupUtils::copydir(APPROOT."/data/$sSourceEnv-modules", APPROOT."/data/$sBuildEnv-modules");
 		SetupUtils::copydir(APPROOT."/conf/$sSourceEnv", APPROOT."/conf/$sBuildEnv");
 
-		$this->InitExtensionMap($sSourceEnv, $this->GetSourceDir($this->sBuildEnv));
+		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
+		$sSourceDir = $oSourceConfig->Get('source_dir');
+		list($aExtraDirs, ) = $this->GetDirsToCompile($sSourceDir, $sSourceEnv);
+
+		$this->InitExtensionMap($aExtraDirs, $oSourceConfig);
 		$this->GetExtensionMap()->DeclareExtensionAsRemoved($this->aExtensionsToRemoveByCode);
 
 		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {

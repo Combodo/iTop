@@ -71,61 +71,35 @@ class RunTimeEnvironment
 		return $this->oExtensionsMap;
 	}
 
-	private array $aExtraDirs;
-	private ?array $aDirsToCompile = null;
-	private ?Config $oSourceConfig = null;
-
 	protected function GetDirsToCompile(string $sSourceDir, string $sSourceEnv): array
 	{
-		if (is_null($this->aDirsToCompile)) {
-
-			$sSourceDirFull = APPROOT.$sSourceDir;
-			if (!is_dir($sSourceDirFull)) {
-				throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
-			}
-			$aDirsToCompile = [$sSourceDirFull];
-			if (is_dir(APPROOT.'extensions')) {
-				$aDirsToCompile[] = APPROOT.'extensions';
-			}
-			$sExtraDir = utils::GetDataPath().$this->sBuildEnv.'-modules/';
-			if (is_dir($sExtraDir)) {
-				$aDirsToCompile[] = $sExtraDir;
-			}
-
-			$this->aExtraDirs = $this->GetExtraDirsToScan($aDirsToCompile);
-			$this->aDirsToCompile = array_merge($aDirsToCompile, $this->aExtraDirs);
+		$sSourceDirFull = APPROOT.$sSourceDir;
+		if (!is_dir($sSourceDirFull)) {
+			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
+		}
+		$aDirsToCompile = [$sSourceDirFull];
+		if (is_dir(APPROOT.'extensions')) {
+			$aDirsToCompile[] = APPROOT.'extensions';
+		}
+		$sExtraDir = utils::GetDataPath().$this->sBuildEnv.'-modules/';
+		if (is_dir($sExtraDir)) {
+			$aDirsToCompile[] = $sExtraDir;
 		}
 
-		return $this->aDirsToCompile;
+		$aExtraDirs = $this->GetExtraDirsToScan($aDirsToCompile);
+		$aDirsToCompile = array_merge($aDirsToCompile, $aExtraDirs);
+		return [$aExtraDirs, $aDirsToCompile];
 	}
 
-	protected function GetSourceDir(string $sSourceEnv): mixed
+	public function InitExtensionMap(array $aExtraDirs, Config $oSourceConfig)
 	{
-		return $this->GetSourceConfig($sSourceEnv)->Get('source_dir');
-	}
-
-	protected function GetSourceConfig(string $sSourceEnv): Config
-	{
-		if (is_null($this->oSourceConfig)) {
-			$this->oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
-		}
-
-		return $this->oSourceConfig;
-	}
-
-	public function InitExtensionMap($sSourceEnv, $sSourceDir)
-	{
-		//required to init $this->aExtraDirs
-		$this->GetDirsToCompile($sSourceDir, $sSourceEnv);
-		$oSourceConfig = $this->GetSourceConfig($sSourceEnv);
-
 		if (is_null($this->oExtensionsMap)) {
 			// Actually read the modules available for the build environment,
 			// but get the selection from the source environment and finally
 			// mark as (automatically) chosen all the "remote" modules present in the
 			// build environment (data/<build-env>-modules)
 			// The actual choices will be recorded by RecordInstallation below
-			$this->oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv, $this->aExtraDirs);
+			$this->oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv, $aExtraDirs);
 			$this->oExtensionsMap->LoadChoicesFromDatabase($oSourceConfig);
 		}
 	}
@@ -496,16 +470,15 @@ class RunTimeEnvironment
 	 */
 	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir): array
 	{
-		$this->InitExtensionMap($sSourceEnv, $sSourceDir);
-		$oSourceConfig = $this->GetSourceConfig($sSourceEnv);
+		list($aExtraDirs, $aDirsToCompile) = $this->GetDirsToCompile($sSourceDir, $sSourceEnv);
+		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
+		$this->InitExtensionMap($aExtraDirs, $oSourceConfig);
 		$this->GetExtensionMap()->LoadChoicesFromDatabase($oSourceConfig);
 		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
 			if ($this->IsExtensionSelected($oExtension)) {
 				$this->GetExtensionMap()->MarkAsChosen($oExtension->sCode);
 			}
 		}
-
-		$aDirsToCompile = $this->GetExtraDirsToCompile($sSourceDir);
 		$aModulesToLoad = $this->GetModulesToLoad($this->sFinalEnv, $aDirsToCompile);
 		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile, true, $aModulesToLoad);
 
@@ -1405,7 +1378,9 @@ class RunTimeEnvironment
 	 */
 	public function CompileFrom($sSourceEnv, $bUseSymLinks = null)
 	{
-		$sSourceDir = $this->GetSourceDir($sSourceEnv);
+		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
+		$sSourceDir = $oSourceConfig->Get('source_dir');
+
 		$sSourceDirFull = APPROOT.$sSourceDir;
 		// Do load the required modules
 		//
@@ -1729,7 +1704,7 @@ class RunTimeEnvironment
 		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
 			if ($oExtension->bMarkedAsChosen && is_dir($oExtension->sSourceDir)) {
 				$aExtensionDirs [] = $oExtension->sSourceDir;
-				$aFromSelectedExtensionModules=array_merge($aFromSelectedExtensionModules, $oExtension->aModules);
+				$aFromSelectedExtensionModules = array_merge($aFromSelectedExtensionModules, $oExtension->aModules);
 			}
 		}
 

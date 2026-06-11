@@ -66,7 +66,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		SetupUtils::copydir(__DIR__.'/other_features/finalclass_ext3', $this->sDirPathToRemoveFromExtensionFolder);
 		clearstatcache();
 
-		$oDryRemovalRuntimeEnvt = new DryRemovalRuntimeEnvironment($this->GetTestEnvironment(), ['finalclass_ext3'], ['nominal_ext1', 'finalclass_ext2']);
+		$oDryRemovalRuntimeEnvt = new DryRemovalRuntimeEnvironment($this->GetTestEnvironment(), ['finalclass_ext3' => 'Ext For Test3'], ['nominal_ext1', 'finalclass_ext2']);
 		$oDryRemovalRuntimeEnvt->CompileFrom($this->GetTestEnvironment());
 
 		$oSetupAudit = new SetupAudit($this->GetTestEnvironment());
@@ -89,7 +89,11 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 			"FinalClassFeature3Module1MyFinalClassFromLocation",
 		];
 		foreach ($expected as $sAddedClass) {
-			$this->assertContains($sAddedClass, $aClassesAfter, "After DryRemoval compilation DM should contain classes coming from finalclass_ext3 extension");
+			$this->assertContains(
+				$sAddedClass,
+				$aClassesAfter,
+				"After DryRemoval compilation DM should contain classes coming from finalclass_ext3 extension"
+			);
 		}
 	}
 
