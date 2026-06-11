@@ -182,13 +182,14 @@ class ExtensionDetails extends UIContentBlock
 		$sName = 'aSelectedExtensions['.$this->GetCode().']';
 		$this->oToggler = new Toggler();
 		$this->oToggler->SetName($sName);
+		$this->oToggler->SetTooltip(Dict::Format('UI:Layout:ExtensionsDetails:TogglerTooltip' ,$this->GetLabel()));
 		$this->oToggler->AddCSSClass('toggler-install');
 	}
 
 	protected function InitializePopoverMenu()
 	{
 		$this->oPopoverMenu = new PopoverMenu();
-		$oPopoverOpenButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S('UI:Layout:ExtensionsDetails:MoreActions'));
+		$oPopoverOpenButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S('UI:Layout:ExtensionsDetails:MoreActions'), 'dropdown-menu-'.$this->GetCode());
 		$this->oPopoverMenu->SetTogglerFromBlock($oPopoverOpenButton);
 		$this->oMoreActions = new UIContentBlock();
 		$this->oMoreActions->AddSubBlock($this->oPopoverMenu);

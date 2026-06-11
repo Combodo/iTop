@@ -21,4 +21,5 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'UI:Layout:ExtensionsDetails:MenuAbout' => 'More informations~~',
 	'UI:Layout:ExtensionsDetails:MenuForce' => 'Force uninstall~~',
 	'UI:Layout:ExtensionsDetails:MoreActions' => 'Show more actions~~',
+	'UI:Layout:ExtensionsDetails:TogglerTooltip' => 'Toggle %1$s~~',
 ]);
