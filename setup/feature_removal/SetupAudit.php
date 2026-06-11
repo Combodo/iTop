@@ -17,6 +17,11 @@ class SetupAudit extends AbstractSetupAudit
 		$this->sEnvAfter = $sEnvAfter ?? "$sEnvBefore-build";
 	}
 
+	public function GetEnvAfter(): string
+	{
+		return $this->sEnvAfter;
+	}
+
 	public function ComputeClasses(): void
 	{
 		if ($this->bClassesInitialized) {

@@ -759,7 +759,7 @@ class iTopExtensionsMap
 	public function ModuleIsChosenAsPartOfAnExtension($sModuleNameToFind, $sInSourceOnly = iTopExtension::SOURCE_REMOTE)
 	{
 		foreach ($this->GetAllExtensions() as $oExtension) {
-			if (($oExtension->sSource == $sInSourceOnly) &&
+			if (/*($oExtension->sSource == $sInSourceOnly) &&*/
 				($oExtension->bMarkedAsChosen == true) &&
 				(array_key_exists($sModuleNameToFind, $oExtension->aModuleVersion))) {
 				return true;

@@ -9,15 +9,17 @@ use SetupUtils;
 class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 {
 	protected array $aExtensionsToRemoveByCode;
+	protected array $aExtensionCodesToAddByCode;
 
 	/**
 	 * Toolset for building a run-time environment
 	 *
 	 *  @param string $sSourceEnv: environment from which setup is inspired to simulate extension removal and usee CompileFrom...
 	 */
-	public function __construct($sSourceEnv = ITOP_DEFAULT_ENV, array $aExtensionCodesToRemove = [])
+	public function __construct($sSourceEnv = ITOP_DEFAULT_ENV, array $aExtensionCodesToAdd = [], array $aExtensionCodesToRemove = [])
 	{
 		parent::__construct($sSourceEnv, false);
+		$this->aExtensionCodesToAddByCode = $aExtensionCodesToAdd;
 		$this->aExtensionsToRemoveByCode = $aExtensionCodesToRemove;
 		$this->Prepare($sSourceEnv, $this->sBuildEnv);
 	}
@@ -34,13 +36,14 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 		SetupUtils::copydir(APPROOT."/data/$sSourceEnv-modules", APPROOT."/data/$sBuildEnv-modules");
 		SetupUtils::copydir(APPROOT."/conf/$sSourceEnv", APPROOT."/conf/$sBuildEnv");
 
-		$this->DeclareExtensionAsRemoved($this->aExtensionsToRemoveByCode);
-	}
+		$this->InitExtensionMap($sSourceEnv, $this->GetSourceDir($this->sBuildEnv));
+		$this->GetExtensionMap()->DeclareExtensionAsRemoved($this->aExtensionsToRemoveByCode);
 
-	private function DeclareExtensionAsRemoved(array $aExtensionCodes): void
-	{
-		$oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv);
-		$oExtensionsMap->DeclareExtensionAsRemoved($aExtensionCodes);
+		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
+			if (in_array($oExtension->sCode, $this->aExtensionCodesToAddByCode)) {
+				$oExtension->bMarkedAsChosen = true;
+			}
+		}
 	}
 
 	public function Cleanup(): void

@@ -9,10 +9,13 @@ use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use Combodo\iTop\Test\UnitTest\Service\UnitTestRunTimeEnvironment;
 use MetaModel;
+use SetupUtils;
 
 class SetupAuditTest extends ItopCustomDatamodelTestCase
 {
 	public const ENVT = 'php-unit-extensionremoval-tests';
+
+	private ?string $sDirPathToRemoveFromExtensionFolder = null;
 
 	public function GetDatamodelDeltaAbsPath(): string
 	{
@@ -44,6 +47,14 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		$this->RequireOnceItopFile('/setup/feature_removal/DryRemovalRuntimeEnvironment.php');
 	}
 
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		if (!is_null($this->sDirPathToRemoveFromExtensionFolder) && is_dir($this->sDirPathToRemoveFromExtensionFolder)) {
+			SetupUtils::rrmdir($this->sDirPathToRemoveFromExtensionFolder);
+		}
+	}
+
 	public function GetTestEnvironment(): string
 	{
 		return self::ENVT;
@@ -51,7 +62,11 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 
 	public function testComputeDryRemoval()
 	{
-		$oDryRemovalRuntimeEnvt = new DryRemovalRuntimeEnvironment($this->GetTestEnvironment(), ['nominal_ext1', 'finalclass_ext2']);
+		$this->sDirPathToRemoveFromExtensionFolder = APPROOT.'/extensions/finalclass_ext3';
+		SetupUtils::copydir(__DIR__.'/other_features/finalclass_ext3', $this->sDirPathToRemoveFromExtensionFolder);
+		clearstatcache();
+
+		$oDryRemovalRuntimeEnvt = new DryRemovalRuntimeEnvironment($this->GetTestEnvironment(), ['finalclass_ext3'], ['nominal_ext1', 'finalclass_ext2']);
 		$oDryRemovalRuntimeEnvt->CompileFrom($this->GetTestEnvironment());
 
 		$oSetupAudit = new SetupAudit($this->GetTestEnvironment());
@@ -67,6 +82,15 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 			"FinalClassFeature2Module1MyFinalClassFromLocation" => 0,
 		];
 		$this->assertEqualsCanonicalizing($expected, $oSetupAudit->RunDataAudit());
+
+		$aClassesAfter = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($oSetupAudit->GetEnvAfter());
+		$expected = [
+			"FinalClassFeature3Module1MyClass",
+			"FinalClassFeature3Module1MyFinalClassFromLocation",
+		];
+		foreach ($expected as $sAddedClass) {
+			$this->assertContains($sAddedClass, $aClassesAfter, "After DryRemoval compilation DM should contain classes coming from finalclass_ext3 extension");
+		}
 	}
 
 	public function testGetRemovedClassesFromSetupWizard()
