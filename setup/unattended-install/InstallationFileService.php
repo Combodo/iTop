@@ -258,7 +258,7 @@ class InstallationFileService
 	public function ProcessDefaultModules(): void
 	{
 		$sProductionModuleDir = APPROOT.'data/'.$this->sTargetEnvironment.'-modules/';
-		$oConfig = new Config(APPCONF.$this->sTargetEnvironment.'/'.ITOP_CONFIG_FILE);
+		$oConfig = new Config(APPCONF.$this->sTargetEnvironment.'/'.ITOP_CONFIG_FILE, false);
 
 		$aAvailableModules = $this->GetProductionEnv()->AnalyzeInstallation($oConfig, $this->GetExtraDirs());
 
