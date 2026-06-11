@@ -3,6 +3,7 @@
 namespace Combodo\iTop\Test\UnitTest\Setup;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use DOMFormatException;
 use Exception;
 use RunTimeEnvironment;
 
@@ -29,7 +30,29 @@ class RunTimeEnvironmentTest extends ItopTestCase
 		parent::tearDown();
 	}
 
-	public function testDoCompileThrowsWhenExtensionCodeIsMissing(): void
+	public function testDoCompileDoesNotThrowWhenUnselectedExtensionCodeIsMissing(): void
+	{
+		[$sToken, $sSourceDirRelative, $sExtensionsDirRelative] = $this->CreateFixtureContext('runtimeenv-missing-code-');
+
+		$sInvalidExtensionXml = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<extension format="1.0">
+	<label>Broken extension</label>
+	<description>Test extension without code</description>
+	<version>1.0.0</version>
+	<mandatory>false</mandatory>
+	<more_info_url></more_info_url>
+</extension>
+XML;
+		file_put_contents(APPROOT.$sExtensionsDirRelative.'/extension.xml', $sInvalidExtensionXml);
+		$oRunTimeEnvironment = $this->CreateRunTimeEnvironment($sToken);
+
+		//early DOMFormatException to avoid any real compilation
+		$this->expectException(DOMFormatException::class);
+		$oRunTimeEnvironment->DoCompile([], [], [], $sSourceDirRelative, $sExtensionsDirRelative);
+	}
+
+	public function testDoCompileThrowsWhenSelectedExtensionCodeIsMissing(): void
 	{
 		[$sToken, $sSourceDirRelative, $sExtensionsDirRelative] = $this->CreateFixtureContext('runtimeenv-missing-code-');
 
@@ -47,12 +70,12 @@ XML;
 		$oRunTimeEnvironment = $this->CreateRunTimeEnvironment($sToken);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Extension "Broken extension" cannot be installed: Missing extension code');
+		$this->expectExceptionMessage("Selected extension(s) cannot be installed: Missing extension code (Broken extension)");
 
-		$oRunTimeEnvironment->DoCompile([], [], $sSourceDirRelative, $sExtensionsDirRelative, false);
+		$oRunTimeEnvironment->DoCompile([""], [], [], $sSourceDirRelative, $sExtensionsDirRelative);
 	}
 
-	public function testDoCompileThrowsWhenExtensionCodeAndLabelAreMissing(): void
+	public function testDoCompileThrowsWhenSelectedExtensionCodeAndLabelAreMissing(): void
 	{
 		[$sToken, $sSourceDirRelative, $sExtensionsDirRelative] = $this->CreateFixtureContext('runtimeenv-missing-label-');
 
@@ -70,9 +93,9 @@ XML;
 		$oRunTimeEnvironment = $this->CreateRunTimeEnvironment($sToken);
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage(sprintf('Extension "%s" cannot be installed: Missing extension code', $sExtensionsDirAbsolute));
+		$this->expectExceptionMessage("Selected extension(s) cannot be installed: Missing extension code ($sExtensionsDirAbsolute)");
 
-		$oRunTimeEnvironment->DoCompile([], [], $sSourceDirRelative, $sExtensionsDirRelative, false);
+		$oRunTimeEnvironment->DoCompile([""], [], [], $sSourceDirRelative, $sExtensionsDirRelative, false);
 	}
 
 	private function CreateFixtureContext(string $sTokenPrefix): array
