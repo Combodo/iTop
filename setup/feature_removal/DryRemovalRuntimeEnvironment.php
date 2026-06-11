@@ -40,7 +40,7 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 		$this->GetExtensionMap()->DeclareExtensionAsRemoved($this->aExtensionsToRemoveByCode);
 
 		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
-			if (in_array($oExtension->sCode, $this->aExtensionCodesToAddByCode)) {
+			if (array_key_exists($oExtension->sCode, $this->aExtensionCodesToAddByCode)) {
 				$oExtension->bMarkedAsChosen = true;
 			}
 		}
