@@ -202,6 +202,7 @@ class ITopUserCountingRepositoryTest extends ItopDataTestCase
 	{
 		$iUser = $this->GivenUserInDB('<_ç"éue"ç_u', $aProfilesList, bReturnLogin: false);
 		$oUser = \MetaModel::GetObject('User', $iUser);
+		\UserRights::Login($oUser->Get('login')); // work around since user needs to be logged in in IsActionAllowed
 		$oITopUserRepository = new ITopUserCountingRepository();
 		$aUsers = match ($sExpectedCategorie) {
 			'console' => $oITopUserRepository->GetConsoleUsers(),

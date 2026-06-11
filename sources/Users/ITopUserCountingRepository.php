@@ -117,10 +117,10 @@ class ITopUserCountingRepository
 	 * @throws CoreException
 	 * @throws Exception
 	 */
-	public function GetReadOnlyUsers(): array
+	public function GetReadOnlyUsers(bool $bAllData = true): array
 	{
 		$aReadOnlyUsers = [];
-		$aAllUsers = $this->GetAllUsers();
+		$aAllUsers = $this->GetAllUsers($bAllData);
 		/** @var User $oUser */
 		foreach ($aAllUsers as $oUser) {
 			$bIsReadOnlyUser = true;
@@ -133,11 +133,9 @@ class ITopUserCountingRepository
 			}
 		}
 
-		if (MetaModel::IsValidClass('UserToken')) {
-			$aUserToken = $this->GetApplicationUsers();
-			$aReadOnlyUsers = array_diff($aReadOnlyUsers, $aUserToken);
-		}
-		return $aReadOnlyUsers;
+		$aUserToken = $this->GetApplicationUsers() ?? [];
+
+		return array_diff($aReadOnlyUsers, $aUserToken);
 	}
 
 	/**
@@ -205,22 +203,18 @@ class ITopUserCountingRepository
 	 */
 	private function IsUserReadOnly(User $oUser, string $sClassCategory): bool
 	{
-		// login (mandatory to compute rights)
-		UserRights::Login($oUser->GetName());
-
 		foreach (MetaModel::GetClasses($sClassCategory) as $sClass) {
 			// no need to check stimuli for now since users can't execute any without UR_ACTION_MODIFY
 			if (
 				UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, null, $oUser) ||
 				UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY, null, $oUser) ||
 				UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, null, $oUser) ||
-				UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, null, $oUser)
+				UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_DELETE, null, $oUser) ||
+				UserRights::IsActionAllowed($sClass, UR_ACTION_CREATE, null, $oUser)
 			) {
-				UserRights::Logoff();
 				return false;
 			}
 		}
-		UserRights::Logoff();
 		return true;
 	}
 
