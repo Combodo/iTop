@@ -1794,9 +1794,11 @@ JS;
 	}
 
 	/**
+	 * @param bool $bReturnOutput
+	 *
 	 * @throws \Exception
 	 */
-	protected function output_dict_entries()
+	protected function output_dict_entries($bReturnOutput = false)
 	{
 		if ($this->sContentType != 'text/plain' && $this->sContentType != 'application/json' && $this->sContentType != 'application/javascript') {
 			/** @var \iBackofficeDictEntriesExtension $oExtensionInstance */
