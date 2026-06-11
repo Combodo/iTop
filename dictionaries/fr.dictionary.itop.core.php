@@ -161,15 +161,6 @@ Opérateurs :<br/>
 	'Core:Context=CRON+' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal',
 	'Core:Context=GUI:Portal+' => 'GUI:Portal',
-
-	'Core:GetCountingUsers:Error' => 'Erreur lors du comptage des %1$s',
-	'Core:CountingUsers:ConsoleUsers' => 'utilisateurs console',
-	'Core:CountingUsers:DisabledUsers' => 'utilisateurs désactivés',
-	'Core:CountingUsers:PortalUsers' => 'utilisateurs du portail',
-	'Core:CountingUsers:BusinessPartnerUsers' => 'utilisateurs partenaires business',
-	'Core:CountingUsers:ReadOnlyUsers' => 'utilisateurs en lecture seule',
-	'Core:CountingUsers:ApplicationUsers' => 'utilisateurs applicatifs',
-	'Core:CountingUsers:AllUsers' => 'tous les utilisateurs',
 ]);
 
 //////////////////////////////////////////////////////////////////////

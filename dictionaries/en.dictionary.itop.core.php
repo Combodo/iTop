@@ -216,15 +216,6 @@ Operators:<br/>
 	'Core:Context=GUI:Console' => 'Console',
 	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal',
-
-	'Core:GetCountingUsers:Error'      => 'Error while counting %1$s',
-	'Core:CountingUsers:ConsoleUsers'  => 'console users',
-	'Core:CountingUsers:DisabledUsers' => 'disabled users',
-	'Core:CountingUsers:PortalUsers'   => 'portal users',
-	'Core:CountingUsers:BusinessPartnerUsers' => 'business partner users',
-	'Core:CountingUsers:ReadOnlyUsers' => 'read - only users',
-	'Core:CountingUsers:ApplicationUsers' => 'application users',
-	'Core:CountingUsers:AllUsers' => 'all users',
 ]);
 
 //////////////////////////////////////////////////////////////////////
