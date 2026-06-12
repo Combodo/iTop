@@ -182,7 +182,7 @@ class ExtensionDetails extends UIContentBlock
 		$sName = 'aSelectedExtensions['.$this->GetCode().']';
 		$this->oToggler = new Toggler();
 		$this->oToggler->SetName($sName);
-		$this->oToggler->SetTooltip(Dict::Format('UI:Layout:ExtensionsDetails:TogglerTooltip' ,$this->GetLabel()));
+		$this->oToggler->SetTooltip(Dict::Format('UI:Layout:ExtensionsDetails:TogglerTooltip', $this->GetLabel()));
 		$this->oToggler->AddCSSClass('toggler-install');
 	}
 
