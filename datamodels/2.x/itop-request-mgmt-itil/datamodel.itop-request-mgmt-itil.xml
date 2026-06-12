@@ -1451,44 +1451,17 @@
           <access>public</access>
           <type>LifecycleAction</type>
           <code><![CDATA[	public function UpdateChildRequestLog()
+{
+    return $this->UpdateChildTicketLog('UserRequest', 'parent_request_id', ['public_log' => 'public_log', 'private_log' => 'private_log' ]);
+}]]></code>
+        </method>
+        <method id="UpdateChildIncidentLog">
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function UpdateChildIncidentLog()
 	{
-		$oLog = $this->Get('public_log');
-		$sLogPublic = $oLog->GetModifiedEntry('html');
-		if ($sLogPublic != '')
-		{
-			$sOQL = "SELECT UserRequest WHERE parent_request_id=:ticket";
-			$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
-							array(),
-							array(
-								'ticket' => $this->GetKey(),
-								)
-							);
-			while($oRequest = $oChildRequestSet->Fetch())
-			{
-				$oRequest->set('public_log',$sLogPublic);
-				$oRequest->DBUpdate();
-			}
-
-		}
-		$oLog = $this->Get('private_log');
-		$sLogPrivate = $oLog->GetModifiedEntry('html');
-		if ($sLogPrivate != '')
-		{
-			$sOQL = "SELECT UserRequest WHERE parent_request_id=:ticket";
-			$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
-							array(),
-							array(
-								'ticket' => $this->GetKey(),
-								)
-							);
-			while($oRequest = $oChildRequestSet->Fetch())
-			{
-				$oRequest->set('private_log',$sLogPrivate);
-				$oRequest->DBUpdate();
-			}
-		}
-		return true;
-
+	  return $this->UpdateChildTicketLog('Incident', 'parent_request_id', ['public_log' => 'public_log', 'private_log' => 'private_log']);
 	}]]></code>
         </method>
         <method id="ComputeImpactedItems">
@@ -1526,6 +1499,7 @@
         parent::OnUpdate();
 		$this->Set('last_update', time());
 		$this->UpdateChildRequestLog();
+		$this->UpdateChildIncidentLog();
 	}]]></code>
         </method>
       </methods>

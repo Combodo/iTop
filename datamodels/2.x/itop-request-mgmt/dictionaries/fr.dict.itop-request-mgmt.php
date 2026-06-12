@@ -42,6 +42,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Requêtes ouvertes par organisation',
 	'Class:UserRequest:KnownErrorList' => 'Erreurs connues',
 	'Class:UserRequest:KnownErrorList+' => 'Erreurs connues liées à des éléments de configuration impactés par ce ticket',
+	'Class:UserRequest/Method:UpdateChildTicketWith:public_log' => '<i><u>Copie automatique du log public de la demande parente %2$s:</u></i><br><br>',
+	'Class:UserRequest/Method:UpdateChildTicketWith:private_log' => '<i>Copie automatique du log privé de la demande parente [[UserRequest:%1$s]]:</i><br><br>',
 	'Menu:UserRequest:MyWorkOrders' => 'Tâches qui me sont assignées',
 	'Menu:UserRequest:MyWorkOrders+' => '',
 	'Class:Problem:KnownProblemList' => 'Problèmes connus',

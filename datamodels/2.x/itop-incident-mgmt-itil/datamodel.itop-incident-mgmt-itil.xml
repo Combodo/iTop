@@ -460,6 +460,18 @@
           <extkey_attcode>parent_incident_id</extkey_attcode>
           <target_attcode>ref</target_attcode>
         </field>
+        <field id="parent_request_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT UserRequest WHERE id != :this->id AND status NOT IN ('rejected','resolved','closed')]]></filter>
+          <dependencies/>
+          <sql>parent_request_id</sql>
+          <target_class>UserRequest</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="parent_request_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>parent_request_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
         <field id="parent_problem_id" xsi:type="AttributeExternalKey">
           <sql>parent_problem_id</sql>
           <target_class>Problem</target_class>
@@ -987,6 +999,9 @@
               <attribute id="parent_incident_id">
                 <read_only/>
               </attribute>
+              <attribute id="parent_request_id">
+                <read_only/>
+              </attribute>
               <attribute id="parent_change_id">
                 <read_only/>
               </attribute>
@@ -1301,90 +1316,20 @@
           <type>LifecycleAction</type>
           <code><![CDATA[	public function UpdateChildRequestLog()
 	{
-        if (!MetaModel::IsValidClass('UserRequest')) return true; // Do nothing
-  
-		$oLog = $this->Get('public_log');
-		$sLogPublic = $oLog->GetModifiedEntry('html');
-		if ($sLogPublic != '')
-		{
-			$sOQL = "SELECT UserRequest WHERE parent_incident_id=:ticket";
-			$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
-							array(),
-							array(
-								'ticket' => $this->GetKey(),
-								)
-							);
-			while($oRequest = $oChildRequestSet->Fetch())
-			{
-				$oRequest->set('public_log',$sLogPublic);
-				$oRequest->DBUpdate();
-			}
-
-		}
-		$oLog = $this->Get('private_log');
-		$sLogPrivate = $oLog->GetModifiedEntry('html');
-		if ($sLogPrivate != '')
-		{
-			$sOQL = "SELECT UserRequest WHERE parent_incident_id=:ticket";
-			$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
-							array(),
-							array(
-								'ticket' => $this->GetKey(),
-								)
-							);
-			while($oRequest = $oChildRequestSet->Fetch())
-			{
-				$oRequest->set('private_log',$sLogPrivate);
-				$oRequest->DBUpdate();
-			}
-		}
-		return true;
-
+    if (MetaModel::IsValidClass('UserRequest')) {
+        return $this->UpdateChildTicketLog('UserRequest', 'parent_incident_id', ['public_log' => 'public_log', 'private_log' => 'private_log'] );
+    }
+    return true;
 	}]]></code>
         </method>
+
         <method id="UpdateChildIncidentLog">
           <static>false</static>
           <access>public</access>
           <type>LifecycleAction</type>
           <code><![CDATA[	public function UpdateChildIncidentLog()
 	{
-		$oLog = $this->Get('public_log');
-		$sLogPublic = $oLog->GetModifiedEntry('html');
-		if ($sLogPublic != '')
-		{
-			$sOQL = "SELECT Incident WHERE parent_incident_id=:ticket";
-			$oChildIncidentSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
-							array(),
-							array(
-								'ticket' => $this->GetKey(),
-								)
-							);
-			while($oIncident = $oChildIncidentSet->Fetch())
-			{
-				$oIncident->set('public_log',$sLogPublic);
-				$oIncident->DBUpdate();
-			}
-
-		}
-		$oLog = $this->Get('private_log');
-		$sLogPrivate = $oLog->GetModifiedEntry('html');
-		if ($sLogPrivate != '')
-		{
-			$sOQL = "SELECT Incident WHERE parent_incident_id=:ticket";
-			$oChildIncidentSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
-							array(),
-							array(
-								'ticket' => $this->GetKey(),
-								)
-							);
-			while($oIncident = $oChildIncidentSet->Fetch())
-			{
-				$oIncident->set('private_log',$sLogPrivate);
-				$oIncident->DBUpdate();
-			}
-		}
-		return true;
-
+	  return $this->UpdateChildTicketLog('Incident', 'parent_incident_id', ['public_log' => 'public_log', 'private_log' => 'private_log']);
 	}]]></code>
         </method>
         <method id="ComputeImpactedItems">
@@ -1557,6 +1502,9 @@
                   <items>
                     <item id="parent_incident_id">
                       <rank>10</rank>
+                    </item>
+                    <item id="parent_request_id">
+                      <rank>15</rank>
                     </item>
                     <item id="parent_problem_id">
                       <rank>20</rank>

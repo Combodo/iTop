@@ -44,6 +44,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Open incidents by status',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Open incidents by agent',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Open incidents by customer',
+	'Class:Incident/Method:UpdateChildTicketWith:public_log' => '<i><u>Public log entry from parent Incident %2$s:</u></i><br><br>',
+	'Class:Incident/Method:UpdateChildTicketWith:private_log' => '<i>Private log entry from parent Incident [[Incident:%1$s]]:</i><br><br>',
 ]);
 
 // Dictionnay conventions
@@ -193,6 +195,10 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:Incident/Attribute:parent_incident_id+' => '',
 	'Class:Incident/Attribute:parent_incident_ref' => 'Parent incident ref',
 	'Class:Incident/Attribute:parent_incident_ref+' => '',
+	'Class:Incident/Attribute:parent_request_id' => 'Parent request',
+	'Class:Incident/Attribute:parent_request_id+' => '',
+	'Class:Incident/Attribute:parent_request_ref' => 'Parent request ref',
+	'Class:Incident/Attribute:parent_request_ref+' => '',
 	'Class:Incident/Attribute:parent_change_id' => 'Parent change',
 	'Class:Incident/Attribute:parent_change_id+' => '',
 	'Class:Incident/Attribute:parent_change_ref' => 'Parent change ref',
