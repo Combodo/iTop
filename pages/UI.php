@@ -1355,4 +1355,3 @@ try {
 	$sOperationToLog = $operation ?? 'N/A';
 	IssueLog::Debug('UI.php operation='.$sOperationToLog.', error='.$e->getMessage()."\n".$sErrorStackTrace, LogChannels::CONSOLE);
 }
-
