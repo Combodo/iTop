@@ -175,6 +175,11 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 */
 	protected $sDisplayMode;
 	protected $aFieldsMap;
+    /**
+     * @var array Store posted values in order to be used in GetAttributeFlags
+     * @since 3.3.0
+     */
+    protected $aPostedValues = [];
 
 	/**
 	 * If true, bypass IsActionAllowedOnAttribute when writing this object
@@ -3800,7 +3805,7 @@ HTML;
 		return $aWriteableAttList;
 	}
 
-	/**
+    /**
 	 * Compute the attribute flags depending on the object state
 	 */
 	public function GetFormAttributeFlags($sAttCode)
@@ -3992,6 +3997,7 @@ HTML;
 
 		$aErrors = [];
 		$aFinalValues = [];
+		$this->aPostedValues = $aValues; // Store the values for later use (e.g. in GetAttributeFlags)
 		foreach ($this->GetWriteableAttList(array_keys($aValues), $aErrors, $aAttFlags) as $sAttCode => $oAttDef) {
 			$aFinalValues[$sAttCode] = $aValues[$sAttCode];
 		}
