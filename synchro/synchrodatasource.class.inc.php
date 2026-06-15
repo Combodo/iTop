@@ -5,12 +5,12 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin;
 
 class SynchroDataSource extends cmdbAbstractObject
@@ -2204,7 +2204,8 @@ class SynchroReplica extends DBObject implements iDisplay
 	/*
 	 * Disassociate the replica from the destination object and set the status to "new" to be synchronized with the next operation
 	 */
-	public function UnLink(){
+	public function UnLink()
+	{
 		$this->Set('dest_id', '');
 		$this->Set('dest_class', '');
 		$this->Set('status', 'new');
@@ -2793,6 +2794,7 @@ class SynchroReplica extends DBObject implements iDisplay
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$this->DisplayBareProperties($oPage, $bEditMode);
 	}
+
 	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
 	{
 		$oBlock = UIContentBlockUIBlockFactory::MakeStandard('title-for-replica', ['ibo-page-header--replica-title']);

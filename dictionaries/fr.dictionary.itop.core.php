@@ -928,7 +928,7 @@ Plusieurs champs peuvent ainsi être modifiés lors d\'une "mise à jour" en app
 	'Core:SynchroReplica:PublicData' => 'Données synchronisées',
 	'Core:SynchroReplica:PrivateDetails' => 'Informations internes',
 	'Core:SynchroReplica:BackToDataSource' => 'Retourner aux détails de la source de données: %1$s',
-	'Core:SynchroReplica:ListOfReplicas' => 'Liste des réplica',
+	'Core:SynchroReplica:ListOfReplicas' => 'Liste des réplicas de %1$s',
 	'Core:SynchroAttExtKey:ReconciliationById' => 'id (clé primaire)',
 	'Core:SynchroAtt:attcode' => 'Champ',
 	'Core:SynchroAtt:attcode+' => '',

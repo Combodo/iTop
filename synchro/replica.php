@@ -18,10 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\Helper\BulkHelper;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
-use Combodo\iTop\Application\Helper\BulkHelper;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -37,7 +37,6 @@ $oP = new iTopWebPage("iTop - Synchro Replicas");
 
 // Main program
 $sOperation = utils::ReadParam('operation', 'details');
-
 try {
 	switch ($sOperation) {
 		case 'details':
@@ -53,7 +52,7 @@ try {
 			$iSourceId = utils::ReadParam('datasource', null);
 			if ($iSourceId != null) {
 				$oSource = MetaModel::GetObject(SynchroDataSource::class, $iSourceId);
-				$oBackButton = ButtonUIBlockFactory::MakeLinkNeutral( ApplicationContext::MakeObjectUrl(SynchroDataSource::class, $iSourceId), Dict::Format('Core:SynchroReplica:BackToDataSource',  $oSource->GetName()), 'fas fa-chevron-left');
+				$oBackButton = ButtonUIBlockFactory::MakeLinkNeutral(ApplicationContext::MakeObjectUrl(SynchroDataSource::class, $iSourceId), Dict::Format('Core:SynchroReplica:BackToDataSource', $oSource->GetName()), 'fas fa-chevron-left');
 				$oP->AddUiBlock($oBackButton);
 				$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::Format('Core:SynchroReplica:ListOfReplicas', $oSource->GetName())));
 			}
@@ -115,7 +114,7 @@ try {
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
 			}
 			$oReplica = MetaModel::GetObject(SynchroReplica::class, $iId);
-			$oStatLog = $oReplica->Set('status_dest_creator',1);
+			$oStatLog = $oReplica->Set('status_dest_creator', 1);
 			$oReplica->DisplayDetails($oP);
 			break;
 
@@ -130,23 +129,23 @@ try {
 			break;
 
 		case 'select_for_unlink_all': // Select the list of objects to be modified (bulk modify)
-			BulkHelper::OperationSelectForModifyAll($oP,'UI:UnlinkAllTabTitle', 'UI:UnlinkAllPageTitle', 'form_for_unlink_all');
+			BulkHelper::OperationSelectForModifyAll($oP, 'UI:UnlinkAllTabTitle', 'UI:UnlinkAllPageTitle', 'form_for_unlink_all');
 			break;
 
 		case 'select_for_unlinksynchro_all': // Select the list of objects to be modified (bulk modify)
-			BulkHelper::OperationSelectForModifyAll($oP,'UI:UnlinkSynchroAllTabTitle', 'UI:UnlinkSynchroAllPageTitle', 'form_for_unlinksynchro_all');
+			BulkHelper::OperationSelectForModifyAll($oP, 'UI:UnlinkSynchroAllTabTitle', 'UI:UnlinkSynchroAllPageTitle', 'form_for_unlinksynchro_all');
 			break;
 
 		case 'select_for_synchro_all': // Select the list of objects to be modified (bulk modify)
-			BulkHelper::OperationSelectForModifyAll($oP,'UI:SynchroAllTabTitle', 'UI:SynchroAllPageTitle','form_for_synchro_all');
+			BulkHelper::OperationSelectForModifyAll($oP, 'UI:SynchroAllTabTitle', 'UI:SynchroAllPageTitle', 'form_for_synchro_all');
 			break;
 
 		case 'select_for_allowdelete_all': // Select the list of objects to be modified (bulk modify)
-			BulkHelper::OperationSelectForModifyAll($oP,'UI:AllowDeleteAllTabTitle', 'UI:AllowDeleteAllPageTitle','form_for_allowdelete_all');
+			BulkHelper::OperationSelectForModifyAll($oP, 'UI:AllowDeleteAllTabTitle', 'UI:AllowDeleteAllPageTitle', 'form_for_allowdelete_all');
 			break;
 
 		case 'select_for_denydelete_all': // Select the list of objects to be modified (bulk modify)
-			BulkHelper::OperationSelectForModifyAll($oP,'UI:DenyDeleteAllTabTitle', 'UI:DenyDeleteAllPageTitle','form_for_denydelete_all');
+			BulkHelper::OperationSelectForModifyAll($oP, 'UI:DenyDeleteAllTabTitle', 'UI:DenyDeleteAllPageTitle', 'form_for_denydelete_all');
 			break;
 	}
 } catch (CoreException $e) {

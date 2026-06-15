@@ -31,7 +31,7 @@ class BulkHelper
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-    public static function OperationSelectForModifyAll(iTopWebPage $oP, $sTitleTab = 'UI:ModifyAllPageTitle', $sTitleCode = 'UI:Modify_ObjectsOf_Class', $sNextOperation = 'form_for_modify_all'): void
+	public static function OperationSelectForModifyAll(iTopWebPage $oP, $sTitleTab = 'UI:ModifyAllPageTitle', $sTitleCode = 'UI:Modify_ObjectsOf_Class', $sNextOperation = 'form_for_modify_all'): void
 	{
 		$oP->DisableBreadCrumb();
 		$oP->set_title(Dict::S($sTitleTab));
@@ -47,10 +47,10 @@ class BulkHelper
 		$sClassName = MetaModel::GetName($sClass);
 
 		$aDisplayParams = [
-			'icon' => MetaModel::GetClassIcon($sClass, false),
-            'title' => Dict::Format($sTitleCode, $sClassName),
+			'icon'  => MetaModel::GetClassIcon($sClass, false),
+			'title' => Dict::Format($sTitleCode, $sClassName),
 		];
-        self::DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker, [], $aDisplayParams);
+		self::DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker, [], $aDisplayParams);
 	}
 
 	/**
@@ -74,47 +74,49 @@ class BulkHelper
 		// Add user filter
 		$oFullSetFilter->UpdateContextFromUser();
 		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
-        $sCancelUrl =  utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&filter=' . urlencode($sFilter) . '&' . $oAppContext->GetForLink();
-        $aContext = array('filter' => utils::EscapeHtml($sFilter));
-        cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, array(), $aContext);
+		$sCancelUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&filter='.urlencode($sFilter).'&'.$oAppContext->GetForLink();
+		$aContext = array('filter' => utils::EscapeHtml($sFilter));
+		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, array(), $aContext);
 	}
 
-    /**
-     * Operation preview_or_modify_all
-     *
-     * @param iTopWebPage $oP
-     * @param \ApplicationContext $oAppContext
-     *
-     * @throws \ApplicationException
-     * @throws \ArchivedObjectException
-     * @throws \CoreCannotSaveObjectException
-     * @throws \CoreException
-     * @throws \DictExceptionMissingString
-     * @throws \OQLException
-     */
-    public static function OperationPreviewOrModifyAll(iTopWebPage $oP, ApplicationContext $oAppContext): void
-    {
-        $oP->DisableBreadCrumb();
-        $sFilter = utils::ReadParam('filter', '', false, 'raw_data');
-        $oFilter = DBObjectSearch::unserialize($sFilter); // TO DO : check that the filter is valid
-        // Add user filter
-        $oFilter->UpdateContextFromUser();
+	/**
+	 * Operation preview_or_modify_all
+	 *
+	 * @param iTopWebPage $oP
+	 * @param \ApplicationContext $oAppContext
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \OQLException
+	 */
+	public static function OperationPreviewOrModifyAll(iTopWebPage $oP, ApplicationContext $oAppContext): void
+	{
+		$oP->DisableBreadCrumb();
+		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+		$oFilter = DBObjectSearch::unserialize($sFilter); // TO DO : check that the filter is valid
+		// Add user filter
+		$oFilter->UpdateContextFromUser();
 
-        $sClass = utils::ReadParam('class', '', false, 'class');
-        $bPreview = utils::ReadParam('preview_mode', '');
-        $sSelectedObj = utils::ReadParam('selectObj', '', false, 'raw_data');
-        if (empty($sClass) || empty($sSelectedObj)) // TO DO: check that the class name is valid !
-        {
-            throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObj'));
-        }
-        $aSelectedObj = explode(',', $sSelectedObj);
-        $sCancelUrl =  utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&filter=' . urlencode($sFilter) . '&' . $oAppContext->GetForLink();
-        $aContext = array(
-            'filter' => utils::EscapeHtml($sFilter),
-            'selectObj' => $sSelectedObj,
-        );
-        cmdbAbstractObject::DoBulkModify($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $bPreview, $sCancelUrl, $aContext);
-    }/**
+		$sClass = utils::ReadParam('class', '', false, 'class');
+		$bPreview = utils::ReadParam('preview_mode', '');
+		$sSelectedObj = utils::ReadParam('selectObj', '', false, 'raw_data');
+		if (empty($sClass) || empty($sSelectedObj)) // TO DO: check that the class name is valid !
+		{
+			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObj'));
+		}
+		$aSelectedObj = explode(',', $sSelectedObj);
+		$sCancelUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&filter='.urlencode($sFilter).'&'.$oAppContext->GetForLink();
+		$aContext = array(
+			'filter'    => utils::EscapeHtml($sFilter),
+			'selectObj' => $sSelectedObj,
+		);
+		cmdbAbstractObject::DoBulkModify($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $bPreview, $sCancelUrl, $aContext);
+	}
+
+	/**
 	 * Displays a form (checkboxes) to select the objects for which to apply a given action
 	 * Only the objects for which the action is valid can be checked. By default all valid objects are checked
 	 *
@@ -128,8 +130,8 @@ class BulkHelper
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
-     *@since 3.0.0 $aDisplayParams parameter
-     *
+	 * @since 3.0.0 $aDisplayParams parameter
+	 *
 	 */
 	public static function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sNextOperation, ActionChecker $oChecker, array $aExtraFormParams = [], array $aDisplayParams = [])
 	{
@@ -145,7 +147,7 @@ class BulkHelper
 		}
 
 		$oForm = new Form();
-	$oForm->SetAction( utils::GetAbsoluteUrlAppRoot().'pages/UI.php');
+		$oForm->SetAction(utils::GetAbsoluteUrlAppRoot().'pages/UI.php');
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', $sNextOperation));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $oFilter->GetClass()));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('filter', utils::HtmlEntities($oFilter->Serialize())));

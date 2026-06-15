@@ -1078,7 +1078,6 @@ JS
 
 				if ($aCounts[$sStateValue] == 0) {
 					$aCounts[$sStateValue] = ['link' => '-', 'label' => $aCounts[$sStateValue]];
-					;
 				} else {
 					$oSingleGroupByValueFilter = $this->m_oFilter->DeepClone();
 					$oSingleGroupByValueFilter->AddCondition($sStateAttrCode, $sStateValue, '=');
@@ -1948,7 +1947,7 @@ class MenuBlock extends DisplayBlock
 
 					// Check rights on class
 					$bIsBulkModifyAllowed = (!MetaModel::IsAbstract($sSelectedClass)) && UserRights::IsActionAllowed($sSelectedClass, UR_ACTION_BULK_MODIFY) && (($oReflectionClass->IsSubclassOf(cmdbAbstractObject::class) || $sSelectedClass === SynchroReplica::class));
-					$bIsBulkDeleteAllowed = (bool) UserRights::IsActionAllowed($sSelectedClass, UR_ACTION_BULK_DELETE);
+					$bIsBulkDeleteAllowed = (bool)UserRights::IsActionAllowed($sSelectedClass, UR_ACTION_BULK_DELETE);
 
 					// Refine filter on selected class so bullk actions occur on the right class
 					$oSelectedClassFilter = $this->GetFilter()->DeepClone();
@@ -1958,12 +1957,12 @@ class MenuBlock extends DisplayBlock
 					// Action label dict code has a specific suffix for "Link" / "Remote" aliases to allow dedicated labels in linksets.
 					$sActionLabelCodeSuffix = in_array($sSelectedAlias, ['Link', 'Remote']) ? $sSelectedAlias : 'Class';
 					if ($bIsBulkModifyAllowed) {
-						if($sSelectedClass === SynchroReplica::class){
-							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:UnlinkAll:', Dict::S('Class:SynchroReplica/Action:unlink_all'),'unlink');
-							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:UnLinkSynchroAll:', Dict::S('Class:SynchroReplica/Action:unlinksynchro_all'),'unlinksynchro');
-							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:SynchroAll:', Dict::S('Class:SynchroReplica/Action:synchro_all'),'synchro');
-							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:AllowDeleteAll:', Dict::S('Class:SynchroReplica/Action:allowdelete_all'),'allowdelete');
-							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:DenyDeleteAll:', Dict::S('Class:SynchroReplica/Action:denydelete_all'),'denydelete');
+						if ($sSelectedClass === SynchroReplica::class) {
+							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:UnlinkAll:', Dict::S('Class:SynchroReplica/Action:unlink_all'), 'unlink');
+							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:UnLinkSynchroAll:', Dict::S('Class:SynchroReplica/Action:unlinksynchro_all'), 'unlinksynchro');
+							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:SynchroAll:', Dict::S('Class:SynchroReplica/Action:synchro_all'), 'synchro');
+							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:AllowDeleteAll:', Dict::S('Class:SynchroReplica/Action:allowdelete_all'), 'allowdelete');
+							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:DenyDeleteAll:', Dict::S('Class:SynchroReplica/Action:denydelete_all'), 'denydelete');
 						} else {
 							$this->AddBulkModifyObjectsMenuAction($aRegularActions, $sSelectedClass, $oSelectedClassFilter->serialize(), 'UI:Menu:ModifyAll:'.$sSelectedAlias, Dict::Format('UI:Menu:ModifyAll_'.$sActionLabelCodeSuffix, $sSelectedClassName));
 						}
@@ -2489,8 +2488,8 @@ class MenuBlock extends DisplayBlock
 	protected function AddBulkModifyObjectsMenuAction(array &$aActions, string $sClass, string $sFilter, string $sActionIdentifier = 'UI:Menu:ModifyAll', $sActionLabel = 'UI:Menu:ModifyAll', $sOperationName = 'modify'): void
 	{
 		$aActions[$sActionIdentifier] = [
-			'label' => Dict::S($sActionLabel),
-			'url' => $this->PrepareUrlForStandardMenuAction($sClass, 'operation=select_for_'.$sOperationName.'_all&class='.$sClass.'&filter='.urlencode($sFilter)),
+				'label' => Dict::S($sActionLabel),
+				'url'   => $this->PrepareUrlForStandardMenuAction($sClass, 'operation=select_for_'.$sOperationName.'_all&class='.$sClass.'&filter='.urlencode($sFilter)),
 		] + $this->GetDefaultParamsForMenuAction();
 	}
 

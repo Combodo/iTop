@@ -27,7 +27,7 @@ class SynchroReplicaHelper
 		// Add user filter
 		$oFullSetFilter->UpdateContextFromUser();
 		$aSelectObject = utils::ReadMultipleSelection($oFullSetFilter);
-		if ( empty($sClass) || empty($aSelectObject)) // TO DO: check that the class name is valid !
+		if (empty($sClass) || empty($aSelectObject)) // TO DO: check that the class name is valid !
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObject[]'));
 		}
@@ -67,7 +67,7 @@ class SynchroReplicaHelper
 			$bResult = true;
 			try {
 				if (in_array($sOperation, ['unlink', 'unlinksynchro'])) {
-						$oReplica->UnLink();
+					$oReplica->UnLink();
 				}
 				if (in_array($sOperation, ['synchro', 'unlinksynchro'])) {
 					$oStatLog = $oReplica->ReSynchro();

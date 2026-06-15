@@ -587,20 +587,20 @@ try {
 				break;
 
 			case 'form_for_unlink_all': // Form to modify multiple objects (bulk modify)
-				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext,'unlink');
+				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext, 'unlink');
 				break;
 			case 'form_for_unlinksynchro_all': // Form to modify multiple objects (bulk modify)
-				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext,'unlinksynchro');
+				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext, 'unlinksynchro');
 				break;
 			case 'form_for_synchro_all': // Form to modify multiple objects (bulk modify)
-				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext,'synchro');
+				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext, 'synchro');
 				break;
 
 			case 'form_for_allowdelete_all': // Form to modify multiple objects (bulk modify)
-				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext,'allowdelete');
+				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext, 'allowdelete');
 				break;
 			case 'form_for_denydelete_all': // Form to modify multiple objects (bulk modify)
-				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext,'denydelete');
+				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext, 'denydelete');
 				break;
 
 				///////////////////////////////////////////////////////////////////////////////////////////

@@ -3805,7 +3805,7 @@ HTML;
 		return $aWriteableAttList;
 	}
 
-    /**
+	/**
 	 * Compute the attribute flags depending on the object state
 	 */
 	public function GetFormAttributeFlags($sAttCode)

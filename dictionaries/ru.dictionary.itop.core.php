@@ -882,7 +882,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Core:SynchroReplica:PublicData' => 'Public Data~~',
 	'Core:SynchroReplica:PrivateDetails' => 'Private Details~~',
 	'Core:SynchroReplica:BackToDataSource' => 'Go Back to the Synchro Data Source: %1$s~~',
-	'Core:SynchroReplica:ListOfReplicas' => 'List of Replica~~',
+	'Core:SynchroReplica:ListOfReplicas' => 'Replicas of the data source: %1$s~~',
 	'Core:SynchroAttExtKey:ReconciliationById' => 'id (Primary Key)~~',
 	'Core:SynchroAtt:attcode' => 'Атрибут',
 	'Core:SynchroAtt:attcode+' => 'Поле объекта',

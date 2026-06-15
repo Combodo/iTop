@@ -965,7 +965,7 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Core:SynchroReplica:PublicData' => 'Public Data',
 	'Core:SynchroReplica:PrivateDetails' => 'Private Details',
 	'Core:SynchroReplica:BackToDataSource' => 'Go Back to the Synchro Data Source: %1$s',
-	'Core:SynchroReplica:ListOfReplicas' => 'List of Replica',
+	'Core:SynchroReplica:ListOfReplicas' => 'Replicas of the data source: %1$s',
 	'Core:SynchroAttExtKey:ReconciliationById' => 'id (Primary Key)',
 	'Core:SynchroAtt:attcode' => 'Attribute',
 	'Core:SynchroAtt:attcode+' => 'Field of the object',
