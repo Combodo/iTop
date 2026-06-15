@@ -6,6 +6,12 @@
  */
 
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin;
 
 class SynchroDataSource extends cmdbAbstractObject
 {
@@ -2108,6 +2114,12 @@ class SynchroReplica extends DBObject implements iDisplay
 		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
+	public function InitExtendedData($oSource)
+	{
+		$sSQLTable = $oSource->GetDataTable();
+		$this->m_aExtendedData = $this->LoadExtendedDataFromTable($sSQLTable);
+	}
+
 	public function __construct($aRow = null, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
 	{
 		parent::__construct($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
@@ -2187,6 +2199,16 @@ class SynchroReplica extends DBObject implements iDisplay
 			$sText = mb_substr($sText, 0, 200).'...('.mb_strlen($sText).' chars)...';
 		}
 		$this->Set('status_last_error', $sText);
+	}
+
+	/*
+	 * Disassociate the replica from the destination object and set the status to "new" to be synchronized with the next operation
+	 */
+	public function UnLink(){
+		$this->Set('dest_id', '');
+		$this->Set('dest_class', '');
+		$this->Set('status', 'new');
+		$this->DBWrite();
 	}
 
 	public function Synchro($oDataSource, $aReconciliationKeys, $aAttributes, $oChange, &$oStatLog)
@@ -2364,6 +2386,89 @@ class SynchroReplica extends DBObject implements iDisplay
 		}
 		$oStatLog->AddTrace('<<< End of SynchroReplica::Synchro.', $this);
 	}
+
+
+	/**
+	 *
+	 * @return \SynchroLog
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \SynchroExceptionNotStarted
+	 */
+	public function ReSynchro(): SynchroLog
+	{
+		$oDataSource = MetaModel::GetObject(SynchroDataSource::class, $this->Get('sync_source_id'));
+
+		$oStatLog = new SynchroLog();
+		$oStatLog->Set('sync_source_id', $oDataSource->GetKey());
+		$oStatLog->Set('start_date', time());
+		$oStatLog->Set('status', 'running');
+		$oStatLog->AddTrace('Manual synchro');
+
+		// Get the list of SQL columns
+		$aAttCodesExpected = array();
+		$aAttCodesToReconcile = array();
+		$aAttCodesToUpdate = array();
+		$sSelectAtt = 'SELECT SynchroAttribute WHERE sync_source_id = :source_id AND (update = 1 OR reconcile = 1)';
+		$oSetAtt = new DBObjectSet(DBObjectSearch::FromOQL($sSelectAtt), array() /* order by*/, array('source_id' => $oDataSource->GetKey()) /* aArgs */);
+		while ($oSyncAtt = $oSetAtt->Fetch()) {
+			if ($oSyncAtt->Get('update')) {
+				$aAttCodesToUpdate[$oSyncAtt->Get('attcode')] = $oSyncAtt;
+			}
+			if ($oSyncAtt->Get('reconcile')) {
+				$aAttCodesToReconcile[$oSyncAtt->Get('attcode')] = $oSyncAtt;
+			}
+			$aAttCodesExpected[$oSyncAtt->Get('attcode')] = $oSyncAtt;
+		}
+
+		// Get the list of attributes, determine reconciliation keys and update targets
+		//
+		if ($oDataSource->Get('reconciliation_policy') == 'use_attributes') {
+			$aReconciliationKeys = $aAttCodesToReconcile;
+		} elseif ($oDataSource->Get('reconciliation_policy') == 'use_primary_key') {
+			// Override the settings made at the attribute level !
+			$aReconciliationKeys = array('primary_key' => null);
+		}
+
+		if (count($aAttCodesToUpdate) == 0) {
+			$oStatLog->AddTrace('No attribute to update');
+			throw new SynchroExceptionNotStarted('There is no attribute to update');
+		}
+		if (count($aReconciliationKeys) == 0) {
+			$oStatLog->AddTrace('No attribute for reconciliation');
+			throw new SynchroExceptionNotStarted('No attribute for reconciliation');
+		}
+
+
+		$aAttributesToUpdate = array();
+		foreach ($aAttCodesToUpdate as $sAttCode => $oSyncAtt) {
+			$oAttDef = MetaModel::GetAttributeDef($oDataSource->GetTargetClass(), $sAttCode);
+			if ($oAttDef->IsWritable()) {
+				$aAttributesToUpdate[$sAttCode] = $oSyncAtt;
+			}
+		}
+		// Create a change used for logging all the modifications/creations happening during the synchro
+		$oChange = MetaModel::NewObject('CMDBChange');
+		$oChange->Set('date', time());
+		$sUserString = CMDBChange::GetCurrentUserName();
+		$oChange->Set('userinfo', $sUserString.' '.Dict::S('Core:SyncDataExchangeComment'));
+		$oChange->Set('origin', CMDBChangeOrigin::SYNCHRO_DATA_SOURCE);
+		$oChange->DBInsert();
+		CMDBObject::SetCurrentChange($oChange);
+
+		$this->InitExtendedData($oDataSource);
+
+		$this->Synchro($oDataSource, $aReconciliationKeys, $aAttributesToUpdate, $oChange, $oStatLog);
+		$this->DBUpdate();
+
+		return $oStatLog;
+	}
+
 
 	/**
 	 * Updates the destination object with the Extended data found in the synchro_data_XXXX table
@@ -2681,11 +2786,114 @@ class SynchroReplica extends DBObject implements iDisplay
 	public function DisplayDetails(WebPage $oPage, $bEditMode = false)
 	{
 		// Object's details
-		//$this->DisplayBareHeader($oPage, $bEditMode);
+		$this->DisplayBareHeader($oPage, $bEditMode);
+
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$this->DisplayBareProperties($oPage, $bEditMode);
+	}
+	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
+	{
+		$oBlock = UIContentBlockUIBlockFactory::MakeStandard('title-for-replica', ['ibo-page-header--replica-title']);
+		$oPage->AddSubBlock($oBlock);
+
+		$sId = $this->GetKey();
+		$oTitle = TitleUIBlockFactory::MakeNeutral(Dict::S('Class:SynchroReplica'));
+		$oBlock->AddSubBlock($oTitle);
+		$oActionsToolbar = ToolbarUIBlockFactory::MakeForButton(MenuBlock::ACTIONS_TOOLBAR_ID_PREFIX.$sId);
+		$oActionsToolbar->AddCSSClass('ibo-panel--toolbar');
+		$oBlock->AddSubBlock($oActionsToolbar);
+
+		$sClass = get_class($this);
+		$sRootUrl = utils::GetAbsoluteUrlAppRoot();
+		$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($sClass);
+		$oAppContext = new ApplicationContext();
+		$sContext = $oAppContext->GetForLink();
+		if (utils::IsNotNullOrEmptyString($sContext)) {
+			$sContext = '&'.$sContext;
+		}
+
+		$aActions = [];
+		//Delete
+		if (UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE)) {
+			$aActions['UI:Menu:Delete'] = array(
+				'label' => Dict::S('UI:Menu:Delete'),
+				'url'   => "{$sRootUrl}pages/$sUIPage?operation=delete&class=$sClass&id=$sId{$sContext}",
+				'tooltip' => Dict::S('Class:SynchroReplica/Action:delete+'),
+			);
+		}
+
+		if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY)) {
+			if (count($aActions) > 0) {
+				$sSeparator = '<hr class="menu-separator"/>';
+				$aActions['sep_0'] = array('label' => $sSeparator, 'url' => '');
+			}
+			$sUrl = "{$sRootUrl}synchro/replica.php?operation=unlink&class=$sClass&id=$sId{$sContext}";
+			$aActions['Class:SynchroReplica/Action:unlink'] = [
+				'label'   => Dict::S('Class:SynchroReplica/Action:unlink'),
+				'url'     => $sUrl,
+				'tooltip' => Dict::S('Class:SynchroReplica/Action:unlink+'),
+			];
+
+			$sUrl = "{$sRootUrl}synchro/replica.php?operation=unlinksynchro&class=$sClass&id=$sId{$sContext}";
+			$aActions['Class:SynchroReplica/Action:unlinksynchro'] = [
+				'label'   => Dict::S('Class:SynchroReplica/Action:unlinksynchro'),
+				'url'     => $sUrl,
+				'tooltip' => Dict::S('Class:SynchroReplica/Action:unlinksynchro+'),
+			];
+
+			$sUrl = "{$sRootUrl}synchro/replica.php?operation=synchro&class=$sClass&id=$sId{$sContext}";
+			$aActions['Class:SynchroReplica/Action:synchro'] = [
+				'label'   => Dict::S('Class:SynchroReplica/Action:synchro'),
+				'url'     => $sUrl,
+				'tooltip' => Dict::S('Class:SynchroReplica/Action:synchro+'),
+			];
+
+			if ($this->Get('status_dest_creator') == 1) {
+				$sUrl = "{$sRootUrl}synchro/replica.php?operation=denydelete&class=$sClass&id=$sId{$sContext}";
+				$aActions['Class:SynchroReplica/Action:denydelete'] = [
+					'label'   => Dict::S('Class:SynchroReplica/Action:denydelete'),
+					'url'     => $sUrl,
+					'tooltip' => Dict::S('Class:SynchroReplica/Action:denydelete+'),
+				];
+			} else {
+				$sUrl = "{$sRootUrl}synchro/replica.php?operation=allowdelete&class=$sClass&id=$sId{$sContext}";
+				$aActions['Class:SynchroReplica/Action:allowdelete'] = [
+					'label'   => Dict::S('Class:SynchroReplica/Action:allowdelete'),
+					'url'     => $sUrl,
+					'tooltip' => Dict::S('Class:SynchroReplica/Action:allowdelete+'),
+				];
+			}
+		}
+		if (count($aActions) > 0) {
+			$sRegularActionsMenuTogglerId = "ibo-regular-actions-menu-toggler-{$sId}";
+			$sRegularActionsPopoverMenuId = "ibo-regular-actions-popover-{$sId}";
+
+			$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S('UI:Menu:Actions'), 'UI:Menu:Actions', '', false, $sRegularActionsMenuTogglerId)
+				->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
+
+			$oRegularActionsMenu = $oPage->GetPopoverMenu($sRegularActionsPopoverMenuId, $aActions)
+				->SetTogglerJSSelector("#$sRegularActionsMenuTogglerId")
+				->SetContainer(PopoverMenu::ENUM_CONTAINER_BODY);
+
+			$oActionsToolbar->AddSubBlock($oActionButton)
+				->AddSubBlock($oRegularActionsMenu);
+
+			$oActionButton = ButtonUIBlockFactory::MakeIconLink('fas fa-search', Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)), "{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '', 'UI:SearchFor_Class');
+			$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
+			$oActionsToolbar->AddSubBlock($oActionButton);
+		}
+
+		$sUrl = "{$sRootUrl}pages/$sUIPage?operation=display&class=$sClass&id=$sId{$sContext}";
+		$oActionButton = ButtonUIBlockFactory::MakeAlternativeNeutral('', 'UI:Button:Refresh');
+		$oActionButton->SetIconClass('fas fa-sync-alt')
+			->SetOnClickJsCode('window.location.href=\''.$sUrl.'\'')
+			->SetTooltip(Dict::S('UI:Button:Refresh'))
+			->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
+		$oActionsToolbar->AddSubBlock($oActionButton);
+
+		return $oBlock;
 	}
 
 	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = [])
