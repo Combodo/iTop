@@ -75,8 +75,8 @@ class BulkHelper
 		$oFullSetFilter->UpdateContextFromUser();
 		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
 		$sCancelUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&filter='.urlencode($sFilter).'&'.$oAppContext->GetForLink();
-		$aContext = array('filter' => utils::EscapeHtml($sFilter));
-		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, array(), $aContext);
+		$aContext = ['filter' => utils::EscapeHtml($sFilter)];
+		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, [], $aContext);
 	}
 
 	/**
@@ -103,16 +103,15 @@ class BulkHelper
 		$sClass = utils::ReadParam('class', '', false, 'class');
 		$bPreview = utils::ReadParam('preview_mode', '');
 		$sSelectedObj = utils::ReadParam('selectObj', '', false, 'raw_data');
-		if (empty($sClass) || empty($sSelectedObj)) // TO DO: check that the class name is valid !
-		{
+		if (empty($sClass) || empty($sSelectedObj)) { // TO DO: check that the class name is valid !
 			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObj'));
 		}
 		$aSelectedObj = explode(',', $sSelectedObj);
 		$sCancelUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&filter='.urlencode($sFilter).'&'.$oAppContext->GetForLink();
-		$aContext = array(
+		$aContext = [
 			'filter'    => utils::EscapeHtml($sFilter),
 			'selectObj' => $sSelectedObj,
-		);
+		];
 		cmdbAbstractObject::DoBulkModify($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $bPreview, $sCancelUrl, $aContext);
 	}
 

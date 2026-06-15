@@ -2388,7 +2388,6 @@ class SynchroReplica extends DBObject implements iDisplay
 		$oStatLog->AddTrace('<<< End of SynchroReplica::Synchro.', $this);
 	}
 
-
 	/**
 	 *
 	 * @return \SynchroLog
@@ -2412,11 +2411,11 @@ class SynchroReplica extends DBObject implements iDisplay
 		$oStatLog->AddTrace('Manual synchro');
 
 		// Get the list of SQL columns
-		$aAttCodesExpected = array();
-		$aAttCodesToReconcile = array();
-		$aAttCodesToUpdate = array();
+		$aAttCodesExpected = [];
+		$aAttCodesToReconcile = [];
+		$aAttCodesToUpdate = [];
 		$sSelectAtt = 'SELECT SynchroAttribute WHERE sync_source_id = :source_id AND (update = 1 OR reconcile = 1)';
-		$oSetAtt = new DBObjectSet(DBObjectSearch::FromOQL($sSelectAtt), array() /* order by*/, array('source_id' => $oDataSource->GetKey()) /* aArgs */);
+		$oSetAtt = new DBObjectSet(DBObjectSearch::FromOQL($sSelectAtt), [] /* order by*/, ['source_id' => $oDataSource->GetKey()] /* aArgs */);
 		while ($oSyncAtt = $oSetAtt->Fetch()) {
 			if ($oSyncAtt->Get('update')) {
 				$aAttCodesToUpdate[$oSyncAtt->Get('attcode')] = $oSyncAtt;
@@ -2433,7 +2432,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			$aReconciliationKeys = $aAttCodesToReconcile;
 		} elseif ($oDataSource->Get('reconciliation_policy') == 'use_primary_key') {
 			// Override the settings made at the attribute level !
-			$aReconciliationKeys = array('primary_key' => null);
+			$aReconciliationKeys = ['primary_key' => null];
 		}
 
 		if (count($aAttCodesToUpdate) == 0) {
@@ -2445,8 +2444,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			throw new SynchroExceptionNotStarted('No attribute for reconciliation');
 		}
 
-
-		$aAttributesToUpdate = array();
+		$aAttributesToUpdate = [];
 		foreach ($aAttCodesToUpdate as $sAttCode => $oSyncAtt) {
 			$oAttDef = MetaModel::GetAttributeDef($oDataSource->GetTargetClass(), $sAttCode);
 			if ($oAttDef->IsWritable()) {
@@ -2469,7 +2467,6 @@ class SynchroReplica extends DBObject implements iDisplay
 
 		return $oStatLog;
 	}
-
 
 	/**
 	 * Updates the destination object with the Extended data found in the synchro_data_XXXX table
@@ -2819,17 +2816,17 @@ class SynchroReplica extends DBObject implements iDisplay
 		$aActions = [];
 		//Delete
 		if (UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE)) {
-			$aActions['UI:Menu:Delete'] = array(
+			$aActions['UI:Menu:Delete'] = [
 				'label' => Dict::S('UI:Menu:Delete'),
 				'url'   => "{$sRootUrl}pages/$sUIPage?operation=delete&class=$sClass&id=$sId{$sContext}",
 				'tooltip' => Dict::S('Class:SynchroReplica/Action:delete+'),
-			);
+			];
 		}
 
 		if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY)) {
 			if (count($aActions) > 0) {
 				$sSeparator = '<hr class="menu-separator"/>';
-				$aActions['sep_0'] = array('label' => $sSeparator, 'url' => '');
+				$aActions['sep_0'] = ['label' => $sSeparator, 'url' => ''];
 			}
 			$sUrl = "{$sRootUrl}synchro/replica.php?operation=unlink&class=$sClass&id=$sId{$sContext}";
 			$aActions['Class:SynchroReplica/Action:unlink'] = [

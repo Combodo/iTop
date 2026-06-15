@@ -17,7 +17,6 @@ use utils;
 
 class SynchroReplicaHelper
 {
-
 	public static function OperationUnlinkAll(iTopWebPage $oP, ApplicationContext $oAppContext, $sOperation = 'unlink'): void
 	{
 		$oP->DisableBreadCrumb();
@@ -27,24 +26,23 @@ class SynchroReplicaHelper
 		// Add user filter
 		$oFullSetFilter->UpdateContextFromUser();
 		$aSelectObject = utils::ReadMultipleSelection($oFullSetFilter);
-		if (empty($sClass) || empty($aSelectObject)) // TO DO: check that the class name is valid !
-		{
+		if (empty($sClass) || empty($aSelectObject)) { // TO DO: check that the class name is valid !
 			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObject[]'));
 		}
 		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
 
-		$aHeaders = array(
-			'object' => array('label' => MetaModel::GetName($sClass), 'description' => Dict::S('UI:ModifiedObject')),
-			'status' => array(
+		$aHeaders = [
+			'object' => ['label' => MetaModel::GetName($sClass), 'description' => Dict::S('UI:ModifiedObject')],
+			'status' => [
 				'label'       => Dict::S('UI:BulkModifyStatus'),
 				'description' => Dict::S('UI:BulkModifyStatus+'),
-			),
-			'errors' => array(
+			],
+			'errors' => [
 				'label'       => Dict::S('UI:BulkModifyErrors'),
 				'description' => Dict::S('UI:BulkModifyErrors+'),
-			),
-		);
-		$aRows = array();
+			],
+		];
+		$aRows = [];
 
 		$sHeaderTitle = Dict::Format('UI:Modify_N_ObjectsOf_Class', count($aSelectObject), MetaModel::GetName($sClass));
 		$sClassIcon = MetaModel::GetClassIcon($sClass, false);
@@ -81,8 +79,7 @@ class SynchroReplicaHelper
 					$oReplica->Set('status_dest_creator', 0);
 					$oReplica->DBUpdate();
 				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				$bResult = false;
 				$aErrors[] = $e->getMessage();
 			}
@@ -92,11 +89,11 @@ class SynchroReplicaHelper
 			$aErrorsToDisplay = array_map(function ($sError) {
 				return utils::HtmlEntities($sError);
 			}, $aErrors);
-			$aRows[] = array(
+			$aRows[] = [
 				'object' => $oReplica->GetHyperlink(),
 				'status' => $sStatus,
 				'errors' => '<p>'.($bResult ? '' : implode('</p><p>', $aErrorsToDisplay)).'</p>',
-			);
+			];
 		}
 
 		set_time_limit(intval($iPreviousTimeLimit));
