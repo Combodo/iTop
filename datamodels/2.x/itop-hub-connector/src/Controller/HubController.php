@@ -208,7 +208,7 @@ class HubController
 			// Record the installation so that the "about box" knows about the installed modules
 			$sDataModelVersion = $oRuntimeEnv->GetCurrentDataModelVersion();
 
-			$oExtensionsMap = new iTopExtensionsMap();
+			$oExtensionsMap = iTopExtensionsMap::GetExtensionsMap();
 
 			// Default choices = as before
 			$oExtensionsMap->LoadChoicesFromDatabase($oConfig);

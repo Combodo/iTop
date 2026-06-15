@@ -99,7 +99,7 @@ class RunTimeEnvironment
 			// mark as (automatically) chosen all the "remote" modules present in the
 			// build environment (data/<build-env>-modules)
 			// The actual choices will be recorded by RecordInstallation below
-			$this->oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv, $aExtraDirs);
+			$this->oExtensionsMap = iTopExtensionsMap::GetExtensionsMap($this->sBuildEnv);
 			$this->oExtensionsMap->LoadChoicesFromDatabase($oSourceConfig);
 		}
 	}
@@ -190,7 +190,7 @@ class RunTimeEnvironment
 		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache, false, $this->sBuildEnv);
 
 		if ($this->oExtensionsMap === null) {
-			$this->oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv);
+			$this->oExtensionsMap = iTopExtensionsMap::GetExtensionsMap($this->sBuildEnv);
 		}
 	}
 
@@ -1471,7 +1471,7 @@ class RunTimeEnvironment
 			SetupUtils::tidydir($sBuildPath);
 		}
 
-		$oExtensionsMap = new iTopExtensionsMap($this->GetFinalEnv(), $aDirsToScan);
+		$oExtensionsMap = iTopExtensionsMap::GetExtensionsMap($this->GetFinalEnv());
 		// Removed modules are stored as static for FindModules()
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
@@ -1481,7 +1481,7 @@ class RunTimeEnvironment
 		$aNoCodeExtensionLabelsThatBreakSetup = [];
 		foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
 			if (in_array($oExtension->sCode, $aSelectedExtensionCodes)) {
-				$oExtension->bMarkedAsChosen = true;
+				$oExtension->MarkAsChosen();
 			}
 
 			if (empty($oExtension->sCode)) {
@@ -1493,7 +1493,7 @@ class RunTimeEnvironment
 					$aNoCodeExtensionSourceDirs [$sExtensionLabel] = $oExtension->sSourceDir;
 				}
 
-				if ($oExtension->bMarkedAsChosen) {
+				if ($oExtension->IsMarkedAsChosen()) {
 					$aNoCodeExtensionLabelsThatBreakSetup[] = $sExtensionLabel;
 					$bSetupFailure = true;
 				}
@@ -1700,9 +1700,9 @@ class RunTimeEnvironment
 		}
 
 		$aExtensionDirs = [];
-		$aFromSelectedExtensionModules=[];
+		$aFromSelectedExtensionModules = [];
 		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
-			if ($oExtension->bMarkedAsChosen && is_dir($oExtension->sSourceDir)) {
+			if ($oExtension->IsMarkedAsChosen() && is_dir($oExtension->sSourceDir)) {
 				$aExtensionDirs [] = $oExtension->sSourceDir;
 				$aFromSelectedExtensionModules = array_merge($aFromSelectedExtensionModules, $oExtension->aModules);
 			}
@@ -1718,8 +1718,8 @@ class RunTimeEnvironment
 			$aModulesToLoad[] = $sModuleName;
 		}
 
-		foreach ($aFromSelectedExtensionModules as $sModuleName){
-			if (! in_array($sModuleName, $aModulesToLoad)){
+		foreach ($aFromSelectedExtensionModules as $sModuleName) {
+			if (! in_array($sModuleName, $aModulesToLoad)) {
 				$aModulesToLoad[] = $sModuleName;
 			}
 		}

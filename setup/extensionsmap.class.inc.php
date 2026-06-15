@@ -14,6 +14,8 @@ require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
  */
 class iTopExtensionsMap
 {
+	private static array $aInstancesByEnvironment = [];
+
 	/**
 	 * The list of all discovered extensions
 	 *  @var array $aExtensions
@@ -35,20 +37,31 @@ class iTopExtensionsMap
 	/** @var bool $bHasXmlInstallationFile : false when legacy 1.x package with no installation.xml */
 	protected $bHasXmlInstallationFile = true;
 
-	//extension dirs apart from package
-	protected array $aExtraDirs = [];
+	/**
+	 * @throws \Exception
+	 */
+	public static function GetExtensionsMap(string $sFromEnvironment = ITOP_DEFAULT_ENV, ?string $sAppRootForTests = null): iTopExtensionsMap
+	{
+		if (!is_null($sAppRootForTests)) {
+			return new iTopExtensionsMap($sFromEnvironment, $sAppRootForTests);
+		}
+
+		if (!isset(self::$aInstancesByEnvironment[$sFromEnvironment])) {
+			self::$aInstancesByEnvironment[$sFromEnvironment] = new iTopExtensionsMap($sFromEnvironment);
+		}
+
+		return self::$aInstancesByEnvironment[$sFromEnvironment];
+	}
 
 	/**
 	 * The list of all discovered extensions
 	 *
 	 * @param string $sFromEnvironment The environment to scan
-	 * @param array $aExtraDirs extensions dir to scan
-	 * @param array $aExtraDirs extensions dir to scan
-	 *  @param string|null $sAppRootForTests
+	 * @param string|null $sAppRootForTests
 	 *
-	 * @return void
+	 * @throws \Exception
 	 */
-	public function __construct(string $sFromEnvironment = ITOP_DEFAULT_ENV, array $aExtraDirs = [], ?string $sAppRootForTests = null)
+	private function __construct(string $sFromEnvironment = ITOP_DEFAULT_ENV, ?string $sAppRootForTests = null)
 	{
 		$this->aExtensions = [];
 		$this->aExtensionsByCode = [];
@@ -56,18 +69,6 @@ class iTopExtensionsMap
 
 		$sAppRoot = $sAppRootForTests ?? APPROOT;
 		$this->ScanDisk($sFromEnvironment, $sAppRoot);
-
-		$this->aExtraDirs = $aExtraDirs;
-		if (is_dir($sAppRoot.'extensions')) {
-			$this->aExtraDirs [] = $sAppRoot.'extensions';
-		}
-		if (is_dir($sAppRoot.'data/'.$sFromEnvironment.'-modules')) {
-			$this->aExtraDirs [] = $sAppRoot.'data/'.$sFromEnvironment.'-modules';
-		}
-
-		foreach ($aExtraDirs as $sDir) {
-			$this->ReadDir($sDir, iTopExtension::SOURCE_REMOTE);
-		}
 		$this->CheckDependencies($sAppRoot);
 	}
 
@@ -536,7 +537,7 @@ class iTopExtensionsMap
 	public function GetAllExtensionsToDisplayInSetup(bool $bKeepExtensionsHavingMissingDependencies = false, bool $bRemoteExtensionsShouldBeMandatory = true): array
 	{
 		// all extensions are loaded at first screen when no installation xml: flat display
-		//otherwhile wizard screen displays choice screens along extension tree (cf installation.xml)
+		// otherwhile wizard screen displays choice screens along extension tree (cf installation.xml)
 		$aRes = [];
 		foreach ($this->GetAllExtensionsWithPreviouslyInstalled() as $oExtension) {
 			/** @var \iTopExtension $oExtension */
@@ -596,7 +597,7 @@ class iTopExtensionsMap
 	{
 		$oExtension = $this->GetFromExtensionCode($sExtensionCode);
 		if (!is_null($oExtension)) {
-			$oExtension->bMarkedAsChosen = $bMark;
+			$oExtension->MarkAsChosen($bMark);
 		}
 	}
 
@@ -609,7 +610,7 @@ class iTopExtensionsMap
 	{
 		$oExtension = $this->GetFromExtensionCode($sExtensionCode);
 		if (!is_null($oExtension)) {
-			return $oExtension->bMarkedAsChosen;
+			return $oExtension->IsMarkedAsChosen();
 		}
 
 		return false;
@@ -636,8 +637,9 @@ class iTopExtensionsMap
 	public function GetChoices()
 	{
 		$aResult = [];
+		/** @var \iTopExtension $oExtension */
 		foreach ($this->aExtensions as $oExtension) {
-			if ($oExtension->bMarkedAsChosen) {
+			if ($oExtension->IsMarkedAsChosen()) {
 				$aResult[] = $oExtension;
 			}
 		}
@@ -745,11 +747,6 @@ class iTopExtensionsMap
 		return array_merge($aDbChoices, $aAddedExtensions);
 	}
 
-	public function GetExtraDirs(): array
-	{
-		return $this->aExtraDirs;
-	}
-
 	/**
 	 * Tells if the given module name is "chosen" since it is part of a "chosen" extension (in the specified source dir)
 	 * @param string $sModuleNameToFind
@@ -759,12 +756,12 @@ class iTopExtensionsMap
 	public function ModuleIsChosenAsPartOfAnExtension($sModuleNameToFind, $sInSourceOnly = iTopExtension::SOURCE_REMOTE)
 	{
 		foreach ($this->GetAllExtensions() as $oExtension) {
-			if (/*($oExtension->sSource == $sInSourceOnly) &&*/
-				($oExtension->bMarkedAsChosen == true) &&
+			if ($oExtension->IsMarkedAsChosen() &&
 				(array_key_exists($sModuleNameToFind, $oExtension->aModuleVersion))) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 

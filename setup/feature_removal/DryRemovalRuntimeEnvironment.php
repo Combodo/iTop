@@ -3,7 +3,6 @@
 namespace Combodo\iTop\Setup\FeatureRemoval;
 
 use Config;
-use iTopExtensionsMap;
 use RunTimeEnvironment;
 use SetupUtils;
 
@@ -46,7 +45,7 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 
 		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
 			if (array_key_exists($oExtension->sCode, $this->aExtensionCodesToAddByCode)) {
-				$oExtension->bMarkedAsChosen = true;
+				$oExtension->MarkAsChosen();
 			}
 		}
 	}

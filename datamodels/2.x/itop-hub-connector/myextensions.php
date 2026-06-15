@@ -41,7 +41,7 @@ function GetExtensionInfoComponent(iTopExtension $oExtension): UIBlock
 }
 
 try {
-	$oExtensionsMap = new iTopExtensionsMap();
+	$oExtensionsMap = iTopExtensionsMap::GetExtensionsMap();
 	$oExtensionsMap->LoadChoicesFromDatabase(MetaModel::GetConfig());
 
 	$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('iTopHub:InstalledExtensions')));

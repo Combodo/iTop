@@ -19,7 +19,7 @@ class ExtensionsMapTest extends ItopTestCase
 
 	public function testGetAllExtensionsWithPreviouslyInstalledDoesNotCrash()
 	{
-		$oExtensionsMap = new iTopExtensionsMap();
+		$oExtensionsMap = iTopExtensionsMap::GetExtensionsMap();
 		$aExtensions = $oExtensionsMap->GetAllExtensionsWithPreviouslyInstalled();
 		$this->assertGreaterThan(0, count($aExtensions));
 	}
@@ -84,7 +84,7 @@ class ExtensionsMapTest extends ItopTestCase
 
 	private function GiveExtensionMapWithAllTypeOfExtensions(): iTopExtensionsMap
 	{
-		$oExtensionsMap = new iTopExtensionsMap();
+		$oExtensionsMap = iTopExtensionsMap::GetExtensionsMap();
 		$this->SetNonPublicProperty($oExtensionsMap, 'aInstalledExtensions', []);
 		$this->SetNonPublicProperty($oExtensionsMap, 'aExtensions', []);
 
@@ -153,7 +153,7 @@ class ExtensionsMapTest extends ItopTestCase
 
 	public function testiTopExtensionsMapInit()
 	{
-		$oiTopExtensionsMap = new iTopExtensionsMap(sAppRootForTests:__DIR__."/ressources");
+		$oiTopExtensionsMap = iTopExtensionsMap::GetExtensionsMap(sFromEnvironment: __DIR__."/ressources", sAppRootForTests: __DIR__."/ressources");
 
 		//file_put_contents(__DIR__.'/ressources/all_extensions_from_datamodels.json', json_encode($this->SerializeExtensionMap($oiTopExtensionsMap), JSON_PRETTY_PRINT));
 

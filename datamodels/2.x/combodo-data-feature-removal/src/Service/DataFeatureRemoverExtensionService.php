@@ -66,7 +66,7 @@ class DataFeatureRemoverExtensionService
 	public function GetExtensionMap(): iTopExtensionsMap
 	{
 		if (is_null($this->oMap)) {
-			$this->oMap = new iTopExtensionsMap();
+			$this->oMap = iTopExtensionsMap::GetExtensionsMap();
 			$this->oMap->LoadInstalledExtensionsFromDatabase(MetaModel::GetConfig());
 		}
 		return $this->oMap;

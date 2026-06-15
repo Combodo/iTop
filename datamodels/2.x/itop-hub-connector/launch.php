@@ -193,7 +193,7 @@ function collect_configuration()
 	}
 
 	// iTop Installation Options, i.e. "Extensions"
-	$oExtensionMap = new iTopExtensionsMap();
+	$oExtensionMap = iTopExtensionsMap::GetExtensionsMap();
 	$oExtensionMap->LoadChoicesFromDatabase($oConfig);
 	$aConfiguration['itop_extensions'] = [];
 	foreach ($oExtensionMap->GetChoices() as $oExtension) {

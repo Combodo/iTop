@@ -55,7 +55,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 	{
 		parent::__construct($oWizard, $sCurrentState);
 		$this->bChoicesFromDatabase = false;
-		$this->oExtensionsMap = new iTopExtensionsMap();
+		$this->oExtensionsMap = iTopExtensionsMap::GetExtensionsMap();
 		$sPreviousSourceDir = $this->oWizard->GetParameter('previous_version_dir', '');
 		$sConfigPath = null;
 		if (($sPreviousSourceDir !== '') && is_readable($sPreviousSourceDir.'/conf/'.ITOP_DEFAULT_ENV.'/config-itop.php')) {

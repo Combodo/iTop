@@ -163,7 +163,7 @@ final class CoreUpdater
 			$oRuntimeEnv->LoadData($aAvailableModules, false /* no sample data*/);
 			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, 'AfterDataLoad');
 			$sDataModelVersion = $oRuntimeEnv->GetCurrentDataModelVersion();
-			$oExtensionsMap = new iTopExtensionsMap();
+			$oExtensionsMap = iTopExtensionsMap::GetExtensionsMap();
 			// Default choices = as before
 			$oExtensionsMap->LoadChoicesFromDatabase($oConfig);
 			foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
