@@ -55,15 +55,15 @@ foreach ($aAddedExtensions as $sExtensionCode) {
 	}
 }
 
-$sRemovedExtensions = utils::ReadParam('removed_modules', '',false, 'raw');
+$sRemovedExtensions = utils::ReadParam('removed_modules', '', false, 'raw');
 $aRemovedExtensionsAndModules = [];
 if (mb_strlen($sRemovedExtensions) > 0) {
 	$aRemovedExtensionsAndModules = explode(',', $sRemovedExtensions);
 }
 
-$aSelectedModules = array_filter($aSelectedModules, fn($element) => !in_array($element, $aRemovedExtensionsAndModules));
-$aSelectedExtensions = array_filter($aSelectedExtensions, fn($element) => !in_array($element, $aRemovedExtensionsAndModules));
-$aRemovedExtensionsAndModules = array_filter($aRemovedExtensionsAndModules, fn($element) => !is_null($oExtensionMap->GetFromExtensionCode($element)));
+$aSelectedModules = array_filter($aSelectedModules, fn ($element) => !in_array($element, $aRemovedExtensionsAndModules));
+$aSelectedExtensions = array_filter($aSelectedExtensions, fn ($element) => !in_array($element, $aRemovedExtensionsAndModules));
+$aRemovedExtensionsAndModules = array_filter($aRemovedExtensionsAndModules, fn ($element) => !is_null($oExtensionMap->GetFromExtensionCode($element)));
 
 $aRemovedExtensions = array_combine($aRemovedExtensionsAndModules, $aRemovedExtensionsAndModules);
 $aAddedExtensions = array_combine($aAddedExtensions, $aAddedExtensions);
