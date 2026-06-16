@@ -1419,8 +1419,6 @@ class RunTimeEnvironment
 	 * @param array $aSelectedExtensionCodes
 	 * @param array $aRemovedExtensionCodes
 	 * @param array $aSelectedModules
-	 * @param string $sSourceDir
-	 * @param string $sExtensionDir
 	 * @param boolean $bUseSymbolicLinks
 	 *
 	 * @return void
@@ -1428,32 +1426,12 @@ class RunTimeEnvironment
 	 * @throws \CoreException
 	 *
 	 */
-	public function DoCompile(array $aSelectedExtensionCodes, array $aRemovedExtensionCodes, array $aSelectedModules, string $sSourceDir, string $sExtensionDir, bool $bUseSymbolicLinks = false): void
+	public function DoCompile(array $aSelectedExtensionCodes, array $aRemovedExtensionCodes, array $aSelectedModules, bool $bUseSymbolicLinks = false): void
 	{
 		SetupLog::Info('Compiling data model.');
 
 		$sEnvironment = $this->sBuildEnv;
 		$sBuildPath = $this->GetBuildDir();
-
-		$sSourcePath = APPROOT.$sSourceDir;
-		$aDirsToScan = [$sSourcePath];
-		$sExtensionsPath = APPROOT.$sExtensionDir;
-		if (is_dir($sExtensionsPath)) {
-			// if the extensions dir exists, scan it for additional modules as well
-			$aDirsToScan[] = $sExtensionsPath;
-		}
-		$sExtraPath = APPROOT.'/data/'.$sEnvironment.'-modules/';
-		if (is_dir($sExtraPath)) {
-			// if the extra dir exists, scan it for additional modules as well
-			$aDirsToScan[] = $sExtraPath;
-		}
-
-		if (!is_dir($sSourcePath)) {
-			$sErrorMessage = "Failed to find the source directory '$sSourcePath', please check the rights of the web server";
-			$e = new CoreException($sErrorMessage);
-			IssueLog::Exception($sErrorMessage, $e);
-			throw $e;
-		}
 
 		if (!is_dir($sBuildPath)) {
 			if (!mkdir($sBuildPath)) {
@@ -1511,7 +1489,7 @@ class RunTimeEnvironment
 			}
 		}
 
-		$oFactory = new ModelFactory($aDirsToScan);
+		$oFactory = new ModelFactory($oExtensionsMap->GetScannedModulesRootDirs());
 
 		$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
 		$oFactory->LoadModule($oDictModule);

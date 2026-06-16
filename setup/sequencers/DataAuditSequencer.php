@@ -74,8 +74,6 @@ class DataAuditSequencer extends StepSequencer
 						$aSelectedExtensionCodes,
 						$aRemovedExtensionCodes,
 						$aSelectedModules,
-						$sSourceDir,
-						$sExtensionDir,
 						$bUseSymbolicLinks
 					);
 					return $this->ComputeNextStep($sStep);

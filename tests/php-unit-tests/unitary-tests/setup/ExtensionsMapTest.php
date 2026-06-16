@@ -153,9 +153,7 @@ class ExtensionsMapTest extends ItopTestCase
 
 	public function testiTopExtensionsMapInit()
 	{
-		$oiTopExtensionsMap = iTopExtensionsMap::GetExtensionsMap(sFromEnvironment: __DIR__."/ressources", sAppRootForTests: __DIR__."/ressources");
-
-		//file_put_contents(__DIR__.'/ressources/all_extensions_from_datamodels.json', json_encode($this->SerializeExtensionMap($oiTopExtensionsMap), JSON_PRETTY_PRINT));
+		$oiTopExtensionsMap = iTopExtensionsMap::GetExtensionsMap(sAppRootForTests: __DIR__."/ressources/");
 
 		$sExpected = file_get_contents(__DIR__.'/ressources/all_extensions_from_datamodels.json');
 		$sExpected = str_replace('"sVersion": "ITOP_VERSION"', '"sVersion": "'.ITOP_VERSION.'"', $sExpected);
@@ -164,6 +162,19 @@ class ExtensionsMapTest extends ItopTestCase
 		$actual = json_encode($this->SerializeExtensionMap($oiTopExtensionsMap), JSON_PRETTY_PRINT);
 		$actual = preg_replace('/"module_file_path": .*/', '"module_file_path": ANYPATH', $actual);
 		$this->assertEquals($sExpected, $actual);
+	}
+
+	public function testGetScannedModulesRootDirs()
+	{
+		$sAppRootForTest = __DIR__."/resources2/";
+		$oiTopExtensionsMap = iTopExtensionsMap::GetExtensionsMap(sAppRootForTests: $sAppRootForTest);
+
+		$aExpectedDirs = [
+			"{$sAppRootForTest}datamodels/2.x",
+			"{$sAppRootForTest}extensions",
+			"{$sAppRootForTest}data/production-modules",
+		];
+		self::assertEquals($aExpectedDirs, $oiTopExtensionsMap->GetScannedModulesRootDirs());
 	}
 
 	public function SerializeExtensionMap(iTopExtensionsMap $oiTopExtensionsMap): array

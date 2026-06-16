@@ -32,7 +32,7 @@ class iTopExtensionsMap
 	 * The list of directories browsed using the ReadDir method when building the map
 	 * @var string[]
 	 */
-	protected $aScannedDirs;
+	protected array $aScannedDirs;
 
 	/** @var bool $bHasXmlInstallationFile : false when legacy 1.x package with no installation.xml */
 	protected $bHasXmlInstallationFile = true;
@@ -84,13 +84,15 @@ class iTopExtensionsMap
 		if (!$this->ReadInstallationWizard($sAppRoot.'/datamodels/2.x')) {
 			$this->bHasXmlInstallationFile = false;
 			//no installation xml found in 2.x: let's read all extensions in 2.x first
-			if (!$this->ReadDir($sAppRoot.'datamodels/2.x', iTopExtension::SOURCE_WIZARD)) {
+			if (!$this->ReadDir($sAppRoot.'datamodels/2.x', iTopExtension::SOURCE_WIZARD, bIsRootDir: true)) {
 				//nothing found in 2.x : fallback read in 1.x (flat structure)
-				$this->ReadDir($sAppRoot.'datamodels/1.x', iTopExtension::SOURCE_WIZARD);
+				$this->ReadDir($sAppRoot.'datamodels/1.x', iTopExtension::SOURCE_WIZARD, bIsRootDir: true);
 			}
+		} else {
+			$this->aScannedDirs[] = $sAppRoot.'datamodels/2.x';
 		}
-		$this->ReadDir($sAppRoot.'extensions', iTopExtension::SOURCE_MANUAL);
-		$this->ReadDir($sAppRoot.'data/'.$sEnvironment.'-modules', iTopExtension::SOURCE_REMOTE);
+		$this->ReadDir($sAppRoot.'extensions', iTopExtension::SOURCE_MANUAL, bIsRootDir: true);
+		$this->ReadDir($sAppRoot.'data/'.$sEnvironment.'-modules', iTopExtension::SOURCE_REMOTE, bIsRootDir: true);
 	}
 
 	/**
@@ -275,14 +277,14 @@ class iTopExtensionsMap
 	 *
 	 * @return boolean false if we cannot open dir
 	 */
-	protected function ReadDir($sSearchDir, $sSource, $sParentExtensionId = null)
+	protected function ReadDir($sSearchDir, $sSource, $sParentExtensionId = null, bool $bIsRootDir = false)
 	{
 		if (!is_readable($sSearchDir)) {
 			return false;
 		}
 		$hDir = opendir($sSearchDir);
 		if ($hDir !== false) {
-			if ($sParentExtensionId == null) {
+			if ($bIsRootDir) {
 				// We're not recursing, let's add the directory to the list of scanned dirs
 				$this->aScannedDirs[] = $sSearchDir;
 			}
@@ -479,16 +481,8 @@ class iTopExtensionsMap
 	 */
 	protected function CheckDependencies(string $sAppRoot)
 	{
-		$aSearchDirs = [];
-
-		if (is_dir($sAppRoot.'/datamodels/2.x')) {
-			$aSearchDirs[] = $sAppRoot.'/datamodels/2.x';
-		} elseif (is_dir($sAppRoot.'/datamodels/1.x')) {
-			$aSearchDirs[] = $sAppRoot.'/datamodels/1.x';
-		}
-		$aSearchDirs = array_merge($aSearchDirs, $this->aScannedDirs);
 		try {
-			ModuleDiscovery::GetModulesOrderedByDependencies($aSearchDirs, true);
+			ModuleDiscovery::GetModulesOrderedByDependencies($this->aScannedDirs, true);
 		} catch (MissingDependencyException $e) {
 			// Some modules have missing dependencies
 			// Let's check what is the impact at the "extensions" level
@@ -765,4 +759,8 @@ class iTopExtensionsMap
 		return false;
 	}
 
+	public function GetScannedModulesRootDirs(): array
+	{
+		return $this->aScannedDirs;
+	}
 }
