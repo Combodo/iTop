@@ -12,6 +12,9 @@ $sToken = SetupUtils::CreateSetupToken();
 function GetLastestInstallFile(): ?string
 {
 	$aFiles = glob(APPROOT.'/log/install-*.xml');
+	if ($aFiles === false) {
+		return null;
+	}
 	rsort($aFiles);
 	$iLatestCtime = 0;
 	$sLastFilePath = null;
@@ -36,14 +39,15 @@ $aParams = new XMLParameters($sPath);
 $aSelectedModules = $aParams->Get('selected_modules', []);
 $aSelectedExtensions = $aParams->Get('selected_extensions', []);
 
-$sAddedExtensions = utils::ReadParam('added_extensions', '');
+$sAddedExtensions = utils::ReadParam('added_extensions', '', false, 'raw');
 $aAddedExtensions = [];
 if (mb_strlen($sAddedExtensions) > 0) {
 	$aAddedExtensions = explode(',', $sAddedExtensions);
 }
 $oExtensionMap = new iTopExtensionsMap();
-foreach ($aAddedExtensions as $sExtensionCode) {
+foreach ($aAddedExtensions as $iIndex => $sExtensionCode) {
 	if (mb_strlen($sExtensionCode) <= 0) {
+		unset($aAddedExtensions[$iIndex]);
 		continue;
 	}
 	$oExtension = $oExtensionMap->GetFromExtensionCode($sExtensionCode);
@@ -69,8 +73,8 @@ $aRemovedExtensions = array_combine($aRemovedExtensionsAndModules, $aRemovedExte
 $aAddedExtensions = array_combine($aAddedExtensions, $aAddedExtensions);
 
 $aPostParams = [
-	"auth_user" => 'admin',
-	"auth_pwd" => 'admin',
+	'auth_user' => 'admin',
+	'auth_pwd' => 'admin',
 	'login_mode' => 'form',
 	'operation' => 'AnalysisResult',
 	'authent' => $sToken,
