@@ -1032,7 +1032,8 @@ class RunTimeEnvironment
 			@chmod($sFinalConfig, 0770); // In case it exists: RWX for owner and group, nothing for others
 			$this->CommitFile($sBuildConfig, $sFinalConfig);
 			@chmod($sFinalConfig, 0440); // Read-only for owner and group, nothing for others
-			@rmdir(dirname($sBuildConfig)); // Cleanup the temporary build dir if empty
+
+			SetupUtils::rrmdir(dirname($sBuildConfig)); // Cleanup the temporary build dir if empty
 
 			if (! isset($_SESSION)) {
 				//used in all UI setups (not unattended)
