@@ -13,10 +13,10 @@
   <target_env>production</target_env>
   <workspace_dir></workspace_dir>
   <database>
-    <server>localhost</server>
-    <user>iTop</user>
-    <pwd>blob99</pwd>
-    <name>configcomments</name>
+    <server></server>
+    <user></user>
+    <pwd></pwd>
+    <name></name>
     <db_tls_enabled></db_tls_enabled>
     <db_tls_ca></db_tls_ca>
     <prefix></prefix>
@@ -24,9 +24,9 @@
   <url></url>
   <graphviz_path>/usr/bin/dot</graphviz_path>
   <admin_account>
-    <user>admin</user>
-    <pwd>admin</pwd>
-    <language>FR FR</language>
+    <user></user>
+    <pwd></pwd>
+    <language></language>
   </admin_account>
   <language></language>
   <selected_modules type="array">
