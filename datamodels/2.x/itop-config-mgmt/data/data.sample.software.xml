@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<Software alias="Software" id="2">
-<name>MySql</name>
-<vendor>Oracle</vendor>
-<version>8</version>
-<type>DBServer</type>
-</Software>
-<Software alias="Software" id="1">
-<name>Oracle DB engine</name>
-<vendor>Oracle</vendor>
-<version>19c</version>
-<type>DBServer</type>
-</Software>
+  <Software alias="Software" id="2">
+    <name>MySql</name>
+    <vendor>Oracle</vendor>
+    <version>8</version>
+    <type>DBServer</type>
+  </Software>
+  <Software alias="Software" id="1">
+    <name>Oracle DB engine</name>
+    <vendor>Oracle</vendor>
+    <version>19c</version>
+    <type>DBServer</type>
+  </Software>
 </Set>

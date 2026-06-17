@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<SLA alias="SLA" id="4">
-<name>SLA Bronze</name>
-<description>Accord de niveaux de service bronze pour les services de criticité basse</description>
-<org_id>2</org_id>
-</SLA>
-<SLA alias="SLA" id="2">
-<name>SLA Gold</name>
-<description>Accord de niveaux de service gold pour les services de criticité haute</description>
-<org_id>2</org_id>
-</SLA>
-<SLA alias="SLA" id="3">
-<name>SLA Silver</name>
-<description>Accord de niveaux de service silver pour les services de criticité moyenne</description>
-<org_id>2</org_id>
-</SLA>
+  <SLA alias="SLA" id="4">
+    <name>SLA Bronze</name>
+    <description>Accord de niveaux de service bronze pour les services de criticité basse</description>
+    <org_id>2</org_id>
+  </SLA>
+  <SLA alias="SLA" id="2">
+    <name>SLA Gold</name>
+    <description>Accord de niveaux de service gold pour les services de criticité haute</description>
+    <org_id>2</org_id>
+  </SLA>
+  <SLA alias="SLA" id="3">
+    <name>SLA Silver</name>
+    <description>Accord de niveaux de service silver pour les services de criticité moyenne</description>
+    <org_id>2</org_id>
+  </SLA>
 </Set>

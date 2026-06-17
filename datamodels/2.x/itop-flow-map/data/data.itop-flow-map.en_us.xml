@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-    <DataFlowType alias="DataFlowType" id="1">
-        <name>HTTP</name>
-    </DataFlowType>
-    <DataFlowType alias="DataFlowType" id="2">
-        <name>HTTPS</name>
-    </DataFlowType>
-    <DataFlowType alias="DataFlowType" id="3">
-        <name>FTP</name>
-    </DataFlowType>
-    <DataFlowType alias="DataFlowType" id="4">
-        <name>SFTP</name>
-    </DataFlowType>
-    <DataFlowType alias="DataFlowType" id="5">
-        <name>AS2</name>
-    </DataFlowType>
-    <DataFlowType alias="DataFlowType" id="6">
-        <name>X.400</name>
-    </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="1">
+    <name>HTTP</name>
+  </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="2">
+    <name>HTTPS</name>
+  </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="3">
+    <name>FTP</name>
+  </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="4">
+    <name>SFTP</name>
+  </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="5">
+    <name>AS2</name>
+  </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="6">
+    <name>X.400</name>
+  </DataFlowType>
   <DataFlowType alias="DataFlowType" id="7">
     <name>FTPS</name>
   </DataFlowType>

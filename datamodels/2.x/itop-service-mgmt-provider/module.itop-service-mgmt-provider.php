@@ -26,27 +26,27 @@ SetupWebPage::AddModule(
 		// 'data/data.itop-contracttype.{{language_code}}.xml',
 		],
 		'data.sample' => [
-			'data/data.sample.organizations.xml',
-			//		'data/data.sample.contracts.xml',  // replaced by localized data
+			//		'data/data.sample.contracts.xml',  => replaced by localized data
 			'data/data.sample.customercontracts.en_us.xml',
 			'data/data.sample.providercontracts.xml',
-			//		'data/data.sample.servicefamilies.xml',  // replaced by localized data
+			//		'data/data.sample.servicefamilies.xml',  => replaced by localized data
 			'data/data.sample.servicefamilies.en_us.xml',
-			//		'data/data.sample.services.xml',  // replaced by localized data
+			//		'data/data.sample.services.xml',  =>  replaced by localized data
 			'data/data.sample.services.en_us.xml',
-			//		'data/data.sample.serviceelements.xml', // replaced by localized data
+			//		'data/data.sample.serviceelements.xml',  =>  replaced by localized data
 			'data/data.sample.serviceelements.en_us.xml',
 			'data/data.sample.contactservice.xml',
-			//		'data/data.sample.sla.xml', // replaced by localized data
+			//		'data/data.sample.sla.xml',  =>  replaced by localized data
 			'data/data.sample.sla.en_us.xml',
-			//		'data/data.sample.slt.xml', // replaced by localized data
+			//		'data/data.sample.slt.xml',  =>  replaced by localized data
 			'data/data.sample.slt.en_us.xml',
 			'data/data.sample.sltsla.xml',
-			//		'data/data.sample.contractservice.xml', // replaced by customercontractservice and providercontractservice files
+			//		'data/data.sample.contractservice.xml', => replaced by customercontractservice and providercontractservice files
 			'data/data.sample.customercontractservice.xml',
 			'data/data.sample.providercontractservice.xml',
 			'data/data.sample.deliverymodel.xml',
 			'data/data.sample.deliverymodelcontact.xml',
+			'data/data.sample.organizations.xml',
 		],
 
 		// Documentation
