@@ -31,8 +31,8 @@ SetupWebPage::AddModule(
 		],
 		'data.struct' => [
 			// add your 'structure' definition XML files here,
-			'data/en_us.data.itop-container-type.xml',
-			'data/en_us.data.itop-container-image-type.xml',
+			'data/data.itop-container-type.en_us.xml',
+			'data/data.itop-container-image-type.en_us.xml',
 		],
 		'data.sample' => [
 			// add your sample data XML files here,

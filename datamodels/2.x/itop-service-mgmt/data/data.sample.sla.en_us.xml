@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<SLA alias="SLA" id="4">
+<name>SLA Bronze</name>
+<description>Service level agreement bronze for service with low criticity</description>
+<org_id>2</org_id>
+</SLA>
+<SLA alias="SLA" id="2">
+<name>SLA Gold</name>
+<description>Service level agreement gold for service with high criticity</description>
+<org_id>2</org_id>
+</SLA>
+<SLA alias="SLA" id="3">
+<name>SLA Silver</name>
+<description>Service level agreement silver for service with medium criticity</description>
+<org_id>2</org_id>
+</SLA>
+</Set>

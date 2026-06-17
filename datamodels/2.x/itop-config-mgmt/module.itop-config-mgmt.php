@@ -25,10 +25,10 @@ SetupWebPage::AddModule(
 			'main.itop-config-mgmt.php',
 		],
 		'data.struct' => [
-			'data/en_us.data.itop-brand.xml',
-			'data/en_us.data.itop-networkdevicetype.xml',
-			'data/en_us.data.itop-osfamily.xml',
-			'data/en_us.data.itop-osversion.xml',
+			'data/data.itop-brand.xml',
+			'data/data.itop-networkdevicetype.xml',
+			'data/data.itop-osfamily.xml',
+			'data/data.itop-osversion.xml',
 		],
 		'data.sample' => [
 			'data/data.sample.model.xml',
@@ -42,6 +42,10 @@ SetupWebPage::AddModule(
 			'data/data.sample.webapp.xml',
 			'data/data.sample.applications.xml',
 			'data/data.sample.applicationsolutionci.xml',
+			'data/data.sample.auditdomain-cmdb.xml',
+			'data/data.sample.auditcategory-cmdb.xml',
+			'data/data.sample.auditcategory-auditdomain-cmdb.xml',
+			'data/data.sample.auditrule-cmdb.xml',
 		],
 
 		// Documentation

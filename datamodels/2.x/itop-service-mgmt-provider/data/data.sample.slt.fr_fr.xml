@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<SLT alias="SLT" id="5">
+<name>TTO incident priorité critique 1 heure</name>
+<priority>1</priority>
+<request_type>incident</request_type>
+<metric>tto</metric>
+<value>1</value>
+<unit>hours</unit>
+<friendlyname>TTO incident priorité critique 1 heure</friendlyname>
+</SLT>
+<SLT alias="SLT" id="3">
+<name>TTO incident priorité critique 15 minutes</name>
+<priority>1</priority>
+<request_type>incident</request_type>
+<metric>tto</metric>
+<value>15</value>
+<unit>minutes</unit>
+<friendlyname>TTO incident priorité critique 15 minutes</friendlyname>
+</SLT>
+<SLT alias="SLT" id="4">
+<name>TTO incident priorité critique 30 minutes</name>
+<priority>1</priority>
+<request_type>incident</request_type>
+<metric>tto</metric>
+<value>30</value>
+<unit>minutes</unit>
+<friendlyname>TTO incident priorité critique 30 minutes</friendlyname>
+</SLT>
+<SLT alias="SLT" id="7">
+<name>TTO incident priorité haute 1 heure</name>
+<priority>2</priority>
+<request_type>incident</request_type>
+<metric>tto</metric>
+<value>1</value>
+<unit>hours</unit>
+<friendlyname>TTO incident priorité haute 1 heure</friendlyname>
+</SLT>
+<SLT alias="SLT" id="8">
+<name>TTO incident priorité haute 2 heures</name>
+<priority>2</priority>
+<request_type>incident</request_type>
+<metric>tto</metric>
+<value>2</value>
+<unit>hours</unit>
+<friendlyname>TTO incident priorité haute 2 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="6">
+<name>TTO incident priorité haute 30 minutes</name>
+<priority>2</priority>
+<request_type>incident</request_type>
+<metric>tto</metric>
+<value>30</value>
+<unit>minutes</unit>
+<friendlyname>TTO incident priorité haute 30 minutes</friendlyname>
+</SLT>
+<SLT alias="SLT" id="12">
+<name>TTO incident priorité basse 2 heures</name>
+<priority>4</priority>
+<request_type>incident</request_type>
+<metric>tto</metric>
+<value>2</value>
+<unit>hours</unit>
+<friendlyname>TTO incident priorité basse 2 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="13">
+<name>TTO incident priorité basse 4 heures</name>
+<priority>4</priority>
+<request_type>incident</request_type>
+<metric>tto</metric>
+<value>4</value>
+<unit>hours</unit>
+<friendlyname>TTO incident priorité basse 4 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="14">
+<name>TTO incident priorité basse 8 heures</name>
+<priority>4</priority>
+<request_type>incident</request_type>
+<metric>tto</metric>
+<value>8</value>
+<unit>hours</unit>
+<friendlyname>TTO incident priorité basse 8 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="9">
+<name>TTO incident priorité moyenne 1 heure</name>
+<priority>3</priority>
+<request_type>incident</request_type>
+<metric>tto</metric>
+<value>1</value>
+<unit>hours</unit>
+<friendlyname>TTO incident priorité moyenne 1 heure</friendlyname>
+</SLT>
+<SLT alias="SLT" id="10">
+<name>TTO incident priorité moyenne 2 heures</name>
+<priority>3</priority>
+<request_type>incident</request_type>
+<metric>tto</metric>
+<value>2</value>
+<unit>hours</unit>
+<friendlyname>TTO incident priorité moyenne 2 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="11">
+<name>TTO incident priorité moyenne 4 heures</name>
+<priority>3</priority>
+<request_type>incident</request_type>
+<metric>tto</metric>
+<value>4</value>
+<unit>hours</unit>
+<friendlyname>TTO incident priorité moyenne 4 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="27">
+<name>TTO demande priorité critique 1 heure</name>
+<priority>1</priority>
+<request_type>service_request</request_type>
+<metric>tto</metric>
+<value>1</value>
+<unit>hours</unit>
+<friendlyname>TTO demande priorité critique 1 heure</friendlyname>
+</SLT>
+<SLT alias="SLT" id="28">
+<name>TTO demande priorité critique 2 heures</name>
+<priority>1</priority>
+<request_type>service_request</request_type>
+<metric>tto</metric>
+<value>2</value>
+<unit>hours</unit>
+<friendlyname>TTO demande priorité critique 2 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="29">
+<name>TTO demande priorité critique 4 heures</name>
+<priority>1</priority>
+<request_type>service_request</request_type>
+<metric>tto</metric>
+<value>4</value>
+<unit>hours</unit>
+<friendlyname>TTO demande priorité critique 4 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="30">
+<name>TTO demande priorité haute 2 heures</name>
+<priority>2</priority>
+<request_type>service_request</request_type>
+<metric>tto</metric>
+<value>2</value>
+<unit>hours</unit>
+<friendlyname>TTO demande priorité haute 2 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="31">
+<name>TTO demande priorité haute 4 heures</name>
+<priority>2</priority>
+<request_type>service_request</request_type>
+<metric>tto</metric>
+<value>4</value>
+<unit>hours</unit>
+<friendlyname>TTO demande priorité haute 4 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="32">
+<name>TTO demande priorité haute 8 heures</name>
+<priority>2</priority>
+<request_type>service_request</request_type>
+<metric>tto</metric>
+<value>8</value>
+<unit>hours</unit>
+<friendlyname>TTO demande priorité haute 8 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="37">
+<name>TTO demande priorité basse 16 heures</name>
+<priority>4</priority>
+<request_type>service_request</request_type>
+<metric>tto</metric>
+<value>16</value>
+<unit>hours</unit>
+<friendlyname>TTO demande priorité basse 16 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="38">
+<name>TTO demande priorité basse 32 heures</name>
+<priority>4</priority>
+<request_type>service_request</request_type>
+<metric>tto</metric>
+<value>32</value>
+<unit>hours</unit>
+<friendlyname>TTO demande priorité basse 32 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="36">
+<name>TTO demande priorité basse 8 heures</name>
+<priority>4</priority>
+<request_type>service_request</request_type>
+<metric>tto</metric>
+<value>8</value>
+<unit>hours</unit>
+<friendlyname>TTO demande priorité basse 8 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="35">
+<name>TTO demande priorité moyenne 16 heures</name>
+<priority>3</priority>
+<request_type>service_request</request_type>
+<metric>tto</metric>
+<value>16</value>
+<unit>hours</unit>
+<friendlyname>TTO demande priorité moyenne 16 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="33">
+<name>TTO demande priorité moyenne 4 heures</name>
+<priority>3</priority>
+<request_type>service_request</request_type>
+<metric>tto</metric>
+<value>4</value>
+<unit>hours</unit>
+<friendlyname>TTO demande priorité moyenne 4 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="34">
+<name>TTO demande priorité moyenne 8 heures</name>
+<priority>3</priority>
+<request_type>service_request</request_type>
+<metric>tto</metric>
+<value>8</value>
+<unit>hours</unit>
+<friendlyname>TTO demande priorité moyenne 8 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="15">
+<name>TTR incident priorité critique 1 heure</name>
+<priority>1</priority>
+<request_type>incident</request_type>
+<metric>ttr</metric>
+<value>1</value>
+<unit>hours</unit>
+<friendlyname>TTR incident priorité critique 1 heure</friendlyname>
+</SLT>
+<SLT alias="SLT" id="16">
+<name>TTR incident priorité critique 2 heures</name>
+<priority>1</priority>
+<request_type>incident</request_type>
+<metric>ttr</metric>
+<value>2</value>
+<unit>hours</unit>
+<friendlyname>TTR incident priorité critique 2 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="17">
+<name>TTR incident priorité critique 4 heures</name>
+<priority>1</priority>
+<request_type>incident</request_type>
+<metric>ttr</metric>
+<value>4</value>
+<unit>hours</unit>
+<friendlyname>TTR incident priorité critique 4 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="18">
+<name>TTR incident priorité haute 2 heures</name>
+<priority>2</priority>
+<request_type>incident</request_type>
+<metric>ttr</metric>
+<value>2</value>
+<unit>hours</unit>
+<friendlyname>TTR incident priorité haute 2 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="19">
+<name>TTR incident priorité haute 4 heures</name>
+<priority>2</priority>
+<request_type>incident</request_type>
+<metric>ttr</metric>
+<value>4</value>
+<unit>hours</unit>
+<friendlyname>TTR incident priorité haute 4 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="20">
+<name>TTR incident priorité haute 8 heures</name>
+<priority>2</priority>
+<request_type>incident</request_type>
+<metric>ttr</metric>
+<value>8</value>
+<unit>hours</unit>
+<friendlyname>TTR incident priorité haute 8 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="25">
+<name>TTR incident priorité basse 16 heures</name>
+<priority>4</priority>
+<request_type>incident</request_type>
+<metric>ttr</metric>
+<value>16</value>
+<unit>hours</unit>
+<friendlyname>TTR incident priorité basse 16 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="26">
+<name>TTR incident priorité basse 32 heures</name>
+<priority>4</priority>
+<request_type>incident</request_type>
+<metric>ttr</metric>
+<value>32</value>
+<unit>hours</unit>
+<friendlyname>TTR incident priorité basse 32 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="24">
+<name>TTR incident priorité basse 8 heures</name>
+<priority>4</priority>
+<request_type>incident</request_type>
+<metric>ttr</metric>
+<value>8</value>
+<unit>hours</unit>
+<friendlyname>TTR incident priorité basse 8 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="23">
+<name>TTR incident priorité moyenne 16 heures</name>
+<priority>3</priority>
+<request_type>incident</request_type>
+<metric>ttr</metric>
+<value>16</value>
+<unit>hours</unit>
+<friendlyname>TTR incident priorité moyenne 16 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="21">
+<name>TTR incident priorité moyenne 4 heures</name>
+<priority>3</priority>
+<request_type>incident</request_type>
+<metric>ttr</metric>
+<value>4</value>
+<unit>hours</unit>
+<friendlyname>TTR incident priorité moyenne 4 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="22">
+<name>TTR incident priorité moyenne 8 heures</name>
+<priority>3</priority>
+<request_type>incident</request_type>
+<metric>ttr</metric>
+<value>8</value>
+<unit>hours</unit>
+<friendlyname>TTR incident priorité moyenne 8 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="41">
+<name>TTR demande priorité critique 16 heures</name>
+<priority>1</priority>
+<request_type>service_request</request_type>
+<metric>ttr</metric>
+<value>16</value>
+<unit>hours</unit>
+<friendlyname>TTR demande priorité critique 16 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="39">
+<name>TTR demande priorité critique 4 heures</name>
+<priority>1</priority>
+<request_type>service_request</request_type>
+<metric>ttr</metric>
+<value>4</value>
+<unit>hours</unit>
+<friendlyname>TTR demande priorité critique 4 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="40">
+<name>TTR demande priorité critique 8 heures</name>
+<priority>1</priority>
+<request_type>service_request</request_type>
+<metric>ttr</metric>
+<value>8</value>
+<unit>hours</unit>
+<friendlyname>TTR demande priorité critique 8 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="43">
+<name>TTR demande priorité haute 16 heures</name>
+<priority>2</priority>
+<request_type>service_request</request_type>
+<metric>ttr</metric>
+<value>16</value>
+<unit>hours</unit>
+<friendlyname>TTR demande priorité haute 16 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="44">
+<name>TTR demande priorité haute 32 heures</name>
+<priority>2</priority>
+<request_type>service_request</request_type>
+<metric>ttr</metric>
+<value>32</value>
+<unit>hours</unit>
+<friendlyname>TTR demande priorité haute 32 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="42">
+<name>TTR demande priorité haute 8 heures</name>
+<priority>2</priority>
+<request_type>service_request</request_type>
+<metric>ttr</metric>
+<value>8</value>
+<unit>hours</unit>
+<friendlyname>TTR demande priorité haute 8 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="50">
+<name>TTR demande priorité basse 128 heures</name>
+<priority>4</priority>
+<request_type>service_request</request_type>
+<metric>ttr</metric>
+<value>128</value>
+<unit>hours</unit>
+<friendlyname>TTR demande priorité basse 128 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="48">
+<name>TTR demande priorité basse 32 heures</name>
+<priority>4</priority>
+<request_type>service_request</request_type>
+<metric>ttr</metric>
+<value>32</value>
+<unit>hours</unit>
+<friendlyname>TTR demande priorité basse 32 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="49">
+<name>TTR demande priorité basse 64 heures</name>
+<priority>4</priority>
+<request_type>service_request</request_type>
+<metric>ttr</metric>
+<value>64</value>
+<unit>hours</unit>
+<friendlyname>TTR demande priorité basse 64 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="45">
+<name>TTR demande priorité moyenne 16 heures</name>
+<priority>3</priority>
+<request_type>service_request</request_type>
+<metric>ttr</metric>
+<value>16</value>
+<unit>hours</unit>
+<friendlyname>TTR demande priorité moyenne 16 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="46">
+<name>TTR demande priorité moyenne 32 heures</name>
+<priority>3</priority>
+<request_type>service_request</request_type>
+<metric>ttr</metric>
+<value>32</value>
+<unit>hours</unit>
+<friendlyname>TTR demande priorité moyenne 32 heures</friendlyname>
+</SLT>
+<SLT alias="SLT" id="47">
+<name>TTR demande priorité moyenne 64 heures</name>
+<priority>3</priority>
+<request_type>service_request</request_type>
+<metric>ttr</metric>
+<value>64</value>
+<unit>hours</unit>
+<friendlyname>TTR demande priorité moyenne 64 heures</friendlyname>
+</SLT>
+</Set>

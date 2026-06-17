@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<AuditRule alias="AuditRule" id="7">
+<name>Active persons with no email</name>
+<description>Active persons with no email</description>
+<query>SELECT Person WHERE email= &apos;&apos;</query>
+<valid_flag>false</valid_flag>
+<category_id>3</category_id>
+<contact_id>3</contact_id>
+<process>&lt;p&gt;Add an email address for each person&lt;/p&gt;</process>
+</AuditRule>
+<AuditRule alias="AuditRule" id="8">
+<name>Active teams with no members</name>
+<description>Active teams with no members</description>
+<query>SELECT Team AS t JOIN lnkPersonToTeam AS l ON l.team_id=t.id</query>
+<valid_flag>true</valid_flag>
+<category_id>4</category_id>
+<contact_id>4</contact_id>
+<process>&lt;p&gt;Add at least on member in each team&lt;/p&gt;</process>
+</AuditRule>
+<AuditRule alias="AuditRule" id="5">
+<name>Physical device in production without any site</name>
+<description>All physical device in production not in a site</description>
+<query>SELECT PhysicalDevice WHERE location_id = 0</query>
+<valid_flag>false</valid_flag>
+<category_id>1</category_id>
+<contact_id>26</contact_id>
+<process>&lt;p&gt;&lt;span style=&quot;background-color:rgb(255,255,255);color:rgb(64,75,90)&quot;&gt;&lt;span style=&apos;float:none;font-family:Raleway, &quot;sans-serif&quot;, &quot;system-ui&quot;;font-size:14.04px;font-style:normal;text-align:start;white-space:normal&apos;&gt;Identify for each physical device the location where it is hosted.&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</process>
+</AuditRule>
+<AuditRule alias="AuditRule" id="1">
+<name>Physical device in production without provider contract</name>
+<description>All physical device in production not linked to a provider contract</description>
+<query>SELECT PhysicalDevice AS Ci JOIN lnkFunctionalCIToProviderContract AS lnk ON lnk.functionalci_id = Ci.id</query>
+<valid_flag>true</valid_flag>
+<category_id>1</category_id>
+<contact_id>26</contact_id>
+<process>&lt;p&gt;&lt;span style=&quot;background-color:rgb(255,255,255);color:rgb(64,75,90)&quot;&gt;&lt;span style=&apos;float:none;font-family:Raleway, &quot;sans-serif&quot;, &quot;system-ui&quot;;font-size:14.04px;font-style:normal;text-align:start;white-space:normal&apos;&gt;Identify a provider contract for each physical device&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</process>
+</AuditRule>
+<AuditRule alias="AuditRule" id="3">
+<name>Physical device in production without serial number</name>
+<description>All physical device in production without serial number</description>
+<query>SELECT PhysicalDevice WHERE serialnumber=&apos;&apos;</query>
+<valid_flag>false</valid_flag>
+<category_id>1</category_id>
+<contact_id>26</contact_id>
+<process>&lt;p&gt;Add serial number for each physical device&lt;/p&gt;</process>
+</AuditRule>
+<AuditRule alias="AuditRule" id="6">
+<name>Physical device not in production without any site</name>
+<description>All physical device not in production not in a site</description>
+<query>SELECT PhysicalDevice WHERE location_id = 0</query>
+<valid_flag>false</valid_flag>
+<category_id>2</category_id>
+<contact_id>26</contact_id>
+<process>&lt;p&gt;&lt;span style=&quot;background-color:rgb(255,255,255);color:rgb(64,75,90)&quot;&gt;&lt;span style=&apos;float:none;font-family:Raleway, &quot;sans-serif&quot;, &quot;system-ui&quot;;font-size:14.04px;font-style:normal;text-align:start;white-space:normal&apos;&gt;Identify for each physical device the location where it is hosted.&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</process>
+</AuditRule>
+<AuditRule alias="AuditRule" id="2">
+<name>Physical device not in production without provider contract</name>
+<description>All physical device not in production not linked to a provider contract</description>
+<query>SELECT PhysicalDevice AS Ci JOIN lnkFunctionalCIToProviderContract AS lnk ON lnk.functionalci_id = Ci.id</query>
+<valid_flag>true</valid_flag>
+<category_id>2</category_id>
+<contact_id>26</contact_id>
+<process>&lt;p&gt;&lt;span style=&quot;background-color:rgb(255,255,255);color:rgb(64,75,90)&quot;&gt;&lt;span style=&apos;float:none;font-family:Raleway, &quot;sans-serif&quot;, &quot;system-ui&quot;;font-size:14.04px;font-style:normal;text-align:start;white-space:normal&apos;&gt;Identify a provider contract for each physical device&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</process>
+</AuditRule>
+<AuditRule alias="AuditRule" id="4">
+<name>Physical device not in production without serial number</name>
+<description>All physical device not in production without serial number</description>
+<query>SELECT PhysicalDevice WHERE serialnumber=&apos;&apos;</query>
+<valid_flag>false</valid_flag>
+<category_id>2</category_id>
+<contact_id>26</contact_id>
+<process>&lt;p&gt;Add serial number for each physical device&lt;/p&gt;</process>
+</AuditRule>
+</Set>
