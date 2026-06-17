@@ -1602,7 +1602,7 @@ JS
 		}
 		$oProductionEnv = new RunTimeEnvironment($oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV));
 		$aRemovedExtensionCodes = json_decode($oWizard->GetParameter('removed_extensions'), true) ?? [];
-		$oExtensionsMap = new iTopExtensionsMap($oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV), $aDirsToScan);
+		$oExtensionsMap = iTopExtensionsMap::GetExtensionsMap($oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV));
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aDirsToScan, $bAbortOnMissingDependency, $aModulesToLoad);

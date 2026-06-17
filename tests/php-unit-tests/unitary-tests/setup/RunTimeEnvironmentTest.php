@@ -9,30 +9,15 @@ use RunTimeEnvironment;
 
 class RunTimeEnvironmentTest extends ItopTestCase
 {
-	private ?string $sFixtureRootDir = null;
-	private ?string $sBuildDirToCleanup = null;
-
 	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->RequireOnceItopFile('/setup/runtimeenv.class.inc.php');
 	}
 
-	protected function tearDown(): void
-	{
-		if (($this->sFixtureRootDir !== null) && is_dir($this->sFixtureRootDir)) {
-			self::RecurseRmdir($this->sFixtureRootDir);
-		}
-		if (($this->sBuildDirToCleanup !== null) && is_dir($this->sBuildDirToCleanup)) {
-			self::RecurseRmdir($this->sBuildDirToCleanup);
-		}
-
-		parent::tearDown();
-	}
-
 	public function testDoCompileDoesNotThrowWhenUnselectedExtensionCodeIsMissing(): void
 	{
-		[$sToken, $sSourceDirRelative, $sExtensionsDirRelative] = $this->CreateFixtureContext('runtimeenv-missing-code-');
+		[$sEnvironment, $sExtensionsDirRelative] = $this->CreateFixtureContext('env-missing-code-');
 
 		$sInvalidExtensionXml = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -41,20 +26,20 @@ class RunTimeEnvironmentTest extends ItopTestCase
 	<description>Test extension without code</description>
 	<version>1.0.0</version>
 	<mandatory>false</mandatory>
-	<more_info_url></more_info_url>
+	<more_info_url/>
 </extension>
 XML;
 		file_put_contents(APPROOT.$sExtensionsDirRelative.'/extension.xml', $sInvalidExtensionXml);
-		$oRunTimeEnvironment = $this->CreateRunTimeEnvironment($sToken);
+		$oRunTimeEnvironment = $this->CreateRunTimeEnvironment($sEnvironment);
 
 		//early DOMFormatException to avoid any real compilation
 		$this->expectException(DOMFormatException::class);
-		$oRunTimeEnvironment->DoCompile([], [], [], $sSourceDirRelative, $sExtensionsDirRelative);
+		$oRunTimeEnvironment->DoCompile([], [], []);
 	}
 
 	public function testDoCompileThrowsWhenSelectedExtensionCodeIsMissing(): void
 	{
-		[$sToken, $sSourceDirRelative, $sExtensionsDirRelative] = $this->CreateFixtureContext('runtimeenv-missing-code-');
+		[$sEnvironment, $sExtensionsDirRelative] = $this->CreateFixtureContext('env-missing-code-');
 
 		$sInvalidExtensionXml = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -63,21 +48,21 @@ XML;
 	<description>Test extension without code</description>
 	<version>1.0.0</version>
 	<mandatory>false</mandatory>
-	<more_info_url></more_info_url>
+	<more_info_url/>
 </extension>
 XML;
 		file_put_contents(APPROOT.$sExtensionsDirRelative.'/extension.xml', $sInvalidExtensionXml);
-		$oRunTimeEnvironment = $this->CreateRunTimeEnvironment($sToken);
+		$oRunTimeEnvironment = $this->CreateRunTimeEnvironment($sEnvironment);
 
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage("Selected extension(s) cannot be installed: Missing extension code (Broken extension)");
 
-		$oRunTimeEnvironment->DoCompile([""], [], [], $sSourceDirRelative, $sExtensionsDirRelative);
+		$oRunTimeEnvironment->DoCompile([""], [], []);
 	}
 
 	public function testDoCompileThrowsWhenSelectedExtensionCodeAndLabelAreMissing(): void
 	{
-		[$sToken, $sSourceDirRelative, $sExtensionsDirRelative] = $this->CreateFixtureContext('runtimeenv-missing-label-');
+		[$sEnvironment, $sExtensionsDirRelative] = $this->CreateFixtureContext('env-missing-label-');
 
 		$sInvalidExtensionXml = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -85,36 +70,34 @@ XML;
 	<description>Test extension without code and label</description>
 	<version>1.0.0</version>
 	<mandatory>false</mandatory>
-	<more_info_url></more_info_url>
+	<more_info_url/>
 </extension>
 XML;
 		$sExtensionsDirAbsolute = APPROOT.$sExtensionsDirRelative;
 		file_put_contents($sExtensionsDirAbsolute.'/extension.xml', $sInvalidExtensionXml);
-		$oRunTimeEnvironment = $this->CreateRunTimeEnvironment($sToken);
+		$oRunTimeEnvironment = $this->CreateRunTimeEnvironment($sEnvironment);
 
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage("Selected extension(s) cannot be installed: Missing extension code ($sExtensionsDirAbsolute)");
 
-		$oRunTimeEnvironment->DoCompile([""], [], [], $sSourceDirRelative, $sExtensionsDirRelative, false);
+		$oRunTimeEnvironment->DoCompile([""], [], [], false);
 	}
 
-	private function CreateFixtureContext(string $sTokenPrefix): array
+	private function CreateFixtureContext(string $sEnvPrefix): array
 	{
-		$sToken = str_replace('.', '-', uniqid($sTokenPrefix, true));
-		$this->sFixtureRootDir = APPROOT.'data/'.$sToken;
-		$sSourceDirRelative = 'data/'.$sToken.'/source';
-		$sExtensionsDirRelative = 'data/'.$sToken.'/extensions';
+		$sEnvironment = str_replace('.', '-', uniqid($sEnvPrefix, true));
+		$sExtensionsDirRelative = 'data/'.$sEnvironment.'-modules';
 
-		mkdir(APPROOT.$sSourceDirRelative, 0777, true);
 		mkdir(APPROOT.$sExtensionsDirRelative, 0777, true);
+		$this->aFileToClean[] = APPROOT.$sExtensionsDirRelative;
 
-		return [$sToken, $sSourceDirRelative, $sExtensionsDirRelative];
+		return [$sEnvironment, $sExtensionsDirRelative];
 	}
 
-	private function CreateRunTimeEnvironment(string $sToken): RunTimeEnvironment
+	private function CreateRunTimeEnvironment(string $sEnvironment): RunTimeEnvironment
 	{
-		$oRunTimeEnvironment = new RunTimeEnvironment('test-'.$sToken, false);
-		$this->sBuildDirToCleanup = $oRunTimeEnvironment->GetBuildDir();
+		$oRunTimeEnvironment = new RunTimeEnvironment($sEnvironment, false);
+		$this->aFileToClean[] = $oRunTimeEnvironment->GetBuildDir();
 
 		return $oRunTimeEnvironment;
 	}

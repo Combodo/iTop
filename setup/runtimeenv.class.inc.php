@@ -71,15 +71,37 @@ class RunTimeEnvironment
 		return $this->oExtensionsMap;
 	}
 
-	public function InitExtensionMap($aExtraDirs, $oSourceConfig)
+	protected function GetDirsToCompile(string $sSourceDir, string $sSourceEnv): array
 	{
-		// Actually read the modules available for the build environment,
-		// but get the selection from the source environment and finally
-		// mark as (automatically) chosen all the "remote" modules present in the
-		// build environment (data/<build-env>-modules)
-		// The actual choices will be recorded by RecordInstallation below
-		$this->oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv, $aExtraDirs);
-		$this->oExtensionsMap->LoadChoicesFromDatabase($oSourceConfig);
+		$sSourceDirFull = APPROOT.$sSourceDir;
+		if (!is_dir($sSourceDirFull)) {
+			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
+		}
+		$aDirsToCompile = [$sSourceDirFull];
+		if (is_dir(APPROOT.'extensions')) {
+			$aDirsToCompile[] = APPROOT.'extensions';
+		}
+		$sExtraDir = utils::GetDataPath().$this->sBuildEnv.'-modules/';
+		if (is_dir($sExtraDir)) {
+			$aDirsToCompile[] = $sExtraDir;
+		}
+
+		$aExtraDirs = $this->GetExtraDirsToScan($aDirsToCompile);
+		$aDirsToCompile = array_merge($aDirsToCompile, $aExtraDirs);
+		return [$aExtraDirs, $aDirsToCompile];
+	}
+
+	public function InitExtensionMap(array $aExtraDirs, Config $oSourceConfig)
+	{
+		if (is_null($this->oExtensionsMap)) {
+			// Actually read the modules available for the build environment,
+			// but get the selection from the source environment and finally
+			// mark as (automatically) chosen all the "remote" modules present in the
+			// build environment (data/<build-env>-modules)
+			// The actual choices will be recorded by RecordInstallation below
+			$this->oExtensionsMap = iTopExtensionsMap::GetExtensionsMap($this->sBuildEnv);
+			$this->oExtensionsMap->LoadChoicesFromDatabase($oSourceConfig);
+		}
 	}
 
 	/**
@@ -168,7 +190,7 @@ class RunTimeEnvironment
 		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache, false, $this->sBuildEnv);
 
 		if ($this->oExtensionsMap === null) {
-			$this->oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv);
+			$this->oExtensionsMap = iTopExtensionsMap::GetExtensionsMap($this->sBuildEnv);
 		}
 	}
 
@@ -444,32 +466,12 @@ class RunTimeEnvironment
 
 	/**
 	 * Get the installed modules (only the installed ones)
+	 * @return \MFModule[]
 	 */
-	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir)
+	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir): array
 	{
-		$sSourceDirFull = APPROOT.$sSourceDir;
-		if (!is_dir($sSourceDirFull)) {
-			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
-		}
-		$aDirsToCompile = [$sSourceDirFull];
-		if (is_dir(APPROOT.'extensions')) {
-			$aDirsToCompile[] = APPROOT.'extensions';
-		}
-		$sExtraDir = utils::GetDataPath().$this->sBuildEnv.'-modules/';
-		if (is_dir($sExtraDir)) {
-			$aDirsToCompile[] = $sExtraDir;
-		}
-
-		$aExtraDirs = $this->GetExtraDirsToScan($aDirsToCompile);
-		$aDirsToCompile = array_merge($aDirsToCompile, $aExtraDirs);
-
+		list($aExtraDirs, $aDirsToCompile) = $this->GetDirsToCompile($sSourceDir, $sSourceEnv);
 		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
-
-		// Actually read the modules available for the build environment,
-		// but get the selection from the source environment and finally
-		// mark as (automatically) chosen all the "remote" modules present in the
-		// build environment (data/<build-env>-modules)
-		// The actual choices will be recorded by RecordInstallation below
 		$this->InitExtensionMap($aExtraDirs, $oSourceConfig);
 		$this->GetExtensionMap()->LoadChoicesFromDatabase($oSourceConfig);
 		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
@@ -477,12 +479,10 @@ class RunTimeEnvironment
 				$this->GetExtensionMap()->MarkAsChosen($oExtension->sCode);
 			}
 		}
-
 		$aModulesToLoad = $this->GetModulesToLoad($this->sFinalEnv, $aDirsToCompile);
 		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile, true, $aModulesToLoad);
 
 		// Do load the required modules
-		//
 		$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
 
 		$aRet = [];
@@ -1419,8 +1419,6 @@ class RunTimeEnvironment
 	 * @param array $aSelectedExtensionCodes
 	 * @param array $aRemovedExtensionCodes
 	 * @param array $aSelectedModules
-	 * @param string $sSourceDir
-	 * @param string $sExtensionDir
 	 * @param boolean $bUseSymbolicLinks
 	 *
 	 * @return void
@@ -1428,32 +1426,12 @@ class RunTimeEnvironment
 	 * @throws \CoreException
 	 *
 	 */
-	public function DoCompile(array $aSelectedExtensionCodes, array $aRemovedExtensionCodes, array $aSelectedModules, string $sSourceDir, string $sExtensionDir, bool $bUseSymbolicLinks = false): void
+	public function DoCompile(array $aSelectedExtensionCodes, array $aRemovedExtensionCodes, array $aSelectedModules, bool $bUseSymbolicLinks = false): void
 	{
 		SetupLog::Info('Compiling data model.');
 
 		$sEnvironment = $this->sBuildEnv;
 		$sBuildPath = $this->GetBuildDir();
-
-		$sSourcePath = APPROOT.$sSourceDir;
-		$aDirsToScan = [$sSourcePath];
-		$sExtensionsPath = APPROOT.$sExtensionDir;
-		if (is_dir($sExtensionsPath)) {
-			// if the extensions dir exists, scan it for additional modules as well
-			$aDirsToScan[] = $sExtensionsPath;
-		}
-		$sExtraPath = APPROOT.'/data/'.$sEnvironment.'-modules/';
-		if (is_dir($sExtraPath)) {
-			// if the extra dir exists, scan it for additional modules as well
-			$aDirsToScan[] = $sExtraPath;
-		}
-
-		if (!is_dir($sSourcePath)) {
-			$sErrorMessage = "Failed to find the source directory '$sSourcePath', please check the rights of the web server";
-			$e = new CoreException($sErrorMessage);
-			IssueLog::Exception($sErrorMessage, $e);
-			throw $e;
-		}
 
 		if (!is_dir($sBuildPath)) {
 			if (!mkdir($sBuildPath)) {
@@ -1471,7 +1449,7 @@ class RunTimeEnvironment
 			SetupUtils::tidydir($sBuildPath);
 		}
 
-		$oExtensionsMap = new iTopExtensionsMap($this->GetFinalEnv(), $aDirsToScan);
+		$oExtensionsMap = iTopExtensionsMap::GetExtensionsMap($this->GetFinalEnv());
 		// Removed modules are stored as static for FindModules()
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
@@ -1481,7 +1459,7 @@ class RunTimeEnvironment
 		$aNoCodeExtensionLabelsThatBreakSetup = [];
 		foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
 			if (in_array($oExtension->sCode, $aSelectedExtensionCodes)) {
-				$oExtension->bMarkedAsChosen = true;
+				$oExtension->MarkAsChosen();
 			}
 
 			if (empty($oExtension->sCode)) {
@@ -1493,7 +1471,7 @@ class RunTimeEnvironment
 					$aNoCodeExtensionSourceDirs [$sExtensionLabel] = $oExtension->sSourceDir;
 				}
 
-				if ($oExtension->bMarkedAsChosen) {
+				if ($oExtension->IsMarkedAsChosen()) {
 					$aNoCodeExtensionLabelsThatBreakSetup[] = $sExtensionLabel;
 					$bSetupFailure = true;
 				}
@@ -1511,7 +1489,7 @@ class RunTimeEnvironment
 			}
 		}
 
-		$oFactory = new ModelFactory($aDirsToScan);
+		$oFactory = new ModelFactory($oExtensionsMap->GetScannedModulesRootDirs());
 
 		$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
 		$oFactory->LoadModule($oDictModule);
@@ -1700,21 +1678,29 @@ class RunTimeEnvironment
 		}
 
 		$aExtensionDirs = [];
+		$aFromSelectedExtensionModules = [];
 		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
-			if ($oExtension->bMarkedAsChosen && is_dir($oExtension->sSourceDir)) {
+			if ($oExtension->IsMarkedAsChosen() && is_dir($oExtension->sSourceDir)) {
 				$aExtensionDirs [] = $oExtension->sSourceDir;
+				$aFromSelectedExtensionModules = array_merge($aFromSelectedExtensionModules, $oExtension->aModules);
 			}
 		}
 
 		SetupLog::Info(__METHOD__, null, ['ext_dirs' => $aExtensionDirs]);
 		$aModuleIdsToLoad = InstallationChoicesToModuleConverter::GetInstance()->GetModules($aChoices, $aSearchDirs, $sInstallFilePath, $aExtensionDirs);
 		$aModulesToLoad = [];
+
 		foreach ($aModuleIdsToLoad as $sModuleId) {
 			$oModule = new Module($sModuleId);
 			$sModuleName = $oModule->GetModuleName();
 			$aModulesToLoad[] = $sModuleName;
 		}
 
+		foreach ($aFromSelectedExtensionModules as $sModuleName) {
+			if (! in_array($sModuleName, $aModulesToLoad)) {
+				$aModulesToLoad[] = $sModuleName;
+			}
+		}
 		return $aModulesToLoad;
 	}
 

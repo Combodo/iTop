@@ -145,7 +145,7 @@ class DataFeatureRemovalController extends Controller
 
 		$bForceCompilation = Session::Get('bForceCompilation', false);
 		try {
-			$this->Compile($aRemoveExtensionCodes, $bForceCompilation);
+			$this->Compile($aAddedExtensions, $aRemoveExtensionCodes, $bForceCompilation);
 		} catch (CoreException $e) {
 			$aParams['DataFeatureRemovalErrorMessage'] = $e->getHtmlDesc();
 			$this->DisplayPage($aParams, 'AnalysisResult');
@@ -162,7 +162,7 @@ class DataFeatureRemovalController extends Controller
 			$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
 			$aHiddenInputs['selected_extensions'] = $this->ConvertIntoSetupFormat($aSelectedExtensions);
 
-			$oRunTimeEnvironment = $this->GetRuntimeEnvironment($aRemovedExtensions);
+			$oRunTimeEnvironment = $this->GetRuntimeEnvironment($aAddedExtensions, $aRemovedExtensions);
 			$aSearchDirs = [$oRunTimeEnvironment->GetBuildDir()];
 			$aSelectedModules = $oRunTimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions, $aSearchDirs);
 			$aHiddenInputs['selected_modules'] = $this->ConvertIntoSetupFormat($aSelectedModules);
@@ -213,13 +213,14 @@ class DataFeatureRemovalController extends Controller
 	}
 
 	/**
+* @param array $aAddedExtensions
 * @param array $aRemovedExtensions
 * @param bool $bForceCompilation
 * @return void
 * @throws \ConfigException
 * @throws \CoreException
 	 */
-	private function Compile(array $aRemovedExtensions, bool $bForceCompilation = true): void
+	private function Compile(array $aAddedExtensions, array $aRemovedExtensions, bool $bForceCompilation = true): void
 	{
 		$sSourceEnv = MetaModel::GetEnvironment();
 		$sBuildDir = APPROOT."/env-$sSourceEnv-build";
@@ -234,15 +235,15 @@ class DataFeatureRemovalController extends Controller
 				null,
 				['sSourceEnv' => $sSourceEnv, 'sBuildDir' => $sBuildDir, 'bIsDirEmpty' => $bIsDirEmpty, glob("$sBuildDir/*")]
 			);
-			$this->GetRuntimeEnvironment($aRemovedExtensions)->CompileFrom($sSourceEnv);
+			$this->GetRuntimeEnvironment($aAddedExtensions, $aRemovedExtensions)->CompileFrom($sSourceEnv);
 		}
 	}
 
-	private function GetRuntimeEnvironment(array $aRemovedExtensions): RunTimeEnvironment
+	private function GetRuntimeEnvironment(array $aAddedExtensions, array $aRemovedExtensions): RunTimeEnvironment
 	{
 		if (is_null($this->oRuntimeEnvironment)) {
 			$sSourceEnv = MetaModel::GetEnvironment();
-			$this->oRuntimeEnvironment = new DryRemovalRuntimeEnvironment($sSourceEnv, $aRemovedExtensions);
+			$this->oRuntimeEnvironment = new DryRemovalRuntimeEnvironment($sSourceEnv, $aAddedExtensions, $aRemovedExtensions);
 		}
 
 		return $this->oRuntimeEnvironment;

@@ -55,7 +55,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 	{
 		parent::__construct($oWizard, $sCurrentState);
 		$this->bChoicesFromDatabase = false;
-		$this->oExtensionsMap = new iTopExtensionsMap();
+		$this->oExtensionsMap = iTopExtensionsMap::GetExtensionsMap();
 		$sPreviousSourceDir = $this->oWizard->GetParameter('previous_version_dir', '');
 		$sConfigPath = null;
 		if (($sPreviousSourceDir !== '') && is_readable($sPreviousSourceDir.'/conf/'.ITOP_DEFAULT_ENV.'/config-itop.php')) {
@@ -81,7 +81,6 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 		// Sanity check (not stopper, to let developers go further...)
 		try {
 			$aModulesToLoad = json_decode($oWizard->GetParameter('selected_modules'), true) ?? null;
-			SetupLog::Error(__METHOD__, null, [$aModulesToLoad]);
 			$this->aAnalyzeInstallationModules = SetupUtils::AnalyzeInstallation($this->oWizard, true, $aModulesToLoad, $this->oConfig);
 		} catch (MissingDependencyException $e) {
 			$this->oMissingDependencyException = $e;
