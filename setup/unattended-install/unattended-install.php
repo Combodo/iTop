@@ -8,7 +8,7 @@ function fatalHandler()
 	$error = error_get_last();
 	if ($error) {
 		SetupLog::Error("Fatal error during setup", null, $error);
-		echo "Fatal Error occured: {$error["message"]}";
+		echo "PHP Fatal captured: {$error["message"]}";
 	}
 }
 
