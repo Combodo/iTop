@@ -21,11 +21,19 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$bSelected = $aExtraFlags['selected'] ?? true;
 		$bDisabled = $aExtraFlags['disabled'] ?? false;
 		$bRemote = $aExtraFlags['remote'] ?? false;
-		self::AddExtraBadges($aBadges, $bUninstallable, $bMissingFromDisk);
-		$oBadgeInstalled = BadgeUIBlockFactory::MakeGreen(Dict::S('UI:Layout:ExtensionsDetails:BadgeInstalled'));
+		self::AddExtraBadges($aBadges, $bUninstallable, $bMissingFromDisk, $sCode);
+		$oBadgeInstalled = BadgeUIBlockFactory::MakeGreen(
+			Dict::S('UI:Layout:ExtensionsDetails:BadgeInstalled'),
+			Dict::S('UI:Layout:ExtensionsDetails:BadgeInstalled+'),
+			'badge--'.$sCode.'--installed'
+		);
 		$oBadgeInstalled->AddCSSClass('checked');
 		$aBadges[] = $oBadgeInstalled;
-		$oBadgeToBeUninstalled = BadgeUIBlockFactory::MakeRed(Dict::S('UI:Layout:ExtensionsDetails:BadgeToBeUninstalled'));
+		$oBadgeToBeUninstalled = BadgeUIBlockFactory::MakeRed(
+			Dict::S('UI:Layout:ExtensionsDetails:BadgeToBeUninstalled'),
+			Dict::S('UI:Layout:ExtensionsDetails:BadgeToBeUninstalled+'),
+			'badge--'.$sCode.'--to-be-uninstalled'
+		);
 		$oBadgeToBeUninstalled->AddCSSClass('unchecked');
 		$aBadges[] = $oBadgeToBeUninstalled;
 
@@ -56,11 +64,19 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$bUninstallable = $aExtraFlags['uninstallable'] ?? true;
 		$bSelected = $aExtraFlags['selected'] ?? false;
 		$bDisabled = $aExtraFlags['disabled'] ?? false;
-		self::AddExtraBadges($aBadges, $bUninstallable, false);
-		$oBadgeInstalled = BadgeUIBlockFactory::MakeGrey(Dict::S('UI:Layout:ExtensionsDetails:BadgeNotInstalled'));
+		self::AddExtraBadges($aBadges, $bUninstallable, false, $sCode);
+		$oBadgeInstalled = BadgeUIBlockFactory::MakeGrey(
+			Dict::S('UI:Layout:ExtensionsDetails:BadgeNotInstalled'),
+			Dict::S('UI:Layout:ExtensionsDetails:BadgeNotInstalled+'),
+			'badge--'.$sCode.'--not-installed'
+		);
 		$oBadgeInstalled->AddCSSClass('unchecked');
 		$aBadges[] = $oBadgeInstalled;
-		$oBadgeToBeUninstalled = BadgeUIBlockFactory::MakeCyan(Dict::S('UI:Layout:ExtensionsDetails:BadgeToBeInstalled'));
+		$oBadgeToBeUninstalled = BadgeUIBlockFactory::MakeCyan(
+			Dict::S('UI:Layout:ExtensionsDetails:BadgeToBeInstalled'),
+			Dict::S('UI:Layout:ExtensionsDetails:BadgeToBeInstalled+'),
+			'badge--'.$sCode.'--to-be-installed'
+		);
 		$oBadgeToBeUninstalled->AddCSSClass('checked');
 		$aBadges[] = $oBadgeToBeUninstalled;
 		$oExtensionDetails = new ExtensionDetails($sCode, $sLabel, $sDescription, $aMetaData, $aBadges, $sAbout);
@@ -76,13 +92,21 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		return $oExtensionDetails;
 	}
 
-	private static function AddExtraBadges(array &$aBadges, bool $bUninstallable, bool $bMissingFromDisk)
+	private static function AddExtraBadges(array &$aBadges, bool $bUninstallable, bool $bMissingFromDisk, string $sCode)
 	{
 		if (!$bUninstallable) {
-			$aBadges[] = BadgeUIBlockFactory::MakeOrange(Dict::S('UI:Layout:ExtensionsDetails:BadgeNotUninstallable'));
+			$aBadges[] = BadgeUIBlockFactory::MakeOrange(
+				Dict::S('UI:Layout:ExtensionsDetails:BadgeNotUninstallable'),
+				Dict::S('UI:Layout:ExtensionsDetails:BadgeNotUninstallable+'),
+				'badge--'.$sCode.'--not-uninstallable'
+			);
 		}
 		if ($bMissingFromDisk) {
-			$aBadges[] = BadgeUIBlockFactory::MakeRed(Dict::S('UI:Layout:ExtensionsDetails:BadgeMissingFromDisk'));
+			$aBadges[] = BadgeUIBlockFactory::MakeRed(
+				Dict::S('UI:Layout:ExtensionsDetails:BadgeMissingFromDisk'),
+				Dict::S('UI:Layout:ExtensionsDetails:BadgeMissingFromDisk+'),
+				'badge--'.$sCode.'--missing-from-disk'
+			);
 		}
 	}
 }
