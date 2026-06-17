@@ -3,6 +3,17 @@
 require_once(dirname(__FILE__, 3).'/approot.inc.php');
 require_once(__DIR__.'/InstallationFileService.php');
 
+function fatalHandler()
+{
+	$error = error_get_last();
+	if ($error) {
+		SetupLog::Error("Fatal error during setup", null, $error);
+		echo "Fatal Error occured: {$error["message"]}";
+	}
+}
+
+register_shutdown_function("fatalHandler");
+
 function PrintUsageAndExit()
 {
 	echo <<<EOF
