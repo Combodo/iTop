@@ -37,6 +37,7 @@ SetupWebPage::AddModule(
 			'data/data.sample.auditcategory.xml',
 			'data/data.sample.auditcategory-auditdomain.xml',
 			'data/data.sample.auditrule.xml',
+			'data/data.sample.users.xml',
 		],
 
 		// Documentation
