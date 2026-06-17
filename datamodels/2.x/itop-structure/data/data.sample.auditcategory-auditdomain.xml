@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+</lnkAuditCategoryToAuditDomain>
+<lnkAuditCategoryToAuditDomain alias="lnkAuditCategoryToAuditDomain" id="2">
+<category_id>3</category_id>
+<domain_id>3</domain_id>
+</lnkAuditCategoryToAuditDomain>
+<lnkAuditCategoryToAuditDomain alias="lnkAuditCategoryToAuditDomain" id="3">
+<category_id>4</category_id>
+<domain_id>3</domain_id>
+</lnkAuditCategoryToAuditDomain>
+</Set>
