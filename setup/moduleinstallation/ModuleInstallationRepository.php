@@ -68,7 +68,12 @@ WHERE
 parent_id='$iRootId'
 OR id='$iRootId'
 SQL;
-		return CMDBSource::QueryToArray($sSQL);
+		try {
+			return CMDBSource::QueryToArray($sSQL);
+		} catch (MySQLException $e) {
+			SetupLog::Exception(__METHOD__, $e);
+			throw $e;
+		}
 	}
 
 	private function GetTableWithPrefix(Config $oConfig)
