@@ -29,6 +29,7 @@ class DBSearchApplyDataFiltersTest extends ItopDataTestCase
 	public function testApplyDataFiltersOnDBObjectSearchShouldAcceptGetSelectFilterClassReturningDBUnionSearch()
 	{
 		// Use custom select filter that returns a DBUnionSearch
+		$sPreviousSelectModuleClass = get_class(UserRights::GetModuleInstance());
 		UserRights::SelectModule('\\Combodo\\iTop\\Test\\UnitTest\\Core\\Fixtures\\N9687_CustomGetSelectFilterClass');
 
 		// Create a user and login, otherwise the select filter won't apply
@@ -41,6 +42,9 @@ class DBSearchApplyDataFiltersTest extends ItopDataTestCase
 		// Try to retrieve it using the select filter
 		$oSearch = DBObjectSearch::FromOQL("SELECT Person WHERE id = {$oCreatedPerson->GetKey()}");
 		$oFilteredSearch = $this->InvokeNonPublicMethod(DBObjectSearch::class, 'ApplyDataFilters', $oSearch);
+
+		// Restore original select module to not interfere with next tests
+		UserRights::SelectModule($sPreviousSelectModuleClass);
 
 		$this->assertEquals(DBUnionSearch::class, get_class($oFilteredSearch), "DBObjectSearch::ApplyDataFilters() should be able to return a \DBUnionSearch");
 	}
