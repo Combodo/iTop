@@ -13,6 +13,13 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = ExtensionDetails::class;
 
+	private const BADGE_ID_INSTALLED = 'installed';
+	private const BADGE_ID_NOT_INSTALLED = 'not-installed';
+	private const BADGE_ID_TO_BE_INSTALLED = 'to-be-installed';
+	private const BADGE_ID_TO_BE_UNINSTALLED = 'to-be-uninstalled';
+	private const BADGE_ID_NOT_UNINSTALLABLE = 'not-uninstallable';
+	private const BADGE_ID_MISSING_FROM_DISK = 'missing-from-disk';
+
 	public static function MakeInstalled(string $sCode, string $sLabel, string $sDescription = '', array $aMetaData = [], array $aExtraFlags = [], string $sAbout = '')
 	{
 		$aBadges = [];
@@ -25,14 +32,14 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$oBadgeInstalled = BadgeUIBlockFactory::MakeGreen(
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeInstalled'),
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeInstalled+'),
-			'badge--'.$sCode.'--installed'
+			self::GetBadgeId($sCode, self::BADGE_ID_INSTALLED)
 		);
 		$oBadgeInstalled->AddCSSClass('checked');
 		$aBadges[] = $oBadgeInstalled;
 		$oBadgeToBeUninstalled = BadgeUIBlockFactory::MakeRed(
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeToBeUninstalled'),
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeToBeUninstalled+'),
-			'badge--'.$sCode.'--to-be-uninstalled'
+			self::GetBadgeId($sCode, self::BADGE_ID_TO_BE_UNINSTALLED)
 		);
 		$oBadgeToBeUninstalled->AddCSSClass('unchecked');
 		$aBadges[] = $oBadgeToBeUninstalled;
@@ -68,14 +75,14 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$oBadgeInstalled = BadgeUIBlockFactory::MakeGrey(
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeNotInstalled'),
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeNotInstalled+'),
-			'badge--'.$sCode.'--not-installed'
+			self::GetBadgeId($sCode, self::BADGE_ID_NOT_INSTALLED)
 		);
 		$oBadgeInstalled->AddCSSClass('unchecked');
 		$aBadges[] = $oBadgeInstalled;
 		$oBadgeToBeUninstalled = BadgeUIBlockFactory::MakeCyan(
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeToBeInstalled'),
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeToBeInstalled+'),
-			'badge--'.$sCode.'--to-be-installed'
+			self::GetBadgeId($sCode, self::BADGE_ID_TO_BE_INSTALLED)
 		);
 		$oBadgeToBeUninstalled->AddCSSClass('checked');
 		$aBadges[] = $oBadgeToBeUninstalled;
@@ -98,15 +105,29 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 			$aBadges[] = BadgeUIBlockFactory::MakeOrange(
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeNotUninstallable'),
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeNotUninstallable+'),
-				'badge--'.$sCode.'--not-uninstallable'
+				self::GetBadgeId($sCode, self::BADGE_ID_NOT_UNINSTALLABLE)
 			);
 		}
 		if ($bMissingFromDisk) {
 			$aBadges[] = BadgeUIBlockFactory::MakeRed(
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeMissingFromDisk'),
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeMissingFromDisk+'),
-				'badge--'.$sCode.'--missing-from-disk'
+				self::GetBadgeId($sCode, self::BADGE_ID_MISSING_FROM_DISK)
 			);
 		}
 	}
+
+	/**
+	 * Generate a badge ID for an extension
+	 *
+	 * @param string $sExtensionCode The extension code
+	 * @param string $sBadgeType The badge type (one of the BADGE_ID_* constants)
+	 *
+	 * @return string The badge ID in the format: badge--{extensionCode}--{badgeType}
+	 */
+	public static function GetBadgeId(string $sExtensionCode, string $sBadgeType): string
+	{
+		return 'badge--'.$sExtensionCode.'--'.$sBadgeType;
+	}
+
 }
