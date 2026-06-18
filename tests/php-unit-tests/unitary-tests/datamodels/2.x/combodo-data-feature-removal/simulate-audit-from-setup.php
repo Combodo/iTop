@@ -44,7 +44,7 @@ $aAddedExtensions = [];
 if (mb_strlen($sAddedExtensions) > 0) {
 	$aAddedExtensions = explode(',', $sAddedExtensions);
 }
-$oExtensionMap = new iTopExtensionsMap();
+$oExtensionMap = iTopExtensionsMap::GetExtensionsMap();
 foreach ($aAddedExtensions as $iIndex => $sExtensionCode) {
 	if (mb_strlen($sExtensionCode) <= 0) {
 		unset($aAddedExtensions[$iIndex]);
