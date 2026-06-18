@@ -16,6 +16,8 @@ class DBSearchApplyDataFiltersTest extends ItopDataTestCase
 {
 	public const CREATE_TEST_ORG = true;
 
+	protected string $sOriginalUserRightsSelectModuleClass = '';
+
 	/**
 	 * @throws \Exception
 	 */
@@ -23,7 +25,21 @@ class DBSearchApplyDataFiltersTest extends ItopDataTestCase
 	{
 		parent::setUp();
 
+		// Backup original UserRights select module as it will changed in some tests
+		$this->sOriginalUserRightsSelectModuleClass = get_class(UserRights::GetModuleInstance());
+
 		$this->RequireOnceUnitTestFile('Fixtures/N9687_CustomGetSelectFilterClass.php');
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function tearDown(): void
+	{
+		// Restore original UserRights select module to not interfere with next tests
+		UserRights::SelectModule($this->sOriginalUserRightsSelectModuleClass);
+
+		parent::tearDown();
 	}
 
 	public function testApplyDataFiltersOnDBObjectSearchShouldAcceptGetSelectFilterClassReturningDBUnionSearch()
