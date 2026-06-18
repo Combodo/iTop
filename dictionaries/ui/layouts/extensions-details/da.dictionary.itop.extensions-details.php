@@ -10,7 +10,7 @@
 /**
  *
  */
-Dict::Add('DA DK', 'Danish', 'Dansk', [
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:Layout:ExtensionsDetails:BadgeInstalled' => 'installed~~',
 	'UI:Layout:ExtensionsDetails:BadgeInstalled+' => 'This extension is part of the current installation.~~',
 	'UI:Layout:ExtensionsDetails:BadgeToBeInstalled' => 'to be installed~~',
