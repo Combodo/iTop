@@ -69,7 +69,7 @@ class RestUtilsTest extends ItopDataTestCase
 		$this->assertNotContains('something', $aList[Ticket::class]);
 	}
 
-	public function extendedOutputDataProvider(): array
+	public static function extendedOutputDataProvider(): array
 	{
 		return [
 			[false, 'ref,start_date,end_date'],
@@ -88,7 +88,7 @@ class RestUtilsTest extends ItopDataTestCase
 		$this->assertSame($bExpected, RestUtils::HasRequestedExtendedOutput($sFields));
 	}
 
-	public function allFieldsOutputDataProvider(): array
+	public static function allFieldsOutputDataProvider(): array
 	{
 		return [
 			[false, 'ref,start_date,end_date'],
