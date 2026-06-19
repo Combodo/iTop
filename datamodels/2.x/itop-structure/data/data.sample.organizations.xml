@@ -13,7 +13,6 @@
       </data>
       <downloads_count>0</downloads_count>
     </logo>
-    <deliverymodel_id>2</deliverymodel_id>
   </Organization>
   <Organization alias="Organization" id="3">
     <name>Demo</name>
@@ -28,7 +27,6 @@
       </data>
       <downloads_count>0</downloads_count>
     </logo>
-    <deliverymodel_id>1</deliverymodel_id>
   </Organization>
   <Organization alias="Organization" id="5">
     <name>HR Department</name>
@@ -37,7 +35,6 @@
     <parent_id>3</parent_id>
     <overview></overview>
     <logo></logo>
-    <deliverymodel_id>1</deliverymodel_id>
   </Organization>
   <Organization alias="Organization" id="4">
     <name>InfraStore</name>
@@ -55,7 +52,6 @@
     <parent_id>3</parent_id>
     <overview></overview>
     <logo></logo>
-    <deliverymodel_id>1</deliverymodel_id>
   </Organization>
   <Organization alias="Organization" id="1">
     <name>My Company/Department</name>
@@ -73,6 +69,5 @@
     <parent_id>3</parent_id>
     <overview></overview>
     <logo></logo>
-    <deliverymodel_id>1</deliverymodel_id>
   </Organization>
 </Set>

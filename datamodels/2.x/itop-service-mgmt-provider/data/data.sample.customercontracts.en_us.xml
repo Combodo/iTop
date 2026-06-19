@@ -15,16 +15,17 @@
     <status>production</status>
   </CustomerContract>
   <CustomerContract alias="CustomerContract" id="1">
-  <name>Customer contract Sales department</name>
-  <org_id>6</org_id>
-  <description>Internal contract to deliver services to Sales department</description>
-  <start_date>2019-01-01</start_date>
-  <end_date>2030-12-31</end_date>
-  <cost></cost>
-  <cost_currency>euros</cost_currency>
-  <contracttype_id>0</contracttype_id>
-  <billing_frequency></billing_frequency>
-  <cost_unit></cost_unit>
-  <provider_id>2</provider_id>
-  <status>production</status>
+    <name>Customer contract Sales department</name>
+    <org_id>6</org_id>
+    <description>Internal contract to deliver services to Sales department</description>
+    <start_date>2019-01-01</start_date>
+    <end_date>2030-12-31</end_date>
+    <cost></cost>
+    <cost_currency>euros</cost_currency>
+    <contracttype_id>0</contracttype_id>
+    <billing_frequency></billing_frequency>
+    <cost_unit></cost_unit>
+    <provider_id>2</provider_id>
+    <status>production</status>
+  </CustomerContract>
 </Set>

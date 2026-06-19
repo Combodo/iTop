@@ -26,7 +26,7 @@
     </allowed_org_list>
     <log></log>
     <reset_pwd_token></reset_pwd_token>
-    <password>R6rQ;p]JT*FA$aaP^4</password>
+    <password><![CDATA[R6rQ;p]JT*FA$aaP^4]]></password>
     <expiration>force_expire</expiration>
     <password_renewed_date>2026-06-04</password_renewed_date>
   </UserLocal>
@@ -56,7 +56,7 @@
     </allowed_org_list>
     <log></log>
     <reset_pwd_token></reset_pwd_token>
-    <password>$W[:"7+Gf"Y\sd8#E~</password>
+    <password><![CDATA[$W[:"7+Gf"Y\sd8#E~]]></password>
     <expiration>force_expire</expiration>
     <password_renewed_date>2026-06-04</password_renewed_date>
   </UserLocal>
@@ -92,7 +92,7 @@
     </allowed_org_list>
     <log></log>
     <reset_pwd_token></reset_pwd_token>
-    <password>-Why]KDdMJvkuB8#e</password>
+    <password><![CDATA[-Why]KDdMJvkuB8#e]]></password>
     <expiration>force_expire</expiration>
     <password_renewed_date>2026-04-17</password_renewed_date>
   </UserLocal>
@@ -133,7 +133,7 @@
     </allowed_org_list>
     <log></log>
     <reset_pwd_token></reset_pwd_token>
-    <password>D%r7hoZ})5*hvq5`{Q</password>
+    <password><![CDATA[D%r7hoZ})5*hvq5`{Q]]></password>
     <expiration>force_expire</expiration>
     <password_renewed_date>2026-06-04</password_renewed_date>
   </UserLocal>

@@ -23,7 +23,7 @@ SetupWebPage::AddModule(
 		'datamodel' => [
 		],
 		'data.struct' => [
-		// 'data/data.itop-contracttype.{{language_code}}.xml',
+			'data/data.itop-contracttype.en_us.xml',
 		],
 		'data.sample' => [
 			//		'data/data.sample.contracts.xml',  => replaced by localized data
@@ -43,7 +43,7 @@ SetupWebPage::AddModule(
 			'data/data.sample.sltsla.xml',
 			//		'data/data.sample.contractservice.xml', => replaced by customercontractservice and providercontractservice files
 			'data/data.sample.customercontractservice.xml',
-			'data/data.sample.providercontractservice.xml',
+			// 'data/data.sample.providercontractservice.xml', => Not available in this installation mode
 			'data/data.sample.deliverymodel.xml',
 			'data/data.sample.deliverymodelcontact.xml',
 			'data/data.sample.organizations.xml',
@@ -96,14 +96,6 @@ if (!class_exists('ServiceMgmtProviderInstaller')) {
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			// Load localized structural data: contract types
-			static::LoadLocalizedData(
-				$oConfiguration,
-				$sPreviousVersion,
-				$sCurrentVersion,
-				'3.3.0',
-				__DIR__."/data/data.itop-contracttype.{{language_code}}.xml"
-			);
 		}
 	}
 }

@@ -23,7 +23,7 @@ SetupWebPage::AddModule(
 		'datamodel' => [
 		],
 		'data.struct' => [
-			// 'data/data.itop-contracttype.{{language_code}}.xml',
+			'data/data.itop-contracttype.en_us.xml',
 		],
 		'data.sample' => [
 	//		'data/data.sample.contracts.xml',   =>  replaced by localized data

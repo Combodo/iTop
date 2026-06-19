@@ -23,8 +23,8 @@ SetupWebPage::AddModule(
 			'main.itop-structure.php',
 		],
 		'data.struct' => [
-			// 'data/data.itop-contacttype.{{language_code}}.xml',
-			// 'data/data.itop-documenttype.{{language_code}}.xm',
+			'data/data.itop-contacttype.en_us.xml',
+			'data/data.itop-documenttype.en_us.xml',
 		],
 		'data.sample' => [
 			'data/data.sample.organizations.xml',
@@ -37,7 +37,7 @@ SetupWebPage::AddModule(
 			'data/data.sample.auditcategory.xml',
 			'data/data.sample.auditcategory-auditdomain.xml',
 			'data/data.sample.auditrule.xml',
-			'data/data.sample.users.xml',
+			'data/data.sample.users.xml', // pb with the passwords, which cannot be loaded (check with empty?)
 		],
 
 		// Documentation
@@ -106,21 +106,6 @@ if (!class_exists('StructureInstaller')) {
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			// Load localized structural data: contact types and document types
-			static::LoadLocalizedData(
-				$oConfiguration,
-				$sPreviousVersion,
-				$sCurrentVersion,
-				'3.3.0',
-				__DIR__."/data/data.itop-contacttype.{{language_code}}.xml"
-			);
-			static::LoadLocalizedData(
-				$oConfiguration,
-				$sPreviousVersion,
-				$sCurrentVersion,
-				'3.3.0',
-				__DIR__."/data/data.itop-documenttype.{{language_code}}.xml"
-			);
 
 			// Default language will be used for actions
 			// Note: There is a issue when upgrading, default language cannot be retrieved from the passed configuration, we have to read it from the disk
