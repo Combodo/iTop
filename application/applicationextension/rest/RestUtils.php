@@ -97,33 +97,125 @@ class RestUtils
 	 * @throws Exception
 	 * @api
 	 */
-	public static function GetFieldList($sClass, $oData, $sParamName)
+	public static function GetFieldList($sClass, $oData, $sParamName, $bFailIfNotFound = true)
 	{
 		$sFields = self::GetOptionalParam($oData, $sParamName, '*');
-		$aShowFields = [];
-		if ($sFields == '*') {
-			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
-				$aShowFields[$sClass][] = $sAttCode;
-			}
-		} elseif ($sFields == '*+') {
-			foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sRefClass) {
-				foreach (MetaModel::ListAttributeDefs($sRefClass) as $sAttCode => $oAttDef) {
-					$aShowFields[$sRefClass][] = $sAttCode;
-				}
-			}
-		} else {
-			foreach (explode(',', $sFields) as $sAttCode) {
-				$sAttCode = trim($sAttCode);
-				if (($sAttCode != 'id') && (!MetaModel::IsValidAttCode($sClass, $sAttCode))) {
-					throw new Exception("$sParamName: invalid attribute code '$sAttCode'");
-				}
-				$aShowFields[$sClass][] = $sAttCode;
-			}
-		}
-
-		return $aShowFields;
+		return match($sFields) {
+			'*' => self::GetFieldListForClass($sClass),
+			'*+' => self::GetFieldListForParentClass($sClass),
+			default => self::GetLimitedFieldListForClass($sClass, $sFields, $sParamName, $bFailIfNotFound),
+		};
 	}
 
+	/**
+	 * Check if the requested field list asks for an extended output.
+	 *
+	 * Extended output is requested when using '*+' or class-scoped field definitions.
+	 *
+	 * @param string $sFields Requested field specification.
+	 *
+	 * @return bool
+	 */
+	public static function HasRequestedExtendedOutput(string $sFields): bool
+	{
+		return match($sFields) {
+			'*' => false,
+			'*+' => true,
+			default => substr_count($sFields, ':') > 1,
+		};
+	}
+
+	/**
+	 * Check if the requested field list asks for all output fields.
+	 *
+	 * @param string $sFields Requested field specification.
+	 *
+	 * @return bool
+	 */
+	public static function HasRequestedAllOutputFields(string $sFields): bool
+	{
+		return match($sFields) {
+			'*', '*+' => true,
+			default => false,
+		};
+	}
+
+	protected static function GetFieldListForClass(string $sClass): array
+	{
+		return [$sClass => array_keys(MetaModel::ListAttributeDefs($sClass))];
+	}
+
+	/**
+	 * Build a field list for all child classes of the given parent class.
+	 *
+	 * @param string $sClass Parent class name.
+	 *
+	 * @return array Array of class => list of attribute codes.
+	 */
+	protected static function GetFieldListForParentClass(string $sClass): array
+	{
+		$aFieldList = array();
+		foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sRefClass) {
+			$aFieldList = array_merge($aFieldList, self::GetFieldListForClass($sRefClass));
+		}
+		return $aFieldList;
+	}
+
+	/**
+	 * Build a restricted field list for one class from a comma-separated attribute list.
+	 *
+	 * @param string $sClass Class name.
+	 * @param string $sFields Comma-separated list of requested attribute codes.
+	 * @param string $sParamName Input parameter name used in error messages.
+	 * @param bool $bFailIfNotFound If true, throws when an attribute code is invalid.
+	 *
+	 * @return array Array containing one class => list of attribute codes.
+	 * @throws Exception When an attribute code is invalid and $bFailIfNotFound is true.
+	 */
+	protected static function GetLimitedFieldListForSingleClass(string $sClass, string $sFields, string $sParamName, bool $bFailIfNotFound = true): array
+	{
+		$aFieldList = [$sClass => []];
+		foreach (explode(',', $sFields) as $sAttCode) {
+			$sAttCode = trim($sAttCode);
+			if (($sAttCode == 'id') || (MetaModel::IsValidAttCode($sClass, $sAttCode))) {
+				$aFieldList[$sClass][] = $sAttCode;
+			} else {
+				if ($bFailIfNotFound) {
+					throw new Exception("$sParamName: invalid attribute code '$sAttCode' for class '$sClass'");
+				}
+			}
+		}
+		return $aFieldList;
+	}
+
+	/**
+	 * Build a restricted field list for one or several classes.
+	 *
+	 * Accepted formats are either "att1,att2" for a single class, or
+	 * "ClassA:att1,att2;ClassB:att3" for class-scoped field definitions.
+	 *
+	 * @param string $sClass Default class name used when no class scope is specified.
+	 * @param string $sFields Requested field specification.
+	 * @param string $sParamName Input parameter name used in error messages.
+	 * @param bool $bFailIfNotFound If true, throws when an attribute code is invalid.
+	 *
+	 * @return array Array of class => list of attribute codes.
+	 * @throws Exception Propagated from GetLimitedFieldListForSingleClass.
+	 */
+	protected static function GetLimitedFieldListForClass(string $sClass, string $sFields, string $sParamName, bool $bFailIfNotFound = true): array
+	{
+		if (!str_contains($sFields, ':')) {
+			return self::GetLimitedFieldListForSingleClass($sClass, $sFields, $sParamName, $bFailIfNotFound);
+		}
+
+		$aFieldList = [];
+		$aFieldListParts = explode(';', $sFields);
+		foreach ($aFieldListParts as $sClassFields) {
+			list($sSubClass, $sSubClassFields) = explode(':', $sClassFields);
+			$aFieldList = array_merge($aFieldList, self::GetLimitedFieldListForSingleClass(trim($sSubClass), trim($sSubClassFields), $sParamName, $bFailIfNotFound));
+		}
+		return $aFieldList;
+	}
 	/**
 	 * Read and interpret object search criteria from a Rest/Json structure
 	 *
