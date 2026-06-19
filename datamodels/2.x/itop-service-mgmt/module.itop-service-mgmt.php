@@ -42,8 +42,8 @@ SetupWebPage::AddModule(
 			'data/data.sample.slt.en_us.xml',
 			'data/data.sample.sltsla.xml',
 	//		'data/data.sample.contractservice.xml',  =>  replaced by customercontractservice and providercontractservice files
-			'data/data.sample.customercontractservice.xml',
-			'data/data.sample.providercontractservice.xml',
+			'data/data.sample.customercontractsservice.xml',
+			'data/data.sample.providercontractsservice.xml',
 			'data/data.sample.deliverymodel.xml',
 			'data/data.sample.deliverymodelcontact.xml',
 			'data/data.sample.organizations.xml',

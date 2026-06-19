@@ -35,7 +35,7 @@ SetupWebPage::AddModule(
 			'data/data.sample.sla.en_us.xml',
 			'data/data.sample.slt.en_us.xml',
 			'data/data.sample.sltsla.xml',
-			'data/data.sample.customercontractservice.xml',
+			'data/data.sample.customercontractsservice.xml',
 			// 'data/data.sample.providercontractservice.xml', => Not available in this installation mode
 			'data/data.sample.deliverymodel.xml',
 			'data/data.sample.deliverymodelcontact.xml',
