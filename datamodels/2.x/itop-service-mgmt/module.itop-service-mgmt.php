@@ -93,14 +93,6 @@ if (!class_exists('ServiceMgmtInstaller')) {
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			// Load localized structural data: contact types and document types
-			static::LoadLocalizedData(
-				$oConfiguration,
-				$sPreviousVersion,
-				$sCurrentVersion,
-				'3.3.0',
-				__DIR__."/data/data.itop-contracttype.{{language_code}}.xml"
-			);
 		}
 	}
 }
