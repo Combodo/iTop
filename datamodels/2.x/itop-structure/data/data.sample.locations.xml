@@ -27,4 +27,22 @@
     <city>Paris</city>
     <country>France</country>
   </Location>
+  <Location alias="Location" id="4">
+    <name>London</name>
+    <status>active</status>
+    <org_id>6</org_id>
+    <address>Buckingham Palace</address>
+    <postal_code>SW1A 1AA</postal_code>
+    <city>London</city>
+    <country>England</country>
+  </Location>
+  <Location alias="Location" id="5">
+    <name>Berlin</name>
+    <status>active</status>
+    <org_id>7</org_id>
+    <address>Pariser Platz, südliches Torhaus</address>
+    <postal_code>10117</postal_code>
+    <city>Berlin</city>
+    <country>Germany</country>
+  </Location>
 </Set>

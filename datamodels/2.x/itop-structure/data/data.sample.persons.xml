@@ -63,7 +63,7 @@
     <first_name>Agatha</first_name>
     <employee_number></employee_number>
     <mobile_phone></mobile_phone>
-    <location_id>0</location_id>
+    <location_id>4</location_id>
     <manager_id>6</manager_id>
   </Person>
   <Person alias="Person" id="48">
@@ -252,7 +252,7 @@
     <first_name>Elisa</first_name>
     <employee_number></employee_number>
     <mobile_phone></mobile_phone>
-    <location_id>0</location_id>
+    <location_id>5</location_id>
     <manager_id>0</manager_id>
   </Person>
   <Person alias="Person" id="20">
@@ -294,7 +294,7 @@
     <first_name>Eugene</first_name>
     <employee_number></employee_number>
     <mobile_phone></mobile_phone>
-    <location_id>0</location_id>
+    <location_id>4</location_id>
     <manager_id>6</manager_id>
   </Person>
   <Person alias="Person" id="24">
@@ -336,7 +336,7 @@
     <first_name>Frida</first_name>
     <employee_number></employee_number>
     <mobile_phone></mobile_phone>
-    <location_id>0</location_id>
+    <location_id>4</location_id>
     <manager_id>6</manager_id>
   </Person>
   <Person alias="Person" id="23">
@@ -420,7 +420,7 @@
     <first_name>Hélène</first_name>
     <employee_number></employee_number>
     <mobile_phone></mobile_phone>
-    <location_id>0</location_id>
+    <location_id>5</location_id>
     <manager_id>0</manager_id>
   </Person>
   <Person alias="Person" id="39">
@@ -546,7 +546,7 @@
     <first_name>Jean-Pierre</first_name>
     <employee_number></employee_number>
     <mobile_phone></mobile_phone>
-    <location_id>0</location_id>
+    <location_id>5</location_id>
     <manager_id>0</manager_id>
   </Person>
   <Person alias="Person" id="50">
@@ -567,7 +567,7 @@
     <first_name>Jeanne</first_name>
     <employee_number></employee_number>
     <mobile_phone></mobile_phone>
-    <location_id>0</location_id>
+    <location_id>5</location_id>
     <manager_id>0</manager_id>
   </Person>
   <Person alias="Person" id="9">
@@ -609,7 +609,7 @@
     <first_name>Lou</first_name>
     <employee_number></employee_number>
     <mobile_phone></mobile_phone>
-    <location_id>0</location_id>
+    <location_id>5</location_id>
     <manager_id>0</manager_id>
   </Person>
   <Person alias="Person" id="51">
@@ -691,21 +691,6 @@
       <downloads_count>0</downloads_count>
     </picture>
     <first_name>Michel</first_name>
-    <employee_number></employee_number>
-    <mobile_phone></mobile_phone>
-    <location_id>0</location_id>
-    <manager_id>0</manager_id>
-  </Person>
-  <Person alias="Person" id="1">
-    <name>My last name</name>
-    <status>active</status>
-    <org_id>1</org_id>
-    <email>my.email@foo.org</email>
-    <phone></phone>
-    <notify>yes</notify>
-    <function></function>
-    <picture></picture>
-    <first_name>My first name</first_name>
     <employee_number></employee_number>
     <mobile_phone></mobile_phone>
     <location_id>0</location_id>
@@ -1026,7 +1011,7 @@
     <first_name>Alexandra</first_name>
     <employee_number></employee_number>
     <mobile_phone></mobile_phone>
-    <location_id>0</location_id>
+    <location_id>5</location_id>
     <manager_id>0</manager_id>
   </Person>
 </Set>

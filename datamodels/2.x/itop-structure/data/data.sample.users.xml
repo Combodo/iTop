@@ -24,8 +24,7 @@
       <Set>
       </Set>
     </allowed_org_list>
-    <log></log>
-    <reset_pwd_token></reset_pwd_token>
+    <password><![CDATA[R6rQ;p]JT*FA$aaP^4]]></password>
     <expiration>force_expire</expiration>
     <password_renewed_date>2026-06-04</password_renewed_date>
   </UserLocal>
@@ -53,8 +52,7 @@
       <Set>
       </Set>
     </allowed_org_list>
-    <log></log>
-    <reset_pwd_token></reset_pwd_token>
+    <password><![CDATA[$W[:"7+Gf"Y\sd8#E~]]></password>
     <expiration>force_expire</expiration>
     <password_renewed_date>2026-06-04</password_renewed_date>
   </UserLocal>
@@ -88,8 +86,7 @@
         </URP_UserOrg>
       </Set>
     </allowed_org_list>
-    <log></log>
-    <reset_pwd_token></reset_pwd_token>
+    <password><![CDATA[-Why]KDdMJvkuB8#e]]></password>
     <expiration>force_expire</expiration>
     <password_renewed_date>2026-04-17</password_renewed_date>
   </UserLocal>
@@ -128,8 +125,7 @@
         </URP_UserOrg>
       </Set>
     </allowed_org_list>
-    <log></log>
-    <reset_pwd_token></reset_pwd_token>
+    <password><![CDATA[D%r7hoZ})5*hvq5`{Q]]></password>
     <expiration>force_expire</expiration>
     <password_renewed_date>2026-06-04</password_renewed_date>
   </UserLocal>

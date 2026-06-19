@@ -53,15 +53,6 @@
     <overview></overview>
     <logo></logo>
   </Organization>
-  <Organization alias="Organization" id="1">
-    <name>My Company/Department</name>
-    <code>SOMECODE</code>
-    <status>active</status>
-    <parent_id>0</parent_id>
-    <overview></overview>
-    <logo></logo>
-    <deliverymodel_id>0</deliverymodel_id>
-  </Organization>
   <Organization alias="Organization" id="6">
     <name>Sales Department</name>
     <code></code>
