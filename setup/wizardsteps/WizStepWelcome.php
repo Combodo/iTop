@@ -128,8 +128,6 @@ HTML
 						<input type="hidden" name="_class" value="WizStepLandingBeforeAudit"/>
 						<input type="hidden" name="operation" value="next"/>
 						<input type="hidden" name="_params[skip_wizard]" value="1"/>
-						<input type="hidden" name="authent" value="{$this->sUID}"/>
-						<input type="hidden" name="_params[authent]" value="{$this->sUID}"/>
 						<table style="width:100%;" class="ibo-setup--wizard--buttons-container">
 						<tr>
 							<td style="text-align: right"><button type="submit" class="ibo-button ibo-is-regular ibo-is-secondary">Keep current choices</button></td>

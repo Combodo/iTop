@@ -90,13 +90,6 @@
             {% UIForm Standard {'sId':'launch-setup-form', Action:sLaunchSetupUrl} %}
                 {% UIButton ForDestructiveAction {'sLabel':'iTopUpdate:UI:SetupLaunch'|dict_s, 'sName':'launch-setup', 'sValue':'launch-setup', 'bIsSubmit':true, 'sId':'launch-setup'} %}
             {% EndUIForm %}
-            {% UIAlert ForInformation {sId:'fast-setup-alert', AddCSSClass:'ibo-is-hidden'} %}
-                {% UIContentBlock Standard {sId:'fast-setup-content', aContainerClasses:['ibo-fast-setup-content']} %}
-                    {{ 'iTopUpdate:UI:SetupMessage:Compile'|dict_s }}
-                {% EndUIContentBlock %}
-            {% EndUIAlert %}
-            {% UIButton ForDestructiveAction {sLabel:'iTopUpdate:UI:FastSetupLaunch'|dict_s, sName:'launch-fast-setup', sValue:'launch-fast-setup', sId:'launch-fast-setup'} %}
-            {% UISpinner Standard {sId:'fast-setup-wait', IsHidden:true} %}
         {% EndUIFieldSet %}
     {% endif %}
 
