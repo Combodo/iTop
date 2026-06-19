@@ -2,11 +2,7 @@
 <Set>
   <UserLocal alias="UserLocal" id="4">
     <contactid>9</contactid>
-    <contactid_friendlyname>Jules Verne</contactid_friendlyname>
-    <last_name>Verne</last_name>
-    <first_name>Jules</first_name>
     <email>jules.vernes@it.com</email>
-    <org_id>2</org_id>
     <org_id_friendlyname>IT Department</org_id_friendlyname>
     <login>Agent</login>
     <language>EN US</language>
@@ -31,10 +27,6 @@
   <UserLocal alias="UserLocal" id="5">
     <contactid>26</contactid>
     <contactid_friendlyname>Jean Ferrat</contactid_friendlyname>
-    <last_name>Ferrat</last_name>
-    <first_name>Jean</first_name>
-    <email>jean.ferrat@it.com</email>
-    <org_id>2</org_id>
     <org_id_friendlyname>IT Department</org_id_friendlyname>
     <login>config</login>
     <language>EN US</language>
@@ -58,11 +50,7 @@
   </UserLocal>
   <UserLocal alias="UserLocal" id="2">
     <contactid>15</contactid>
-    <contactid_friendlyname>Agatha Christie</contactid_friendlyname>
-    <last_name>Christie</last_name>
-    <first_name>Agatha</first_name>
     <email>agatha.christie@demo.com</email>
-    <org_id>6</org_id>
     <org_id_friendlyname>Sales Department</org_id_friendlyname>
     <login>Portal</login>
     <language>EN US</language>
@@ -92,11 +80,7 @@
   </UserLocal>
   <UserLocal alias="UserLocal" id="3">
     <contactid>6</contactid>
-    <contactid_friendlyname>Claude Monet</contactid_friendlyname>
-    <last_name>Monet</last_name>
-    <first_name>Claude</first_name>
     <email>claude.monet@demo.com</email>
-    <org_id>6</org_id>
     <org_id_friendlyname>Sales Department</org_id_friendlyname>
     <login>SalesManager</login>
     <language>EN US</language>
