@@ -47,6 +47,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap 服务器',
+	'Class:UserLDAP/Attribute:ldap_server' => 'LDAP 服务器',
 	'Class:UserLDAP/Attribute:ldap_server+' => '',
 ]);
