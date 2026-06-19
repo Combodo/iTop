@@ -238,9 +238,6 @@ class WizStepSummary extends AbstractWizStepInstall
 
 		}
 
-		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
-		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
-
 		$oPage->add_ready_script(
 			<<<JS
 	$("#db_backup_path").on('change keyup', function() { WizardAsyncAction('check_backup', { db_backup_path: $('#db_backup_path').val() }); });

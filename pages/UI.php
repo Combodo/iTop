@@ -5,12 +5,13 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\BulkHelper;
 use Combodo\iTop\Application\Helper\SearchHelper;
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\Helper\SynchroReplicaHelper;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
@@ -577,18 +578,35 @@ try {
 				///////////////////////////////////////////////////////////////////////////////////////////
 
 			case 'select_for_modify_all': // Select the list of objects to be modified (bulk modify)
-				UI::OperationSelectForModifyAll($oP);
+				BulkHelper::OperationSelectForModifyAll($oP);
 				break;
 				///////////////////////////////////////////////////////////////////////////////////////////
 
 			case 'form_for_modify_all': // Form to modify multiple objects (bulk modify)
-				UI::OperationFormForModifyAll($oP, $oAppContext);
+				BulkHelper::OperationFormForModifyAll($oP, $oAppContext);
+				break;
+
+			case 'form_for_unlink_all': // Form to modify multiple objects (bulk modify)
+				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext, 'unlink');
+				break;
+			case 'form_for_unlinksynchro_all': // Form to modify multiple objects (bulk modify)
+				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext, 'unlinksynchro');
+				break;
+			case 'form_for_synchro_all': // Form to modify multiple objects (bulk modify)
+				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext, 'synchro');
+				break;
+
+			case 'form_for_allowdelete_all': // Form to modify multiple objects (bulk modify)
+				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext, 'allowdelete');
+				break;
+			case 'form_for_denydelete_all': // Form to modify multiple objects (bulk modify)
+				SynchroReplicaHelper::OperationUnlinkAll($oP, $oAppContext, 'denydelete');
 				break;
 
 				///////////////////////////////////////////////////////////////////////////////////////////
 
 			case 'preview_or_modify_all': // Preview or apply bulk modify
-				UI::OperationPreviewOrModifyAll($oP, $oAppContext);
+				BulkHelper::OperationPreviewOrModifyAll($oP, $oAppContext);
 				break;
 
 				///////////////////////////////////////////////////////////////////////////////////////////
@@ -627,7 +645,7 @@ try {
 					'title' => Dict::S('UI:BulkDeleteTitle'),
 				];
 				$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_DELETE);
-				DisplayMultipleSelectionForm($oP, $oFilter, 'bulk_delete', $oChecker, [], $aDisplayParams);
+				BulkHelper::DisplayMultipleSelectionForm($oP, $oFilter, 'bulk_delete', $oChecker, [], $aDisplayParams);
 				break;
 
 				///////////////////////////////////////////////////////////////////////////////////////////
@@ -1306,101 +1324,4 @@ try {
 	throw new ItopException("Unable to handle UI operation", previous: $e, aContext: [
 		'operation' => ($operation ?? 'N/A'),
 	]);
-}
-
-class UI
-{
-	/**
-	 * Operation select_for_modify_all
-	 *
-	 * @param iTopWebPage $oP
-	 *
-	 * @throws \ApplicationException
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \OQLException
-	 */
-	public static function OperationSelectForModifyAll(iTopWebPage $oP): void
-	{
-		$oP->DisableBreadCrumb();
-		$oP->set_title(Dict::S('UI:ModifyAllPageTitle'));
-		$sFilter = utils::ReadParam('filter', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
-		if (empty($sFilter)) {
-			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
-		}
-		$oFilter = DBObjectSearch::unserialize($sFilter); //TODO : check that the filter is valid
-		// Add user filter
-		$oFilter->UpdateContextFromUser();
-		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
-		$sClass = $oFilter->GetClass();
-		$sClassName = MetaModel::GetName($sClass);
-
-		$aDisplayParams = [
-			'icon' => MetaModel::GetClassIcon($sClass, false),
-			'title' => Dict::Format('UI:Modify_ObjectsOf_Class', $sClassName),
-		];
-		DisplayMultipleSelectionForm($oP, $oFilter, 'form_for_modify_all', $oChecker, [], $aDisplayParams);
-	}
-
-	/**
-	 * Operation form_for_modify_all
-	 *
-	 * @param iTopWebPage $oP
-	 * @param \ApplicationContext $oAppContext
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
-	public static function OperationFormForModifyAll(iTopWebPage $oP, ApplicationContext $oAppContext): void
-	{
-		$oP->DisableBreadCrumb();
-		$sFilter = utils::ReadParam('filter', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
-		$sClass = utils::ReadParam('class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
-		$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
-		// Add user filter
-		$oFullSetFilter->UpdateContextFromUser();
-		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
-		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter).$oAppContext->GetForLink(true);
-		$aContext = ['filter' => utils::EscapeHtml($sFilter)];
-		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, [], $aContext);
-	}
-
-	/**
-	 * Operation preview_or_modify_all
-	 *
-	 * @param iTopWebPage $oP
-	 * @param \ApplicationContext $oAppContext
-	 *
-	 * @throws \ApplicationException
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 * @throws \OQLException
-	 */
-	public static function OperationPreviewOrModifyAll(iTopWebPage $oP, ApplicationContext $oAppContext): void
-	{
-		$oP->DisableBreadCrumb();
-		$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
-		$oFilter = DBObjectSearch::unserialize($sFilter); // TO DO : check that the filter is valid
-		// Add user filter
-		$oFilter->UpdateContextFromUser();
-
-		$sClass = utils::ReadParam('class', '', false, 'class');
-		$bPreview = utils::ReadParam('preview_mode', '');
-		$sSelectedObj = utils::ReadParam('selectObj', '', false, 'raw_data');
-		if (empty($sClass) || empty($sSelectedObj)) { // TO DO: check that the class name is valid !
-			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'selectObj'));
-		}
-		$aSelectedObj = explode(',', $sSelectedObj);
-		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter).$oAppContext->GetForLink(true);
-		$aContext = [
-			'filter'    => utils::EscapeHtml($sFilter),
-			'selectObj' => $sSelectedObj,
-		];
-		cmdbAbstractObject::DoBulkModify($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $bPreview, $sCancelUrl, $aContext);
-	}
 }

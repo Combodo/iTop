@@ -439,6 +439,27 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 		$this->assertEquals($expected, $this->oSequencer->GetStepNames());
 	}
 
+	public function testDefaultOptionalStepsWhenUsingOldParameters()
+	{
+		$aAdditionalParams = [
+			'optional_steps' => null,
+		];
+		$this->GivenApplicationInstallSequencer($aAdditionalParams, true);
+
+		$expected = [
+			'',
+			'log-parameters',
+			'migrate-before',
+			'db-schema',
+			'migrate-after',
+			'after-db-create',
+			'load-data',
+			'create-config',
+			'commit',
+		];
+		$this->assertEquals($expected, $this->oSequencer->GetStepNames());
+	}
+
 	public static function WithoutOneStepProvider()
 	{
 		return [
@@ -482,13 +503,13 @@ class ApplicationInstallerSequencerTest extends ItopTestCase
 
 	public function testGetStepNamesWithOnlyMandatorySteps()
 	{
-		$this->GivenApplicationInstallSequencer([], true);
+		$aAdditionalParams = [
+			'optional_steps' => [],
+		];
+		$this->GivenApplicationInstallSequencer($aAdditionalParams, true);
 		$expected = [
 			'',
-			'log-parameters',
-			'migrate-before',
 			'db-schema',
-			'migrate-after',
 			'after-db-create',
 			'load-data',
 			'create-config',

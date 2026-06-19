@@ -22,7 +22,6 @@ use Combodo\iTop\Application\EventRegister\ApplicationEvents;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
-use Combodo\iTop\Setup\ModuleDependency\Module;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 
 require_once APPROOT.'core/modulehandler.class.inc.php';
@@ -4660,12 +4659,15 @@ abstract class MetaModel
 	 * @throws \CoreException
 	 * @throws \MySQLException
 	 */
-	public static function DBExists($bMustBeComplete = true)
+	public static function DBExists($bMustBeComplete = true, ?string $sDBName = null)
 	{
-		if (!CMDBSource::IsDB(self::$m_sDBName)) {
+		if (is_null($sDBName)) {
+			$sDBName = self::$m_sDBName;
+		}
+		if (!CMDBSource::IsDB($sDBName)) {
 			return false;
 		}
-		CMDBSource::SelectDB(self::$m_sDBName);
+		CMDBSource::SelectDB($sDBName);
 
 		$aFound = [];
 		$aMissing = [];

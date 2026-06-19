@@ -195,31 +195,9 @@ class WizardController
 	{
 		SetupLog::Info("=== Setup screen: ".$oStep->GetTitle().' ('.get_class($oStep).')');
 		$oPage = new SetupPage($oStep->GetTitle());
-		if ($oStep->RequiresWritableConfig()) {
-			$sConfigFile = utils::GetConfigFilePath(ITOP_DEFAULT_ENV);
-			if (file_exists($sConfigFile)) {
-				// The configuration file already exists
-				if (!is_writable($sConfigFile)) {
-					SetupUtils::ExitReadOnlyMode(false); // Reset readonly mode in case of problem
-					SetupUtils::EraseSetupToken();
-					$sRelativePath = utils::GetConfigFilePathRelative(ITOP_DEFAULT_ENV);
-					$oP = new SetupPage('Installation Cannot Continue');
-					$oP->add("<h2>Fatal error</h2>\n");
-					$oP->error("<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.");
-					$oP->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.");
-
-					$sButtonsHtml = <<<HTML
-<button type="button" class="ibo-button ibo-is-regular ibo-is-primary" onclick="window.location.reload()">Reload</button>
-HTML;
-					$oP->p($sButtonsHtml);
-
-					$oP->output();
-					// Prevent token creation
-					exit;
-				}
-			}
-		}
 		$oPage->LinkScriptFromAppRoot('setup/setup.js');
+		$oStep->PreFormDisplay($oPage);
+
 		$oPage->add('<form id="wiz_form" class="ibo-setup--wizard" method="post">');
 		$oPage->add('<div class="ibo-setup--wizard--content">');
 		$oStep->Display($oPage);
@@ -287,8 +265,8 @@ EOF
 		$oPage->output();
 	}
 	/**
-	 * Make the wizard run: Start, Next or Back depending WizardUpdateButtons();
-on the page's parameters
+	 * Make the wizard run: 'Start', 'Next' or 'Back' depending WizardUpdateButtons();
+	 * on the page's parameters
 	 */
 	public function Run()
 	{

@@ -52,4 +52,11 @@ class ormPasswordTest extends ItopDataTestCase
 			],
 		];
 	}
+
+	public function testSetPasswordNullShouldNotCrash()
+	{
+		$oPassword = new ormPassword();
+		$oPassword->SetPassword(null);
+		static::assertTrue($oPassword->CheckPassword(null));
+	}
 }

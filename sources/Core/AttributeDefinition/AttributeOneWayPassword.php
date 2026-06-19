@@ -81,7 +81,7 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 		if (is_object($oPassword)) {
 			$oPassword = clone $proposedValue;
 		} else {
-			$oPassword = new ormPassword('', '');
+			$oPassword = new ormPassword();
 			$oPassword->SetPassword($proposedValue);
 		}
 

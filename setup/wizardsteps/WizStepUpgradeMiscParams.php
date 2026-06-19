@@ -65,8 +65,6 @@ class WizStepUpgradeMiscParams extends AbstractWizStepMiscParams
 		$oPage->add('</table>');
 		$oPage->add('<span id="graphviz_status"></span>');
 		$oPage->add('</fieldset>');
-		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
-		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		$oPage->add_ready_script(
 			<<<EOF
 		$('#application_url').on('change keyup', function() { WizardUpdateButtons(); } );

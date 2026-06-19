@@ -25,8 +25,8 @@ use CoreException;
 use Dict;
 use Exception;
 use MetaModel;
+use MFCompiler;
 use RunTimeEnvironment;
-use SecurityException;
 use SetupUtils;
 use utils;
 
@@ -84,11 +84,8 @@ class DataFeatureRemovalController extends Controller
 	{
 		$aParams = [];
 
-		try {
-			//from setup wizard/mtp
-			SetupUtils::CheckSetupToken();
-			SetupUtils::EraseSetupToken();
-		} catch (SecurityException $e) {
+		//from setup wizard/mtp
+		if (!SetupUtils::IsSessionSetupTokenValid()) {
 			//from same module
 			$this->ValidateTransactionId();
 		}
@@ -97,12 +94,15 @@ class DataFeatureRemovalController extends Controller
 		$aHiddenInputNames = [
 			'selected_extensions' => '[]',
 			'selected_modules' => '[]',
-			'display_choices' => '[]',
+			'display_choices' => '',
 			'added_extensions' => '[]',
 			'removed_extensions' => '[]',
 			'extensions_not_uninstallable' => '[]',
 			'copy_setup_files' => 1,
+			'force-uninstall' => "",
+			'use_symbolic_links' => MFCompiler::UseSymbolicLinks() ? 'on' : '',
 			'return_button_label' => '',
+			'target_env' => ITOP_DEFAULT_ENV,
 		];
 
 		$aHiddenInputs = [];
@@ -122,6 +122,7 @@ class DataFeatureRemovalController extends Controller
 			//it does not come from setup
 			// we get extensions from 1st screen uiblocks
 			$this->ReadExtensionsDiff();
+			$aHiddenInputs['force-uninstall'] = $this->bForcedUninstallation ? 'on' : '';
 			$aAddedExtensions = $this->aExtensionsToCheck['to_be_installed'];
 			$aHiddenInputs['added_extensions'] = $this->ConvertIntoSetupFormat($aAddedExtensions);
 
@@ -144,7 +145,7 @@ class DataFeatureRemovalController extends Controller
 
 		$bForceCompilation = Session::Get('bForceCompilation', false);
 		try {
-			$this->Compile($aRemoveExtensionCodes, $bForceCompilation);
+			$this->Compile($aAddedExtensions, $aRemoveExtensionCodes, $bForceCompilation);
 		} catch (CoreException $e) {
 			$aParams['DataFeatureRemovalErrorMessage'] = $e->getHtmlDesc();
 			$this->DisplayPage($aParams, 'AnalysisResult');
@@ -158,10 +159,10 @@ class DataFeatureRemovalController extends Controller
 		if ("[]" === $aHiddenInputs['selected_modules']) {
 			//to make setup redirection work, we need to pass complex data structures to setup wizards (ie extension/module lists)
 			$oConfig = MetaModel::GetConfig();
-			$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, $aAddedExtensions, $aRemovedExtensions);
+			$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
 			$aHiddenInputs['selected_extensions'] = $this->ConvertIntoSetupFormat($aSelectedExtensions);
 
-			$oRunTimeEnvironment = $this->GetRuntimeEnvironment($aRemovedExtensions);
+			$oRunTimeEnvironment = $this->GetRuntimeEnvironment($aAddedExtensions, $aRemovedExtensions);
 			$aSearchDirs = [$oRunTimeEnvironment->GetBuildDir()];
 			$aSelectedModules = $oRunTimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions, $aSearchDirs);
 			$aHiddenInputs['selected_modules'] = $this->ConvertIntoSetupFormat($aSelectedModules);
@@ -179,7 +180,6 @@ class DataFeatureRemovalController extends Controller
 		$aParams['aSetupParams'] = [
 			"_class" => "WizStepLandingBeforeAudit",
 			"operation" => "next",
-			"_params[authent]" => SetupUtils::CreateSetupToken(),
 		];
 
 		foreach ($aHiddenInputs as $sInputName => $sInputValue) {
@@ -195,22 +195,32 @@ class DataFeatureRemovalController extends Controller
 		$aParams['bDeletionNeeded'] = ($aParams['iQueryCount'] > 0);
 		Session::Set('aDeletionExecutionSummary', serialize($this->aDeletionExecutionSummary));
 
+		if (!$aParams['bDeletionNeeded']) {
+			SetupUtils::CreateSetupToken();
+		}
+
 		$this->DisplayPage($aParams, 'AnalysisResult');
 	}
 
 	private function ConvertIntoSetupFormat(array $aData): string
 	{
-		return json_encode($aData);
+		$aNewData = [];
+		foreach ($aData as $k => $sVal) {
+			$aNewData[] = sprintf('"%s":"%s"', $k, $sVal);
+		}
+
+		return "{".implode(',', $aNewData)."}";
 	}
 
 	/**
+* @param array $aAddedExtensions
 * @param array $aRemovedExtensions
 * @param bool $bForceCompilation
 * @return void
 * @throws \ConfigException
 * @throws \CoreException
 	 */
-	private function Compile(array $aRemovedExtensions, bool $bForceCompilation = true): void
+	private function Compile(array $aAddedExtensions, array $aRemovedExtensions, bool $bForceCompilation = true): void
 	{
 		$sSourceEnv = MetaModel::GetEnvironment();
 		$sBuildDir = APPROOT."/env-$sSourceEnv-build";
@@ -225,15 +235,15 @@ class DataFeatureRemovalController extends Controller
 				null,
 				['sSourceEnv' => $sSourceEnv, 'sBuildDir' => $sBuildDir, 'bIsDirEmpty' => $bIsDirEmpty, glob("$sBuildDir/*")]
 			);
-			$this->GetRuntimeEnvironment($aRemovedExtensions)->CompileFrom($sSourceEnv);
+			$this->GetRuntimeEnvironment($aAddedExtensions, $aRemovedExtensions)->CompileFrom($sSourceEnv);
 		}
 	}
 
-	private function GetRuntimeEnvironment(array $aRemovedExtensions): RunTimeEnvironment
+	private function GetRuntimeEnvironment(array $aAddedExtensions, array $aRemovedExtensions): RunTimeEnvironment
 	{
 		if (is_null($this->oRuntimeEnvironment)) {
 			$sSourceEnv = MetaModel::GetEnvironment();
-			$this->oRuntimeEnvironment = new DryRemovalRuntimeEnvironment($sSourceEnv, $aRemovedExtensions);
+			$this->oRuntimeEnvironment = new DryRemovalRuntimeEnvironment($sSourceEnv, $aAddedExtensions, $aRemovedExtensions);
 		}
 
 		return $this->oRuntimeEnvironment;
@@ -426,7 +436,7 @@ class DataFeatureRemovalController extends Controller
 				$aExtensionData['extra_flags']['selected'] = false;
 				$sLabel = $aAvailableExtensions[$sCode]['label'];
 				$this->aExtensionsToCheck['to_be_removed'][$sCode] = $sLabel;
-				if (!$aExtensionData['extra_flags']['uninstallable'] || $aExtensionData['extra_flags']['remote']) {
+				if (! $this->bForcedUninstallation && $aExtensionData['extra_flags']['uninstallable']) {
 					$this->bForcedUninstallation = true;
 				}
 			} elseif (!$aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCode] === 'on') {

@@ -108,7 +108,7 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 	/**
 	 * @inheritDoc
 	 */
-	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir)
+	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir): array
 	{
 		\SetupLog::Info(__METHOD__);
 		$aRet = parent::GetMFModulesToCompile($sSourceEnv, $sSourceDir);

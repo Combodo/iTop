@@ -2,22 +2,24 @@
 
 namespace Combodo\iTop\Setup\FeatureRemoval;
 
-use iTopExtensionsMap;
+use Config;
 use RunTimeEnvironment;
 use SetupUtils;
 
 class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 {
 	protected array $aExtensionsToRemoveByCode;
+	protected array $aExtensionCodesToAddByCode;
 
 	/**
 	 * Toolset for building a run-time environment
 	 *
 	 *  @param string $sSourceEnv: environment from which setup is inspired to simulate extension removal and usee CompileFrom...
 	 */
-	public function __construct($sSourceEnv = 'production', array $aExtensionCodesToRemove = [])
+	public function __construct($sSourceEnv = ITOP_DEFAULT_ENV, array $aExtensionCodesToAdd = [], array $aExtensionCodesToRemove = [])
 	{
 		parent::__construct($sSourceEnv, false);
+		$this->aExtensionCodesToAddByCode = $aExtensionCodesToAdd;
 		$this->aExtensionsToRemoveByCode = $aExtensionCodesToRemove;
 		$this->Prepare($sSourceEnv, $this->sBuildEnv);
 	}
@@ -34,13 +36,18 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 		SetupUtils::copydir(APPROOT."/data/$sSourceEnv-modules", APPROOT."/data/$sBuildEnv-modules");
 		SetupUtils::copydir(APPROOT."/conf/$sSourceEnv", APPROOT."/conf/$sBuildEnv");
 
-		$this->DeclareExtensionAsRemoved($this->aExtensionsToRemoveByCode);
-	}
+		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
+		$sSourceDir = $oSourceConfig->Get('source_dir');
+		list($aExtraDirs, ) = $this->GetDirsToCompile($sSourceDir, $sSourceEnv);
 
-	private function DeclareExtensionAsRemoved(array $aExtensionCodes): void
-	{
-		$oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv);
-		$oExtensionsMap->DeclareExtensionAsRemoved($aExtensionCodes);
+		$this->InitExtensionMap($aExtraDirs, $oSourceConfig);
+		$this->GetExtensionMap()->DeclareExtensionAsRemoved($this->aExtensionsToRemoveByCode);
+
+		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
+			if (array_key_exists($oExtension->sCode, $this->aExtensionCodesToAddByCode)) {
+				$oExtension->MarkAsChosen();
+			}
+		}
 	}
 
 	public function Cleanup(): void

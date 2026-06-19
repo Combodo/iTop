@@ -42,7 +42,7 @@ abstract class StepSequencer
 	public function __construct(Parameters $oParams, ?RunTimeEnvironment $oRunTimeEnvironment = null, string $sSourceDesc = 'Setup')
 	{
 		if (is_null($oRunTimeEnvironment)) {
-			$sEnvironment = $oParams->Get('target_env', 'production');
+			$sEnvironment = $oParams->Get('target_env', ITOP_DEFAULT_ENV);
 			$this->oRunTimeEnvironment = new RunTimeEnvironment($sEnvironment, false);
 		} else {
 			$this->oRunTimeEnvironment = $oRunTimeEnvironment;
@@ -171,12 +171,13 @@ abstract class StepSequencer
 	protected function GetConfig()
 	{
 		if (! is_null($this->oTestConfig)) {
+			// For unit tests
 			return $this->oTestConfig;
 		}
 
 		// Caching config here is a bad idea, the first config loaded does not contain module settings
-		$sTargetEnvironment = $this->oRunTimeEnvironment->GetBuildEnv();
-		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
+		$sBuildEnvironment = $this->oRunTimeEnvironment->GetBuildEnv();
+		$sConfigFile = APPCONF.$sBuildEnvironment.'/'.ITOP_CONFIG_FILE;
 		try {
 			if (file_exists($sConfigFile)) {
 				$oConfig = new Config($sConfigFile);

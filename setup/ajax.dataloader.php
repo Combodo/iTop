@@ -35,6 +35,7 @@
  * 'percent': integer 0..100 the percentage of completion once the file has been loaded
  */
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\WebPage\AjaxPage;
 
 $bBypassMaintenance = true; // Reset maintenance mode in case of problem
@@ -123,13 +124,19 @@ require_once('./xmldataloader.class.inc.php');
 // Never cache this page
 header("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
 header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");    // Date in the past
+$oCtx = new ContextTag(ContextTag::TAG_SETUP);
 
 /**
  * Main program
  */
 $sOperation = utils::ReadParam('operation', '');
 try {
-	SetupUtils::CheckSetupToken();
+	Session::Start();
+	if (!SetupUtils::IsSessionSetupTokenValid()) {
+		throw new SecurityException("Invalid session token");
+	}
+
+	$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
 	switch ($sOperation) {
 		case 'async_action':
@@ -150,14 +157,7 @@ try {
 				/** @var WizardStep $oStep */
 				$oStep = new $sClass($oDummyController, $sState);
 				$sConfigFile = utils::GetConfigFilePath(ITOP_DEFAULT_ENV);
-				if (file_exists($sConfigFile) && !is_writable($sConfigFile) && $oStep->RequiresWritableConfig()) {
-					$sRelativePath = utils::GetConfigFilePathRelative(ITOP_DEFAULT_ENV);
-					$sErrorMsg = "<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.";
-					$sErrorMsg .= "The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.";
-					throw new Exception($sErrorMsg);
-				} else {
-					$oStep->AsyncAction($oPage, $sActionCode, $aParams);
-				}
+				$oStep->AsyncAction($oPage, $sActionCode, $aParams);
 			}
 			$oPage->output();
 			break;

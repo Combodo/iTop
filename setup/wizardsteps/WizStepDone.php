@@ -17,6 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
@@ -68,13 +69,13 @@ class WizStepDone extends WizardStep
 		}
 
 		$bHasBackup = false;
-		if (($this->oWizard->GetParameter('mode', '') == 'upgrade') && $this->oWizard->GetParameter('db_backup', false) && $this->oWizard->GetParameter('authent', false)) {
+		if (($this->oWizard->GetParameter('mode', '') == 'upgrade') && $this->oWizard->GetParameter('db_backup', false)) {
 			$sBackupDestination = $this->oWizard->GetParameter('db_backup_path', '');
 			if (file_exists($sBackupDestination.'.tar.gz')) {
 				$bHasBackup = true;
 				// To mitigate security risks: pass only the filename without the extension, the download will add the extension itself
 				$oPage->p('Your backup is ready');
-				$oPage->p('<a style="background:transparent;" href="'.utils::GetAbsoluteUrlAppRoot(true).'setup/ajax.dataloader.php?operation=async_action&step_class=WizStepDone&params[backup]='.urlencode($sBackupDestination).'&authent='.$this->oWizard->GetParameter('authent', '').'" target="_blank"><img src="../images/icons/icons8-archive-folder.svg" style="border:0;vertical-align:middle;">&nbsp;Download '.basename($sBackupDestination).'</a>');
+				$oPage->p('<a style="background:transparent;" href="'.utils::GetAbsoluteUrlAppRoot(true).'setup/ajax.dataloader.php?operation=async_action&step_class=WizStepDone&params[backup]='.urlencode($sBackupDestination).'" target="_blank"><img src="../images/icons/icons8-archive-folder.svg" style="border:0;vertical-align:middle;">&nbsp;Download '.basename($sBackupDestination).'</a>');
 			} else {
 				$oPage->p('<img src="../images/error.png"/>&nbsp;Warning: Backup creation failed !');
 			}
@@ -95,7 +96,7 @@ class WizStepDone extends WizardStep
 		// Load the data model only, in order to load env-production/core/main.php to get the XML parameters (needed by GetModuleSettings below)
 		// But main.php may also contain classes (defined without any module), and thus requiring the full data model
 		// to be loaded to prevent "class not found" errors...
-		$oProductionEnv = new RunTimeEnvironment(ITOP_DEFAULT_ENV);
+		$oProductionEnv = new RunTimeEnvironment($this->oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV));
 		$oProductionEnv->InitDataModel($oConfig, true);
 		$sIframeUrl = $oConfig->GetModuleSetting('itop-hub-connector', 'setup_url', '');
 
@@ -118,9 +119,8 @@ class WizStepDone extends WizardStep
 			");
 		}
 
-		$sForm = '<div class="ibo-setup--wizard--buttons-container" style="text-align:center"><form method="post" class="ibo-setup--enter-itop" action="'.$this->oWizard->GetParameter('application_url').'pages/UI.php">';
-		$sForm .= '<input type="hidden" name="auth_user" value="'.utils::EscapeHtml($this->oWizard->GetParameter('admin_user')).'">';
-		$sForm .= '<input type="hidden" name="auth_pwd" value="'.utils::EscapeHtml($this->oWizard->GetParameter('admin_pwd')).'">';
+		$sTargetEnv = utils::HtmlEntities($this->oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV));
+		$sForm = '<div class="ibo-setup--wizard--buttons-container" style="text-align:center"><form method="post" class="ibo-setup--enter-itop" action="'.$this->oWizard->GetParameter('application_url').'pages/UI.php?switch_env='.$sTargetEnv.'">';
 		$sForm .= "<button id=\"enter_itop\" class=\"ibo-button ibo-is-regular ibo-is-primary\" type=\"submit\">Enter ".ITOP_APPLICATION."</button></div>";
 		$sForm .= '</form>';
 
@@ -147,15 +147,6 @@ class WizStepDone extends WizardStep
 	public function JSCanMoveBackward()
 	{
 		return 'return false;';
-	}
-
-	/**
-	 * Tells whether this step of the wizard requires that the configuration file be writable
-	 * @return bool True if the wizard will possibly need to modify the configuration at some point
-	 */
-	public function RequiresWritableConfig()
-	{
-		return false; //This step executes once the config was written and secured
 	}
 
 	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)

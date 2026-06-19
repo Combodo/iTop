@@ -23,5 +23,5 @@
  */
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'theme:fullmoon-high-contrast' => 'Fullmoon (High contrast)~~',
+	'theme:fullmoon-high-contrast' => 'Fullmoon (高对比度)',
 ]);

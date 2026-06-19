@@ -71,15 +71,37 @@ class RunTimeEnvironment
 		return $this->oExtensionsMap;
 	}
 
-	public function InitExtensionMap($aExtraDirs, $oSourceConfig)
+	protected function GetDirsToCompile(string $sSourceDir, string $sSourceEnv): array
 	{
-		// Actually read the modules available for the build environment,
-		// but get the selection from the source environment and finally
-		// mark as (automatically) chosen all the "remote" modules present in the
-		// build environment (data/<build-env>-modules)
-		// The actual choices will be recorded by RecordInstallation below
-		$this->oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv, $aExtraDirs);
-		$this->oExtensionsMap->LoadChoicesFromDatabase($oSourceConfig);
+		$sSourceDirFull = APPROOT.$sSourceDir;
+		if (!is_dir($sSourceDirFull)) {
+			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
+		}
+		$aDirsToCompile = [$sSourceDirFull];
+		if (is_dir(APPROOT.'extensions')) {
+			$aDirsToCompile[] = APPROOT.'extensions';
+		}
+		$sExtraDir = utils::GetDataPath().$this->sBuildEnv.'-modules/';
+		if (is_dir($sExtraDir)) {
+			$aDirsToCompile[] = $sExtraDir;
+		}
+
+		$aExtraDirs = $this->GetExtraDirsToScan($aDirsToCompile);
+		$aDirsToCompile = array_merge($aDirsToCompile, $aExtraDirs);
+		return [$aExtraDirs, $aDirsToCompile];
+	}
+
+	public function InitExtensionMap(array $aExtraDirs, Config $oSourceConfig)
+	{
+		if (is_null($this->oExtensionsMap)) {
+			// Actually read the modules available for the build environment,
+			// but get the selection from the source environment and finally
+			// mark as (automatically) chosen all the "remote" modules present in the
+			// build environment (data/<build-env>-modules)
+			// The actual choices will be recorded by RecordInstallation below
+			$this->oExtensionsMap = iTopExtensionsMap::GetExtensionsMap($this->sBuildEnv);
+			$this->oExtensionsMap->LoadChoicesFromDatabase($oSourceConfig);
+		}
 	}
 
 	/**
@@ -168,7 +190,7 @@ class RunTimeEnvironment
 		MetaModel::Startup($oConfig, $bModelOnly, $bUseCache, false, $this->sBuildEnv);
 
 		if ($this->oExtensionsMap === null) {
-			$this->oExtensionsMap = new iTopExtensionsMap($this->sBuildEnv);
+			$this->oExtensionsMap = iTopExtensionsMap::GetExtensionsMap($this->sBuildEnv);
 		}
 	}
 
@@ -396,9 +418,11 @@ class RunTimeEnvironment
 		$sBuildConfigFile = APPCONF.$this->sBuildEnv.'/'.ITOP_CONFIG_FILE;
 
 		// Write the config file
-		@chmod($sBuildConfigFile, 0770); // In case it exists: RWX for owner and group, nothing for others
+		if (is_file($sBuildConfigFile)) {
+			chmod($sBuildConfigFile, 0770); // In case it exists: RWX for owner and group, nothing for others
+		}
 		$oConfig->WriteToFile($sBuildConfigFile);
-		@chmod($sBuildConfigFile, 0440); // Read-only for owner and group, nothing for others
+		chmod($sBuildConfigFile, 0440); // Read-only for owner and group, nothing for others
 	}
 
 	/**
@@ -442,32 +466,12 @@ class RunTimeEnvironment
 
 	/**
 	 * Get the installed modules (only the installed ones)
+	 * @return \MFModule[]
 	 */
-	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir)
+	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir): array
 	{
-		$sSourceDirFull = APPROOT.$sSourceDir;
-		if (!is_dir($sSourceDirFull)) {
-			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
-		}
-		$aDirsToCompile = [$sSourceDirFull];
-		if (is_dir(APPROOT.'extensions')) {
-			$aDirsToCompile[] = APPROOT.'extensions';
-		}
-		$sExtraDir = utils::GetDataPath().$this->sBuildEnv.'-modules/';
-		if (is_dir($sExtraDir)) {
-			$aDirsToCompile[] = $sExtraDir;
-		}
-
-		$aExtraDirs = $this->GetExtraDirsToScan($aDirsToCompile);
-		$aDirsToCompile = array_merge($aDirsToCompile, $aExtraDirs);
-
+		list($aExtraDirs, $aDirsToCompile) = $this->GetDirsToCompile($sSourceDir, $sSourceEnv);
 		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
-
-		// Actually read the modules available for the build environment,
-		// but get the selection from the source environment and finally
-		// mark as (automatically) chosen all the "remote" modules present in the
-		// build environment (data/<build-env>-modules)
-		// The actual choices will be recorded by RecordInstallation below
 		$this->InitExtensionMap($aExtraDirs, $oSourceConfig);
 		$this->GetExtensionMap()->LoadChoicesFromDatabase($oSourceConfig);
 		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
@@ -475,12 +479,10 @@ class RunTimeEnvironment
 				$this->GetExtensionMap()->MarkAsChosen($oExtension->sCode);
 			}
 		}
-
 		$aModulesToLoad = $this->GetModulesToLoad($this->sFinalEnv, $aDirsToCompile);
 		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile, true, $aModulesToLoad);
 
 		// Do load the required modules
-		//
 		$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
 
 		$aRet = [];
@@ -1030,7 +1032,8 @@ class RunTimeEnvironment
 			@chmod($sFinalConfig, 0770); // In case it exists: RWX for owner and group, nothing for others
 			$this->CommitFile($sBuildConfig, $sFinalConfig);
 			@chmod($sFinalConfig, 0440); // Read-only for owner and group, nothing for others
-			@rmdir(dirname($sBuildConfig)); // Cleanup the temporary build dir if empty
+
+			SetupUtils::rrmdir(dirname($sBuildConfig)); // Cleanup the temporary build dir if empty
 
 			if (! isset($_SESSION)) {
 				//used in all UI setups (not unattended)
@@ -1331,11 +1334,12 @@ class RunTimeEnvironment
 
 	public function DataToCleanupAudit()
 	{
-		$oSetupAudit = new SetupAudit(ITOP_DEFAULT_ENV, $this->sBuildEnv);
+		$oSetupAudit = new SetupAudit($this->GetFinalEnv(), $this->GetBuildEnv());
 
 		//Make sure the MetaModel is started before analysing for issues
-		$sConfFile = utils::GetConfigFilePath(ITOP_DEFAULT_ENV);
-		MetaModel::Startup($sConfFile, false, false); // Start on production environment
+		$sFinalEnv = $this->GetFinalEnv();
+		$sConfFile = utils::GetConfigFilePath($sFinalEnv);
+		MetaModel::Startup($sConfFile, false, false, false, $sFinalEnv); // Start on environment
 		$oSetupAudit->RunDataAudit(true);
 		$iCount = $oSetupAudit->GetDataToCleanupCount();
 
@@ -1350,15 +1354,11 @@ class RunTimeEnvironment
 		$sDestinationEnv = $this->sBuildEnv;
 
 		if ($sDestinationEnv != $sSourceEnv) {
+			if (file_exists(utils::GetDataPath().$sDestinationEnv.'.delta.xml')) {
+				unlink(utils::GetDataPath().$sDestinationEnv.'.delta.xml');
+			}
 			SetupUtils::CopyFile(utils::GetDataPath().$sSourceEnv.'.delta.xml', utils::GetDataPath().$sDestinationEnv.'.delta.xml');
 			SetupUtils::copydir(utils::GetDataPath().$sSourceEnv.'-modules/', utils::GetDataPath().$sDestinationEnv.'-modules/');
-
-			// Copy the config file
-			//
-			$sFinalConfig = APPCONF.$sDestinationEnv.'/config-itop.php';
-			if (is_file($sFinalConfig)) {
-				chmod($sFinalConfig, 0770); // In case it exists: RWX for owner and group, nothing for others
-			}
 			SetupUtils::copydir(APPCONF.$sSourceEnv, APPCONF.$sDestinationEnv);
 			MetaModel::ResetAllCaches($sDestinationEnv);
 		}
@@ -1409,7 +1409,7 @@ class RunTimeEnvironment
 		self::MakeDirSafe($sBuildDir);
 		$bSkipTempDir = ($this->sFinalEnv != $this->sBuildEnv); // No need for a temporary directory if sBuildEnv is already a temporary directory
 		$oMFCompiler = new MFCompiler($oFactory, $this->sFinalEnv);
-		$oMFCompiler->Compile($sBuildDir, null, $bUseSymLinks, $bSkipTempDir);
+		$oMFCompiler->Compile($sBuildDir, $bUseSymLinks, $bSkipTempDir);
 
 		MetaModel::ResetAllCaches($this->sBuildEnv);
 
@@ -1417,10 +1417,9 @@ class RunTimeEnvironment
 	}
 
 	/**
+	 * @param array $aSelectedExtensionCodes
 	 * @param array $aRemovedExtensionCodes
 	 * @param array $aSelectedModules
-	 * @param string $sSourceDir
-	 * @param string $sExtensionDir
 	 * @param boolean $bUseSymbolicLinks
 	 *
 	 * @return void
@@ -1428,32 +1427,12 @@ class RunTimeEnvironment
 	 * @throws \CoreException
 	 *
 	 */
-	public function DoCompile(array $aRemovedExtensionCodes, array $aSelectedModules, string $sSourceDir, string $sExtensionDir, bool $bUseSymbolicLinks = false): void
+	public function DoCompile(array $aSelectedExtensionCodes, array $aRemovedExtensionCodes, array $aSelectedModules, bool $bUseSymbolicLinks = false): void
 	{
 		SetupLog::Info('Compiling data model.');
 
 		$sEnvironment = $this->sBuildEnv;
 		$sBuildPath = $this->GetBuildDir();
-
-		$sSourcePath = APPROOT.$sSourceDir;
-		$aDirsToScan = [$sSourcePath];
-		$sExtensionsPath = APPROOT.$sExtensionDir;
-		if (is_dir($sExtensionsPath)) {
-			// if the extensions dir exists, scan it for additional modules as well
-			$aDirsToScan[] = $sExtensionsPath;
-		}
-		$sExtraPath = APPROOT.'/data/'.$sEnvironment.'-modules/';
-		if (is_dir($sExtraPath)) {
-			// if the extra dir exists, scan it for additional modules as well
-			$aDirsToScan[] = $sExtraPath;
-		}
-
-		if (!is_dir($sSourcePath)) {
-			$sErrorMessage = "Failed to find the source directory '$sSourcePath', please check the rights of the web server";
-			$e = new CoreException($sErrorMessage);
-			IssueLog::Exception($sErrorMessage, $e);
-			throw $e;
-		}
 
 		if (!is_dir($sBuildPath)) {
 			if (!mkdir($sBuildPath)) {
@@ -1471,22 +1450,47 @@ class RunTimeEnvironment
 			SetupUtils::tidydir($sBuildPath);
 		}
 
-		$oExtensionsMap = new iTopExtensionsMap(ITOP_DEFAULT_ENV, $aDirsToScan);
+		$oExtensionsMap = iTopExtensionsMap::GetExtensionsMap($this->GetFinalEnv());
 		// Removed modules are stored as static for FindModules()
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
 		// Check that all the extensions have a code
+		$aNoCodeExtensionSourceDirs = [];
+		$bSetupFailure = false;
+		$aNoCodeExtensionLabelsThatBreakSetup = [];
 		foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
+			if (in_array($oExtension->sCode, $aSelectedExtensionCodes)) {
+				$oExtension->MarkAsChosen();
+			}
+
 			if (empty($oExtension->sCode)) {
-				$sExtensionLabel = !empty($oExtension->sLabel) ? $oExtension->sLabel : $oExtension->sSourceDir;
-				$sErrorMessage = sprintf('Extension "%s" cannot be installed: Missing extension code', $sExtensionLabel);
-				$e = new CoreException($sErrorMessage);
-				IssueLog::Exception($sErrorMessage, $e);
-				throw $e;
+				if (empty($oExtension->sLabel)) {
+					$sExtensionLabel = $oExtension->sSourceDir;
+					$aNoCodeExtensionSourceDirs [] = $oExtension->sSourceDir;
+				} else {
+					$sExtensionLabel = $oExtension->sLabel;
+					$aNoCodeExtensionSourceDirs [$sExtensionLabel] = $oExtension->sSourceDir;
+				}
+
+				if ($oExtension->IsMarkedAsChosen()) {
+					$aNoCodeExtensionLabelsThatBreakSetup[] = $sExtensionLabel;
+					$bSetupFailure = true;
+				}
 			}
 		}
 
-		$oFactory = new ModelFactory($aDirsToScan);
+		if (count($aNoCodeExtensionSourceDirs) > 0) {
+			if ($bSetupFailure) {
+				$sErrorMessage = sprintf('Selected extension(s) cannot be installed: Missing extension code (%s)', implode(',', $aNoCodeExtensionLabelsThatBreakSetup));
+				$e = new CoreException($sErrorMessage);
+				SetupLog::Exception($sErrorMessage, $e, null, $aNoCodeExtensionSourceDirs);
+				throw $e;
+			} else {
+				SetupLog::Warning("Non selected extension(s) cannot be installed: Missing extension code", null, $aNoCodeExtensionSourceDirs);
+			}
+		}
+
+		$oFactory = new ModelFactory($oExtensionsMap->GetScannedModulesRootDirs());
 
 		$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
 		$oFactory->LoadModule($oDictModule);
@@ -1522,7 +1526,7 @@ class RunTimeEnvironment
 		}
 
 		$oMFCompiler = new MFCompiler($oFactory, $sEnvironment);
-		$oMFCompiler->Compile($sBuildPath, null, $bUseSymbolicLinks, false, false);
+		$oMFCompiler->Compile($sBuildPath, $bUseSymbolicLinks, false);
 		SetupLog::Info("Data model successfully compiled to '$sBuildPath'.");
 
 		$sCacheDir = APPROOT.'/data/cache-'.$sEnvironment.'/';
@@ -1572,7 +1576,7 @@ class RunTimeEnvironment
 
 	public function EnterReadOnlyMode(Config $oConfig)
 	{
-		if ($this->GetFinalEnv() != 'production') {
+		if ($this->GetFinalEnv() != ITOP_DEFAULT_ENV) {
 			return;
 		}
 
@@ -1592,7 +1596,7 @@ class RunTimeEnvironment
 
 	public function ExitReadOnlyMode()
 	{
-		if ($this->GetFinalEnv() != 'production') {
+		if ($this->GetFinalEnv() != ITOP_DEFAULT_ENV) {
 			return;
 		}
 
@@ -1675,21 +1679,29 @@ class RunTimeEnvironment
 		}
 
 		$aExtensionDirs = [];
+		$aFromSelectedExtensionModules = [];
 		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
-			if ($oExtension->bMarkedAsChosen && is_dir($oExtension->sSourceDir)) {
+			if ($oExtension->IsMarkedAsChosen() && is_dir($oExtension->sSourceDir)) {
 				$aExtensionDirs [] = $oExtension->sSourceDir;
+				$aFromSelectedExtensionModules = array_merge($aFromSelectedExtensionModules, $oExtension->aModules);
 			}
 		}
 
 		SetupLog::Info(__METHOD__, null, ['ext_dirs' => $aExtensionDirs]);
 		$aModuleIdsToLoad = InstallationChoicesToModuleConverter::GetInstance()->GetModules($aChoices, $aSearchDirs, $sInstallFilePath, $aExtensionDirs);
 		$aModulesToLoad = [];
+
 		foreach ($aModuleIdsToLoad as $sModuleId) {
 			$oModule = new Module($sModuleId);
 			$sModuleName = $oModule->GetModuleName();
 			$aModulesToLoad[] = $sModuleName;
 		}
 
+		foreach ($aFromSelectedExtensionModules as $sModuleName) {
+			if (! in_array($sModuleName, $aModulesToLoad)) {
+				$aModulesToLoad[] = $sModuleName;
+			}
+		}
 		return $aModulesToLoad;
 	}
 

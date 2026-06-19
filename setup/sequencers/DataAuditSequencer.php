@@ -67,13 +67,13 @@ class DataAuditSequencer extends StepSequencer
 					$sSourceDir = $this->oParams->Get('source_dir', 'datamodels/latest');
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
 					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', []);
+					$aSelectedExtensionCodes = $this->oParams->Get('selected_extensions', []);
 					$bUseSymbolicLinks = $this->oParams->Get('use_symbolic_links', null) === 'on';
 					MetaModel::ResetAllCaches($this->oRunTimeEnvironment->GetBuildEnv());
 					$this->oRunTimeEnvironment->DoCompile(
+						$aSelectedExtensionCodes,
 						$aRemovedExtensionCodes,
 						$aSelectedModules,
-						$sSourceDir,
-						$sExtensionDir,
 						$bUseSymbolicLinks
 					);
 					return $this->ComputeNextStep($sStep);

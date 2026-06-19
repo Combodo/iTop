@@ -21,6 +21,7 @@
 /**
  * Database Connection parameters screen
  */
+
 use Combodo\iTop\Application\WebPage\WebPage;
 
 class WizStepDBParams extends WizardStep
@@ -76,8 +77,6 @@ class WizStepDBParams extends WizardStep
 			$sTlsCA,
 			$sNewDBName
 		);
-		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
-		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		$oPage->add('</table>');
 		$sCreateDB = $this->oWizard->GetParameter('create_db', 'yes');
 		if ($sCreateDB == 'no') {

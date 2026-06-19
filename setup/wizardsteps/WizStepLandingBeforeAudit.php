@@ -7,10 +7,12 @@
 
 class WizStepLandingBeforeAudit extends WizStepModulesChoice
 {
+	private RunTimeEnvironment $oRuntimeEnv;
+
 	public function __construct(WizardController $oWizard, $sCurrentState)
 	{
-		$oProductionEnv = new RunTimeEnvironment();
-		$sBuildConfigFile = APPCONF.$oProductionEnv->GetBuildEnv().'/'.ITOP_CONFIG_FILE;
+		$this->oRuntimeEnv = new RunTimeEnvironment($oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV));
+		$sBuildConfigFile = APPCONF.$this->oRuntimeEnv->GetBuildEnv().'/'.ITOP_CONFIG_FILE;
 		$this->oConfig = new Config($sBuildConfigFile);
 
 		$oWizard->SetParameter('previous_version_dir', APPROOT);
@@ -20,6 +22,16 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 		$oWizard->SetParameter('application_url', $this->oConfig->Get('app_root_url'));
 		$oWizard->SetParameter('datamodel_version', ITOP_CORE_VERSION);
 		$oWizard->SetParameter('upgrade_type', 'use-compatible');
+
+		$oWizard->SetParameter('db_server', $this->oConfig->Get('db_host'));
+		$oWizard->SetParameter('db_user', $this->oConfig->Get('db_user'));
+		$oWizard->SetParameter('db_pwd', $this->oConfig->Get('db_pwd'));
+		$oWizard->SetParameter('db_name', $this->oConfig->Get('db_name'));
+		$oWizard->SetParameter('db_prefix', $this->oConfig->Get('db_subname'));
+		$oWizard->SetParameter('db_tls_enabled', $this->oConfig->Get('db_tls.enabled'));
+		$oWizard->SetParameter('db_tls_ca', $this->oConfig->Get('db_tls.ca') ?? '');
+		$oWizard->SetParameter('display_choices', '');
+		$oWizard->SetParameter('extensions_not_uninstallable', '[]');
 
 		$oWizard->SaveParameter('use_symbolic_links', MFCompiler::UseSymbolicLinks());
 		$oWizard->SaveParameter('force-uninstall', '');
@@ -40,21 +52,16 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 	 */
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
-		$oProductionEnv = new RunTimeEnvironment();
-		$sBuildConfigFile = APPCONF.$oProductionEnv->GetBuildEnv().'/'.ITOP_CONFIG_FILE;
-		@chmod($sBuildConfigFile, 0770); // In case it exists: RWX for owner and group, nothing for others
-
-		$oConfig = new Config($sBuildConfigFile);
-		$this->oWizard->SetParameter('db_server', $oConfig->Get('db_host'));
-		$this->oWizard->SetParameter('db_user', $oConfig->Get('db_user'));
-		$this->oWizard->SetParameter('db_pwd', $oConfig->Get('db_pwd'));
-		$this->oWizard->SetParameter('db_name', $oConfig->Get('db_name'));
-		$this->oWizard->SetParameter('db_prefix', $oConfig->Get('db_subname'));
-		$this->oWizard->SetParameter('db_tls_enabled', $oConfig->Get('db_tls.enabled'));
-		$this->oWizard->SetParameter('db_tls_ca', $oConfig->Get('db_tls.ca') ?? '');
-
-		$this->oWizard->SetParameter('display_choices', '[]');
-		$this->oWizard->SetParameter('extensions_not_uninstallable', '[]');
+		if ($this->oWizard->GetParameter('skip_wizard', false)) {
+			$oRuntimeEnv = new RunTimeEnvironment();
+			$sBuildConfigFile = APPCONF.$oRuntimeEnv->GetBuildEnv().'/'.ITOP_CONFIG_FILE;
+			$oConfig = new Config($sBuildConfigFile);
+			$oExtensionMap = iTopExtensionsMap::GetExtensionsMap($oRuntimeEnv->GetBuildEnv());
+			$aExtensionsFromDatabase = $oExtensionMap->GetChoicesFromDatabase($oConfig);
+			$this->oWizard->SetParameter('selected_extensions', json_encode($aExtensionsFromDatabase));
+			$adModulesFromDatabase = ModuleInstallationRepository::GetInstance()->ReadComputeInstalledModules($oConfig);
+			$this->oWizard->SetParameter('selected_modules', json_encode(array_keys($adModulesFromDatabase)));
+		}
 
 		$aWizardSteps = $this->GetWizardSteps();
 		$this->oWizard->SetWizardSteps($aWizardSteps);
@@ -62,6 +69,16 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 
 		$aSelectedComponents = $this->GetSelectedComponents($this->aSteps, $this->oWizard->GetParameter('selected_extensions'));
 		$this->oWizard->SetParameter('selected_components', json_encode($aSelectedComponents));
+
+		// Save the choices for the summary step
+		$sDisplayChoices = '<ul>';
+		$i = 0;
+		foreach ($this->aSteps as $aStepInfo) {
+			$sDisplayChoices .= $this->GetSelectedModules($aStepInfo, $aSelectedComponents[$i], $aModules, '', '', $aExtensions);
+			$i++;
+		}
+		$sDisplayChoices .= '</ul>';
+		$this->oWizard->SetParameter('display_choices', $sDisplayChoices);
 
 		return new WizardState(WizStepDataAudit::class);
 	}

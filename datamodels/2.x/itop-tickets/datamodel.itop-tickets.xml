@@ -351,6 +351,63 @@
 	  }]]></code>
           <arguments/>
         </method>
+        <method id="UpdateChildTicketLog">
+          <comment><![CDATA[/**
+            *
+            * Remove the current user associated Person from the contacts_list of this Ticket
+            * No error if there is no associated Person or if the Person is not in the list
+            * @return bool Return true
+             * @param string $sChildClass The class name of the child ticket (e.g. 'Incident', 'UserRequest', etc.)
+             * @param string $sChildParentAttCode The external key in the child class pointing to the parent ticket (e.g. 'parent_request_id')
+             * @param array $aLogAttCodes An array of parent caselog attribute codes and for each the corresponding child log attribute code to update (e.g. ['public_log' => 'private_log'])
+            *  So in the example parent.public_log will be copied into each child.private_log
+            *  with a prefix using a dictionary entry like 'Class:<parent_ticket_class>/Method:UpdateChildTicketWith:<caselog_attcode>' with one placeholder %1$s for the parent ticket ref
+            *  resulting in an entry like "Copy of public log entry from parent Incident I-000123: <log entry from parent.public_log>" in the child private_log
+             *
+            */]]>
+          </comment>
+          <static>false</static>
+          <access>public</access>
+          <type>LifecycleAction</type>
+          <code><![CDATA[	public function UpdateChildTicketLog($sChildClass, $sChildParentAttCode, $aLogAttCodes)
+{
+    if (!MetaModel::IsValidClass($sChildClass) || (!MetaModel::IsValidAttCode($sChildClass, $sChildParentAttCode))) {
+        ErrorLog::Debug("Invalid class ($sChildClass) or attribute code ($sChildParentAttCode) provided to UpdateChildTicketLog","DataModel");
+        return true; // Do nothing
+    }
+    $oAttDef = MetaModel::GetAttributeDef($sChildClass, $sChildParentAttCode);
+    if (!$oAttDef instanceof AttributeExternalKey ||  ($oAttDef->GetTargetClass() !== get_class($this))) {
+        ErrorLog::Debug("Attribute $sChildParentAttCode should be an external key of class $sChildClass, pointing to class ".get_class($this),"DataModel");
+        return true; // Do nothing
+    }
+
+    $sParentClass = get_class($this);
+    $aChildEntries = [];
+		foreach ($aLogAttCodes as $sParentAttCode => $sChildAttCode) {
+			if (MetaModel::IsValidAttCode($sParentClass, $sParentAttCode) && MetaModel::GetAttributeDef($sParentClass, $sParentAttCode) instanceof AttributeCaseLog
+			&& MetaModel::IsValidAttCode($sChildClass, $sChildAttCode) &&  MetaModel::GetAttributeDef($sChildClass, $sChildAttCode) instanceof AttributeCaseLog
+			&& (!utils::IsNullOrEmptyString($this->Get($sParentAttCode)->GetModifiedEntry('html')))) {
+			  $aChildEntries[$sChildAttCode] = Dict::Format('Class:'.$sParentClass.'/Method:UpdateChildTicketWith:'.$sParentAttCode, $this->GetKey(), $this->Get('ref')).$this->Get($sParentAttCode)->GetModifiedEntry('html');
+			}
+		}
+		if ($aChildEntries == []) {
+			return true; // nothing to update
+		}
+
+		$sOQL = "SELECT $sChildClass WHERE $sChildParentAttCode = :ticket_id";
+		$oChildSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData($sOQL), [], ['ticket_id' => $this->GetKey()]);
+		while ($oChild = $oChildSet->Fetch()) {
+			if (is_object($oChild)) {  // Seems that empty set, maybe in case of OQL syntax error, can return a single empty object instead of no object at all
+        foreach ($aChildEntries as $sAttCode => $sEntry) {
+          $oChild->Set($sAttCode, $sEntry);
+        }
+        $oChild->DBUpdate();
+      }
+		}
+		return true;
+
+	}]]></code>
+        </method>
       </methods>
       <presentation>
         <details>

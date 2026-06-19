@@ -1,15 +1,23 @@
 <?php
 
 /**
- * Localized data
+ * Copyright (C) 2013-2024 Combodo SAS
  *
- * @copyright Copyright (C) 2010-2024 Combodo SAS
- * @license    https://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
  *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
-/**
- *
- */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Attachments:TabTitle_Count' => '附件 (%1$d)',
 	'Attachments:EmptyTabTitle' => '附件',
@@ -39,10 +47,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Attachment' => '附件',
-	'Class:Attachment+' => '',
+	'Class:Attachment+' => '文件: 链接到单一对象的文本或图片. 它无法被修改，只能被删除. 附件无法在编辑界面之外创建.',
 	'Class:Attachment/Attribute:expire' => '过期',
 	'Class:Attachment/Attribute:expire+' => '',
-	'Class:Attachment/Attribute:temp_id' => '临时编号',
+	'Class:Attachment/Attribute:temp_id' => '临时id',
 	'Class:Attachment/Attribute:temp_id+' => '',
 	'Class:Attachment/Attribute:item_class' => '项目类型',
 	'Class:Attachment/Attribute:item_class+' => '',
@@ -69,11 +77,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Attachment/Attribute:creation_date' => '创建日期',
-	'Class:Attachment/Attribute:creation_date+' => '~~',
-	'Class:Attachment/Attribute:user_id' => '用户编号',
-	'Class:Attachment/Attribute:user_id+' => '~~',
-	'Class:Attachment/Attribute:contact_id' => '联系人编号',
-	'Class:Attachment/Attribute:contact_id+' => '~~',
+	'Class:Attachment/Attribute:creation_date+' => '',
+	'Class:Attachment/Attribute:user_id' => '用户id',
+	'Class:Attachment/Attribute:user_id+' => '',
+	'Class:Attachment/Attribute:contact_id' => '联系人id',
+	'Class:Attachment/Attribute:contact_id+' => '',
 ]);
 
 //
@@ -81,15 +89,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:TriggerOnAttachmentDownload' => '触发器 (于对象附件下载时)',
-	'Class:TriggerOnAttachmentDownload+' => '触发器于指定类型 [子类型] 对象附件下载时',
-	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment creation)~~',
-	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment creation~~',
-	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email~~',
-	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
-	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment deletion)~~',
-	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment deletion~~',
-	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email' => 'Add deleted file in email~~',
-	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email+' => 'If checked, the deleted file will be automatically attached to the email when an email action is triggered~~',
-	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',
+	'Class:TriggerOnAttachmentDownload'                       => '触发器 (对象附件被下载时)',
+	'Class:TriggerOnAttachmentDownload+'                      => '触发器基于指定类型 [或子类型] 对象附件被下载时',
+	'Class:TriggerOnAttachmentCreate'                         => '触发器 (对象附件被创建时)',
+	'Class:TriggerOnAttachmentCreate+'                        => '触发器 (对象附件被创建时)',
+	'Class:TriggerOnAttachmentDelete'                         => '触发器 (对象附件被删除时)',
+	'Class:TriggerOnAttachmentDelete+'                        => '触发器 (对象附件被删除时)',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => '在邮件里添加文件',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => '如果勾选，文件将在触发邮件操作时自动附加到邮件中',
+	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email' => '在邮件里添加已删除的文件',
+	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email+' => '如果勾选，已删除的文件将在触发邮件操作时自动附加到邮件中',
+	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => '此触发器不允许用于附件. 请使用特定的触发器',
 ]);

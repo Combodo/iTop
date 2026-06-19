@@ -2,7 +2,7 @@
 {% block iboInput %}
 <span class="ibo-toggler--wrapper">
     {{ parent() }}
-    <span class="ibo-toggler--slider"></span>
+    <a class="ibo-toggler--slider" title="{{ oUIBlock.GetTooltip() }}" href="#"></a>
     <input class="ibo-toggler--hidden" type="hidden" name="{{ oUIBlock.GetName() }}" value="{% if oUIBlock.IsChecked() %}on{% else %}off{% endif %}"/>
 </span>
 {% endblock %}

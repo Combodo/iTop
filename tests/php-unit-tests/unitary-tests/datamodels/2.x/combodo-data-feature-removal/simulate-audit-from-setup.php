@@ -6,18 +6,15 @@ require_once(dirname(__DIR__, 6).'/approot.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 
-$aParams = [
-	"exec_module" => "combodo-data-feature-removal",
-	"exec_page" => "index.php",
-	'exec_env' => 'production',
-];
-
 new ContextTag(ContextTag::TAG_SETUP);
 $sToken = SetupUtils::CreateSetupToken();
 
 function GetLastestInstallFile(): ?string
 {
 	$aFiles = glob(APPROOT.'/log/install-*.xml');
+	if ($aFiles === false) {
+		return null;
+	}
 	rsort($aFiles);
 	$iLatestCtime = 0;
 	$sLastFilePath = null;
@@ -34,32 +31,59 @@ function GetLastestInstallFile(): ?string
 	return $sLastFilePath;
 }
 
-$aRemovedExtensions = ['itop-container-mgmt' => 'Containerization'];
-
 $sPath = GetLastestInstallFile();
 if (is_null($sPath)) {
-	throw new Exception("$sPath no installation XM. Launch a setup....");
+	throw new Exception("$sPath no installation XML. Launch a setup....");
 }
 $aParams = new XMLParameters($sPath);
-$aSelectedModules = array_filter($aParams->Get('selected_modules', []), static function ($element) {
-	global $aRemovedExtensions;
-	return ! array_key_exists($element, $aRemovedExtensions);
-});
+$aSelectedModules = $aParams->Get('selected_modules', []);
+$aSelectedExtensions = $aParams->Get('selected_extensions', []);
 
-$aSelectedExtensions = array_filter($aParams->Get('selected_extensions', []), static function ($element) {
-	global $aRemovedExtensions;
-	return ! array_key_exists($element, $aRemovedExtensions);
-});
+$sAddedExtensions = utils::ReadParam('added_extensions', '', false, 'raw');
+$aAddedExtensions = [];
+if (mb_strlen($sAddedExtensions) > 0) {
+	$aAddedExtensions = explode(',', $sAddedExtensions);
+}
+$oExtensionMap = iTopExtensionsMap::GetExtensionsMap();
+foreach ($aAddedExtensions as $iIndex => $sExtensionCode) {
+	if (mb_strlen($sExtensionCode) <= 0) {
+		unset($aAddedExtensions[$iIndex]);
+		continue;
+	}
+	$oExtension = $oExtensionMap->GetFromExtensionCode($sExtensionCode);
+	$aSelectedExtensions[] = $oExtension->sCode;
+	foreach ($oExtension->aModules as $sModuleCode) {
+		if (!in_array($sModuleCode, $aSelectedModules)) {
+			$aSelectedModules[] = $sModuleCode;
+		}
+	}
+}
+
+$sRemovedExtensions = utils::ReadParam('removed_modules', '', false, 'raw');
+$aRemovedExtensionsAndModules = [];
+if (mb_strlen($sRemovedExtensions) > 0) {
+	$aRemovedExtensionsAndModules = explode(',', $sRemovedExtensions);
+}
+
+$aSelectedModules = array_filter($aSelectedModules, fn ($element) => !in_array($element, $aRemovedExtensionsAndModules));
+$aSelectedExtensions = array_filter($aSelectedExtensions, fn ($element) => !in_array($element, $aRemovedExtensionsAndModules));
+$aRemovedExtensionsAndModules = array_filter($aRemovedExtensionsAndModules, fn ($element) => !is_null($oExtensionMap->GetFromExtensionCode($element)));
+
+$aRemovedExtensions = array_combine($aRemovedExtensionsAndModules, $aRemovedExtensionsAndModules);
+$aAddedExtensions = array_combine($aAddedExtensions, $aAddedExtensions);
 
 $aPostParams = [
-	"auth_user" => 'admin',
-	"auth_pwd" => 'admin',
+	'auth_user' => 'admin',
+	'auth_pwd' => 'admin',
 	'login_mode' => 'form',
 	'operation' => 'AnalysisResult',
-	'setup_token' => $sToken,
+	'authent' => $sToken,
 	'selected_modules' => utils::HtmlEntities(json_encode($aSelectedModules)),
 	'selected_extensions' => utils::HtmlEntities(json_encode($aSelectedExtensions)),
 	'removed_extensions' => utils::HtmlEntities(json_encode($aRemovedExtensions)),
+	'added_extensions' => utils::HtmlEntities(json_encode($aAddedExtensions)),
+	'force-uninstall' => 'on',
+	'use_symbolic_links' => '',
 ];
 
 $sHiddenPostedInput = "";

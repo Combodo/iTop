@@ -4,6 +4,7 @@
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:RequestManagement' => '服务台',
 	'Menu:RequestManagement+' => '',
@@ -13,10 +14,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:UserRequest:Provider+' => '',
 	'Menu:UserRequest:Overview' => '概况',
 	'Menu:UserRequest:Overview+' => '',
-	'Menu:NewUserRequest' => '新建用户需求',
-	'Menu:NewUserRequest+' => '新建用户需求工单',
-	'Menu:SearchUserRequests' => '搜索用户需求',
-	'Menu:SearchUserRequests+' => '搜索用户需求',
+	'Menu:NewUserRequest' => '新建需求',
+	'Menu:NewUserRequest+' => '新建需求工单',
+	'Menu:SearchUserRequests' => '搜索需求',
+	'Menu:SearchUserRequests+' => '搜索需求',
 	'Menu:UserRequest:Shortcuts' => '快捷方式',
 	'Menu:UserRequest:Shortcuts+' => '',
 	'Menu:UserRequest:MyRequests' => '分配给我的需求',
@@ -57,7 +58,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:UserRequest' => '用户需求',
+	'Class:UserRequest' => '需求',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => '状态',
 	'Class:UserRequest/Attribute:status+' => '',
@@ -141,7 +142,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest/Attribute:servicesubcategory_id+' => '',
 	'Class:UserRequest/Attribute:servicesubcategory_name' => '子服务名称',
 	'Class:UserRequest/Attribute:servicesubcategory_name+' => '',
-	'Class:UserRequest/Attribute:escalation_flag' => '是否升级',
+	'Class:UserRequest/Attribute:escalation_flag' => '升级标识',
 	'Class:UserRequest/Attribute:escalation_flag+' => '',
 	'Class:UserRequest/Attribute:escalation_flag/Value:no' => '否',
 	'Class:UserRequest/Attribute:escalation_flag/Value:no+' => '否',
@@ -151,7 +152,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest/Attribute:escalation_reason+' => '',
 	'Class:UserRequest/Attribute:assignment_date' => '分配日期',
 	'Class:UserRequest/Attribute:assignment_date+' => '',
-	'Class:UserRequest/Attribute:resolution_date' => '开始时间',
+	'Class:UserRequest/Attribute:resolution_date' => '解决日期',
 	'Class:UserRequest/Attribute:resolution_date+' => '',
 	'Class:UserRequest/Attribute:last_pending_date' => '最近待定日期',
 	'Class:UserRequest/Attribute:last_pending_date+' => '',
@@ -161,9 +162,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest/Attribute:tto+' => '响应时间',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',
 	'Class:UserRequest/Attribute:ttr+' => '解决时限',
-	'Class:UserRequest/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:UserRequest/Attribute:tto_time_spent' => 'TTO 耗时',
 	'Class:UserRequest/Attribute:tto_time_spent+' => '~~',
-	'Class:UserRequest/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:UserRequest/Attribute:ttr_time_spent' => 'TTR 耗时',
 	'Class:UserRequest/Attribute:ttr_time_spent+' => '~~',
 	'Class:UserRequest/Attribute:tto_escalation_deadline' => 'TTO截止日期',
 	'Class:UserRequest/Attribute:tto_escalation_deadline+' => '',
@@ -213,7 +214,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => '衍生事件',
 	'Class:UserRequest/Attribute:related_request_list+' => '此事件相关的所有子事件',
-	'Class:UserRequest/Attribute:public_log' => '评论',
+	'Class:UserRequest/Attribute:public_log' => '公共日志',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => '用户满意度',
 	'Class:UserRequest/Attribute:user_satisfaction+' => '',
@@ -227,7 +228,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => '',
 	'Class:UserRequest/Attribute:user_comment' => '用户留言',
 	'Class:UserRequest/Attribute:user_comment+' => '',
-	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => 'parent_request_id_friendlyname',
+	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => '父级需求昵称',
 	'Class:UserRequest/Attribute:parent_request_id_friendlyname+' => '',
 	'Class:UserRequest/Stimulus:ev_assign' => '分配',
 	'Class:UserRequest/Stimulus:ev_assign+' => '',
@@ -271,20 +272,21 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Portal:UserRequest:MoreInfo' => '更多详细信息',
 	'Portal:Details-Service-Element' => '服务元素',
 	'Portal:NoClosedTicket' => '没有关闭的需求',
-	'Portal:NoService' => '',
+	'Portal:NoService' => '没有可用的服务',
 	'Portal:ListOpenProblems' => '处理中的问题',
 	'Portal:ShowProblem' => '问题',
 	'Portal:ShowFaqs' => 'FAQ',
 	'Portal:NoOpenProblem' => '没有打开的问题',
 	'Portal:SelectLanguage' => '更改您的语言',
 	'Portal:LanguageChangedTo_Lang' => '语言更改为',
-	'Portal:ChooseYourFavoriteLanguage' => '选择您喜欢的语言',
+	'Portal:ChooseYourFavoriteLanguage' => '请选择您喜欢的语言',
+
 	'Class:UserRequest/Method:ResolveChildTickets' => '解决子工单',
 	'Class:UserRequest/Method:ResolveChildTickets+' => '递归解决子工单 (自动解决), 并调整相关字段与父级工单保持一致: 服务, 团队, 办理人, 解决方案',
 ]);
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Organization:Overview:UserRequests' => '来自此组织的用户需求',
-	'Organization:Overview:MyUserRequests' => '我在此组织的用户需求',
+	'Organization:Overview:UserRequests' => '来自此组织的需求',
+	'Organization:Overview:MyUserRequests' => '我在此组织的需求',
 	'Organization:Overview:Tickets' => '来自此组织的工单',
 ]);

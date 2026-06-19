@@ -1,8 +1,5 @@
 <?php
 
-use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
-use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
-
 require_once(APPROOT.'/setup/parameters.class.inc.php');
 require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once(APPROOT.'/setup/modulediscovery.class.inc.php');
@@ -60,7 +57,7 @@ class iTopExtension
 	/**
 	 * @var bool
 	 */
-	public $bMarkedAsChosen;
+	private $bMarkedAsChosen;
 	/**
 	 * If null, check if at least one module cannot be uninstalled
 	 * @var bool|null
@@ -182,5 +179,15 @@ class iTopExtension
 	public function IsRemote(): string
 	{
 		return $this->sSource === self::SOURCE_REMOTE;
+	}
+
+	public function IsMarkedAsChosen(): bool
+	{
+		return $this->bMarkedAsChosen;
+	}
+
+	public function MarkAsChosen(bool $bMarkedAsChosen = true): void
+	{
+		$this->bMarkedAsChosen = $bMarkedAsChosen;
 	}
 }

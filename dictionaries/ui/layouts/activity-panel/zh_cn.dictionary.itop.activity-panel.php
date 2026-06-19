@@ -17,13 +17,14 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 // Activity panel
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => '展开',
-	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => '减少',
+	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => '还原',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => '关闭',
-	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => '加载更多',
-	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => '全部加载',
+	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => '加载更多条目',
+	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => '加载之前全部的条目',
 
 	// Tabs
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => '活动',
@@ -54,6 +55,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => '暂无任何活动',
 
 	// Closed cover
-	'UI:Layout:ActivityPanel:ClosedCover:Title' => '活动面板',
-	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => '点击打开活动面板',
+	'UI:Layout:ActivityPanel:ClosedCover:Title' => '侧面板',
+	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => '点击打开侧面板',
 ]);

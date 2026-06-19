@@ -55,13 +55,13 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 	{
 		parent::__construct($oWizard, $sCurrentState);
 		$this->bChoicesFromDatabase = false;
-		$this->oExtensionsMap = new iTopExtensionsMap();
+		$this->oExtensionsMap = iTopExtensionsMap::GetExtensionsMap();
 		$sPreviousSourceDir = $this->oWizard->GetParameter('previous_version_dir', '');
 		$sConfigPath = null;
-		if (($sPreviousSourceDir !== '') && is_readable($sPreviousSourceDir.'/conf/production/config-itop.php')) {
-			$sConfigPath = $sPreviousSourceDir.'/conf/production/config-itop.php';
-		} elseif (is_readable(utils::GetConfigFilePath(ITOP_DEFAULT_ENV))) {
-			$sConfigPath = utils::GetConfigFilePath(ITOP_DEFAULT_ENV);
+		if (($sPreviousSourceDir !== '') && is_readable($sPreviousSourceDir.'/conf/'.ITOP_DEFAULT_ENV.'/config-itop.php')) {
+			$sConfigPath = $sPreviousSourceDir.'/conf/'.ITOP_DEFAULT_ENV.'/config-itop.php';
+		} elseif (is_readable(utils::GetConfigFilePath($this->oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV)))) {
+			$sConfigPath = utils::GetConfigFilePath($this->oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV));
 		}
 
 		// only called if the config file exists : we are updating a previous installation !
@@ -81,7 +81,6 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 		// Sanity check (not stopper, to let developers go further...)
 		try {
 			$aModulesToLoad = json_decode($oWizard->GetParameter('selected_modules'), true) ?? null;
-			SetupLog::Error(__METHOD__, null, [$aModulesToLoad]);
 			$this->aAnalyzeInstallationModules = SetupUtils::AnalyzeInstallation($this->oWizard, true, $aModulesToLoad, $this->oConfig);
 		} catch (MissingDependencyException $e) {
 			$this->oMissingDependencyException = $e;
@@ -870,18 +869,18 @@ EOF
 
 		$sTooltip = '';
 		if ($aFlags['missing']) {
-			$sTooltip .= '<div class="ibo-badge ibo-block ibo-is-red" title="The local extension folder has been removed from the disk. This will force the uninstallation of this extension." >source removed</div>';
+			$sTooltip .= '<div id="badge--'.$sId.'--missing-from-disk" class="ibo-badge ibo-block ibo-is-red" title="The local extension folder has been removed from the disk. This will force the uninstallation of this extension." >source removed</div>';
 		}
 		if ($aFlags['installed']) {
-			$sTooltip .= '<div class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</div>';
+			$sTooltip .= '<div id="badge--'.$sId.'--installed" class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</div>';
 
-			$sTooltip .= '<div class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</div>';
+			$sTooltip .= '<div id="badge--'.$sId.'--to-be-uninstalled" class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</div>';
 		} else {
-			$sTooltip .= '<div class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</div>';
-			$sTooltip .= '<div class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</div>';
+			$sTooltip .= '<div id="badge--'.$sId.'--to-be-installed" class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</div>';
+			$sTooltip .= '<div id="badge--'.$sId.'--not-installed" class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</div>';
 		}
 		if (!$aFlags['uninstallable']) {
-			$sTooltip .= '<div class="ibo-badge ibo-block ibo-is-orange" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</div>';
+			$sTooltip .= '<div id="badge--'.$sId.'--not-uninstallable" class="ibo-badge ibo-block ibo-is-orange" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</div>';
 		}
 
 		$sMetadata = '';

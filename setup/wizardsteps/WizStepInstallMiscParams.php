@@ -85,8 +85,6 @@ class WizStepInstallMiscParams extends AbstractWizStepMiscParams
 		$sChecked = ($sSampleData == 'no') ? 'checked ' : '';
 		$oPage->p('<input id="sample_data_no" name="sample_data" type="radio" value="no" '.$sChecked.'><label for="sample_data_no">&nbsp;I am installing a <b>production</b> instance, create an empty database to start from.');
 		$oPage->add('</fieldset>');
-		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
-		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		$oPage->add_ready_script(
 			<<<EOF
 		$('#application_url').on('change keyup', function() { WizardUpdateButtons(); } );

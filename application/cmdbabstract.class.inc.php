@@ -175,6 +175,11 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 */
 	protected $sDisplayMode;
 	protected $aFieldsMap;
+	/**
+	 * @var array Store posted values in order to be used in GetAttributeFlags
+	 * @since 3.3.0
+	 */
+	protected $aPostedValues = [];
 
 	/**
 	 * If true, bypass IsActionAllowedOnAttribute when writing this object
@@ -524,6 +529,12 @@ JS
 				$sLabel = Dict::S('Tag:Synchronized');
 				$sSynchroTagId = 'synchro_icon-'.$this->GetKey();
 				$aTags[$sSynchroTagId] = ['title' => $sTip, 'css_classes' => 'ibo-object-details--tag--synchronized', 'decoration_classes' => 'fas fa-lock', 'label' => $sLabel];
+				if (UserRights::IsActionAllowed(SynchroReplica::class, UR_ACTION_READ)) {
+					$oDBSearch = DBObjectSearch::FromOQL('SELECT SynchroReplica WHERE dest_class=:sClass AND dest_id=:id');
+					$sFilter = rawurlencode($oDBSearch->serialize(false, ['sClass' => get_class($this),'id' => $this->GetKey()]));
+					$sUrlSearchReplica = 'UI.php?operation=search&filter='.$sFilter;
+					$oPage->add_ready_script("$('#$sSynchroTagId').on('click',function() {window.location = '$sUrlSearchReplica' });");
+				}
 			}
 		}
 
@@ -3986,6 +3997,7 @@ HTML;
 
 		$aErrors = [];
 		$aFinalValues = [];
+		$this->aPostedValues = $aValues; // Store the values for later use (e.g. in GetAttributeFlags)
 		foreach ($this->GetWriteableAttList(array_keys($aValues), $aErrors, $aAttFlags) as $sAttCode => $oAttDef) {
 			$aFinalValues[$sAttCode] = $aValues[$sAttCode];
 		}

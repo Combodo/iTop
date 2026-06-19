@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @copyright Copyright (C) 2010-2024 Combodo SAS
- * @license    https://opensource.org/licenses/AGPL-3.0
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -18,6 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 // Portal
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Page:DefaultTitle' => '%1$s 用户门户',
@@ -84,7 +84,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => '确认密码',
 	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => '要修改密码, 请联系管理员',
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => '无法修改密码, 请联系管理员',
-	'Brick:Portal:UserProfile:PersonalInformations:Title' => '人员信息',
+	'Brick:Portal:UserProfile:PersonalInformations:Title' => '个体信息',
 	'Brick:Portal:UserProfile:Photo:Title' => '头像',
 ]);
 

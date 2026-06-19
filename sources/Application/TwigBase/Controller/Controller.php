@@ -20,6 +20,8 @@
 
 namespace Combodo\iTop\Application\TwigBase\Controller;
 
+require_once APPROOT.'setup/setuppage.class.inc.php';
+
 use ApplicationMenu;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\WebPage\AjaxPage;
