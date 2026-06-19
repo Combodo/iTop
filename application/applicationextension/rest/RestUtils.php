@@ -107,6 +107,15 @@ class RestUtils
 		};
 	}
 
+	/**
+	 * Check if the requested field list asks for an extended output.
+	 *
+	 * Extended output is requested when using '*+' or class-scoped field definitions.
+	 *
+	 * @param string $sFields Requested field specification.
+	 *
+	 * @return bool
+	 */
 	public static function HasRequestedExtendedOutput(string $sFields): bool
 	{
 		return match($sFields) {
@@ -116,6 +125,13 @@ class RestUtils
 		};
 	}
 
+	/**
+	 * Check if the requested field list asks for all output fields.
+	 *
+	 * @param string $sFields Requested field specification.
+	 *
+	 * @return bool
+	 */
 	public static function HasRequestedAllOutputFields(string $sFields): bool
 	{
 		return match($sFields) {
@@ -129,6 +145,13 @@ class RestUtils
 		return [$sClass => array_keys(MetaModel::ListAttributeDefs($sClass))];
 	}
 
+	/**
+	 * Build a field list for all child classes of the given parent class.
+	 *
+	 * @param string $sClass Parent class name.
+	 *
+	 * @return array Array of class => list of attribute codes.
+	 */
 	protected static function GetFieldListForParentClass(string $sClass): array
 	{
 		$aFieldList = array();
@@ -138,6 +161,17 @@ class RestUtils
 		return $aFieldList;
 	}
 
+	/**
+	 * Build a restricted field list for one class from a comma-separated attribute list.
+	 *
+	 * @param string $sClass Class name.
+	 * @param string $sFields Comma-separated list of requested attribute codes.
+	 * @param string $sParamName Input parameter name used in error messages.
+	 * @param bool $bFailIfNotFound If true, throws when an attribute code is invalid.
+	 *
+	 * @return array Array containing one class => list of attribute codes.
+	 * @throws Exception When an attribute code is invalid and $bFailIfNotFound is true.
+	 */
 	protected static function GetLimitedFieldListForSingleClass(string $sClass, string $sFields, string $sParamName, bool $bFailIfNotFound = true): array
 	{
 		$aFieldList = [$sClass => []];
@@ -154,6 +188,20 @@ class RestUtils
 		return $aFieldList;
 	}
 
+	/**
+	 * Build a restricted field list for one or several classes.
+	 *
+	 * Accepted formats are either "att1,att2" for a single class, or
+	 * "ClassA:att1,att2;ClassB:att3" for class-scoped field definitions.
+	 *
+	 * @param string $sClass Default class name used when no class scope is specified.
+	 * @param string $sFields Requested field specification.
+	 * @param string $sParamName Input parameter name used in error messages.
+	 * @param bool $bFailIfNotFound If true, throws when an attribute code is invalid.
+	 *
+	 * @return array Array of class => list of attribute codes.
+	 * @throws Exception Propagated from GetLimitedFieldListForSingleClass.
+	 */
 	protected static function GetLimitedFieldListForClass(string $sClass, string $sFields, string $sParamName, bool $bFailIfNotFound = true): array
 	{
 		if (!str_contains($sFields, ':')) {

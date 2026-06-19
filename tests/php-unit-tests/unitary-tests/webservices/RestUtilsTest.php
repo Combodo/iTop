@@ -69,23 +69,6 @@ class RestUtilsTest extends ItopDataTestCase
 		$this->assertNotContains('something', $aList[Ticket::class]);
 	}
 
-
-	/**
-	 * @dataProvider extendedOutputDataProvider
-	 */
-	public function testIsExtendedOutputRequest(bool $bExpected, string $sFields): void
-	{
-		$this->assertSame($bExpected, RestUtils::HasRequestedExtendedOutput($sFields));
-	}
-
-	/**
-	 * @dataProvider allFieldsOutputDataProvider
-	 */
-	public function testIsAllFieldsOutputRequest(bool $bExpected, string $sFields): void
-	{
-		$this->assertSame($bExpected, RestUtils::HasRequestedAllOutputFields($sFields));
-	}
-
 	public function extendedOutputDataProvider(): array
 	{
 		return [
@@ -97,6 +80,14 @@ class RestUtilsTest extends ItopDataTestCase
 		];
 	}
 
+	/**
+	 * @dataProvider extendedOutputDataProvider
+	 */
+	public function testIsExtendedOutputRequest(bool $bExpected, string $sFields): void
+	{
+		$this->assertSame($bExpected, RestUtils::HasRequestedExtendedOutput($sFields));
+	}
+
 	public function allFieldsOutputDataProvider(): array
 	{
 		return [
@@ -106,5 +97,13 @@ class RestUtilsTest extends ItopDataTestCase
 			[false, 'Ticket:ref'],
 			[false, 'Ticket:ref;UserRequest:ref'],
 		];
+	}
+
+	/**
+	 * @dataProvider allFieldsOutputDataProvider
+	 */
+	public function testIsAllFieldsOutputRequest(bool $bExpected, string $sFields): void
+	{
+		$this->assertSame($bExpected, RestUtils::HasRequestedAllOutputFields($sFields));
 	}
 }
