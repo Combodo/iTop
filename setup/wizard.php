@@ -61,6 +61,7 @@ if (!function_exists('json_decode')) {
 //N°3671 setup context: force $bForceTrustProxy to be persisted in next calls
 utils::GetAbsoluteUrlAppRoot(true);
 $oWizard = new WizardController('WizStepWelcome');
+$oCtx = new ContextTag(ContextTag::TAG_SETUP);
 //N°3952
 if (SetupUtils::IsSessionSetupTokenValid()) {
 	// Normal operation

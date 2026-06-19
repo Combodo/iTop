@@ -14,13 +14,11 @@ use Combodo\iTop\CoreUpdate\Service\CoreUpdater;
 use Combodo\iTop\DBTools\Service\DBToolsUtils;
 use Combodo\iTop\FilesInformation\Service\FileNotExistException;
 use Combodo\iTop\FilesInformation\Service\FilesInformation;
-use Config;
 use ContextTag;
 use Dict;
 use Exception;
 use IssueLog;
 use MetaModel;
-use RunTimeEnvironment;
 use SecurityException;
 use SetupUtils;
 use utils;
@@ -229,29 +227,6 @@ class AjaxController extends Controller
 			$iResponseCode = 500;
 		}
 
-		$this->DisplayJSONPage($aParams, $iResponseCode);
-	}
-
-	public function OperationRebuildToolkitEnvironment()
-	{
-		$sTransactionId = utils::GetNewTransactionId();
-		$aParams = [];
-		$aParams['sTransactionId'] = $sTransactionId;
-		$aParams['bStatus'] = true;
-
-		$iResponseCode = 200;
-		try {
-			$aParams['sAjaxURL'] = utils::GetAbsoluteUrlAppRoot().'/pages/UI.php';
-			$oConfig = new Config(APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE);
-			$oEnvironment = new RunTimeEnvironment(ITOP_DEFAULT_ENV);
-			$oEnvironment->WriteConfigFileSafe($oConfig);
-			$oEnvironment->CompileFrom(ITOP_DEFAULT_ENV);
-		} catch (Exception $e) {
-			IssueLog::Error('RebuildToolkitEnvironment: '.$e->getMessage());
-			$aParams['sError'] = $e->getMessage();
-			$iResponseCode = 500;
-			$aParams['bStatus'] = false;
-		}
 		$this->DisplayJSONPage($aParams, $iResponseCode);
 	}
 
