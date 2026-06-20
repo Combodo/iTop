@@ -391,6 +391,10 @@ EOF
 	}
 
 	/**
+	 * Note: This test is not optimal!
+	 *       It checks if a dict entry is present in the same file but *accross different `Dict::Add()` sections*.
+	 *       If the dict entry is present multiple times within the same `Dict::Add()` section, it won't be detected as the test evaluates the PHP files which deduplicate the hash array, making the algorythm unaccurate.
+	 *
 	 * @dataProvider DictionaryFileProvider
 	 */
 	public function testDictKeyDefinedOncePerFile(string $sDictFileToTestFullPath): void
@@ -409,6 +413,10 @@ EOF
 	}
 
 	/**
+	 * Note: This test is not optimal!
+	 *       It checks if a dict entry is present in the same file but *accross different `Dict::Add()` sections*.
+	 *       If the dict entry is present multiple times within the same `Dict::Add()` section, it won't be detected as the test evaluates the PHP files which deduplicate the hash array, making the algorythm unaccurate.
+	 *
 	 * @dataProvider GetLanguagesData
 	 *
 	 * @param string $sLang
