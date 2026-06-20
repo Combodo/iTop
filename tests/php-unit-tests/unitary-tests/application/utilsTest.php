@@ -895,8 +895,16 @@ HTML,
 
 	public function testFileGetContentsAndMIMETypeOnLocalURL()
 	{
-		$sURL = utils::GetAbsoluteUrlAppRoot().'env-production/itop-request-mgmt/images/user-request.svg';
-		$sPath = APPROOT.'env-production/itop-request-mgmt/images/user-request.svg';
+		// For the test to work on most dev / CI environments, we need to use a module with an SVG image that is installed with the current setup choices
+		if (file_exists(APPROOT.'env-production/itop-request-mgmt/images/user-request.svg')) {
+			$sImgRelPath = 'itop-request-mgmt/images/user-request.svg';
+		} elseif (file_exists(APPROOT.'env-production/itop-request-mgmt-itil/images/user-request.svg')) {
+			$sImgRelPath = 'itop-request-mgmt-itil/images/user-request.svg';
+		}
+
+		$sURL = utils::GetAbsoluteUrlModulesRoot().$sImgRelPath;
+		$sPath = APPROOT.'env-production/'.$sImgRelPath;
+
 		$oExpectedDocument = new ormDocument(file_get_contents($sPath), 'image/svg+xml; charset=us-ascii', 'user-request.svg');
 		$this->assertEquals($oExpectedDocument, utils::FileGetContentsAndMIMEType($sURL));
 		// Read local URL directly on disk
