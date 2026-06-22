@@ -2162,6 +2162,33 @@ JS
 
 		return $aOptionalExtensions;
 	}
+
+	public static function GetBackButtonInfo($sReturnApplication): array
+	{
+		$sButtonUrl = '';
+		$sButtonLabel = '';
+		if ($sReturnApplication !== '') {
+			switch ($sReturnApplication) {
+				case 'itop':
+					$sButtonUrl = utils::GetAbsoluteUrlAppRoot();
+					$sButtonLabel = 'Back to application';
+					break;
+				case 'designer':
+					$sButtonUrl = utils::GetAbsoluteUrlModulePage('itsm-designer-connector', 'launch.php');
+					$sButtonLabel = 'Back to Designer';
+					break;
+				case 'hub':
+					$sButtonUrl = utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'launch.php');
+					$sButtonLabel = 'Back to hub';
+					break;
+				default:
+					break;
+			}
+
+		}
+
+		return [$sButtonLabel, $sButtonUrl];
+	}
 }
 
 /**
