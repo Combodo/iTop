@@ -108,7 +108,7 @@ JS);
 			'removed_extensions' => '[]',
 			'extensions_not_uninstallable' => '[]',
 			'copy_setup_files' => 1,
-			'return_button_label' => '',
+			'return_application' => '',
 			'target_env' => ITOP_DEFAULT_ENV,
 			'force-uninstall' => "",
 			'use_symbolic_links' => "",
@@ -130,14 +130,12 @@ INPUT;
 HTML
 		);
 
-		$sButtonLabel = $this->oWizard->GetParameter('return_button_label', '');
-		if ($sButtonLabel !== '') {
-			$sButtonLabel = utils::HtmlEntities($sButtonLabel);
-			$sButtonUrl = utils::GetAbsoluteUrlModulePage('itsm-designer-connector', 'launch.php');
+		[$sButtonLabel, $sButtonUrl] = $this->GetBackButtonInfo();
+		if ($sButtonUrl !== '') {
 			$sButtonUrl = utils::HtmlEntities($sButtonUrl);
 			$oPage->add_ready_script(
 				<<<JS
-	$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').after('<td style="text-align:center;"><button id="return-button" class="ibo-button ibo-is-alternative ibo-is-neutral ibo-is-hidden" type="button" onclick="window.location.href=\'$sButtonUrl\'"><span class="ibo-button--label">$sButtonLabel</span></button></td>');
+$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').after('<td style="text-align:center;"><button id="return-button" class="ibo-button ibo-is-alternative ibo-is-neutral ibo-is-hidden" type="button" onclick="window.location.href=\'$sButtonUrl\'"><span class="ibo-button--label">$sButtonLabel</span></button></td>');
 JS
 			);
 		}
@@ -182,7 +180,9 @@ JS
 
 	public function JSCanMoveBackward()
 	{
-		if ($this->oWizard->GetParameter('return_button_label', '') !== '') {
+		$sReturnApplication = $this->oWizard->GetParameter('return_application', '');
+		[$sReturnLabel] = SetupUtils::GetBackButtonInfo($sReturnApplication);
+		if ($sReturnLabel !== '') {
 			return 'return false;';
 		}
 

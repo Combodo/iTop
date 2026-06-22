@@ -59,10 +59,9 @@ class WizStepSummary extends AbstractWizStepInstall
 
 	public function CanMoveBackward()
 	{
-		$sLabel = $this->oWizard->GetParameter('return_button_label', '');
-		SetupLog::Info(__METHOD__.": return_button_label [$sLabel]");
+		$sApplication = $this->oWizard->GetParameter('return_application', '');
 
-		return $sLabel === '';
+		return $sApplication === '';
 	}
 
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
@@ -249,12 +248,12 @@ JS
 
 	public function PostFormDisplay(SetupPage $oPage)
 	{
-		$sButtonLabel = $this->oWizard->GetParameter('return_button_label', '');
-		if ($sButtonLabel !== '') {
-			$sButtonUrl = utils::GetAbsoluteUrlModulePage('itsm-designer-connector', 'launch.php');
+		[$sButtonLabel, $sButtonUrl] = $this->GetBackButtonInfo();
+		if ($sButtonUrl !== '') {
+			$sButtonUrl = utils::HtmlEntities($sButtonUrl);
 			$oPage->add_ready_script(
 				<<<JS
-	$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').after('<td style="text-align:center;"><button id="return-button" class="ibo-button ibo-is-alternative ibo-is-neutral" type="button" onclick="window.location.href=\'$sButtonUrl\'"><span class="ibo-button--label">$sButtonLabel</span></button></td>');
+$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').after('<td style="text-align:center;"><button id="return-button" class="ibo-button ibo-is-alternative ibo-is-neutral" type="button" onclick="window.location.href=\'$sButtonUrl\'"><span class="ibo-button--label">$sButtonLabel</span></button></td>');
 JS
 			);
 		}
@@ -275,7 +274,7 @@ JS
 	 */
 	public function JSCanMoveBackward()
 	{
-		if ($this->oWizard->GetParameter('return_button_label', '') === '') {
+		if ($this->oWizard->GetParameter('return_application', '') === '') {
 			return 'return true;';
 		}
 
