@@ -50,8 +50,8 @@ class DBUnionSearchTest extends ItopDataTestCase
 			'Same class' => ["SELECT Server UNION SELECT Server"],
 			'different class same alias' => ['SELECT Server AS fci UNION SELECT VirtualMachine AS fci'],
 			'different class no alias' => ['SELECT Server UNION SELECT VirtualMachine'],
-			'multiple classes same alias' => ['SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = 3) UNION SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = 2)'],
-			'multiple classes' => ['SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = 3) UNION SELECT `L1`, `P1` FROM Person AS `P1` JOIN Location AS `L1` ON `P1`.location_id = `L1`.id WHERE (`P1`.`org_id` = 2)'],
+			'multiple classes same alias' => ['SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = 7) UNION SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = 2)'],
+			'multiple classes' => ['SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = 7) UNION SELECT `L1`, `P1` FROM Person AS `P1` JOIN Location AS `L1` ON `P1`.location_id = `L1`.id WHERE (`P1`.`org_id` = 2)'],
 		];
 	}
 

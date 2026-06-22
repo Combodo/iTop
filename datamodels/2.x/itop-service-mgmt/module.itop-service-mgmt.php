@@ -23,21 +23,30 @@ SetupWebPage::AddModule(
 		'datamodel' => [
 		],
 		'data.struct' => [
-			//'data.struct.itop-service-mgmt.xml',
+			'data/data.itop-contracttype.en_us.xml',
 		],
 		'data.sample' => [
-			'data/data.sample.organizations.xml',
-			'data/data.sample.contracts.xml',
-			'data/data.sample.servicefamilies.xml',
-			'data/data.sample.services.xml',
-			'data/data.sample.serviceelements.xml',
-			'data/data.sample.sla.xml',
-			'data/data.sample.slt.xml',
+	//		'data/data.sample.contracts.xml',   =>  replaced by localized data
+			'data/data.sample.customercontracts.en_us.xml',
+			'data/data.sample.providercontracts.xml',
+	//		'data/data.sample.servicefamilies.xml', =>  replaced by localized data
+			'data/data.sample.servicefamilies.en_us.xml',
+	//		'data/data.sample.services.xml',  =>  replaced by localized data
+			'data/data.sample.services.en_us.xml',
+	//		'data/data.sample.serviceelements.xml',  =>  replaced by localized data
+			'data/data.sample.serviceelements.en_us.xml',
+			'data/data.sample.contactservice.xml',
+	//		'data/data.sample.sla.xml',  =>  replaced by localized data
+			'data/data.sample.sla.en_us.xml',
+	//		'data/data.sample.slt.xml',  =>  replaced by localized data
+			'data/data.sample.slt.en_us.xml',
 			'data/data.sample.sltsla.xml',
-	//		'data/data.sample.coveragewindows.xml',
-			'data/data.sample.contractservice.xml',
-	//		'data/data.sample.deliverymodel.xml',
+	//		'data/data.sample.contractservice.xml',  =>  replaced by customercontractservice and providercontractservice files
+			'data/data.sample.customercontractsservice.xml',
+			'data/data.sample.providercontractsservice.xml',
+			'data/data.sample.deliverymodel.xml',
 			'data/data.sample.deliverymodelcontact.xml',
+			'data/data.sample.organizations.xml',
 		],
 
 		// Documentation
@@ -84,14 +93,6 @@ if (!class_exists('ServiceMgmtInstaller')) {
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			// Load localized structural data: contact types and document types
-			static::LoadLocalizedData(
-				$oConfiguration,
-				$sPreviousVersion,
-				$sCurrentVersion,
-				'3.3.0',
-				__DIR__."/data/{{language_code}}.data.itop-contracttype.xml"
-			);
 		}
 	}
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<DatabaseSchema alias="DatabaseSchema" id="20">
-<name>odooprod</name>
-<description></description>
-<org_id>2</org_id>
-<business_criticity>low</business_criticity>
-<move2production></move2production>
-<dbserver_id>17</dbserver_id>
-</DatabaseSchema>
+  <DatabaseSchema alias="DatabaseSchema" id="20">
+    <name>odooprod</name>
+    <description></description>
+    <org_id>2</org_id>
+    <business_criticity>low</business_criticity>
+    <move2production></move2production>
+    <dbserver_id>17</dbserver_id>
+  </DatabaseSchema>
 </Set>

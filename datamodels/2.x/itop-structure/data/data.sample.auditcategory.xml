@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+  <AuditCategory alias="AuditCategory" id="3">
+    <name>Active persons</name>
+    <description>Persons with status active</description>
+    <definition_set>SELECT Person WHERE status =&apos;active&apos;</definition_set>
+    <ok_error_tolerance>5</ok_error_tolerance>
+    <warning_error_tolerance>25</warning_error_tolerance>
+  </AuditCategory>
+  <AuditCategory alias="AuditCategory" id="4">
+    <name>Active teams</name>
+    <description>Teams with status active</description>
+    <definition_set>SELECT Team WHERE status=&apos;active&apos;</definition_set>
+    <ok_error_tolerance>5</ok_error_tolerance>
+    <warning_error_tolerance>25</warning_error_tolerance>
+  </AuditCategory>
+</Set>

@@ -124,7 +124,7 @@ class BulkChangeTest extends ItopDataTestCase
 		return [
 			"Case 3, 5 et 8 : unchanged" => [
 				"csvData" =>
-					[["Demo", "Server1", "1", "production", ""]],
+					[["IT Department", "Server1", "1", "production", ""]],
 				"attributes" =>
 					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
 				"extKeys" =>
@@ -132,9 +132,9 @@ class BulkChangeTest extends ItopDataTestCase
 				"reconciliation Keys" =>
 					["id"],
 				"expectedResult" =>
-					[0 => "Demo", "org_id" => "3", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "unchanged"],
+					[0 => "IT Department", "org_id" => "6", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "unchanged"],
 				"expectedResultHTML" =>
-					[0 => "Demo", "org_id" => "3", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "unchanged"],
+					[0 => "IT Department", "org_id" => "6", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "unchanged"],
 			],
 			"Case 9 : wrong date format" => [
 				"csvData" =>

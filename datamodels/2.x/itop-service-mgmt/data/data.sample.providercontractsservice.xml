@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+  <lnkProviderContractToService alias="lnkProviderContractToService" id="1">
+    <providercontract_id>2</providercontract_id>
+    <provider_id>4</provider_id>
+    <service_id>5</service_id>
+  </lnkProviderContractToService>
+  <lnkProviderContractToService alias="lnkProviderContractToService" id="2">
+    <providercontract_id>2</providercontract_id>
+    <provider_id>4</provider_id>
+    <service_id>4</service_id>
+  </lnkProviderContractToService>
+</Set>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+  <CustomerContract alias="CustomerContract" id="3">
+    <name>Customer Contract</name>
+    <org_id>7</org_id>
+    <description>Customer contract to deliver services to an external customer</description>
+    <start_date>2026-01-01</start_date>
+    <end_date>2030-12-31</end_date>
+    <cost>10000</cost>
+    <cost_currency>euros</cost_currency>
+    <contracttype_id>79</contracttype_id>
+    <billing_frequency>yearly</billing_frequency>
+    <provider_id>2</provider_id>
+    <status>production</status>
+  </CustomerContract>
+  <CustomerContract alias="CustomerContract" id="1">
+    <name>Customer contract Sales department</name>
+    <org_id>6</org_id>
+    <description>Internal contract to deliver services to Sales department</description>
+    <start_date>2019-01-01</start_date>
+    <end_date>2030-12-31</end_date>
+    <cost>0</cost>
+    <cost_currency>euros</cost_currency>
+    <contracttype_id>0</contracttype_id>
+    <billing_frequency>monthly</billing_frequency>
+    <provider_id>2</provider_id>
+    <status>production</status>
+  </CustomerContract>
+</Set>

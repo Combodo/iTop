@@ -1,30 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<Location alias="Location" id="1">
-<name>Bordeaux</name>
-<status>active</status>
-<org_id>2</org_id>
-<address></address>
-<postal_code></postal_code>
-<city></city>
-<country></country>
-</Location>
-<Location alias="Location" id="2">
-<name>Grenoble</name>
-<status>active</status>
-<org_id>2</org_id>
-<address>24, rue Lamartine</address>
-<postal_code>38320</postal_code>
-<city>Eybens</city>
-<country>France</country>
-</Location>
-<Location alias="Location" id="3">
-<name>Paris</name>
-<status>active</status>
-<org_id>2</org_id>
-<address>5, rue du Sentier</address>
-<postal_code>75002</postal_code>
-<city>Paris</city>
-<country>France</country>
-</Location>
+  <Location alias="Location" id="1">
+    <name>Bordeaux</name>
+    <status>active</status>
+    <org_id>2</org_id>
+    <address></address>
+    <postal_code></postal_code>
+    <city></city>
+    <country></country>
+  </Location>
+  <Location alias="Location" id="2">
+    <name>Grenoble</name>
+    <status>active</status>
+    <org_id>2</org_id>
+    <address>24, rue Lamartine</address>
+    <postal_code>38320</postal_code>
+    <city>Eybens</city>
+    <country>France</country>
+  </Location>
+  <Location alias="Location" id="3">
+    <name>Paris</name>
+    <status>active</status>
+    <org_id>2</org_id>
+    <address>5, rue du Sentier</address>
+    <postal_code>75002</postal_code>
+    <city>Paris</city>
+    <country>France</country>
+  </Location>
+  <Location alias="Location" id="4">
+    <name>London</name>
+    <status>active</status>
+    <org_id>6</org_id>
+    <address>Buckingham Palace</address>
+    <postal_code>SW1A 1AA</postal_code>
+    <city>London</city>
+    <country>England</country>
+  </Location>
+  <Location alias="Location" id="5">
+    <name>Berlin</name>
+    <status>active</status>
+    <org_id>7</org_id>
+    <address>Pariser Platz, südliches Torhaus</address>
+    <postal_code>10117</postal_code>
+    <city>Berlin</city>
+    <country>Germany</country>
+  </Location>
 </Set>

@@ -270,7 +270,7 @@ class DBObjectTest extends ItopDataTestCase
 
 		// External key given as an id
 		$this->assertDBQueryCount(1, function () use (&$oObject) {
-			$oObject->Set('org_id', 2);
+			$oObject->Set('org_id', 6);
 			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
 		});
 
@@ -318,7 +318,7 @@ class DBObjectTest extends ItopDataTestCase
 
 		// External key given as an id
 		$this->assertDBQueryCount(1, function () use (&$oObject) {
-			$oObject->Set('org_id', 2);
+			$oObject->Set('org_id', 6);
 			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
 		});
 		$this->assertEquals(0, $this->GetObjectReloadCount($sClass, $sKey));
@@ -385,7 +385,7 @@ class DBObjectTest extends ItopDataTestCase
 
 		// External key given as an id
 		$this->assertDBQueryCount(1, function () use (&$oTeam) {
-			$oTeam->Set('org_id', 2);
+			$oTeam->Set('org_id', 6);
 			static::assertEquals('IT Department', $oTeam->Get('org_id_friendlyname'));
 		});
 		$this->DebugReloadCount("Set('org_id', 2) and Get('org_id_friendlyname')");
@@ -581,15 +581,15 @@ class DBObjectTest extends ItopDataTestCase
 	{
 		//--- Preparing data...
 		$this->bIsUsingSilo = true;
-		/** @var Organization $oDemoOrg */
-		$oDemoOrg = MetaModel::GetObjectByName(Organization::class, 'Demo');
+		/** @var Organization $oCustomerOrg */
+		$oCustomerOrg = MetaModel::GetObjectByName(Organization::class, 'Customer');
 		/** @var Person $oPersonOnItDepartmentOrg */
 		$oPersonOnItDepartmentOrg = MetaModel::GetObjectByName(Person::class, 'Anna Gavalda');
-		/** @var Person $oPersonOnDemoOrg */
-		$oPersonOnDemoOrg = MetaModel::GetObjectByName(Person::class, 'Claude Monet');
+		/** @var Person $oPersonOnCustomerOrg */
+		$oPersonOnCustomerOrg = MetaModel::GetObjectByName(Person::class, 'Camille Cottin');
 
 		$sConfigManagerProfileId = 3; // access to Team and Contact objects
-		$sLogin = $this->GivenUserRestrictedToAnOrganizationInDB($oDemoOrg->GetKey(), $sConfigManagerProfileId);
+		$sLogin = $this->GivenUserRestrictedToAnOrganizationInDB($oCustomerOrg->GetKey(), $sConfigManagerProfileId);
 
 		//--- Now we can do some tests !
 		UserRights::Login($sLogin);
@@ -597,7 +597,7 @@ class DBObjectTest extends ItopDataTestCase
 
 		$oTeam = MetaModel::NewObject(Team::class, [
 			'name' => 'The A Team',
-			'org_id' => $oDemoOrg->GetKey(),
+			'org_id' => $oCustomerOrg->GetKey(),
 		]);
 
 		// Part 1 - Test with an invalid id (non-existing object)
@@ -629,7 +629,7 @@ class DBObjectTest extends ItopDataTestCase
 		//
 		$oPersonLinks = \DBObjectSet::FromScratch(lnkPersonToTeam::class);
 		$oPersonLinks->AddObject(MetaModel::NewObject(lnkPersonToTeam::class, [
-			'person_id' => $oPersonOnDemoOrg->GetKey(),
+			'person_id' => $oPersonOnCustomerOrg->GetKey(),
 			'team_id' => $oTeam->GetKey(),
 		]));
 		$oTeam->Set('persons_list', $oPersonLinks);
@@ -684,15 +684,15 @@ class DBObjectTest extends ItopDataTestCase
 	{
 		//--- Preparing data...
 		$this->bIsUsingSilo = true;
-		/** @var Organization $oDemoOrg */
-		$oDemoOrg = MetaModel::GetObjectByName(Organization::class, 'Demo');
+		/** @var Organization $oCustomerOrg */
+		$oCustomerOrg = MetaModel::GetObjectByName(Organization::class, 'Customer');
 		/** @var Person $oPersonOnItDepartmentOrg */
 		$oPersonOnItDepartmentOrg = MetaModel::GetObjectByName(Person::class, 'Anna Gavalda');
-		/** @var Person $oPersonOnDemoOrg */
-		$oPersonOnDemoOrg = MetaModel::GetObjectByName(Person::class, 'Claude Monet');
+		/** @var Person $oPersonOnCustomerOrg */
+		$oPersonOnCustomerOrg = MetaModel::GetObjectByName(Person::class, 'Camille Cottin');
 
 		$sConfigManagerProfileId = 3; // access to Team and Contact objects
-		$sLogin = $this->GivenUserRestrictedToAnOrganizationInDB($oDemoOrg->GetKey(), $sConfigManagerProfileId);
+		$sLogin = $this->GivenUserRestrictedToAnOrganizationInDB($oCustomerOrg->GetKey(), $sConfigManagerProfileId);
 
 		//--- Now we can do some tests !
 		UserRights::Login($sLogin);
@@ -700,7 +700,7 @@ class DBObjectTest extends ItopDataTestCase
 
 		$oAttachment = MetaModel::NewObject(Attachment::class, [
 			'item_class' => Person::class,
-			'item_id' => $oPersonOnDemoOrg->GetKey(),
+			'item_id' => $oPersonOnCustomerOrg->GetKey(),
 		]);
 		try {
 			$oAttachment->CheckChangedExtKeysValues();

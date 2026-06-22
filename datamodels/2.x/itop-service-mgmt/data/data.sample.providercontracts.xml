@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+  <ProviderContract alias="ProviderContract" id="2">
+    <name>Maintenance contract</name>
+    <org_id>3</org_id>
+    <description>Maintenance contract for hardware and software</description>
+    <start_date>2024-01-01</start_date>
+    <end_date>2033-12-31</end_date>
+    <cost>32000</cost>
+    <cost_currency>euros</cost_currency>
+    <contracttype_id>0</contracttype_id>
+    <billing_frequency>annuelle</billing_frequency>
+    <provider_id>4</provider_id>
+    <status>production</status>
+  </ProviderContract>
+</Set>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+  <AuditRule alias="AuditRule" id="7">
+    <name>Active persons with no email</name>
+    <description>Active persons with no email</description>
+    <query>SELECT Person WHERE email= &apos;&apos;</query>
+    <valid_flag>false</valid_flag>
+    <category_id>3</category_id>
+    <contact_id>3</contact_id>
+    <process>&lt;p&gt;Add an email address for each person&lt;/p&gt;</process>
+  </AuditRule>
+  <AuditRule alias="AuditRule" id="8">
+    <name>Active teams with no members</name>
+    <description>Active teams with no members</description>
+    <query>SELECT Team AS t JOIN lnkPersonToTeam AS l ON l.team_id=t.id</query>
+    <valid_flag>true</valid_flag>
+    <category_id>4</category_id>
+    <contact_id>4</contact_id>
+    <process>&lt;p&gt;Add at least on member in each team&lt;/p&gt;</process>
+  </AuditRule>
+</Set>
