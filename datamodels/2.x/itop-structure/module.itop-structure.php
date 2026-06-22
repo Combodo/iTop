@@ -37,7 +37,7 @@ SetupWebPage::AddModule(
 			'data/data.sample.auditcategory.xml',
 			'data/data.sample.auditcategory-auditdomain.xml',
 			'data/data.sample.auditrule.xml',
-			'data/data.sample.users.xml', // pb with the passwords, which cannot be loaded (check with empty?)
+			'data/data.sample.users.xml',
 		],
 
 		// Documentation
