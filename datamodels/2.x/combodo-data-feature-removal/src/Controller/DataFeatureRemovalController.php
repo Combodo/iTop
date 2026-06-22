@@ -111,14 +111,6 @@ class DataFeatureRemovalController extends Controller
 		}
 		$aParams['aHiddenInputs'] = $aHiddenInputs;
 
-		[$sReturnButtonLabel, $sReturnButtonURL] = SetupUtils::GetBackButtonInfo($aHiddenInputs['return_application']);
-		$aParams['sReturnButtonLabel'] = $sReturnButtonLabel;
-		$aParams['sReturnButtonURL'] = $sReturnButtonURL;
-
-		if ($aHiddenInputs['return_application'] === '') {
-			$aHiddenInputs['return_application'] = 'itop';
-		}
-
 		$aAddedExtensions = json_decode($aHiddenInputs['added_extensions'], true);
 
 		$aRemovedExtensions = json_decode($aHiddenInputs['removed_extensions'], true);

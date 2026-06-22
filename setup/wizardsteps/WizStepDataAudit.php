@@ -180,7 +180,9 @@ JS
 
 	public function JSCanMoveBackward()
 	{
-		if ($this->oWizard->GetParameter('return_application', '') !== '') {
+		$sReturnApplication = $this->oWizard->GetParameter('return_application', '');
+		[$sReturnLabel] = SetupUtils::GetBackButtonInfo($sReturnApplication);
+		if ($sReturnLabel !== '') {
 			return 'return false;';
 		}
 
