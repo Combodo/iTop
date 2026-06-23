@@ -1202,7 +1202,7 @@ class RunTimeEnvironment
 	{
 		$oConfig = MetaModel::GetConfig();
 		$oConfig->Set('access_mode', ACCESS_FULL);
-
+		$sDefaultLanguage = $oConfig->GetDefaultLanguage();
 		$oDataLoader = new XMLDataLoader();
 
 		CMDBObject::SetCurrentChangeFromParams("Initialization from XML files for the selected modules ");
@@ -1248,7 +1248,7 @@ class RunTimeEnvironment
 		// in the current database
 		foreach ($aPreviouslyLoadedFiles as $sFileRelativePath) {
 			$sFileName = APPROOT.$sFileRelativePath;
-			SetupLog::Info("Loading file: $sFileName (just to get the keys mapping)");
+			SetupLog::Info("Loading file: $sFileName (just to build & cache the keys mapping)");
 			if (!file_exists($sFileName)) {
 				throw(new Exception("File $sFileName does not exist"));
 			}
@@ -1264,7 +1264,7 @@ class RunTimeEnvironment
 			if (!file_exists($sFileName)) {
 				throw(new Exception("File $sFileName does not exist"));
 			}
-
+			$sFileName = ModuleInstallerAPI::GetLocalizedFileName($sFileName, $sDefaultLanguage);
 			$oDataLoader->LoadFile($sFileName);
 			$sResult = sprintf("loading of %s done.", basename($sFileName));
 			SetupLog::Info($sResult);

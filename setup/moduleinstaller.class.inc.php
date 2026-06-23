@@ -310,18 +310,20 @@ abstract class ModuleInstallerAPI
 	}
 
 	/**
+	 * Helper to load localized data from a file, only if the module is being installed for the first time or if the module is being upgraded and the FirstLoadingVersion is between the PreviousVersion and the CurrentVersion.
+	 *
 	 * @param \Config $oConfiguration
 	 * @param string $sPreviousVersion The previous version of the module (empty string in case of first install)
 	 * @param string $sCurrentVersion The current version of the module
 	 * @param string $sFirstLoadingVersion The first module version for which the data loading should be performed (e.g. '3.0.0')
-	 * @param string $sFilePattern The pattern of the file to load, with {{language_code}} as placeholder for the language code (e.g. 'data.sample.{{language_code}}.xml')
+	 * @param string $sDefaultFileName The pattern of the file to load, with {{language_code}} as placeholder for the language code (e.g. 'data.sample.{{language_code}}.xml')
 	 *
 	 * @return void
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public static function LoadLocalizedDataOnCrossingVersion(Config $oConfiguration, ?string $sPreviousVersion, ?string $sCurrentVersion, string $sFirstLoadingVersion, string $sFilePattern): void
+	public static function LoadLocalizedDataOnCrossingVersion(Config $oConfiguration, ?string $sPreviousVersion, ?string $sCurrentVersion, string $sFirstLoadingVersion, string $sDefaultFileName): void
 	{
 		self::AssertLoadLocalizedDataParametersAreValid($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion);
 
@@ -335,10 +337,12 @@ abstract class ModuleInstallerAPI
 		&& version_compare($sPreviousVersion, $sFirstLoadingVersion, '<')
 		&& version_compare($sFirstLoadingVersion, $sCurrentVersion, '<='))) {
 
-			self::LoadLocalizedData($oConfiguration, $sFilePattern);
+			$sWishedLanguage = $oConfiguration->GetDefaultLanguage();
+			self::LoadLocalizedData($sWishedLanguage, $sDefaultFileName);
 		}
 	}
 	/**
+	 * Helper which will be removed as the standard knows how to load localized data on first install, but this is kept for backward compatibility.
 	* @param \Config $oConfiguration
 	* @param string $sPreviousVersion The previous version of the module (empty string in case of first install)
 	 * @param string $sFilePattern The pattern of the file to load, with {{language_code}} as placeholder for the language code (e.g. 'data.sample.{{language_code}}.xml')
@@ -348,24 +352,23 @@ abstract class ModuleInstallerAPI
 	public static function LoadLocalizedDataOnNewInstall(Config $oConfiguration, ?string $sPreviousVersion, string $sFilePattern): void
 	{
 		if (utils::IsNullOrEmptyString($sPreviousVersion)) {
-			self::LoadLocalizedData($oConfiguration, $sFilePattern);
+			$sWishedLanguage = $oConfiguration->GetDefaultLanguage();
+			self::LoadLocalizedData($sWishedLanguage, $sFilePattern);
 		}
 	}
 
 	/**
-	 * @param \Config $oConfiguration
-	 * @param string $sFilePattern The pattern of the file to load, with {{language_code}} as placeholder for the language code (e.g. 'data.sample.{{language_code}}.xml')
+	 * Helper to load a localized data file based on the default language of the application.
+	 * @param \Config $oConfiguration to retrieve the default language
+	 * @param string $sDefaultFile The default file to load, must be ending with .en_us.xml to be localized
 	 *
 	 * @return void
 	 * @throws \Exception
 	 */
-	protected static function LoadLocalizedData(Config $oConfiguration, string $sFilePattern): void
+	protected static function LoadLocalizedData(string $sDefaultLanguage, string $sDefaultFile): void
 	{
-		if (substr_count($sFilePattern, '{{language_code}}') !== 1) {
-			throw new CoreUnexpectedValue("LoadLocalizedData expects $sFilePattern to contain the exact placeholder '{{language_code}}' exactly once");
-		}
-		$sDefaultLanguage = $oConfiguration->GetDefaultLanguage();
-		$sFileName = self::GetLocalizedFileName($sDefaultLanguage, $sFilePattern);
+
+		$sFileName = self::GetLocalizedFileName($sDefaultLanguage, $sDefaultFile);
 		if (!file_exists($sFileName)) {
 			throw new Exception("File $sFileName not found");
 		}
@@ -400,25 +403,32 @@ abstract class ModuleInstallerAPI
 	}
 
 	/**
-	 * @param string $sLanguage The language code to use for localization (e.g. 'EN US')
-	 * @param string $sFilePattern The full path+name of the file to localize, with {{language_code}} as placeholder for the language code (e.g. 'data.sample.{{language_code}}.xml')
+	 * Helper to get the localized file name for a given language code, based on the original file name which must end by .en_us.xml
+	 * @param string $sLanguage The language code to use for localization (e.g. 'FR FR' or 'fr_fr')
+	 * @param string $sOriginalFileName The full path+name of the file to localize. If ending with .en_us.xml, it searches for a localized file.
 	 *
-	 * @return string The localized file name if found, or an empty string if not found
+	 * @return string The localized file name if found otherwise the original file name
+	 * @throws \Exception If the original file name ends with .en_us.xml and does not exist
 	 */
-	private static function GetLocalizedFileName($sLanguage, string $sFilePattern): string
+	public static function GetLocalizedFileName(string $sLanguage, string $sOriginalFileName): string
 	{
-		$sLang = str_replace(' ', '_', strtolower($sLanguage));
-		$sFileName = str_replace('{{language_code}}', $sLang, $sFilePattern);
-		if (!file_exists($sFileName)) {
-			SetupLog::Debug("No data file found matching the pattern $sFilePattern and language_code $sLang. Trying with 'en_us' as fallback.");
-			$sLang = 'en_us';
-			$sFileName = str_replace('{{language_code}}', $sLang, $sFilePattern);
-		}
-		if (file_exists($sFileName)) {
-			return $sFileName;
+		if (str_ends_with($sOriginalFileName, '.en_us.xml')) {
+			// If the original file which can be localized, does not exist, then even if the localized file itself exists, we want to raise this design issue.
+			if (!file_exists($sOriginalFileName)) {
+				throw new Exception("This file $sOriginalFileName not found, it must exist in the module for the iTop fallback language (en_us)");
+			}
+			// Search for a file for the requested language,
+			$sLang = '.'.str_replace(' ', '_', strtolower($sLanguage)).'.xml';
+			$sFileName = str_replace('.en_us.xml', $sLang, $sOriginalFileName);
+			// localized file not found, fall back to the original file (en_us)
+			if (!file_exists($sFileName)) {
+				SetupLog::Debug("File for iTop default language $sFileName not found, fall back to file $sOriginalFileName");
+				$sFileName = $sOriginalFileName;
+			}
 		} else {
-			SetupLog::Warning("No data file matching the pattern $sFilePattern and language_code $sLang was found.");
-			return '';
+			// If the original file is not localizable, then we just return it as is
+			$sFileName = $sOriginalFileName;
 		}
+		return $sFileName;
 	}
 }
