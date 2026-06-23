@@ -154,7 +154,7 @@ class RestUtils
 	 */
 	protected static function GetFieldListForParentClass(string $sClass): array
 	{
-		$aFieldList = array();
+		$aFieldList = [];
 		foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sRefClass) {
 			$aFieldList = array_merge($aFieldList, self::GetFieldListForClass($sRefClass));
 		}

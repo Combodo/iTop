@@ -139,8 +139,8 @@ JSON;
 		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $sJSONOutput);
 	}
 
-
-	public function testCoreApiGet_Select2SubClasses(){
+	public function testCoreApiGet_Select2SubClasses()
+	{
 		// Create ticket
 		$description = date('dmY H:i:s');
 		$iIdCaller = $this->CreatePerson(1)->GetKey();
@@ -190,8 +190,8 @@ JSON;
 		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $sJSONOutput);
 	}
 
-
-	public function testCoreApiGet_SelectTicketAndPerson(){
+	public function testCoreApiGet_SelectTicketAndPerson()
+	{
 		// Create ticket
 		$description = date('dmY H:i:s');
 		$iIdCaller = $this->CreatePerson(1)->GetKey();
@@ -240,7 +240,8 @@ JSON;
 		$this->assertJsonStringEqualsJsonString($sExpectedJsonOuput, $sJSONOutput);
 	}
 
-	public function testCoreApiGetWithUnionAndDifferentOutputFields(){
+	public function testCoreApiGetWithUnionAndDifferentOutputFields()
+	{
 		// Create ticket
 		$description = date('dmY H:i:s');
 		$oUserRequest = $this->CreateSampleTicket($description);

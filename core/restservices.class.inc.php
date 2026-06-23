@@ -258,7 +258,7 @@ class RestResultWithObjectSets extends RestResultWithObjects
 
 	public function MakeNewObjectSet()
 	{
-		$arr = array();
+		$arr = [];
 		$this->current_object = &$arr;
 		$this->objects[] = &$arr;
 	}
@@ -539,22 +539,22 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 				break;
 
 			case 'core/get':
-			$sClassParam =  RestUtils::GetMandatoryParam($aParams, 'class');
+				$sClassParam =  RestUtils::GetMandatoryParam($aParams, 'class');
 				$key = RestUtils::GetMandatoryParam($aParams, 'key');
 				$sShowFields = RestUtils::GetOptionalParam($aParams, 'output_fields', '*');
 				$iLimit = (int)RestUtils::GetOptionalParam($aParams, 'limit', 0);
 				$iPage = (int)RestUtils::GetOptionalParam($aParams, 'page', 1);
 
-			// Validate the class(es)
-			$aClass = explode(',', $sClassParam);
-			foreach ($aClass as $sClass) {
-				if (!MetaModel::IsValidClass(trim($sClass))) {
-					throw new Exception("class '$sClass' is not valid");
+				// Validate the class(es)
+				$aClass = explode(',', $sClassParam);
+				foreach ($aClass as $sClass) {
+					if (!MetaModel::IsValidClass(trim($sClass))) {
+						throw new Exception("class '$sClass' is not valid");
+					}
 				}
-			}
 
-			$oObjectSet = RestUtils::GetObjectSetFromKey($sClassParam, $key, $iLimit, self::getOffsetFromLimitAndPage($iLimit, $iPage));
-			$sTargetClass = $oObjectSet->GetFilter()->GetClass();
+				$oObjectSet = RestUtils::GetObjectSetFromKey($sClassParam, $key, $iLimit, self::getOffsetFromLimitAndPage($iLimit, $iPage));
+				$sTargetClass = $oObjectSet->GetFilter()->GetClass();
 
 				if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ) != UR_ALLOWED_YES) {
 					$oResult->code = RestResult::UNAUTHORIZED;
@@ -565,12 +565,12 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 				} elseif ($iPage < 1) {
 					$oResult->code = RestResult::INVALID_PAGE;
 					$oResult->message = "The request page number is not valid. It must be an integer greater than 0";
-	            } elseif (count($oObjectSet->GetSelectedClasses()) > 1) {
+				} elseif (count($oObjectSet->GetSelectedClasses()) > 1) {
 					$oResult = new RestResultWithObjectSets();
 					$aCache = [];
 					$aShowFields = [];
 					foreach ($oObjectSet->GetSelectedClasses() as $sSelectedClass) {
-						$aShowFields = array_merge( $aShowFields, RestUtils::GetFieldList($sSelectedClass, $aParams, 'output_fields', false));
+						$aShowFields = array_merge($aShowFields, RestUtils::GetFieldList($sSelectedClass, $aParams, 'output_fields', false));
 					}
 
 					while ($oObjects = $oObjectSet->FetchAssoc()) {
@@ -608,21 +608,21 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 					}
 					$oResult->message = "Found: ".$oObjectSet->Count();
 				} else {
-					$aShowFields =[];
-					foreach ($aClass  as $sSelectedClass) {
+					$aShowFields = [];
+					foreach ($aClass as $sSelectedClass) {
 						$sSelectedClass = trim($sSelectedClass);
 						$aShowFields = array_merge($aShowFields, RestUtils::GetFieldList($sSelectedClass, $aParams, 'output_fields', false));
 					}
 
-	                if (!RestUtils::HasRequestedAllOutputFields($sShowFields) && count($aShowFields) == 1) {
-		                $aFields = $aShowFields[$sClass];
-		                //Id is not a valid attribute to optimize
-		                if (in_array('id', $aFields)) {
-		                    unset($aFields[array_search('id', $aFields)]);
-		                }
+					if (!RestUtils::HasRequestedAllOutputFields($sShowFields) && count($aShowFields) == 1) {
+						$aFields = $aShowFields[$sClass];
+						//Id is not a valid attribute to optimize
+						if (in_array('id', $aFields)) {
+							unset($aFields[array_search('id', $aFields)]);
+						}
 						$aAttToLoad = [$oObjectSet->GetClassAlias() => $aFields];
-		                $oObjectSet->OptimizeColumnLoad($aAttToLoad);
-	                }
+						$oObjectSet->OptimizeColumnLoad($aAttToLoad);
+					}
 
 					while ($oObject = $oObjectSet->Fetch()) {
 						$oResult->AddObject(0, '', $oObject, $aShowFields, RestUtils::HasRequestedExtendedOutput($sShowFields));

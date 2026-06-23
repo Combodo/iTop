@@ -8,7 +8,6 @@ use RestUtils;
 use Ticket;
 use UserRequest;
 
-
 class RestUtilsTest extends ItopDataTestCase
 {
 	public function testGetFieldListForSingleClass(): void
@@ -60,7 +59,6 @@ class RestUtilsTest extends ItopDataTestCase
 		$this->expectExceptionMessage('output_fields: invalid attribute code \'something\'');
 		RestUtils::GetFieldList(Ticket::class, (object) ['output_fields' => 'Ticket:ref;UserRequest:ref,something'], 'output_fields');
 	}
-
 
 	public function testGetFieldListForMultipleClassesWithInvalidFieldName(): void
 	{
