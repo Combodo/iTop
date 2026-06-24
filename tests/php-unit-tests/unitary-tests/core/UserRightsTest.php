@@ -81,6 +81,16 @@ class UserRightsTest extends ItopDataTestCase
 		return $oUser;
 	}
 
+	public function testReadOnlyUserObject()
+	{
+		$oUser = $this->GivenUserWithProfiles('test1', [3]); // not a readonly profile
+		$oAdminUser = $this->GivenUserWithProfiles('test2', [1]);
+		$oAdminUser->DBInsert();
+		$_SESSION = [];
+		UserRights::Login($oAdminUser->Get('login'));
+
+		self::assertTrue(UserRights::IsActionAllowed('Server', UR_ACTION_MODIFY, null, $oUser) === UR_ALLOWED_YES);
+	}
 	protected function GivenUserWithProfiles(string $sLogin, array $aProfileIds): DBObject
 	{
 		$oProfiles = new \ormLinkSet(\UserLocal::class, 'profile_list', \DBObjectSet::FromScratch(\URP_UserProfile::class));

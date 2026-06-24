@@ -582,16 +582,26 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	 */
 	public function ListProfiles($oUser)
 	{
-		$aRet = [];
-		$oSearch = new DBObjectSearch('URP_UserProfile');
-		$oSearch->AllowAllData();
-		$oSearch->NoContextParameters();
-		$oSearch->Addcondition('userid', $oUser->GetKey(), '=');
-		$oProfiles = new DBObjectSet($oSearch);
-		while ($oUserProfile = $oProfiles->Fetch()) {
-			$aRet[$oUserProfile->Get('profileid')] = $oUserProfile->Get('profileid_friendlyname');
+		if (count($oUser->ListChanges()) === 0) { // backward compatibility
+			$aRet = [];
+			$oSearch = new DBObjectSearch('URP_UserProfile');
+			$oSearch->AllowAllData();
+			$oSearch->NoContextParameters();
+			$oSearch->Addcondition('userid', $oUser->GetKey(), '=');
+			$oProfiles = new DBObjectSet($oSearch);
+			while ($oUserProfile = $oProfiles->Fetch()) {
+				$aRet[$oUserProfile->Get('profileid')] = $oUserProfile->Get('profileid_friendlyname');
+			}
+
+			return $aRet;
+		} else {
+			$aRet = [];
+			$oProfilesSet = $oUser->Get('profile_list');
+			foreach ($oProfilesSet as $oUserProfile) {
+				$aRet[$oUserProfile->Get('profileid')] = $oUserProfile->Get('profileid_friendlyname');
+			}
+			return $aRet;
 		}
-		return $aRet;
 	}
 
 	public function GetSelectFilter($oUser, $sClass, $aSettings = [])
@@ -705,26 +715,23 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	protected function GetUserActionGrant($oUser, $sClass, $iActionCode)
 	{
 		$this->LoadCache();
-
-		// load and cache permissions for the current user on the given class
-		//
-		$iUser = $oUser->GetKey();
-		if (isset($this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode])) {
-			$aTest = $this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode];
-			if (is_array($aTest)) {
-				return $aTest;
+		if (count($oUser->ListChanges()) === 0) {
+			// load and cache permissions for the current user on the given class
+			if (isset($this->m_aObjectActionGrants[$oUser->GetKey()][$sClass][$iActionCode])) {
+				$aTest = $this->m_aObjectActionGrants[$oUser->GetKey()][$sClass][$iActionCode];
+				if (is_array($aTest)) {
+					return $aTest;
+				}
 			}
 		}
 
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
 		$bStatus = null;
-		// Cache user's profiles
-		if (false === array_key_exists($iUser, $this->aUsersProfilesList)) {
-			$this->aUsersProfilesList[$iUser] = UserRights::ListProfiles($oUser);
-		}
+
+		$aProfileList = $this->GetProfileList($oUser);
 		// Call the API of UserRights because it caches the list for us
-		foreach ($this->aUsersProfilesList[$iUser] as $iProfile => $oProfile) {
+		foreach ($aProfileList as $iProfile => $oProfile) {
 			$bGrant = $this->GetProfileActionGrant($iProfile, $sClass, $sAction);
 			if (!is_null($bGrant)) {
 				if ($bGrant) {
@@ -742,7 +749,9 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$aRes = [
 			'permission' => $iPermission,
 		];
-		$this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode] = $aRes;
+		if (count($oUser->ListChanges()) === 0) {
+			$this->m_aObjectActionGrants[$oUser->GetKey()][$sClass][$iActionCode] = $aRes;
+		}
 		return $aRes;
 	}
 
@@ -824,18 +833,14 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	{
 		$this->LoadCache();
 		// Note: this code is VERY close to the code of IsActionAllowed()
-		$iUser = $oUser->GetKey();
 
-		// Cache user's profiles
-		if (false === array_key_exists($iUser, $this->aUsersProfilesList)) {
-			$this->aUsersProfilesList[$iUser] = UserRights::ListProfiles($oUser);
-		}
+		$aProfileList  = $this->GetProfileList($oUser);
 
 		// Note: The object set is ignored because it was interesting to optimize for huge data sets
 		//       and acceptable to consider only the root class of the object set
 		$bStatus = null;
 		// Call the API of UserRights because it caches the list for us
-		foreach ($this->aUsersProfilesList[$iUser] as $iProfile => $oProfile) {
+		foreach ($aProfileList as $iProfile => $oProfile) {
 			$bGrant = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
 			if (!is_null($bGrant)) {
 				if ($bGrant) {
@@ -892,6 +897,25 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			$bHasSharing = class_exists('SharedObject');
 		}
 		return $bHasSharing;
+	}
+
+	/**
+	 * @param \User $oUser
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function GetProfileList(User $oUser): array
+	{
+		if (count($oUser->ListChanges()) === 0) { // if user is already in db and not changed
+			$iUser = $oUser->GetKey();
+			if (false === array_key_exists($iUser, $this->aUsersProfilesList)) {
+				$aProfiles = UserRights::ListProfiles($oUser);
+				$this->aUsersProfilesList[$iUser] = $aProfiles;
+			}
+			return $this->aUsersProfilesList[$iUser];
+		}
+		return UserRights::ListProfiles($oUser);
 	}
 }
 
