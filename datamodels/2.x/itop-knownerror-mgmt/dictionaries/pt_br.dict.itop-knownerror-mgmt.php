@@ -97,7 +97,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:ProblemManagement' => 'Gerenciamento de Problemas',
-	'Menu:ProblemManagement+' => 'Lista de Gerenciamento de Problemas',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Atalhos',
 	'Menu:NewError' => 'Novo erro conhecido',
 	'Menu:NewError+' => '',

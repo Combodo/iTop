@@ -97,7 +97,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:ProblemManagement' => 'Gestion des problèmes',
-	'Menu:ProblemManagement+' => 'Gestion des problèmes',
+	'Menu:ProblemManagement+' => 'Un processus ITIL qui identifie la cause des incidents répétitifs, documente les Erreurs connues et les FAQs, afin de réduire la charge de travail du heldesk',
 	'Menu:Problem:Shortcuts' => 'Raccourcis',
 	'Menu:NewError' => 'Nouvelle erreur connue',
 	'Menu:NewError+' => 'Créer une erreur connue',

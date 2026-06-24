@@ -25,6 +25,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:Incident:Shortcuts+' => '',
 	'Menu:Incident:MyIncidents' => 'Incidenty přidělené mně',
 	'Menu:Incident:MyIncidents+' => 'Incidenty přidělené mně (jako řešiteli)',
+	'Menu:Incident:MySupportIncidents' => 'Reported by me~~',
+	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
 	'Menu:Incident:EscalatedIncidents' => 'Eskalované incidenty',
 	'Menu:Incident:EscalatedIncidents+' => 'Eskalované incidenty',
 	'Menu:Incident:OpenIncidents' => 'Všechny otevřené incidenty',

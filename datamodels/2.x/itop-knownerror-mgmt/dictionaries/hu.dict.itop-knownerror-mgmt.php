@@ -97,7 +97,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:ProblemManagement' => 'Problémakezelés',
-	'Menu:ProblemManagement+' => '',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Gyorsgomb',
 	'Menu:NewError' => 'Új ismert hiba',
 	'Menu:NewError+' => '',
