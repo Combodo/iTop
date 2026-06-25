@@ -8,7 +8,7 @@
     <language>EN US</language>
     <status>disabled</status>
      <password><![CDATA[SupportAgent]]></password>
-    <expiration>never_expire</expiration>
+    <expiration>force_expire</expiration>
     <password_renewed_date>2026-06-04</password_renewed_date>
   </UserLocal>
   <URP_UserProfile id="5">
@@ -26,7 +26,7 @@
     <language>EN US</language>
     <status>disabled</status>
     <password><![CDATA[$W[ConfigManager]]></password>
-    <expiration>never_expire</expiration>
+    <expiration>force_expire</expiration>
     <password_renewed_date>2026-06-04</password_renewed_date>
   </UserLocal>
   <URP_UserProfile id="6">
@@ -44,7 +44,7 @@
     <language>EN US</language>
     <status>disabled</status>
     <password><![CDATA[PortalUser]]></password>
-    <expiration>never_expire</expiration>
+    <expiration>force_expire</expiration>
     <password_renewed_date>2026-04-17</password_renewed_date>
   </UserLocal>
   <URP_UserProfile id="2">
@@ -70,7 +70,7 @@
     <language>EN US</language>
     <status>disabled</status>
     <password><![CDATA[SalesManager]]></password>
-    <expiration>never_expire</expiration>
+    <expiration>force_expire</expiration>
     <password_renewed_date>2026-06-04</password_renewed_date>
   </UserLocal>
   <URP_UserProfile id="4">
@@ -103,7 +103,7 @@
     <language>EN US</language>
     <status>disabled</status>
     <password><![CDATA[SuperUser]]></password>
-    <expiration>never_expire</expiration>
+    <expiration>force_expire</expiration>
     <password_renewed_date>2026-04-17</password_renewed_date>
   </UserLocal>
   <URP_UserProfile id="7">
