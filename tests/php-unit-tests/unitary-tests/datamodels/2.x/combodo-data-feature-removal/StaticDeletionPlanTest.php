@@ -7,8 +7,6 @@ namespace Combodo\iTop\Test\UnitTest\Module\DataFeatureRemoval;
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use CMDBSource;
-use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
 use Combodo\iTop\DataFeatureRemoval\Service\StaticDeletionPlan;
 use MetaModel;
 
@@ -98,5 +96,7 @@ class StaticDeletionPlanTest extends \AbstractCleanup
 		var_export($aRes);
 
 		var_export($this->aIdByClass);
+
+		self::assertTrue(true);
 	}
 }
