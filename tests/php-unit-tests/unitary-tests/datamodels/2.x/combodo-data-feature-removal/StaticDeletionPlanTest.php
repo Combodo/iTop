@@ -29,11 +29,11 @@ class StaticDeletionPlanTest extends \AbstractCleanup
 
 		$oService = new StaticDeletionPlan();
 		$oDeletionPlanItem = $oService->GetInitialClassDeletionPlan('DFRToRemoveLeaf');
-		self::assertEquals(2, $oDeletionPlanItem->Count());
-		self::assertEquals($this->aIdByClass['DFRToRemoveLeaf'], $oDeletionPlanItem->aIds);
+		self::assertEquals(2, $oDeletionPlanItem->Count(), 'All entries of root table should be removed');
+		self::assertEquals($this->aIdByClass['DFRToRemoveLeaf'], $oDeletionPlanItem->aIds, 'All the Ids found in root table should correspond to the one created');
 		$sTable = MetaModel::DBGetTable('DFRToRemoveLeaf');
 		$sExpectedSQL = "DELETE FROM $sTable";
-		self::assertEquals($sExpectedSQL, $oDeletionPlanItem->aQueries[0]);
+		self::assertEquals($sExpectedSQL, $oDeletionPlanItem->aQueries[0], 'Removing elements in root class should suppress all entries');
 	}
 
 	public function testUpdateExtKeyNullable()
@@ -57,16 +57,13 @@ class StaticDeletionPlanTest extends \AbstractCleanup
 
 		// THEN
 		$sExpectedSQLEnd = " IN (".implode(',', $this->aIdByClass['DFRToRemoveLeaf']).")";
-		self::assertStringEndsWith($sExpectedSQLEnd, $sUpdateSQL);
+		self::assertStringEndsWith($sExpectedSQLEnd, $sUpdateSQL, 'The query should be filtered with the ids of the root class');
 
-		self::assertEquals(3, $oDeletionPlanItem->Count());
+		self::assertEquals(3, $oDeletionPlanItem->Count(), 'All entries of root table should be removed');
 		$sIdsToRemoveInTargetClass = implode(',', $this->aIdByClass['DFRToRemoveLeaf']);
 		$aExpectedIds = $oService->GetRemoteIdsForExtKey($sRemoteClass, 'extkey_id', $sIdsToRemoveInTargetClass);
 
-		self::assertEquals($aExpectedIds, $oDeletionPlanItem->aIds);
-
-		//		var_export($aRes);
-		//		var_export($this->aIdByClass);
+		self::assertEquals($aExpectedIds, $oDeletionPlanItem->aIds, 'All entries pointing on root class should be removed');
 	}
 
 	/**
@@ -94,7 +91,7 @@ class StaticDeletionPlanTest extends \AbstractCleanup
 		$oService = new StaticDeletionPlan();
 		$aRes = $oService->GetStaticDeletionPlan($aClasses);
 
-		self::assertArrayHasKey('DFRRemovedCollateralCascade', $aRes);
+		self::assertArrayHasKey('DFRRemovedCollateralCascade', $aRes, 'The cleanup should descend to the cascaded classes');
 
 		//		echo json_encode($aRes, JSON_PRETTY_PRINT)."\n";
 		//		echo json_encode($this->aIdByClass, JSON_PRETTY_PRINT);
@@ -111,17 +108,11 @@ class StaticDeletionPlanTest extends \AbstractCleanup
 		EOF);
 
 		$aClasses = [ 'DFRToRemoveLeaf' ];
-		//		$this->expectException(DataFeatureRemovalException::class);
-		//		$this->expectExceptionMessage('Deletion Plan cannot be executed due to issues');
 		$oService = new StaticDeletionPlan();
 		$aRes = $oService->GetStaticDeletionPlan($aClasses);
 
-		self::assertEquals(1, $aRes['DFRManual']->oIssue->Count());
-		self::assertEquals($this->aIdByClass['DFRManual'], $aRes['DFRManual']->oIssue->aIds);
-
-		//		echo json_encode($aRes, JSON_PRETTY_PRINT)."\n";
-		//		echo json_encode($this->aIdByClass, JSON_PRETTY_PRINT);
-
+		self::assertEquals(1, $aRes['DFRManual']->oIssue->Count(), 'Issue should be found because of DEL_MANUAL deletion policy');
+		self::assertEquals($this->aIdByClass['DFRManual'], $aRes['DFRManual']->oIssue->aIds, 'Issue should be correspond to the entries created');
 	}
 
 	public function testGetStaticDeletionPlan_UpdateMultipleExtKeys()
@@ -136,10 +127,8 @@ class StaticDeletionPlanTest extends \AbstractCleanup
 		$oService = new StaticDeletionPlan();
 		$aRes = $oService->GetStaticDeletionPlan($aClasses);
 
-		self::assertArrayHasKey('DFRToUpdate', $aRes);
-
-		echo json_encode($aRes, JSON_PRETTY_PRINT)."\n";
-		echo json_encode($this->aIdByClass, JSON_PRETTY_PRINT);
+		self::assertArrayHasKey('DFRToUpdate', $aRes, 'Class to update should be targeted');
+		self::assertEquals(2, $aRes['DFRToUpdate']->oUpdate->Count(), 'Update should be counted only for removed pointed classes');
 	}
 
 	public function testGetCleanupSummary()
@@ -156,11 +145,7 @@ class StaticDeletionPlanTest extends \AbstractCleanup
 		$oService = new StaticDeletionPlan();
 		$aRes = $oService->GetCleanupSummary($aClasses);
 
-		echo json_encode($aRes, JSON_PRETTY_PRINT)."\n";
-		echo json_encode($this->aIdByClass, JSON_PRETTY_PRINT);
-
-		self::assertEquals(1, $aRes['DFRManual']->iIssueCount);
-
+		self::assertEquals(1, $aRes['DFRManual']->iIssueCount, 'Issue should have been detected during cleanup count');
 	}
 
 }
