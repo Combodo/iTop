@@ -36,6 +36,9 @@ class StaticDeletionPlan
 		$aDeletionPlan = $this->GetStaticDeletionPlan($aClasses ?? []);
 
 		foreach ($aDeletionPlan as $sClass => $oDeletionPlanEntity) {
+			if ($oDeletionPlanEntity->TotalCount() === 0) {
+				continue;
+			}
 			$oDataCleanupSummary = new DataCleanupSummaryEntity($sClass);
 			$oDataCleanupSummary->iUpdateCount = $oDeletionPlanEntity->oUpdate->Count();
 			$oDataCleanupSummary->iDeleteCount = $oDeletionPlanEntity->oDelete->Count();
@@ -73,7 +76,6 @@ class StaticDeletionPlan
 		$sIdsToRemove = implode(', ', $this->aDeletionPlan[$sClass]->oDelete->aIds);
 		$aReferencingMe = MetaModel::EnumReferencingClasses($sClass);
 		foreach ($aReferencingMe as $sRemoteClass => $aExtKeys) {
-			$sRemoteTable = MetaModel::DBGetTable($sRemoteClass);
 			if (!isset($this->aDeletionPlan[$sRemoteClass])) {
 				$this->aDeletionPlan[$sRemoteClass] =  new DeletionPlanEntity();
 			}
@@ -87,11 +89,11 @@ class StaticDeletionPlan
 
 				if ($oExtKeyAttDef->IsNullAllowed()) {
 					// update
-					$oUpdateItem = $this->UpdateExtKeyNullable($sRemoteTable, $sExtKeyAttCode, $sIdsToRemove);
+					$oUpdateItem = $this->UpdateExtKeyNullable($sRemoteClass, $sExtKeyAttCode, $sIdsToRemove);
 					$oDeletionPlanEntity->oUpdate->Merge($oUpdateItem);
 				} else {
 					// delete
-					$aRemoteIdsToRemove = $this->GetRemoteIdsForExtKey($sRemoteTable, $sExtKeyAttCode, $sIdsToRemove);
+					$aRemoteIdsToRemove = $this->GetRemoteIdsForExtKey($sRemoteClass, $sExtKeyAttCode, $sIdsToRemove);
 
 					$iDeletePropagationOption = $oExtKeyAttDef->GetDeletionPropagationOption();
 					if ($iDeletePropagationOption == DEL_MANUAL) {
@@ -104,7 +106,7 @@ class StaticDeletionPlan
 					if (($iDeletePropagationOption == DEL_MOVEUP) && ($oExtKeyAttDef->IsHierarchicalKey())) {
 						// update hierarchical keys due to row cleanup in the same table
 						$sIdsToRemove = implode(',', $this->aDeletionPlan[$sRemoteClass]->oDelete->aIds);
-						$oUpdateItem = $this->UpdateHierarchicalExtKey($sRemoteTable, $sExtKeyAttCode, $sIdsToRemove);
+						$oUpdateItem = $this->UpdateHierarchicalExtKey($sRemoteClass, $sExtKeyAttCode, $sIdsToRemove);
 						$oDeletionPlanEntity->oUpdate->Merge($oUpdateItem);
 						// do not recurse
 						continue;
@@ -112,7 +114,9 @@ class StaticDeletionPlan
 
 					// Delete entries in Remote Class
 					if (count($aRemoteIdsToRemove) !== 0) {
+						// TODO see ObjectService::Delete() !!!!!!
 						$sRemoteIdsToDelete = implode(',', $aRemoteIdsToRemove);
+						$sRemoteTable = MetaModel::DBGetTable($sRemoteClass);
 						$sSQL = "DELETE FROM $sRemoteTable WHERE id IN ($sRemoteIdsToDelete)";
 						$oDeletionPlanEntity->oDelete->Merge(new DeletionPlanItem([$sSQL], $aRemoteIdsToRemove));
 
@@ -124,38 +128,50 @@ class StaticDeletionPlan
 	}
 
 	/**
-	 * @param string $sRemoteTable
+	 * @param string $sRemoteClass
 	 * @param string $sExtKeyAttCode
 	 * @param string $sIdsToRemoveInTargetClass
 	 *
 	 * @return \Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanItem
+	 * @throws \CoreException
 	 */
-	public function UpdateExtKeyNullable(string $sRemoteTable, string $sExtKeyAttCode, string $sIdsToRemoveInTargetClass): DeletionPlanItem
+	public function UpdateExtKeyNullable(string $sRemoteClass, string $sExtKeyAttCode, string $sIdsToRemoveInTargetClass): DeletionPlanItem
 	{
-		$aIds = $this->GetRemoteIdsForExtKey($sRemoteTable, $sExtKeyAttCode, $sIdsToRemoveInTargetClass);
+		$aIds = $this->GetRemoteIdsForExtKey($sRemoteClass, $sExtKeyAttCode, $sIdsToRemoveInTargetClass);
 
+		[$sDBTable, $sDBField] = $this->GetDBInfoForAttcode($sRemoteClass, $sExtKeyAttCode);
 		$sUpdateSQL = <<<SQL
-UPDATE $sRemoteTable SET updated.$sExtKeyAttCode = 0
-FROM $sRemoteTable AS updated
-WHERE updated.$sExtKeyAttCode IN ($sIdsToRemoveInTargetClass)
+UPDATE $sDBTable SET updated.$sDBField = 0
+FROM $sDBTable AS updated
+WHERE updated.$sDBField IN ($sIdsToRemoveInTargetClass)
 SQL;
 
 		return new DeletionPlanItem([$sExtKeyAttCode => $sUpdateSQL], $aIds);
 	}
 
-	public function UpdateHierarchicalExtKey(string $sRemoteTable, string $sExtKeyAttCode, string $sIdsToRemoveInTargetClass): DeletionPlanItem
+	/**
+	 * @param string $sRemoteClass
+	 * @param string $sExtKeyAttCode
+	 * @param string $sIdsToRemoveInTargetClass
+	 *
+	 * @return \Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanItem
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 */
+	public function UpdateHierarchicalExtKey(string $sRemoteClass, string $sExtKeyAttCode, string $sIdsToRemoveInTargetClass): DeletionPlanItem
 	{
+		[$sDBTable, $sDBField] = $this->GetDBInfoForAttcode($sRemoteClass, $sExtKeyAttCode);
 		$sUpdateSQL = <<<SQL
-UPDATE $sRemoteTable SET updated.$sExtKeyAttCode = removed.$sExtKeyAttCode
-FROM $sRemoteTable AS updated
-INNER JOIN $sRemoteTable AS removed ON updated.$sExtKeyAttCode = removed.id
+UPDATE $sDBTable SET updated.$sDBField = removed.$sDBField
+FROM $sDBTable AS updated
+INNER JOIN $sDBTable AS removed ON updated.$sDBField = removed.id
 WHERE removed.id IN ($sIdsToRemoveInTargetClass)
 SQL;
 
 		$sSQL = <<<SQL
 SELECT id
-FROM $sRemoteTable AS updated
-INNER JOIN $sRemoteTable AS removed ON updated.$sExtKeyAttCode = removed.id
+FROM $sDBTable AS updated
+INNER JOIN $sDBTable AS removed ON updated.$sDBField = removed.id
 WHERE removed.id IN ($sIdsToRemoveInTargetClass)
 SQL;
 		$aIds = CMDBSource::QueryToCol($sSQL, 'id');
@@ -163,12 +179,22 @@ SQL;
 		return new DeletionPlanItem([$sExtKeyAttCode => $sUpdateSQL], $aIds);
 	}
 
-	public function GetRemoteIdsForExtKey(string $sRemoteTable, string $sExtKeyAttCode, string $sIdsToRemoveInTargetClass): array
+	/**
+	 * @param string $sRemoteClass
+	 * @param string $sExtKeyAttCode
+	 * @param string $sIdsToRemoveInTargetClass
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 */
+	public function GetRemoteIdsForExtKey(string $sRemoteClass, string $sExtKeyAttCode, string $sIdsToRemoveInTargetClass): array
 	{
 		if (\utils::IsNullOrEmptyString($sIdsToRemoveInTargetClass)) {
 			return [];
 		}
-		$sSQL = "SELECT id FROM $sRemoteTable WHERE $sExtKeyAttCode IN ($sIdsToRemoveInTargetClass)";
+		[$sDBTable, $sDBField] = $this->GetDBInfoForAttcode($sRemoteClass, $sExtKeyAttCode);
+		$sSQL = "SELECT id FROM $sDBTable WHERE $sDBField IN ($sIdsToRemoveInTargetClass)";
 
 		return CMDBSource::QueryToCol($sSQL, 'id');
 	}
@@ -188,6 +214,25 @@ SQL;
 		$sDeleteSQL = "DELETE FROM $sTable";
 
 		return new DeletionPlanItem([$sDeleteSQL], $aIds);
+	}
+
+	/**
+	 * Get database table for an attcode
+	 *
+	 * @param string $sRemoteClass
+	 * @param string $sExtKeyAttCode
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	public function GetDBInfoForAttcode(string $sRemoteClass, string $sExtKeyAttCode): array
+	{
+		$sRealClass = MetaModel::GetAttributeOrigin($sRemoteClass, $sExtKeyAttCode);
+		$sRealTable = MetaModel::DBGetTable($sRealClass);
+		$oAttDef = MetaModel::GetAttributeDef($sRealClass, $sExtKeyAttCode);
+		$sSQLAttCode = array_keys($oAttDef->GetSQLColumns())[0];
+		return [$sRealTable, $sSQLAttCode];
 	}
 
 }

@@ -47,9 +47,9 @@ class StaticDeletionPlanTest extends \AbstractCleanup
 
 		// WHEN
 		$oService = new StaticDeletionPlan();
-		$sRemoteTable = MetaModel::DBGetTable('DFRToUpdate');
+		$sRemoteClass = 'DFRToUpdate';
 		$oDeletionPlanItem = $oService->UpdateExtKeyNullable(
-			$sRemoteTable,
+			$sRemoteClass,
 			'extkey_id',
 			implode(',', $this->aIdByClass['DFRToRemoveLeaf'])
 		);
@@ -61,7 +61,7 @@ class StaticDeletionPlanTest extends \AbstractCleanup
 
 		self::assertEquals(3, $oDeletionPlanItem->Count());
 		$sIdsToRemoveInTargetClass = implode(',', $this->aIdByClass['DFRToRemoveLeaf']);
-		$aExpectedIds = $oService->GetRemoteIdsForExtKey($sRemoteTable, 'extkey_id', $sIdsToRemoveInTargetClass);
+		$aExpectedIds = $oService->GetRemoteIdsForExtKey($sRemoteClass, 'extkey_id', $sIdsToRemoveInTargetClass);
 
 		self::assertEquals($aExpectedIds, $oDeletionPlanItem->aIds);
 

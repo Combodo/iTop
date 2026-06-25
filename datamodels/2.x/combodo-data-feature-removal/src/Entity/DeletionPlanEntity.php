@@ -24,4 +24,9 @@ class DeletionPlanEntity
 		$this->oUpdate = $oUpdate ?? new DeletionPlanItem();
 		$this->oIssue = $oIssue ?? new DeletionPlanItem();
 	}
+
+	public function TotalCount(): int
+	{
+		return $this->oDelete->Count() + $this->oUpdate->Count() + $this->oIssue->Count();
+	}
 }
