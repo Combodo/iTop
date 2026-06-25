@@ -82,6 +82,8 @@ class BulkChangeTest extends ItopDataTestCase
 	 */
 	public function testBulkChangeWithoutInitData($aCSVData, $aAttributes, $aExtKeys, $aReconcilKeys, $aResult, ?array $aResultHTML = null)
 	{
+		[$aCSVData, $aResult, $aResultHTML] = $this->ResolveBulkChangeWithoutInitDataFixtures($aCSVData, $aResult, $aResultHTML);
+
 		$this->debug("aReconcilKeys:".$aReconcilKeys[0]);
 		$oBulk = new BulkChange(
 			"Server",
@@ -124,7 +126,7 @@ class BulkChangeTest extends ItopDataTestCase
 		return [
 			"Case 3, 5 et 8 : unchanged" => [
 				"csvData" =>
-					[["IT Department", "Server1", "1", "production", ""]],
+					[["{{ORG_NAME}}", "{{SERVER_NAME}}", "{{SERVER_ID}}", "production", ""]],
 				"attributes" =>
 					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
 				"extKeys" =>
@@ -132,13 +134,13 @@ class BulkChangeTest extends ItopDataTestCase
 				"reconciliation Keys" =>
 					["id"],
 				"expectedResult" =>
-					[0 => "IT Department", "org_id" => "6", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "unchanged"],
+					[0 => "{{ORG_NAME}}", "org_id" => "{{ORG_ID}}", 1 => "{{SERVER_NAME}}", 2 => "{{SERVER_ID}}", 3 => "production", 4 => "", "id" => "{{SERVER_ID}}", "__STATUS__" => "unchanged"],
 				"expectedResultHTML" =>
-					[0 => "IT Department", "org_id" => "6", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "unchanged"],
+					[0 => "{{ORG_NAME}}", "org_id" => "{{ORG_ID}}", 1 => "{{SERVER_NAME}}", 2 => "{{SERVER_ID}}", 3 => "production", 4 => "", "id" => "{{SERVER_ID}}", "__STATUS__" => "unchanged"],
 			],
 			"Case 9 : wrong date format" => [
 				"csvData" =>
-					[["Demo", "Server1", "1", "production", "<date"]],
+					[["{{ORG_NAME}}", "{{SERVER_NAME}}", "{{SERVER_ID}}", "production", "<date"]],
 				"attributes" =>
 					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
 				"extKeys" =>
@@ -146,13 +148,13 @@ class BulkChangeTest extends ItopDataTestCase
 				"reconciliation Keys" =>
 					["id"],
 				"expectedResult" =>
-					[ 0 => "Demo", "org_id" => "n/a", 1 => "Server1", 2 => "1", 3 => "production", 4 => "'<date' is an invalid value", "id" => 1, "__STATUS__" => "Issue: wrong date format"],
+					[ 0 => "{{ORG_NAME}}", "org_id" => "n/a", 1 => "{{SERVER_NAME}}", 2 => "{{SERVER_ID}}", 3 => "production", 4 => "'<date' is an invalid value", "id" => "{{SERVER_ID}}", "__STATUS__" => "Issue: wrong date format"],
 				"expectedResultHTML" =>
-					[ 0 => "Demo", "org_id" => "n/a", 1 => "Server1", 2 => "1", 3 => "production", 4 => "'&lt;date' is an invalid value", "id" => 1, "__STATUS__" => "Issue: wrong date format"],
+					[ 0 => "{{ORG_NAME}}", "org_id" => "n/a", 1 => "{{SERVER_NAME}}", 2 => "{{SERVER_ID}}", 3 => "production", 4 => "'&lt;date' is an invalid value", "id" => "{{SERVER_ID}}", "__STATUS__" => "Issue: wrong date format"],
 				],
 			"Case 1 : no match" => [
 				"csvData" =>
-					[["<Bad", "Server1", "1", "production", ""]],
+					[["<Bad", "{{SERVER_NAME}}", "{{SERVER_ID}}", "production", ""]],
 				"attributes" =>
 					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
 				"extKeys" =>
@@ -160,13 +162,13 @@ class BulkChangeTest extends ItopDataTestCase
 				"reconciliation Keys" =>
 					["id"],
 				"expectedResult" =>
-					[0 => '<Bad', "org_id" => "No match for value '<Bad'",1 => "Server1",2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)"],
+					[0 => '<Bad', "org_id" => "No match for value '<Bad'",1 => "{{SERVER_NAME}}",2 => "{{SERVER_ID}}", 3 => "production", 4 => "", "id" => "{{SERVER_ID}}", "__STATUS__" => "Issue: Unexpected attribute value(s)"],
 				"expectedResultHTML" =>
-					[0 => '&lt;Bad', "org_id" => "No match for value &apos;&lt;Bad&apos;",1 => "Server1",2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)"],
+					[0 => '&lt;Bad', "org_id" => "No match for value &apos;&lt;Bad&apos;",1 => "{{SERVER_NAME}}",2 => "{{SERVER_ID}}", 3 => "production", 4 => "", "id" => "{{SERVER_ID}}", "__STATUS__" => "Issue: Unexpected attribute value(s)"],
 			],
 			"Case 10 : Missing mandatory value" => [
 				"csvData" =>
-					[["", "Server1", "1", "production", ""]],
+					[["", "{{SERVER_NAME}}", "{{SERVER_ID}}", "production", ""]],
 				"attributes" =>
 					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
 				"extKeys" =>
@@ -174,13 +176,13 @@ class BulkChangeTest extends ItopDataTestCase
 				"reconciliation Keys" =>
 					["id"],
 				"expectedResult" =>
-					[0 => null, "org_id" => "Invalid value for attribute", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)"],
+					[0 => null, "org_id" => "Invalid value for attribute", 1 => "{{SERVER_NAME}}", 2 => "{{SERVER_ID}}", 3 => "production", 4 => "", "id" => "{{SERVER_ID}}", "__STATUS__" => "Issue: Unexpected attribute value(s)"],
 				"expectedResultHTML" =>
-					[0 => null, "org_id" => "Invalid value for attribute", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)"],
+					[0 => null, "org_id" => "Invalid value for attribute", 1 => "{{SERVER_NAME}}", 2 => "{{SERVER_ID}}", 3 => "production", 4 => "", "id" => "{{SERVER_ID}}", "__STATUS__" => "Issue: Unexpected attribute value(s)"],
 				],
 			"Case 6 : Unexpected value" => [
 				"csvData" =>
-					[["Demo", "Server1", "1", "<svg onclick\"alert(1)\">", ""]],
+					[["{{ORG_NAME}}", "{{SERVER_NAME}}", "{{SERVER_ID}}", "<svg onclick\"alert(1)\">", ""]],
 				"attributes" =>
 					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
 				"extKeys" =>
@@ -189,30 +191,74 @@ class BulkChangeTest extends ItopDataTestCase
 					["id"],
 			"expectedResult" =>
 					[
-						0 => "Demo",
-						"org_id" => "3",
-						1 => "Server1",
-						2 => "1",
+						0 => "{{ORG_NAME}}",
+						"org_id" => "{{ORG_ID}}",
+						1 => "{{SERVER_NAME}}",
+						2 => "{{SERVER_ID}}",
 						3 => '\'<svg onclick"alert(1)">\' is an invalid value',
 						4 => "",
-						"id" => 1,
+						"id" => "{{SERVER_ID}}",
 						"__STATUS__" => "Issue: Unexpected attribute value(s)",
 						"__ERRORS__" => "Unexpected value for attribute 'status': no match found, check spelling",
 					],
 				"expectedResultHTML" =>
 					[
-						0 => "Demo",
-						"org_id" => "3",
-						1 => "Server1",
-						2 => "1",
+						0 => "{{ORG_NAME}}",
+						"org_id" => "{{ORG_ID}}",
+						1 => "{{SERVER_NAME}}",
+						2 => "{{SERVER_ID}}",
 						3 => '\'&lt;svg onclick&quot;alert(1)&quot;&gt;\' is an invalid value',
 						4 => "",
-						"id" => 1,
+						"id" => "{{SERVER_ID}}",
 						"__STATUS__" => "Issue: Unexpected attribute value(s)",
 						"__ERRORS__" => "Unexpected value for attribute 'status': no match found, check spelling",
 					],
 			],
 		];
+	}
+
+	private function ResolveBulkChangeWithoutInitDataFixtures(array $aCSVData, array $aResult, ?array $aResultHTML): array
+	{
+		$sSuffix = uniqid('bulk_', false);
+		$iOrgId =  $this->getTestOrgId();
+		$sServerName = 'Bulk Server '.$sSuffix;
+		$iServerId = (string) $this->GivenObjectInDB('Server', [
+			'name' => $sServerName,
+			'status' => 'production',
+			'org_id' => $iOrgId,
+		]);
+
+		$aTokens = [
+			'{{ORG_NAME}}' => 'UnitTestOrganization',
+			'{{ORG_ID}}' => $iOrgId,
+			'{{SERVER_NAME}}' => $sServerName,
+			'{{SERVER_ID}}' => $iServerId,
+		];
+
+		$aCSVData = $this->ReplaceFixtureTokens($aCSVData, $aTokens);
+		$aResult = $this->ReplaceFixtureTokens($aResult, $aTokens);
+		if ($aResultHTML !== null) {
+			$aResultHTML = $this->ReplaceFixtureTokens($aResultHTML, $aTokens);
+		}
+
+		return [$aCSVData, $aResult, $aResultHTML];
+	}
+
+	private function ReplaceFixtureTokens($mValue, array $aTokens)
+	{
+		if (is_array($mValue)) {
+			$aResult = [];
+			foreach ($mValue as $sKey => $mItem) {
+				$aResult[$sKey] = $this->ReplaceFixtureTokens($mItem, $aTokens);
+			}
+			return $aResult;
+		}
+
+		if (is_string($mValue) && array_key_exists($mValue, $aTokens)) {
+			return $aTokens[$mValue];
+		}
+
+		return $mValue;
 	}
 
 	/**

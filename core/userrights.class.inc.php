@@ -1531,6 +1531,37 @@ class UserRights
 	}
 
 	/**
+	 * @param User $oUser
+	 * @param array $aExcludedProfilesId Administrator by default, but can also be other proofiles depending on needs (e.g. power portal user or REST profile)
+	 * @return bool
+	 * @throws ArchivedObjectException
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 * @throws MySQLException
+	 */
+	public static function IsUserReadOnly(User $oUser, array $aExcludedProfilesId = [1]): bool
+	{
+		$oUserProfiles = $oUser->Get('profile_list');
+		$oUserRights = UserRights::GetModuleInstance();
+		while ($oUserProfile = $oUserProfiles->Fetch()) {
+			$iProfileId = $oUserProfile->Get('profileid');
+			if (in_array($iProfileId, $aExcludedProfilesId)) {
+				return false;
+			}
+			foreach (MetaModel::GetClasses('bizmodel,grant_by_profile') as $sClass) {
+				foreach (['w', 'bw', 'd', 'bd'] as $sWriteActionCode) {
+					$bIsGranted = $oUserRights->GetProfileActionGrant($iProfileId, $sClass, $sWriteActionCode);
+					if ($bIsGranted === true) {
+						return false;
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * @param string $sClass
 	 * @param int $iActionCode see UR_ACTION_* constants
 	 * @param DBObjectSet $oInstanceSet

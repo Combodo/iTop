@@ -4,80 +4,64 @@
     <contactid>9</contactid>
     <email>jules.vernes@it.com</email>
     <org_id_friendlyname>IT Department</org_id_friendlyname>
-    <login>Agent</login>
+    <login>SupportAgent</login>
     <language>EN US</language>
     <status>disabled</status>
-    <profile_list>
-      <Set>
-        <URP_UserProfile id="5">
-          <profileid>5</profileid>
-          <profile>Support Agent</profile>
-          <reason></reason>
-        </URP_UserProfile>
-      </Set>
-    </profile_list>
-    <allowed_org_list>
-      <Set>
-      </Set>
-    </allowed_org_list>
-    <password><![CDATA[R6rQ;p]JT*FA$aaP^4]]></password>
+     <password><![CDATA[SupportAgent]]></password>
     <expiration>force_expire</expiration>
     <password_renewed_date>2026-06-04</password_renewed_date>
   </UserLocal>
+  <URP_UserProfile id="5">
+    <userid>4</userid>
+    <userlogin>SupportAgent</userlogin>
+    <profileid>SELECT URP_Profiles WHERE id='5'</profileid>
+    <profile>Support Agent</profile>
+    <reason></reason>
+  </URP_UserProfile>
   <UserLocal alias="UserLocal" id="5">
     <contactid>26</contactid>
     <contactid_friendlyname>Jean Ferrat</contactid_friendlyname>
     <org_id_friendlyname>IT Department</org_id_friendlyname>
-    <login>config</login>
+    <login>ConfigManager</login>
     <language>EN US</language>
     <status>disabled</status>
-    <profile_list>
-      <Set>
-        <URP_UserProfile id="6">
-          <profileid>3</profileid>
-          <profile>Configuration Manager</profile>
-          <reason></reason>
-        </URP_UserProfile>
-      </Set>
-    </profile_list>
-    <allowed_org_list>
-      <Set>
-      </Set>
-    </allowed_org_list>
-    <password><![CDATA[$W[:"7+Gf"Y\sd8#E~]]></password>
+    <password><![CDATA[$W[ConfigManager]]></password>
     <expiration>force_expire</expiration>
     <password_renewed_date>2026-06-04</password_renewed_date>
   </UserLocal>
+  <URP_UserProfile id="6">
+    <userid>5</userid>
+    <userlogin>ConfigManager</userlogin>
+    <profileid>SELECT URP_Profiles WHERE id='3'</profileid>
+    <profile>Configuration Manager</profile>
+    <reason></reason>
+  </URP_UserProfile>
   <UserLocal alias="UserLocal" id="2">
     <contactid>15</contactid>
     <email>agatha.christie@demo.com</email>
     <org_id_friendlyname>Sales Department</org_id_friendlyname>
-    <login>Portal</login>
+    <login>PortalUser</login>
     <language>EN US</language>
     <status>disabled</status>
-    <profile_list>
-      <Set>
-        <URP_UserProfile id="2">
-          <profileid>2</profileid>
-          <profile>Portal user</profile>
-          <reason></reason>
-        </URP_UserProfile>
-      </Set>
-    </profile_list>
-    <allowed_org_list>
-      <Set>
-        <URP_UserOrg id="2">
-          <allowed_org_id>6</allowed_org_id>
-          <allowed_org_name>Sales Department</allowed_org_name>
-          <reason></reason>
-          <allowed_org_id_obsolescence_flag>no</allowed_org_id_obsolescence_flag>
-        </URP_UserOrg>
-      </Set>
-    </allowed_org_list>
-    <password><![CDATA[-Why]KDdMJvkuB8#e]]></password>
+    <password><![CDATA[PortalUser]]></password>
     <expiration>force_expire</expiration>
     <password_renewed_date>2026-04-17</password_renewed_date>
   </UserLocal>
+  <URP_UserProfile id="2">
+    <userid>2</userid>
+    <userlogin>PortalUser</userlogin>
+    <profileid>SELECT URP_Profiles WHERE id='2'</profileid>
+    <profile>Portal user</profile>
+    <reason></reason>
+  </URP_UserProfile>
+  <URP_UserOrg id="2">
+    <userid>2</userid>
+    <userlogin>PortalUser</userlogin>
+    <allowed_org_id>6</allowed_org_id>
+    <allowed_org_name>Sales Department</allowed_org_name>
+    <reason></reason>
+    <allowed_org_id_obsolescence_flag>no</allowed_org_id_obsolescence_flag>
+  </URP_UserOrg>
   <UserLocal alias="UserLocal" id="3">
     <contactid>6</contactid>
     <email>claude.monet@demo.com</email>
@@ -85,32 +69,48 @@
     <login>SalesManager</login>
     <language>EN US</language>
     <status>disabled</status>
-    <profile_list>
-      <Set>
-        <URP_UserProfile id="4">
-          <profileid>12</profileid>
-          <profile>Portal power user</profile>
-          <reason></reason>
-        </URP_UserProfile>
-        <URP_UserProfile id="3">
-          <profileid>2</profileid>
-          <profile>Portal user</profile>
-          <reason></reason>
-        </URP_UserProfile>
-      </Set>
-    </profile_list>
-    <allowed_org_list>
-      <Set>
-        <URP_UserOrg id="1">
-          <allowed_org_id>6</allowed_org_id>
-          <allowed_org_name>Sales Department</allowed_org_name>
-          <reason></reason>
-          <allowed_org_id_obsolescence_flag>no</allowed_org_id_obsolescence_flag>
-        </URP_UserOrg>
-      </Set>
-    </allowed_org_list>
-    <password><![CDATA[D%r7hoZ})5*hvq5`{Q]]></password>
+    <password><![CDATA[SalesManager]]></password>
     <expiration>force_expire</expiration>
     <password_renewed_date>2026-06-04</password_renewed_date>
   </UserLocal>
+  <URP_UserProfile id="4">
+    <userid>3</userid>
+    <userlogin>SalesManager</userlogin>
+    <profileid>SELECT URP_Profiles WHERE id='12'</profileid>
+    <profile>Portal power user</profile>
+    <reason></reason>
+  </URP_UserProfile>
+  <URP_UserProfile id="3">
+    <userid>3</userid>
+    <userlogin>SalesManager</userlogin>
+    <profileid>SELECT URP_Profiles WHERE id='2'</profileid>
+    <profile>Portal user</profile>
+    <reason></reason>
+  </URP_UserProfile>
+  <URP_UserOrg id="1">
+    <userid>3</userid>
+    <userlogin>SalesManager</userlogin>
+    <allowed_org_id>6</allowed_org_id>
+    <allowed_org_name>Sales Department</allowed_org_name>
+    <reason></reason>
+    <allowed_org_id_obsolescence_flag>no</allowed_org_id_obsolescence_flag>
+  </URP_UserOrg>
+  <UserLocal alias="UserLocal" id="6">
+    <contactid>18</contactid>
+    <email>rene.descartes@demo.com</email>
+    <org_id_friendlyname>Demo</org_id_friendlyname>
+    <login>SuperUser</login>
+    <language>EN US</language>
+    <status>disabled</status>
+    <password><![CDATA[SuperUser]]></password>
+    <expiration>force_expire</expiration>
+    <password_renewed_date>2026-04-17</password_renewed_date>
+  </UserLocal>
+  <URP_UserProfile id="7">
+    <userid>6</userid>
+    <userlogin>SuperUser</userlogin>
+    <profileid>SELECT URP_Profiles WHERE id='117'</profileid>
+    <profile>Super User</profile>
+    <reason></reason>
+  </URP_UserProfile>
 </Set>
