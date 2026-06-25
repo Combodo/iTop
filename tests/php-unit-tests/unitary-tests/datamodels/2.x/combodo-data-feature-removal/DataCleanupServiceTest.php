@@ -34,14 +34,9 @@ use PHPUnit\Framework\MockObject\MockObject;
  * @see DataCleanupSummaryEntity
  * @see ItopDataTestCase
  */
-class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
+class DataCleanupServiceTest extends \AbstractCleanup
 {
 	private ExecutionLimits&MockObject $oExecutionLimits;
-
-	public function GetDatamodelDeltaAbsPath(): string
-	{
-		return __DIR__.'/data_cleanup_delta.xml';
-	}
 
 	//--- GetCleanupSummary tests ---
 
@@ -259,36 +254,6 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 		$this->SetNonPublicProperty($oDeletionPlaService, 'oExecutionLimits', $this->oExecutionLimits);
 		$aRes = $oDeletionPlaService->ExecuteCleanup($aClasses);
 		$this->AssertSummaryEquals($aExpected, $aRes);
-	}
-
-	private function GivenDFRTreeInDB(string $sTree)
-	{
-		$aTree = explode("\n", $sTree);
-		foreach ($aTree as $sLine) {
-			if (trim($sLine) === "") {
-				continue;
-			}
-			$this->GivenDFRTreeLineInDB($sLine);
-		}
-	}
-
-	private array $aIdByObjectName = [];
-	private function GivenDFRTreeLineInDB(string $sLine)
-	{
-		[$sLeft, $sRight] = explode('<-', $sLine);
-		$sLeft = trim($sLeft);
-
-		$iLeftId = $this->aIdByObjectName[$sLeft] ?? 0;
-		if ($iLeftId === 0) {
-			[$sChildClass, ] = explode('_', $sLeft, 2);
-			$iLeftId = $this->GivenObjectInDB($sChildClass, ['name' => $sLeft]);
-			$this->aIdByObjectName[$sLeft] = $iLeftId;
-		}
-
-		$sRight = trim($sRight);
-		[$sChildClass, ] = explode('_', $sRight, 2);
-		$iRightId = $this->GivenObjectInDB($sChildClass, ['name' => $sRight, 'extkey_id' => $iLeftId]);
-		$this->aIdByObjectName[$sRight] = $iRightId;
 	}
 
 	private function GivenExecutionLimits(int $iStopAfterCallNumberReached): void

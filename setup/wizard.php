@@ -74,7 +74,6 @@ if (SetupUtils::IsSessionSetupTokenValid()) {
 		// The configuration file already exists
 		if (!is_writable($sConfigFile)) {
 			SetupUtils::ExitReadOnlyMode(false); // Reset readonly mode in case of problem
-			SetupUtils::EraseSetupToken();
 			$sRelativePath = utils::GetConfigFilePathRelative(ITOP_DEFAULT_ENV);
 			$oP = new SetupPage('Installation Cannot Continue');
 			$oP->add("<h2>Fatal error</h2>\n");
@@ -87,7 +86,6 @@ HTML;
 			$oP->p($sButtonsHtml);
 
 			$oP->output();
-			// Prevent token creation
 			exit;
 		} else {
 			chmod($sConfigFile, 0440);

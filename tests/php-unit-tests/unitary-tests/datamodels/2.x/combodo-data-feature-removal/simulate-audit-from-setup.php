@@ -59,7 +59,7 @@ foreach ($aAddedExtensions as $iIndex => $sExtensionCode) {
 	}
 }
 
-$sRemovedExtensions = utils::ReadParam('removed_modules', '', false, 'raw');
+$sRemovedExtensions = utils::ReadParam('removed_modules', 'itop-container-mgmt', false, 'raw');
 $aRemovedExtensionsAndModules = [];
 if (mb_strlen($sRemovedExtensions) > 0) {
 	$aRemovedExtensionsAndModules = explode(',', $sRemovedExtensions);

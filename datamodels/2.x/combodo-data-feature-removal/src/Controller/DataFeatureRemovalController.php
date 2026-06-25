@@ -18,6 +18,7 @@ use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalLog;
 use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
 use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
+use Combodo\iTop\DataFeatureRemoval\Service\StaticDeletionPlan;
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use ContextTag;
@@ -168,6 +169,7 @@ class DataFeatureRemovalController extends Controller
 		$oSetupAudit = new SetupAudit($sSourceEnv);
 		$aGetRemovedClasses = array_keys($oSetupAudit->RunDataAudit());
 		DataFeatureRemovalLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
+		$aDeletionPlan = (new StaticDeletionPlan())->GetStaticDeletionPlan($aGetRemovedClasses);
 
 		$aParams['aClasses'] = $aGetRemovedClasses;
 
