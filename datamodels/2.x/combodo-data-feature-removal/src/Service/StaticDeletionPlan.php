@@ -26,9 +26,6 @@ class StaticDeletionPlan
 	 *
 	 * @return array<\Combodo\iTop\DataFeatureRemoval\Entity\DataCleanupSummaryEntity>
 	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
 	 */
 	public function GetCleanupSummary(?array $aClasses): array
 	{
@@ -160,21 +157,21 @@ SQL;
 	 */
 	public function UpdateHierarchicalExtKey(string $sRemoteClass, string $sExtKeyAttCode, string $sIdsToRemoveInTargetClass): DeletionPlanItem
 	{
-		[$sDBTable, $sDBField] = $this->GetDBInfoForAttcode($sRemoteClass, $sExtKeyAttCode);
+		[$sDBTable, $sDBField, $sDBKey] = $this->GetDBInfoForAttcode($sRemoteClass, $sExtKeyAttCode);
 		$sUpdateSQL = <<<SQL
 UPDATE $sDBTable SET updated.$sDBField = removed.$sDBField
 FROM $sDBTable AS updated
-INNER JOIN $sDBTable AS removed ON updated.$sDBField = removed.id
-WHERE removed.id IN ($sIdsToRemoveInTargetClass)
+INNER JOIN $sDBTable AS removed ON updated.$sDBField = removed.$sDBKey
+WHERE removed.$sDBKey IN ($sIdsToRemoveInTargetClass)
 SQL;
 
 		$sSQL = <<<SQL
-SELECT id
+SELECT $sDBKey
 FROM $sDBTable AS updated
-INNER JOIN $sDBTable AS removed ON updated.$sDBField = removed.id
-WHERE removed.id IN ($sIdsToRemoveInTargetClass)
+INNER JOIN $sDBTable AS removed ON updated.$sDBField = removed.$sDBKey
+WHERE removed.$sDBKey IN ($sIdsToRemoveInTargetClass)
 SQL;
-		$aIds = CMDBSource::QueryToCol($sSQL, 'id');
+		$aIds = CMDBSource::QueryToCol($sSQL, $sDBKey);
 
 		return new DeletionPlanItem([$sExtKeyAttCode => $sUpdateSQL], $aIds);
 	}
@@ -193,10 +190,10 @@ SQL;
 		if (\utils::IsNullOrEmptyString($sIdsToRemoveInTargetClass)) {
 			return [];
 		}
-		[$sDBTable, $sDBField] = $this->GetDBInfoForAttcode($sRemoteClass, $sExtKeyAttCode);
-		$sSQL = "SELECT id FROM $sDBTable WHERE $sDBField IN ($sIdsToRemoveInTargetClass)";
+		[$sDBTable, $sDBField, $sDBKey] = $this->GetDBInfoForAttcode($sRemoteClass, $sExtKeyAttCode);
+		$sSQL = "SELECT $sDBKey FROM $sDBTable WHERE $sDBField IN ($sIdsToRemoveInTargetClass)";
 
-		return CMDBSource::QueryToCol($sSQL, 'id');
+		return CMDBSource::QueryToCol($sSQL, $sDBKey);
 	}
 
 	/**
@@ -209,8 +206,9 @@ SQL;
 	public function GetInitialClassDeletionPlan(string $sClass): DeletionPlanItem
 	{
 		$sTable = MetaModel::DBGetTable($sClass);
-		$sSQL = "SELECT id FROM $sTable";
-		$aIds = CMDBSource::QueryToCol($sSQL, 'id');
+		$sDBKey = MetaModel::DBGetKey($sClass);
+		$sSQL = "SELECT $sDBKey FROM $sTable";
+		$aIds = CMDBSource::QueryToCol($sSQL, $sDBKey);
 		$sDeleteSQL = "DELETE FROM $sTable";
 
 		return new DeletionPlanItem([$sDeleteSQL], $aIds);
@@ -232,7 +230,8 @@ SQL;
 		$sRealTable = MetaModel::DBGetTable($sRealClass);
 		$oAttDef = MetaModel::GetAttributeDef($sRealClass, $sExtKeyAttCode);
 		$sSQLAttCode = array_keys($oAttDef->GetSQLColumns())[0];
-		return [$sRealTable, $sSQLAttCode];
+		$sDBKey = MetaModel::DBGetKey($sRemoteClass);
+		return [$sRealTable, $sSQLAttCode, $sDBKey];
 	}
 
 }

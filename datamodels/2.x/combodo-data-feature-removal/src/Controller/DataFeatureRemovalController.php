@@ -224,6 +224,7 @@ class DataFeatureRemovalController extends Controller
 		$bIsDirEmpty = count(scandir($sBuildDir)) === 2;
 
 		if ($bIsDirEmpty || $bForceCompilation) {
+			Session::Unset('bForceCompilation');
 			DataFeatureRemovalLog::Debug(
 				__METHOD__,
 				null,
