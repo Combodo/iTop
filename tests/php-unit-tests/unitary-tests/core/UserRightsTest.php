@@ -81,6 +81,17 @@ class UserRightsTest extends ItopDataTestCase
 		return $oUser;
 	}
 
+	public function testIsActionAllowedWithNonInstantiatedUserObject()
+	{
+		$oUser = $this->GivenUserWithProfiles('test1', [self::$aURP_Profiles['Configuration Manager']]); // not a readonly profile
+		$oAdminUser = $this->GivenUserWithProfiles('test2', [self::$aURP_Profiles['Administrator']]);
+		$oAdminUser->DBInsert();
+		$_SESSION = [];
+		UserRights::Login($oAdminUser->Get('login'));
+
+		self::assertTrue(UserRights::IsActionAllowed('Server', UR_ACTION_MODIFY, null, $oUser) === UR_ALLOWED_YES);
+	}
+
 	/**
 	 * @param array $aProfileIds
 	 * @param array $aShouldBeAllowedToSeeClass
