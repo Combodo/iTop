@@ -274,7 +274,7 @@ class DataFeatureRemovalController extends Controller
 	private function GetDeletionPlanSummaryTable(array $aRemovedClasses): array
 	{
 		$sName = 'DeletionPlanSummary';
-		$oDataCleanupService = new DataCleanupService();
+		$oDataCleanupService = new StaticDeletionPlan();
 		$aDeletionPlanSummaryEntities = $oDataCleanupService->GetCleanupSummary($aRemovedClasses);
 		$aColumns = ['Class', 'Delete Count' , 'Update Count', 'Issue Count'];
 		$aRows = [];

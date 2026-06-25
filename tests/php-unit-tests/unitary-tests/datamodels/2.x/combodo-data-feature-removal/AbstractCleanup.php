@@ -6,7 +6,6 @@
  */
 
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
-use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 class AbstractCleanup extends ItopCustomDatamodelTestCase
 {
@@ -45,12 +44,13 @@ class AbstractCleanup extends ItopCustomDatamodelTestCase
 
 		$sRight = trim($sRight);
 		if (preg_match("/(?<name>(?<class>[^_]+)_\d+)(\s+\((?<extkey>\w+)\))?/", $sRight, $aMatches) !== false) {
+			$sName = $aMatches['name'];
+			$sChildClass = $aMatches['class'];
+			$sExtKey = $aMatches['extkey'] ?? 'extkey_id';
+
+			$iRightId = $this->GivenObjectInDB($sChildClass, ['name' => $sName, $sExtKey => $iLeftId]);
+			$this->aIdByClass[$sChildClass][] = $iRightId;
+			$this->aIdByObjectName[$sRight] = $iRightId;
 		}
-
-		[$sChildClass] = explode('_', $sRight, 2);
-
-		$iRightId = $this->GivenObjectInDB($sChildClass, ['name' => $sRight, 'extkey_id' => $iLeftId]);
-		$this->aIdByClass[$sChildClass][] = $iRightId;
-		$this->aIdByObjectName[$sRight] = $iRightId;
 	}
 }

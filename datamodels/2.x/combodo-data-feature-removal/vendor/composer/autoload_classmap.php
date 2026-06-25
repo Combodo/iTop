@@ -8,6 +8,8 @@ $baseDir = dirname($vendorDir);
 return array(
     'Combodo\\iTop\\DataFeatureRemoval\\Controller\\DataFeatureRemovalController' => $baseDir . '/src/Controller/DataFeatureRemovalController.php',
     'Combodo\\iTop\\DataFeatureRemoval\\Entity\\DataCleanupSummaryEntity' => $baseDir . '/src/Entity/DataCleanupSummaryEntity.php',
+    'Combodo\\iTop\\DataFeatureRemoval\\Entity\\DeletionPlanEntity' => $baseDir . '/src/Entity/DeletionPlanEntity.php',
+    'Combodo\\iTop\\DataFeatureRemoval\\Entity\\DeletionPlanItem' => $baseDir . '/src/Entity/DeletionPlanItem.php',
     'Combodo\\iTop\\DataFeatureRemoval\\Helper\\DataFeatureRemovalConfig' => $baseDir . '/src/Helper/DataFeatureRemovalConfig.php',
     'Combodo\\iTop\\DataFeatureRemoval\\Helper\\DataFeatureRemovalException' => $baseDir . '/src/Helper/DataFeatureRemovalException.php',
     'Combodo\\iTop\\DataFeatureRemoval\\Helper\\DataFeatureRemovalHelper' => $baseDir . '/src/Helper/DataFeatureRemovalHelper.php',
