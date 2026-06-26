@@ -124,17 +124,17 @@ HTML
 			if (file_exists($sBuildConfigFile)) {
 				$oPage->add(
 					<<<HTML
-					<form method="post">
+					<form id="fast_setup" method="post">
 						<input type="hidden" name="_class" value="WizStepLandingBeforeAudit"/>
 						<input type="hidden" name="operation" value="next"/>
 						<input type="hidden" name="_params[skip_wizard]" value="1"/>
-						<table style="width:100%;" class="ibo-setup--wizard--buttons-container">
-						<tr>
-							<td style="text-align: right"><button type="submit" class="ibo-button ibo-is-regular ibo-is-secondary">Keep current choices</button></td>
-						</tr>
-						</table>
 					</form>
 HTML
+				);
+				$oPage->add_ready_script(
+					<<<JS
+$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').before('<td style="text-align:center;"><button class="ibo-button ibo-is-alternative ibo-is-neutral" form="fast_setup"><span class="ibo-button--label">Keep current choices</span></button></td>');
+JS
 				);
 			}
 		}

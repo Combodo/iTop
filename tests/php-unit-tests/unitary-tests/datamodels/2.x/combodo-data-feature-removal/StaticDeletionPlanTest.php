@@ -7,8 +7,6 @@ namespace Combodo\iTop\Test\UnitTest\Module\DataFeatureRemoval;
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
-use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
 use Combodo\iTop\DataFeatureRemoval\Service\StaticDeletionPlan;
 use MetaModel;
 
@@ -32,7 +30,7 @@ class StaticDeletionPlanTest extends \AbstractCleanup
 		self::assertEquals(2, $oDeletionPlanItem->Count(), 'All entries of root table should be removed');
 		self::assertEquals($this->aIdByClass['DFRToRemoveLeaf'], $oDeletionPlanItem->aIds, 'All the Ids found in root table should correspond to the one created');
 		$sTable = MetaModel::DBGetTable('DFRToRemoveLeaf');
-		$sExpectedSQL = "DELETE FROM $sTable";
+		$sExpectedSQL = "DELETE FROM `$sTable`";
 		self::assertEquals($sExpectedSQL, $oDeletionPlanItem->aQueries[0], 'Removing elements in root class should suppress all entries');
 	}
 

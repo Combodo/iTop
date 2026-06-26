@@ -166,8 +166,6 @@ class UpdateController extends Controller
 	public function OperationRunSetup()
 	{
 		SetupUtils::CheckSetupToken(true);
-		$sConfigFile = APPCONF.'production/'.ITOP_CONFIG_FILE;
-		@chmod($sConfigFile, 0770);
 		$sRedirectURL = utils::GetAbsoluteUrlAppRoot().'setup/index.php';
 		header("Location: $sRedirectURL");
 	}

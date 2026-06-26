@@ -114,7 +114,8 @@ class StaticDeletionPlan
 						// TODO see ObjectService::Delete() !!!!!!
 						$sRemoteIdsToDelete = implode(',', $aRemoteIdsToRemove);
 						$sRemoteTable = MetaModel::DBGetTable($sRemoteClass);
-						$sSQL = "DELETE FROM $sRemoteTable WHERE id IN ($sRemoteIdsToDelete)";
+						$sDBKey = MetaModel::DBGetKey($sRemoteClass);
+						$sSQL = "DELETE FROM `$sRemoteTable` WHERE `$sDBKey` IN ($sRemoteIdsToDelete)";
 						$oDeletionPlanEntity->oDelete->Merge(new DeletionPlanItem([$sSQL], $aRemoteIdsToRemove));
 
 						$this->DeletionPlanForReferencingClasses($sRemoteClass);
@@ -138,9 +139,9 @@ class StaticDeletionPlan
 
 		[$sDBTable, $sDBField] = $this->GetDBInfoForAttcode($sRemoteClass, $sExtKeyAttCode);
 		$sUpdateSQL = <<<SQL
-UPDATE $sDBTable SET updated.$sDBField = 0
-FROM $sDBTable AS updated
-WHERE updated.$sDBField IN ($sIdsToRemoveInTargetClass)
+UPDATE `$sDBTable` SET `updated`.`$sDBField` = 0
+FROM `$sDBTable` AS `updated`
+WHERE `updated`.`$sDBField` IN ($sIdsToRemoveInTargetClass)
 SQL;
 
 		return new DeletionPlanItem([$sExtKeyAttCode => $sUpdateSQL], $aIds);
@@ -159,17 +160,17 @@ SQL;
 	{
 		[$sDBTable, $sDBField, $sDBKey] = $this->GetDBInfoForAttcode($sRemoteClass, $sExtKeyAttCode);
 		$sUpdateSQL = <<<SQL
-UPDATE $sDBTable SET updated.$sDBField = removed.$sDBField
-FROM $sDBTable AS updated
-INNER JOIN $sDBTable AS removed ON updated.$sDBField = removed.$sDBKey
-WHERE removed.$sDBKey IN ($sIdsToRemoveInTargetClass)
+UPDATE `$sDBTable` SET `updated`.`$sDBField` = `removed`.`$sDBField`
+FROM `$sDBTable` AS `updated`
+INNER JOIN `$sDBTable` AS `removed` ON `updated`.`$sDBField` = `removed`.`$sDBKey`
+WHERE `removed`.`$sDBKey` IN ($sIdsToRemoveInTargetClass)
 SQL;
 
 		$sSQL = <<<SQL
-SELECT $sDBKey
-FROM $sDBTable AS updated
-INNER JOIN $sDBTable AS removed ON updated.$sDBField = removed.$sDBKey
-WHERE removed.$sDBKey IN ($sIdsToRemoveInTargetClass)
+SELECT `$sDBKey`
+FROM `$sDBTable` AS `updated`
+INNER JOIN `$sDBTable` AS `removed` ON `updated`.`$sDBField` = `removed`.`$sDBKey`
+WHERE `removed`.`$sDBKey` IN ($sIdsToRemoveInTargetClass)
 SQL;
 		$aIds = CMDBSource::QueryToCol($sSQL, $sDBKey);
 
@@ -191,7 +192,7 @@ SQL;
 			return [];
 		}
 		[$sDBTable, $sDBField, $sDBKey] = $this->GetDBInfoForAttcode($sRemoteClass, $sExtKeyAttCode);
-		$sSQL = "SELECT $sDBKey FROM $sDBTable WHERE $sDBField IN ($sIdsToRemoveInTargetClass)";
+		$sSQL = "SELECT `$sDBKey` FROM `$sDBTable` WHERE `$sDBField` IN ($sIdsToRemoveInTargetClass)";
 
 		return CMDBSource::QueryToCol($sSQL, $sDBKey);
 	}
@@ -207,9 +208,9 @@ SQL;
 	{
 		$sTable = MetaModel::DBGetTable($sClass);
 		$sDBKey = MetaModel::DBGetKey($sClass);
-		$sSQL = "SELECT $sDBKey FROM $sTable";
+		$sSQL = "SELECT `$sDBKey` FROM `$sTable`";
 		$aIds = CMDBSource::QueryToCol($sSQL, $sDBKey);
-		$sDeleteSQL = "DELETE FROM $sTable";
+		$sDeleteSQL = "DELETE FROM `$sTable`";
 
 		return new DeletionPlanItem([$sDeleteSQL], $aIds);
 	}
@@ -217,21 +218,22 @@ SQL;
 	/**
 	 * Get database table for an attcode
 	 *
-	 * @param string $sRemoteClass
+	 * @param string $sClass
 	 * @param string $sExtKeyAttCode
 	 *
 	 * @return array
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	public function GetDBInfoForAttcode(string $sRemoteClass, string $sExtKeyAttCode): array
+	public function GetDBInfoForAttcode(string $sClass, string $sExtKeyAttCode): array
 	{
-		$sRealClass = MetaModel::GetAttributeOrigin($sRemoteClass, $sExtKeyAttCode);
-		$sRealTable = MetaModel::DBGetTable($sRealClass);
-		$oAttDef = MetaModel::GetAttributeDef($sRealClass, $sExtKeyAttCode);
-		$sSQLAttCode = array_keys($oAttDef->GetSQLColumns())[0];
-		$sDBKey = MetaModel::DBGetKey($sRemoteClass);
-		return [$sRealTable, $sSQLAttCode, $sDBKey];
+		$sOriginClass = MetaModel::GetAttributeOrigin($sClass, $sExtKeyAttCode);
+		$sDBTable = MetaModel::DBGetTable($sOriginClass);
+		$oAttDef = MetaModel::GetAttributeDef($sOriginClass, $sExtKeyAttCode);
+		// External key is on a single DB column
+		$sDBField = array_keys($oAttDef->GetSQLColumns())[0];
+		$sDBKey = MetaModel::DBGetKey($sClass);
+		return [$sDBTable, $sDBField, $sDBKey];
 	}
 
 }
