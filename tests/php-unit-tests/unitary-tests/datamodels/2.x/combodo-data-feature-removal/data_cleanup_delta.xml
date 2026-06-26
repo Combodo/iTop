@@ -132,6 +132,67 @@
           <on_target_delete>DEL_AUTO</on_target_delete>
           <tracking_level>all</tracking_level>
         </field>
+        <field id="circular_id" xsi:type="AttributeExternalKey">
+          <sql>circular_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>DFRCircularRefs</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items/>
+        </list>
+        <search>
+          <items/>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="extkey_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <class id="DFRCircularRefs" _created_in="itop-structure" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dfrcircularrefs</db_table>
+        <naming>
+          <attributes/>
+        </naming>
+        <reconciliation>
+          <attributes/>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="extkey_id" xsi:type="AttributeExternalKey">
+          <sql>extkey_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>DFRRemovedCollateral</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
       </fields>
       <methods/>
       <presentation>

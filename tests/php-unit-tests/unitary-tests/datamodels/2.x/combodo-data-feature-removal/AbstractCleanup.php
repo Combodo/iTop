@@ -48,9 +48,17 @@ class AbstractCleanup extends ItopCustomDatamodelTestCase
 			$sChildClass = $aMatches['class'];
 			$sExtKey = $aMatches['extkey'] ?? 'extkey_id';
 
-			$iRightId = $this->GivenObjectInDB($sChildClass, ['name' => $sName, $sExtKey => $iLeftId]);
-			$this->aIdByClass[$sChildClass][] = $iRightId;
-			$this->aIdByObjectName[$sRight] = $iRightId;
+			$iRightId = $this->aIdByObjectName[$sName] ?? 0;
+			if ($iRightId === 0) {
+				$iRightId = $this->GivenObjectInDB($sChildClass, ['name' => $sName, $sExtKey => $iLeftId]);
+				$this->aIdByClass[$sChildClass][] = $iRightId;
+				$this->aIdByObjectName[$sName] = $iRightId;
+			} else {
+				// Update object
+				$oObj = MetaModel::GetObject($sChildClass, $iRightId);
+				$oObj->Set($sExtKey, $iLeftId);
+				$oObj->DBUpdate();
+			}
 		}
 	}
 }

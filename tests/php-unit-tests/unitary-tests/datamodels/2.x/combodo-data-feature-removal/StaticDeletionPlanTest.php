@@ -146,4 +146,17 @@ class StaticDeletionPlanTest extends \AbstractCleanup
 		self::assertEquals(1, $aRes['DFRManual']->iIssueCount, 'Issue should have been detected during cleanup count');
 	}
 
+	public function testCircularRefsShouldNotRunInfinitely()
+	{
+		$this->GivenDFRTreeInDB(<<<EOF
+			DFRToRemoveLeaf_1 <- DFRRemovedCollateral_1
+			DFRRemovedCollateral_1 <- DFRCircularRefs_1
+			DFRCircularRefs_1 <- DFRRemovedCollateral_1 (circular_id)
+		EOF);
+
+		$aClasses = [ 'DFRToRemoveLeaf' ];
+		$oService = new StaticDeletionPlan();
+		$aRes = $oService->GetStaticDeletionPlan($aClasses);
+		echo json_encode($aRes, JSON_PRETTY_PRINT)."\n";
+	}
 }

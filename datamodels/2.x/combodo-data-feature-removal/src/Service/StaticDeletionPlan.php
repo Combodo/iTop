@@ -210,6 +210,8 @@ SQL;
 		$sDBKey = MetaModel::DBGetKey($sClass);
 		$sSQL = "SELECT `$sDBKey` FROM `$sTable`";
 		$aIds = CMDBSource::QueryToCol($sSQL, $sDBKey);
+
+		// TODO see ObjectService::Delete() !!!!!!
 		$sDeleteSQL = "DELETE FROM `$sTable`";
 
 		return new DeletionPlanItem([$sDeleteSQL], $aIds);
