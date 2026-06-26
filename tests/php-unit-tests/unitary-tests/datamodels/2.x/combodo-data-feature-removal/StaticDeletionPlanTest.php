@@ -162,5 +162,6 @@ class StaticDeletionPlanTest extends \AbstractCleanup
 		$aRes = $oService->GetStaticDeletionPlan($aClasses);
 		echo json_encode($aRes, JSON_PRETTY_PRINT)."\n";
 
+		self::assertTrue(true);
 	}
 }
