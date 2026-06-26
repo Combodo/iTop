@@ -295,7 +295,7 @@
         }
         ]]></code>
         </method>
-        <method id="AddCurrentUserToContacts" _revision_id="294">
+        <method id="AddCurrentUserToContacts">
           <comment>/**
             *
             * Add the current contact associated Person to the contacts_list of this Ticket
@@ -321,7 +321,7 @@
 	  }]]></code>
           <arguments/>
         </method>
-        <method id="RemoveCurrentUserFromContacts" _revision_id="296">
+        <method id="RemoveCurrentUserFromContacts">
           <comment>/**
             *
             * Remove the current user associated Person from the contacts_list of this Ticket
