@@ -32,4 +32,9 @@ class DeletionPlanItem
 	{
 		return count($this->aIds);
 	}
+
+	public function FilterBy(DeletionPlanItem $oItem): void
+	{
+		$this->aIds = array_diff($this->aIds, $oItem->aIds);
+	}
 }

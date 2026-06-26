@@ -29,4 +29,9 @@ class DeletionPlanEntity
 	{
 		return $this->oDelete->Count() + $this->oUpdate->Count() + $this->oIssue->Count();
 	}
+
+	public function FilterUpdatesByDeletes()
+	{
+		$this->oUpdate->FilterBy($this->oDelete);
+	}
 }

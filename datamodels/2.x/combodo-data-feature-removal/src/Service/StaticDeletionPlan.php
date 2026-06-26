@@ -36,6 +36,7 @@ class StaticDeletionPlan
 			if ($oDeletionPlanEntity->TotalCount() === 0) {
 				continue;
 			}
+			$oDeletionPlanEntity->FilterUpdatesByDeletes();
 			$oDataCleanupSummary = new DataCleanupSummaryEntity($sClass);
 			$oDataCleanupSummary->iUpdateCount = $oDeletionPlanEntity->oUpdate->Count();
 			$oDataCleanupSummary->iDeleteCount = $oDeletionPlanEntity->oDelete->Count();

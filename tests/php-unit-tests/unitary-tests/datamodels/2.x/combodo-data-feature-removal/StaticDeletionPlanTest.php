@@ -156,7 +156,11 @@ class StaticDeletionPlanTest extends \AbstractCleanup
 
 		$aClasses = [ 'DFRToRemoveLeaf' ];
 		$oService = new StaticDeletionPlan();
+		$aRes = $oService->GetCleanupSummary($aClasses);
+		echo json_encode($aRes, JSON_PRETTY_PRINT)."\n";
+
 		$aRes = $oService->GetStaticDeletionPlan($aClasses);
 		echo json_encode($aRes, JSON_PRETTY_PRINT)."\n";
+
 	}
 }
