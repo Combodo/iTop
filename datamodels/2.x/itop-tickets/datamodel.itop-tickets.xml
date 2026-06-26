@@ -299,8 +299,9 @@
           <comment>/**
             *
             * Add the current contact associated Person to the contacts_list of this Ticket
-            * No error if there is no associated Person or if the Person is already in the list
-            * @return bool Return true if link was created, false otherwise
+            * Must be called while the Ticket is not under modification by the current user
+            * Can fail if the person was linked to the Ticket by another user since the Ticket was last loaded by the current user (concurrent access)
+            * @return void
             */
           </comment>
           <static>false</static>
@@ -315,10 +316,8 @@
                 $oLnk->Set('contact_id', $iPersonId);
                 $oLnk->Set('ticket_id', $this->GetKey());
                 $oLnk->DBInsert();
-                return true;
             }
 	      }
-	      return false;
 	  }]]></code>
           <arguments/>
         </method>
@@ -326,8 +325,9 @@
           <comment>/**
             *
             * Remove the current user associated Person from the contacts_list of this Ticket
-            * No error if there is no associated Person or if the Person is not in the list
-            * @return bool Return true if link was deleted, false otherwise
+            * Must be called while the Ticket is not under modification by the current user
+            * Can fail if the person was removed from the Ticket by another user since the Ticket was last loaded by the current user (concurrent access)
+            * @return void
             */
           </comment>
           <static>false</static>
@@ -340,11 +340,9 @@
             foreach ($oContactsSet as $oLnk) {
                 if ($oLnk->Get('contact_id') == $iPersonId) {
                     $oLnk->DBDelete();
-                    return true;
                 }
             }
         }
-        return false;
 	  }]]></code>
           <arguments/>
         </method>
