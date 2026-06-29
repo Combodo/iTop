@@ -9,22 +9,18 @@ namespace Combodo\iTop\DataFeatureRemoval\Entity;
 
 class DeletionPlanItem
 {
-	public array $aQueries = [];
 	public array $aIds = [];
 
 	/**
-	 * @param array $aQueries
 	 * @param array $aIds
 	 */
-	public function __construct(array $aQueries = [], array $aIds = [])
+	public function __construct(array $aIds = [])
 	{
-		$this->aQueries = $aQueries;
 		$this->aIds = $aIds;
 	}
 
 	public function Merge(DeletionPlanItem $oItem): void
 	{
-		$this->aQueries = array_merge($this->aQueries, $oItem->aQueries);
 		$this->aIds = array_unique(array_merge($this->aIds, $oItem->aIds));
 	}
 

@@ -61,4 +61,67 @@ class AbstractCleanup extends ItopCustomDatamodelTestCase
 			}
 		}
 	}
+
+	/**
+	 * format of object:
+	 *  [create|update] CLASS (name = NAME, ...)
+	 *
+	 * @param string $sObjects
+	 *
+	 * @return void
+	 */
+	protected function GivenDFRObjectsInDB(string $sObjects)
+	{
+		$this->aIdByClass = [];
+		$sObjects = explode("\n", $sObjects);
+		foreach ($sObjects as $sLine) {
+			$sLine = trim($sLine);
+			if ($sLine === '') {
+				continue;
+			}
+			$this->GivenDFRObjectLineInDB($sLine);
+		}
+	}
+
+	protected function GivenDFRObjectLineInDB(string $sLine)
+	{
+		if (preg_match("/(?<verb>\w+)\s+(?<class>\w+)\s*\((?<att_list>[^)]+)\)/", $sLine, $aMatches) !== false) {
+			$sVerb = $aMatches['verb'];
+			$sClass = $aMatches['class'];
+			$sAttList = $aMatches['att_list'];
+
+			$aAttSet = explode(',', $sAttList);
+			$aAttributes = [];
+			foreach ($aAttSet as $sAtt) {
+				[$sAttName, $sAttValue] = explode('=', $sAtt, 2);
+				$sAttName = trim($sAttName);
+				$sAttValue = trim($sAttValue);
+				$aAttributes[$sAttName] = $sAttValue;
+			}
+
+			$sName = $aAttributes['name'] ?? '';
+			// Transform names in external keys into ids
+			foreach ($aAttributes as $sAttName => $sAttValue) {
+				if ($sAttName !== 'name') {
+					$aAttributes[$sAttName] = $this->aIdByObjectName[$sAttValue] ?? $sAttValue;
+				}
+			}
+
+			switch ($sVerb) {
+				case 'create':
+					$sId = $this->GivenObjectInDB($sClass, $aAttributes);
+					$this->aIdByClass[$sClass][] = $sId;
+					$this->aIdByObjectName[$sName] = $sId;
+					break;
+				case 'update':
+					$sId = $this->aIdByObjectName[$sName];
+					$oObj = MetaModel::GetObject($sClass, $sId);
+					foreach ($aAttributes as $sAttName => $sAttValue) {
+						$oObj->Set($sAttName, $sAttValue);
+					}
+					$oObj->DBUpdate();
+			}
+		}
+	}
+
 }

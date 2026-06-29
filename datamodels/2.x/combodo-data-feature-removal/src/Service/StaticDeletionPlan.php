@@ -112,13 +112,7 @@ class StaticDeletionPlan
 
 					// Delete entries in Remote Class
 					if (count($aRemoteIdsToRemove) !== 0) {
-						// TODO see ObjectService::Delete() !!!!!!
-						$sRemoteIdsToDelete = implode(',', $aRemoteIdsToRemove);
-						$sRemoteTable = MetaModel::DBGetTable($sRemoteClass);
-						$sDBKey = MetaModel::DBGetKey($sRemoteClass);
-						$sSQL = "DELETE FROM `$sRemoteTable` WHERE `$sDBKey` IN ($sRemoteIdsToDelete)";
-						$oDeletionPlanEntity->oDelete->Merge(new DeletionPlanItem([$sSQL], $aRemoteIdsToRemove));
-
+						$oDeletionPlanEntity->oDelete->Merge(new DeletionPlanItem($aRemoteIdsToRemove));
 						$this->DeletionPlanForReferencingClasses($sRemoteClass);
 					}
 				}
@@ -138,14 +132,7 @@ class StaticDeletionPlan
 	{
 		$aIds = $this->GetRemoteIdsForExtKey($sRemoteClass, $sExtKeyAttCode, $sIdsToRemoveInTargetClass);
 
-		[$sDBTable, $sDBField] = $this->GetDBInfoForAttcode($sRemoteClass, $sExtKeyAttCode);
-		$sUpdateSQL = <<<SQL
-UPDATE `$sDBTable` SET `updated`.`$sDBField` = 0
-FROM `$sDBTable` AS `updated`
-WHERE `updated`.`$sDBField` IN ($sIdsToRemoveInTargetClass)
-SQL;
-
-		return new DeletionPlanItem([$sExtKeyAttCode => $sUpdateSQL], $aIds);
+		return new DeletionPlanItem($aIds);
 	}
 
 	/**
@@ -160,12 +147,6 @@ SQL;
 	public function UpdateHierarchicalExtKey(string $sRemoteClass, string $sExtKeyAttCode, string $sIdsToRemoveInTargetClass): DeletionPlanItem
 	{
 		[$sDBTable, $sDBField, $sDBKey] = $this->GetDBInfoForAttcode($sRemoteClass, $sExtKeyAttCode);
-		$sUpdateSQL = <<<SQL
-UPDATE `$sDBTable` SET `updated`.`$sDBField` = `removed`.`$sDBField`
-FROM `$sDBTable` AS `updated`
-INNER JOIN `$sDBTable` AS `removed` ON `updated`.`$sDBField` = `removed`.`$sDBKey`
-WHERE `removed`.`$sDBKey` IN ($sIdsToRemoveInTargetClass)
-SQL;
 
 		$sSQL = <<<SQL
 SELECT `$sDBKey`
@@ -175,7 +156,7 @@ WHERE `removed`.`$sDBKey` IN ($sIdsToRemoveInTargetClass)
 SQL;
 		$aIds = CMDBSource::QueryToCol($sSQL, $sDBKey);
 
-		return new DeletionPlanItem([$sExtKeyAttCode => $sUpdateSQL], $aIds);
+		return new DeletionPlanItem($aIds);
 	}
 
 	/**
@@ -212,10 +193,7 @@ SQL;
 		$sSQL = "SELECT `$sDBKey` FROM `$sTable`";
 		$aIds = CMDBSource::QueryToCol($sSQL, $sDBKey);
 
-		// TODO see ObjectService::Delete() !!!!!!
-		$sDeleteSQL = "DELETE FROM `$sTable`";
-
-		return new DeletionPlanItem([$sDeleteSQL], $aIds);
+		return new DeletionPlanItem($aIds);
 	}
 
 	/**
