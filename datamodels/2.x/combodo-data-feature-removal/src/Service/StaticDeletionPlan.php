@@ -61,13 +61,6 @@ class StaticDeletionPlan
 			$aTempTables[$sTempTableName]['depends_on']  = array_unique(array_merge($aTempTables[$sTempTableName]['depends_on'] ?? [], $oDeletionPlanEntity->aDependsOnTempTable));
 		}
 
-		foreach ($aTempTables as $sTempTableName => $aTempTable) {
-			// complete the depends on
-			foreach ($aTempTable['depends_on'] as $sParent) {
-
-			}
-		}
-
 		usort($aTempTables, function ($a, $b) use ($aTempTables) {
 			if (empty($a['depends_on']) && empty($b['depends_on'])) {
 				// Both initial classes
