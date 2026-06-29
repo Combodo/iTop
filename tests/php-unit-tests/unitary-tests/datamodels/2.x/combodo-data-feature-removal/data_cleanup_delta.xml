@@ -446,11 +446,43 @@
       </presentation>
       <parent>cmdbAbstractObject</parent>
     </class>
-    <class id="DFRC1" _created_in="itop-structure" _delta="define">
+    <class id="DFRC00" _created_in="itop-structure" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>true</abstract>
+        <db_table>dfrc00</db_table>
+        <naming>
+          <attributes/>
+        </naming>
+        <reconciliation>
+          <attributes/>
+        </reconciliation>
+      </properties>
+      <fields>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items/>
+        </list>
+        <search>
+          <items/>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <parent>DFRC0</parent>
+    </class>
+    <class id="DFRC01" _created_in="itop-structure" _delta="define">
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
-        <db_table>dfrc1</db_table>
+        <db_table>dfrc01</db_table>
         <naming>
           <attributes/>
         </naming>
@@ -484,12 +516,92 @@
           </items>
         </details>
       </presentation>
-      <parent>DFRC0</parent>
+      <parent>DFRC00</parent>
+    </class>
+    <class id="DFRC02" _created_in="itop-structure" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dfrc02</db_table>
+        <naming>
+          <attributes/>
+        </naming>
+        <reconciliation>
+          <attributes/>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="desc" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items/>
+        </list>
+        <search>
+          <items/>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <parent>DFRC00</parent>
+    </class>
+    <class id="DFRC03" _created_in="itop-structure" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dfrc03</db_table>
+        <naming>
+          <attributes/>
+        </naming>
+        <reconciliation>
+          <attributes/>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="desc" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items/>
+        </list>
+        <search>
+          <items/>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <parent>DFRC00</parent>
     </class>
     <class id="DFRC2" _created_in="itop-structure" _delta="define">
       <properties>
         <category>bizmodel,searchable</category>
-        <abstract>false</abstract>
+        <abstract>true</abstract>
         <db_table>dfrc2</db_table>
         <naming>
           <attributes/>
@@ -516,6 +628,41 @@
           <on_target_delete>DEL_AUTO</on_target_delete>
           <tracking_level>all</tracking_level>
         </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items/>
+        </list>
+        <search>
+          <items/>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="extkey_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <class id="DFRC21" _created_in="itop-structure" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dfrc21</db_table>
+        <naming>
+          <attributes/>
+        </naming>
+        <reconciliation>
+          <attributes/>
+        </reconciliation>
+      </properties>
+      <fields>
         <field id="extkey2_id" xsi:type="AttributeExternalKey">
           <sql>extkey2_id</sql>
           <filter/>
@@ -554,7 +701,42 @@
           </items>
         </details>
       </presentation>
-      <parent>cmdbAbstractObject</parent>
+      <parent>DFRC2</parent>
+    </class>
+    <class id="DFRC22" _created_in="itop-structure" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dfrc22</db_table>
+        <naming>
+          <attributes/>
+        </naming>
+        <reconciliation>
+          <attributes/>
+        </reconciliation>
+      </properties>
+      <fields>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items/>
+        </list>
+        <search>
+          <items/>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="extkey_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <parent>DFRC2</parent>
     </class>
     <class id="DFRC3" _created_in="itop-structure" _delta="define">
       <properties>
@@ -643,7 +825,7 @@
           <filter/>
           <dependencies/>
           <is_null_allowed>false</is_null_allowed>
-          <target_class>DFRC2</target_class>
+          <target_class>DFRC21</target_class>
           <on_target_delete>DEL_AUTO</on_target_delete>
           <tracking_level>all</tracking_level>
         </field>

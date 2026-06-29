@@ -72,12 +72,13 @@ class StaticDeletionPlanTest extends \AbstractCleanup
 
 	public function testGetStaticDeletionPlan_DeleteObjRecursively()
 	{
-		$this->GivenDFRTreeInDB(<<<EOF
-			DFRToRemoveLeaf_1 <- DFRToUpdate_1
-			DFRToRemoveLeaf_1 <- DFRRemovedCollateral_1
-			DFRRemovedCollateral_1 <- DFRRemovedCollateralCascade_1
-			DFRRemovedCollateral_1 <- DFRRemovedCollateralCascade_2
-		EOF);
+		$this->GivenDFRObjectsInDB(<<<EOF
+			create DFRToRemoveLeaf              (name = DFRToRemoveLeaf_1)
+			create DFRToUpdate                  (name = DFRToUpdate_1, extkey_id = DFRToRemoveLeaf_1)
+			create DFRRemovedCollateral         (name = DFRRemovedCollateral_1, extkey_id = DFRToRemoveLeaf_1)
+			create DFRRemovedCollateralCascade  (name = DFRRemovedCollateralCascade_1, extkey_id = DFRRemovedCollateral_1)
+			create DFRRemovedCollateralCascade  (name = DFRRemovedCollateralCascade_2, extkey_id = DFRRemovedCollateral_1)
+EOF);
 
 		$aClasses = [ 'DFRToRemoveLeaf' ];
 		$oService = new StaticDeletionPlan();
@@ -85,7 +86,6 @@ class StaticDeletionPlanTest extends \AbstractCleanup
 
 		self::assertArrayHasKey('DFRRemovedCollateralCascade', $aRes, 'The cleanup should descend to the cascaded classes');
 
-		//		echo json_encode($aRes, JSON_PRETTY_PRINT)."\n";
 		//		echo json_encode($this->aIdByClass, JSON_PRETTY_PRINT);
 	}
 
@@ -174,37 +174,95 @@ EOF);
 	public function testMultipleExtKeys()
 	{
 		$this->GivenDFRObjectsInDB(<<<EOF
-			create DFRC1 (name = DFRC1_1)
-			create DFRC1 (name = DFRC1_2)
-			create DFRC1 (name = DFRC1_3)
-			create DFRC1 (name = DFRC1_4)
-			create DFRC1 (name = DFRC1_5)
+			create DFRC01 (name = DFRC01_1)
+			create DFRC01 (name = DFRC01_2)
+			create DFRC01 (name = DFRC01_3)
+			create DFRC01 (name = DFRC01_4)
+			create DFRC01 (name = DFRC01_5)
 		
-			create DFRC3 (name = DFRC3_1, extkey1_id = DFRC1_1)
-			create DFRC3 (name = DFRC3_2, extkey1_id = DFRC1_2)
-			create DFRC3 (name = DFRC3_3, extkey1_id = DFRC1_3)
+			create DFRC3 (name = DFRC3_1, extkey1_id = DFRC01_1)
+			create DFRC3 (name = DFRC3_2, extkey1_id = DFRC01_2)
+			create DFRC3 (name = DFRC3_3, extkey1_id = DFRC01_3)
 						
-			create DFRC2 (name = DFRC2_1, extkey1_id = DFRC1_4, extkey2_id = DFRC1_5, extkey3_id = DFRC3_3)
+			create DFRC21 (name = DFRC21_1, extkey1_id = DFRC01_4, extkey2_id = DFRC01_5, extkey3_id = DFRC3_3)
 			
-			create DFRC4 (name = DFRC4_1, extkey1_id = DFRC2_1)
+			create DFRC4 (name = DFRC4_1, extkey1_id = DFRC21_1)
 			
 			update DFRC3 (name = DFRC3_2, extkey2_id = DFRC4_1)
 		EOF);
 
-		$aClasses = [ 'DFRC1' ];
+		$aClasses = [ 'DFRC01' ];
 		$oService = new StaticDeletionPlan();
+
+		$aRes = $oService->GetStaticDeletionPlan($aClasses);
+		echo json_encode($aRes, JSON_PRETTY_PRINT)."\n";
 
 		$aRes = $oService->GetCleanupSummary($aClasses);
 
 		$aExpected = [
-			'DFRC1' => ['iDeleteCount' => 5],
-			'DFRC2' => ['iDeleteCount' => 1],
+			'DFRC01' => ['iDeleteCount' => 5],
+			'DFRC21' => ['iDeleteCount' => 1],
 			'DFRC3' => ['iDeleteCount' => 3],
 			'DFRC4' => ['iDeleteCount' => 1],
 		];
 
 		$this->AssertSummaryEquals($aExpected, $aRes);
+	}
 
+	public function testMultipleInitialSubClassesFromSameRoot()
+	{
+		$this->GivenDFRObjectsInDB(<<<EOF
+			create DFRC01 (name = DFRC01_1)
+			create DFRC01 (name = DFRC01_2)
+			create DFRC01 (name = DFRC01_3)
+			create DFRC01 (name = DFRC01_4)
+			create DFRC01 (name = DFRC01_5)
+		
+			create DFRC02 (name = DFRC02_1)
+			create DFRC02 (name = DFRC02_2)
+			create DFRC02 (name = DFRC02_3)
+		
+			create DFRC03 (name = DFRC03_1)
+			create DFRC03 (name = DFRC03_2)
+			create DFRC03 (name = DFRC03_3)
+			
+			create DFRC3 (name = DFRC3_1, extkey1_id = DFRC01_1)
+			create DFRC3 (name = DFRC3_2, extkey1_id = DFRC01_2)
+			create DFRC3 (name = DFRC3_3, extkey1_id = DFRC01_3)
+			
+			create DFRC3 (name = DFRC3_4, extkey1_id = DFRC02_1)
+			create DFRC3 (name = DFRC3_5, extkey1_id = DFRC02_2)
+			create DFRC3 (name = DFRC3_6, extkey1_id = DFRC02_3)
+					
+			create DFRC3 (name = DFRC3_7, extkey1_id = DFRC03_1)
+			create DFRC3 (name = DFRC3_8, extkey1_id = DFRC03_2)
+			create DFRC3 (name = DFRC3_9, extkey1_id = DFRC03_3)
+						
+			create DFRC21 (name = DFRC21_1, extkey1_id = DFRC01_4, extkey2_id = DFRC01_5, extkey3_id = DFRC3_3)
+			
+			create DFRC4 (name = DFRC4_1, extkey1_id = DFRC21_1)
+			
+			update DFRC3 (name = DFRC3_2, extkey2_id = DFRC4_1)
+		EOF);
+
+		$aClasses = [ 'DFRC01', 'DFRC03' ];
+		$oService = new StaticDeletionPlan();
+
+		$aRes = $oService->GetStaticDeletionPlan($aClasses);
+		echo json_encode($aRes, JSON_PRETTY_PRINT)."\n";
+
+		$aRes = $oService->GetCleanupSummary($aClasses);
+		echo json_encode($aRes, JSON_PRETTY_PRINT)."\n";
+
+		$aExpected = [
+			'DFRC01' => ['iDeleteCount' => 5],
+			'DFRC2' => ['iDeleteCount' => 1],
+			'DFRC21' => ['iDeleteCount' => 1],
+			'DFRC3' => ['iDeleteCount' => 6],
+			'DFRC4' => ['iDeleteCount' => 1],
+		];
+
+		$this->AssertSummaryEquals($aExpected, $aRes);
 	}
 
 	private function AssertSummaryEquals(array $aExpected, array $aActual, string $sMessage = '')
