@@ -218,7 +218,7 @@ class StaticDeletionPlan
 		$sSQL = <<<SQL
 SELECT `$sDBKey`
 FROM `$sDBTable` AS `updated`
-INNER JOIN `$sDBTable` AS `removed` ON `updated`.`$sDBField` = `removed`.`$sDBKey`
+INNER JOIN `$sDBTable` AS `removed` ON `updated`.`$sDBField` = `removed`.`$sDBField`
 WHERE `removed`.`$sDBKey` IN ($sIdsToRemoveInTargetClass)
 SQL;
 		$aIds = CMDBSource::QueryToCol($sSQL, $sDBKey);
