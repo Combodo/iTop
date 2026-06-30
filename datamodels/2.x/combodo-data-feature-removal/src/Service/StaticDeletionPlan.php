@@ -111,6 +111,7 @@ class StaticDeletionPlan
 					// Delete entries in Remote Class
 					if (count($aRemoteIdsToRemove) !== 0) {
 						$oDeletionPlanEntity->oDelete->Merge(new DeletionPlanItem($aRemoteIdsToRemove));
+						// Infinite loops do not occurs due to the datamodel structure
 						$this->DeletionPlanForReferencingClasses($sRemoteClass);
 					}
 				}
