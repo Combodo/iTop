@@ -23,6 +23,8 @@ class ComposerStaticInit4f96a7199e2c0d90e547333758b26464
     public static $classMap = array (
         'Combodo\\iTop\\DataFeatureRemoval\\Controller\\DataFeatureRemovalController' => __DIR__ . '/../..' . '/src/Controller/DataFeatureRemovalController.php',
         'Combodo\\iTop\\DataFeatureRemoval\\Entity\\DataCleanupSummaryEntity' => __DIR__ . '/../..' . '/src/Entity/DataCleanupSummaryEntity.php',
+        'Combodo\\iTop\\DataFeatureRemoval\\Entity\\DeletionPlanEntity' => __DIR__ . '/../..' . '/src/Entity/DeletionPlanEntity.php',
+        'Combodo\\iTop\\DataFeatureRemoval\\Entity\\DeletionPlanItem' => __DIR__ . '/../..' . '/src/Entity/DeletionPlanItem.php',
         'Combodo\\iTop\\DataFeatureRemoval\\Helper\\DataFeatureRemovalConfig' => __DIR__ . '/../..' . '/src/Helper/DataFeatureRemovalConfig.php',
         'Combodo\\iTop\\DataFeatureRemoval\\Helper\\DataFeatureRemovalException' => __DIR__ . '/../..' . '/src/Helper/DataFeatureRemovalException.php',
         'Combodo\\iTop\\DataFeatureRemoval\\Helper\\DataFeatureRemovalHelper' => __DIR__ . '/../..' . '/src/Helper/DataFeatureRemovalHelper.php',
@@ -31,6 +33,7 @@ class ComposerStaticInit4f96a7199e2c0d90e547333758b26464
         'Combodo\\iTop\\DataFeatureRemoval\\Service\\DataFeatureRemoverExtensionService' => __DIR__ . '/../..' . '/src/Service/DataFeatureRemoverExtensionService.php',
         'Combodo\\iTop\\DataFeatureRemoval\\Service\\ObjectService' => __DIR__ . '/../..' . '/src/Service/ObjectService.php',
         'Combodo\\iTop\\DataFeatureRemoval\\Service\\ObjectServiceSummary' => __DIR__ . '/../..' . '/src/Service/ObjectServiceSummary.php',
+        'Combodo\\iTop\\DataFeatureRemoval\\Service\\StaticDeletionPlan' => __DIR__ . '/../..' . '/src/Service/StaticDeletionPlan.php',
         'Combodo\\iTop\\DataFeatureRemoval\\Service\\iObjectService' => __DIR__ . '/../..' . '/src/Service/iObjectService.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );

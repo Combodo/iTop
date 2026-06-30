@@ -18,6 +18,7 @@ use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalLog;
 use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
 use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
+use Combodo\iTop\DataFeatureRemoval\Service\StaticDeletionPlan;
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use ContextTag;
@@ -222,6 +223,7 @@ class DataFeatureRemovalController extends Controller
 		$bIsDirEmpty = count(scandir($sBuildDir)) === 2;
 
 		if ($bIsDirEmpty || $bForceCompilation) {
+			Session::Unset('bForceCompilation');
 			DataFeatureRemovalLog::Debug(
 				__METHOD__,
 				null,
@@ -272,7 +274,7 @@ class DataFeatureRemovalController extends Controller
 	private function GetDeletionPlanSummaryTable(array $aRemovedClasses): array
 	{
 		$sName = 'DeletionPlanSummary';
-		$oDataCleanupService = new DataCleanupService();
+		$oDataCleanupService = new StaticDeletionPlan();
 		$aDeletionPlanSummaryEntities = $oDataCleanupService->GetCleanupSummary($aRemovedClasses);
 		$aColumns = ['Class', 'Delete Count' , 'Update Count', 'Issue Count'];
 		$aRows = [];

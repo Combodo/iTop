@@ -76,10 +76,6 @@ abstract class WizardStep
 	{
 	}
 
-	public function PreFormDisplay(SetupPage $oPage)
-	{
-	}
-
 	protected function CheckDependencies()
 	{
 		if (is_null($this->bDependencyCheck)) {

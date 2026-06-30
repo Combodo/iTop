@@ -916,7 +916,9 @@ class CMDBSource
 		$aColumn = [];
 		$aData = self::QueryToArray($sSql);
 		foreach ($aData as $aRow) {
-			@$aColumn[] = $aRow[$col];
+			if ($aRow[$col] !== null) {
+				$aColumn[] = $aRow[$col];
+			}
 		}
 		return $aColumn;
 	}
