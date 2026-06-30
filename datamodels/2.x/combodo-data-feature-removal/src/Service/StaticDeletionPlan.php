@@ -103,11 +103,9 @@ class StaticDeletionPlan
 
 					if (($iDeletePropagationOption == DEL_MOVEUP) && ($oExtKeyAttDef->IsHierarchicalKey())) {
 						// update hierarchical keys due to row cleanup in the same table
-						$sIdsToRemove = implode(',', $this->aDeletionPlan[$sRemoteClass]->oDelete->aIds);
-						$oUpdateItem = $this->UpdateHierarchicalExtKey($sRemoteClass, $sExtKeyAttCode, $sIdsToRemove);
+						$sTargetIdsToRemove = implode(',', $this->aDeletionPlan[$sRemoteClass]->oDelete->aIds);
+						$oUpdateItem = $this->UpdateHierarchicalExtKey($sRemoteClass, $sExtKeyAttCode, $sTargetIdsToRemove);
 						$oDeletionPlanEntity->oUpdate->Merge($oUpdateItem);
-						// do not recurse
-						continue;
 					}
 
 					// Delete entries in Remote Class
