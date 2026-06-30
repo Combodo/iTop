@@ -121,3 +121,6 @@ class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeText::class, 'Com
 class_alias(\Combodo\iTop\PropertyType\Serializer\XMLFormat\XMLFormatCSV::class, 'Combodo-XMLFormat-CSV');
 class_alias(\Combodo\iTop\PropertyType\Serializer\XMLFormat\XMLFormatValueAsId::class, 'Combodo-XMLFormat-ValueAsId');
 class_alias(\Combodo\iTop\PropertyType\Serializer\XMLFormat\XMLFormatFlatArray::class, 'Combodo-XMLFormat-FlatArray');
+
+// Moved classes
+class_alias(\Combodo\iTop\Service\Session\Session::class, '\Combodo\iTop\Application\Helper\Session');

@@ -188,15 +188,6 @@ abstract class WizardStep
 	}
 
 	/**
-	 * Tells whether this step of the wizard requires that the configuration file be writable
-	 * @return bool True if the wizard will possibly need to modify the configuration at some point
-	 */
-	public function RequiresWritableConfig()
-	{
-		return true;
-	}
-
-	/**
 	 * Overload this function to implement asynchronous action(s) (AJAX)
 	 * @param string $sCode The code of the action (if several actions need to be distinguished)
 	 * @param array $aParameters The action's parameters name => value

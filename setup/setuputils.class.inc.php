@@ -103,6 +103,9 @@ class CheckResult
  */
 class SetupUtils
 {
+	// Name of the parameter array in session for setup
+	public const SESSION_PARAMETERS_NAME = 'setup_params';
+
 	// -- Minimum versions (requirements : forbids installation if not met)
 	public const PHP_MIN_VERSION             = '8.2.0';
 	public const MYSQL_MIN_VERSION           = '5.7.0'; // 5.6 is no longer supported

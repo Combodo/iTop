@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Service\Session\SessionParameters;
+
 /**
  * First step of the iTop Installation Wizard: Welcome screen, requirements
  */

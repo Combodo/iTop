@@ -19,6 +19,7 @@
  */
 
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\Session\SessionParameters;
 
 /**
  * Summary of the installation tasks
@@ -132,6 +133,7 @@ class WizStepDone extends WizardStep
 
 		if (false === $bHasBackup) {
 			SetupUtils::EraseSetupToken();
+			$this->oWizard->EraseParameters();
 		}
 	}
 
@@ -152,6 +154,7 @@ class WizStepDone extends WizardStep
 	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
 	{
 		SetupUtils::EraseSetupToken();
+		$this->oWizard->EraseParameters();
 		// For security reasons: add the extension now so that this action can be used to read *only* .tar.gz files from the disk...
 		$sBackupFile = $aParameters['backup'].'.tar.gz';
 		if (file_exists($sBackupFile)) {

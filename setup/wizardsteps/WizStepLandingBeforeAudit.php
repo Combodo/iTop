@@ -61,6 +61,17 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 			$this->oWizard->SetParameter('selected_extensions', json_encode($aExtensionsFromDatabase));
 			$adModulesFromDatabase = ModuleInstallationRepository::GetInstance()->ReadComputeInstalledModules($oConfig);
 			$this->oWizard->SetParameter('selected_modules', json_encode(array_keys($adModulesFromDatabase)));
+		} else {
+			$this->oWizard->SavePostedParameter('selected_modules');
+			$this->oWizard->SavePostedParameter('selected_extensions');
+			$this->oWizard->SavePostedParameter('added_extensions');
+			$this->oWizard->SavePostedParameter('removed_extensions');
+			$this->oWizard->SavePostedParameter('extensions_not_uninstallable');
+			$this->oWizard->SavePostedParameter('copy_setup_files');
+			$this->oWizard->SavePostedParameter('force-uninstall');
+			$this->oWizard->SavePostedParameter('use_symbolic_links');
+			$this->oWizard->SavePostedParameter('return_application');
+			$this->oWizard->SavePostedParameter('target_env');
 		}
 
 		$aWizardSteps = $this->GetWizardSteps();
