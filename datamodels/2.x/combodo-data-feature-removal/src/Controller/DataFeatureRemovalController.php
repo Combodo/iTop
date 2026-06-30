@@ -169,7 +169,6 @@ class DataFeatureRemovalController extends Controller
 		$oSetupAudit = new SetupAudit($sSourceEnv);
 		$aGetRemovedClasses = array_keys($oSetupAudit->RunDataAudit());
 		DataFeatureRemovalLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
-		$aDeletionPlan = (new StaticDeletionPlan())->GetStaticDeletionPlan($aGetRemovedClasses);
 
 		$aParams['aClasses'] = $aGetRemovedClasses;
 
