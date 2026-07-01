@@ -3005,12 +3005,11 @@ class SynchroExecution
 				$oLimitDate = new DateTime('1970-01-01');
 			} else {
 				$oLimitDate = self::GetDataBaseCurrentDateTime();
-				$this->ExactlySubtractSeconds($oLimitDate, $iFullLoadInterval);
 			}
 		} else {
 			$oLimitDate = clone $this->m_oImportPhaseStartDate;
-			$this->ExactlySubtractSeconds($oLimitDate, $iFullLoadInterval);
 		}
+		$this->ExactlySubtractSeconds($oLimitDate, $iFullLoadInterval);
 		$this->m_oLastFullLoadStartDate = $oLimitDate;
 		if ($bFirstPass) {
 			$this->m_oStatLog->AddTrace('Limit Date: '.$this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s'));
@@ -3130,7 +3129,7 @@ class SynchroExecution
 			$aArguments['log'] = $this->m_oStatLog->GetKey();
 			$aArguments['change'] = $this->m_oChange->GetKey();
 			$aArguments['chunk'] = $iMaxChunkSize;
-			if (! is_null($this->m_oImportPhaseStartDate)) {
+			if (is_null($this->m_oImportPhaseStartDate)) {
 				$aArguments['last_full_load'] = '';
 			} else {
 				$aArguments['last_full_load'] = $this->m_oImportPhaseStartDate->Format('Y-m-d H:i:s');
