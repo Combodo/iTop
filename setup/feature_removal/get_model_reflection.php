@@ -21,8 +21,7 @@ $sConfFile = utils::GetConfigFilePath($sEnv);
 try {
 	MetaModel::Startup($sConfFile, false /* $bModelOnly */, false /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
 } catch (\Throwable $e) {
-	echo $e->getMessage();
-	echo $e->getTraceAsString();
+	SetupLog::Enable(APPROOT.'log/setup.log');
 	\SetupLog::Error(
 		"Cannot read model from provided environment",
 		null,
@@ -32,7 +31,9 @@ try {
 			'stack' => $e->getTraceAsString(),
 		]
 	);
-	echo "Cannot read model from provided environment";
+
+	//keep first echo to have proper setup feedbacks
+	echo $e->getMessage();
 	exit(1);
 }
 
