@@ -2,9 +2,7 @@
 
 namespace Combodo\iTop\Setup\FeatureRemoval;
 
-use ContextTag;
 use CoreException;
-use Exception;
 use IssueLog;
 use SetupLog;
 use utils;

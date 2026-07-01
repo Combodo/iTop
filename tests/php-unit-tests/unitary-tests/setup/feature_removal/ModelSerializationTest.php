@@ -4,7 +4,6 @@ namespace Combodo\iTop\Test\UnitTest\Setup\FeatureRemoval;
 
 use Combodo\iTop\Setup\FeatureRemoval\ModelReflectionSerializer;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use ContextTag;
 use MetaModel;
 
 class ModelSerializationTest extends ItopDataTestCase
