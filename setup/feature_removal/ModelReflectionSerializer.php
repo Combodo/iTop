@@ -31,6 +31,8 @@ class ModelReflectionSerializer
 		self::$oInstance = $oInstance;
 	}
 
+	public const ERROR_LABEL = "Data consistency check failed: %s";
+
 	public function GetModelFromEnvironment(string $sEnv): array
 	{
 		IssueLog::Debug(__METHOD__, null, ['env' => $sEnv]);
@@ -38,20 +40,28 @@ class ModelReflectionSerializer
 		$sPHPExec = trim(utils::GetConfig()->Get('php_path'));
 		$aOutput = null;
 		$iRes = 0;
+		exec("$sPHPExec --version", $aOutput, $iRes);
+		if ($iRes != 0) {
+			$sError = sprintf(self::ERROR_LABEL, "Cannot check CLI/PHP version ($sPHPExec)");
+			$this->LogSetupError($sError, null, ['env' => $sEnv, 'code' => $iRes, "output" => $aOutput, 'php_path' => $sPHPExec]);
+			throw new CoreException($sError);
+		}
 
-		$sErrorLabel = "Data consistency check failed: %s";
+		$this->CheckCliPhpVersionFromOutput(PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION, $sPHPExec, $aOutput);
 
+		$aOutput = null;
+		$iRes = 0;
 		//preliminary check
 		$sEnvDir = APPROOT."env-$sEnv";
 		if (! is_dir($sEnvDir)) {
-			$sMsg = sprintf($sErrorLabel, "Missing environment ($sEnvDir)");
+			$sMsg = sprintf(self::ERROR_LABEL, "Missing environment ($sEnvDir)");
 			$this->LogSetupError($sMsg);
 			throw new CoreException($sMsg);
 		}
 
 		$sConfigFile = APPROOT."conf/$sEnv/config-itop.php";
 		if (! is_file($sConfigFile)) {
-			$sMsg = sprintf($sErrorLabel, "Missing configuration ($sConfigFile)");
+			$sMsg = sprintf(self::ERROR_LABEL, "Missing configuration ($sConfigFile)");
 			$this->LogSetupError($sMsg);
 			throw new CoreException($sMsg);
 		}
@@ -60,24 +70,37 @@ class ModelReflectionSerializer
 		exec($sCommandLine, $aOutput, $iRes);
 		if ($iRes != 0) {
 			$sError = $aOutput[0] ?? 'Invalid output when serializing model';
-			$this->LogSetupError(sprintf($sErrorLabel, '(cli error) '.$sError), null, ['env' => $sEnv, 'code' => $iRes, "output" => $aOutput, 'cmd' => $sCommandLine]);
-			throw new CoreException(sprintf($sErrorLabel, $sError));
+			$this->LogSetupError(sprintf(self::ERROR_LABEL, '(cli error) '.$sError), null, ['env' => $sEnv, 'code' => $iRes, "output" => $aOutput, 'cmd' => $sCommandLine]);
+			throw new CoreException(sprintf(self::ERROR_LABEL, $sError));
 		}
 
 		$aClasses = json_decode($aOutput[0] ?? null, true);
 		if (false === $aClasses) {
-			$sMsg = sprintf($sErrorLabel, 'Invalid JSON');
+			$sMsg = sprintf(self::ERROR_LABEL, 'Invalid JSON');
 			$this->LogSetupError($sMsg, null, ['env' => $sEnv, "output" => $aOutput]);
 			throw new CoreException($sMsg);
 		}
 
 		if (!is_array($aClasses)) {
 			$sError = $aOutput[0] ?? 'Invalid json array when serializing model';
-			$this->LogSetupError(sprintf($sErrorLabel, '(JSON output not an array) '.$sError), null, ['env' => $sEnv, "classes" => $aClasses, "output" => $aOutput]);
-			throw new CoreException(sprintf($sErrorLabel, $sError));
+			$this->LogSetupError(sprintf(self::ERROR_LABEL, '(JSON output not an array) '.$sError), null, ['env' => $sEnv, "classes" => $aClasses, "output" => $aOutput]);
+			throw new CoreException(sprintf(self::ERROR_LABEL, $sError));
 		}
 
 		return $aClasses;
+	}
+
+	public function CheckCliPhpVersionFromOutput(string $sUIPhpVersion, string $sPHPExec, $aOutput): void
+	{
+		$sFoundVersion = trim($aOutput[0] ?? "");
+		if (preg_match('/^.* (\d\.\d)\.\d/', $sFoundVersion, $aMatches)) {
+			$sFoundVersion = $aMatches[1];
+		}
+		if ($sFoundVersion != $sUIPhpVersion) {
+			$sError = sprintf(self::ERROR_LABEL, "Invalid PHP versions (CLI: $sFoundVersion/ UI: $sUIPhpVersion)");
+			$this->LogSetupError($sError, null, ["output" => $aOutput, 'php_path' => $sPHPExec]);
+			throw new CoreException($sError);
+		}
 	}
 
 	//could be shared with others in log APIs ?

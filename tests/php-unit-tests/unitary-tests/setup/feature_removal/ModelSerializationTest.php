@@ -21,6 +21,27 @@ class ModelSerializationTest extends ItopDataTestCase
 		$this->assertEqualsCanonicalizing(MetaModel::GetClasses(), $aModel);
 	}
 
+	public function testCheckFail()
+	{
+		$sOuput = <<<OUTPUT
+PHP 7.4.33 (cli) (built: Aug 2 2024 16:22:28) ( NTS )
+OUTPUT;
+
+		$this->expectException(\CoreException::class);
+		$this->expectExceptionMessage("Data consistency check failed: Invalid PHP versions (CLI: 7.4/ UI: 6.6)");
+		ModelReflectionSerializer::GetInstance()->CheckCliPhpVersionFromOutput('6.6', 'sPHPExec', [$sOuput]);
+	}
+
+	public function testCheckOK()
+	{
+		$sOuput = <<<OUTPUT
+PHP 7.4.33 (cli) (built: Aug 2 2024 16:22:28) ( NTS )
+OUTPUT;
+
+		ModelReflectionSerializer::GetInstance()->CheckCliPhpVersionFromOutput('7.4', 'sPHPExec', [$sOuput]);
+		$this->assertTrue(true);
+	}
+
 	public function testGetModelFromEnvironmentFailure_NoEnvt()
 	{
 		$this->expectException(\CoreException::class);
