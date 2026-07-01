@@ -24,6 +24,15 @@ class SynchroExecutionTest extends ItopDataTestCase
 		$this->assertEquals("2026-03-29 01:30:01", $oDate->Format('Y-m-d H:i:s'));
 	}
 
+	public function testGetDateMinusRetentioLinuxTimeZero()
+	{
+		$oObj = new SynchroExecution($this->createMock(SynchroDataSource::class));
+		$oDate = new DateTime('1970-01-01');
+
+		$oObj->ExactlySubtractSeconds($oDate, 3600);
+		$this->assertEquals("1969-12-31 23:00:00", $oDate->Format('Y-m-d H:i:s'));
+	}
+
 	public function testGetDateMinusRetentionWithTimeChangeAndUTC()
 	{
 		$sTZ = $this->InitAndGetTZ('UTC');
