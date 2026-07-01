@@ -93,7 +93,7 @@ class ModelReflectionSerializer
 	public function CheckCliPhpVersionFromOutput(string $sUIPhpVersion, string $sPHPExec, $aOutput): void
 	{
 		$sFoundVersion = trim($aOutput[0] ?? "");
-		if (preg_match('/^.* (\d\.\d)\.\d/', $sFoundVersion, $aMatches)) {
+		if (preg_match('/(\d+\.\d+)(?:\.\d+)?/', $sFoundVersion, $aMatches)) {
 			$sFoundVersion = $aMatches[1];
 		}
 		if ($sFoundVersion != $sUIPhpVersion) {

@@ -5774,6 +5774,9 @@ abstract class MetaModel
 			}
 
 			if ($bModelOnly) {
+				// Event service must be initialized after the MetaModel startup, otherwise it cannot discover classes implementing the iEventServiceSetup interface
+				EventService::InitService();
+				EventService::FireEvent(new EventData(ApplicationEvents::APPLICATION_EVENT_METAMODEL_STARTED));
 				return;
 			}
 		}

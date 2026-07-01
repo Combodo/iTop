@@ -32,12 +32,20 @@ OUTPUT;
 		ModelReflectionSerializer::GetInstance()->CheckCliPhpVersionFromOutput('6.6', 'sPHPExec', [$sOuput]);
 	}
 
-	public function testCheckOK()
+	public function CheckOKProvider()
 	{
-		$sOuput = <<<OUTPUT
-PHP 7.4.33 (cli) (built: Aug 2 2024 16:22:28) ( NTS )
-OUTPUT;
-
+		return [
+			["7.4 7.2 7.3.33"],
+			["PHP 7.4.33 (cli) (built: Aug  2 2024 16:22:28) ( NTS )"],
+			["PHP 7.4.33 PHP 7.33.22"],
+			["version: 7.4.27 stable"],
+		];
+	}
+	/**
+	 * @dataProvider CheckOKProvider
+	 */
+	public function testCheckOK($sOuput)
+	{
 		ModelReflectionSerializer::GetInstance()->CheckCliPhpVersionFromOutput('7.4', 'sPHPExec', [$sOuput]);
 		$this->assertTrue(true);
 	}
