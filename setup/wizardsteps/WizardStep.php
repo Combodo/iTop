@@ -76,6 +76,11 @@ abstract class WizardStep
 	{
 	}
 
+	public function CanAccessToWizardStep()
+	{
+		return ($this->oWizard->GetParameter('return_application', '') === '');
+	}
+
 	protected function CheckDependencies()
 	{
 		if (is_null($this->bDependencyCheck)) {
@@ -185,15 +190,6 @@ abstract class WizardStep
 	public function JSCanMoveBackward()
 	{
 		return 'return true;';
-	}
-
-	/**
-	 * Tells whether this step of the wizard requires that the configuration file be writable
-	 * @return bool True if the wizard will possibly need to modify the configuration at some point
-	 */
-	public function RequiresWritableConfig()
-	{
-		return true;
 	}
 
 	/**

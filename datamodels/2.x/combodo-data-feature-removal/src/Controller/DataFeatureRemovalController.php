@@ -19,6 +19,7 @@ use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalLog;
 use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
 use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
 use Combodo\iTop\DataFeatureRemoval\Service\StaticDeletionPlan;
+use Combodo\iTop\Service\Session\SessionParameters;
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use ContextTag;
@@ -46,6 +47,9 @@ class DataFeatureRemovalController extends Controller
 	public function OperationMain($sErrorMessage = null): void
 	{
 		$aParams = [];
+
+		SetupUtils::EraseSetupToken();
+		(new SessionParameters(SetupUtils::SESSION_PARAMETERS_NAME))->Erase();
 
 		$this->AddAnalyzeParams();
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
@@ -180,7 +184,7 @@ class DataFeatureRemovalController extends Controller
 		];
 
 		foreach ($aHiddenInputs as $sInputName => $sInputValue) {
-			$aParams['aSetupParams']["_params[$sInputName]"] = $sInputValue;
+			$aParams['aSetupParams'][$sInputName] = $sInputValue;
 		}
 
 		[$aParams['aDeletionPlanSummary'], $aParams['iQueryCount'], $aParams['bDeletionPossible']] = $this->GetDeletionPlanSummaryTable($aGetRemovedClasses);
@@ -189,6 +193,7 @@ class DataFeatureRemovalController extends Controller
 		Session::Set('aDeletionExecutionSummary', serialize($this->aDeletionExecutionSummary));
 
 		if (!$aParams['bDeletionNeeded']) {
+			// Erase session setup parameters
 			SetupUtils::CreateSetupToken();
 		}
 
@@ -206,12 +211,13 @@ class DataFeatureRemovalController extends Controller
 	}
 
 	/**
-* @param array $aAddedExtensions
-* @param array $aRemovedExtensions
-* @param bool $bForceCompilation
-* @return void
-* @throws \ConfigException
-* @throws \CoreException
+	 * @param array $aAddedExtensions
+	 * @param array $aRemovedExtensions
+	 * @param bool $bForceCompilation
+	 *
+	 * @return void
+	 * @throws \ConfigException
+	 * @throws \CoreException
 	 */
 	private function Compile(array $aAddedExtensions, array $aRemovedExtensions, bool $bForceCompilation = true): void
 	{

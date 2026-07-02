@@ -39,6 +39,11 @@ class WizStepSummary extends AbstractWizStepInstall
 		return [WizStepInstall::class];
 	}
 
+	public function CanAccessToWizardStep()
+	{
+		return true;
+	}
+
 	/**
 	 * Returns the label for the " Next >> " button
 	 * @return string The label for the button
@@ -123,21 +128,23 @@ class WizStepSummary extends AbstractWizStepInstall
 		$oPage->add($sExtensionsRemoved);
 		$oPage->add('</div>');
 
-		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Database Parameters">Database Parameters</a><ul>');
-		$oPage->add('<li>Server Name: '.$aInstallParams['database']['server'].'</li>');
-		$oPage->add('<li>DB User Name: '.$aInstallParams['database']['user'].'</li>');
-		$oPage->add('<li>DB user password: ***</li>');
-		if (($sMode == 'install') && ($this->oWizard->GetParameter('create_db') == 'yes')) {
-			$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].' (will be created)</li>');
-		} else {
-			$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].'</li>');
+		if (UserRights::IsAdministrator()) {
+			$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Database Parameters">Database Parameters</a><ul>');
+			$oPage->add('<li>Server Name: '.$aInstallParams['database']['server'].'</li>');
+			$oPage->add('<li>DB User Name: '.$aInstallParams['database']['user'].'</li>');
+			$oPage->add('<li>DB user password: ***</li>');
+			if (($sMode == 'install') && ($this->oWizard->GetParameter('create_db') == 'yes')) {
+				$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].' (will be created)</li>');
+			} else {
+				$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].'</li>');
+			}
+			if ($aInstallParams['database']['prefix'] != '') {
+				$oPage->add('<li>Prefix for the '.ITOP_APPLICATION.' tables: '.$aInstallParams['database']['prefix'].'</li>');
+			} else {
+				$oPage->add('<li>Prefix for the '.ITOP_APPLICATION.' tables: none</li>');
+			}
+			$oPage->add('</ul></div>');
 		}
-		if ($aInstallParams['database']['prefix'] != '') {
-			$oPage->add('<li>Prefix for the '.ITOP_APPLICATION.' tables: '.$aInstallParams['database']['prefix'].'</li>');
-		} else {
-			$oPage->add('<li>Prefix for the '.ITOP_APPLICATION.' tables: none</li>');
-		}
-		$oPage->add('</ul></div>');
 
 		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Data Model Configuration">Data Model Configuration</a>');
 		$oPage->add($this->oWizard->GetParameter('display_choices'));
@@ -253,7 +260,7 @@ JS
 			$sButtonUrl = utils::HtmlEntities($sButtonUrl);
 			$oPage->add_ready_script(
 				<<<JS
-$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').after('<td style="text-align:center;"><button id="return-button" class="ibo-button ibo-is-alternative ibo-is-neutral" type="button" onclick="window.location.href=\'$sButtonUrl\'"><span class="ibo-button--label">$sButtonLabel</span></button></td>');
+$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').before('<td style="text-align:center;"><button id="return-button" class="ibo-button ibo-is-alternative ibo-is-neutral" type="button" onclick="window.location.href=\'$sButtonUrl\'"><span class="ibo-button--label">$sButtonLabel</span></button></td>');
 JS
 			);
 		}

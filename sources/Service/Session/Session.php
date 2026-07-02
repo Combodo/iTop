@@ -1,11 +1,11 @@
 <?php
 
-/**
- * @copyright   Copyright (C) 2010-2024 Combodo SAS
+/*
+ * @copyright   Copyright (C) 2010-2026 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Application\Helper;
+namespace Combodo\iTop\Service\Session;
 
 use Combodo\iTop\SessionTracker\SessionHandler;
 
@@ -21,9 +21,9 @@ class Session
 	/** @var int|null */
 	public static $iSessionId = null;
 	/** @var bool */
-	public static $bAllowCLI = false;
+	public static bool $bAllowCLI = false;
 
-	public static function Start()
+	public static function Start(): void
 	{
 		if (session_status() === PHP_SESSION_DISABLED) {
 			return;
@@ -47,7 +47,7 @@ class Session
 		self::$iSessionId = session_id();
 	}
 
-	public static function RegenerateId($bDeleteOldSession = false)
+	public static function RegenerateId($bDeleteOldSession = false): void
 	{
 		if (session_status() === PHP_SESSION_DISABLED || headers_sent()) {
 			return;
@@ -61,7 +61,7 @@ class Session
 		self::$iSessionId = session_id();
 	}
 
-	public static function WriteClose()
+	public static function WriteClose(): void
 	{
 		if (session_status() === PHP_SESSION_DISABLED) {
 			return;
@@ -76,7 +76,7 @@ class Session
 	 * @param string|array $key key to access to the session variable. To access to $_SESSION['a']['b'] $key must be ['a', 'b']
 	 * @param $value
 	 */
-	public static function Set($key, $value)
+	public static function Set($key, $value): void
 	{
 		if (!isset($_SESSION) || self::Get($key) == $value) {
 			return;
@@ -103,7 +103,7 @@ class Session
 	/**
 	 * @param string|array $key key to access to the session variable. To access to $_SESSION['a']['b'] $key must be ['a', 'b']
 	 */
-	public static function Unset($key)
+	public static function Unset($key): void
 	{
 		if (self::IsSet($key)) {
 			$aSession = $_SESSION;
@@ -137,7 +137,7 @@ class Session
 	 *
 	 * @return mixed
 	 */
-	public static function Get($key, $default = null)
+	public static function Get($key, $default = null): mixed
 	{
 		if (isset($_SESSION)) {
 			$aSession = $_SESSION;
@@ -189,7 +189,7 @@ class Session
 	/**
 	 * @return bool|string
 	 */
-	public static function GetLog()
+	public static function GetLog(): string
 	{
 		return print_r($_SESSION, true);
 	}

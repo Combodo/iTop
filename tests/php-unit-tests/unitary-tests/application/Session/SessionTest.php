@@ -2,7 +2,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Application;
 
-use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Service\Session\Session;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
