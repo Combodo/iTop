@@ -31,8 +31,8 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 		$oWizard->SetParameter('db_tls_enabled', $this->oConfig->Get('db_tls.enabled'));
 		$oWizard->SetParameter('db_tls_ca', $this->oConfig->Get('db_tls.ca') ?? '');
 		$oWizard->SetParameter('display_choices', '');
-		$oWizard->SetParameter('extensions_not_uninstallable', '[]');
 
+		$oWizard->SaveParameter('extensions_not_uninstallable', '[]');
 		$oWizard->SaveParameter('use_symbolic_links', MFCompiler::UseSymbolicLinks());
 		$oWizard->SaveParameter('force-uninstall', false);
 		$oWizard->SaveParameter('skip_wizard', false);

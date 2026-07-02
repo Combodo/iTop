@@ -111,7 +111,7 @@ class WizStepSummary extends AbstractWizStepInstall
 		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Extensions to be uninstalled">Extensions to be uninstalled</a>');
 
 		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('removed_extensions'), true) ?? [];
-		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable')) ?? [];
+		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable'), true) ?? [];
 		if (count($aExtensionsRemoved) > 0) {
 			$sExtensionsRemoved = '<ul>';
 			foreach ($aExtensionsRemoved as $sExtensionCode => $sLabel) {
