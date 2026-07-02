@@ -476,8 +476,7 @@ $(function()
 
 				let sStimulusCode = (undefined !== oData.stimulus_code) ? oData.stimulus_code : null
                 // If several entry forms filled, show a confirmation message
-                if ((GetUserPreference('activity_panel.show_multiple_entries_submit_confirmation',true) === true
-                    || GetUserPreference('activity_panel.show_multiple_entries_submit_confirmation', true) === "true")
+                if (GetUserPreferenceAsBoolean('activity_panel.show_multiple_entries_submit_confirmation',true) === true
                     && (Object.keys(await this._GetEntriesFromAllForms()).length > 1)) {
 					this._ShowEntriesSubmitConfirmation(sStimulusCode);
 				}
