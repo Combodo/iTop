@@ -128,21 +128,23 @@ class WizStepSummary extends AbstractWizStepInstall
 		$oPage->add($sExtensionsRemoved);
 		$oPage->add('</div>');
 
-		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Database Parameters">Database Parameters</a><ul>');
-		$oPage->add('<li>Server Name: '.$aInstallParams['database']['server'].'</li>');
-		$oPage->add('<li>DB User Name: '.$aInstallParams['database']['user'].'</li>');
-		$oPage->add('<li>DB user password: ***</li>');
-		if (($sMode == 'install') && ($this->oWizard->GetParameter('create_db') == 'yes')) {
-			$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].' (will be created)</li>');
-		} else {
-			$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].'</li>');
+		if (UserRights::IsAdministrator()) {
+			$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Database Parameters">Database Parameters</a><ul>');
+			$oPage->add('<li>Server Name: '.$aInstallParams['database']['server'].'</li>');
+			$oPage->add('<li>DB User Name: '.$aInstallParams['database']['user'].'</li>');
+			$oPage->add('<li>DB user password: ***</li>');
+			if (($sMode == 'install') && ($this->oWizard->GetParameter('create_db') == 'yes')) {
+				$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].' (will be created)</li>');
+			} else {
+				$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].'</li>');
+			}
+			if ($aInstallParams['database']['prefix'] != '') {
+				$oPage->add('<li>Prefix for the '.ITOP_APPLICATION.' tables: '.$aInstallParams['database']['prefix'].'</li>');
+			} else {
+				$oPage->add('<li>Prefix for the '.ITOP_APPLICATION.' tables: none</li>');
+			}
+			$oPage->add('</ul></div>');
 		}
-		if ($aInstallParams['database']['prefix'] != '') {
-			$oPage->add('<li>Prefix for the '.ITOP_APPLICATION.' tables: '.$aInstallParams['database']['prefix'].'</li>');
-		} else {
-			$oPage->add('<li>Prefix for the '.ITOP_APPLICATION.' tables: none</li>');
-		}
-		$oPage->add('</ul></div>');
 
 		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Data Model Configuration">Data Model Configuration</a>');
 		$oPage->add($this->oWizard->GetParameter('display_choices'));

@@ -19,11 +19,11 @@ use Combodo\iTop\SessionTracker\SessionHandler;
 class Session
 {
 	/** @var int|null */
-	public static bool|int|null $iSessionId = null;
+	public static $iSessionId = null;
 	/** @var bool */
 	public static bool $bAllowCLI = false;
 
-	public static function Start()
+	public static function Start(): void
 	{
 		if (session_status() === PHP_SESSION_DISABLED) {
 			return;
