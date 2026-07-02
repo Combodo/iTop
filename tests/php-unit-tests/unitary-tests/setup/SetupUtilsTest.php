@@ -2,6 +2,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Setup;
 
+use Combodo\iTop\Setup\FeatureRemoval\ModelReflectionSerializer;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use SetupUtils;
 
@@ -145,5 +146,43 @@ class SetupUtilsTest extends ItopTestCase
 				"SetupUtils::PHP_MIN_VERSION ($sPHPMinVersion) and SetupUtils::PHP_NOT_VALIDATED_VERSION ($sPHPNotValidatedVersion) is not equals composer.json > require > php ($sComposerRequirePhp)"
 			);
 		}
+	}
+
+	public function testCheckCliPhpVersionIsOk()
+	{
+		$this->RequireOnceItopFile('/setup/feature_removal/ModelReflectionSerializer.php');
+		SetupUtils::CheckCliPhpVersionIsOk(ModelReflectionSerializer::ERROR_LABEL);
+		$this->assertTrue(true);
+	}
+
+	public function testCheckCliPhpVersionFromOutputFail()
+	{
+		$this->RequireOnceItopFile('/setup/feature_removal/ModelReflectionSerializer.php');
+		$sOuput = <<<OUTPUT
+PHP 7.4.33 (cli) (built: Aug 2 2024 16:22:28) ( NTS )
+OUTPUT;
+
+		$this->expectException(\CoreException::class);
+		$this->expectExceptionMessage("Data consistency check failed: Mismatch between PHP versions (CLI: 7.4/ UI: 6.6)");
+		$this->InvokeNonPublicStaticMethod(SetupUtils::class, 'CheckCliPhpVersionFromOutput', [ModelReflectionSerializer::ERROR_LABEL, '6.6', 'sPHPExec', [$sOuput]]);
+	}
+
+	public function CheckOKProvider()
+	{
+		return [
+			["7.4 7.2 7.3.33"],
+			["PHP 7.4.33 (cli) (built: Aug  2 2024 16:22:28) ( NTS )"],
+			["PHP 7.4.33 PHP 7.33.22"],
+			["version: 7.4.27 stable"],
+		];
+	}
+	/**
+	 * @dataProvider CheckOKProvider
+	 */
+	public function testCheckCliPhpVersionFromOutputOK($sOuput)
+	{
+		$this->RequireOnceItopFile('/setup/feature_removal/ModelReflectionSerializer.php');
+		$this->InvokeNonPublicStaticMethod(SetupUtils::class, 'CheckCliPhpVersionFromOutput', [ModelReflectionSerializer::ERROR_LABEL, '7.4', 'sPHPExec', [$sOuput]]);
+		$this->assertTrue(true);
 	}
 }

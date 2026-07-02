@@ -2,11 +2,10 @@
 
 namespace Combodo\iTop\Setup\FeatureRemoval;
 
-use ContextTag;
 use CoreException;
-use Exception;
 use IssueLog;
 use SetupLog;
+use SetupUtils;
 use utils;
 
 class ModelReflectionSerializer
@@ -15,6 +14,7 @@ class ModelReflectionSerializer
 
 	protected function __construct()
 	{
+		SetupLog::Enable(APPROOT.'log/setup.log');
 	}
 
 	final public static function GetInstance(): ModelReflectionSerializer
@@ -31,42 +31,53 @@ class ModelReflectionSerializer
 		self::$oInstance = $oInstance;
 	}
 
+	public const ERROR_LABEL = "Data consistency check failed: %s";
+
 	public function GetModelFromEnvironment(string $sEnv): array
 	{
 		IssueLog::Debug(__METHOD__, null, ['env' => $sEnv]);
 
-		$sPHPExec = trim(utils::GetConfig()->Get('php_path'));
-		$sOutput = "";
-		$iRes = 0;
+		SetupUtils::CheckCliPhpVersionIsOk(self::ERROR_LABEL);
 
-		$sCommandLine = sprintf("$sPHPExec %s/get_model_reflection.php --env=%s", __DIR__, escapeshellarg($sEnv));
-		exec($sCommandLine, $sOutput, $iRes);
-		if ($iRes != 0) {
-			$this->LogErrorWithProperLogger("Cannot get classes", null, ['env' => $sEnv, 'code' => $iRes, "output" => $sOutput, 'cmd' => $sCommandLine]);
-			throw new CoreException("Cannot get classes from env ".$sEnv);
+		//preliminary check
+		$sEnvDir = APPROOT."env-$sEnv";
+		if (! is_dir($sEnvDir)) {
+			$sMsg = sprintf(self::ERROR_LABEL, "Missing environment ($sEnvDir)");
+			SetupLog::Error($sMsg);
+			throw new CoreException($sMsg);
 		}
 
-		$aClasses = json_decode($sOutput[0] ?? null, true);
+		$sConfigFile = APPROOT."conf/$sEnv/config-itop.php";
+		if (! is_file($sConfigFile)) {
+			$sMsg = sprintf(self::ERROR_LABEL, "Missing configuration ($sConfigFile)");
+			SetupLog::Error($sMsg);
+			throw new CoreException($sMsg);
+		}
+
+		$sPHPExec = trim(utils::GetConfig()->Get('php_path'));
+		$aOutput = null;
+		$iRes = 0;
+		$sCommandLine = sprintf("$sPHPExec %s/get_model_reflection.php --env=%s", __DIR__, escapeshellarg($sEnv));
+		exec($sCommandLine, $aOutput, $iRes);
+		if ($iRes != 0) {
+			$sError = $aOutput[0] ?? 'Invalid output when serializing model';
+			SetupLog::Error(sprintf(self::ERROR_LABEL, '(cli error) '.$sError), null, ['env' => $sEnv, 'code' => $iRes, "output" => $aOutput, 'cmd' => $sCommandLine]);
+			throw new CoreException(sprintf(self::ERROR_LABEL, $sError));
+		}
+
+		$aClasses = json_decode($aOutput[0] ?? null, true);
 		if (false === $aClasses) {
-			$this->LogErrorWithProperLogger("Invalid JSON", null, ['env' => $sEnv, "output" => $sOutput]);
-			throw new Exception("cannot get classes");
+			$sMsg = sprintf(self::ERROR_LABEL, 'Invalid JSON');
+			SetupLog::Error($sMsg, null, ['env' => $sEnv, "output" => $aOutput]);
+			throw new CoreException($sMsg);
 		}
 
 		if (!is_array($aClasses)) {
-			$this->LogErrorWithProperLogger("not an array", null, ['env' => $sEnv, "classes" => $aClasses, "output" => $sOutput]);
-			throw new Exception("cannot get classes from $sEnv");
+			$sError = $aOutput[0] ?? 'Invalid json array when serializing model';
+			SetupLog::Error(sprintf(self::ERROR_LABEL, '(JSON output not an array) '.$sError), null, ['env' => $sEnv, "classes" => $aClasses, "output" => $aOutput]);
+			throw new CoreException(sprintf(self::ERROR_LABEL, $sError));
 		}
 
 		return $aClasses;
-	}
-
-	//could be shared with others in log APIs ?
-	private function LogErrorWithProperLogger($sMessage, $sChannel = null, $aContext = []): void
-	{
-		if (ContextTag::Check(ContextTag::TAG_SETUP)) {
-			SetupLog::Error($sMessage, $sChannel, $aContext);
-		} else {
-			IssueLog::Error($sMessage, $sChannel, $aContext);
-		}
 	}
 }

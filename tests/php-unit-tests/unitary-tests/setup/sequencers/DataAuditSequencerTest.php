@@ -201,6 +201,7 @@ class DataAuditSequencerTest extends ItopTestCase
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
 		$oRunTimeEnvironment->expects($this->once())->method('GetApplicationVersion')
 			->willReturn(['product_version' => ITOP_VERSION_FULL]);
+		$oRunTimeEnvironment->expects($this->once())->method('ExitMaintenanceMode');
 		$oRunTimeEnvironment->expects($this->once())->method('DataToCleanupAudit');
 		$oRunTimeEnvironment->expects($this->any())->method('GetFinalEnv')
 			->willReturn('production');

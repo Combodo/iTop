@@ -5761,36 +5761,37 @@ abstract class MetaModel
 
 		self::$m_sEnvironment = $sEnvironment;
 
-		try {
-			if (!defined('MODULESROOT')) {
-				define('MODULESROOT', APPROOT.'env-'.self::$m_sEnvironment.'/');
+		if (!defined('MODULESROOT')) {
+			define('MODULESROOT', APPROOT.'env-'.self::$m_sEnvironment.'/');
 
-				self::$m_bTraceSourceFiles = $bTraceSourceFiles;
+			self::$m_bTraceSourceFiles = $bTraceSourceFiles;
 
-				// $config can be either a filename, or a Configuration object (volatile!)
-				if ($config instanceof Config) {
-					self::LoadConfig($config, $bAllowCache);
-				} else {
-					self::LoadConfig(new Config($config), $bAllowCache);
-				}
-
-				if ($bModelOnly) {
-					return;
-				}
+			// $config can be either a filename, or a Configuration object (volatile!)
+			if ($config instanceof Config) {
+				self::LoadConfig($config, $bAllowCache);
+			} else {
+				self::LoadConfig(new Config($config), $bAllowCache);
 			}
 
-			CMDBSource::SelectDB(self::$m_sDBName);
-
-			foreach (MetaModel::EnumPlugins('ModuleHandlerApiInterface') as $oPHPClass) {
-				$oPHPClass::OnMetaModelStarted();
+			if ($bModelOnly) {
+				// Event service must be initialized after the MetaModel startup, otherwise it cannot discover classes implementing the iEventServiceSetup interface
+				EventService::InitService();
+				EventService::FireEvent(new EventData(ApplicationEvents::APPLICATION_EVENT_METAMODEL_STARTED));
+				return;
 			}
-
-			ExpressionCache::Warmup();
-		} finally {
-			// Event service must be initialized after the MetaModel startup, otherwise it cannot discover classes implementing the iEventServiceSetup interface
-			EventService::InitService();
-			EventService::FireEvent(new EventData(ApplicationEvents::APPLICATION_EVENT_METAMODEL_STARTED));
 		}
+
+		CMDBSource::SelectDB(self::$m_sDBName);
+
+		foreach (MetaModel::EnumPlugins('ModuleHandlerApiInterface') as $oPHPClass) {
+			$oPHPClass::OnMetaModelStarted();
+		}
+
+		ExpressionCache::Warmup();
+
+		// Event service must be initialized after the MetaModel startup, otherwise it cannot discover classes implementing the iEventServiceSetup interface
+		EventService::InitService();
+		EventService::FireEvent(new EventData(ApplicationEvents::APPLICATION_EVENT_METAMODEL_STARTED));
 	}
 
 	/**

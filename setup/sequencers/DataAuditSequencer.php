@@ -70,6 +70,7 @@ class DataAuditSequencer extends StepSequencer
 					$aSelectedExtensionCodes = $this->oParams->Get('selected_extensions', []);
 					$bUseSymbolicLinks = $this->oParams->Get('use_symbolic_links', null) === 'on';
 					MetaModel::ResetAllCaches($this->oRunTimeEnvironment->GetBuildEnv());
+
 					$this->oRunTimeEnvironment->DoCompile(
 						$aSelectedExtensionCodes,
 						$aRemovedExtensionCodes,
@@ -79,6 +80,7 @@ class DataAuditSequencer extends StepSequencer
 					return $this->ComputeNextStep($sStep);
 
 				case 'setup-audit':
+					$this->oRunTimeEnvironment->ExitMaintenanceMode();
 					$this->oRunTimeEnvironment->DataToCleanupAudit();
 					return $this->ComputeNextStep($sStep);
 
