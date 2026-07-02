@@ -19,7 +19,6 @@
  */
 
 use Combodo\iTop\Application\WebPage\WebPage;
-use Combodo\iTop\Service\Session\SessionParameters;
 
 /**
  * Summary of the installation tasks
@@ -135,6 +134,11 @@ class WizStepDone extends WizardStep
 			SetupUtils::EraseSetupToken();
 			$this->oWizard->EraseParameters();
 		}
+	}
+
+	public function CanAccessToWizardStep()
+	{
+		return true;
 	}
 
 	public function CanMoveForward()

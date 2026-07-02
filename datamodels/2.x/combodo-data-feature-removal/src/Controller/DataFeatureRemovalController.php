@@ -48,6 +48,9 @@ class DataFeatureRemovalController extends Controller
 	{
 		$aParams = [];
 
+		SetupUtils::EraseSetupToken();
+		(new SessionParameters(SetupUtils::SESSION_PARAMETERS_NAME))->Erase();
+
 		$this->AddAnalyzeParams();
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
 		$aParams['iColumnCount'] = $this->iColumnCount;
@@ -191,8 +194,6 @@ class DataFeatureRemovalController extends Controller
 
 		if (!$aParams['bDeletionNeeded']) {
 			// Erase session setup parameters
-			SetupUtils::EraseSetupToken();
-			(new SessionParameters(SetupUtils::SESSION_PARAMETERS_NAME))->Erase();
 			SetupUtils::CreateSetupToken();
 		}
 
@@ -210,12 +211,13 @@ class DataFeatureRemovalController extends Controller
 	}
 
 	/**
-* @param array $aAddedExtensions
-* @param array $aRemovedExtensions
-* @param bool $bForceCompilation
-* @return void
-* @throws \ConfigException
-* @throws \CoreException
+	 * @param array $aAddedExtensions
+	 * @param array $aRemovedExtensions
+	 * @param bool $bForceCompilation
+	 *
+	 * @return void
+	 * @throws \ConfigException
+	 * @throws \CoreException
 	 */
 	private function Compile(array $aAddedExtensions, array $aRemovedExtensions, bool $bForceCompilation = true): void
 	{

@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Service\Session\SessionParameters;
-
 /**
  * First step of the iTop Installation Wizard: Welcome screen, requirements
  */
@@ -62,6 +60,9 @@ class WizStepWelcome extends WizardStep
 
 	public function Display(SetupPage $oPage): void
 	{
+		$this->oWizard->EraseParameters();
+		$this->oWizard->SetWizardSteps([]);
+
 		// Store the misc_options for the future...
 		$aMiscOptions = utils::ReadParam('option', [], false, 'raw_data');
 		$sMiscOptions = $this->oWizard->GetParameter('misc_options', json_encode($aMiscOptions));
@@ -129,7 +130,7 @@ HTML
 					<form id="fast_setup" method="post">
 						<input type="hidden" name="_class" value="WizStepLandingBeforeAudit"/>
 						<input type="hidden" name="operation" value="next"/>
-						<input type="hidden" name="_params[skip_wizard]" value="1"/>
+						<input type="hidden" name="skip_wizard" value="1"/>
 					</form>
 HTML
 				);

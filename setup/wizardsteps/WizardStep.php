@@ -76,6 +76,11 @@ abstract class WizardStep
 	{
 	}
 
+	public function CanAccessToWizardStep()
+	{
+		return ($this->oWizard->GetParameter('return_application', '') === '');
+	}
+
 	protected function CheckDependencies()
 	{
 		if (is_null($this->bDependencyCheck)) {

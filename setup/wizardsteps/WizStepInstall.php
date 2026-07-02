@@ -45,6 +45,11 @@ class WizStepInstall extends AbstractWizStepInstall
 		return 'Continue';
 	}
 
+	public function CanAccessToWizardStep()
+	{
+		return true;
+	}
+
 	public function CanMoveForward()
 	{
 		if ($this->CheckDependencies()) {
@@ -120,7 +125,7 @@ JS);
 			$sButtonUrl = utils::HtmlEntities($sButtonUrl);
 			$oPage->add_ready_script(
 				<<<JS
-$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').after('<td style="text-align:center;"><button id="return-button" class="ibo-button ibo-is-alternative ibo-is-neutral ibo-is-hidden" type="button" onclick="window.location.href=\'$sButtonUrl\'"><span class="ibo-button--label">$sButtonLabel</span></button></td>');
+$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').before('<td style="text-align:center;"><button id="return-button" class="ibo-button ibo-is-alternative ibo-is-neutral ibo-is-hidden" type="button" onclick="window.location.href=\'$sButtonUrl\'"><span class="ibo-button--label">$sButtonLabel</span></button></td>');
 JS
 			);
 		}

@@ -178,6 +178,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 		$i = 0;
 		$this->aSteps = null;
 		while (null != $this->GetStepInfo($i)) {
+			// Allow looping for all existing steps
 			$this->aSteps = null;
 			$aSteps [] = ["class" => "WizStepModulesChoice","state" => "$i"];
 			$i++;
