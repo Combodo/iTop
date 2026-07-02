@@ -229,6 +229,13 @@ class SetupUtils
 				$aResult[] = new CheckResult(CheckResult::WARNING, "Missing optional PHP extension: $sExtension. ".$sMessage);
 			}
 		}
+
+		try {
+			SetupUtils::CheckCliPhpVersionIsOk();
+		} catch (CoreException $e) {
+			$aResult[] = new CheckResult(CheckResult::WARNING, $e->getMessage());
+		}
+
 		// Check some ini settings here
 		if (function_exists('php_ini_loaded_file')) { // PHP >= 5.2.4
 			$sPhpIniFile = php_ini_loaded_file();
@@ -2188,6 +2195,41 @@ JS
 		}
 
 		return [$sButtonLabel, $sButtonUrl];
+	}
+
+	/**
+	* @param string $sErrorLabel: error label with 1 placeholder inside for detailed error
+	* @return void
+	* @throws \ConfigException
+	* @throws \CoreException
+	 */
+	public static function CheckCliPhpVersionIsOk(string $sErrorLabel = '%s'): void
+	{
+		$sPHPExec = trim(utils::GetConfig()->Get('php_path'));
+		$aOutput = null;
+		$iRes = 0;
+		exec("$sPHPExec --version", $aOutput, $iRes);
+		if ($iRes != 0) {
+			$sError = sprintf($sErrorLabel, "Cannot check CLI/PHP version ($sPHPExec)");
+			SetupLog::Error($sError, null, ['code' => $iRes, "output" => $aOutput, 'php_path' => $sPHPExec]);
+			throw new CoreException($sError);
+		}
+
+		SetupUtils::CheckCliPhpVersionFromOutput($sErrorLabel, PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION, $sPHPExec, $aOutput);
+	}
+
+	private static function CheckCliPhpVersionFromOutput(string $sErrorLabel, string $sUIPhpVersion, string $sPHPExec, $aOutput): void
+	{
+		$sFoundVersion = trim($aOutput[0] ?? "");
+		if (false !== preg_match('/(\d+\.\d+)(?:\.\d+)?/', $sFoundVersion, $aMatches)) {
+			$sFoundVersion = $aMatches[1];
+		}
+
+		if ($sFoundVersion !== $sUIPhpVersion) {
+			$sError = sprintf($sErrorLabel, "Mismatch between PHP versions (CLI: $sFoundVersion/ UI: $sUIPhpVersion)");
+			SetupLog::Error($sError, null, ["output" => $aOutput, 'php_path' => $sPHPExec]);
+			throw new CoreException($sError);
+		}
 	}
 }
 
