@@ -84,7 +84,6 @@ class DataAuditSequencerTest extends ItopTestCase
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
 		$oRunTimeEnvironment->expects($this->once())->method('GetApplicationVersion')
 			->willReturn(['product_version' => ITOP_VERSION_FULL]);
-		$oRunTimeEnvironment->expects($this->once())->method('ExitMaintenanceMode');
 		$oRunTimeEnvironment->expects($this->once())->method('DoCompile');
 		$oRunTimeEnvironment->expects($this->once())->method('GetFinalEnv')
 			->willReturn('production');
@@ -111,7 +110,6 @@ class DataAuditSequencerTest extends ItopTestCase
 	{
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
 		$oRunTimeEnvironment->expects($this->never())->method('GetApplicationVersion');
-		$oRunTimeEnvironment->expects($this->once())->method('ExitMaintenanceMode');
 		$oRunTimeEnvironment->expects($this->once())->method('DoCompile');
 		$oRunTimeEnvironment->expects($this->never())->method('GetFinalEnv')
 			->willReturn('production');
@@ -136,7 +134,6 @@ class DataAuditSequencerTest extends ItopTestCase
 	public function testCompileNoAuditInFreshInstall()
 	{
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
-		$oRunTimeEnvironment->expects($this->once())->method('ExitMaintenanceMode');
 		$oRunTimeEnvironment->expects($this->once())->method('DoCompile');
 		$oSequencer = new DataAuditSequencer($this->GivenParams(), $oRunTimeEnvironment);
 
@@ -157,7 +154,6 @@ class DataAuditSequencerTest extends ItopTestCase
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
 		$oRunTimeEnvironment->expects($this->once())->method('GetApplicationVersion')
 			->willReturn(['product_version' => ITOP_VERSION_FULL]);
-		$oRunTimeEnvironment->expects($this->once())->method('ExitMaintenanceMode');
 		$oRunTimeEnvironment->expects($this->once())->method('DoCompile');
 		$oRunTimeEnvironment->expects($this->once())->method('GetFinalEnv')
 			->willReturn('gabuzomeu');
@@ -183,7 +179,6 @@ class DataAuditSequencerTest extends ItopTestCase
 	public function testCompileFailureInFreshInstallNoAudit()
 	{
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
-		$oRunTimeEnvironment->expects($this->once())->method('ExitMaintenanceMode');
 		$oRunTimeEnvironment->expects($this->once())->method('DoCompile')
 			->willThrowException(new \CoreException('SHADOK MSG'));
 		$oSequencer = new DataAuditSequencer($this->GivenParams(), $oRunTimeEnvironment);
@@ -206,6 +201,7 @@ class DataAuditSequencerTest extends ItopTestCase
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
 		$oRunTimeEnvironment->expects($this->once())->method('GetApplicationVersion')
 			->willReturn(['product_version' => ITOP_VERSION_FULL]);
+		$oRunTimeEnvironment->expects($this->once())->method('ExitMaintenanceMode');
 		$oRunTimeEnvironment->expects($this->once())->method('DataToCleanupAudit');
 		$oRunTimeEnvironment->expects($this->any())->method('GetFinalEnv')
 			->willReturn('production');
