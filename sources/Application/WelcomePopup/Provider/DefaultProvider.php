@@ -38,14 +38,14 @@ class DefaultProvider extends AbstractWelcomePopupExtension
 				"330_01_Welcome",
 				Dict::S("UI:WelcomePopup:Message:330_01_Welcome:Title"),
 				Dict::S("UI:WelcomePopup:Message:330_01_Welcome:Description"),
-				utils::GetAbsoluteUrlAppRoot()."images/illustrations/undraw_route_planning.svg"
+				utils::GetAbsoluteUrlAppRoot()."images/illustrations/undraw_to_the_moon.svg"
 			);
 
 			$aMessages[] = MessageFactory::MakeForLeftIllustrationAsSVGMarkupRightTexts(
 				"330_03_CMDB",
 				Dict::S("UI:WelcomePopup:Message:330_03_CMDB:Title"),
 				Dict::S("UI:WelcomePopup:Message:330_03_CMDB:Description"),
-				utils::GetAbsoluteUrlAppRoot()."images/illustrations/undraw_code_contribution.svg"
+				utils::GetAbsoluteUrlAppRoot()."images/illustrations/undraw_maintenance.svg"
 			);
 		}
 
