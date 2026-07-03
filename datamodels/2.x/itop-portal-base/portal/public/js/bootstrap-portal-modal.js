@@ -67,6 +67,10 @@ $(document).ready(function()
 			}
 		});
 		$this.css('z-index', zIndex);
+		//Add the ability to drag and drop the pop-up
+		$this.find('.modal-dialog').draggable({
+			handle: ".modal-header"
+		});
 		// Set the z-index of the backdrop later because it is created after the modal
 		setTimeout(function() {
 			$('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
