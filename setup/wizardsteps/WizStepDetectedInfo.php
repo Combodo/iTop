@@ -17,6 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
@@ -205,7 +206,7 @@ EOF
 				$sUpgradeDMVersionToDisplay = utils::HtmlEntities($sUpgradeDMVersion);
 				$oPage->add(
 					<<<HTML
-<div class="message message-valid">The datamodel will be upgraded from version $sInstalledDataModelVersion to version $sUpgradeDMVersion.</div>
+<div class="message message-valid ibo-is-html-content">The datamodel will be upgraded from version $sInstalledDataModelVersion to version $sUpgradeDMVersion.</div>
 <input type="hidden" name="upgrade_type" value="use-compatible">
 <input type="hidden" name="datamodel_path" value="$sCompatibleDMDirToDisplay">
 <input type="hidden" name="datamodel_version" value="$sUpgradeDMVersionToDisplay">
@@ -214,24 +215,77 @@ HTML
 
 			}
 
+			$oPage->add('<div id="db_info"></div>');
+
+			$sDBServer = $this->oWizard->GetParameter('db_server', '');
+			$sDBUser = $this->oWizard->GetParameter('db_user', '');
+			$sDBPwd = $this->oWizard->GetParameter('db_pwd', '');
+			$sDBName = $this->oWizard->GetParameter('db_name', '');
+			$sTlsEnabled = $this->oWizard->GetParameter('db_tls_enabled', false) ? 1 : 0;
+			$sTlsCA = $this->oWizard->GetParameter('db_tls_ca', '');
+
 			$oPage->add_ready_script(
 				<<<EOF
 	$("#changes_summary .title").on('click', function() { $(this).parent().toggleClass('closed'); } );
 	$('input[name=upgrade_type]').on('click change', function() { WizardUpdateButtons(); });
+
+var iCheckDBTimer = null;
+var oXHRCheckDB = null;
+
+function CheckDBConnection()
+{
+	// Don't call the server too often...
+	if (iCheckDBTimer !== null)
+	{
+		clearTimeout(iCheckDBTimer);
+		iCheckDBTimer = null;
+	}
+	iCheckDBTimer = setTimeout(DoCheckDBConnection, 500);
+}
+
+function DoCheckDBConnection()
+{
+	iCheckDBTimer = null;
+	var oParams = {
+		'db_server': '$sDBServer',
+		'db_user': '$sDBUser',
+		'db_pwd': '$sDBPwd',
+		'db_name': '$sDBName',
+		'db_tls_enabled': $sTlsEnabled,
+		'db_tls_ca': '$sTlsCA',
+	}
+	if ((oXHRCheckDB != null) && (oXHRCheckDB != undefined))
+	{
+		oXHRCheckDB.abort();
+		oXHRCheckDB = null;
+	}
+	oXHRCheckDB = WizardAsyncAction("check_db", oParams);
+}
+
+DoCheckDBConnection(); // Validate the initial values immediately
 EOF
 			);
 
 			$oMutex = new iTopMutex(
-				'cron'.$this->oWizard->GetParameter('db_name', '').$this->oWizard->GetParameter('db_prefix', ''),
-				$this->oWizard->GetParameter('db_server', ''),
-				$this->oWizard->GetParameter('db_user', ''),
-				$this->oWizard->GetParameter('db_pwd', ''),
+				'cron'.$sDBName.$this->oWizard->GetParameter('db_prefix', ''),
+				$sDBServer,
+				$sDBUser,
+				$sDBPwd,
 				$this->oWizard->GetParameter('db_tls_enabled', ''),
-				$this->oWizard->GetParameter('db_tls_ca', '')
+				$sTlsCA
 			);
 			if ($oMutex->IsLocked()) {
 				$oPage->add('<div class="message">'.ITOP_APPLICATION.' cron process is being executed on the target database. '.ITOP_APPLICATION.' cron process will be stopped during the setup execution.</div>');
 			}
+		}
+	}
+
+	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
+	{
+		switch ($sCode) {
+			case 'check_db':
+				SetupUtils::AsyncCheckDB($oPage, $aParameters);
+				break;
 		}
 	}
 

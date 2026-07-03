@@ -1437,7 +1437,7 @@ EOF
 			// Unsupported Password, warn the user
 			$oPage->add_ready_script(
 				<<<JS
-$("#db_info").html('<div class="message message-error"><span class="message-title">Error:</span>On Windows, the backup won\'t work because database password contains %, ! or &quot; character</div>');
+$("#db_info").html('<div class="message message-error ibo-is-html-content"><span class="message-title">Error:</span>On Windows, the backup won\'t work because database password contains %, ! or &quot; character</div>');
 JS
 			);
 		} else {

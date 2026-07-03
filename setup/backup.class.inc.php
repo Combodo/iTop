@@ -444,7 +444,7 @@ EOF;
 		$sPwd = $oConfig->Get('db_pwd');
 		$sSource = $oConfig->Get('db_name');
 		$sTlsEnabled = $oConfig->Get('db_tls.enabled');
-		$sTlsCA = $oConfig->Get('db_tls.ca');
+		$sTlsCA = $oConfig->Get('db_tls.ca') ?? '';
 
 		try {
 			$oMysqli = CMDBSource::GetMysqliInstance(

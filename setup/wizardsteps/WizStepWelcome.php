@@ -50,18 +50,42 @@ class WizStepWelcome extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return [WizStepInstallOrUpgrade::class];
+		return [WizStepDetectedInfo::class, WizStepLicense::class];
 	}
 
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
-		return new WizardState(WizStepInstallOrUpgrade::class);
+		if ($this->oWizard->GetParameter('install_mode', 'install') === 'install') {
+
+			return new WizardState(WizStepLicense::class);
+		}
+
+		return new WizardState(WizStepDetectedInfo::class);
 	}
 
 	public function Display(SetupPage $oPage): void
 	{
 		$this->oWizard->EraseParameters();
 		$this->oWizard->SetWizardSteps([]);
+
+		$aPreviousInstance = SetupUtils::GetPreviousInstance(APPROOT);
+		if ($aPreviousInstance['found']) {
+			$this->oWizard->SetParameter('install_mode', 'upgrade');
+			$this->oWizard->SetParameter('db_server', $aPreviousInstance['db_server']);
+			$this->oWizard->SetParameter('db_user', $aPreviousInstance['db_user']);
+			$this->oWizard->SetParameter('db_pwd', $aPreviousInstance['db_pwd']);
+			$this->oWizard->SetParameter('db_name', $aPreviousInstance['db_name']);
+			$this->oWizard->SetParameter('db_prefix', $aPreviousInstance['db_prefix']);
+			$this->oWizard->SetParameter('db_tls_enabled', $aPreviousInstance['db_tls_enabled']);
+			$this->oWizard->SetParameter('db_tls_ca', $aPreviousInstance['db_tls_ca'] ?? '');
+			$this->oWizard->SetParameter('graphviz_path', $aPreviousInstance['graphviz_path']);
+		} else {
+			$this->oWizard->SetParameter('install_mode', 'install');
+			$sFullSourceDir = SetupUtils::GetLatestDataModelDir();
+			$this->oWizard->SetParameter('source_dir', $sFullSourceDir);
+			$this->oWizard->SetParameter('datamodel_version', SetupUtils::GetDataModelVersion($sFullSourceDir));
+		}
+		$this->oWizard->SetParameter('previous_version_dir', APPROOT);
 
 		// Store the misc_options for the future...
 		$aMiscOptions = utils::ReadParam('option', [], false, 'raw_data');
