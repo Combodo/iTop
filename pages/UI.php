@@ -27,6 +27,7 @@ use Combodo\iTop\Application\WelcomePopup\WelcomePopupService;
 use Combodo\iTop\Controller\Base\Layout\ObjectController;
 use Combodo\iTop\Controller\WelcomePopupController;
 use Combodo\iTop\Service\Router\Router;
+use Combodo\iTop\Service\Session\SessionParameters;
 
 /**
  * Displays a popup welcome message, once per session at maximum
@@ -1306,6 +1307,10 @@ try {
 				///////////////////////////////////////////////////////////////////////////////////////////
 
 			default: // Menu node rendering (templates)
+				// Erase setup parameters
+				SetupUtils::EraseSetupToken();
+				(new SessionParameters(SetupUtils::SESSION_PARAMETERS_NAME))->Erase();
+
 				ApplicationMenu::LoadAdditionalMenus();
 				$oMenuNode = ApplicationMenu::GetMenuNode(ApplicationMenu::GetMenuIndexById(ApplicationMenu::GetActiveNodeId()));
 				if (is_object($oMenuNode)) {
