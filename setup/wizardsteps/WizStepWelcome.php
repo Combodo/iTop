@@ -40,7 +40,7 @@ class WizStepWelcome extends WizardStep
 	}
 
 	/**
-	 * Returns the label for the " Next >> " button
+	 * Returns the label for the "Next >>" button
 	 * @return string The label for the button
 	 */
 	public function GetNextButtonLabel()
