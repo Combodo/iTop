@@ -128,7 +128,7 @@ class WizStepSummary extends AbstractWizStepInstall
 		$oPage->add($sExtensionsRemoved);
 		$oPage->add('</div>');
 
-		if (UserRights::IsAdministrator()) {
+		if ($this->oWizard->GetParameter('return_application') === '') {
 			$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Database Parameters">Database Parameters</a><ul>');
 			$oPage->add('<li>Server Name: '.$aInstallParams['database']['server'].'</li>');
 			$oPage->add('<li>DB User Name: '.$aInstallParams['database']['user'].'</li>');
