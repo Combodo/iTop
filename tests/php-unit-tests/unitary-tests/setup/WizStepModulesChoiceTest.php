@@ -1420,7 +1420,6 @@ HTML,
 
 		$expected = [
 			["class" => "WizStepWelcome","state" => ""],
-			["class" => "WizStepInstallOrUpgrade","state" => ""],
 			["class" => "WizStepDetectedInfo","state" => ""],
 			["class" => "WizStepUpgradeMiscParams","state" => ""],
 		];
@@ -1441,7 +1440,6 @@ HTML,
 
 		$expected = [
 			["class" => "WizStepWelcome","state" => ""],
-			["class" => "WizStepInstallOrUpgrade","state" => ""],
 			["class" => "WizStepDetectedInfo","state" => ""],
 			["class" => "WizStepUpgradeMiscParams","state" => ""],
 		];
