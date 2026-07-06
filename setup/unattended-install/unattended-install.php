@@ -132,7 +132,7 @@ if ($bUseItopConfig && file_exists($sConfigFile)) {
 	$aDBXmlSettings ['prefix'] = $oConfig->Get('db_subname');
 	$aDBXmlSettings ['db_tls_enabled'] = $oConfig->Get('db_tls.enabled');
 	//cannot be null or infinite loop triggered!
-	$aDBXmlSettings ['db_tls_ca'] = $oConfig->Get('db_tls.ca') ?? "";
+	$aDBXmlSettings ['db_tls_ca'] = $oConfig->Get('db_tls.ca') ?? '';
 	$oParams->Set('database', $aDBXmlSettings);
 
 	$aFields = [

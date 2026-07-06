@@ -24,7 +24,6 @@
  * Steps order (can be retrieved using \WizardController::DumpStructure) :
  *
  * WizStepWelcome
- * WizStepInstallOrUpgrade
  *    +             +
  *    |             |
  *    v             +----->
