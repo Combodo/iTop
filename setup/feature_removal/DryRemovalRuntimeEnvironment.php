@@ -25,28 +25,6 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 	}
 
 	/**
-	 * Compile the data model by imitating the given environment
-	 * The list of modules to be installed in the build environment is:
-	 *  - the list of modules present in the "source_dir" (defined by the source environment) which are marked as "installed" in the source environment's database
-	 *  - plus the list of modules present in the "extra" directory of the build environment: data/<build_environment>-modules/
-	 *
-	 * @param string $sSourceEnv The name of the source environment to 'imitate'
-	 * @param null $bUseSymLinks Whether to create symbolic links instead of copies
-	 *
-	 * @return string[]
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 */
-	public function CompileFrom($sSourceEnv, $bUseSymLinks = null)
-	{
-		$aSelecteModules = $this->GetExtensionMap()->GetSelectedModules();
-		$this->DoCompile($this->aExtensionCodesToAddByCode, $this->aExtensionsToRemoveByCode, $this->GetExtensionMap()->GetSelectedModules(), $bUseSymLinks ?? false);
-		return $aSelecteModules;
-	}
-
-
-
-	/**
 	* @param string $sSourceEnv
 	* @param string $sBuildEnv
 	* @return void
