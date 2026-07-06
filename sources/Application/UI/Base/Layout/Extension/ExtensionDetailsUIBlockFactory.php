@@ -89,6 +89,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$oBadgeToBeUninstalled->AddCSSClass('checked');
 		$aBadges[] = $oBadgeToBeUninstalled;
 		if ($bCannotBeInstalled) {
+			$bSelected = false;
 			$aBadges[] = BadgeUIBlockFactory::MakeOrange(
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled'),
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled+'),
