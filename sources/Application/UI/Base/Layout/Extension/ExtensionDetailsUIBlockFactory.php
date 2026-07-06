@@ -111,7 +111,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 	private static function AddExtraBadges(array &$aBadges, bool $bUninstallable, bool $bMissingFromDisk, string $sCode)
 	{
 		if (!$bUninstallable) {
-			$aBadges[] = BadgeUIBlockFactory::MakeOrange(
+			$aBadges[] = BadgeUIBlockFactory::MakeYellow(
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeNotUninstallable'),
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeNotUninstallable+'),
 				self::GetBadgeId($sCode, self::BADGE_ID_NOT_UNINSTALLABLE)

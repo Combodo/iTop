@@ -1093,7 +1093,7 @@ HTML,
 					<div class="ibo-extension-details--information--label">
 						<label for="itop-ext-installed"><b>My extension</b></label>
 						
-						<div id="badge--itop-ext-installed--installed" class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</div><div id="badge--itop-ext-installed--to-be-uninstalled" class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</div><div id="badge--itop-ext-installed--not-uninstallable" class="ibo-badge ibo-block ibo-is-orange" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</div>
+						<div id="badge--itop-ext-installed--installed" class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</div><div id="badge--itop-ext-installed--to-be-uninstalled" class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</div><div id="badge--itop-ext-installed--not-uninstallable" class="ibo-badge ibo-block ibo-is-yellow" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</div>
 					</div>
 					<div class="ibo-extension-details--information--metadata">
 						<span>v1.2.3</span><span>Local extensions folder</span>

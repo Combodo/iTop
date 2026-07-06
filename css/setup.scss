@@ -611,32 +611,6 @@ body {
 .setup-extension--missing .setup-extension--icon{
 	color:#a00000;
 }
-.setup-extension-tag {
-  display: inline-flex;
-	background-color: grey;
-	border-radius: 8px;
-	padding-left: 3px;
-	padding-right: 3px;
-	margin-right: 3px;
-	&.installed{
-		background-color:#9eff9e
-	}
-	&.notinstalled{
-		background-color:#ed9eff
-	}
-	&.tobeinstalled{
-		background-color:#9ef0ff
-	}
-	&.tobeuninstalled{
-		background-color:#ff9e9e
-	}
-	&.notuninstallable{
-		background-color:#ffc98c
-	}
-	&.removed{
-		background-color: #969594
-	}
-}
 
 .ibo-extension-details {
 	align-items: flex-start;
