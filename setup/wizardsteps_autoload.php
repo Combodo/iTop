@@ -4,7 +4,6 @@ require_once(APPROOT.'setup/wizardsteps/WizardState.php');
 require_once(APPROOT.'setup/wizardsteps/WizardStep.php');
 require_once(APPROOT.'setup/wizardsteps/AbstractWizStepInstall.php');
 require_once(APPROOT.'setup/wizardsteps/WizStepWelcome.php');
-require_once(APPROOT.'setup/wizardsteps/WizStepInstallOrUpgrade.php');
 require_once(APPROOT.'setup/wizardsteps/WizStepDetectedInfo.php');
 require_once(APPROOT.'setup/wizardsteps/WizStepLicense.php');
 require_once(APPROOT.'setup/wizardsteps/WizStepLicense2.php');
