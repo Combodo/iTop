@@ -480,6 +480,11 @@ class RunTimeEnvironment
 			}
 		}
 		$aModulesToLoad = $this->GetModulesToLoad($this->sFinalEnv, $aDirsToCompile);
+		foreach ($aModulesToLoad as $sKey){
+			if (false !== strpos($sKey, 'enduser')){
+				SetupLog::Error(__METHOD__ . ':'.__LINE__. ' aModulesToLoad: ' . $sKey) ;
+			}
+		}
 		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile, true, $aModulesToLoad);
 
 		// Do load the required modules
@@ -503,6 +508,10 @@ class RunTimeEnvironment
 		$aModules = $oFactory->FindModules();
 		foreach ($aModules as $oModule) {
 			$sModule = $oModule->GetName();
+
+			if (false !== strpos($sModule, 'enduser')){
+				SetupLog::Error(__METHOD__ . ':'.__LINE__. ' oFactory->FindModules: ' . $sModule) ;
+			}
 			$bIsExtra = $this->GetExtensionMap()->ModuleIsChosenAsPartOfAnExtension($sModule, iTopExtension::SOURCE_REMOTE);
 			if (array_key_exists($sModule, $aAvailableModules)) {
 				if (($aAvailableModules[$sModule]['installed_version'] != '') || $bIsExtra && !$oModule->IsAutoSelect()) { //Extra modules are always unless they are 'AutoSelect'
@@ -519,6 +528,9 @@ class RunTimeEnvironment
 			$bModuleAdded = false;
 			foreach ($aModules as $oModule) {
 				if (!array_key_exists($oModule->GetName(), $aRet) && $oModule->IsAutoSelect()) {
+					if (false !== strpos($oModule->GetName(), 'enduser')){
+						SetupLog::Error(__METHOD__ . ':'.__LINE__. ' IsAutoSelect: ' . $oModule->GetName()) ;
+					}
 					SetupInfo::SetSelectedModules($aRet);
 					try {
 						$bSelected = $oPhpExpressionEvaluator->ParseAndEvaluateBooleanExpression($oModule->GetAutoSelect());
@@ -1379,6 +1391,16 @@ class RunTimeEnvironment
 	 */
 	public function CompileFrom($sSourceEnv, $bUseSymLinks = null)
 	{
+		$oConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
+		$sSourceDir = $oConfig->Get('source_dir');
+		list($aExtraDirs, ) = $this->GetDirsToCompile($sSourceDir, $sSourceEnv);
+		$this->InitExtensionMap($aExtraDirs, $oConfig);
+		$aSelectedExtensions = $this->GetExtensionMap()->GetSelectedExtensions($oConfig, [], []);
+		$aSelectedModules = $this->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions, $this->GetExtensionMap()->GetScannedModulesRootDirs());
+		return $this->DoCompile(array_keys($aSelectedExtensions), [], $aSelectedModules, $bUseSymLinks ?? false);
+
+/*
+
 		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
 		$sSourceDir = $oSourceConfig->Get('source_dir');
 
@@ -1413,7 +1435,7 @@ class RunTimeEnvironment
 
 		MetaModel::ResetAllCaches($this->sBuildEnv);
 
-		return array_keys($aModulesToCompile);
+		return array_keys($aModulesToCompile);*/
 	}
 
 	/**
@@ -1422,12 +1444,12 @@ class RunTimeEnvironment
 	 * @param array $aSelectedModules
 	 * @param boolean $bUseSymbolicLinks
 	 *
-	 * @return void
+	 * @return string[]
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 *
 	 */
-	public function DoCompile(array $aSelectedExtensionCodes, array $aRemovedExtensionCodes, array $aSelectedModules, bool $bUseSymbolicLinks = false): void
+	public function DoCompile(array $aSelectedExtensionCodes, array $aRemovedExtensionCodes, array $aSelectedModules, bool $bUseSymbolicLinks = false): array
 	{
 		SetupLog::Info('Compiling data model.');
 
@@ -1540,6 +1562,8 @@ class RunTimeEnvironment
 			$sInstanceUUID = utils::CreateUUID('filesystem');
 			file_put_contents($sInstanceUUIDFile, $sInstanceUUID);
 		}
+
+		return $aSelectedModules;
 	}
 
 	/**

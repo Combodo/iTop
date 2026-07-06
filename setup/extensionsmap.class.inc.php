@@ -763,4 +763,8 @@ class iTopExtensionsMap
 	{
 		return $this->aScannedDirs;
 	}
+
+	public function GetSelectedModules()
+	{
+	}
 }
