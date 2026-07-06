@@ -97,6 +97,9 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		}
 		$oExtensionDetails = new ExtensionDetails($sCode, $sLabel, $sDescription, $aMetaData, $aBadges, $sAbout);
 
+		if ($bCannotBeInstalled) {
+			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
+		}
 		if ($bSelected) {
 			$oExtensionDetails->GetToggler()->SetIsToggled(true);
 		}
