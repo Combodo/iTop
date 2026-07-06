@@ -880,7 +880,7 @@ EOF
 			$sTooltip .= '<div id="badge--'.$sId.'--not-installed" class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</div>';
 		}
 		if (!$aFlags['uninstallable']) {
-			$sTooltip .= '<div id="badge--'.$sId.'--not-uninstallable" class="ibo-badge ibo-block ibo-is-orange" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</div>';
+			$sTooltip .= '<div id="badge--'.$sId.'--not-uninstallable" class="ibo-badge ibo-block ibo-is-yellow" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</div>';
 		}
 
 		$sMetadata = '';

@@ -626,6 +626,14 @@ $oSampleBadgeOrange = BadgeUIBlockFactory::MakeOrange('badge orange', 'Tooltip')
 $oPage->AddUiBlock($oSampleBadgeOrange);
 $oSampleBadgeRed = BadgeUIBlockFactory::MakeRed('badge red', 'Tooltip');
 $oPage->AddUiBlock($oSampleBadgeRed);
+$oSampleBadgePink = BadgeUIBlockFactory::MakePink('badge pink', 'Tooltip');
+$oPage->AddUiBlock($oSampleBadgePink);
+$oSampleBadgePurple = BadgeUIBlockFactory::MakePurple('badge purple', 'Tooltip');
+$oPage->AddUiBlock($oSampleBadgePurple);
+$oSampleBadgeBlue = BadgeUIBlockFactory::MakeBlue('badge blue', 'Tooltip');
+$oPage->AddUiBlock($oSampleBadgeBlue);
+$oSampleBadgeYellow = BadgeUIBlockFactory::MakeYellow('badge yellow', 'Tooltip');
+$oPage->AddUiBlock($oSampleBadgeYellow);
 
 $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Extensions details layout', 3));
 

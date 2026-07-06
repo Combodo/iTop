@@ -9,6 +9,7 @@ class Badge extends UIBlock
 	public const BLOCK_CODE = 'ibo-badge';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/badge/layout';
 
+	//Colors defined in _badge.scss
 	/** @var string ENUM_COLOR_SCHEME_NEUTRAL */
 	public const ENUM_COLOR_SCHEME_NEUTRAL = 'neutral';
 	/** @var string ENUM_COLOR_SCHEME_VALIDATION */
@@ -25,12 +26,20 @@ class Badge extends UIBlock
 	public const ENUM_COLOR_SCHEME_RED = 'red';
 	/** @var string ENUM_COLOR_SCHEME_CYAN */
 	public const ENUM_COLOR_SCHEME_CYAN = 'cyan';
-	/** @var string DEFAULT_COLOR_SCHEME */
+	/** @var string ENUM_COLOR_SCHEME_GREY */
 	public const ENUM_COLOR_SCHEME_GREY = 'grey';
-	/** @var string DEFAULT_COLOR_SCHEME */
+	/** @var string ENUM_COLOR_SCHEME_BLUE_GREY */
 	public const ENUM_COLOR_SCHEME_BLUE_GREY = 'blue-grey';
-	/** @var string DEFAULT_COLOR_SCHEME */
+	/** @var string ENUM_COLOR_SCHEME_ORANGE */
 	public const ENUM_COLOR_SCHEME_ORANGE = 'orange';
+	/** @var string ENUM_COLOR_SCHEME_PURPLE */
+	public const ENUM_COLOR_SCHEME_PURPLE = 'purple';
+	/** @var string ENUM_COLOR_SCHEME_YELLOW */
+	public const ENUM_COLOR_SCHEME_YELLOW = 'yellow';
+	/** @var string ENUM_COLOR_SCHEME_BLUE */
+	public const ENUM_COLOR_SCHEME_BLUE = 'blue';
+	/** @var string ENUM_COLOR_SCHEME_PINK */
+	public const ENUM_COLOR_SCHEME_PINK = 'pink';
 	/** @var string DEFAULT_COLOR_SCHEME */
 	public const DEFAULT_COLOR_SCHEME = self::ENUM_COLOR_SCHEME_NEUTRAL;
 	private string $sLabel;

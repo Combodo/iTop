@@ -38,4 +38,20 @@ class BadgeUIBlockFactory extends AbstractUIBlockFactory
 	{
 		return new Badge($sLabel, Badge::ENUM_COLOR_SCHEME_ORANGE, $sTooltip, $sId);
 	}
+	public static function MakeYellow(string $sLabel, string $sTooltip = '', ?string $sId = null)
+	{
+		return new Badge($sLabel, Badge::ENUM_COLOR_SCHEME_YELLOW, $sTooltip, $sId);
+	}
+	public static function MakePurple(string $sLabel, string $sTooltip = '', ?string $sId = null)
+	{
+		return new Badge($sLabel, Badge::ENUM_COLOR_SCHEME_PURPLE, $sTooltip, $sId);
+	}
+	public static function MakeBlue(string $sLabel, string $sTooltip = '', ?string $sId = null)
+	{
+		return new Badge($sLabel, Badge::ENUM_COLOR_SCHEME_BLUE, $sTooltip, $sId);
+	}
+	public static function MakePink(string $sLabel, string $sTooltip = '', ?string $sId = null)
+	{
+		return new Badge($sLabel, Badge::ENUM_COLOR_SCHEME_PINK, $sTooltip, $sId);
+	}
 }

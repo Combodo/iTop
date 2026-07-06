@@ -19,6 +19,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 	private const BADGE_ID_TO_BE_UNINSTALLED = 'to-be-uninstalled';
 	private const BADGE_ID_NOT_UNINSTALLABLE = 'not-uninstallable';
 	private const BADGE_ID_MISSING_FROM_DISK = 'missing-from-disk';
+	private const BADGE_ID_CANNOT_BE_INSTALLED = 'cannot-be-installed';
 
 	public static function MakeInstalled(string $sCode, string $sLabel, string $sDescription = '', array $aMetaData = [], array $aExtraFlags = [], string $sAbout = '')
 	{
@@ -69,6 +70,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 	{
 		$aBadges = [];
 		$bUninstallable = $aExtraFlags['uninstallable'] ?? true;
+		$bCannotBeInstalled = $aExtraFlags['cannot-be-installed'] ?? false;
 		$bSelected = $aExtraFlags['selected'] ?? false;
 		$bDisabled = $aExtraFlags['disabled'] ?? false;
 		self::AddExtraBadges($aBadges, $bUninstallable, false, $sCode);
@@ -86,8 +88,19 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		);
 		$oBadgeToBeUninstalled->AddCSSClass('checked');
 		$aBadges[] = $oBadgeToBeUninstalled;
+		if ($bCannotBeInstalled) {
+			$bSelected = false;
+			$aBadges[] = BadgeUIBlockFactory::MakeOrange(
+				Dict::S('UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled'),
+				Dict::S('UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled+'),
+				self::GetBadgeId($sCode, self::BADGE_ID_CANNOT_BE_INSTALLED)
+			);
+		}
 		$oExtensionDetails = new ExtensionDetails($sCode, $sLabel, $sDescription, $aMetaData, $aBadges, $sAbout);
 
+		if ($bCannotBeInstalled) {
+			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
+		}
 		if ($bSelected) {
 			$oExtensionDetails->GetToggler()->SetIsToggled(true);
 		}
@@ -102,7 +115,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 	private static function AddExtraBadges(array &$aBadges, bool $bUninstallable, bool $bMissingFromDisk, string $sCode)
 	{
 		if (!$bUninstallable) {
-			$aBadges[] = BadgeUIBlockFactory::MakeOrange(
+			$aBadges[] = BadgeUIBlockFactory::MakeYellow(
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeNotUninstallable'),
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeNotUninstallable+'),
 				self::GetBadgeId($sCode, self::BADGE_ID_NOT_UNINSTALLABLE)
