@@ -24,6 +24,7 @@ use ContextTag;
 use CoreException;
 use Dict;
 use Exception;
+use IssueLog;
 use MetaModel;
 use MFCompiler;
 use RunTimeEnvironment;
@@ -143,21 +144,25 @@ class DataFeatureRemovalController extends Controller
 		$aParams['iColumnCount'] = $this->iColumnCount;
 		$aParams['aAvailableExtensions'] = $this->SplitArrayIntoColumns($this->GetExtensionsDiff($aAddedExtensions, $aRemovedExtensions), $this->iColumnCount);
 
-		if ("[]" === $aHiddenInputs['selected_modules']) {
-			//to make setup redirection work, we need to pass complex data structures to setup wizards (ie extension/module lists)
-			$oConfig = MetaModel::GetConfig();
-			$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
-			$aHiddenInputs['selected_extensions'] = $this->ConvertIntoSetupFormat($aSelectedExtensions);
+		//to make setup redirection work, we need to pass complex data structures to setup wizards (ie extension/module lists)
+		$oConfig = MetaModel::GetConfig();
+		$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
 
-			$oRunTimeEnvironment = $this->GetRuntimeEnvironment($aAddedExtensions, $aRemovedExtensions);
-			$aSearchDirs = [$oRunTimeEnvironment->GetBuildDir()];
-			$aSelectedModules = $oRunTimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions, $aSearchDirs);
+		$oRunTimeEnvironment = $this->GetRuntimeEnvironment($aAddedExtensions, $aRemovedExtensions);
+		$aSearchDirs = [$oRunTimeEnvironment->GetBuildDir()];
+		$aSelectedModules = $oRunTimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions, $aSearchDirs);
+		if ('[]' === $aHiddenInputs['selected_modules']) {
+			$aHiddenInputs['selected_extensions'] = $this->ConvertIntoSetupFormat($aSelectedExtensions);
 			$aHiddenInputs['selected_modules'] = $this->ConvertIntoSetupFormat($aSelectedModules);
 		}
 
+		IssueLog::Info(sMessage: '$aSelectedExtensions', aContext: $aSelectedExtensions);
+		IssueLog::Info(sMessage: '$aRemovedExtensions', aContext: $aRemovedExtensions);
+		IssueLog::Info(sMessage: '$aSelectedModules', aContext: $aSelectedModules);
+
 		$bForceCompilation = Session::Get('bForceCompilation', false);
 		try {
-			$this->Compile(array_keys($aSelectedExtensions), $aRemovedExtensions, array_keys($aSelectedModules), $bForceCompilation);
+			$this->Compile($aSelectedExtensions, array_keys($aRemovedExtensions), $aSelectedModules, $bForceCompilation);
 		} catch (CoreException $e) {
 			$aParams['DataFeatureRemovalErrorMessage'] = $e->getHtmlDesc();
 			$this->DisplayPage($aParams, 'AnalysisResult');
