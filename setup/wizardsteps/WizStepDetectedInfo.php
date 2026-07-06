@@ -217,12 +217,12 @@ HTML
 
 			$oPage->add('<div id="db_info"></div>');
 
-			$sDBServer = $this->oWizard->GetParameter('db_server', '');
-			$sDBUser = $this->oWizard->GetParameter('db_user', '');
-			$sDBPwd = $this->oWizard->GetParameter('db_pwd', '');
-			$sDBName = $this->oWizard->GetParameter('db_name', '');
+			$sDBServer = json_encode($this->oWizard->GetParameter('db_server', ''));
+			$sDBUser = json_encode($this->oWizard->GetParameter('db_user', ''));
+			$sDBPwd = json_encode($this->oWizard->GetParameter('db_pwd', ''));
+			$sDBName = json_encode($this->oWizard->GetParameter('db_name', ''));
+			$sTlsCA = json_encode($this->oWizard->GetParameter('db_tls_ca', ''));
 			$sTlsEnabled = $this->oWizard->GetParameter('db_tls_enabled', false) ? 1 : 0;
-			$sTlsCA = $this->oWizard->GetParameter('db_tls_ca', '');
 
 			$oPage->add_ready_script(
 				<<<EOF
@@ -247,12 +247,12 @@ function DoCheckDBConnection()
 {
 	iCheckDBTimer = null;
 	var oParams = {
-		'db_server': '$sDBServer',
-		'db_user': '$sDBUser',
-		'db_pwd': '$sDBPwd',
-		'db_name': '$sDBName',
+		'db_server': $sDBServer,
+		'db_user': $sDBUser,
+		'db_pwd': $sDBPwd,
+		'db_name': $sDBName,
 		'db_tls_enabled': $sTlsEnabled,
-		'db_tls_ca': '$sTlsCA',
+		'db_tls_ca': $sTlsCA,
 	}
 	if ((oXHRCheckDB != null) && (oXHRCheckDB != undefined))
 	{
@@ -268,11 +268,11 @@ EOF
 
 			$oMutex = new iTopMutex(
 				'cron'.$sDBName.$this->oWizard->GetParameter('db_prefix', ''),
-				$sDBServer,
-				$sDBUser,
-				$sDBPwd,
+				$this->oWizard->GetParameter('db_server', ''),
+				$this->oWizard->GetParameter('db_user', ''),
+				$this->oWizard->GetParameter('db_pwd', ''),
 				$this->oWizard->GetParameter('db_tls_enabled', ''),
-				$sTlsCA
+				$this->oWizard->GetParameter('db_tls_ca', '')
 			);
 			if ($oMutex->IsLocked()) {
 				$oPage->add('<div class="message">'.ITOP_APPLICATION.' cron process is being executed on the target database. '.ITOP_APPLICATION.' cron process will be stopped during the setup execution.</div>');
