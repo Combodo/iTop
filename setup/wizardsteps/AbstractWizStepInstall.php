@@ -27,7 +27,7 @@ abstract class AbstractWizStepInstall extends WizardStep
 	 */
 	protected function BuildConfig()
 	{
-		$sMode = $this->oWizard->GetParameter('install_mode', 'install');
+		$sMode = $this->oWizard->GetParameter('mode', 'install');
 		$aSelectedModules = json_decode($this->oWizard->GetParameter('selected_modules'), true);
 		$aSelectedExtensions = json_decode($this->oWizard->GetParameter('selected_extensions'), true);
 		$sBackupDestination = '';

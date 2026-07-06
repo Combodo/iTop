@@ -275,7 +275,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 			$oPage->warning($this->oMissingDependencyException->getHtmlDesc(), $this->oMissingDependencyException->getMessage());
 		}
 
-		$this->bUpgrade = ($this->oWizard->GetParameter('install_mode') != 'install');
+		$this->bUpgrade = ($this->oWizard->GetParameter('mode') != 'install');
 		$aStepInfo = $this->GetStepInfo();
 		$oPage->add_style("div.choice { margin: 0.5em;}");
 		$oPage->add_style("div.choice a { text-decoration:none; font-weight: bold; color: #1C94C4 }");

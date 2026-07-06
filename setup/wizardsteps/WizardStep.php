@@ -226,15 +226,15 @@ class Step1 extends WizardStep
 	public function ProcessParams($bMoveForward = true)
 	{
 		$sNextStep = '';
-		$sInstallMode = utils::ReadParam('install_mode');
+		$sInstallMode = utils::ReadParam('mode');
 		if ($sInstallMode == 'install')
 		{
-			$this->oWizard->SetParameter('install_mode', 'install');
+			$this->oWizard->SetParameter('mode', 'install');
 			$sNextStep = Step2::class;
 		}
 		else
 		{
-			$this->oWizard->SetParameter('install_mode', 'upgrade');
+			$this->oWizard->SetParameter('mode', 'upgrade');
 			$sNextStep = Step2bis::class;
 
 		}
@@ -244,7 +244,7 @@ class Step1 extends WizardStep
 	public function Display(WebPage $oPage)
 	{
 		$oPage->p('This is Step 1!');
-		$sInstallMode = $this->oWizard->GetParameter('install_mode', 'install');
+		$sInstallMode = $this->oWizard->GetParameter('mode', 'install');
 		$sChecked = ($sInstallMode == 'install') ? ' checked ' : '';
 		$oPage->p('<input type="radio" name="install_mode" value="install"'.$sChecked.'/> Install');
 		$sChecked = ($sInstallMode == 'upgrade') ? ' checked ' : '';

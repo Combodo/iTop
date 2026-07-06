@@ -55,7 +55,7 @@ class WizStepWelcome extends WizardStep
 
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
-		if ($this->oWizard->GetParameter('install_mode', 'install') === 'install') {
+		if ($this->oWizard->GetParameter('mode', 'install') === 'install') {
 
 			return new WizardState(WizStepLicense::class);
 		}
@@ -70,7 +70,7 @@ class WizStepWelcome extends WizardStep
 
 		$aPreviousInstance = SetupUtils::GetPreviousInstance(APPROOT);
 		if ($aPreviousInstance['found']) {
-			$this->oWizard->SetParameter('install_mode', 'upgrade');
+			$this->oWizard->SetParameter('mode', 'upgrade');
 			$this->oWizard->SetParameter('db_server', $aPreviousInstance['db_server']);
 			$this->oWizard->SetParameter('db_user', $aPreviousInstance['db_user']);
 			$this->oWizard->SetParameter('db_pwd', $aPreviousInstance['db_pwd']);
@@ -80,7 +80,7 @@ class WizStepWelcome extends WizardStep
 			$this->oWizard->SetParameter('db_tls_ca', $aPreviousInstance['db_tls_ca'] ?? '');
 			$this->oWizard->SetParameter('graphviz_path', $aPreviousInstance['graphviz_path']);
 		} else {
-			$this->oWizard->SetParameter('install_mode', 'install');
+			$this->oWizard->SetParameter('mode', 'install');
 			$sFullSourceDir = SetupUtils::GetLatestDataModelDir();
 			$this->oWizard->SetParameter('source_dir', $sFullSourceDir);
 			$this->oWizard->SetParameter('datamodel_version', SetupUtils::GetDataModelVersion($sFullSourceDir));

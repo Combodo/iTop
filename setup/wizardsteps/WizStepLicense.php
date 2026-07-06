@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\WebPage\WebPage;
-
 /**
  * License acceptation screen
  */
@@ -49,7 +47,7 @@ class WizStepLicense extends WizardStep
 	 */
 	private function NeedsGdprConsent()
 	{
-		$sMode = $this->oWizard->GetParameter('install_mode');
+		$sMode = $this->oWizard->GetParameter('mode');
 
 		if ($sMode !== 'install') {
 			return false;
