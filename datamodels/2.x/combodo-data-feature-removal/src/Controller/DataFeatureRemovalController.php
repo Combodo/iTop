@@ -131,8 +131,6 @@ class DataFeatureRemovalController extends Controller
 			$aHiddenInputs['removed_extensions'] = $this->ConvertIntoSetupFormat($aRemovedExtensions);
 		}
 
-		$aRemoveExtensionCodes = array_keys($aRemovedExtensions);
-
 		$aParams['aAddedExtensions'] = $aAddedExtensions;
 		$aParams['aRemovedExtensions'] = $aRemovedExtensions;
 
@@ -218,9 +216,11 @@ class DataFeatureRemovalController extends Controller
 	}
 
 	/**
-	 * @param array $aAddedExtensions
-	 * @param array $aRemovedExtensions
+	 * @param array $aSelectedExtensionCodes
+	 * @param array $aRemovedExtensionCodes
+	 * @param array $aSelectedModules
 	 * @param bool $bForceCompilation
+	 *
 	 * @return void
 	 * @throws \ConfigException
 	 * @throws \CoreException
