@@ -118,7 +118,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Query/Attribute:usages' => 'Usages~~',
 	'Class:Query/Attribute:usages+' => 'Specify the possible usages for this query~~',
 	'Class:Query/Attribute:usages/Value:export' => 'Export~~',
-	'Class:Query/Attribute:usages/Value:reference' => 'Reference for IA~~',
+	'Class:Query/Attribute:usages/Value:reference' => 'Reference for AI~~',
 	'Class:Query/Attribute:usages/Value:notif' => 'Notification~~',
 	'Class:Query/Attribute:usages/Value:draft' => 'Draft~~',
 	'Class:Query/Attribute:usages/Value:dashlet' => 'Dashlet~~',
