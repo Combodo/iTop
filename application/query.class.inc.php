@@ -123,7 +123,7 @@ abstract class Query extends cmdbAbstractObject
 				"depends_on" => [],
 				"display_style" => 'select',
 				"always_load_in_tables" => false,
-				"on_target_delete" => DEL_MANUAL,
+				"on_target_delete" => DEL_AUTO,
 			]
 		));
 
