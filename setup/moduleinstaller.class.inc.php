@@ -326,34 +326,9 @@ abstract class ModuleInstallerAPI
 	public static function LoadLocalizedDataOnCrossingVersion(Config $oConfiguration, ?string $sPreviousVersion, ?string $sCurrentVersion, string $sFirstLoadingVersion, string $sDefaultFileName): void
 	{
 		self::AssertLoadLocalizedDataParametersAreValid($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion);
-
-		// The loading is done only if
-		// - it's a first install of the module
-		// - or it's an upgrade of that module (PreviousVersion is less than the CurrentVersion), which means that we are really upgrading (and not reinstalling the same version or downgrading), and
-		//    - either the FirstLoadingVersion is between the PreviousVersion and the CurrentVersion
-		//    - or the FirstLoadingVersion is empty, forcing the loading on all upgrades,
-		if (($sPreviousVersion === '') ||
-			(version_compare($sPreviousVersion, $sCurrentVersion, '<')
-		&& version_compare($sPreviousVersion, $sFirstLoadingVersion, '<')
-		&& version_compare($sFirstLoadingVersion, $sCurrentVersion, '<='))) {
-
+		if (self::IsVersionCrossed($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion)) {
 			$sWishedLanguage = $oConfiguration->GetDefaultLanguage();
 			self::LoadLocalizedData($sWishedLanguage, $sDefaultFileName);
-		}
-	}
-	/**
-	 * Helper which will be removed as the standard knows how to load localized data on first install, but this is kept for backward compatibility.
-	* @param \Config $oConfiguration
-	* @param string $sPreviousVersion The previous version of the module (empty string in case of first install)
-	 * @param string $sFilePattern The pattern of the file to load, with {{language_code}} as placeholder for the language code (e.g. 'data.sample.{{language_code}}.xml')
-	 *
-	 * @return void
-	*/
-	public static function LoadLocalizedDataOnNewInstall(Config $oConfiguration, ?string $sPreviousVersion, string $sFilePattern): void
-	{
-		if (utils::IsNullOrEmptyString($sPreviousVersion)) {
-			$sWishedLanguage = $oConfiguration->GetDefaultLanguage();
-			self::LoadLocalizedData($sWishedLanguage, $sFilePattern);
 		}
 	}
 
@@ -379,27 +354,6 @@ abstract class ModuleInstallerAPI
 		$oDataLoader->StartSession($oMyChange);
 		$oDataLoader->LoadFile($sFileName, false, true);
 		$oDataLoader->EndSession();
-	}
-
-	/**
-	 * @throws \CoreUnexpectedValue
-	 */
-	private static function AssertLoadLocalizedDataParametersAreValid(?string $sPreviousVersion, ?string $sCurrentVersion, string $sFirstLoadingVersion): void
-	{
-		if (($sPreviousVersion !== '') && !self::IsValidLocalizedDataVersion($sPreviousVersion)) {
-			throw new CoreUnexpectedValue("LoadLocalizedData expects sPreviousVersion to be empty or match x.y[.z][-name], got '{$sPreviousVersion}'");
-		}
-		if (!self::IsValidLocalizedDataVersion($sCurrentVersion)) {
-			throw new CoreUnexpectedValue("LoadLocalizedData expects sCurrentVersion to match x.y[.z][-name], got '{$sCurrentVersion}'");
-		}
-		if (($sFirstLoadingVersion !== '') && !self::IsValidLocalizedDataVersion($sFirstLoadingVersion)) {
-			throw new CoreUnexpectedValue("LoadLocalizedData expects sFirstLoadingVersion to match x.y[.z][-name], got '{$sFirstLoadingVersion}'");
-		}
-	}
-
-	private static function IsValidLocalizedDataVersion(string $sVersion): bool
-	{
-		return (preg_match('/^\d+\.\d+(?:\.\d+)?(?:-[A-Za-z0-9]+)?$/', $sVersion) === 1);
 	}
 
 	/**
@@ -430,5 +384,41 @@ abstract class ModuleInstallerAPI
 			$sFileName = $sOriginalFileName;
 		}
 		return $sFileName;
+	}
+
+	/**
+	 * @throws \CoreUnexpectedValue
+	 */
+	private static function AssertLoadLocalizedDataParametersAreValid(?string $sPreviousVersion, ?string $sCurrentVersion, string $sFirstLoadingVersion): void
+	{
+		if (($sPreviousVersion !== '') && !self::IsValidLocalizedDataVersion($sPreviousVersion)) {
+			throw new CoreUnexpectedValue("LoadLocalizedData expects sPreviousVersion to be empty or match x.y[.z][-name], got '{$sPreviousVersion}'");
+		}
+		if (!self::IsValidLocalizedDataVersion($sCurrentVersion)) {
+			throw new CoreUnexpectedValue("LoadLocalizedData expects sCurrentVersion to match x.y[.z][-name], got '{$sCurrentVersion}'");
+		}
+		if (($sFirstLoadingVersion !== '') && !self::IsValidLocalizedDataVersion($sFirstLoadingVersion)) {
+			throw new CoreUnexpectedValue("LoadLocalizedData expects sFirstLoadingVersion to match x.y[.z][-name], got '{$sFirstLoadingVersion}'");
+		}
+	}
+
+	private static function IsValidLocalizedDataVersion(string $sVersion): bool
+	{
+		return (preg_match('/^\d+\.\d+(?:\.\d+)?(?:-[A-Za-z0-9]+)?$/', $sVersion) === 1);
+	}
+
+	/**
+	 * @param string|null $sPreviousVersion
+	 * @param string|null $sCurrentVersion
+	 * @param string $sFirstLoadingVersion
+	 *
+	 * @return bool
+	 */
+	private static function IsVersionCrossed(?string $sPreviousVersion, ?string $sCurrentVersion, string $sFirstLoadingVersion): bool
+	{
+		return ($sPreviousVersion === '') ||
+			(version_compare($sPreviousVersion, $sCurrentVersion, '<')
+				&& version_compare($sPreviousVersion, $sFirstLoadingVersion, '<')
+				&& version_compare($sFirstLoadingVersion, $sCurrentVersion, '<='));
 	}
 }

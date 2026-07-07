@@ -1264,7 +1264,7 @@ class RunTimeEnvironment
 			if (!file_exists($sFileName)) {
 				throw(new Exception("File $sFileName does not exist"));
 			}
-			$sFileName = ModuleInstallerAPI::GetLocalizedFileName($sFileName, $sDefaultLanguage);
+			$sFileName = ModuleInstallerAPI::GetLocalizedFileName($sDefaultLanguage, $sFileName);
 			$oDataLoader->LoadFile($sFileName);
 			$sResult = sprintf("loading of %s done.", basename($sFileName));
 			SetupLog::Info($sResult);

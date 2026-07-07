@@ -25,14 +25,13 @@ SetupWebPage::AddModule(
 			'main.itop-config-mgmt.php',
 		],
 		'data.struct' => [
-			'data/en_us.data.itop-brand.xml',
-			'data/en_us.data.itop-networkdevicetype.xml',
-			'data/en_us.data.itop-osfamily.xml',
-			'data/en_us.data.itop-osversion.xml',
+			'data/data.itop-brand.xml',
+			'data/data.itop-networkdevicetype.xml',
+			'data/data.itop-osfamily.xml',
+			'data/data.itop-osversion.xml',
 		],
 		'data.sample' => [
 			'data/data.sample.model.xml',
-			'data/data.sample.networkdevicetype.xml',
 			'data/data.sample.servers.xml',
 			'data/data.sample.nw-devices.xml',
 			'data/data.sample.software.xml',

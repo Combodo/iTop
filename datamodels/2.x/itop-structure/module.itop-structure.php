@@ -32,7 +32,6 @@ SetupWebPage::AddModule(
 			'data/data.sample.persons.xml',
 			'data/data.sample.teams.xml',
 			'data/data.sample.contactteam.xml',
-			'data/data.sample.contacttype.xml',
 			'data/data.sample.auditdomain.xml',
 			'data/data.sample.auditcategory.xml',
 			'data/data.sample.auditcategory-auditdomain.xml',

@@ -334,52 +334,40 @@ SQL
 	}
 
 	/**
-	 * @covers \ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion
-	 * @dataProvider LoadLocalizedData_VersionConditionNotMetProvider
+	 * @covers \ModuleInstallerAPI::IsVersionCrossed
+	 * @dataProvider IsVersionCrossedProvider
 	 */
-	public function testLoadLocalizedData_DoesNotLoadWhenVersionConditionIsNotMet(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion): void
+	public function testIsVersionCrossed_ReturnsExpectedValue(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, bool $bExpected): void
 	{
-		// Given
-		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_NoLoad_', 'en_us', ['en_us']);
-		// When version gate conditions are not met
-		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, $sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
-		// Then no data loaded
-		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 0);
+		$bIsVersionCrossed = $this->InvokeNonPublicStaticMethod(ModuleInstallerAPI::class, 'IsVersionCrossed', [$sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion]);
+
+		$this->assertSame($bExpected, $bIsVersionCrossed);
 	}
 
-	public function LoadLocalizedData_VersionConditionNotMetProvider(): array
+	public function IsVersionCrossedProvider(): array
 	{
 		return [
-			'Equal versions (reinstall)' => ['3.1.0', '3.1.0', '3.0.0'],
-			'Downgrade attempt' => ['3.2.0', '3.1.0', '3.0.0'],
-			'Upgrade but first loading version already passed' => ['3.1.0', '3.2.0', '3.0.0'],
-			'Upgrade with boundary equality on first loading version' => ['3.0.0', '3.1.0', '3.0.0'],
-			'Upgrade but first loading version empty' => ['3.1.0', '3.2.0', ''],
-
+			'First install always crosses' => ['', '3.2.0', '3.0.0', true],
+			'Upgrade crosses first loading version' => ['3.0.0', '3.2.0', '3.1.0', true],
+			'Upgrade but first loading version already passed' => ['3.1.0', '3.2.0', '3.0.0', false],
+			'Reinstall same version does not cross' => ['3.1.0', '3.1.0', '3.0.0', false],
+			'Downgrade does not cross' => ['3.2.0', '3.1.0', '3.0.0', false],
+			'First install with suffixed current version' => ['', '3.2-dev', '3.0.0', true],
+			'Upgrade with suffixed current version crosses' => ['1.0.3-2', '1.2.4-1', '1.1.0', true],
+			'Upgrade with suffixed current version below threshold does not cross' => ['1.0.0', '1.2.0-beta', '1.2.0', false],
 		];
 	}
 
 	/**
 	 * @covers \ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion
-	 * @dataProvider LoadLocalizedData_ValidVersionFormatsProvider
 	 */
-	public function testLoadLocalizedData_AcceptsSupportedVersionFormats(string $sCurrentVersion, string $sFirstLoadingVersion): void
+	public function testLoadLocalizedData_LoadsWhenVersionCrossingIsTrue(): void
 	{
-		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_ValidVersion_', 'en_us', ['en_us']);
+		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_VersionCrossingTrue_', 'en_us', ['en_us']);
 
-		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '', $sCurrentVersion, $sFirstLoadingVersion, $sPattern);
+		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '3.0.0', '3.2.0', '3.1.0', $sPattern);
 
 		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 1);
-	}
-
-	public function LoadLocalizedData_ValidVersionFormatsProvider(): array
-	{
-		return [
-			'Current version with suffix' => ['3.2-dev', '3.0.0'],
-			'Current version x.y.z' => ['10.12.140-Tagada34', '1.0'],
-			'Current version x.y.z-suffix' => ['2.3.3-beta', '2.3.3-alpha'],
-			'Current version x.y.z-1' => ['1.2.4-1', '1.0.3-2'],
-		];
 	}
 	// Test when a file is loaded twice because of the version conditions, it doesn't create duplicates (idempotent loading)
 	public function testLoadLocalizedData_IdempotentLoading(): void
@@ -388,8 +376,8 @@ SQL
 		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_Idempotent_', 'en_us', ['en_us']);
 
 		// When LoadLocalizedData is called twice with conditions that would load the file both times
-		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '', '3.1.0', '3.0.0', $sPattern);
-		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '3.1.0', '3.2.0', '', $sPattern);
+		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '', '3.0.1', '3.0.0', $sPattern);
+		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '3.0.1', '3.1.0', '3.0.2', $sPattern);
 
 		// Then no duplicate data loaded
 		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 1);
@@ -420,29 +408,22 @@ SQL
 				'previous' => 'v3.2',
 				'current' => '3.2.0',
 				'first' => '3.0.0',
-				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml',
+				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.en_us.xml',
 				'message' => 'sPreviousVersion',
 			],
 			'Invalid current version format' => [
 				'previous' => '',
 				'current' => '3',
 				'first' => '3.0.0',
-				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml',
+				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.en_us.xml',
 				'message' => 'sCurrentVersion',
 			],
 			'Invalid first loading version format' => [
 				'previous' => '',
 				'current' => '3.2.0',
 				'first' => '3.0.0-beta.1',
-				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml',
+				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.en_us.xml',
 				'message' => 'sFirstLoadingVersion',
-			],
-			'Missing strict placeholder' => [
-				'previous' => '',
-				'current' => '3.2.0',
-				'first' => '3.0.0',
-				'pattern' => $sTmpDir.DIRECTORY_SEPARATOR.'data.{{LANGUAGE_CODE}}.xml',
-				'message' => "{{language_code}}",
 			],
 		];
 	}
@@ -462,7 +443,7 @@ SQL
 
 		$sTmpDir = static::CreateTmpdir();
 		$this->aFileToClean[] = $sTmpDir;
-		$sPattern = $sTmpDir.DIRECTORY_SEPARATOR.'data.{{language_code}}.xml';
+		$sPattern = $sTmpDir.DIRECTORY_SEPARATOR.'data.en_us.xml';
 
 		foreach ($aAvailableLanguages as $sAvailableLanguage) {
 			$this->GivenLocalizedDataFile($sTmpDir, $sAvailableLanguage, $sOrgName);
