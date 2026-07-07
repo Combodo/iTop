@@ -1540,7 +1540,7 @@ class RunTimeEnvironment
 		$aExtensionDirs = [];
 		$aFromSelectedExtensionModules = [];
 		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
-			if ($oExtension->IsMarkedAsChosen() && is_dir($oExtension->sSourceDir)) {
+			if (in_array($oExtension->sCode, $aChoices) && is_dir($oExtension->sSourceDir)) {
 				$aExtensionDirs [] = $oExtension->sSourceDir;
 				$aFromSelectedExtensionModules = array_merge($aFromSelectedExtensionModules, $oExtension->aModules);
 			}
