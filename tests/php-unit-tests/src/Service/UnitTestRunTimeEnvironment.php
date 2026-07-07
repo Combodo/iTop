@@ -111,6 +111,7 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 	protected function GetAdditionalMFModulesBeforeFinalDeltaToCompile(string $sSourceEnv, array $aScannedModulesRootDirs): array
 	{
 		\SetupLog::Info(__METHOD__);
+		$aRet = [];
 		if ($this->bUseDelta) {
 			foreach ($this->GetCustomDatamodelFiles() as $sDeltaFile) {
 				$sDeltaId = preg_replace('/[^\d\w]/', '', $sDeltaFile);
@@ -212,8 +213,8 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 					}
 				}
 
-				$aExtensionsPaths = $oTestClassInstance->GetAdditionalFeaturePaths();
-				$this->aAdditionExtensionFoldersByCode = array_merge($this->aAdditionExtensionFoldersByCode, $aExtensionsPaths);
+				// Add additional extension paths
+				$this->aAdditionExtensionFoldersByCode = array_merge($this->aAdditionExtensionFoldersByCode, $oTestClassInstance->GetAdditionalFeaturePaths());
 			}
 		}
 	}

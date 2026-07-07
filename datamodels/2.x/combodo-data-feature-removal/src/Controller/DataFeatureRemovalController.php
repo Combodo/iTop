@@ -8,7 +8,6 @@
 namespace Combodo\iTop\DataFeatureRemoval\Controller;
 
 require_once APPROOT.'setup/feature_removal/SetupAudit.php';
-require_once APPROOT.'setup/feature_removal/DryRemovalRuntimeEnvironment.php';
 
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
@@ -20,7 +19,6 @@ use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
 use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
 use Combodo\iTop\DataFeatureRemoval\Service\StaticDeletionPlan;
 use Combodo\iTop\Service\Session\SessionParameters;
-use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use ContextTag;
 use CoreException;
@@ -40,10 +38,10 @@ class DataFeatureRemovalController extends Controller
 	private array $aCountClassesToCleanup = [];
 	private array $aAnalysisDataTable = [];
 	private array $aDeletionExecutionSummary = [];
-	private ?RuntimeEnvironment $oRuntimeEnvironment = null;
 
 	private int $iCount = 0;
 	private int $iColumnCount = 2;
+	private RunTimeEnvironment $oRuntimeEnvironment;
 
 	public function OperationMain($sErrorMessage = null): void
 	{
@@ -144,23 +142,20 @@ class DataFeatureRemovalController extends Controller
 		$aParams['aAvailableExtensions'] = $this->SplitArrayIntoColumns($this->GetExtensionsDiff($aAddedExtensions, $aRemovedExtensions), $this->iColumnCount);
 
 		//to make setup redirection work, we need to pass complex data structures to setup wizards (ie extension/module lists)
+		$sSourceEnv = MetaModel::GetEnvironment();
+		$this->oRuntimeEnvironment = new RunTimeEnvironment($sSourceEnv, false);
+
 		if ('[]' === $aHiddenInputs['selected_modules']) {
 			$oConfig = MetaModel::GetConfig();
 			$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
-
-			$oRunTimeEnvironment = $this->GetRuntimeEnvironment($aAddedExtensions, $aRemovedExtensions);
-			[$aDummy, $aSearchDirs] = $oRunTimeEnvironment->GetDirsToCompile($oConfig->Get('source_dir'));
-			$aSelectedModules = $oRunTimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions, $aSearchDirs);
 			$aHiddenInputs['selected_extensions'] = $this->ConvertIntoSetupFormat($aSelectedExtensions);
+
+			$aSelectedModules = $this->oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
 			$aHiddenInputs['selected_modules'] = $this->ConvertIntoSetupFormat($aSelectedModules);
 		} else {
 			$aSelectedExtensions = json_decode($aHiddenInputs['selected_extensions'], true);
 			$aSelectedModules = json_decode($aHiddenInputs['selected_modules'], true);
 		}
-
-		IssueLog::Info(sMessage: '$aSelectedExtensions', aContext: $aSelectedExtensions);
-		IssueLog::Info(sMessage: '$aRemovedExtensions', aContext: $aRemovedExtensions);
-		IssueLog::Info(sMessage: '$aSelectedModules', aContext: $aSelectedModules);
 
 		try {
 			$this->Compile($aSelectedExtensions, array_keys($aRemovedExtensions), $aSelectedModules);
@@ -174,7 +169,6 @@ class DataFeatureRemovalController extends Controller
 			return;
 		}
 
-		$sSourceEnv = MetaModel::GetEnvironment();
 		$oSetupAudit = new SetupAudit($sSourceEnv);
 		$aGetRemovedClasses = array_keys($oSetupAudit->RunDataAudit());
 		DataFeatureRemovalLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
@@ -219,7 +213,6 @@ class DataFeatureRemovalController extends Controller
 	 * @param array $aSelectedExtensionCodes
 	 * @param array $aRemovedExtensionCodes
 	 * @param array $aSelectedModules
-	 * @param bool $bForceCompilation
 	 *
 	 * @return void
 	 * @throws \ConfigException
@@ -237,24 +230,14 @@ class DataFeatureRemovalController extends Controller
 
 		if ($bIsDirEmpty || $bForceCompilation) {
 			Session::Unset('bForceCompilation');
+			$this->oRuntimeEnvironment->CopySetupFiles();
 			DataFeatureRemovalLog::Debug(
 				__METHOD__,
 				null,
 				['sSourceEnv' => $sSourceEnv, 'sBuildDir' => $sBuildDir, 'bIsDirEmpty' => $bIsDirEmpty, glob("$sBuildDir/*")]
 			);
-			$oRuntimeEnvironment = new RunTimeEnvironment($sSourceEnv, false);
-			$oRuntimeEnvironment->DoCompile($aSelectedExtensionCodes, $aRemovedExtensionCodes, $aSelectedModules, MFCompiler::CanUseSymbolicLinks());
+			$this->oRuntimeEnvironment->DoCompile($aSelectedExtensionCodes, $aRemovedExtensionCodes, $aSelectedModules, MFCompiler::CanUseSymbolicLinks());
 		}
-	}
-
-	private function GetRuntimeEnvironment(array $aAddedExtensions, array $aRemovedExtensions): RunTimeEnvironment
-	{
-		if (is_null($this->oRuntimeEnvironment)) {
-			$sSourceEnv = MetaModel::GetEnvironment();
-			$this->oRuntimeEnvironment = new DryRemovalRuntimeEnvironment($sSourceEnv, $aAddedExtensions, $aRemovedExtensions);
-		}
-
-		return $this->oRuntimeEnvironment;
 	}
 
 	private function GetExecutionSummaryTable(): array

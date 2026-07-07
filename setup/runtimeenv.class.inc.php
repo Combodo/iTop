@@ -71,27 +71,7 @@ class RunTimeEnvironment
 		return $this->oExtensionsMap;
 	}
 
-	public function GetDirsToCompile(string $sSourceDir): array
-	{
-		$sSourceDirFull = APPROOT.$sSourceDir;
-		if (!is_dir($sSourceDirFull)) {
-			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
-		}
-		$aDirsToCompile = [$sSourceDirFull];
-		if (is_dir(APPROOT.'extensions')) {
-			$aDirsToCompile[] = APPROOT.'extensions';
-		}
-		$sExtraDir = utils::GetDataPath().$this->sBuildEnv.'-modules/';
-		if (is_dir($sExtraDir)) {
-			$aDirsToCompile[] = $sExtraDir;
-		}
-
-		$aExtraDirs = $this->GetExtraDirsToScan($aDirsToCompile);
-		$aDirsToCompile = array_merge($aDirsToCompile, $aExtraDirs);
-		return [$aExtraDirs, $aDirsToCompile];
-	}
-
-	public function InitExtensionMap(array $aExtraDirs, Config $oSourceConfig)
+	private function InitExtensionMap(Config $oSourceConfig)
 	{
 		if (is_null($this->oExtensionsMap)) {
 			// Actually read the modules available for the build environment,
@@ -423,16 +403,6 @@ class RunTimeEnvironment
 		}
 		$oConfig->WriteToFile($sBuildConfigFile);
 		chmod($sBuildConfigFile, 0440); // Read-only for owner and group, nothing for others
-	}
-
-	/**
-	 * Return an array with extra directories to scan for extensions/modules to install
-	 * @return string[]
-	 */
-	protected function GetExtraDirsToScan($aDirs = [])
-	{
-		// Do nothing, overload this method if needed
-		return [];
 	}
 
 	/**
@@ -1311,11 +1281,9 @@ class RunTimeEnvironment
 	public function CompileFrom($sSourceEnv, $bUseSymLinks = null)
 	{
 		$oConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
-		$sSourceDir = $oConfig->Get('source_dir');
-		list($aExtraDirs, ) = $this->GetDirsToCompile($sSourceDir);
-		$this->InitExtensionMap($aExtraDirs, $oConfig);
+		$this->InitExtensionMap($oConfig);
 		$aSelectedExtensions = $this->GetExtensionMap()->GetSelectedExtensions($oConfig, [], []);
-		$aSelectedModules = $this->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions, $this->GetExtensionMap()->GetScannedModulesRootDirs());
+		$aSelectedModules = $this->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
 		return $this->DoCompile(array_keys($aSelectedExtensions), [], $aSelectedModules, $bUseSymLinks ?? false);
 	}
 
@@ -1546,40 +1514,22 @@ class RunTimeEnvironment
 	}
 
 	/**
-	 * @param string $sSourceEnv
-	 * @param array<string> $aSearchDirs : module/extension dirs to load if they are included in choices
+	 * Return modules based on installation choices+package
 	 *
-	 * @return array| null
-	 * @throws \ConfigException
-	 * @throws \CoreException
+	 * @param \Config $oConfig
+	 * @param array|bool $aChoices
+	 *
+	 * @return array|null
 	 * @throws \ModuleInstallationException
 	 */
-	protected function GetModulesToLoad(string $sSourceEnv, array $aSearchDirs): ?array
-	{
-		if (is_null($this->GetExtensionMap())) {
-			return null;
-		}
-
-		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
-
-		$aChoices = $this->GetExtensionMap()->GetChoicesFromDatabase($oSourceConfig);
-		return $this->GetModulesToLoadFromChoices($oSourceConfig, $aChoices, $aSearchDirs);
-	}
-
-	/**
-	 * Return modules based on installation choices+package
-* @param \Config $oConfig
-* @param array|bool $aChoices
-* @param array $aSearchDirs
-* @return array|null
-* @throws \ModuleInstallationException
-	 */
-	public function GetModulesToLoadFromChoices(Config $oConfig, array|bool $aChoices, array $aSearchDirs): ?array
+	public function GetModulesToLoadFromChoices(Config $oConfig, array|bool $aChoices): ?array
 	{
 		if (false === $aChoices) {
 			return null;
 		}
 
+		$this->InitExtensionMap($oConfig);
+		$aSearchDirs = $this->GetExtensionMap()->GetScannedModulesRootDirs();
 		$sSourceDir = $oConfig->Get('source_dir');
 
 		$sInstallFilePath = APPROOT.$sSourceDir.'/installation.xml';
