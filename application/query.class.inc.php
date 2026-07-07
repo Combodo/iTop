@@ -168,6 +168,7 @@ abstract class Query extends cmdbAbstractObject
 
 		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 	}
+
 	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = [])
 	{
 		// read only attribute
