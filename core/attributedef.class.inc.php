@@ -897,6 +897,19 @@ abstract class AttributeDefinition
 		return null;
 	}
 
+	public function TrimValue(string $sValue)
+	{
+		$iMaxSize = $this->GetMaxSize();
+		$sLength = mb_strlen($sValue);
+		if ($iMaxSize && ($sLength > $iMaxSize)) {
+			$sMessage = " -truncated ($sLength chars)";
+
+			return mb_substr($sValue, 0, $iMaxSize - mb_strlen($sMessage)).$sMessage;
+		}
+
+		return $sValue;
+	}
+
 	/**
 	 * @return mixed|null
 	 * @deprecated never used
@@ -4217,6 +4230,21 @@ class AttributeText extends AttributeString
 	protected function GetSQLCol($bFullSpec = false)
 	{
 		return "TEXT".CMDBSource::GetSqlStringColumnDefinition();
+	}
+
+	public function TrimValue(string $sValue)
+	{
+		$iMaxSize = $this->GetMaxSize();
+		$sLength = strlen($sValue);
+		if ($iMaxSize && ($sLength > $iMaxSize)) {
+			$sMessage = " -truncated ($sLength chars)";
+			$sVal = substr($sValue, 0, $iMaxSize - strlen($sMessage));
+
+			//executes the "mb_substr" function to ensure a character is not truncated in the middle.
+			return mb_substr($sValue, 0, mb_strlen($sVal) - 1).$sMessage;
+		}
+
+		return $sValue;
 	}
 
 	public function GetSQLColumns($bFullSpec = false)

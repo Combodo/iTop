@@ -732,13 +732,8 @@ abstract class DBObject implements iDisplay
 	public function SetTrim($sAttCode, $sValue)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		$iMaxSize = $oAttDef->GetMaxSize();
-		$sLength = mb_strlen($sValue);
-		if ($iMaxSize && ($sLength > $iMaxSize)) {
-			$sMessage = " -truncated ($sLength chars)";
-			$sValue = mb_substr($sValue, 0, $iMaxSize - mb_strlen($sMessage)).$sMessage;
-		}
-		$this->Set($sAttCode, $sValue);
+
+		$this->Set($sAttCode, $oAttDef->TrimValue($sValue));
 	}
 
 	/**
