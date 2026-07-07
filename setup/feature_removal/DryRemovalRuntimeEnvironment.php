@@ -38,7 +38,7 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 
 		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
 		$sSourceDir = $oSourceConfig->Get('source_dir');
-		list($aExtraDirs, ) = $this->GetDirsToCompile($sSourceDir, $sSourceEnv);
+		[$aExtraDirs] = $this->GetDirsToCompile($sSourceDir);
 
 		$this->InitExtensionMap($aExtraDirs, $oSourceConfig);
 		$this->GetExtensionMap()->DeclareExtensionAsRemoved($this->aExtensionsToRemoveByCode);

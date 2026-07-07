@@ -18,6 +18,8 @@ use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalLog;
 use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
 use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
+use Combodo\iTop\DataFeatureRemoval\Service\StaticDeletionPlan;
+use Combodo\iTop\Service\Session\SessionParameters;
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use ContextTag;
@@ -46,6 +48,9 @@ class DataFeatureRemovalController extends Controller
 	public function OperationMain($sErrorMessage = null): void
 	{
 		$aParams = [];
+
+		SetupUtils::EraseSetupToken();
+		(new SessionParameters(SetupUtils::SESSION_PARAMETERS_NAME))->Erase();
 
 		$this->AddAnalyzeParams();
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
@@ -100,9 +105,9 @@ class DataFeatureRemovalController extends Controller
 			'removed_extensions' => '[]',
 			'extensions_not_uninstallable' => '[]',
 			'copy_setup_files' => 1,
-			'force-uninstall' => "",
+			'force-uninstall' => '',
 			'use_symbolic_links' => MFCompiler::UseSymbolicLinks() ? 'on' : '',
-			'return_button_label' => '',
+			'return_application' => '',
 			'target_env' => ITOP_DEFAULT_ENV,
 		];
 
@@ -111,10 +116,6 @@ class DataFeatureRemovalController extends Controller
 			$aHiddenInputs[$sInputName] = utils::ReadPostedParam($sInputName, $defaultValue, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 		}
 		$aParams['aHiddenInputs'] = $aHiddenInputs;
-
-		if ($aHiddenInputs['return_button_label'] !== '') {
-			$aParams['sReturnButtonURL'] = utils::GetAbsoluteUrlModulePage('itsm-designer-connector', 'launch.php');
-		}
 
 		$aAddedExtensions = json_decode($aHiddenInputs['added_extensions'], true);
 
@@ -143,24 +144,26 @@ class DataFeatureRemovalController extends Controller
 		$aParams['aAvailableExtensions'] = $this->SplitArrayIntoColumns($this->GetExtensionsDiff($aAddedExtensions, $aRemovedExtensions), $this->iColumnCount);
 
 		//to make setup redirection work, we need to pass complex data structures to setup wizards (ie extension/module lists)
-		$oConfig = MetaModel::GetConfig();
-		$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
-
-		$oRunTimeEnvironment = $this->GetRuntimeEnvironment($aAddedExtensions, $aRemovedExtensions);
-		$aSearchDirs = [$oRunTimeEnvironment->GetBuildDir()];
-		$aSelectedModules = $oRunTimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions, $aSearchDirs);
 		if ('[]' === $aHiddenInputs['selected_modules']) {
+			$oConfig = MetaModel::GetConfig();
+			$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
+
+			$oRunTimeEnvironment = $this->GetRuntimeEnvironment($aAddedExtensions, $aRemovedExtensions);
+			[$aDummy, $aSearchDirs] = $oRunTimeEnvironment->GetDirsToCompile($oConfig->Get('source_dir'));
+			$aSelectedModules = $oRunTimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions, $aSearchDirs);
 			$aHiddenInputs['selected_extensions'] = $this->ConvertIntoSetupFormat($aSelectedExtensions);
 			$aHiddenInputs['selected_modules'] = $this->ConvertIntoSetupFormat($aSelectedModules);
+		} else {
+			$aSelectedExtensions = json_decode($aHiddenInputs['selected_extensions'], true);
+			$aSelectedModules = json_decode($aHiddenInputs['selected_modules'], true);
 		}
 
 		IssueLog::Info(sMessage: '$aSelectedExtensions', aContext: $aSelectedExtensions);
 		IssueLog::Info(sMessage: '$aRemovedExtensions', aContext: $aRemovedExtensions);
 		IssueLog::Info(sMessage: '$aSelectedModules', aContext: $aSelectedModules);
 
-		$bForceCompilation = Session::Get('bForceCompilation', false);
 		try {
-			$this->Compile($aSelectedExtensions, array_keys($aRemovedExtensions), $aSelectedModules, $bForceCompilation);
+			$this->Compile($aSelectedExtensions, array_keys($aRemovedExtensions), $aSelectedModules);
 		} catch (CoreException $e) {
 			$aParams['DataFeatureRemovalErrorMessage'] = $e->getHtmlDesc();
 			$this->DisplayPage($aParams, 'AnalysisResult');
@@ -186,11 +189,7 @@ class DataFeatureRemovalController extends Controller
 		];
 
 		foreach ($aHiddenInputs as $sInputName => $sInputValue) {
-			$aParams['aSetupParams']["_params[$sInputName]"] = $sInputValue;
-		}
-
-		if ($aHiddenInputs['return_button_label'] !== '') {
-			$aParams['sReturnButtonURL'] = utils::GetAbsoluteUrlModulePage('itsm-designer-connector', 'launch.php');
+			$aParams['aSetupParams'][$sInputName] = $sInputValue;
 		}
 
 		[$aParams['aDeletionPlanSummary'], $aParams['iQueryCount'], $aParams['bDeletionPossible']] = $this->GetDeletionPlanSummaryTable($aGetRemovedClasses);
@@ -199,6 +198,7 @@ class DataFeatureRemovalController extends Controller
 		Session::Set('aDeletionExecutionSummary', serialize($this->aDeletionExecutionSummary));
 
 		if (!$aParams['bDeletionNeeded']) {
+			// Erase session setup parameters
 			SetupUtils::CreateSetupToken();
 		}
 
@@ -225,7 +225,7 @@ class DataFeatureRemovalController extends Controller
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
-	private function Compile(array $aSelectedExtensionCodes, array $aRemovedExtensionCodes, array $aSelectedModules, bool $bForceCompilation = true): void
+	private function Compile(array $aSelectedExtensionCodes, array $aRemovedExtensionCodes, array $aSelectedModules): void
 	{
 		$sSourceEnv = MetaModel::GetEnvironment();
 		$sBuildDir = APPROOT."/env-$sSourceEnv-build";
@@ -233,8 +233,10 @@ class DataFeatureRemovalController extends Controller
 			SetupUtils::builddir($sBuildDir);
 		}
 		$bIsDirEmpty = count(scandir($sBuildDir)) === 2;
+		$bForceCompilation = Session::Get('bForceCompilation', false);
 
 		if ($bIsDirEmpty || $bForceCompilation) {
+			Session::Unset('bForceCompilation');
 			DataFeatureRemovalLog::Debug(
 				__METHOD__,
 				null,
@@ -286,7 +288,7 @@ class DataFeatureRemovalController extends Controller
 	private function GetDeletionPlanSummaryTable(array $aRemovedClasses): array
 	{
 		$sName = 'DeletionPlanSummary';
-		$oDataCleanupService = new DataCleanupService();
+		$oDataCleanupService = new StaticDeletionPlan();
 		$aDeletionPlanSummaryEntities = $oDataCleanupService->GetCleanupSummary($aRemovedClasses);
 		$aColumns = ['Class', 'Delete Count' , 'Update Count', 'Issue Count'];
 		$aRows = [];

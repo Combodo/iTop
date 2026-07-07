@@ -71,7 +71,7 @@ class RunTimeEnvironment
 		return $this->oExtensionsMap;
 	}
 
-	protected function GetDirsToCompile(string $sSourceDir, string $sSourceEnv): array
+	public function GetDirsToCompile(string $sSourceDir): array
 	{
 		$sSourceDirFull = APPROOT.$sSourceDir;
 		if (!is_dir($sSourceDirFull)) {
@@ -470,7 +470,7 @@ class RunTimeEnvironment
 	 */
 	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir): array
 	{
-		list($aExtraDirs, $aDirsToCompile) = $this->GetDirsToCompile($sSourceDir, $sSourceEnv);
+		list($aExtraDirs, $aDirsToCompile) = $this->GetDirsToCompile($sSourceDir);
 		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
 		$this->InitExtensionMap($aExtraDirs, $oSourceConfig);
 		$this->GetExtensionMap()->LoadChoicesFromDatabase($oSourceConfig);
@@ -480,9 +480,9 @@ class RunTimeEnvironment
 			}
 		}
 		$aModulesToLoad = $this->GetModulesToLoad($this->sFinalEnv, $aDirsToCompile);
-		foreach ($aModulesToLoad as $sKey){
-			if (false !== strpos($sKey, 'enduser')){
-				SetupLog::Error(__METHOD__ . ':'.__LINE__. ' aModulesToLoad: ' . $sKey) ;
+		foreach ($aModulesToLoad as $sKey) {
+			if (false !== strpos($sKey, 'enduser')) {
+				SetupLog::Error(__METHOD__.':'.__LINE__.' aModulesToLoad: '.$sKey) ;
 			}
 		}
 		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile, true, $aModulesToLoad);
@@ -509,8 +509,8 @@ class RunTimeEnvironment
 		foreach ($aModules as $oModule) {
 			$sModule = $oModule->GetName();
 
-			if (false !== strpos($sModule, 'enduser')){
-				SetupLog::Error(__METHOD__ . ':'.__LINE__. ' oFactory->FindModules: ' . $sModule) ;
+			if (false !== strpos($sModule, 'enduser')) {
+				SetupLog::Error(__METHOD__.':'.__LINE__.' oFactory->FindModules: '.$sModule) ;
 			}
 			$bIsExtra = $this->GetExtensionMap()->ModuleIsChosenAsPartOfAnExtension($sModule, iTopExtension::SOURCE_REMOTE);
 			if (array_key_exists($sModule, $aAvailableModules)) {
@@ -528,8 +528,8 @@ class RunTimeEnvironment
 			$bModuleAdded = false;
 			foreach ($aModules as $oModule) {
 				if (!array_key_exists($oModule->GetName(), $aRet) && $oModule->IsAutoSelect()) {
-					if (false !== strpos($oModule->GetName(), 'enduser')){
-						SetupLog::Error(__METHOD__ . ':'.__LINE__. ' IsAutoSelect: ' . $oModule->GetName()) ;
+					if (false !== strpos($oModule->GetName(), 'enduser')) {
+						SetupLog::Error(__METHOD__.':'.__LINE__.' IsAutoSelect: '.$oModule->GetName()) ;
 					}
 					SetupInfo::SetSelectedModules($aRet);
 					try {
@@ -1393,49 +1393,49 @@ class RunTimeEnvironment
 	{
 		$oConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
 		$sSourceDir = $oConfig->Get('source_dir');
-		list($aExtraDirs, ) = $this->GetDirsToCompile($sSourceDir, $sSourceEnv);
+		list($aExtraDirs, ) = $this->GetDirsToCompile($sSourceDir);
 		$this->InitExtensionMap($aExtraDirs, $oConfig);
 		$aSelectedExtensions = $this->GetExtensionMap()->GetSelectedExtensions($oConfig, [], []);
 		$aSelectedModules = $this->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions, $this->GetExtensionMap()->GetScannedModulesRootDirs());
 		return $this->DoCompile(array_keys($aSelectedExtensions), [], $aSelectedModules, $bUseSymLinks ?? false);
 
-/*
+		/*
 
-		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
-		$sSourceDir = $oSourceConfig->Get('source_dir');
+				$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
+				$sSourceDir = $oSourceConfig->Get('source_dir');
 
-		$sSourceDirFull = APPROOT.$sSourceDir;
-		// Do load the required modules
-		//
-		$oFactory = new ModelFactory($sSourceDirFull);
-		$aModulesToCompile = $this->GetMFModulesToCompile($sSourceEnv, $sSourceDir);
-		$oModule = null;
-		foreach ($aModulesToCompile as $oModule) {
-			if ($oModule instanceof MFDeltaModule) {
-				// Just before loading the delta, let's save an image of the datamodel
-				// in case there is no delta the operation will be done after the end of the loop
-				$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'.xml');
-			}
-			$oFactory->LoadModule($oModule);
-		}
+				$sSourceDirFull = APPROOT.$sSourceDir;
+				// Do load the required modules
+				//
+				$oFactory = new ModelFactory($sSourceDirFull);
+				$aModulesToCompile = $this->GetMFModulesToCompile($sSourceEnv, $sSourceDir);
+				$oModule = null;
+				foreach ($aModulesToCompile as $oModule) {
+					if ($oModule instanceof MFDeltaModule) {
+						// Just before loading the delta, let's save an image of the datamodel
+						// in case there is no delta the operation will be done after the end of the loop
+						$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'.xml');
+					}
+					$oFactory->LoadModule($oModule);
+				}
 
-		if (!is_null($oModule) && ($oModule instanceof MFDeltaModule)) {
-			// A delta was loaded, let's save a second copy of the datamodel
-			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'-with-delta.xml');
-		} else {
-			// No delta was loaded, let's save the datamodel now
-			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'.xml');
-		}
+				if (!is_null($oModule) && ($oModule instanceof MFDeltaModule)) {
+					// A delta was loaded, let's save a second copy of the datamodel
+					$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'-with-delta.xml');
+				} else {
+					// No delta was loaded, let's save the datamodel now
+					$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'.xml');
+				}
 
-		$sBuildDir = APPROOT.'env-'.$this->sBuildEnv;
-		self::MakeDirSafe($sBuildDir);
-		$bSkipTempDir = ($this->sFinalEnv != $this->sBuildEnv); // No need for a temporary directory if sBuildEnv is already a temporary directory
-		$oMFCompiler = new MFCompiler($oFactory, $this->sFinalEnv);
-		$oMFCompiler->Compile($sBuildDir, $bUseSymLinks, $bSkipTempDir);
+				$sBuildDir = APPROOT.'env-'.$this->sBuildEnv;
+				self::MakeDirSafe($sBuildDir);
+				$bSkipTempDir = ($this->sFinalEnv != $this->sBuildEnv); // No need for a temporary directory if sBuildEnv is already a temporary directory
+				$oMFCompiler = new MFCompiler($oFactory, $this->sFinalEnv);
+				$oMFCompiler->Compile($sBuildDir, $bUseSymLinks, $bSkipTempDir);
 
-		MetaModel::ResetAllCaches($this->sBuildEnv);
+				MetaModel::ResetAllCaches($this->sBuildEnv);
 
-		return array_keys($aModulesToCompile);*/
+				return array_keys($aModulesToCompile);*/
 	}
 
 	/**
