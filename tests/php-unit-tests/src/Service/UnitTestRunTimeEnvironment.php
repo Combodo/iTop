@@ -108,11 +108,9 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 	/**
 	 * @inheritDoc
 	 */
-	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir): array
+	protected function GetAdditionalMFModulesBeforeFinalDeltaToCompile(string $sSourceEnv, array $aScannedModulesRootDirs): array
 	{
 		\SetupLog::Info(__METHOD__);
-		$aRet = parent::GetMFModulesToCompile($sSourceEnv, $sSourceDir);
-
 		if ($this->bUseDelta) {
 			foreach ($this->GetCustomDatamodelFiles() as $sDeltaFile) {
 				$sDeltaId = preg_replace('/[^\d\w]/', '', $sDeltaFile);
