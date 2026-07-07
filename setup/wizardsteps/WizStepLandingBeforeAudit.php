@@ -16,7 +16,7 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 		$this->oConfig = new Config($sBuildConfigFile);
 
 		$oWizard->SetParameter('previous_version_dir', APPROOT);
-		$oWizard->SetParameter('install_mode', 'upgrade');
+		$oWizard->SetParameter('mode', 'upgrade');
 		$oWizard->SetParameter('source_dir', APPROOT.$this->oConfig->Get('source_dir'));
 		$oWizard->SetParameter('graphviz_path', $this->oConfig->Get('graphviz_path'));
 		$oWizard->SetParameter('application_url', $this->oConfig->Get('app_root_url'));

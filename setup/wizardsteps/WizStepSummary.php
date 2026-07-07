@@ -29,9 +29,9 @@ class WizStepSummary extends AbstractWizStepInstall
 		if ($sMode == 'install') {
 			return 'Ready to install';
 
-		} else {
-			return 'Ready to upgrade';
 		}
+
+		return 'Ready to upgrade';
 	}
 
 	public function GetPossibleSteps()
@@ -50,7 +50,12 @@ class WizStepSummary extends AbstractWizStepInstall
 	 */
 	public function GetNextButtonLabel()
 	{
-		return 'Install';
+		$sMode = $this->oWizard->GetParameter('mode', 'install');
+		if ($sMode == 'install') {
+			return 'Install';
+		}
+
+		return 'Upgrade';
 	}
 
 	public function CanMoveForward()
