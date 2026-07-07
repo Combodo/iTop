@@ -29,8 +29,6 @@ use Twig\Node\Expression\Variable\TemplateVariable;
 use Twig\Node\MacroNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
-use Twig\Node\NodeCaptureInterface;
-use Twig\Node\NodeOutputInterface;
 use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
 use Twig\Node\TextNode;
@@ -54,6 +52,7 @@ class Parser
     private $importedSymbols;
     private $traits;
     private $embeddedTemplates = [];
+    private int $lastEmbedIndex = 0;
     private $varNameSalt = 0;
     private $ignoreUnknownTwigCallables = false;
     private ExpressionParsers $parsers;
@@ -81,8 +80,13 @@ class Parser
      */
     public function parse(TokenStream $stream, $test = null, bool $dropNeedle = false): ModuleNode
     {
+        // reset on root parse() calls only, so the counter spans nested/reentrant parses
+        if (!$this->stack) {
+            $this->lastEmbedIndex = 0;
+        }
+
         $vars = get_object_vars($this);
-        unset($vars['stack'], $vars['env'], $vars['handlers'], $vars['visitors'], $vars['expressionParser'], $vars['reservedMacroNames'], $vars['varNameSalt']);
+        unset($vars['stack'], $vars['env'], $vars['handlers'], $vars['visitors'], $vars['expressionParser'], $vars['reservedMacroNames'], $vars['lastEmbedIndex'], $vars['varNameSalt']);
         $this->stack[] = $vars;
 
         // node visitors
@@ -102,10 +106,6 @@ class Parser
 
         try {
             $body = $this->subparse($test, $dropNeedle);
-
-            if (null !== $this->parent && null === $body = $this->filterBodyNodes($body)) {
-                $body = new EmptyNode();
-            }
         } catch (SyntaxError $e) {
             if (!$e->getSourceContext()) {
                 $e->setSourceContext($this->stream->getSourceContext());
@@ -118,6 +118,10 @@ class Parser
             throw $e;
         } finally {
             $this->expressionRefs = null;
+        }
+
+        if ($this->parent) {
+            $body = $this->cleanupBodyForChildTemplates($body);
         }
 
         $node = new ModuleNode(
@@ -319,7 +323,7 @@ class Parser
      */
     public function embedTemplate(ModuleNode $template)
     {
-        $template->setIndex(mt_rand());
+        $template->setIndex(++$this->lastEmbedIndex);
 
         $this->embeddedTemplates[] = $template;
     }
@@ -410,13 +414,21 @@ class Parser
         return $this->parent || 0 < \count($this->traits);
     }
 
-    public function setParent(?Node $parent): void
+    public function setParent(?Node $parent, bool $throwOnMultiple = true): void
     {
         if (null === $parent) {
             trigger_deprecation('twig/twig', '3.12', 'Passing "null" to "%s()" is deprecated.', __METHOD__);
         }
 
+        if (null !== $parent && !$parent instanceof AbstractExpression) {
+            trigger_deprecation('twig/twig', '3.24', 'Passing a "%s" instance to "%s()" is deprecated, pass an "AbstractExpression" instance instead.', $parent::class, __METHOD__);
+        }
+
         if (null !== $this->parent) {
+            if (!$throwOnMultiple) {
+                return;
+            }
+
             throw new SyntaxError('Multiple extends tags are forbidden.', $parent->getTemplateLine(), $parent->getSourceContext());
         }
 
@@ -447,7 +459,7 @@ class Parser
 
         if (!$function) {
             if ($this->shouldIgnoreUnknownTwigCallables()) {
-                return new TwigFunction($name, fn () => '');
+                return new TwigFunction($name, static fn () => '');
             }
             $e = new SyntaxError(\sprintf('Unknown "%s" function.', $name), $line, $this->stream->getSourceContext());
             $e->addSuggestions($name, array_keys($this->env->getFunctions()));
@@ -476,7 +488,7 @@ class Parser
         }
         if (!$filter) {
             if ($this->shouldIgnoreUnknownTwigCallables()) {
-                return new TwigFilter($name, fn () => '');
+                return new TwigFilter($name, static fn () => '');
             }
             $e = new SyntaxError(\sprintf('Unknown "%s" filter.', $name), $line, $this->stream->getSourceContext());
             $e->addSuggestions($name, array_keys($this->env->getFilters()));
@@ -524,7 +536,7 @@ class Parser
 
         if (!$test) {
             if ($this->shouldIgnoreUnknownTwigCallables()) {
-                return new TwigTest($name, fn () => '');
+                return new TwigTest($name, static fn () => '');
             }
             $e = new SyntaxError(\sprintf('Unknown "%s" test.', $name), $line, $this->stream->getSourceContext());
             $e->addSuggestions($name, array_keys($this->env->getTests()));
@@ -540,52 +552,23 @@ class Parser
         return $test;
     }
 
-    private function filterBodyNodes(Node $node, bool $nested = false): ?Node
+    private function cleanupBodyForChildTemplates(Node $body): Node
     {
-        // check that the body does not contain non-empty output nodes
-        if (
-            ($node instanceof TextNode && !ctype_space($node->getAttribute('data')))
-            || (!$node instanceof TextNode && !$node instanceof BlockReferenceNode && $node instanceof NodeOutputInterface)
-        ) {
-            if (str_contains((string) $node, \chr(0xEF).\chr(0xBB).\chr(0xBF))) {
-                $t = substr($node->getAttribute('data'), 3);
-                if ('' === $t || ctype_space($t)) {
-                    // bypass empty nodes starting with a BOM
-                    return null;
-                }
-            }
-
-            throw new SyntaxError('A template that extends another one cannot include content outside Twig blocks. Did you forget to put the content inside a {% block %} tag?', $node->getTemplateLine(), $this->stream->getSourceContext());
+        if ($body instanceof BlockReferenceNode || ($body instanceof TextNode && $body->isBlank())) {
+            return new EmptyNode();
         }
 
-        // bypass nodes that "capture" the output
-        if ($node instanceof NodeCaptureInterface) {
-            // a "block" tag in such a node will serve as a block definition AND be displayed in place as well
-            return $node;
-        }
-
-        // "block" tags that are not captured (see above) are only used for defining
-        // the content of the block. In such a case, nesting it does not work as
-        // expected as the definition is not part of the default template code flow.
-        if ($nested && $node instanceof BlockReferenceNode) {
-            throw new SyntaxError('A block definition cannot be nested under non-capturing nodes.', $node->getTemplateLine(), $this->stream->getSourceContext());
-        }
-
-        if ($node instanceof NodeOutputInterface) {
-            return null;
-        }
-
-        // here, $nested means "being at the root level of a child template"
-        // we need to discard the wrapping "Node" for the "body" node
-        // Node::class !== \get_class($node) should be removed in Twig 4.0
-        $nested = $nested || (Node::class !== $node::class && !$node instanceof Nodes);
-        foreach ($node as $k => $n) {
-            if (null !== $n && null === $this->filterBodyNodes($n, $nested)) {
-                $node->removeNode($k);
+        foreach ($body as $k => $node) {
+            if ($node instanceof BlockReferenceNode) {
+                // as it has a parent, the block reference won't be used
+                $body->removeNode($k);
+            } elseif ($node instanceof TextNode && $node->isBlank()) {
+                // remove nodes considered as "empty"
+                $body->removeNode($k);
             }
         }
 
-        return $node;
+        return $body;
     }
 
     private function checkPrecedenceDeprecations(ExpressionParserInterface $expressionParser, AbstractExpression $expr)

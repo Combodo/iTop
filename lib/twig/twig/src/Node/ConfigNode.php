@@ -12,21 +12,19 @@
 namespace Twig\Node;
 
 use Twig\Attribute\YieldReady;
-use Twig\Compiler;
 
 /**
+ * Represents a node that has global side effects but does not generate template code.
+ *
+ * Such nodes must be at the root level of the body of a template.
+ *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 #[YieldReady]
-class CheckSecurityCallNode extends Node
+final class ConfigNode extends Node
 {
-    /**
-     * @return void
-     */
-    public function compile(Compiler $compiler)
+    public function __construct(int $lineno)
     {
-        $compiler
-            ->write("\$this->sandbox = \$this->extensions[SandboxExtension::class];\n")
-        ;
+        parent::__construct([], [], $lineno);
     }
 }

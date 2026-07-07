@@ -13,6 +13,7 @@ namespace Twig\Node\Expression\Binary;
 
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
+use Twig\Extension\SandboxExtension;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\Variable\ContextVariable;
@@ -23,7 +24,8 @@ use Twig\Node\Node;
  */
 class ObjectDestructuringSetBinary extends AbstractBinary
 {
-    private array $properties = [];
+    /** @var list<array{property: string, variable: string}> */
+    private array $mappings = [];
 
     /**
      * @param ArrayExpression    $left  The array expression containing object/mapping destructuring properties
@@ -38,7 +40,11 @@ class ObjectDestructuringSetBinary extends AbstractBinary
             if (!$pair['value'] instanceof ContextVariable) {
                 throw new SyntaxError(\sprintf('Cannot assign to "%s", only variables can be assigned in object/mapping destructuring.', $pair['value']::class), $lineno);
             }
-            $this->properties[] = $pair['value']->getAttribute('name');
+
+            $this->mappings[] = [
+                'property' => $pair['key']->getAttribute('value'),
+                'variable' => $pair['value']->getAttribute('name'),
+            ];
         }
 
         parent::__construct($left, $right, $lineno);
@@ -48,18 +54,18 @@ class ObjectDestructuringSetBinary extends AbstractBinary
     {
         $compiler->addDebugInfo($this);
         $compiler->raw('[');
-        foreach ($this->properties as $i => $property) {
+        foreach ($this->mappings as $i => $mapping) {
             if ($i) {
                 $compiler->raw(', ');
             }
-            $compiler->raw('$context[')->repr($property)->raw(']');
+            $compiler->raw('$context[')->repr($mapping['variable'])->raw(']');
         }
         $compiler->raw('] = [');
-        foreach ($this->properties as $i => $property) {
+        foreach ($this->mappings as $i => $mapping) {
             if ($i) {
                 $compiler->raw(', ');
             }
-            $compiler->raw('CoreExtension::getAttribute($this->env, $this->source, ')->subcompile($this->getNode('right'))->raw(', ')->repr($property)->raw(', [], \\Twig\\Template::ANY_CALL, false, false, false, ')->repr($this->getNode('right')->getTemplateLine())->raw(')');
+            $compiler->raw('CoreExtension::getAttribute($this->env, $this->source, ')->subcompile($this->getNode('right'))->raw(', ')->repr($mapping['property'])->raw(', [], \\Twig\\Template::ANY_CALL, false, false, ')->repr($compiler->getEnvironment()->hasExtension(SandboxExtension::class))->raw(', ')->repr($this->getNode('right')->getTemplateLine())->raw(')');
         }
         $compiler->raw(']');
     }

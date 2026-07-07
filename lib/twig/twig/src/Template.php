@@ -80,6 +80,14 @@ abstract class Template
             return $this->parent;
         }
 
+        // The compiled doGetParent() may evaluate user expressions (filters,
+        // functions, method calls) when the parent name is dynamic. Make sure
+        // the sandbox security check runs first so those expressions cannot
+        // bypass the allow-list when getParent() is reached before the first
+        // ensureSecurityChecked() call on this template (e.g. via
+        // getTemplateForMacro() or yieldBlock() into a pre-warmed instance).
+        $this->ensureSecurityChecked();
+
         if (!$parent = $this->doGetParent($context)) {
             return false;
         }
@@ -158,7 +166,7 @@ abstract class Template
             if ($this->env->isDebug()) {
                 ob_start();
             } else {
-                ob_start(function () { return ''; });
+                ob_start(static function () { return ''; });
             }
             $this->displayParentBlock($name, $context, $blocks);
 
@@ -193,7 +201,7 @@ abstract class Template
             if ($this->env->isDebug()) {
                 ob_start();
             } else {
-                ob_start(function () { return ''; });
+                ob_start(static function () { return ''; });
             }
             try {
                 $this->displayBlock($name, $context, $blocks, $useBlocks);
@@ -367,7 +375,7 @@ abstract class Template
             if ($this->env->isDebug()) {
                 ob_start();
             } else {
-                ob_start(function () { return ''; });
+                ob_start(static function () { return ''; });
             }
             try {
                 $this->display($context);
@@ -399,6 +407,7 @@ abstract class Template
         $blocks = array_merge($this->blocks, $blocks);
 
         try {
+            $this->ensureSecurityChecked();
             yield from $this->doDisplay($context, $blocks);
         } catch (Error $e) {
             if (!$e->getSourceContext()) {
@@ -431,6 +440,8 @@ abstract class Template
         } elseif (isset($this->blocks[$name])) {
             $template = $this->blocks[$name][0];
             $block = $this->blocks[$name][1];
+            // expose this template's own blocks so nested block() calls resolve against them when the block is rendered directly (e.g. block(name, template))
+            $blocks = array_merge($this->blocks, $blocks);
         } else {
             $template = null;
             $block = null;
@@ -443,6 +454,7 @@ abstract class Template
 
         if (null !== $template) {
             try {
+                $template->ensureSecurityChecked();
                 yield from $template->$block($context, $blocks);
             } catch (Error $e) {
                 if (!$e->getSourceContext()) {
@@ -510,17 +522,30 @@ abstract class Template
     protected function getTemplateForMacro(string $name, array $context, int $line, Source $source): self
     {
         if (method_exists($this, $name)) {
+            $this->ensureSecurityChecked();
+
             return $this;
         }
 
         $parent = $this;
         while ($parent = $parent->getParent($context)) {
             if (method_exists($parent, $name)) {
+                $parent->ensureSecurityChecked();
+
                 return $parent;
             }
         }
 
         throw new RuntimeError(\sprintf('Macro "%s" is not defined in template "%s".', substr($name, \strlen('macro_')), $this->getTemplateName()), $line, $source);
+    }
+
+    /**
+     * Runs the sandbox security check against the current sandbox state.
+     *
+     * @internal
+     */
+    public function ensureSecurityChecked(): void
+    {
     }
 
     /**
