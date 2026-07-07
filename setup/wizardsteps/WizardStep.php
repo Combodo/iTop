@@ -21,22 +21,27 @@
 /**
  * All the steps of the iTop installation wizard
  *
- * Steps order (can be retrieved using \WizardController::DumpStructure) :
+ * Steps order:
  *
  * WizStepWelcome
+ *  (install)    (upgrade)
  *    +             +
  *    |             |
- *    v             +----->
- * WizStepLicense          WizStepDetectedInfo
- * WizStepDBParams           +              +
- * WizStepAdminAccount       |              |
- * WizStepInstallMiscParams  v              +------>
- *    +                    WizStepLicense2 +--> WizStepUpgradeMiscParams
- *    |                                            +
- *    +--->    <-----------------------------------+
- * WizStepModulesChoice
- * WizStepSummary
- * WizStepDone
+ *    v             +----------> WizStepDetectedInfo
+ * WizStepLicense                  +           +
+ * WizStepDBParams                 |           |
+ * WizStepAdminAccount             |           |
+ * WizStepInstallMiscParams        v           +------->
+ *    +                    WizStepLicense2 +-----------> WizStepUpgradeMiscParams
+ *    |                                                  +
+ *    |                                                  |
+ *    +----+---------------------------------------------+
+ *         |
+ *         v                                                +--- [Extension management]
+ * WizStepModulesChoice                                     |
+ * WizStepDataAudit    <----+ WizStepLandingBeforeAudit <---+--- [Hub Connector]
+ * WizStepSummary                                           |
+ * WizStepDone                                              +--- [Other Connector]
  */
 
 use Combodo\iTop\Application\WebPage\WebPage;
@@ -246,9 +251,9 @@ class Step1 extends WizardStep
 		$oPage->p('This is Step 1!');
 		$sInstallMode = $this->oWizard->GetParameter('mode', 'install');
 		$sChecked = ($sInstallMode == 'install') ? ' checked ' : '';
-		$oPage->p('<input type="radio" name="install_mode" value="install"'.$sChecked.'/> Install');
+		$oPage->p('<input type="radio" name="mode" value="install"'.$sChecked.'/> Install');
 		$sChecked = ($sInstallMode == 'upgrade') ? ' checked ' : '';
-		$oPage->p('<input type="radio" name="install_mode" value="upgrade"'.$sChecked.'/> Upgrade');
+		$oPage->p('<input type="radio" name="mode" value="upgrade"'.$sChecked.'/> Upgrade');
 	}
 }
 
