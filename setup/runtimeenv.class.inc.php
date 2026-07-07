@@ -435,7 +435,7 @@ class RunTimeEnvironment
 	}
 
 	/**
-	 * Getadditional modules to compiljust before delta
+	 * Get additional modules to compile just before delta
 	 * @return \MFModule[]
 	 */
 	protected function GetAdditionalMFModulesBeforeFinalDeltaToCompile(string $sSourceEnv, array $aScannedModulesRootDirs): array
