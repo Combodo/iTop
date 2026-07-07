@@ -50,13 +50,13 @@ const oOpenSignInWindow = function (url, name) {
 		 then we load it in the already opened secondary window, and then
 		 we bring such window back on top/in front of its parent window. */
 		oWindowObjectReference = window.open(url, name, sWindowFeatures);
-		oWindowObjectReference.trigger('focus');
+        oWindowObjectReference.focus();
 	} else {
 		/* Else the window reference must exist and the window
 		 is not closed; therefore, we can bring it back on top of any other
 		 window with the focus() method. There would be no need to re-create
 		 the window or to reload the referenced resource. */
-		oWindowObjectReference.trigger('focus');
+        oWindowObjectReference.focus();
 	}
 	/* Let know every second our child window that we're waiting for it to complete,
 	once we reach our landing page, it'll send us a reply
