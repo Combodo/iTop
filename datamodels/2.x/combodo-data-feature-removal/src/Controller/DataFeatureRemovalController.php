@@ -24,7 +24,6 @@ use ContextTag;
 use CoreException;
 use Dict;
 use Exception;
-use IssueLog;
 use MetaModel;
 use MFCompiler;
 use RunTimeEnvironment;
