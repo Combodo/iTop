@@ -2035,7 +2035,7 @@ abstract class DBObject implements iDisplay
 				}
 			}
 			if (!is_null($iMaxSize = $oAtt->GetMaxSize())) {
-				$iLen = mb_strlen($toCheck);
+				$iLen = $oAtt->GetSize($toCheck);
 				if ($iLen > $iMaxSize) {
 					return "String too long (found $iLen, limited to $iMaxSize)";
 				}

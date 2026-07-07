@@ -1297,19 +1297,21 @@ class DBObjectTest extends ItopDataTestCase
 	{
 		return [
 			// UserRequest.title is an AttributeString (maxsize = 255)
-			'title 250 chars' => ['title', 250],
-			'title 254 chars' => ['title', 254],
-			'title 255 chars' => ['title', 255],
-			'title 256 chars' => ['title', 256],
-			'title 300 chars' => ['title', 300],
+			'title 250 chars'            => ['title', 250, 250, true],
+			'title 254 chars'            => ['title', 254, 254, true],
+			'title 255 chars'            => ['title', 255, 255, true],
+			'title 256 chars'            => ['title', 256, 255, false],
+			'title 300 chars'            => ['title', 300, 255, false],
 
 			// UserRequest.pending_reason is an AttributeText (maxsize=65535) with format=text
-			'pending_reason 250 chars' => ['pending_reason', 250],
-			'pending_reason 60000 chars' => ['pending_reason', 60000],
-			'pending_reason 65534 chars' => ['pending_reason', 65534],
-			'pending_reason 65535 chars' => ['pending_reason', 65535],
-			'pending_reason 65536 chars' => ['pending_reason', 65536],
-			'pending_reason 70000 chars' => ['pending_reason', 70000],
+			'pending_reason 250 chars'   => ['pending_reason', 250, 250, true],
+			'pending_reason 65534 chars' => ['pending_reason', 65534, 16403, false],
+			'pending_reason 65535 chars' => ['pending_reason', 65535, 16403, false],
+			'pending_reason 65536 chars' => ['pending_reason', 65536, 16403, false],
+			'pending_reason 16385 chars' => ['pending_reason', 16385, 16403, false],
+			'pending_reason 16384 chars' => ['pending_reason', 16384, 16383, true],
+			'pending_reason 16383 chars' => ['pending_reason', 16383, 16383, true],
+			'pending_reason 16382 chars' => ['pending_reason', 16382, 16382, true],
 		];
 	}
 
@@ -1322,7 +1324,7 @@ class DBObjectTest extends ItopDataTestCase
 	 *
 	 * @since 3.1.2 N°3448 - Framework field size check not correctly implemented for multi-bytes languages/strings
 	 */
-	public function testCheckLongValueInAttribute(string $sAttrCode, int $iValueLength)
+	public function testCheckLongValueInAttribute(string $sAttrCode, int $iValueLength, int $iExpectedLength, bool $bIsValueToSetBelowAttrMaxSize): void
 	{
 		$sPrefix = 'a'; // just a small prefix so that the emoji bytes won't have a power of 2 (we want a non even value)
 		$sEmojiToRepeat = '😎'; // this emoji is 4 bytes long
@@ -1343,7 +1345,6 @@ class DBObjectTest extends ItopDataTestCase
 
 		$oAttDef = MetaModel::GetAttributeDef(UserRequest::class, $sAttrCode);
 		$iAttrMaxSize = $oAttDef->GetMaxSize();
-		$bIsValueToSetBelowAttrMaxSize = ($iValueLength <= $iAttrMaxSize);
 		/** @noinspection PhpUnusedLocalVariableInspection */
 		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oTicket->CheckToWrite();
 		$this->assertEquals($bIsValueToSetBelowAttrMaxSize, $bCheckStatus, "CheckResult result:".var_export($aCheckIssues, true));
@@ -1353,7 +1354,7 @@ class DBObjectTest extends ItopDataTestCase
 		if ($bIsValueToSetBelowAttrMaxSize) {
 			$this->assertEquals($sValueToSet, $sValueInObject, 'Should not alter string that is already shorter than attribute max length');
 		} else {
-			$this->assertEquals($iAttrMaxSize, mb_strlen($sValueInObject), 'Should truncate at the same length than attribute max length');
+			$this->assertEquals($iExpectedLength, mb_strlen($sValueInObject), 'Should truncate at the same length than attribute max length');
 			$sLastCharsOfValueInObject = mb_substr($sValueInObject, -30);
 			$this->assertStringContainsString(' -truncated', $sLastCharsOfValueInObject, 'Should end with "truncated" comment');
 		}
