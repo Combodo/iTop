@@ -122,10 +122,10 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Query/Attribute:export_last_user_contact' => 'Contact',
 	'Class:Query/Attribute:export_last_user_contact+' => 'Dernier contact ayant exécuté cette requête',
 	'Class:Query/Attribute:usages' => 'Usages',
-	'Class:Query/Attribute:usages+' => 'Specifie les usages possibles de cette requête.
-- L\'étiquette "Référence pour IA" suppose que la description est très explicite et conforme à l\'OQL.Elle pourra servir d\'exemple pour la construction de requêtes OQL par des IA
+'Class:Query/Attribute:usages+' => 'Spécifie les usages possibles de cette requête.
+- L\'étiquette "Référence pour IA" suppose que la description est très explicite et conforme à l\'OQL. Elle pourra servir d\'exemple pour la construction de requêtes OQL par des IA.
 - L\'étiquette "Notification" implique que la classe d\'objets retournés possède un et un seul champ de type email.
-- L\'étiquette "Dashlet" suppose que l\'OQL ne retourne qu\'une seule classe d\'objets',
+- L\'étiquette "Dashlet" suppose que l\'OQL ne retourne qu\'une seule classe d\'objets.',
 	'Class:Query/Attribute:usages/Value:export' => 'Export',
 	'Class:Query/Attribute:usages/Value:reference' => 'Référence pour IA',
 	'Class:Query/Attribute:usages/Value:notif' => 'Notification',
