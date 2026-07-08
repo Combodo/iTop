@@ -340,7 +340,8 @@
             foreach ($oContactsSet as $oLnk) {
                 if ($oLnk->Get('contact_id') == $iPersonId) {
                     $oLnk->DBDelete();
-                }
+                    return;
+               }
             }
         }
 	  }]]></code>
