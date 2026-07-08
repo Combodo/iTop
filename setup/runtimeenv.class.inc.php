@@ -1282,7 +1282,7 @@ class RunTimeEnvironment
 		$this->InitExtensionMap($oConfig);
 		$aSelectedExtensions = $this->GetExtensionMap()->GetSelectedExtensions($oConfig, [], []);
 		$aSelectedModules = $this->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
-		return $this->DoCompile(array_keys($aSelectedExtensions), [], $aSelectedModules, $bUseSymLinks ?? false);
+		return $this->DoCompile($aSelectedExtensions, [], $aSelectedModules, $bUseSymLinks ?? false);
 	}
 
 	/**
