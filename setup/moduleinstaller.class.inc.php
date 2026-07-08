@@ -327,7 +327,12 @@ abstract class ModuleInstallerAPI
 	{
 		self::AssertLoadLocalizedDataParametersAreValid($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion);
 		if (self::IsVersionCrossed($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion)) {
-			$sWishedLanguage = $oConfiguration->GetDefaultLanguage();
+			// Note: on upgrade, the default language cannot be retrieved from the passed configuration, it must be read from disk (see StructureInstaller::AfterDatabaseCreation)
+			if (utils::IsNullOrEmptyString($sPreviousVersion)) {
+				$sWishedLanguage = $oConfiguration->GetDefaultLanguage();
+			} else {
+				$sWishedLanguage = utils::GetConfig(true)->GetDefaultLanguage();
+			}
 			self::LoadLocalizedData($sWishedLanguage, $sDefaultFileName);
 		}
 	}
