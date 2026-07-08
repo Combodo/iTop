@@ -24,11 +24,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Combodo\iTop\Setup\ModuleDependency\Module;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
-use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
 require_once APPROOT."setup/modulediscovery.class.inc.php";
 require_once APPROOT.'setup/modelfactory.class.inc.php';
@@ -1321,7 +1319,7 @@ class RunTimeEnvironment
 			SetupUtils::tidydir($sBuildPath);
 		}
 
-		$oExtensionsMap = iTopExtensionsMap::GetExtensionsMap($this->GetFinalEnv());
+		$oExtensionsMap = iTopExtensionsMap::GetExtensionsMap($this->GetBuildEnv());
 		// Removed modules are stored as static for FindModules()
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
@@ -1330,9 +1328,7 @@ class RunTimeEnvironment
 		$bSetupFailure = false;
 		$aNoCodeExtensionLabelsThatBreakSetup = [];
 		foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
-			if (in_array($oExtension->sCode, $aSelectedExtensionCodes)) {
-				$oExtension->MarkAsChosen();
-			}
+			$oExtension->MarkAsChosen(in_array($oExtension->sCode, $aSelectedExtensionCodes));
 
 			if (empty($oExtension->sCode)) {
 				if (empty($oExtension->sLabel)) {
@@ -1385,6 +1381,7 @@ class RunTimeEnvironment
 			}
 		}
 
+		// For unit tests
 		$aModulesToCompile = $this->GetAdditionalMFModulesBeforeFinalDeltaToCompile($sEnvironment, $oExtensionsMap->GetScannedModulesRootDirs());
 		foreach ($aModulesToCompile as $oModule) {
 			$oFactory->LoadModule($oModule);
@@ -1556,11 +1553,8 @@ class RunTimeEnvironment
 			$aModulesToLoad[] = $sModuleName;
 		}
 
-		foreach ($aFromSelectedExtensionModules as $sModuleName) {
-			if (! in_array($sModuleName, $aModulesToLoad)) {
-				$aModulesToLoad[] = $sModuleName;
-			}
-		}
+		$this->AnalyzeInstallation($oConfig, $aSearchDirs, true, $aModulesToLoad);
+
 		return $aModulesToLoad;
 	}
 

@@ -149,8 +149,7 @@ class DataFeatureRemovalController extends Controller
 			$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
 			$aHiddenInputs['selected_extensions'] = $this->ConvertIntoSetupFormat($aSelectedExtensions);
 
-			$aSelectedModules = $this->oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
-			$aHiddenInputs['selected_modules'] = $this->ConvertIntoSetupFormat($aSelectedModules);
+			$aSelectedModules = []; // keep it to compile method
 		} else {
 			$aSelectedExtensions = json_decode($aHiddenInputs['selected_extensions'], true);
 			$aSelectedModules = json_decode($aHiddenInputs['selected_modules'], true);
@@ -158,6 +157,7 @@ class DataFeatureRemovalController extends Controller
 
 		try {
 			$this->Compile($aSelectedExtensions, array_keys($aRemovedExtensions), $aSelectedModules);
+			$aHiddenInputs['selected_modules'] = $this->ConvertIntoSetupFormat($aSelectedModules);
 		} catch (CoreException $e) {
 			$aParams['DataFeatureRemovalErrorMessage'] = $e->getHtmlDesc();
 			$this->DisplayPage($aParams, 'AnalysisResult');
@@ -209,15 +209,15 @@ class DataFeatureRemovalController extends Controller
 	}
 
 	/**
-	 * @param array $aSelectedExtensionCodes
-	 * @param array $aRemovedExtensionCodes
+	 * @param array $aSelectedExtensions
+	 * @param array $aRemovedExtensions
 	 * @param array $aSelectedModules
 	 *
 	 * @return void
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
-	private function Compile(array $aSelectedExtensionCodes, array $aRemovedExtensionCodes, array $aSelectedModules): void
+	private function Compile(array $aSelectedExtensions, array $aRemovedExtensions, array &$aSelectedModules): void
 	{
 		$sSourceEnv = MetaModel::GetEnvironment();
 		$sBuildDir = APPROOT."/env-$sSourceEnv-build";
@@ -227,15 +227,23 @@ class DataFeatureRemovalController extends Controller
 		$bIsDirEmpty = count(scandir($sBuildDir)) === 2;
 		$bForceCompilation = Session::Get('bForceCompilation', false);
 
+		$oConfig = MetaModel::GetConfig();
 		if ($bIsDirEmpty || $bForceCompilation) {
 			Session::Unset('bForceCompilation');
 			$this->oRuntimeEnvironment->CopySetupFiles();
+			if (count($aSelectedModules) === 0) {
+				$aSelectedModules = $this->oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
+			}
 			DataFeatureRemovalLog::Debug(
 				__METHOD__,
 				null,
 				['sSourceEnv' => $sSourceEnv, 'sBuildDir' => $sBuildDir, 'bIsDirEmpty' => $bIsDirEmpty, glob("$sBuildDir/*")]
 			);
-			$this->oRuntimeEnvironment->DoCompile($aSelectedExtensionCodes, $aRemovedExtensionCodes, $aSelectedModules, MFCompiler::CanUseSymbolicLinks());
+			$this->oRuntimeEnvironment->DoCompile($aSelectedExtensions, $aRemovedExtensions, $aSelectedModules, MFCompiler::CanUseSymbolicLinks());
+		} else {
+			if (count($aSelectedModules) === 0) {
+				$aSelectedModules = $this->oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
+			}
 		}
 	}
 
