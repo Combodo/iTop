@@ -431,7 +431,7 @@ SQL
 	/**
 	 * Prepare common context for LoadLocalizedData tests.
 	 *
-	 * @return array{0: Config, 1: string, 2: string, 3: string, 4: string}
+	 * @return array{0: Config, 1: string, 2: string}
 	 */
 	private function GivenLocalizedDataTestContext(string $sOrgNamePrefix, string $sLanguage, array $aAvailableLanguages = []): array
 	{
