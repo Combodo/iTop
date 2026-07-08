@@ -69,7 +69,7 @@ class RunTimeEnvironment
 		return $this->oExtensionsMap;
 	}
 
-	private function InitExtensionMap(Config $oSourceConfig)
+	protected function InitExtensionMap(Config $oSourceConfig)
 	{
 		if (is_null($this->oExtensionsMap)) {
 			// Actually read the modules available for the build environment,
@@ -1323,39 +1323,12 @@ class RunTimeEnvironment
 		// Removed modules are stored as static for FindModules()
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
-		// Check that all the extensions have a code
-		$aNoCodeExtensionSourceDirs = [];
-		$bSetupFailure = false;
-		$aNoCodeExtensionLabelsThatBreakSetup = [];
 		foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
 			$oExtension->MarkAsChosen(in_array($oExtension->sCode, $aSelectedExtensionCodes));
-
-			if (empty($oExtension->sCode)) {
-				if (empty($oExtension->sLabel)) {
-					$sExtensionLabel = $oExtension->sSourceDir;
-					$aNoCodeExtensionSourceDirs [] = $oExtension->sSourceDir;
-				} else {
-					$sExtensionLabel = $oExtension->sLabel;
-					$aNoCodeExtensionSourceDirs [$sExtensionLabel] = $oExtension->sSourceDir;
-				}
-
-				if ($oExtension->IsMarkedAsChosen()) {
-					$aNoCodeExtensionLabelsThatBreakSetup[] = $sExtensionLabel;
-					$bSetupFailure = true;
-				}
-			}
 		}
 
-		if (count($aNoCodeExtensionSourceDirs) > 0) {
-			if ($bSetupFailure) {
-				$sErrorMessage = sprintf('Selected extension(s) cannot be installed: Missing extension code (%s)', implode(',', $aNoCodeExtensionLabelsThatBreakSetup));
-				$e = new CoreException($sErrorMessage);
-				SetupLog::Exception($sErrorMessage, $e, null, $aNoCodeExtensionSourceDirs);
-				throw $e;
-			} else {
-				SetupLog::Warning("Non selected extension(s) cannot be installed: Missing extension code", null, $aNoCodeExtensionSourceDirs);
-			}
-		}
+		// Check that all the extensions have a code
+		$oExtensionsMap->CheckExtensionsValidity();
 
 		$oFactory = new ModelFactory($oExtensionsMap->GetScannedModulesRootDirs());
 
