@@ -345,7 +345,7 @@ abstract class ModuleInstallerAPI
 	 * @return void
 	 * @throws \Exception
 	 */
-	protected static function LoadLocalizedData(string $sDefaultLanguage, string $sDefaultFile): void
+	public static function LoadLocalizedData(string $sDefaultLanguage, string $sDefaultFile): void
 	{
 
 		$sFileName = self::GetLocalizedFileName($sDefaultLanguage, $sDefaultFile);
@@ -396,18 +396,18 @@ abstract class ModuleInstallerAPI
 	 */
 	private static function AssertLoadLocalizedDataParametersAreValid(?string $sPreviousVersion, ?string $sCurrentVersion, string $sFirstLoadingVersion): void
 	{
-		if (($sPreviousVersion !== '') && !self::IsValidLocalizedDataVersion($sPreviousVersion)) {
+		if (($sPreviousVersion !== '') && !self::IsSupportediTopVersion($sPreviousVersion)) {
 			throw new CoreUnexpectedValue("LoadLocalizedData expects sPreviousVersion to be empty or match x.y[.z][-name], got '{$sPreviousVersion}'");
 		}
-		if (!self::IsValidLocalizedDataVersion($sCurrentVersion)) {
+		if (!self::IsSupportediTopVersion($sCurrentVersion)) {
 			throw new CoreUnexpectedValue("LoadLocalizedData expects sCurrentVersion to match x.y[.z][-name], got '{$sCurrentVersion}'");
 		}
-		if (($sFirstLoadingVersion !== '') && !self::IsValidLocalizedDataVersion($sFirstLoadingVersion)) {
+		if (($sFirstLoadingVersion !== '') && !self::IsSupportediTopVersion($sFirstLoadingVersion)) {
 			throw new CoreUnexpectedValue("LoadLocalizedData expects sFirstLoadingVersion to match x.y[.z][-name], got '{$sFirstLoadingVersion}'");
 		}
 	}
 
-	private static function IsValidLocalizedDataVersion(string $sVersion): bool
+	public static function IsSupportediTopVersion(string $sVersion): bool
 	{
 		return (preg_match('/^\d+\.\d+(?:\.\d+)?(?:-[A-Za-z0-9]+)?$/', $sVersion) === 1);
 	}
@@ -419,7 +419,7 @@ abstract class ModuleInstallerAPI
 	 *
 	 * @return bool
 	 */
-	private static function IsVersionCrossed(?string $sPreviousVersion, ?string $sCurrentVersion, string $sFirstLoadingVersion): bool
+	public static function IsVersionCrossed(?string $sPreviousVersion, ?string $sCurrentVersion, string $sFirstLoadingVersion): bool
 	{
 		return ($sPreviousVersion === '') ||
 			(version_compare($sPreviousVersion, $sCurrentVersion, '<')

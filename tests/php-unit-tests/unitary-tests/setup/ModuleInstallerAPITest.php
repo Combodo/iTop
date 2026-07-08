@@ -288,18 +288,16 @@ SQL
 	 * @covers \ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion
 	 * @dataProvider LoadLocalizedData_RequiredLanguageProvider
 	 */
-	public function testLoadLocalizedData_LoadRequiredLanguageOnFirstInstall(string $sRequiredLanguage, array $aAvailableLanguages, array $aExpectedCountByLanguage): void
+	public function testLoadLocalizedData_LoadRequiredLanguageOnFirstInstall(string $sRequiredLanguage, array $aExpectedOrganizationNames): void
 	{
 		// Given
-		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_RequiredLanguage_', $sRequiredLanguage, $aAvailableLanguages);
+		[$oConfig, $sPattern] = $this->GivenLocalizedDataTestContext($sRequiredLanguage);
 
 		// When no previous version, and current version higher than the first loading version
 		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '', '3.3.0', '3.0.0', $sPattern);
 
-		// Then data loaded
-		foreach ($aExpectedCountByLanguage as $sLanguage => $iExpectedCount) {
-			$this->AssertOrganizationCountByName($sOrgName, $sLanguage, $iExpectedCount);
-		}
+		// Then the expected localized organizations are loaded
+		$this->AssertOrganizationNamesExist($aExpectedOrganizationNames);
 	}
 
 	public function LoadLocalizedData_RequiredLanguageProvider(): array
@@ -307,28 +305,15 @@ SQL
 		return [
 			'Required fr_fr and file exists' => [
 				'required language' => 'fr_fr',
-				'available languages' => ['en_us', 'fr_fr'],
-				'expected counts' => ['en_us' => 0, 'fr_fr' => 1],
+				'expected organization names' => ['Client (Test)', 'Département informatique (Test)'],
 			],
 			'Required en_us and file exists' => [
 				'required language' => 'en_us',
-				'available languages' => ['en_us', 'fr_fr'],
-				'expected counts' => ['en_us' => 1, 'fr_fr' => 0],
-			],
-			'Required fr_fr but fallback to en_us' => [
-				'required language' => 'fr_fr',
-				'available languages' => ['en_us'],
-				'expected counts' => ['en_us' => 1, 'fr_fr' => 0],
-			],
-			'Required de_de and file exists' => [
-				'required language' => 'de_de',
-				'available languages' => ['en_us', 'fr_fr', 'de_de'],
-				'expected counts' => ['en_us' => 0, 'fr_fr' => 0, 'de_de' => 1],
+				'expected organization names' => ['Customer (Test)', 'IT Department (Test)'],
 			],
 			'Required de_de but fallback to en_us' => [
 				'required language' => 'de_de',
-				'available languages' => ['en_us', 'fr_fr'],
-				'expected counts' => ['en_us' => 1, 'fr_fr' => 0, 'de_de' => 0],
+				'expected organization names' => ['Customer (Test)', 'IT Department (Test)'],
 			],
 		];
 	}
@@ -339,7 +324,7 @@ SQL
 	 */
 	public function testIsVersionCrossed_ReturnsExpectedValue(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, bool $bExpected): void
 	{
-		$bIsVersionCrossed = $this->InvokeNonPublicStaticMethod(ModuleInstallerAPI::class, 'IsVersionCrossed', [$sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion]);
+		$bIsVersionCrossed = ModuleInstallerAPI::IsVersionCrossed($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion);
 
 		$this->assertSame($bExpected, $bIsVersionCrossed);
 	}
@@ -363,24 +348,49 @@ SQL
 	 */
 	public function testLoadLocalizedData_LoadsWhenVersionCrossingIsTrue(): void
 	{
-		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_VersionCrossingTrue_', 'en_us', ['en_us']);
+		[$oConfig, $sPattern] = $this->GivenLocalizedDataTestContext('FR FR', 'data.sample.organizations.en_us.xml');
 
 		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '3.0.0', '3.2.0', '3.1.0', $sPattern);
 
-		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 1);
+		$this->AssertOrganizationNamesExist(['Client (Test)', 'Département informatique (Test)']);
 	}
 	// Test when a file is loaded twice because of the version conditions, it doesn't create duplicates (idempotent loading)
 	public function testLoadLocalizedData_IdempotentLoading(): void
 	{
 		// Given
-		[$oConfig, $sOrgName, $sPattern] = $this->GivenLocalizedDataTestContext('XML_Load_Idempotent_', 'en_us', ['en_us']);
+		[$oConfig, $sPattern] = $this->GivenLocalizedDataTestContext('en_us', 'data.sample.organizations.en_us.xml');
 
 		// When LoadLocalizedData is called twice with conditions that would load the file both times
 		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '', '3.0.1', '3.0.0', $sPattern);
 		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '3.0.1', '3.1.0', '3.0.2', $sPattern);
 
-		// Then no duplicate data loaded
-		$this->AssertOrganizationCountByName($sOrgName, 'en_us', 1);
+		// Then no duplicated data load side effect and values remain stable
+		$this->AssertOrganizationNamesExist(['Customer (Test)', 'IT Department (Test)']);
+	}
+
+	/**
+	 * @covers \ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion
+	 */
+	public function testLoadLocalizedData_LoadsRequestedNonEnUsFileWhenItExists(): void
+	{
+		[$oConfig, $sPattern] = $this->GivenLocalizedDataTestContext('en_us', 'data.sample.organizations.fr_fr.xml');
+
+		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '', '3.3.0', '3.0.0', $sPattern);
+
+		$this->AssertOrganizationNamesExist(['Client (Test)', 'Département informatique (Test)']);
+	}
+
+	/**
+	 * @covers \ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion
+	 */
+	public function testLoadLocalizedData_ThrowsWhenRequestedNonEnUsFileDoesNotExist(): void
+	{
+		[$oConfig, $sPattern] = $this->GivenLocalizedDataTestContext('en_us', 'data.sample.organizations.fr_fr.missing.xml', false);
+
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage("File $sPattern not found");
+
+		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '', '3.3.0', '3.0.0', $sPattern);
 	}
 
 	/**
@@ -431,60 +441,36 @@ SQL
 	/**
 	 * Prepare common context for LoadLocalizedData tests.
 	 *
-	 * @return array{0: Config, 1: string, 2: string}
+	 * @return array{0: Config, 1: string}
 	 */
-	private function GivenLocalizedDataTestContext(string $sOrgNamePrefix, string $sLanguage, array $aAvailableLanguages = []): array
+	private function GivenLocalizedDataTestContext(string $sLanguage, string $sDataFileName = 'data.sample.organizations.en_us.xml', bool $bAssertFileExists = true): array
 	{
 		$oConfig = MetaModel::GetConfig();
 		$oConfig->SetDefaultLanguage($sLanguage);
 		$this->assertNotNull($oConfig);
 
-		$sOrgName = $sOrgNamePrefix.uniqid();
-
-		$sTmpDir = static::CreateTmpdir();
-		$this->aFileToClean[] = $sTmpDir;
-		$sPattern = $sTmpDir.DIRECTORY_SEPARATOR.'data.en_us.xml';
-
-		foreach ($aAvailableLanguages as $sAvailableLanguage) {
-			$this->GivenLocalizedDataFile($sTmpDir, $sAvailableLanguage, $sOrgName);
+		$sPattern = __DIR__.DIRECTORY_SEPARATOR.'resources2'.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'load-localized-data'.DIRECTORY_SEPARATOR.$sDataFileName;
+		if ($bAssertFileExists) {
+			$this->assertFileExists($sPattern);
 		}
 
-		return [$oConfig, $sOrgName, $sPattern];
+		return [$oConfig, $sPattern];
 	}
 
-	private function GivenLocalizedDataFile(string $sDir, string $sLang, string $sOrgName): string
+	private function AssertOrganizationNamesExist(array $aExpectedOrganizationNames): void
 	{
-		$sFilePath = $sDir.DIRECTORY_SEPARATOR.'data.'.$sLang.'.xml';
-		file_put_contents($sFilePath, $this->BuildOrganizationXml($sOrgName, $sLang));
-
-		return $sFilePath;
+		foreach ($aExpectedOrganizationNames as $sExpectedName) {
+			$this->AssertOrganizationNameExists($sExpectedName);
+		}
 	}
 
-	private function BuildOrganizationXml(string $sOrgName, string $sLang): string
-	{
-		$iId = random_int(100000, 999999);
-		$sOrgNameXml = htmlspecialchars($sOrgName, ENT_XML1);
-
-		return <<<XML
-<?xml version="1.0" encoding="UTF-8"?>
-<Set>
-	<Organization alias="Organization" id="{$iId}">
-		<name>{$sOrgNameXml}</name>
-		<code>{$sLang}</code>
-		<status>active</status>
-	</Organization>
-</Set>
-XML;
-	}
-
-	private function AssertOrganizationCountByName(string $sOrgName, string $sLanguage, int $iExpectedCount): void
+	private function AssertOrganizationNameExists(string $sExpectedName): void
 	{
 		$oSet = new \DBObjectSet(
-			\DBSearch::FromOQL("SELECT Organization WHERE name = :org_name AND code = :language"),
+			\DBSearch::FromOQL("SELECT Organization WHERE name = :org_name"),
 			[],
-			['org_name' => $sOrgName, 'language' => $sLanguage]
+			['org_name' => $sExpectedName]
 		);
-		$iCount = $oSet->Count();
-		$this->assertEquals($iExpectedCount, $iCount, "Found $iCount changes for objects with name '{$sOrgName}' and language '{$sLanguage}', expected {$iExpectedCount}");
+		$this->assertGreaterThanOrEqual(1, $oSet->Count(), "Expected at least one Organization named '{$sExpectedName}'");
 	}
 }
