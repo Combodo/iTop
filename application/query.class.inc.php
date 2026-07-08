@@ -113,17 +113,43 @@ abstract class Query extends cmdbAbstractObject
 			]
 		));
 
+		MetaModel::Init_AddAttribute(new AttributeExternalKey(
+			"owner_id",
+			[
+				"targetclass" => 'Contact',
+				"allowed_values" => null,
+				"sql" => 'owner_id',
+				"is_null_allowed" => true,
+				"depends_on" => [],
+				"display_style" => 'select',
+				"always_load_in_tables" => false,
+				"on_target_delete" => DEL_AUTO,
+			]
+		));
+
+		MetaModel::Init_AddAttribute(new AttributeEnumSet(
+			"usages",
+			[
+				"allowed_values" => null,
+				"possible_values" => new ValueSetEnumPadded("export,reference,notif,draft,dashlet"),
+				"sql" => "usages",
+				"depends_on" => [],
+				"is_null_allowed" => true,
+				"max_items" => 12,
+			]
+		));
+
 		// Display lists
 		MetaModel::Init_SetZListItems(
 			'details',
-			['name', 'is_template', 'description']
+			['name', 'is_template', 'owner_id', 'usages', 'description']
 		); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', ['description']); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', ['description', 'usages']); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', ['name', 'description', 'is_template']); // Criteria of the std search form
 		MetaModel::Init_SetZListItems(
 			'default_search',
-			['name', 'description', 'is_template']
+			['name', 'description', 'is_template', 'owner_id', 'usages']
 		); // Criteria of the default search form
 		// MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
@@ -141,6 +167,15 @@ abstract class Query extends cmdbAbstractObject
 		}
 
 		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+	}
+
+	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = [])
+	{
+		// read only attribute
+		if (in_array($sAttCode, ['export_count', 'export_last_date', 'export_last_user_id'])) {
+			return OPT_ATT_READONLY;
+		}
+		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
 	}
 
 	/**
@@ -214,15 +249,15 @@ class QueryOQL extends Query
 		MetaModel::Init_SetZListItems(
 			'details',
 			[
-				'col:col1' => ['fieldset:Query:baseinfo' => ['name', 'is_template', 'description', 'oql', 'fields']],
+				'col:col1' => ['fieldset:Query:baseinfo' => ['name', 'is_template', 'owner_id', 'usages', 'description', 'oql', 'fields']],
 				'col:col2' => ['fieldset:Query:exportInfo' => ['export_count', 'export_last_date', 'export_last_user_id', 'export_last_user_contact']],
 			]
 		); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', ['description']); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', ['description', 'usages']); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems(
 			'standard_search',
-			['name', 'description', 'is_template', 'fields', 'oql']
+			['name', 'description', 'is_template', 'owner_id', 'usages', 'oql']
 		); // Criteria of the std search form
 	}
 

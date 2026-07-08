@@ -116,6 +116,18 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Query/Attribute:export_last_user_id+' => 'Uživatel, který naposledy spustil export',
 	'Class:Query/Attribute:export_last_user_contact' => 'Kontakt',
 	'Class:Query/Attribute:export_last_user_contact+' => 'kontakt, který naposledy spustil export',
+	'Class:Query/Attribute:usages' => 'Usages~~',
+		'Class:Query/Attribute:usages+' => 'Specify the possible usages for this query.
+ - The "Reference for AI" tag assumes the description is very explicit and compliant with OQL. It may be used as an example for building OQL queries by AI.
+ - The "Notification" tag implies the class of returned objects has one and only one field of type email.
+ - The "Dashlet" tag assumes the OQL returns a single class of objects.~~',
+	'Class:Query/Attribute:usages/Value:export' => 'Export~~',
+	'Class:Query/Attribute:usages/Value:reference' => 'Reference for AI~~',
+	'Class:Query/Attribute:usages/Value:notif' => 'Notification~~',
+	'Class:Query/Attribute:usages/Value:draft' => 'Draft~~',
+	'Class:Query/Attribute:usages/Value:dashlet' => 'Dashlet~~',
+	'Class:Query/Attribute:owner_id' => 'Owner~~',
+	'Class:Query/Attribute:owner_id+' => 'Team or person responsible for this query~~',
 	'Query:baseinfo' => 'Hlavní informace',
 	'Query:exportInfo' => 'Informace o Exportu',
 	'Class:QueryOQL/Attribute:fields' => 'Atributy',

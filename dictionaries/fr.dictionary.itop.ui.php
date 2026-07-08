@@ -121,6 +121,18 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Query/Attribute:export_last_user_id+' => 'Dernier utilisateur ayant exécuté cette requête',
 	'Class:Query/Attribute:export_last_user_contact' => 'Contact',
 	'Class:Query/Attribute:export_last_user_contact+' => 'Dernier contact ayant exécuté cette requête',
+	'Class:Query/Attribute:usages' => 'Usages',
+	'Class:Query/Attribute:usages+' => 'Spécifie les usages possibles de cette requête.
+- L\'étiquette "Référence pour IA" suppose que la description est très explicite et conforme à l\'OQL. Elle pourra servir d\'exemple pour la construction de requêtes OQL par des IA.
+- L\'étiquette "Notification" implique que la classe d\'objets retournés possède un et un seul champ de type email.
+- L\'étiquette "Dashlet" suppose que l\'OQL ne retourne qu\'une seule classe d\'objets.',
+	'Class:Query/Attribute:usages/Value:export' => 'Export',
+	'Class:Query/Attribute:usages/Value:reference' => 'Référence pour IA',
+	'Class:Query/Attribute:usages/Value:notif' => 'Notification',
+	'Class:Query/Attribute:usages/Value:draft' => 'Brouillon',
+	'Class:Query/Attribute:usages/Value:dashlet' => 'Dashlet',
+	'Class:Query/Attribute:owner_id' => 'Responsable',
+	'Class:Query/Attribute:owner_id+' => 'Personne ou équipe utilisatrice de cette requête, responsable de sa définition',
 	'Query:baseinfo' => 'Informations générales',
 	'Query:exportInfo' => 'Informations sur les exports',
 	'Class:QueryOQL/Attribute:fields' => 'Champs',

@@ -129,6 +129,18 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Query/Attribute:export_last_user_id+'      => '执行最近一次导出的用户',
 	'Class:Query/Attribute:export_last_user_contact'  => '联系人',
 	'Class:Query/Attribute:export_last_user_contact+' => '执行最近一次导出的联系人',
+	'Class:Query/Attribute:usages' => 'Usages~~',
+		'Class:Query/Attribute:usages+' => 'Specify the possible usages for this query.
+ - The "Reference for AI" tag assumes the description is very explicit and compliant with OQL. It may be used as an example for building OQL queries by AI.
+ - The "Notification" tag implies the class of returned objects has one and only one field of type email.
+ - The "Dashlet" tag assumes the OQL returns a single class of objects.~~',
+	'Class:Query/Attribute:usages/Value:export' => 'Export~~',
+	'Class:Query/Attribute:usages/Value:reference' => 'Reference for AI~~',
+	'Class:Query/Attribute:usages/Value:notif' => 'Notification~~',
+	'Class:Query/Attribute:usages/Value:draft' => 'Draft~~',
+	'Class:Query/Attribute:usages/Value:dashlet' => 'Dashlet~~',
+	'Class:Query/Attribute:owner_id' => 'Owner~~',
+	'Class:Query/Attribute:owner_id+' => 'Team or person responsible for this query~~',
 	'Query:baseinfo'                                  => '基本信息',
 	'Query:exportInfo'                                => '导出信息',
 	'Class:QueryOQL/Attribute:fields'                 => '字段',
