@@ -191,6 +191,7 @@ abstract class ItopTestCase extends KernelTestCase
 		}
 
 		foreach ($this->aFileToClean as $sPath) {
+			echo "aFileToClean: $sPath \n";
 			if (is_file($sPath)) {
 				@unlink($sPath);
 				continue;
