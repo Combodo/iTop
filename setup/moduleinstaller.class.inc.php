@@ -323,7 +323,7 @@ abstract class ModuleInstallerAPI
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public static function LoadLocalizedDataOnCrossingVersion(Config $oConfiguration, ?string $sPreviousVersion, ?string $sCurrentVersion, string $sFirstLoadingVersion, string $sDefaultFileName): void
+	public static function LoadLocalizedDataOnCrossingVersion(Config $oConfiguration, string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, string $sDefaultFileName): void
 	{
 		self::AssertLoadLocalizedDataParametersAreValid($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion);
 		if (self::IsVersionCrossed($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion)) {
