@@ -64,8 +64,6 @@ class DataAuditSequencer extends StepSequencer
 
 				case 'compile':
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
-					$sSourceDir = $this->oParams->Get('source_dir', 'datamodels/latest');
-					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
 					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', []);
 					$aSelectedExtensionCodes = $this->oParams->Get('selected_extensions', []);
 					$bUseSymbolicLinks = $this->oParams->Get('use_symbolic_links', null) === 'on';

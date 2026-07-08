@@ -190,4 +190,14 @@ class iTopExtension
 	{
 		$this->bMarkedAsChosen = $bMarkedAsChosen;
 	}
+
+	public function HasCode(): bool
+	{
+		return $this->sCode !== '';
+	}
+
+	public function HasLabel(): bool
+	{
+		return $this->sLabel !== '';
+	}
 }
