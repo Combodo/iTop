@@ -41,6 +41,10 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		$this->oEnvironment = new UnitTestRunTimeEnvironment(self::ENVT);
 		$this->oEnvironment->bUseDelta = false;
 		$this->oEnvironment->bUseAdditionalFeatures = true;
+
+		$oRuntimeEnvironment = new RunTimeEnvironment($this->GetTestEnvironment(), false);
+		$oRuntimeEnvironment->CopySetupFiles();
+
 		parent::setUp();
 
 		$this->RequireOnceItopFile('/setup/feature_removal/SetupAudit.php');
