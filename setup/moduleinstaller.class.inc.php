@@ -334,7 +334,7 @@ abstract class ModuleInstallerAPI
 
 	/**
 	 * Helper to load a localized data file based on the default language of the application.
-	 * @param \Config $oConfiguration to retrieve the default language
+	 * @param string $sDefaultLanguage The default language of the application, used to build the localized file name
 	 * @param string $sDefaultFile The default file to load, must be ending with .en_us.xml to be localized
 	 *
 	 * @return void
