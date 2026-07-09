@@ -397,13 +397,13 @@ abstract class ModuleInstallerAPI
 	private static function AssertLoadLocalizedDataParametersAreValid(?string $sPreviousVersion, ?string $sCurrentVersion, string $sFirstLoadingVersion): void
 	{
 		if (($sPreviousVersion !== '') && !self::IsSupportediTopVersion($sPreviousVersion)) {
-			throw new CoreUnexpectedValue("LoadLocalizedData expects sPreviousVersion to be empty or match x.y[.z][-name], got '{$sPreviousVersion}'");
+			throw new CoreUnexpectedValue("LoadLocalizedDataOnCrossingVersion expects sPreviousVersion to be empty or match x.y[.z][-name], got '{$sPreviousVersion}'");
 		}
 		if (!self::IsSupportediTopVersion($sCurrentVersion)) {
-			throw new CoreUnexpectedValue("LoadLocalizedData expects sCurrentVersion to match x.y[.z][-name], got '{$sCurrentVersion}'");
+			throw new CoreUnexpectedValue("LoadLocalizedDataOnCrossingVersion expects sCurrentVersion to match x.y[.z][-name], got '{$sCurrentVersion}'");
 		}
 		if (($sFirstLoadingVersion !== '') && !self::IsSupportediTopVersion($sFirstLoadingVersion)) {
-			throw new CoreUnexpectedValue("LoadLocalizedData expects sFirstLoadingVersion to match x.y[.z][-name], got '{$sFirstLoadingVersion}'");
+			throw new CoreUnexpectedValue("LoadLocalizedDataOnCrossingVersion expects sFirstLoadingVersion to match x.y[.z][-name], got '{$sFirstLoadingVersion}'");
 		}
 	}
 
