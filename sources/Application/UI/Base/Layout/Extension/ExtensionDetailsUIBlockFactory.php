@@ -27,7 +27,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$bUninstallable = $aExtraFlags['uninstallable'] ?? true;
 		$bMissingFromDisk = $aExtraFlags['missing'] ?? false;
 		$bCannotBeInstalled = $aExtraFlags['cannot-be-installed'] ?? false;
-		$bSelected = $aExtraFlags['selected'] ?? !$bCannotBeInstalled;
+		$bSelected = $aExtraFlags['selected'] ?? true;
 		$bDisabled = $aExtraFlags['disabled'] ?? false;
 		$bRemote = $aExtraFlags['remote'] ?? false;
 		self::AddExtraBadges($aBadges, $bUninstallable, $bMissingFromDisk, $bCannotBeInstalled, $sCode);
@@ -48,9 +48,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 
 		$oExtensionDetails = new ExtensionDetails($sCode, $sLabel, $sDescription, $aMetaData, $aBadges, $sAbout);
 		$oExtensionDetails->GetToggler()->SetIsToggled(true);
-		if ($bCannotBeInstalled) {
-			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
-		} elseif ($bMissingFromDisk) {
+		if ($bMissingFromDisk || $bCannotBeInstalled) {
 			$oExtensionDetails->GetToggler()->SetIsToggled(false);
 			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
 		} elseif ((!$bUninstallable || $bRemote) && !$bDisabled) {
@@ -74,7 +72,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$aBadges = [];
 		$bUninstallable = $aExtraFlags['uninstallable'] ?? true;
 		$bCannotBeInstalled = $aExtraFlags['cannot-be-installed'] ?? false;
-		$bSelected = $aExtraFlags['selected'] ?? !$bCannotBeInstalled;
+		$bSelected = $aExtraFlags['selected'] ?? false;
 		$bDisabled = $aExtraFlags['disabled'] ?? false;
 		self::AddExtraBadges($aBadges, $bUninstallable, false, $bCannotBeInstalled, $sCode);
 		$oBadgeInstalled = BadgeUIBlockFactory::MakeGrey(
@@ -94,6 +92,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$oExtensionDetails = new ExtensionDetails($sCode, $sLabel, $sDescription, $aMetaData, $aBadges, $sAbout);
 
 		if ($bCannotBeInstalled) {
+			$oExtensionDetails->GetToggler()->SetIsToggled(false);
 			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
 		}
 
