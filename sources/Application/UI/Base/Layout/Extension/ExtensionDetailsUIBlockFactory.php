@@ -70,7 +70,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 	{
 		$aBadges = [];
 		$bUninstallable = $aExtraFlags['uninstallable'] ?? true;
-		$bCannotBeInstalled = $aExtraFlags['cannot-be-installed'] ?? false;
+		$bDependencyIssue = $aExtraFlags['dependency_issue'] ?? false;
 		$bSelected = $aExtraFlags['selected'] ?? false;
 		$bDisabled = $aExtraFlags['disabled'] ?? false;
 		self::AddExtraBadges($aBadges, $bUninstallable, false, $sCode);
@@ -88,7 +88,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		);
 		$oBadgeToBeUninstalled->AddCSSClass('checked');
 		$aBadges[] = $oBadgeToBeUninstalled;
-		if ($bCannotBeInstalled) {
+		if ($bDependencyIssue) {
 			$bSelected = false;
 			$aBadges[] = BadgeUIBlockFactory::MakeOrange(
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled'),
@@ -98,7 +98,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		}
 		$oExtensionDetails = new ExtensionDetails($sCode, $sLabel, $sDescription, $aMetaData, $aBadges, $sAbout);
 
-		if ($bCannotBeInstalled) {
+		if ($bDependencyIssue) {
 			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
 		}
 		if ($bSelected) {

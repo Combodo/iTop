@@ -587,7 +587,7 @@ EOF
 					break;
 				}
 			}
-			if ((isset($aChoice['mandatory']) && $aChoice['mandatory'] && (!isset($aChoice['cannot-be-installed']) || !$aChoice['cannot-be-installed'])) ||
+			if ((isset($aChoice['mandatory']) && $aChoice['mandatory'] && (!isset($aChoice['dependency_issue']) || !$aChoice['dependency_issue'])) ||
 				(isset($aSelectedChoices[$sChoiceId]) && ($aSelectedChoices[$sChoiceId] == $sChoiceId))) {
 				$sDisplayChoices .= '<li>'.$aChoice['title'].'</li>';
 				if (isset($aChoice['modules'])) {
@@ -637,7 +637,7 @@ EOF
 			if ($sChoiceName == null) {
 				$sChoiceName = $sChoiceId;
 			}
-			if ((isset($aChoice['mandatory']) && $aChoice['mandatory'] && (!isset($aChoice['cannot-be-installed']) || !$aChoice['cannot-be-installed'])) ||
+			if ((isset($aChoice['mandatory']) && $aChoice['mandatory'] && (!isset($aChoice['dependency_issue']) || !$aChoice['dependency_issue'])) ||
 				(isset($aSelectedChoices[$sChoiceName]) && ($aSelectedChoices[$sChoiceName] == $sChoiceId))) {
 				$sDisplayChoices .= '<li>'.$aChoice['title'].'</li>';
 				if ($aSelectedExtensions !== null) {
@@ -751,14 +751,14 @@ EOF
 		$bMissingFromDisk = isset($aChoice['missing']) && $aChoice['missing'] === true;
 		$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']);
 		$bInstalled = $bMissingFromDisk || $oITopExtension->bInstalled;
-		$bCannotBeInstalled = $bMissingFromDisk || count($oITopExtension->aMissingDependencies) > 0;
+		$bDependencyIssue = $bMissingFromDisk || $oITopExtension->HasDependencyIssue();
 
 		$bChecked = $bSelected;
 		$bDisabled = false;
 		if ($bMissingFromDisk) {
 			$bDisabled = true;
 			$bChecked = false;
-		} elseif ($bCannotBeInstalled) {
+		} elseif ($bDependencyIssue) {
 			$bDisabled = true;
 			$bChecked = false;
 		} elseif ($bMandatory) {
@@ -791,7 +791,7 @@ EOF
 
 		return [
 			'uninstallable' => $bCanBeUninstalled,
-			'cannot-be-installed' => $bCannotBeInstalled,
+			'dependency_issue' => $bDependencyIssue,
 			'mandatory' => $bMandatory,
 			'missing' => $bMissingFromDisk,
 			'installed' => $bInstalled,
@@ -888,7 +888,7 @@ EOF
 		if (!$aFlags['uninstallable']) {
 			$sTooltip .= '<div id="badge--'.$sId.'--not-uninstallable" class="ibo-badge ibo-block ibo-is-yellow" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</div>';
 		}
-		if ($aFlags['cannot-be-installed'] && !$aFlags['installed']) {
+		if ($aFlags['dependency_issue'] && !$aFlags['installed']) {
 			$sTooltip .= '<div id="badge--'.$sId.'--cannot-be-installed" class="ibo-badge ibo-block ibo-is-orange" title="This extension cannot be installed because one or more dependencies are not satisfied." >cannot be installed</div>';
 		}
 

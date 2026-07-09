@@ -159,7 +159,7 @@ function DoInstall(WebPage $oPage)
 
 	foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
 		if ($oExtension->sSource == iTopExtension::SOURCE_REMOTE) {
-			if (count($oExtension->aMissingDependencies) > 0) {
+			if ($oExtension->HasDependencyIssue()) {
 				$oPage->add('<div class="choice">');
 				$oPage->add('<input type="checkbox" disabled>&nbsp;');
 				$sTitle = Dict::Format('iTopHub:InstallationEffect:MissingDependencies_Details', implode(', ', $oExtension->aMissingDependencies));

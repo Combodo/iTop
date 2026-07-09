@@ -545,7 +545,7 @@ class iTopExtensionsMap
 				continue;
 			}
 
-			if (! $bKeepExtensionsHavingMissingDependencies && count($oExtension->aMissingDependencies) > 0) {
+			if (! $bKeepExtensionsHavingMissingDependencies && $oExtension->HasDependencyIssue()) {
 				//skip extensions with dependency issues
 				continue;
 			}
@@ -571,7 +571,7 @@ class iTopExtensionsMap
 				'default'             => true, // by default offer to install all modules
 				'modules'             => $oExtension->aModules,
 				'mandatory'           => $oExtension->bMandatory,
-				'cannot-be-installed' => count($oExtension->aMissingDependencies) > 0,
+				'dependency_issue'    => $oExtension->HasDependencyIssue(),
 				'source_label'        => $oExtension->GetExtensionSourceLabel(),
 				'uninstallable'       => $oExtension->CanBeUninstalled(),
 				'missing'             => $oExtension->bRemovedFromDisk,
