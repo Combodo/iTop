@@ -146,7 +146,7 @@ class XMLBulkExport extends BulkExport
 			}
 			foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
 				$oObj = $aObjects[$sAlias];
-				$oObj->FireEventReadDetails();
+				$oObj->FireEventReadDetails(get_class($this));
 				if (is_null($oObj)) {
 					$sData .= "<$sClassName alias=\"$sAlias\" id=\"null\">\n";
 				} else {

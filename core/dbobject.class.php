@@ -6266,7 +6266,7 @@ abstract class DBObject implements iDisplay
 	 * @return void
 	 * @since 3.3.0
 	 */
-	public function FireEventReadDetails(): void
+	public function FireEventReadDetails(string $sExportType): void
 	{
 	}
 

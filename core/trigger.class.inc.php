@@ -135,6 +135,11 @@ abstract class Trigger extends cmdbAbstractObject
 				if ($oAction->IsActive()) {
 					$oKPI = new ExecutionKPI();
 					$aContextArgs['action->object()'] = $oAction;
+					if (array_key_exists('this->object()', $aContextArgs)) {
+						/** @var \DBObject $oObject */
+						$oObject = $aContextArgs['this->object()'];
+						$oObject->FireEventReadDetails(get_class($oAction));
+					}
 					$oAction->DoExecute($this, $aContextArgs);
 					$oKPI->ComputeStatsForExtension($oAction, 'DoExecute');
 				}
