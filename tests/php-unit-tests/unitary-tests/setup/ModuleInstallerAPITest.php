@@ -365,7 +365,10 @@ SQL
 		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '3.0.1', '3.1.0', '3.0.2', $sPattern);
 
 		// Then no duplicated data load side effect and values remain stable
-		$this->AssertOrganizationNamesExist(['Customer (Test)', 'IT Department (Test)']);
+		foreach (['Customer (Test)', 'IT Department (Test)'] as $sExpectedName) {
+			$oSet = new \DBObjectSet(\DBSearch::FromOQL("SELECT Organization WHERE name = :org_name"), [], ['org_name' => $sExpectedName]);
+			$this->assertSame(1, $oSet->Count(), "Expected exactly one Organization named '{$sExpectedName}' after loading twice (idempotency)");
+		}
 	}
 
 	/**
