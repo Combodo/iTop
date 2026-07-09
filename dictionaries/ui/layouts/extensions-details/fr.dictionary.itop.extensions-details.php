@@ -16,7 +16,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Layout:ExtensionsDetails:BadgeToBeInstalled' => 'va être installé',
 	'UI:Layout:ExtensionsDetails:BadgeToBeInstalled+' => 'Cette extension sera installée lors de l\'installation.',
 	'UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled' => 'ne peut pas être installée',
-	'UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled+' => 'Cette extension ne peut pas être installée car une ou plusieurs dépendances ne sont pas satisfaites.',
+	'UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled+' => 'Cette extension ne peut pas être installée car une ou plusieurs dépendances ne peuvent pas être satisfaites.',
 	'UI:Layout:ExtensionsDetails:BadgeNotInstalled' => 'pas installé',
 	'UI:Layout:ExtensionsDetails:BadgeNotInstalled+' => 'Cette extension ne fait pas partie de l\'installation actuelle.',
 	'UI:Layout:ExtensionsDetails:BadgeToBeUninstalled' => 'va être désinstallé',
