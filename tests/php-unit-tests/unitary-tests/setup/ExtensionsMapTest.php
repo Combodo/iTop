@@ -3,6 +3,7 @@
 namespace Combodo\iTop\Test\UnitTest\Integration;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use CoreException;
 use iTopExtension;
 use ItopExtensionsMap;
 use ModuleDiscovery;
@@ -175,6 +176,125 @@ class ExtensionsMapTest extends ItopTestCase
 			"{$sAppRootForTest}data/production-modules",
 		];
 		self::assertEquals($aExpectedDirs, $oiTopExtensionsMap->GetScannedModulesRootDirs());
+	}
+
+	public function testCheckExtensionsValidityReturnsFalseWhenSelectedExtensionCodeAndLabelAreMissing(): void
+	{
+		[$sEnvironment, $sExtensionsDirRelative] = $this->CreateFixtureContext('env-missing-label-');
+
+		$sInvalidExtensionXml = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<extension format="1.0">
+	<description>Test extension without code and label</description>
+	<version>1.0.0</version>
+	<mandatory>false</mandatory>
+	<more_info_url/>
+</extension>
+XML;
+		$sExtensionsDirAbsolute = APPROOT.$sExtensionsDirRelative;
+		file_put_contents($sExtensionsDirAbsolute.'/extension.xml', $sInvalidExtensionXml);
+
+		$oExtensionMap = ItopExtensionsMap::GetExtensionsMap($sEnvironment);
+
+		//echo json_encode(array_keys($oExtensionMap->GetAllExtensions()), JSON_PRETTY_PRINT);
+
+		//		$this->expectException(CoreException::class);
+		//		$this->expectExceptionMessage("Selected extension(s) cannot be installed: Missing extension code ($sExtensionsDirAbsolute)");
+
+		self::assertFalse($oExtensionMap->CheckExtensionsValidity(), 'Check extensions validity should have detected an extension without code.');
+	}
+
+	public function testCheckExtensionsValidityReturnsFalseWhenSelectedExtensionCodeIsMissing(): void
+	{
+		[$sEnvironment, $sExtensionsDirRelative] = $this->CreateFixtureContext('env-missing-label-');
+
+		$sInvalidExtensionXml = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<extension format="1.0">
+	<label>Broken extension</label>
+	<description>Test extension without code and label</description>
+	<version>1.0.0</version>
+	<mandatory>false</mandatory>
+	<more_info_url/>
+</extension>
+XML;
+		$sExtensionsDirAbsolute = APPROOT.$sExtensionsDirRelative;
+		file_put_contents($sExtensionsDirAbsolute.'/extension.xml', $sInvalidExtensionXml);
+
+		$oExtensionMap = ItopExtensionsMap::GetExtensionsMap($sEnvironment);
+
+		//echo json_encode(array_keys($oExtensionMap->GetAllExtensions()), JSON_PRETTY_PRINT);
+
+		//		$this->expectException(CoreException::class);
+		//		$this->expectExceptionMessage("Selected extension(s) cannot be installed: Missing extension code ($sExtensionsDirAbsolute)");
+
+		self::assertFalse($oExtensionMap->CheckExtensionsValidity(), 'Check extensions validity should have detected an extension without code.');
+	}
+
+	public function testCheckExtensionsValidityThrowExceptionWhenSelectedExtensionCodeAndLabelAreMissingAndExtensionIsChosen(): void
+	{
+		[$sEnvironment, $sExtensionsDirRelative] = $this->CreateFixtureContext('env-missing-label-');
+
+		$sInvalidExtensionXml = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<extension format="1.0">
+	<description>Test extension without code and label</description>
+	<version>1.0.0</version>
+	<mandatory>false</mandatory>
+	<more_info_url/>
+</extension>
+XML;
+		$sExtensionsDirAbsolute = APPROOT.$sExtensionsDirRelative;
+		file_put_contents($sExtensionsDirAbsolute.'/extension.xml', $sInvalidExtensionXml);
+
+		$oExtensionMap = ItopExtensionsMap::GetExtensionsMap($sEnvironment);
+		$oExtensionMap->MarkAsChosen('');
+
+		//echo json_encode(array_keys($oExtensionMap->GetAllExtensions()), JSON_PRETTY_PRINT);
+
+		$this->expectException(CoreException::class);
+		$this->expectExceptionMessage("Selected extension(s) cannot be installed: Missing extension code ($sExtensionsDirAbsolute)");
+
+		$oExtensionMap->CheckExtensionsValidity();
+	}
+
+	public function testCheckExtensionsValidityThrowExceptionWhenSelectedExtensionCodeIsMissingAndExtensionIsChosen(): void
+	{
+		[$sEnvironment, $sExtensionsDirRelative] = $this->CreateFixtureContext('env-missing-label-');
+
+		$sInvalidExtensionXml = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<extension format="1.0">
+	<label>Broken extension</label>
+	<description>Test extension without code and label</description>
+	<version>1.0.0</version>
+	<mandatory>false</mandatory>
+	<more_info_url/>
+</extension>
+XML;
+		$sExtensionsDirAbsolute = APPROOT.$sExtensionsDirRelative;
+		file_put_contents($sExtensionsDirAbsolute.'/extension.xml', $sInvalidExtensionXml);
+
+		$oExtensionMap = ItopExtensionsMap::GetExtensionsMap($sEnvironment);
+		$oExtensionMap->MarkAsChosen('');
+
+		//echo json_encode(array_keys($oExtensionMap->GetAllExtensions()), JSON_PRETTY_PRINT);
+
+		$this->expectException(CoreException::class);
+		$this->expectExceptionMessage("Selected extension(s) cannot be installed: Missing extension code (Broken extension)");
+
+		$oExtensionMap->CheckExtensionsValidity();
+	}
+
+	private function CreateFixtureContext(string $sEnvPrefix): array
+	{
+		$sEnvironment = str_replace('.', '-', uniqid($sEnvPrefix, true));
+		$sExtensionsDirRelative = 'data/'.$sEnvironment.'-modules';
+
+		mkdir(APPROOT.$sExtensionsDirRelative, 0777, true);
+		$this->aFileToClean[] = APPROOT.$sExtensionsDirRelative;
+
+		return [$sEnvironment, $sExtensionsDirRelative];
 	}
 
 	public function SerializeExtensionMap(iTopExtensionsMap $oiTopExtensionsMap): array

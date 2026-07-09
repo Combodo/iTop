@@ -13,43 +13,29 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 
 // Message
 Dict::Add('PL PL', 'Polish', 'Polski', [
-	'UI:WelcomePopup:Message:320_01_Welcome:Title' => 'Witaj w '.ITOP_APPLICATION_SHORT.' 3.2',
-	'UI:WelcomePopup:Message:320_01_Welcome:Description' => '<div>Gratulacje, trafiłeś do '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+	'UI:WelcomePopup:Message:330_01_Welcome:Title' => 'Welcome to '.ITOP_APPLICATION_SHORT.' 3.3~~',
+	'UI:WelcomePopup:Message:330_01_Welcome:Description' => '<div>We’re pleased to introduce this latest release, bringing you a range of updates and improvements !</div>
 <br>
-<div>Z radością ogłaszamy tę nową wersję. </div>
-<div>Oprócz wprowadzenia nowych funkcji, takich jak Newsroom, '.ITOP_APPLICATION_SHORT.' wersja 3.2 zawiera krytyczne poprawki bezpieczeństwa, zwiększoną dostępność i inne znaczące ulepszenia mające na celu zapewnienie stabilności i bezpieczeństwa.</div>
+<div>Alongside new features like Multi-Factor Authentication, this version includes essential security updates, the first AI bricks, and various enhancements designed to deliver a smoother and more reliable experience.</div>
 <br>
-<div>Odkryj wszystkie ekscytujące nowe funkcje '.ITOP_APPLICATION_SHORT.' i bądź na bieżąco z ważnymi powiadomieniami dzięki naszemu nowemu wyskakującemu okienku powitalnemu!</div>
-<div>Mamy nadzieję, że spodoba ci się ta wersja tak samo, jak nam podobało się jej wyobrażanie i tworzenie.</div>
+<div>We hope you enjoy using this version as much as we enjoyed building it.</div>
+<div>Don’t forget to adjust your iTop preferences to tailor the experience to your needs.</div>~~',
+	'UI:WelcomePopup:Message:330_02_AIFoundations:Title' => 'Laying the foundations for AI~~',
+	'UI:WelcomePopup:Message:330_02_AIFoundations:Description' => '<div>This release introduces the first building blocks for our upcoming AI-powered features.</div>
 <br>
-<div>Dostosuj swoją aplikację '.ITOP_APPLICATION_SHORT.' w preferencjach dotyczących spersonalizowanych doświadczeń.</div>',
-	'UI:WelcomePopup:Message:320_02_Newsroom:Title' => 'Przywitaj się z newsroomem',
-	'UI:WelcomePopup:Message:320_02_Newsroom:Description' => '<div>Pożegnaj zaśmiecone skrzynki odbiorcze i przywitaj się ze spersonalizowanymi alertami <a href="%1$s" target="_blank">'.ITOP_APPLICATION_SHORT.'\'s Newsroom</a>!</div>
-<div>Newsroom umożliwia łatwe zarządzanie powiadomieniami w ramach platformy, dzięki czemu możesz być na bieżąco z ważnymi aktualizacjami bez ciągłego sprawdzania poczty. Dzięki możliwości oznaczania wiadomości jako przeczytanych lub nieprzeczytanych oraz automatycznego usuwania starych powiadomień, masz pełną kontrolę nad swoimi powiadomieniami. </div>
+<div>We’ve implemented the core APIs that will support future enhancements, paving the way for new intelligent capabilities and richer experiences in the next updates.</div>
 <br>
-<div>Wypróbuj już dziś i usprawnij swoje doświadczenie komunikacji w '.ITOP_APPLICATION_SHORT.'!</div>',
-	'UI:WelcomePopup:Message:320_03_NotificationsCenter:Title' => 'Centrum powiadomień',
-	'UI:WelcomePopup:Message:320_03_NotificationsCenter:Description' => '<div>Ponieważ wiemy, że Twoje zapotrzebowanie na informacje jest już maksymalne, możesz teraz łatwo wybrać sposób otrzymywania powiadomień – e-mailem, czatem, a nawet funkcją Newsroom</div>
-<div>Nie chcesz otrzymywać określonego rodzaju alertów? Nie ma nic łatwiejszego dzięki zaawansowanym możliwościom dostosowywania, które zapewniają elastyczność dostosowywania wrażeń do Twoich potrzeb. </div>
+<div>Stay tuned—this is just the beginning of what’s ahead.</div>~~',
+	'UI:WelcomePopup:Message:330_03_CMDB:Title' => 'Enhanced CMDB~~',
+	'UI:WelcomePopup:Message:330_03_CMDB:Description' => '<div>This version brings several improvements to our datamodel to better support evolving needs.</div>
 <br>
-<div>Uzyskaj dostęp do swojego centrum powiadomień poprzez newsroom lub poprzez swoje preferencje i unikaj przeciążenia informacjami we wszystkich kanałach komunikacji!</div>',
-	'UI:WelcomePopup:Message:320_05_A11yThemes:Title' => 'Dostępność '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomePopup:Message:320_05_A11yThemes:Description' => '<div>Aby zapewnić dostępność'.ITOP_APPLICATION_SHORT.', nasz zespół pracował nad nowymi motywami zaplecza. Zgodny z WCAG, interfejs użytkownika skupia się na ułatwieniu użytkownikom z wadami wzroku korzystania z rozwiązania:
-<ul>
-	<li><b>Temat dla daltonistów:</b> Zaprojektowany, aby pomóc użytkownikom z daltonizmem, motyw ten dzieli się na dwa podtematy, aby dostosować się do konkretnych przypadków: </li>
-		<ul>
-			<li>Jeden przystosowany do protanopii i deuteranopii</li>	
-			<li>I jeszcze jeden na tritanopię</li>	
-		</ul>
-		<br>
-	<li><b>Motyw o wysokim kontraście:</b> Zwiększony kontrast, aby umożliwić użytkownikom łatwiejsze rozróżnienie pomiędzy różnymi elementami na ekranie i uniknąć polegania na schemacie kolorów w przekazywaniu informacji. Może być pomocny dla użytkowników z różnymi patologiami, od ślepoty barw po problemy ze wzrokiem.</li>
-</ul>
-</div>',
-	'UI:WelcomePopup:Message:320_04_PowerfulNotifications_AdminOnly:Title' => 'Potężne powiadomienia',
-	'UI:WelcomePopup:Message:320_04_PowerfulNotifications_AdminOnly:Description' => '<div>'.ITOP_APPLICATION_SHORT.' Newsroom oferuje nowy sposób <b>automatyzacji</b> alertów na podstawie powtarzających się zdarzeń, dzięki czemu możesz łatwo skonfigurować odpowiednie dla siebie reguły. </div>
-<div>Nasze <b>sortowanie powiadomień oparte na priorytetach</b> gwarantuje, że ważne wiadomości będą wyświetlane jako pierwsze, a nasze opcje dostosowywania adresów URL pozwalają kierować odbiorców we właściwe miejsce. </div>
+<div>We’ve introduced containerization management, improved flow management, enriched class descriptions, and lifecycle management (End of Life / End of Support). The service management menu has also been redesigned for greater clarity and usability, along with the addition of images and logos on selected configuration items.</div>
 <br>
-<div>Dzięki obsłudze <b>wielu języków</b> masz teraz pełną kontrolę nad wyświetlaniem powiadomień.</div>
+<div>These updates aim to provide a more structured and intuitive experience.</div>~~',
+	'UI:WelcomePopup:Message:330_04_MFA:Title' => 'Strengthening security with MFA~~',
+	'UI:WelcomePopup:Message:330_04_MFA:Description' => '<div>Multi-Factor Authentication (MFA) is now fully integrated into iTop.</div>
 <br>
-<div>Skonfiguruj już dziś i przekonaj się, o ile efektywniejszy może być Twój proces alertów!</div>',
+<div>MFA, now built directly into the core experience, strengthens overall security while ensuring a more seamless and consistent user experience.</div>
+<br>
+<div>We encourage you to review your settings and enable MFA to benefit from enhanced account protection.</div>~~',
 ]);

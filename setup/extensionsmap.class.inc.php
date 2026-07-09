@@ -764,4 +764,49 @@ class iTopExtensionsMap
 	{
 		return $this->aScannedDirs;
 	}
+
+	/**
+	 * Validate extensions if an invalid extension is marked as chosen, then throw an exception
+	 *
+	 * @return bool true if all extensions are valid
+	 * @throws \CoreException
+	 */
+	public function CheckExtensionsValidity(): bool
+	{
+		$bSetupFailure = false;
+		$aNoCodeExtensionSourceDirs = [];
+		$aNoCodeExtensionLabelsThatBreakSetup = [];
+
+		/** @var iTopExtension $oExtension */
+		foreach ($this->aExtensions as $oExtension) {
+			if (!$oExtension->HasCode()) {
+				if ($oExtension->HasLabel()) {
+					$sExtensionLabel = $oExtension->sLabel;
+					$aNoCodeExtensionSourceDirs [$sExtensionLabel] = $oExtension->sSourceDir;
+				} else {
+					$sExtensionLabel = $oExtension->sSourceDir;
+					$aNoCodeExtensionSourceDirs [] = $oExtension->sSourceDir;
+				}
+
+				if ($oExtension->IsMarkedAsChosen()) {
+					$aNoCodeExtensionLabelsThatBreakSetup[] = $sExtensionLabel;
+					$bSetupFailure = true;
+				}
+			}
+		}
+
+		if (count($aNoCodeExtensionSourceDirs) > 0) {
+			if ($bSetupFailure) {
+				$sErrorMessage = sprintf('Selected extension(s) cannot be installed: Missing extension code (%s)', implode(',', $aNoCodeExtensionLabelsThatBreakSetup));
+				$e = new CoreException($sErrorMessage);
+				SetupLog::Exception($sErrorMessage, $e, null, $aNoCodeExtensionSourceDirs);
+				throw $e;
+			} else {
+				SetupLog::Warning('Non selected extension(s) cannot be installed: Missing extension code', null, $aNoCodeExtensionSourceDirs);
+				return false;
+			}
+		}
+
+		return true;
+	}
 }

@@ -2,10 +2,15 @@
 
 namespace Combodo\iTop\Test\UnitTest\Setup;
 
+use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Config;
+use CoreException;
 use DOMFormatException;
 use Exception;
+use iTopExtensionsMap;
 use RunTimeEnvironment;
+use utils;
 
 class RunTimeEnvironmentTest extends ItopTestCase
 {
@@ -15,52 +20,7 @@ class RunTimeEnvironmentTest extends ItopTestCase
 		$this->RequireOnceItopFile('/setup/runtimeenv.class.inc.php');
 	}
 
-	public function testDoCompileDoesNotThrowWhenUnselectedExtensionCodeIsMissing(): void
-	{
-		[$sEnvironment, $sExtensionsDirRelative] = $this->CreateFixtureContext('env-missing-code-');
-
-		$sInvalidExtensionXml = <<<XML
-<?xml version="1.0" encoding="UTF-8"?>
-<extension format="1.0">
-	<label>Broken extension</label>
-	<description>Test extension without code</description>
-	<version>1.0.0</version>
-	<mandatory>false</mandatory>
-	<more_info_url/>
-</extension>
-XML;
-		file_put_contents(APPROOT.$sExtensionsDirRelative.'/extension.xml', $sInvalidExtensionXml);
-		$oRunTimeEnvironment = $this->CreateRunTimeEnvironment($sEnvironment);
-
-		//early DOMFormatException to avoid any real compilation
-		$this->expectException(DOMFormatException::class);
-		$oRunTimeEnvironment->DoCompile([], [], []);
-	}
-
-	public function testDoCompileThrowsWhenSelectedExtensionCodeIsMissing(): void
-	{
-		[$sEnvironment, $sExtensionsDirRelative] = $this->CreateFixtureContext('env-missing-code-');
-
-		$sInvalidExtensionXml = <<<XML
-<?xml version="1.0" encoding="UTF-8"?>
-<extension format="1.0">
-	<label>Broken extension</label>
-	<description>Test extension without code</description>
-	<version>1.0.0</version>
-	<mandatory>false</mandatory>
-	<more_info_url/>
-</extension>
-XML;
-		file_put_contents(APPROOT.$sExtensionsDirRelative.'/extension.xml', $sInvalidExtensionXml);
-		$oRunTimeEnvironment = $this->CreateRunTimeEnvironment($sEnvironment);
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage("Selected extension(s) cannot be installed: Missing extension code (Broken extension)");
-
-		$oRunTimeEnvironment->DoCompile([""], [], []);
-	}
-
-	public function testDoCompileThrowsWhenSelectedExtensionCodeAndLabelAreMissing(): void
+	public function testDoCompileCallCheckExtensionsValidity(): void
 	{
 		[$sEnvironment, $sExtensionsDirRelative] = $this->CreateFixtureContext('env-missing-label-');
 
@@ -75,12 +35,17 @@ XML;
 XML;
 		$sExtensionsDirAbsolute = APPROOT.$sExtensionsDirRelative;
 		file_put_contents($sExtensionsDirAbsolute.'/extension.xml', $sInvalidExtensionXml);
-		$oRunTimeEnvironment = $this->CreateRunTimeEnvironment($sEnvironment);
 
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage("Selected extension(s) cannot be installed: Missing extension code ($sExtensionsDirAbsolute)");
+		$oRuntimeEnvironment = $this->CreateRunTimeEnvironment($sEnvironment);
+		$oExtensionMap = $this->createMock(ItopExtensionsMap::class);
+		$oExtensionMap->expects($this->once())->method('GetAllExtensions')->willReturn([]);
 
-		$oRunTimeEnvironment->DoCompile([""], [], [], false);
+		$this->SetNonPublicStaticProperty(iTopExtensionsMap::class, 'aInstancesByEnvironment', [$oRuntimeEnvironment->GetBuildEnv() => $oExtensionMap]);
+
+		$this->expectException(CoreException::class);
+
+		$oExtensionMap->expects($this->once())->method('CheckExtensionsValidity')->willThrowException(new CoreException(''));
+		$oRuntimeEnvironment->DoCompile([""], [], [], false);
 	}
 
 	private function CreateFixtureContext(string $sEnvPrefix): array

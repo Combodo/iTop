@@ -57,7 +57,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 	/**
 	 * @return array<string, string> : dict extensions folders by their code
 	 */
-	public function GetAdditionalFeaturePaths(): array
+	public function GetAdditionalExtensionsPaths(): array
 	{
 		return [];
 	}

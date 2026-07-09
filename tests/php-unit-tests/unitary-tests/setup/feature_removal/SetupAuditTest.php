@@ -2,20 +2,20 @@
 
 namespace Combodo\iTop\Test\UnitTest\Setup\FeatureRemoval;
 
-use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
-use Combodo\iTop\Setup\FeatureRemoval\InplaceSetupAudit;
+use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
 use Combodo\iTop\Setup\FeatureRemoval\ModelReflectionSerializer;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use Combodo\iTop\Test\UnitTest\Service\UnitTestRunTimeEnvironment;
+use Config;
 use MetaModel;
+use RunTimeEnvironment;
 use SetupUtils;
+use utils;
 
 class SetupAuditTest extends ItopCustomDatamodelTestCase
 {
 	public const ENVT = 'php-unit-extensionremoval-tests';
-
-	private ?string $sDirPathToRemoveFromExtensionFolder = null;
 
 	public function GetDatamodelDeltaAbsPath(): string
 	{
@@ -23,7 +23,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		return "";
 	}
 
-	public function GetAdditionalFeaturePaths(): array
+	public function GetAdditionalExtensionsPaths(): array
 	{
 		$aFeaturePaths = [];
 		foreach (glob(__DIR__."/additional_features/*", GLOB_ONLYDIR) as $aFeaturePath) {
@@ -34,25 +34,21 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		return $aFeaturePaths;
 	}
 
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+	}
+
 	protected function setUp(): void
 	{
 		static::LoadRequiredItopFiles();
 		$this->oEnvironment = new UnitTestRunTimeEnvironment(self::ENVT);
 		$this->oEnvironment->bUseDelta = false;
 		$this->oEnvironment->bUseAdditionalFeatures = true;
+
 		parent::setUp();
 
 		$this->RequireOnceItopFile('/setup/feature_removal/SetupAudit.php');
-		$this->RequireOnceItopFile('/setup/feature_removal/InplaceSetupAudit.php');
-		$this->RequireOnceItopFile('/setup/feature_removal/DryRemovalRuntimeEnvironment.php');
-	}
-
-	protected function tearDown(): void
-	{
-		parent::tearDown();
-		if (!is_null($this->sDirPathToRemoveFromExtensionFolder) && is_dir($this->sDirPathToRemoveFromExtensionFolder)) {
-			SetupUtils::rrmdir($this->sDirPathToRemoveFromExtensionFolder);
-		}
 	}
 
 	public function GetTestEnvironment(): string
@@ -60,14 +56,22 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		return self::ENVT;
 	}
 
-	public function testComputeDryRemoval()
+	public function testRemovedExtensionsAreListedInSetupAudit()
 	{
-		$this->sDirPathToRemoveFromExtensionFolder = APPROOT.'/extensions/finalclass_ext3';
-		SetupUtils::copydir(__DIR__.'/other_features/finalclass_ext3', $this->sDirPathToRemoveFromExtensionFolder);
+		$sAdditionalExtensionDir = APPROOT.'/extensions/finalclass_ext3';
+		SetupUtils::copydir(__DIR__.'/other_features/finalclass_ext3', $sAdditionalExtensionDir);
+		$this->aFileToClean[] = $sAdditionalExtensionDir;
+
 		clearstatcache();
 
-		$oDryRemovalRuntimeEnvt = new DryRemovalRuntimeEnvironment($this->GetTestEnvironment(), ['finalclass_ext3' => 'Ext For Test3'], ['nominal_ext1', 'finalclass_ext2']);
-		$oDryRemovalRuntimeEnvt->CompileFrom($this->GetTestEnvironment());
+		$oRuntimeEnvironment = new RunTimeEnvironment($this->GetTestEnvironment(), false);
+		$oRuntimeEnvironment->CopySetupFiles();
+		$oConfig = new Config(utils::GetConfigFilePath($this->GetTestEnvironment()));
+		$aRemovedExtensions = ['nominal_ext1', 'finalclass_ext2'];
+		$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, ['finalclass_ext1', 'finalclass_ext3'], $aRemovedExtensions);
+		$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
+
+		$oRuntimeEnvironment->DoCompile($aSelectedExtensions, $aRemovedExtensions, $aSelectedModules);
 
 		$oSetupAudit = new SetupAudit($this->GetTestEnvironment());
 
@@ -97,25 +101,13 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		}
 	}
 
-	public function testGetRemovedClassesFromSetupWizard()
-	{
-		$sEnv = MetaModel::GetEnvironment();
-
-		$aClassesBeforeRemoval = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($sEnv);
-		$aClassesBeforeRemoval[] = "GabuZomeu";
-
-		$oSetupAudit = new InplaceSetupAudit($aClassesBeforeRemoval, $sEnv);
-		$oSetupAudit->ComputeClasses();
-		$this->assertEquals(["GabuZomeu"], $oSetupAudit->GetRemovedClasses());
-	}
-
 	public function testGetIssues()
 	{
 		$sUID = "AuditExtensionsCleanupRules_".uniqid();
 		$oOrg = $this->CreateOrganization($sUID);
 		$this->createObject('FinalClassFeature1Module1MyFinalClassFromLocation', ['org_id' => $oOrg->GetKey(), 'name' => $sUID, 'name2' => uniqid()]);
 
-		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment());
+		$oSetupAudit = new SetupAudit($this->GetTestEnvironment());
 		$aRemovedClasses = [
 			"Feature1Module1MyClass",
 			"FinalClassFeature1Module1MyClass",
@@ -141,7 +133,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		$this->createObject('FinalClassFeature1Module1MyFinalClassFromLocation', ['org_id' => $oOrg->GetKey(), 'name' => $sUID, 'name2' => uniqid()]);
 		$this->createObject('FinalClassFeature2Module1MyFinalClassFromLocation', ['org_id' => $oOrg->GetKey(), 'name' => $sUID, 'name2' => uniqid()]);
 
-		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment());
+		$oSetupAudit = new SetupAudit($this->GetTestEnvironment());
 		$aRemovedClasses = [
 			"Feature1Module1MyClass",
 			"FinalClassFeature1Module1MyClass",

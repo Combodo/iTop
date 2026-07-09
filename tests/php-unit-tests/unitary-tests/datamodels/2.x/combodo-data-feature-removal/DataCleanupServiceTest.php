@@ -15,6 +15,8 @@ use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
+require_once __DIR__."/AbstractCleanup.php";
+
 /**
  * Unit tests for the CleanupService cf the Combodo Data Feature Removal module.
  *

@@ -11,6 +11,7 @@ use Combodo\iTop\DataFeatureRemoval\Entity\DataCleanupSummaryEntity;
 use Combodo\iTop\DataFeatureRemoval\Service\StaticDeletionPlan;
 use MetaModel;
 
+require_once __DIR__."/AbstractCleanup.php";
 class StaticDeletionPlanTest extends \AbstractCleanup
 {
 	public function GetDatamodelDeltaAbsPath(): string

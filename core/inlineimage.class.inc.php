@@ -434,7 +434,7 @@ JS
 	 * Resize an image so that it fits the maximum width/height defined in the config file
 	 * @param ormDocument $oImage The original image stored as an array (content / mimetype / filename)
 	 * @return ormDocument The resampled image (or the original one if it already fit)
-	 * @deprecated since 3.3.0 Replaced by ormDocument::ResizeImageToFit
+	 * @deprecated 3.3.0 Use ormDocument::ResizeImageToFit instead
 	 */
 	public static function ResizeImageToFit(ormDocument $oImage, &$aDimensions = null)
 	{

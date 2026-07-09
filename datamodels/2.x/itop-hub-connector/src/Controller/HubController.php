@@ -133,8 +133,7 @@ class HubController
 			throw new Exception('Sorry the installation of extensions is not allowed in demo mode');
 		}
 
-		$aSelectModules = $oRuntimeEnv->CompileFrom('production'); // WARNING symlinks does not seem to be compatible with manual Commit
-
+		$oRuntimeEnv->CompileFrom('production'); // WARNING symlinks does not seem to be compatible with manual Commit
 		$oRuntimeEnv->UpdateIncludes($oConfig);
 
 		$oRuntimeEnv->InitDataModel($oConfig, true /* model only */);
