@@ -139,21 +139,27 @@ class HTMLBulkExport extends TabularBulkExport
 			} else {
 				$sData .= "<tr>";
 			}
+			$aExportedObjects = [];
 			foreach ($this->aStatusInfo['fields'] as $iCol => $aFieldSpec) {
 				$sAlias = $aFieldSpec['sAlias'];
 				$sAttCode = $aFieldSpec['sAttCode'];
 
 				$oObj = $aRow[$sAlias];
-				$oObj->FireEventReadDetails(get_class($this));
 				$sField = '';
 				if ($oObj) {
 					$sField = $this->GetValue($oObj, $sAttCode);
+					$aExportedObjects[] = $oObj;
 				}
 				$sValue = ($sField === '') ? '&nbsp;' : $sField;
 				$sData .= "<td>$sValue</td>";
 			}
 			$sData .= "</tr>";
 			$iCount++;
+
+			$aExportedObjects = array_unique($aExportedObjects);
+			foreach ($aExportedObjects as $oExportedObject) {
+				$oExportedObject->FireEventReadDetails(get_class($this));
+			}
 		}
 		set_time_limit(intval($iPreviousTimeLimit));
 		$this->aStatusInfo['position'] += $this->iChunkSize;

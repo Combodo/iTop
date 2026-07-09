@@ -625,7 +625,7 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 					}
 
 					while ($oObject = $oObjectSet->Fetch()) {
-						$oObject->FireEventReadDetails(ContextTag::TAG_REST);
+						$oObject->FireEventReadDetails(get_class($this));
 						$oResult->AddObject(0, '', $oObject, $aShowFields, RestUtils::HasRequestedExtendedOutput($sShowFields));
 					}
 					$oResult->message = "Found: ".$oObjectSet->Count();

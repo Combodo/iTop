@@ -253,6 +253,7 @@ EOF
 			set_time_limit(intval($iLoopTimeLimit));
 
 			$sData .= "<tr>";
+			$aExportedObjects = [];
 			foreach ($this->aStatusInfo['fields'] as $aFieldSpec) {
 				$sAlias = $aFieldSpec['sAlias'];
 				$sAttCode = $aFieldSpec['sAttCode'];
@@ -264,8 +265,7 @@ EOF
 					$sData .= "<td x:str></td>";
 					continue;
 				}
-				$oObj->FireEventReadDetails(get_class($this));
-
+				$aExportedObjects[] = $oObj;
 				switch ($sAttCode) {
 					case 'id':
 						$sField = $oObj->GetKey();
@@ -322,6 +322,11 @@ EOF
 			}
 			$sData .= "</tr>";
 			$iCount++;
+
+			$aExportedObjects = array_unique($aExportedObjects);
+			foreach ($aExportedObjects as $oExportedObject) {
+				$oExportedObject->FireEventReadDetails(get_class($this));
+			}
 		}
 		set_time_limit(intval($iPreviousTimeLimit));
 		$this->aStatusInfo['position'] += $this->iChunkSize;
