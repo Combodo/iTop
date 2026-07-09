@@ -394,6 +394,60 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'mandatory' => false,
 				],
 			],
+			'A non installed extension with missing dependencies should be not checked and disabled' => [
+				'aExtensionsOnDiskOrDb' => [
+					'itop-ext1' => [
+						'installed' => false,
+						'missing_dependencies' => [
+							'itop-ext1-1',
+						],
+					],
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => false,
+					'uninstallable' => true,
+					'missing_dependencies' => true,
+				],
+				'bCurrentSelected' => false,
+				'bDisableUninstallChecks' => false,
+				'aExpectedFlags' => [
+					'uninstallable' => true,
+					'missing' => false,
+					'installed' => false,
+					'disabled' => true,
+					'checked' => false,
+					'cannot-be-installed' => true,
+					'mandatory' => false,
+				],
+			],
+			'An installed extension with missing dependencies should be not checked and disabled' => [
+				'aExtensionsOnDiskOrDb' => [
+					'itop-ext1' => [
+						'installed' => true,
+						'missing_dependencies' => [
+							'itop-ext1-1',
+						],
+					],
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => false,
+					'uninstallable' => true,
+					'missing_dependencies' => true,
+				],
+				'bCurrentSelected' => false,
+				'bDisableUninstallChecks' => false,
+				'aExpectedFlags' => [
+					'uninstallable' => true,
+					'missing' => false,
+					'installed' => true,
+					'disabled' => true,
+					'checked' => false,
+					'cannot-be-installed' => true,
+					'mandatory' => false,
+				],
+			],
 		];
 	}
 
