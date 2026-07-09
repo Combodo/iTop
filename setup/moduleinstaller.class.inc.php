@@ -316,7 +316,7 @@ abstract class ModuleInstallerAPI
 	 * @param string $sPreviousVersion The previous version of the module (empty string in case of first install)
 	 * @param string $sCurrentVersion The current version of the module
 	 * @param string $sFirstLoadingVersion The first module version for which the data loading should be performed (e.g. '3.0.0')
-	 * @param string $sDefaultFileName The default (en_us) file to load, ending with '.en_us.xml' (e.g. 'data.sample.en_us.xml'); the localized variant for the configured language is used when available
+	 * @param string $sDefaultFileName The file to load (typically the '.en_us.xml' base file); when it ends with '.en_us.xml', the localized variant for the configured language is used when available
 	 *
 	 * @return void
 	 * @throws \ConfigException
