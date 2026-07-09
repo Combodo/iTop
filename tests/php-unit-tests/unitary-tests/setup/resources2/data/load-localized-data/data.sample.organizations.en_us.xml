@@ -57,7 +57,7 @@
     <name>Sales Department (Test)</name>
     <code></code>
     <status>active</status>
-    <parent_id>3</parent_id>
+    <parent_id>103</parent_id>
     <overview></overview>
     <logo></logo>
   </Organization>
