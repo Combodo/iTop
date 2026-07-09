@@ -293,7 +293,7 @@ EOF
 				$sAttCode = $aFieldSpec['sAttCode'];
 
 				$oObj = $aRow[$sAlias];
-				$oObj->FireEventReadDetails();
+				$oObj->FireEventReadDetails(get_class($this));
 				$sField = '';
 				if ($oObj) {
 					$sField = $this->GetValue($oObj, $sAttCode);

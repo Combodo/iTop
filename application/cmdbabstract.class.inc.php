@@ -5391,10 +5391,9 @@ JS
 	 * @throws \CoreException
 	 * @since 3.3.0
 	 */
-	final public function FireEventReadDetails(): void
+	final public function FireEventReadDetails(string $sExportType): void
 	{
-
-		$this->FireEvent(EVENT_DB_TRACEABILITY);
+		$this->FireEvent(EVENT_DATA_EXPORT, ['export_type' => $sExportType]);
 	}
 
 	//////////////

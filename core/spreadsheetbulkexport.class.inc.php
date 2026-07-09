@@ -253,18 +253,18 @@ EOF
 			set_time_limit(intval($iLoopTimeLimit));
 
 			$sData .= "<tr>";
-			foreach ($this->aStatusInfo['fields'] as $iCol => $aFieldSpec) {
+			foreach ($this->aStatusInfo['fields'] as $aFieldSpec) {
 				$sAlias = $aFieldSpec['sAlias'];
 				$sAttCode = $aFieldSpec['sAttCode'];
 
 				$sField = '';
 				/** @var \DBObject $oObj */
 				$oObj = $aRow[$sAlias];
-				$oObj->FireEventReadDetails();
 				if ($oObj == null) {
 					$sData .= "<td x:str></td>";
 					continue;
 				}
+				$oObj->FireEventReadDetails(get_class($this));
 
 				switch ($sAttCode) {
 					case 'id':
