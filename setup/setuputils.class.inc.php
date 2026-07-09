@@ -523,6 +523,8 @@ class SetupUtils
 	{
 		$sFoundVersion = trim($aOutput[0] ?? "");
 		if (false === preg_match('/(\d+\.\d+)(?:\.\d+)?/', $sFoundVersion, $aMatches)) {
+			// no php version parsed. no php version check is possible
+			// let itop work. it may raise error with less accurate symptoms in setup audit checks (composer blabla...)
 			return;
 		}
 
@@ -531,7 +533,7 @@ class SetupUtils
 		self::CheckPhpVersion($aCheckResults, $sFoundVersion, 'The current CLI PHP Version');
 		foreach ($aCheckResults as $oCheckRes) {
 			/** @var CheckResult $oCheckRes */
-			if ($oCheckRes->iSeverity <= CheckResult::WARNING) {
+			if ($oCheckRes->iSeverity === CheckResult::ERROR) {
 				$sDetail = str_replace('Error: ', '', $oCheckRes->sLabel);
 				$sError = sprintf($sErrorLabel, $sDetail);
 				SetupLog::Error($sError, null, ["output" => $aOutput, 'php_path' => $sPHPExec]);

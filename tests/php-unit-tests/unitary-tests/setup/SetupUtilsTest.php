@@ -169,7 +169,7 @@ class SetupUtilsTest extends ItopTestCase
 	/**
 	 * @dataProvider CheckOKProvider
 	 */
-	public function testCheckCliPhpVersionFromOutputFail($sOuput, $sFoundVersion = '7.4')
+	public function testCheckCliPhpVersionFromOutputFail($sOutput, $sFoundVersion = '7.4')
 	{
 		$this->RequireOnceItopFile('/setup/feature_removal/ModelReflectionSerializer.php');
 
@@ -177,17 +177,17 @@ class SetupUtilsTest extends ItopTestCase
 		$sDetails = sprintf('The current CLI PHP Version (%s) is lower than the minimum version required to run %s, which is (%s)', $sFoundVersion, ITOP_APPLICATION, SetupUtils::PHP_MIN_VERSION);
 
 		$this->expectExceptionMessage("Data consistency check failed: $sDetails");
-		$this->InvokeNonPublicStaticMethod(SetupUtils::class, 'CheckCliPhpVersionFromOutput', [ModelReflectionSerializer::ERROR_LABEL, 'sPHPExec', [$sOuput]]);
+		$this->InvokeNonPublicStaticMethod(SetupUtils::class, 'CheckCliPhpVersionFromOutput', [ModelReflectionSerializer::ERROR_LABEL, 'sPHPExec', [$sOutput]]);
 	}
 
 	public function testCheckCliPhpVersionFromOutputOK()
 	{
-		$sOuput = <<<OUTPUT
+		$sOutput = <<<OUTPUT
 PHP 8.2.3 (cli) (built: Aug 2 2024 16:22:28) ( NTS )
 OUTPUT;
 
 		$this->RequireOnceItopFile('/setup/feature_removal/ModelReflectionSerializer.php');
-		$this->InvokeNonPublicStaticMethod(SetupUtils::class, 'CheckCliPhpVersionFromOutput', [ModelReflectionSerializer::ERROR_LABEL, 'sPHPExec', [$sOuput]]);
+		$this->InvokeNonPublicStaticMethod(SetupUtils::class, 'CheckCliPhpVersionFromOutput', [ModelReflectionSerializer::ERROR_LABEL, 'sPHPExec', [$sOutput]]);
 		$this->assertTrue(true);
 	}
 
