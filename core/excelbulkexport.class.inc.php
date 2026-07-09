@@ -288,12 +288,13 @@ EOF
 		while ($aRow = $oSet->FetchAssoc()) {
 			set_time_limit(intval($iLoopTimeLimit));
 			$aData = [];
+			$aExportedObjects = [];
 			foreach ($this->aStatusInfo['fields'] as $iCol => $aFieldSpec) {
 				$sAlias = $aFieldSpec['sAlias'];
 				$sAttCode = $aFieldSpec['sAttCode'];
 
 				$oObj = $aRow[$sAlias];
-				$oObj->FireEventReadDetails(get_class($this));
+				$aExportedObjects[] = $oObj;
 				$sField = '';
 				if ($oObj) {
 					$sField = $this->GetValue($oObj, $sAttCode);
@@ -302,6 +303,11 @@ EOF
 			}
 			fwrite($hFile, json_encode($aData)."\n");
 			$iCount++;
+
+			$aExportedObjects = array_unique($aExportedObjects);
+			foreach ($aExportedObjects as $oExportedObject) {
+				$oExportedObject->FireEventReadDetails(get_class($this));
+			}
 		}
 		set_time_limit(intval($iPreviousTimeLimit));
 		$this->aStatusInfo['position'] += $this->iChunkSize;

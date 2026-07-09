@@ -334,13 +334,14 @@ EOF
 		while ($aRow = $oSet->FetchAssoc()) {
 			set_time_limit(intval($iLoopTimeLimit));
 			$aData = [];
-			foreach ($this->aStatusInfo['fields'] as $iCol => $aFieldSpec) {
+			$aExportedObjects = [];
+			foreach ($this->aStatusInfo['fields'] as $aFieldSpec) {
 				$sAlias = $aFieldSpec['sAlias'];
 				$sAttCode = $aFieldSpec['sAttCode'];
 
 				$sField = '';
 				$oObj = $aRow[$sAlias];
-				$oObj->FireEventReadDetails(get_class($this));
+				$aExportedObjects[] = $oObj;
 				if ($oObj != null) {
 					switch ($sAttCode) {
 						case 'id':
@@ -367,7 +368,13 @@ EOF
 			}
 			$sData .= implode($this->aStatusInfo['separator'], $aData)."\n";
 			$iCount++;
+
+			$aExportedObjects = array_unique($aExportedObjects);
+			foreach ($aExportedObjects as $oExportedObject) {
+				$oExportedObject->FireEventReadDetails(get_class($this));
+			}
 		}
+
 		// Restore original date & time formats
 		AttributeDateTime::SetFormat($oPrevDateTimeFormat);
 		AttributeDate::SetFormat($oPrevDateFormat);

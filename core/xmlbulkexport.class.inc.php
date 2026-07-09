@@ -144,14 +144,15 @@ class XMLBulkExport extends BulkExport
 			if (count($aAuthorizedClasses) > 1) {
 				$sData .= "<Row>\n";
 			}
+			$aExportedObjects = [];
 			foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
 				$oObj = $aObjects[$sAlias];
-				$oObj->FireEventReadDetails(get_class($this));
 				if (is_null($oObj)) {
 					$sData .= "<$sClassName alias=\"$sAlias\" id=\"null\">\n";
 				} else {
 					$sClassName = get_class($oObj);
 					$sData .= "<$sClassName alias=\"$sAlias\" id=\"".$oObj->GetKey()."\">\n";
+					$aExportedObjects[] = $oObj;
 				}
 				foreach ($aClass2Attributes[$sAlias] as $sAttCode => $oAttDef) {
 					if (is_null($oObj)) {
@@ -167,6 +168,11 @@ class XMLBulkExport extends BulkExport
 				$sData .= "</Row>\n";
 			}
 			$iCount++;
+
+			$aExportedObjects = array_unique($aExportedObjects);
+			foreach ($aExportedObjects as $oExportedObject) {
+				$oExportedObject->FireEventReadDetails(get_class($this));
+			}
 		}
 
 		set_time_limit(intval($iPreviousTimeLimit));
