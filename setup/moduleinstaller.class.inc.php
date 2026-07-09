@@ -325,7 +325,7 @@ abstract class ModuleInstallerAPI
 	 */
 	public static function LoadLocalizedDataOnCrossingVersion(Config $oConfiguration, string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, string $sDefaultFileName): void
 	{
-		self::AssertLoadLocalizedDataParametersAreValid($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion);
+		self::AssertLoadLocalizedDataOnCrossingVersionParametersAreValid($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion);
 		if (self::IsVersionCrossed($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion)) {
 			// Note: on upgrade, the default language cannot be retrieved from the passed configuration, it must be read from disk (see StructureInstaller::AfterDatabaseCreation)
 			if (utils::IsNullOrEmptyString($sPreviousVersion)) {
@@ -374,7 +374,7 @@ abstract class ModuleInstallerAPI
 		if (str_ends_with($sOriginalFileName, '.en_us.xml')) {
 			// If the original file which can be localized, does not exist, then even if the localized file itself exists, we want to raise this design issue.
 			if (!file_exists($sOriginalFileName)) {
-				throw new Exception("This file $sOriginalFileName not found, it must exist in the module for the iTop fallback language (en_us)");
+				throw new Exception("File $sOriginalFileName not found, it must exist when required by the module or as iTop fallback language when no localized file exists for the iTop default language");
 			}
 			// Search for a file for the requested language,
 			$sLang = '.'.str_replace(' ', '_', strtolower($sLanguage)).'.xml';
@@ -394,32 +394,32 @@ abstract class ModuleInstallerAPI
 	/**
 	 * @throws \CoreUnexpectedValue
 	 */
-	private static function AssertLoadLocalizedDataParametersAreValid(?string $sPreviousVersion, ?string $sCurrentVersion, string $sFirstLoadingVersion): void
+	private static function AssertLoadLocalizedDataOnCrossingVersionParametersAreValid(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion): void
 	{
-		if (($sPreviousVersion !== '') && !self::IsSupportediTopVersion($sPreviousVersion)) {
+		if (($sPreviousVersion !== '') && !self::IsValidVersionFormat($sPreviousVersion)) {
 			throw new CoreUnexpectedValue("LoadLocalizedDataOnCrossingVersion expects sPreviousVersion to be empty or match x.y[.z][-name], got '{$sPreviousVersion}'");
 		}
-		if (!self::IsSupportediTopVersion($sCurrentVersion)) {
+		if (!self::IsValidVersionFormat($sCurrentVersion)) {
 			throw new CoreUnexpectedValue("LoadLocalizedDataOnCrossingVersion expects sCurrentVersion to match x.y[.z][-name], got '{$sCurrentVersion}'");
 		}
-		if (($sFirstLoadingVersion !== '') && !self::IsSupportediTopVersion($sFirstLoadingVersion)) {
+		if (utils::IsNullOrEmptyString($sFirstLoadingVersion) || !self::IsValidVersionFormat($sFirstLoadingVersion)) {
 			throw new CoreUnexpectedValue("LoadLocalizedDataOnCrossingVersion expects sFirstLoadingVersion to match x.y[.z][-name], got '{$sFirstLoadingVersion}'");
 		}
 	}
 
-	public static function IsSupportediTopVersion(string $sVersion): bool
+	public static function IsValidVersionFormat(string $sVersion): bool
 	{
 		return (preg_match('/^\d+\.\d+(?:\.\d+)?(?:-[A-Za-z0-9]+)?$/', $sVersion) === 1);
 	}
 
 	/**
-	 * @param string|null $sPreviousVersion
-	 * @param string|null $sCurrentVersion
+	 * @param string $sPreviousVersion
+	 * @param string $sCurrentVersion
 	 * @param string $sFirstLoadingVersion
 	 *
 	 * @return bool
 	 */
-	public static function IsVersionCrossed(?string $sPreviousVersion, ?string $sCurrentVersion, string $sFirstLoadingVersion): bool
+	public static function IsVersionCrossed(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion): bool
 	{
 		return ($sPreviousVersion === '') ||
 			(version_compare($sPreviousVersion, $sCurrentVersion, '<')

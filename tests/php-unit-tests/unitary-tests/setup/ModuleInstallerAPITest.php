@@ -389,9 +389,9 @@ SQL
 	/**
 	 * @covers \ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion
 	 */
-	public function testLoadLocalizedData_ThrowsWhenRequestedNonEnUsFileDoesNotExist(): void
+	public function testLoadLocalizedData_ThrowsWhenRequestedEnUsFileDoesNotExist(): void
 	{
-		[$oConfig, $sPattern] = $this->GivenLocalizedDataTestContext('en_us', 'data.sample.organizations.fr_fr.missing.xml', false);
+		[$oConfig, $sPattern] = $this->GivenLocalizedDataTestContext('en_us', 'data.sample.missing-file.en_us.xml', false);
 
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage("File $sPattern not found");
