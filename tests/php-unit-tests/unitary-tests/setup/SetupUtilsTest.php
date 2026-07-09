@@ -2,6 +2,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Setup;
 
+use CheckResult;
 use Combodo\iTop\Setup\FeatureRemoval\ModelReflectionSerializer;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use SetupUtils;
@@ -155,34 +156,79 @@ class SetupUtilsTest extends ItopTestCase
 		$this->assertTrue(true);
 	}
 
-	public function testCheckCliPhpVersionFromOutputFail()
-	{
-		$this->RequireOnceItopFile('/setup/feature_removal/ModelReflectionSerializer.php');
-		$sOuput = <<<OUTPUT
-PHP 7.4.33 (cli) (built: Aug 2 2024 16:22:28) ( NTS )
-OUTPUT;
-
-		$this->expectException(\CoreException::class);
-		$this->expectExceptionMessage("Data consistency check failed: Mismatch between PHP versions (CLI: 7.4/ UI: 6.6)");
-		$this->InvokeNonPublicStaticMethod(SetupUtils::class, 'CheckCliPhpVersionFromOutput', [ModelReflectionSerializer::ERROR_LABEL, '6.6', 'sPHPExec', [$sOuput]]);
-	}
-
 	public function CheckOKProvider()
 	{
 		return [
 			["7.4 7.2 7.3.33"],
-			["PHP 7.4.33 (cli) (built: Aug  2 2024 16:22:28) ( NTS )"],
-			["PHP 7.4.33 PHP 7.33.22"],
-			["version: 7.4.27 stable"],
+			["PHP 7.4.33 (cli) (built: Aug  2 2024 16:22:28) ( NTS )", "7.4.33"],
+			["PHP 7.4.33 PHP 7.33.22", "7.4.33"],
+			["version: 7.4.33 stable", "7.4.33"],
 		];
 	}
+
 	/**
 	 * @dataProvider CheckOKProvider
 	 */
-	public function testCheckCliPhpVersionFromOutputOK($sOuput)
+	public function testCheckCliPhpVersionFromOutputFail($sOuput, $sFoundVersion = '7.4')
 	{
 		$this->RequireOnceItopFile('/setup/feature_removal/ModelReflectionSerializer.php');
-		$this->InvokeNonPublicStaticMethod(SetupUtils::class, 'CheckCliPhpVersionFromOutput', [ModelReflectionSerializer::ERROR_LABEL, '7.4', 'sPHPExec', [$sOuput]]);
+
+		$this->expectException(\CoreException::class);
+		$sDetails = sprintf('The current CLI PHP Version (%s) is lower than the minimum version required to run %s, which is (%s)', $sFoundVersion, ITOP_APPLICATION, SetupUtils::PHP_MIN_VERSION);
+
+		$this->expectExceptionMessage("Data consistency check failed: $sDetails");
+		$this->InvokeNonPublicStaticMethod(SetupUtils::class, 'CheckCliPhpVersionFromOutput', [ModelReflectionSerializer::ERROR_LABEL, 'sPHPExec', [$sOuput]]);
+	}
+
+	public function testCheckCliPhpVersionFromOutputOK()
+	{
+		$sOuput = <<<OUTPUT
+PHP 8.2.3 (cli) (built: Aug 2 2024 16:22:28) ( NTS )
+OUTPUT;
+
+		$this->RequireOnceItopFile('/setup/feature_removal/ModelReflectionSerializer.php');
+		$this->InvokeNonPublicStaticMethod(SetupUtils::class, 'CheckCliPhpVersionFromOutput', [ModelReflectionSerializer::ERROR_LABEL, 'sPHPExec', [$sOuput]]);
 		$this->assertTrue(true);
 	}
+
+	public function testCheckPhpVersionIsOK()
+	{
+		$aRes = [];
+		$this->InvokeNonPublicStaticMethod(SetupUtils::class, 'CheckPhpVersion', [&$aRes]);
+		$this->ValidateCheckResults([], $aRes);
+	}
+
+	public function testCheckPhpVersionIsNotValidatedYet()
+	{
+		$aRes = [];
+		$this->InvokeNonPublicStaticMethod(SetupUtils::class, 'CheckPhpVersion', [&$aRes, '100.0']);
+		$expected = [
+			'The current PHP Version (100.0) is not yet validated by Combodo. You may experience some incompatibility issues.',
+		];
+		$this->ValidateCheckResults($expected, $aRes);
+	}
+
+	public function testCheckPhpVersionIsNOK()
+	{
+		$aRes = [];
+		$this->InvokeNonPublicStaticMethod(SetupUtils::class, 'CheckPhpVersion', [&$aRes, '1.0']);
+		$expected = [
+			sprintf('Error: The current PHP Version (1.0) is lower than the minimum version required to run %s, which is (%s)', ITOP_APPLICATION, SetupUtils::PHP_MIN_VERSION),
+		];
+		$this->ValidateCheckResults($expected, $aRes);
+	}
+
+	private function ValidateCheckResults(array $expected, array $aActualCheckResults)
+	{
+		$aActual = [];
+		foreach ($aActualCheckResults as $oCheckRes) {
+			/** @var CheckResult $oCheckRes */
+			if ($oCheckRes->iSeverity <= CheckResult::WARNING) {
+				$aActual [] = $oCheckRes->sLabel;
+			}
+		}
+
+		self::assertEquals($expected, $aActual);
+	}
+
 }
