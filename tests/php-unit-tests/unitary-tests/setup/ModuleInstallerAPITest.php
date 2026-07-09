@@ -477,6 +477,6 @@ SQL
 			[],
 			['org_name' => $sExpectedName]
 		);
-		$this->assertGreaterThanOrEqual(1, $oSet->Count(), "Expected at least one Organization named '{$sExpectedName}'");
+		$this->assertEquals(1, $oSet->Count(), "Expected exactly one Organization named '{$sExpectedName}'");
 	}
 }
