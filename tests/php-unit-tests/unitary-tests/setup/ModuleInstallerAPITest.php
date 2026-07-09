@@ -354,7 +354,10 @@ SQL
 
 		$this->AssertOrganizationNamesExist(['Client (Test)', 'Département informatique (Test)']);
 	}
-	// Test when a file is loaded twice because of the version conditions, it doesn't create duplicates (idempotent loading)
+	/**
+	 * Test that loading a file twice (because of the version conditions) does not create duplicates (idempotent loading).
+	 * @covers \ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion
+	 */
 	public function testLoadLocalizedData_IdempotentLoading(): void
 	{
 		// Given
