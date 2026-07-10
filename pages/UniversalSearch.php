@@ -51,7 +51,7 @@ $sOperation = utils::ReadParam('operation', '');
 $oP->SetBreadCrumbEntry('ui-tool-universalsearch', Dict::S('Menu:UniversalSearchMenu'), Dict::S('Menu:UniversalSearchMenu+'), '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 //$sSearchHeaderForceDropdown
-$sSearchHeaderForceDropdown = '<select  id="select_class" name="baseClass" onChange="this.form.trigger(\'submit\');">';
+$sSearchHeaderForceDropdown = '<select  id="select_class" name="baseClass" onChange="this.form.submit();">';
 $aClassLabels = [];
 foreach (MetaModel::GetClasses('bizmodel, grant_by_profile') as $sCurrentClass) {
 	if ((MetaModel::HasCategory($sCurrentClass, 'grant_by_profile') && UserRights::IsActionAllowed($sCurrentClass, UR_ACTION_BULK_MODIFY))
