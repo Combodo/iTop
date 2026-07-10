@@ -751,7 +751,7 @@ EOF
 		$bMissingFromDisk = isset($aChoice['missing']) && $aChoice['missing'] === true;
 		$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']);
 		$bInstalled = $bMissingFromDisk || $oITopExtension->bInstalled;
-		$bDependencyIssue = $bMissingFromDisk || $oITopExtension->HasDependencyIssue();
+		$bDependencyIssue = $oITopExtension->HasDependencyIssue();
 
 		$bChecked = $bSelected;
 		$bDisabled = false;
@@ -888,7 +888,7 @@ EOF
 		if (!$aFlags['uninstallable']) {
 			$sTooltip .= '<div id="badge--'.$sId.'--not-uninstallable" class="ibo-badge ibo-block ibo-is-yellow" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</div>';
 		}
-		if ($aFlags['dependency_issue'] && !$aFlags['installed']) {
+		if ($aFlags['dependency_issue']) {
 			$sTooltip .= '<div id="badge--'.$sId.'--cannot-be-installed" class="ibo-badge ibo-block ibo-is-orange" title="This extension cannot be installed because one or more dependencies are not satisfied." >cannot be installed</div>';
 		}
 
