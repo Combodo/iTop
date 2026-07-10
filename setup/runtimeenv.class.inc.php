@@ -933,6 +933,7 @@ class RunTimeEnvironment
 			@chmod($sFinalConfig, 0440); // Read-only for owner and group, nothing for others
 
 			SetupUtils::rrmdir(dirname($sBuildConfig)); // Cleanup the temporary build dir if empty
+			MetaModel::ResetAllCaches($this->sFinalEnv);
 
 			if (! isset($_SESSION)) {
 				//used in all UI setups (not unattended)
@@ -1101,7 +1102,7 @@ class RunTimeEnvironment
 	{
 		$oConfig = MetaModel::GetConfig();
 		$oConfig->Set('access_mode', ACCESS_FULL);
-
+		$sDefaultLanguage = $oConfig->GetDefaultLanguage();
 		$oDataLoader = new XMLDataLoader();
 
 		CMDBObject::SetCurrentChangeFromParams("Initialization from XML files for the selected modules ");
@@ -1147,7 +1148,7 @@ class RunTimeEnvironment
 		// in the current database
 		foreach ($aPreviouslyLoadedFiles as $sFileRelativePath) {
 			$sFileName = APPROOT.$sFileRelativePath;
-			SetupLog::Info("Loading file: $sFileName (just to get the keys mapping)");
+			SetupLog::Info("Loading file: $sFileName (just to build & cache the keys mapping)");
 			if (!file_exists($sFileName)) {
 				throw(new Exception("File $sFileName does not exist"));
 			}
@@ -1163,7 +1164,7 @@ class RunTimeEnvironment
 			if (!file_exists($sFileName)) {
 				throw(new Exception("File $sFileName does not exist"));
 			}
-
+			$sFileName = ModuleInstallerAPI::GetLocalizedFileName($sDefaultLanguage, $sFileName);
 			$oDataLoader->LoadFile($sFileName);
 			$sResult = sprintf("loading of %s done.", basename($sFileName));
 			SetupLog::Info($sResult);

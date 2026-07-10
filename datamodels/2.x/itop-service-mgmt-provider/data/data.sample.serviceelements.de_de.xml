@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+  <ServiceSubcategory alias="ServiceSubcategory" id="28">
+    <name>Zugriffsprobleme</name>
+    <description>Hilfe bei einem Zugriffsproblem anfordern</description>
+    <service_id>7</service_id>
+    <request_type>incident</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="17">
+    <name>API-Integration</name>
+    <description>Verbindung zwischen internen und externen Anwendungen.</description>
+    <service_id>2</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="13">
+    <name>CRM (z. B. Salesforce, HubSpot)</name>
+    <description>Einrichtung, Anpassung und Support für das Customer-Relationship-Management.</description>
+    <service_id>2</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="22">
+    <name>Sensibilisierung für Cybersicherheit</name>
+    <description>Schulung der Mitarbeitenden zu bewährten Praktiken (Phishing, Passwörter usw.).</description>
+    <service_id>6</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="3">
+    <name>Datensicherung</name>
+    <description>Automatische Sicherung kritischer Dateien (täglich/wöchentlich/monatlich).</description>
+    <service_id>3</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="21">
+    <name>Datenschutz (DSGVO)</name>
+    <description>Unterstützung bei der Einhaltung gesetzlicher Vorgaben (DSGVO, HIPAA usw.).</description>
+    <service_id>6</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="1">
+    <name>ERP (z. B. SAP, Odoo)</name>
+    <description>Zugriff, Support und Schulung für integrierte Managementsoftware.</description>
+    <service_id>2</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="10">
+    <name>Dateispeicherung und -freigabe</name>
+    <description>Bereitstellung kollaborativer Speicherbereiche (z. B. SharePoint, Nextcloud).</description>
+    <service_id>3</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="12">
+    <name>Hardwarevorfall</name>
+    <description>Unterstützung bei einem Hardwareausfall anfordern.</description>
+    <service_id>1</service_id>
+    <request_type>incident</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="19">
+    <name>Hardware-Upgrade</name>
+    <description>Austausch oder Erweiterung von Komponenten (RAM, Festplatte usw.).</description>
+    <service_id>1</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="7">
+    <name>Lokales Netzwerk (LAN/Wi-Fi)</name>
+    <description>Installation, Konfiguration und Wartung von Netzwerkgeräten.</description>
+    <service_id>3</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="27">
+    <name>Multi-Faktor-Authentifizierung (MFA)</name>
+    <description>Konfiguration und Support für Multi-Faktor-Authentifizierung.</description>
+    <service_id>7</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="4">
+    <name>Fehlerbehebung im Netzwerk</name>
+    <description>Hilfe bei der Behebung eines Netzwerkproblems anfordern.</description>
+    <service_id>3</service_id>
+    <request_type>incident</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="5">
+    <name>Bestellung neuer Desktop-Computer</name>
+    <description>Einen neuen Desktop-Computer für neue Mitarbeitende oder als Ersatz für ein altes System bestellen.</description>
+    <service_id>1</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="8">
+    <name>Bestellung neuer Laptops</name>
+    <description>Einen neuen Laptop für mobile Mitarbeitende oder als Ersatz für ein altes Gerät bestellen.</description>
+    <service_id>1</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="11">
+    <name>Neues Peripheriegerät</name>
+    <description>Ein Peripheriegerät bestellen: Tastatur, Maus, persönlicher Drucker ...</description>
+    <service_id>1</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="20">
+    <name>Sicherheitsaudit</name>
+    <description>Schwachstellenanalysen, Penetrationstests und Empfehlungen.</description>
+    <service_id>6</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="23">
+    <name>Sicherheitsvorfall</name>
+    <description>Reaktion auf Cyberangriffe, Datenlecks oder Sicherheitsverletzungen.</description>
+    <service_id>6</service_id>
+    <request_type>incident</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="6">
+    <name>Serververwaltung</name>
+    <description>Präventive Wartung, Software-Updates und 24/7-Überwachung.</description>
+    <service_id>3</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="16">
+    <name>Softwarevorfall</name>
+    <description>Hilfe bei der Behebung eines Softwareproblems anfordern.</description>
+    <service_id>1</service_id>
+    <request_type>incident</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="15">
+    <name>Softwarevorfall</name>
+    <description>Unterstützung bei einem softwarebezogenen Problem anfordern.</description>
+    <service_id>2</service_id>
+    <request_type>incident</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="18">
+    <name>Softwareinstallation</name>
+    <description>Bereitstellung von Office-Software (z. B. Microsoft 365, LibreOffice) und Geschäftssoftware.</description>
+    <service_id>1</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="14">
+    <name>Individuelle Entwicklung</name>
+    <description>Entwicklung maßgeschneiderter Tools (Dashboards, Automatisierungen, Skripte).</description>
+    <service_id>2</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="24">
+    <name>Benutzerkonto-Erstellung</name>
+    <description>Erstellung von Konten für neue Mitarbeitende oder Auftragnehmer.</description>
+    <service_id>7</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="26">
+    <name>Benutzerkonto-Löschung</name>
+    <description>Deaktivierung von Konten für ausscheidende Mitarbeitende oder am Ende ihrer Verträge.</description>
+    <service_id>7</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="25">
+    <name>Benutzerkonto-Aktualisierung</name>
+    <description>Hinzufügen oder Entfernen von Berechtigungen (z. B. Zugriff auf einen freigegebenen Ordner oder eine Anwendung).</description>
+    <service_id>7</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+  <ServiceSubcategory alias="ServiceSubcategory" id="2">
+    <name>VPN-Zugriff</name>
+    <description>Konfiguration und Support für sicheren Fernzugriff auf interne Ressourcen.</description>
+    <service_id>3</service_id>
+    <request_type>service_request</request_type>
+    <status>production</status>
+    <approvalrule_id>0</approvalrule_id>
+  </ServiceSubcategory>
+</Set>
