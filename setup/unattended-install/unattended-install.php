@@ -244,7 +244,8 @@ $aChecks = SetupUtils::CheckBackupPrerequisites(APPROOT.'data'); // mmm should b
 $aSelectedModules = $oParams->Get('selected_modules');
 $sSourceDir = $oParams->Get('source_dir', 'datamodels/latest');
 $sExtensionDir = $oParams->Get('extensions_dir', 'extensions');
-$aChecks = array_merge($aChecks, SetupUtils::CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules));
+$aRelDirsToScan = [$sSourceDir, $sExtensionDir, "data/$sTargetEnvironment-modules"];
+$aChecks = array_merge($aChecks, SetupUtils::CheckSelectedModules($aRelDirsToScan, $aSelectedModules));
 
 foreach ($aChecks as $oCheckResult) {
 	switch ($oCheckResult->iSeverity) {

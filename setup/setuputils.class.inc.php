@@ -553,15 +553,12 @@ class SetupUtils
 	 *
 	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	public static function CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules)
+	public static function CheckSelectedModules(array $aRelDirsToScan, $aSelectedModules)
 	{
 		$aResult = [];
-
-		$aDirsToScan = [APPROOT.$sSourceDir];
-		$sExtensionsPath = APPROOT.$sExtensionDir;
-		if (is_dir($sExtensionsPath)) {
-			// if the extensions dir exists, scan it for additional modules as well
-			$aDirsToScan[] = $sExtensionsPath;
+		$aDirsToScan = [];
+		foreach ($aRelDirsToScan as $sRelDir) {
+			$aDirsToScan[] = APPROOT.$sRelDir;
 		}
 		require_once(APPROOT.'setup/modulediscovery.class.inc.php');
 		try {
