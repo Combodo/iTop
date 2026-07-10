@@ -196,6 +196,10 @@ class Session
 
 	public static function ListVariables(): array
 	{
+		if (!isset($_SESSION)) {
+			return [];
+		}
+
 		return array_keys($_SESSION);
 	}
 
