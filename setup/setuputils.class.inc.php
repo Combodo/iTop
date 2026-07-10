@@ -558,7 +558,9 @@ class SetupUtils
 		$aResult = [];
 		$aDirsToScan = [];
 		foreach ($aRelDirsToScan as $sRelDir) {
-			$aDirsToScan[] = APPROOT.$sRelDir;
+			if (is_dir(APPROOT.$sRelDir)) {
+				$aDirsToScan[] = APPROOT.$sRelDir;
+			}
 		}
 		require_once(APPROOT.'setup/modulediscovery.class.inc.php');
 		try {
