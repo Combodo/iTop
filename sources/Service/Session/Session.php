@@ -132,6 +132,19 @@ class Session
 	}
 
 	/**
+	 * Unset all session variables, no matter if they were set by iTop or not
+	 *
+	 * @return void
+	 * @since 3.3.0 N°9625
+	 */
+	public static function UnsetAll(): void
+	{
+		foreach (self::ListVariables() as $sKey) {
+			self::Unset($sKey);
+		}
+	}
+
+	/**
 	 * @param string|array $key key to access to the session variable. To access to $_SESSION['a']['b'] $key must be ['a', 'b']
 	 * @param $default
 	 *
