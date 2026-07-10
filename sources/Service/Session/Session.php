@@ -139,8 +139,12 @@ class Session
 	 */
 	public static function UnsetAll(): void
 	{
-		foreach (self::ListVariables() as $sKey) {
-			self::Unset($sKey);
+		if (session_status() !== PHP_SESSION_ACTIVE) {
+			self::Start();
+			$_SESSION = [];
+			self::WriteClose();
+		} else {
+			$_SESSION = [];
 		}
 	}
 
