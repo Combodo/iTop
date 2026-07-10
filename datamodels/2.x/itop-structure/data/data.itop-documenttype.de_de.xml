@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+  <DocumentType alias="DocumentType" id="72">
+    <name>Architektur</name>
+  </DocumentType>
+  <DocumentType alias="DocumentType" id="69">
+    <name>Vertrag</name>
+  </DocumentType>
+  <DocumentType alias="DocumentType" id="71">
+    <name>Verfahren</name>
+  </DocumentType>
+  <DocumentType alias="DocumentType" id="70">
+    <name>Prozess</name>
+  </DocumentType>
+</Set>
+
