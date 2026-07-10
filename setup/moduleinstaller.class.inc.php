@@ -310,13 +310,15 @@ abstract class ModuleInstallerAPI
 	}
 
 	/**
-	 * Helper to load localized data from a file, only if the module is being installed for the first time or if the module is being upgraded and the FirstLoadingVersion is between the PreviousVersion and the CurrentVersion.
+	 * Helper to load localized data in iTop not only at the module installation but also if during an upgrade you pass over the version which brought those data
 	 *
 	 * @param \Config $oConfiguration
+	 * Expected values for the three version parameters: Valid examples: '3.2', '3.2.0', '3.2-beta1'. Invalid examples: '3', '3.2.', '3.2-beta-1', '3.2 beta1'.
 	 * @param string $sPreviousVersion The previous version of the module (empty string in case of first install)
-	 * @param string $sCurrentVersion The current version of the module
-	 * @param string $sFirstLoadingVersion The first module version for which the data loading should be performed (e.g. '3.0.0')
-	 * @param string $sDefaultFileName The file to load (typically the '.en_us.xml' base file); when it ends with '.en_us.xml', the localized variant for the configured language is used when available
+	 * @param string $sCurrentVersion The current version of the module. Cannot be empty.
+	 * @param string $sFirstLoadingVersion If your upgrade passes over the FirstLoadingVersion or in case of fresh install, the localized data will be loaded. This is useful when you want to load (structural) data on a module upgrade. Cannot be empty.
+	 * @param string $sDefaultFileName The file to load (If localization is expected then provided file name must end by '.en_us.xml')
+	 * If the default iTop language is french and a localized variant of the $sDefaultFileName ending by '.fr_fr.xml' exists, then that file with french data will be loaded.
 	 *
 	 * @return void
 	 * @throws \ConfigException
@@ -407,6 +409,15 @@ abstract class ModuleInstallerAPI
 		}
 	}
 
+	/**
+	 * Checks if a module version matches x.y[.z][-name].
+	 * Valid examples: '3.2', '3.2.1', '3.2.3-2', '3.3.0-dev', '10.14-beta2'.
+	 * Invalid examples: '3', 'v3.2', '3.2.1.4', '3.2-rc.1', '3.2 beta1'.
+	 *
+	 * @param string $sVersion
+	 *
+	 * @return bool
+	 */
 	public static function IsValidVersionFormat(string $sVersion): bool
 	{
 		return (preg_match('/^\d+\.\d+(?:\.\d+)?(?:-[A-Za-z0-9]+)?$/', $sVersion) === 1);
