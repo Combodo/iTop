@@ -933,6 +933,7 @@ class RunTimeEnvironment
 			@chmod($sFinalConfig, 0440); // Read-only for owner and group, nothing for others
 
 			SetupUtils::rrmdir(dirname($sBuildConfig)); // Cleanup the temporary build dir if empty
+			MetaModel::ResetAllCaches($this->sFinalEnv);
 
 			if (! isset($_SESSION)) {
 				//used in all UI setups (not unattended)
