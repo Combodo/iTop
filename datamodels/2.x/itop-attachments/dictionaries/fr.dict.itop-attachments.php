@@ -90,6 +90,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TriggerOnAttachmentDelete'                         => 'Déclencheur sur la suppression d\'une pièce jointe',
 	'Class:TriggerOnAttachmentDelete+'                        => 'Déclencheur sur la suppression d\'une pièce jointe d\'un objet',
 	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email' => 'Ajoute le fichier supprimé dans l\'email',
-	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email+' => 'If checked, the deleted file will be automatically attached to the email when an email action is triggered~~',
+	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email+' => 'Si coché, le fichier supprimé sera automatiquement joint à l\'email quand une action email sera lancée',
 	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Les Triggers sur les objets ne sont pas autorisés sur la classe Attachement. Veuillez utiliser les triggers spécifiques pour cette classe',
 ]);
