@@ -3510,12 +3510,9 @@ class AttributeString extends AttributeDBField
 	public function TrimValue(string $sValue)
 	{
 		$iMaxSize = $this->GetMaxSize();
-		if ($iMaxSize == null) {
-			return $sValue;
-		}
-		$sLength = mb_strlen($sValue);
-		if ($iMaxSize && ($sLength > $iMaxSize)) {
-			$sMessage = " -truncated ($sLength chars)";
+		$iLength = mb_strlen($sValue);
+		if ($iMaxSize && ($iLength > $iMaxSize)) {
+			$sMessage = " -truncated ($iLength chars)";
 
 			return mb_substr($sValue, 0, $iMaxSize - mb_strlen($sMessage)).$sMessage;
 		}
