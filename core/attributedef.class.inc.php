@@ -909,13 +909,12 @@ abstract class AttributeDefinition
 	 */
 	public function TrimValue(string $sValue)
 	{
-        $iMaxSize = $this->GetMaxSize();
-        if ($iMaxSize && (strlen($sValue) > $iMaxSize))
-        {
-            $sValue = substr($sValue, 0, $iMaxSize);
-        }
-        return $sValue;
-    }
+		$iMaxSize = $this->GetMaxSize();
+		if ($iMaxSize && (strlen($sValue) > $iMaxSize)) {
+			$sValue = substr($sValue, 0, $iMaxSize);
+		}
+		return $sValue;
+	}
 
 	/**
 	 * @return mixed|null
@@ -4266,10 +4265,10 @@ class AttributeText extends AttributeString
 	public function TrimValue(string $sValue)
 	{
 		$iMaxSize = $this->GetMaxSize();
-		$sLength = strlen($sValue);
-		$sLengthChar = mb_strlen($sValue);
-		if ($iMaxSize && ($sLength > $iMaxSize)) {
-			$sMessage = " -truncated ($sLengthChar chars)";
+		$iLength = strlen($sValue);
+		$iLengthChar = mb_strlen($sValue);
+		if ($iMaxSize && ($iLength > $iMaxSize)) {
+			$sMessage = " -truncated ($iLengthChar chars)";
 			$sVal = substr($sValue, 0, $iMaxSize - strlen($sMessage));
 
 			//executes the "mb_substr" function to ensure a character is not truncated in the middle.
