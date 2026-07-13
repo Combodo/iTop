@@ -898,6 +898,26 @@ abstract class AttributeDefinition
 	}
 
 	/**
+	 * Helper to set a value that fits the attribute max size
+	 *
+	 * Default behavior is what DBObject::SetTrim used to do, now delegated to AttributeDefinition
+	 *
+	 * @param string $sValue
+	 *
+	 * @return string
+	 * @since 3.2.0 N°9643
+	 */
+	public function TrimValue(string $sValue)
+	{
+        $iMaxSize = $this->GetMaxSize();
+        if ($iMaxSize && (strlen($sValue) > $iMaxSize))
+        {
+            $sValue = substr($sValue, 0, $iMaxSize);
+        }
+        return $sValue;
+    }
+
+	/**
 	 * @return mixed|null
 	 * @deprecated never used
 	 */

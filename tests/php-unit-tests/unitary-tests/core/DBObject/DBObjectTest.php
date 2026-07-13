@@ -1388,6 +1388,17 @@ class DBObjectTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @covers DBObject::SetTrim
+	 */
+	public function testSetTrimOnNonStringAttributeDoesNotTrim()
+	{
+		$oTicket = MetaModel::NewObject(UserRequest::class);
+		$oTicket->SetTrim('caller_id', '15');
+
+		$this->assertEquals(15, $oTicket->Get('caller_id'), 'SetTrim should keep non-string attributes untouched before regular Set conversion');
+	}
+
+	/**
 	 * @covers DBObject::SetComputedDate
 	 * @return void
 	 */
