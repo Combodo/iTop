@@ -4257,7 +4257,10 @@ class AttributeText extends AttributeString
 	{
 		return strlen($value);
 	}
-	public function TrimValue(string $sValue)
+	/**
+	 * @inheritDoc
+	 */
+	public function TrimValue(?string $sValue)
 	{
 		$iMaxSize = $this->GetMaxSize();
 		$iLength = strlen($sValue);
