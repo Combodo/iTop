@@ -897,6 +897,9 @@ abstract class AttributeDefinition
 		return null;
 	}
 
+	/**
+	 * @since 3.2.3-2 3.2.4 3.3.0 N°9759
+	 */
 	public function GetSize($value)
 	{
 		return mb_strlen($value);
@@ -910,7 +913,7 @@ abstract class AttributeDefinition
 	 * @param string $sValue
 	 *
 	 * @return string
-	 * @since 3.2.3-2 N°9759
+	 * @since 3.2.3-2 3.2.4 3.3.0 N°9759
 	 */
 	public function TrimValue(string $sValue)
 	{
@@ -4247,6 +4250,9 @@ class AttributeText extends AttributeString
 		return "TEXT".CMDBSource::GetSqlStringColumnDefinition();
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function GetSize($value)
 	{
 		return strlen($value);
