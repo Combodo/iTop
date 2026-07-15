@@ -910,7 +910,7 @@ abstract class AttributeDefinition
 	 * @param string $sValue
 	 *
 	 * @return string
-	 * @since 3.2.0 N°9643
+	 * @since 3.2.3-2 N°9759
 	 */
 	public function TrimValue(string $sValue)
 	{
@@ -3511,18 +3511,6 @@ class AttributeString extends AttributeDBField
 			.($bFullSpec ? $this->GetSQLColSpec() : '');
 	}
 
-	public function TrimValue(string $sValue)
-	{
-		$iMaxSize = $this->GetMaxSize();
-		$iLength = mb_strlen($sValue);
-		if ($iMaxSize && ($iLength > $iMaxSize)) {
-			$sMessage = " -truncated ($iLength chars)";
-
-			return mb_substr($sValue, 0, $iMaxSize - mb_strlen($sMessage)).$sMessage;
-		}
-
-		return $sValue;
-	}
 	public function GetValidationPattern()
 	{
 		$sPattern = $this->GetOptional('validation_pattern', '');
