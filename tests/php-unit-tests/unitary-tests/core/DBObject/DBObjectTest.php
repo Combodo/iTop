@@ -37,7 +37,6 @@ use Team;
 use User;
 use UserRequest;
 use UserRights;
-use utils;
 
 /**
  * @group specificOrgInSampleData
@@ -1309,7 +1308,7 @@ class DBObjectTest extends ItopDataTestCase
 			'pending_reason 65535 chars' => ['pending_reason', 65535, 16403, false],
 			'pending_reason 65536 chars' => ['pending_reason', 65536, 16403, false],
 			'pending_reason 16385 chars' => ['pending_reason', 16385, 16403, false],
-			'pending_reason 16384 chars' => ['pending_reason', 16384, 16383, true],
+			'pending_reason 16384 chars' => ['pending_reason', 16384, 16384, true],
 			'pending_reason 16383 chars' => ['pending_reason', 16383, 16383, true],
 			'pending_reason 16382 chars' => ['pending_reason', 16382, 16382, true],
 		];
@@ -1345,16 +1344,18 @@ class DBObjectTest extends ItopDataTestCase
 
 		$oAttDef = MetaModel::GetAttributeDef(UserRequest::class, $sAttrCode);
 		$iAttrMaxSize = $oAttDef->GetMaxSize();
+		$bExpectedStatus = ($oAttDef->GetSize($sValueToSet) <= $iAttrMaxSize);
+		$this->assertSame($bExpectedStatus, $bIsValueToSetBelowAttrMaxSize, 'The data provider must stay aligned with the attribute max size logic.');
 		/** @noinspection PhpUnusedLocalVariableInspection */
 		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oTicket->CheckToWrite();
 		$this->assertEquals($bIsValueToSetBelowAttrMaxSize, $bCheckStatus, "CheckResult result:".var_export($aCheckIssues, true));
 
 		$oTicket->SetTrim($sAttrCode, $sValueToSet);
 		$sValueInObject = $oTicket->Get($sAttrCode);
+		$this->assertEquals($iExpectedLength, mb_strlen($sValueInObject), 'Should match expected resulting value length.');
 		if ($bIsValueToSetBelowAttrMaxSize) {
 			$this->assertEquals($sValueToSet, $sValueInObject, 'Should not alter string that is already shorter than attribute max length');
 		} else {
-			$this->assertEquals($iExpectedLength, mb_strlen($sValueInObject), 'Should truncate at the same length than attribute max length');
 			$sLastCharsOfValueInObject = mb_substr($sValueInObject, -30);
 			$this->assertStringContainsString(' -truncated', $sLastCharsOfValueInObject, 'Should end with "truncated" comment');
 		}
@@ -1385,6 +1386,50 @@ class DBObjectTest extends ItopDataTestCase
 		$oOrganisation = MetaModel::NewObject(Organization::class);
 		$oOrganisation->SetTrim('name', $sName);
 		$this->assertEquals($sResult, $oOrganisation->Get('name'), 'SetTrim must limit string to 255 characters');
+	}
+
+	/**
+	 * Check that DBObject::SetTrim doesn't cut through multibytes characters
+	 *
+	 * @covers DBObject::SetTrim
+	 * @dataProvider SetTrimAttributeTextProvider
+	 */
+	public function testSetTrimOnAttributeTextKeepsUtf8Validity(string $sChar, int $iRepeatCount, bool $bExpectExactByteFill): void
+	{
+		$oTicket = MetaModel::NewObject('UserRequest', [
+			'ref'         => 'Test Ticket',
+			'title'       => 'Create OK',
+			'description' => 'Create OK',
+			'caller_id'   => 15,
+			'org_id'      => 3,
+		]);
+
+		$sValueToSet = str_repeat($sChar, $iRepeatCount);
+		$oTicket->SetTrim('pending_reason', $sValueToSet);
+		$sValueInObject = $oTicket->Get('pending_reason');
+
+		$oAttDef = MetaModel::GetAttributeDef('UserRequest', 'pending_reason');
+		$iAttrMaxSize = $oAttDef->GetMaxSize();
+		$iOriginalCharLength = mb_strlen($sValueToSet);
+		$sMessage = " -truncated ($iOriginalCharLength chars)";
+
+		$this->assertStringEndsWith($sMessage, $sValueInObject, 'Trimmed value should keep the expected truncation suffix.');
+		$this->assertTrue(mb_check_encoding($sValueInObject, 'UTF-8'), 'Trimmed value should stay valid UTF-8.');
+		$this->assertLessThanOrEqual($iAttrMaxSize, strlen($sValueInObject), 'Trimmed value should never exceed attribute byte max size.');
+
+		if ($bExpectExactByteFill) {
+			$this->assertSame($iAttrMaxSize, strlen($sValueInObject), 'When byte cut lands on a character boundary, SetTrim should use all available bytes.');
+		}
+	}
+
+	public function SetTrimAttributeTextProvider()
+	{
+		return [
+			// 2-byte UTF-8 chars: truncation payload size is byte-aligned and should fill the max size exactly.
+			'pending_reason 2-byte chars on byte boundary' => ["\xC3\xA9", 32768, true],
+			// 4-byte UTF-8 chars: truncation payload size is not byte-aligned and must backtrack to valid UTF-8.
+			'pending_reason 4-byte chars with mid-character byte cut' => ['💃', 16385, false],
+		];
 	}
 
 	/**

@@ -910,9 +910,13 @@ abstract class AttributeDefinition
 	public function TrimValue(string $sValue)
 	{
 		$iMaxSize = $this->GetMaxSize();
-		if ($iMaxSize && (strlen($sValue) > $iMaxSize)) {
-			$sValue = substr($sValue, 0, $iMaxSize);
+		$iLength = mb_strlen($sValue);
+		if ($iMaxSize && ($iLength > $iMaxSize)) {
+			$sMessage = " -truncated ($iLength chars)";
+
+			return mb_substr($sValue, 0, $iMaxSize - mb_strlen($sMessage)).$sMessage;
 		}
+
 		return $sValue;
 	}
 
@@ -4266,10 +4270,15 @@ class AttributeText extends AttributeString
 		$iLengthChar = mb_strlen($sValue);
 		if ($iMaxSize && ($iLength > $iMaxSize)) {
 			$sMessage = " -truncated ($iLengthChar chars)";
-			$sVal = substr($sValue, 0, $iMaxSize - strlen($sMessage));
+			$iTruncatedValueMaxSize = $iMaxSize - strlen($sMessage);
+			$sTruncatedValue = substr($sValue, 0, $iTruncatedValueMaxSize);
 
-			//executes the "mb_substr" function to ensure a character is not truncated in the middle.
-			return mb_substr($sValue, 0, mb_strlen($sVal) - 1).$sMessage;
+			// Keep trimming bytes until we have valid UTF-8 to avoid returning a broken multibyte sequence.
+			while (($sTruncatedValue !== '') && !mb_check_encoding($sTruncatedValue, 'UTF-8')) {
+				$sTruncatedValue = substr($sTruncatedValue, 0, -1);
+			}
+
+			return $sTruncatedValue.$sMessage;
 		}
 
 		return $sValue;
