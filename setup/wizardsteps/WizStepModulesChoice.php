@@ -587,7 +587,7 @@ EOF
 					break;
 				}
 			}
-			if ((isset($aChoice['mandatory']) && $aChoice['mandatory']) ||
+			if ((isset($aChoice['mandatory']) && $aChoice['mandatory'] && (!isset($aChoice['dependency_issue']) || !$aChoice['dependency_issue'])) ||
 				(isset($aSelectedChoices[$sChoiceId]) && ($aSelectedChoices[$sChoiceId] == $sChoiceId))) {
 				$sDisplayChoices .= '<li>'.$aChoice['title'].'</li>';
 				if (isset($aChoice['modules'])) {
@@ -637,7 +637,7 @@ EOF
 			if ($sChoiceName == null) {
 				$sChoiceName = $sChoiceId;
 			}
-			if ((isset($aChoice['mandatory']) && $aChoice['mandatory']) ||
+			if ((isset($aChoice['mandatory']) && $aChoice['mandatory'] && (!isset($aChoice['dependency_issue']) || !$aChoice['dependency_issue'])) ||
 				(isset($aSelectedChoices[$sChoiceName]) && ($aSelectedChoices[$sChoiceName] == $sChoiceId))) {
 				$sDisplayChoices .= '<li>'.$aChoice['title'].'</li>';
 				if ($aSelectedExtensions !== null) {
@@ -751,10 +751,14 @@ EOF
 		$bMissingFromDisk = isset($aChoice['missing']) && $aChoice['missing'] === true;
 		$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']);
 		$bInstalled = $bMissingFromDisk || $oITopExtension->bInstalled;
+		$bDependencyIssue = $oITopExtension->HasDependencyIssue();
 
 		$bChecked = $bSelected;
 		$bDisabled = false;
 		if ($bMissingFromDisk) {
+			$bDisabled = true;
+			$bChecked = false;
+		} elseif ($bDependencyIssue) {
 			$bDisabled = true;
 			$bChecked = false;
 		} elseif ($bMandatory) {
@@ -787,6 +791,8 @@ EOF
 
 		return [
 			'uninstallable' => $bCanBeUninstalled,
+			'dependency_issue' => $bDependencyIssue,
+			'mandatory' => $bMandatory,
 			'missing' => $bMissingFromDisk,
 			'installed' => $bInstalled,
 			'disabled' => $bDisabled,
@@ -805,7 +811,7 @@ EOF
 			$sChoiceId = $sParentId.self::$SEP.$index;
 			$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck, $this->bUpgrade);
 
-			if ($aFlags['disabled'] && !$aFlags['checked'] && !$aFlags['uninstallable'] && !$bDisableUninstallCheck) {
+			if ($aFlags['disabled'] && !$aFlags['checked'] && !$bDisableUninstallCheck && (!$aFlags['uninstallable'] || $aFlags['mandatory'])) {
 				$this->bCanMoveForward = false;//Disable "Next"
 			}
 
@@ -882,6 +888,9 @@ EOF
 		if (!$aFlags['uninstallable']) {
 			$sTooltip .= '<div id="badge--'.$sId.'--not-uninstallable" class="ibo-badge ibo-block ibo-is-yellow" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</div>';
 		}
+		if ($aFlags['dependency_issue']) {
+			$sTooltip .= '<div id="badge--'.$sId.'--cannot-be-installed" class="ibo-badge ibo-block ibo-is-orange" title="This extension cannot be installed because one or more dependencies are not satisfied." >cannot be installed</div>';
+		}
 
 		$sMetadata = '';
 		if (isset($aChoice['version']) && isset($aChoice['source_label'])) {
@@ -939,10 +948,6 @@ EOF
 
 	public function GetNextButtonLabel()
 	{
-		if (!$this->bCanMoveForward) {
-			return 'Non-uninstallable extension missing';
-		}
-
 		if ($this->GetStepInfo(1 + $this->GetStepIndex()) === null) {
 			return 'Check compatibility';
 		}

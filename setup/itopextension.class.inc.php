@@ -200,4 +200,9 @@ class iTopExtension
 	{
 		return $this->sLabel !== '';
 	}
+
+	public function HasDependencyIssue(): bool
+	{
+		return count($this->aMissingDependencies) > 0;
+	}
 }

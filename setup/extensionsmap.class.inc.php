@@ -545,7 +545,7 @@ class iTopExtensionsMap
 				continue;
 			}
 
-			if (! $bKeepExtensionsHavingMissingDependencies && count($oExtension->aMissingDependencies) > 0) {
+			if (! $bKeepExtensionsHavingMissingDependencies && $oExtension->HasDependencyIssue()) {
 				//skip extensions with dependency issues
 				continue;
 			}
@@ -562,19 +562,20 @@ class iTopExtensionsMap
 	public function GetAllExtensionsOptionInfo(bool $bRemoteExtensionsShouldBeMandatory = true): array
 	{
 		$aRes = [];
-		foreach ($this->GetAllExtensionsToDisplayInSetup(false, $bRemoteExtensionsShouldBeMandatory) as $sCode => $oExtension) {
+		foreach ($this->GetAllExtensionsToDisplayInSetup(true, $bRemoteExtensionsShouldBeMandatory) as $sCode => $oExtension) {
 			$aRes[] = [
-				'extension_code' => $oExtension->sCode,
-				'title'          => $oExtension->sLabel,
-				'description'    => $oExtension->sDescription,
-				'more_info'      => $oExtension->sMoreInfoUrl,
-				'default'        => true, // by default offer to install all modules
-				'modules'        => $oExtension->aModules,
-				'mandatory'      => $oExtension->bMandatory,
-				'source_label'   => $oExtension->GetExtensionSourceLabel(),
-				'uninstallable'  => $oExtension->CanBeUninstalled(),
-				'missing'        => $oExtension->bRemovedFromDisk,
-				'version'        => $oExtension->sVersion,
+				'extension_code'      => $oExtension->sCode,
+				'title'               => $oExtension->sLabel,
+				'description'         => $oExtension->sDescription,
+				'more_info'           => $oExtension->sMoreInfoUrl,
+				'default'             => true, // by default offer to install all modules
+				'modules'             => $oExtension->aModules,
+				'mandatory'           => $oExtension->bMandatory,
+				'dependency_issue'    => $oExtension->HasDependencyIssue(),
+				'source_label'        => $oExtension->GetExtensionSourceLabel(),
+				'uninstallable'       => $oExtension->CanBeUninstalled(),
+				'missing'             => $oExtension->bRemovedFromDisk,
+				'version'             => $oExtension->sVersion,
 			];
 		}
 

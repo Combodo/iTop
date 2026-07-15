@@ -26,11 +26,11 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$aBadges = [];
 		$bUninstallable = $aExtraFlags['uninstallable'] ?? true;
 		$bMissingFromDisk = $aExtraFlags['missing'] ?? false;
-		$bCannotBeInstalled = $aExtraFlags['cannot-be-installed'] ?? false;
+		$bDependencyIssue = $aExtraFlags['dependency_issue'] ?? false;
 		$bSelected = $aExtraFlags['selected'] ?? true;
 		$bDisabled = $aExtraFlags['disabled'] ?? false;
 		$bRemote = $aExtraFlags['remote'] ?? false;
-		self::AddExtraBadges($aBadges, $bUninstallable, $bMissingFromDisk, $bCannotBeInstalled, $sCode);
+		self::AddExtraBadges($aBadges, $bUninstallable, $bMissingFromDisk, $bDependencyIssue, $sCode);
 		$oBadgeInstalled = BadgeUIBlockFactory::MakeGreen(
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeInstalled'),
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeInstalled+'),
@@ -48,7 +48,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 
 		$oExtensionDetails = new ExtensionDetails($sCode, $sLabel, $sDescription, $aMetaData, $aBadges, $sAbout);
 		$oExtensionDetails->GetToggler()->SetIsToggled(true);
-		if ($bMissingFromDisk || $bCannotBeInstalled) {
+		if ($bMissingFromDisk || $bDependencyIssue) {
 			$oExtensionDetails->GetToggler()->SetIsToggled(false);
 			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
 		} elseif ((!$bUninstallable || $bRemote) && !$bDisabled) {
@@ -71,10 +71,10 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 	{
 		$aBadges = [];
 		$bUninstallable = $aExtraFlags['uninstallable'] ?? true;
-		$bCannotBeInstalled = $aExtraFlags['cannot-be-installed'] ?? false;
+		$bDependencyIssue = $aExtraFlags['dependency_issue'] ?? false;
 		$bSelected = $aExtraFlags['selected'] ?? false;
 		$bDisabled = $aExtraFlags['disabled'] ?? false;
-		self::AddExtraBadges($aBadges, $bUninstallable, false, $bCannotBeInstalled, $sCode);
+		self::AddExtraBadges($aBadges, $bUninstallable, false, $bDependencyIssue, $sCode);
 		$oBadgeInstalled = BadgeUIBlockFactory::MakeGrey(
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeNotInstalled'),
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeNotInstalled+'),
@@ -91,7 +91,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$aBadges[] = $oBadgeToBeUninstalled;
 		$oExtensionDetails = new ExtensionDetails($sCode, $sLabel, $sDescription, $aMetaData, $aBadges, $sAbout);
 
-		if ($bCannotBeInstalled) {
+		if ($bDependencyIssue) {
 			$oExtensionDetails->GetToggler()->SetIsToggled(false);
 			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
 		}
@@ -107,7 +107,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		return $oExtensionDetails;
 	}
 
-	private static function AddExtraBadges(array &$aBadges, bool $bUninstallable, bool $bMissingFromDisk, bool $bCannotBeInstalled, string $sCode)
+	private static function AddExtraBadges(array &$aBadges, bool $bUninstallable, bool $bMissingFromDisk, bool $bDependencyIssue, string $sCode)
 	{
 		if (!$bUninstallable) {
 			$aBadges[] = BadgeUIBlockFactory::MakeYellow(
@@ -123,7 +123,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 				self::GetBadgeId($sCode, self::BADGE_ID_MISSING_FROM_DISK)
 			);
 		}
-		if ($bCannotBeInstalled) {
+		if ($bDependencyIssue) {
 			$aBadges[] = BadgeUIBlockFactory::MakeOrange(
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled'),
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled+'),

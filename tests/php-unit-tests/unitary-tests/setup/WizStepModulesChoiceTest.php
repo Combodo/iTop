@@ -49,6 +49,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'installed' => false,
 					'disabled' => false,
 					'checked' => false,
+					'dependency_issue' => false,
+					'mandatory' => false,
 				],
 			],
 			'A selected but not installed extension should be checked and enabled' => [
@@ -70,6 +72,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'installed' => false,
 					'disabled' => false,
 					'checked' => true,
+					'dependency_issue' => false,
+					'mandatory' => false,
 				],
 			],
 			'A missing extension should be disabled and unchecked' => [
@@ -89,6 +93,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'installed' => true,
 					'disabled' => true,
 					'checked' => false,
+					'dependency_issue' => true,
+					'mandatory' => false,
 				],
 			],
 			'A missing extension should always be disabled and unchecked, even when mandatory' => [
@@ -108,6 +114,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'installed' => true,
 					'disabled' => true,
 					'checked' => false,
+					'dependency_issue' => true,
+					'mandatory' => true,
 				],
 			],
 			'A missing extension should always be disabled and unchecked, even when non-uninstallable' => [
@@ -127,6 +135,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'installed' => true,
 					'disabled' => true,
 					'checked' => false,
+					'dependency_issue' => true,
+					'mandatory' => true,
 				],
 			],
 			'An installed but not selected extension should not be checked and be enabled' => [
@@ -148,6 +158,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'installed' => true,
 					'disabled' => false,
 					'checked' => false,
+					'dependency_issue' => false,
+					'mandatory' => false,
 				],
 			],
 			'An installed non uninstallable extension should be checked and disabled' => [
@@ -169,6 +181,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'installed' => true,
 					'disabled' => true,
 					'checked' => true,
+					'dependency_issue' => false,
+					'mandatory' => false,
 				],
 			],
 			'An installed non uninstallable extension should be enabled if the "disable uninstallation check" flag is set' => [
@@ -190,6 +204,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'installed' => true,
 					'disabled' => false,
 					'checked' => true,
+					'dependency_issue' => false,
+					'mandatory' => false,
 				],
 			],
 			'A mandatory extension should be checked and disabled' => [
@@ -211,6 +227,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'installed' => false,
 					'disabled' => true,
 					'checked' => true,
+					'dependency_issue' => false,
+					'mandatory' => true,
 				],
 			],
 			'A mandatory extension should be checked and disabled even if the "disable uninstallation check" flag is set' => [
@@ -232,6 +250,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'installed' => false,
 					'disabled' => true,
 					'checked' => true,
+					'dependency_issue' => false,
+					'mandatory' => true,
 				],
 			],
 			'An optional sub extension should not force its parent flags' => [
@@ -265,6 +285,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'installed' => false,
 					'disabled' => false,
 					'checked' => false,
+					'dependency_issue' => false,
+					'mandatory' => false,
 				],
 			],
 			'A mandatory sub extension should force its parent to be checked and disabled' => [
@@ -298,6 +320,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'installed' => false,
 					'disabled' => true,
 					'checked' => true,
+					'dependency_issue' => false,
+					'mandatory' => false,
 				],
 			],
 			'An installed non uninstallable sub extension should force its parent to be checked and disabled' => [
@@ -331,6 +355,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'installed' => true,
 					'disabled' => true,
 					'checked' => true,
+					'dependency_issue' => false,
+					'mandatory' => false,
 				],
 			],
 			'A non installed non uninstallable sub extension should not force its parent flags' => [
@@ -364,6 +390,62 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'installed' => true,
 					'disabled' => false,
 					'checked' => false,
+					'dependency_issue' => false,
+					'mandatory' => false,
+				],
+			],
+			'A non installed extension with missing dependencies should be not checked and disabled' => [
+				'aExtensionsOnDiskOrDb' => [
+					'itop-ext1' => [
+						'installed' => false,
+						'missing_dependencies' => [
+							'itop-ext1-1',
+						],
+					],
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => false,
+					'uninstallable' => true,
+					'missing_dependencies' => true,
+				],
+				'bCurrentSelected' => false,
+				'bDisableUninstallChecks' => false,
+				'aExpectedFlags' => [
+					'uninstallable' => true,
+					'missing' => false,
+					'installed' => false,
+					'disabled' => true,
+					'checked' => false,
+					'dependency_issue' => true,
+					'mandatory' => false,
+				],
+			],
+			'An installed extension with missing dependencies should be not checked and disabled' => [
+				'aExtensionsOnDiskOrDb' => [
+					'itop-ext1' => [
+						'installed' => true,
+						'missing_dependencies' => [
+							'itop-ext1-1',
+						],
+					],
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => false,
+					'uninstallable' => true,
+					'missing_dependencies' => true,
+				],
+				'bCurrentSelected' => false,
+				'bDisableUninstallChecks' => false,
+				'aExpectedFlags' => [
+					'uninstallable' => true,
+					'missing' => false,
+					'installed' => true,
+					'disabled' => true,
+					'checked' => false,
+					'dependency_issue' => true,
+					'mandatory' => false,
 				],
 			],
 		];

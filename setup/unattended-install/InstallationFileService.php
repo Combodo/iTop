@@ -338,7 +338,7 @@ class InstallationFileService
 				continue;
 			}
 			if ($this->CanChooseUnpackageExtension($oExtension)) {
-				if (($oExtension->bVisible) && (count($oExtension->aMissingDependencies) === 0)) {
+				if ($oExtension->bVisible && !$oExtension->HasDependencyIssue()) {
 					$aCurrentModules = [];
 					$aUnselectableModules = [];
 					$bIsExtensionSelectable = true;
