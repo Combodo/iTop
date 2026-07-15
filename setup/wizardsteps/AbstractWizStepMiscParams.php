@@ -46,7 +46,7 @@ abstract class AbstractWizStepMiscParams extends WizardStep
 		$oPage->add('<fieldset>');
 
 		$oPage->add('<div id="prefix_option" class="collapsable-options">');
-		$oPage->add('<span data-role="setup-collapsable-options--toggler"><label style="font-weight: normal;">Advanced parameters</label></span>');
+		$oPage->add('<span data-role="setup-collapsable-options--toggler"><a href="#" style="font-weight: normal;color:black;">Advanced parameters</a></span>');
 		$oPage->add('<div class="" style="'.(mb_strlen($sChecked) === 0 ? 'display:none' : '').'">');
 		$oPage->add('<input id="force-uninstall" type="checkbox"'.$sChecked.' name="force-uninstall"><label for="force-uninstall">&nbsp;Unlock any extension uninstallation</label>');
 		$oPage->add('<div class="message message-warning">This could result in data corruption and application crashes.</div>');

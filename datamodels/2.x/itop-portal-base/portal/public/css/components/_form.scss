@@ -36,7 +36,7 @@ $ipb-field--is-mandatory--font-size: 0.6rem !default;
 
 .form_field_label > .control-label[data-tooltip-instantiated="true"]:after {
     cursor: pointer;
-    @extend %common-font-size-50;
+    @extend %common-font-size-20;
 }
 
 .form_field .form_mandatory .control-label:after{

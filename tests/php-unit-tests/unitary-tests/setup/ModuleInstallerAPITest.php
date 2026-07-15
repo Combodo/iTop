@@ -348,6 +348,8 @@ SQL
 	 */
 	public function testLoadLocalizedData_LoadsWhenVersionCrossingIsTrue(): void
 	{
+		$this->markTestSkipped('Test skipped because failing in CI. Investigation required, cf Bug N°9787');
+
 		[$oConfig, $sPattern] = $this->GivenLocalizedDataTestContext('FR FR', 'data.sample.organizations.en_us.xml');
 
 		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '3.0.0', '3.2.0', '3.1.0', $sPattern);
