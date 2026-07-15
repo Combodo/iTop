@@ -897,6 +897,11 @@ abstract class AttributeDefinition
 		return null;
 	}
 
+	public function GetSize($value)
+	{
+		return mb_strlen($value);
+	}
+
 	/**
 	 * Helper to set a value that fits the attribute max size
 	 *
@@ -2607,11 +2612,6 @@ class AttributeDBFieldVoid extends AttributeDefinition
 		return 'VARCHAR(255)'
 			.CMDBSource::GetSqlStringColumnDefinition()
 			.($bFullSpec ? $this->GetSQLColSpec() : '');
-	}
-
-	public function GetSize($value)
-	{
-		return mb_strlen($value);
 	}
 
 	protected function GetSQLColSpec()
