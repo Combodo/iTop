@@ -915,7 +915,7 @@ abstract class AttributeDefinition
 	 * @return string
 	 * @since 3.2.3-2 3.2.4 3.3.0 N°9759
 	 */
-	public function TrimValue(string $sValue)
+	public function TrimValue(?string $sValue)
 	{
 		$iMaxSize = $this->GetMaxSize();
 		$iLength = mb_strlen($sValue);
