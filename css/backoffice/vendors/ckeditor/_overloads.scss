@@ -70,7 +70,7 @@ $ibo-vendors-ckeditor--ck-mentions--item--padding-y: $ibo-spacing-200 !default;
   }
 }
 
-.ck-editor__editable_inline:not(.ck-comment__input *) {
+.ck-editor__editable_inline:not(.ck-comment__input *), .ck-source-editing-area {
   height: 200px;
 }
 
