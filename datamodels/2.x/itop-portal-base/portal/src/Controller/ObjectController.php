@@ -1385,7 +1385,7 @@ class ObjectController extends BrickController
 					'object_id'      => $oNewLink->GetKey(),
 					'prefix'         => 'lnk__',
 					'attribute_code' => $sAttCode,
-					'attribute_type' => $oAttDef->GetType(),
+					'attribute_type' => $oAttDef->GetTypeShortClassName(),
 					'value_html'     => $sValue,
 				];
 
@@ -1442,7 +1442,7 @@ class ObjectController extends BrickController
 				'object_class'  => $sObjectClass,
 				'object_id'  => $oObject->GetKey(),
 				'attribute_code' => $oAttDef->GetCode(),
-				'attribute_type' => $oAttDef->GetType(),
+				'attribute_type' => $oAttDef->GetTypeShortClassName(),
 			];
 
 			// - Value raw

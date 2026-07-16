@@ -136,6 +136,12 @@ abstract class AttributeDefinition
 		return Dict::S('Core:'.$oClass->getShortName());
 	}
 
+	public function GetTypeShortClassName()
+	{
+		$oClass = new ReflectionClass(get_class($this));
+		return $oClass->getShortName();
+	}
+
 	public function GetTypeDesc()
 	{
 		$oClass = new ReflectionClass(get_class($this));
@@ -1095,7 +1101,7 @@ abstract class AttributeDefinition
 
 		// Metadata
 		$oFormField->AddMetadata('attribute-code', $this->GetCode());
-		$oFormField->AddMetadata('attribute-type', $this->GetType());
+		$oFormField->AddMetadata('attribute-type', $this->GetTypeShortClassName());
 		$oFormField->AddMetadata('attribute-label', $this->GetLabel());
 		// - Attribute flags
 		$aPossibleAttFlags = MetaModel::EnumPossibleAttributeFlags();
