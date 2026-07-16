@@ -20,6 +20,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 	'DataFeatureRemoval:Features:Title' => 'Extensions',
 	'DataFeatureRemoval:Result:Title' => 'Modification demandée',
+	'DataFeatureRemoval:NoResult:Title' => 'Aucune modification demandée',
 	'DataFeatureRemoval:Execution:Title' => 'Suppressions',
 	'DataFeatureRemoval:Analysis:Title' => 'Résultat de l’analyse',
 	'DataFeatureRemoval:Analysis:Subtitle' => 'Vérifier les éléments à nettoyer',

@@ -20,6 +20,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 	'DataFeatureRemoval:Features:Title' => 'Extensions',
 	'DataFeatureRemoval:Result:Title' => 'Modification requested',
+	'DataFeatureRemoval:NoResult:Title' => 'No modification requested',
 	'DataFeatureRemoval:Execution:Title' => 'Deletion Executions',
 	'DataFeatureRemoval:Analysis:Title' => 'Analysis result',
 	'DataFeatureRemoval:Analysis:Subtitle' => 'Review all elements requiring attention',

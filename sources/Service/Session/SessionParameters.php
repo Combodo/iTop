@@ -45,8 +45,10 @@ class SessionParameters
 	 */
 	public function SetParameter($sParamCode, $value): void
 	{
-		$this->aParameters[$sParamCode] = $value;
-		$this->Save();
+		if (!isset($this->aParameters[$sParamCode]) || $this->aParameters[$sParamCode] !== $value) {
+			$this->aParameters[$sParamCode] = $value;
+			$this->Save();
+		}
 	}
 
 	/**
