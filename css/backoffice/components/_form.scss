@@ -8,70 +8,73 @@
   padding-bottom: 14px;
 }
 
-.help-text{
-  padding: 1px 5px;
-  background-color: #d7e3f8;
-  border: 1px solid #c6e7f5;
-  border-radius: 5px;
-  margin: 5px 0;
-  font-size: 0.9em;
-}
+form[is="itop-form-element"] {
 
-.form-error ul{
-  padding: 1px 5px;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  border-radius: 5px;
-  margin: 5px 0;
-  font-size: 0.9em;
-}
+  .help-text{
+    padding: 1px 5px;
+    background-color: #d7e3f8;
+    border: 1px solid #c6e7f5;
+    border-radius: 5px;
+    margin: 5px 0;
+    font-size: 0.9em;
+  }
 
-.subform{
-  background-color: #efefef;
-  border-radius: 5px;
-  padding: 10px;
-}
+  .form-error ul{
+    padding: 1px 5px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    margin: 5px 0;
+    font-size: 0.9em;
+  }
 
-.form-buttons{
-  margin: 20px 0;
-}
+  .subform{
+    background-color: #efefef;
+    border-radius: 5px;
+    padding: 10px;
+  }
 
-.form select{
-  padding: 0;
-  overflow-y: auto;
-}
+  .form-buttons{
+    margin: 20px 0;
+  }
 
-.form select option{
-  height: 30px;
-  display: flex;
-  align-items: center;
-}
+  .form select{
+    padding: 0;
+    overflow-y: auto;
+  }
 
-.turbo-refreshing{
-  opacity: .5;
-}
+  .form select option{
+    height: 30px;
+    display: flex;
+    align-items: center;
+  }
 
-.ibo-field legend{
-  margin-top: 24px;
-}
+  .turbo-refreshing{
+    opacity: .5;
+  }
 
-collection-entry-element {
-  margin-top: 8px;
-  display: block;
-  padding: 10px 10px;
-  background-color: #f5f5f5;
-  border-radius: 5px;
-}
-.ts-control{
-  height: auto;
-  min-height: 30px;
-}
+  .ibo-field legend{
+    margin-top: 24px;
+  }
 
-.ibo-form-actions > .ibo-button > span{
-  margin-right: 5px;
-}
+  collection-entry-element {
+    margin-top: 8px;
+    display: block;
+    padding: 10px 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+  }
+  .ts-control{
+    height: auto;
+    min-height: 30px;
+  }
 
-.ibo-form textarea{
-  resize: vertical;
-}
+  .ibo-form-actions > .ibo-button > span{
+    margin-right: 5px;
+  }
 
+  .ibo-form textarea{
+    resize: vertical;
+  }
+
+}
