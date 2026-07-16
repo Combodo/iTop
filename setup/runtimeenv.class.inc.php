@@ -915,6 +915,9 @@ class RunTimeEnvironment
 				utils::GetDataPath().'cache-'.$this->sFinalEnv,
 				false
 			);
+
+			SetupUtils::tidydir(utils::GetCachePath().'expressioncache/');
+
 			$this->CommitDir(
 				APPROOT.'env-'.$this->sBuildEnv,
 				APPROOT.'env-'.$this->sFinalEnv,
