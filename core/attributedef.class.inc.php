@@ -904,32 +904,42 @@ abstract class AttributeDefinition
 	 * Byte-based attributes (e.g. {@see AttributeText}, stored as MySQL TEXT which is limited to 65535 **bytes**,
 	 * not characters) MUST override both this method and {@see TrimValue()} consistently.
 	 *
-	 * @param string|null $value
+	 * @param string|null $sValue
 	 *
 	 * @return int Size of $value in the unit of GetMaxSize() (characters by default)
 	 * @since 3.2.3-2 3.2.4 3.3.0 N°9759
 	 */
-	public function GetSize($value)
+	public function GetSize(?string $sValue)
 	{
-		return mb_strlen($value);
+		// If the value is null, we return 0
+		if ($sValue === null) {
+			return 0;
+		}
+
+		return mb_strlen($sValue);
 	}
 
 	/**
 	 * Helper to set a value that fits the attribute max size
-	 * 
+	 *
 	 * Truncation is performed in the same unit as GetMaxSize() / {@see GetSize()}: a number of **characters**
 	 * by default (VARCHAR-based attributes). When truncated, a " -truncated (N chars)" suffix is appended and
 	 * the returned value (suffix included) still fits within GetMaxSize().
 	 *
 	 * Default behavior is what DBObject::SetTrim used to do, now delegated to AttributeDefinition
 	 *
-	 * @param string $sValue
+	 * @param string|null $sValue
 	 *
 	 * @return string $sValue truncated so that it fits within {@see GetMaxSize()}.
 	 * @since 3.2.3-2 3.2.4 3.3.0 N°9759
 	 */
 	public function TrimValue(?string $sValue)
 	{
+		// If the value is null, we return an empty string
+		if ($sValue === null) {
+			return '';
+		}
+
 		$iMaxSize = $this->GetMaxSize();
 		$iLength = mb_strlen($sValue);
 		if ($iMaxSize && ($iLength > $iMaxSize)) {
@@ -4269,9 +4279,14 @@ class AttributeText extends AttributeString
 	 * Unlike the default implementation, the size is expressed in **bytes**: MySQL TEXT columns are limited
 	 * in bytes (65535), not in characters, and {@see static::GetMaxSize()} for this class returns a number of bytes.
 	 */
-	public function GetSize($value)
+	public function GetSize(?string $sValue)
 	{
-		return strlen($value);
+		// If the value is null, we return 0
+		if ($sValue === null) {
+			return 0;
+		}
+
+		return strlen($sValue);
 	}
 	/**
 	 * @inheritDoc
@@ -4282,6 +4297,11 @@ class AttributeText extends AttributeString
 	 */
 	public function TrimValue(?string $sValue)
 	{
+		// If the value is null, we return an empty string
+		if ($sValue === null) {
+			return '';
+		}
+
 		$iMaxSize = $this->GetMaxSize();
 		$iLength = strlen($sValue);
 		$iLengthChar = mb_strlen($sValue);
