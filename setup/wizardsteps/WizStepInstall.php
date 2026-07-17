@@ -112,6 +112,22 @@ JS);
 			return;
 		}
 
+		// When the setup reach this step, it already checked whether extensions were uninstallable (during WizStepModulesChoice or combodo-data-feature-removal). We only need to log what has been done.
+		if ($this->oWizard->GetParameter('force-uninstall', false)) {
+			SetupLog::Warning("User disabled uninstallation checks");
+		}
+		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('removed_extensions'), true) ?? [];
+		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable'), true) ?? [];
+		$aExtensionsForceUninstalled = [];
+		foreach ($aExtensionsRemoved as $sExtensionCode => $sLabel) {
+			if (in_array($sExtensionCode, $aExtensionsNotUninstallable)) {
+				$aExtensionsForceUninstalled[] = $sExtensionCode;
+			}
+		}
+		if (count($aExtensionsForceUninstalled)) {
+			SetupLog::Warning("Extensions uninstalled forcefully : ".implode(',', $aExtensionsForceUninstalled));
+		}
+
 		$oPage->add_ready_script(<<<JS
 	$("#wiz_form").data("installation_status", "not started");
 	ExecuteStep("");
