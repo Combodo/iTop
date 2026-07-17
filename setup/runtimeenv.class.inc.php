@@ -915,9 +915,6 @@ class RunTimeEnvironment
 				utils::GetDataPath().'cache-'.$this->sFinalEnv,
 				false
 			);
-
-			SetupUtils::tidydir(utils::GetCachePath().'expressioncache/');
-
 			$this->CommitDir(
 				APPROOT.'env-'.$this->sBuildEnv,
 				APPROOT.'env-'.$this->sFinalEnv,
@@ -936,6 +933,7 @@ class RunTimeEnvironment
 			@chmod($sFinalConfig, 0440); // Read-only for owner and group, nothing for others
 
 			SetupUtils::rrmdir(dirname($sBuildConfig)); // Cleanup the temporary build dir if empty
+			MetaModel::ResetAllCaches($this->sBuildEnv);
 			MetaModel::ResetAllCaches($this->sFinalEnv);
 
 			if (! isset($_SESSION)) {
