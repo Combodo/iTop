@@ -127,6 +127,9 @@ class DataFeatureRemovalController extends Controller
 
 			$aRemovedExtensions = $this->aExtensionsToCheck['to_be_removed'];
 			$aHiddenInputs['removed_extensions'] = $this->ConvertIntoSetupFormat($aRemovedExtensions);
+
+			$aExtensionsNotUninstallable = $this->aExtensionsToCheck['extensions_not_uninstallable'];
+			$aHiddenInputs['extensions_not_uninstallable'] = $this->ConvertIntoSetupFormat($aExtensionsNotUninstallable);
 		}
 
 		$aParams['aAddedExtensions'] = $aAddedExtensions;
@@ -425,6 +428,7 @@ class DataFeatureRemovalController extends Controller
 		$this->aExtensionsToCheck = [
 			'to_be_installed' => [],
 			'to_be_removed' => [],
+			'extensions_not_uninstallable' => [],
 		];
 		foreach ($aAvailableExtensions as $sCode => &$aExtensionData) {
 			if (!isset($aSelectedExtensionsFromUI[$sCode])) {
@@ -437,6 +441,9 @@ class DataFeatureRemovalController extends Controller
 				$this->aExtensionsToCheck['to_be_removed'][$sCode] = $sLabel;
 				if (! $this->bForcedUninstallation && $aExtensionData['extra_flags']['uninstallable']) {
 					$this->bForcedUninstallation = true;
+				}
+				if (false === $aExtensionData['extra_flags']['uninstallable']) {
+					$this->aExtensionsToCheck['extensions_not_uninstallable'][] = $sCode;
 				}
 			} elseif (!$aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCode] === 'on') {
 				$aExtensionData['extra_flags']['selected'] = true;
