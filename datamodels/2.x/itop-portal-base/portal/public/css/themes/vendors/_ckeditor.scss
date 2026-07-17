@@ -18,3 +18,7 @@ $ipb-vendors-ckeditor--ck-content--text-color: $ipb-color-grey-900 !default;
 .ipb-is-html-content {
   @extend .ck-content;
 }
+
+.ck-source-editing-area {
+  height: 180px;
+}
