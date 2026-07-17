@@ -84,11 +84,6 @@ $ibo-vendors-ckeditor--ck-mentions--item--padding-y: $ibo-spacing-200 !default;
   }
 }
 
-// N°7552 Allow source editing area to be scrollable in full screen
-.ck-maximize_editor_main .ck-source-editing-area textarea{
-  overflow: auto !important;
-}
-
 /* Mentions */
 .ck-mentions {
   .ck-button {
