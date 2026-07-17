@@ -4281,12 +4281,9 @@ class AttributeText extends AttributeString
 		if ($iMaxSize && ($iLength > $iMaxSize)) {
 			$sMessage = " -truncated ($iLengthChar chars)";
 			$iTruncatedValueMaxSize = $iMaxSize - strlen($sMessage);
-			$sTruncatedValue = substr($sValue, 0, $iTruncatedValueMaxSize);
-
-			// Keep trimming bytes until we have valid UTF-8 to avoid returning a broken multibyte sequence.
-			while (($sTruncatedValue !== '') && !mb_check_encoding($sTruncatedValue, 'UTF-8')) {
-				$sTruncatedValue = substr($sTruncatedValue, 0, -1);
-			}
+			// mb_strcut cuts on a byte budget but moves the cut point back to a character boundary,
+			// so it never returns a broken multibyte sequence at the end of the value
+			$sTruncatedValue = mb_strcut($sValue, 0, $iTruncatedValueMaxSize, 'UTF-8');
 
 			return $sTruncatedValue.$sMessage;
 		}
