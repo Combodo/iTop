@@ -19,6 +19,7 @@ function ajax_run_audit() {
         }
     )
     .fail(function() {
+        $('#ajax_run_audit_in_progress_msg').addClass('ibo-is-hidden');
         $('#ajax_run_audit_error_msg .ibo-alert--title').html('{{ 'DataFeatureRemoval:RunAudit:Error'|dict_s }}');
         $('#ajax_run_audit_error_msg').removeClass('ibo-is-hidden');
     });
@@ -46,6 +47,7 @@ function ajax_compile() {
         'json'
     )
     .fail(function() {
+        $('#ajax_compile_in_progress_msg').addClass('ibo-is-hidden');
         $('#ajax_compile_error_msg .ibo-alert--title').html('{{ 'DataFeatureRemoval:Compile:Error'|dict_s }}');
         $('#ajax_compile_error_msg').removeClass('ibo-is-hidden');
     });

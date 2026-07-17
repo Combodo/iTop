@@ -26,7 +26,7 @@
             {% EndUIToolbar %}
         {% EndUIForm %}
     {% else %}
-        {% UIAlert ForFailure { sTitle: 'aze', sContent: 'DataFeatureRemoval:DeletionPlan:Error:Issues'|dict_s } %}{% EndUIAlert %}
+        {% UIAlert ForFailure { sTitle: '', sContent: 'DataFeatureRemoval:DeletionPlan:Error:Issues'|dict_s } %}{% EndUIAlert %}
     {% endif %}
 {% else %}
     {% UIAlert ForSuccess { sTitle:'DataFeatureRemoval:CleanupComplete:Title'|dict_s, sContent:'DataFeatureRemoval:CompilComplete'|dict_s } %}{% EndUIAlert %}
