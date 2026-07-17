@@ -442,7 +442,7 @@ class DataFeatureRemovalController extends Controller
 				if (! $this->bForcedUninstallation && $aExtensionData['extra_flags']['uninstallable']) {
 					$this->bForcedUninstallation = true;
 				}
-				if (false === $aExtensionData['extra_flags']['uninstallable']) {
+				if (false === $aExtensionData['extra_flags']['uninstallable'] || true === $aExtensionData['extra_flags']['remote']) {
 					$this->aExtensionsToCheck['extensions_not_uninstallable'][] = $sCode;
 				}
 			} elseif (!$aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCode] === 'on') {
