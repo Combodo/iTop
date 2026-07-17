@@ -916,12 +916,16 @@ abstract class AttributeDefinition
 
 	/**
 	 * Helper to set a value that fits the attribute max size
+	 * 
+	 * Truncation is performed in the same unit as GetMaxSize() / {@see GetSize()}: a number of **characters**
+	 * by default (VARCHAR-based attributes). When truncated, a " -truncated (N chars)" suffix is appended and
+	 * the returned value (suffix included) still fits within GetMaxSize().
 	 *
 	 * Default behavior is what DBObject::SetTrim used to do, now delegated to AttributeDefinition
 	 *
 	 * @param string $sValue
 	 *
-	 * @return string
+	 * @return string $sValue truncated so that it fits within {@see GetMaxSize()}.
 	 * @since 3.2.3-2 3.2.4 3.3.0 N°9759
 	 */
 	public function TrimValue(?string $sValue)
