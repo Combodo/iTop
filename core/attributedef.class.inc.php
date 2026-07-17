@@ -4268,6 +4268,10 @@ class AttributeText extends AttributeString
 	}
 	/**
 	 * @inheritDoc
+	 *
+	 * Truncation is performed on a **byte** budget (MySQL TEXT limit) without ever cutting through a multibyte
+	 * UTF-8 sequence: the returned value is always valid UTF-8 and never exceeds GetMaxSize() bytes,
+	 * truncation suffix included.
 	 */
 	public function TrimValue(?string $sValue)
 	{
