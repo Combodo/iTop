@@ -898,6 +898,15 @@ abstract class AttributeDefinition
 	}
 
 	/**
+	 * Return the size of $value, expressed in the same unit as {@see static::GetMaxSize()} for this attribute class.
+	 *
+	 * Default unit is a number of **characters**, matching MySQL VARCHAR(M) semantics for VARCHAR-based attributes.
+	 * Byte-based attributes (e.g. {@see AttributeText}, stored as MySQL TEXT which is limited to 65535 **bytes**,
+	 * not characters) MUST override both this method and {@see TrimValue()} consistently.
+	 *
+	 * @param string|null $value
+	 *
+	 * @return int Size of $value in the unit of GetMaxSize() (characters by default)
 	 * @since 3.2.3-2 3.2.4 3.3.0 N°9759
 	 */
 	public function GetSize($value)
