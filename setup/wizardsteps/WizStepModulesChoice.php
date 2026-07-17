@@ -751,7 +751,7 @@ EOF
 		$bMissingFromDisk = isset($aChoice['missing']) && $aChoice['missing'] === true;
 		$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']);
 		$bInstalled = $bMissingFromDisk || $oITopExtension->bInstalled;
-		$bDependencyIssue = $oITopExtension->HasDependencyIssue();
+		$bDependencyIssue = $oITopExtension?->HasDependencyIssue() ?? false;
 
 		$bChecked = $bSelected;
 		$bDisabled = false;

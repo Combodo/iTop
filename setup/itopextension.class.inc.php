@@ -176,7 +176,7 @@ class iTopExtension
 		};
 	}
 
-	public function IsRemote(): string
+	public function IsRemote(): bool
 	{
 		return $this->sSource === self::SOURCE_REMOTE;
 	}
