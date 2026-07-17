@@ -132,6 +132,23 @@ class Session
 	}
 
 	/**
+	 * Unset all session variables, no matter if they were set by iTop or not
+	 *
+	 * @return void
+	 * @since 3.3.0 N°9625
+	 */
+	public static function UnsetAll(): void
+	{
+		if (session_status() !== PHP_SESSION_ACTIVE) {
+			self::Start();
+			$_SESSION = [];
+			self::WriteClose();
+		} else {
+			$_SESSION = [];
+		}
+	}
+
+	/**
 	 * @param string|array $key key to access to the session variable. To access to $_SESSION['a']['b'] $key must be ['a', 'b']
 	 * @param $default
 	 *
@@ -183,6 +200,10 @@ class Session
 
 	public static function ListVariables(): array
 	{
+		if (!isset($_SESSION)) {
+			return [];
+		}
+
 		return array_keys($_SESSION);
 	}
 
