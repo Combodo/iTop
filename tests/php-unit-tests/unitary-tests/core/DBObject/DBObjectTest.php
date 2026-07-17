@@ -37,7 +37,6 @@ use Team;
 use User;
 use UserRequest;
 use UserRights;
-use utils;
 
 /**
  * @group specificOrgInSampleData
@@ -1297,19 +1296,21 @@ class DBObjectTest extends ItopDataTestCase
 	{
 		return [
 			// UserRequest.title is an AttributeString (maxsize = 255)
-			'title 250 chars' => ['title', 250],
-			'title 254 chars' => ['title', 254],
-			'title 255 chars' => ['title', 255],
-			'title 256 chars' => ['title', 256],
-			'title 300 chars' => ['title', 300],
+			'title 250 chars'            => ['title', 250, 250, true],
+			'title 254 chars'            => ['title', 254, 254, true],
+			'title 255 chars'            => ['title', 255, 255, true],
+			'title 256 chars'            => ['title', 256, 255, false],
+			'title 300 chars'            => ['title', 300, 255, false],
 
 			// UserRequest.pending_reason is an AttributeText (maxsize=65535) with format=text
-			'pending_reason 250 chars' => ['pending_reason', 250],
-			'pending_reason 60000 chars' => ['pending_reason', 60000],
-			'pending_reason 65534 chars' => ['pending_reason', 65534],
-			'pending_reason 65535 chars' => ['pending_reason', 65535],
-			'pending_reason 65536 chars' => ['pending_reason', 65536],
-			'pending_reason 70000 chars' => ['pending_reason', 70000],
+			'pending_reason 250 chars'   => ['pending_reason', 250, 250, true],
+			'pending_reason 65534 chars' => ['pending_reason', 65534, 16403, false],
+			'pending_reason 65535 chars' => ['pending_reason', 65535, 16403, false],
+			'pending_reason 65536 chars' => ['pending_reason', 65536, 16403, false],
+			'pending_reason 16385 chars' => ['pending_reason', 16385, 16403, false],
+			'pending_reason 16384 chars' => ['pending_reason', 16384, 16384, true],
+			'pending_reason 16383 chars' => ['pending_reason', 16383, 16383, true],
+			'pending_reason 16382 chars' => ['pending_reason', 16382, 16382, true],
 		];
 	}
 
@@ -1322,7 +1323,7 @@ class DBObjectTest extends ItopDataTestCase
 	 *
 	 * @since 3.1.2 N°3448 - Framework field size check not correctly implemented for multi-bytes languages/strings
 	 */
-	public function testCheckLongValueInAttribute(string $sAttrCode, int $iValueLength)
+	public function testCheckLongValueInAttribute(string $sAttrCode, int $iValueLength, int $iExpectedLength, bool $bIsValueToSetBelowAttrMaxSize): void
 	{
 		$sPrefix = 'a'; // just a small prefix so that the emoji bytes won't have a power of 2 (we want a non even value)
 		$sEmojiToRepeat = '😎'; // this emoji is 4 bytes long
@@ -1343,17 +1344,18 @@ class DBObjectTest extends ItopDataTestCase
 
 		$oAttDef = MetaModel::GetAttributeDef(UserRequest::class, $sAttrCode);
 		$iAttrMaxSize = $oAttDef->GetMaxSize();
-		$bIsValueToSetBelowAttrMaxSize = ($iValueLength <= $iAttrMaxSize);
+		$bExpectedStatus = ($oAttDef->GetSize($sValueToSet) <= $iAttrMaxSize);
+		$this->assertSame($bExpectedStatus, $bIsValueToSetBelowAttrMaxSize, 'The data provider must stay aligned with the attribute max size logic.');
 		/** @noinspection PhpUnusedLocalVariableInspection */
 		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oTicket->CheckToWrite();
 		$this->assertEquals($bIsValueToSetBelowAttrMaxSize, $bCheckStatus, "CheckResult result:".var_export($aCheckIssues, true));
 
 		$oTicket->SetTrim($sAttrCode, $sValueToSet);
 		$sValueInObject = $oTicket->Get($sAttrCode);
+		$this->assertEquals($iExpectedLength, mb_strlen($sValueInObject), 'Should match expected resulting value length.');
 		if ($bIsValueToSetBelowAttrMaxSize) {
 			$this->assertEquals($sValueToSet, $sValueInObject, 'Should not alter string that is already shorter than attribute max length');
 		} else {
-			$this->assertEquals($iAttrMaxSize, mb_strlen($sValueInObject), 'Should truncate at the same length than attribute max length');
 			$sLastCharsOfValueInObject = mb_substr($sValueInObject, -30);
 			$this->assertStringContainsString(' -truncated', $sLastCharsOfValueInObject, 'Should end with "truncated" comment');
 		}
@@ -1384,6 +1386,61 @@ class DBObjectTest extends ItopDataTestCase
 		$oOrganisation = MetaModel::NewObject(Organization::class);
 		$oOrganisation->SetTrim('name', $sName);
 		$this->assertEquals($sResult, $oOrganisation->Get('name'), 'SetTrim must limit string to 255 characters');
+	}
+
+	/**
+	 * Check that DBObject::SetTrim doesn't cut through multibytes characters
+	 *
+	 * @covers DBObject::SetTrim
+	 * @dataProvider SetTrimAttributeTextProvider
+	 */
+	public function testSetTrimOnAttributeTextKeepsUtf8Validity(string $sChar, int $iRepeatCount, bool $bExpectExactByteFill): void
+	{
+		$oTicket = MetaModel::NewObject('UserRequest', [
+			'ref'         => 'Test Ticket',
+			'title'       => 'Create OK',
+			'description' => 'Create OK',
+			'caller_id'   => 15,
+			'org_id'      => 3,
+		]);
+
+		$sValueToSet = str_repeat($sChar, $iRepeatCount);
+		$oTicket->SetTrim('pending_reason', $sValueToSet);
+		$sValueInObject = $oTicket->Get('pending_reason');
+
+		$oAttDef = MetaModel::GetAttributeDef('UserRequest', 'pending_reason');
+		$iAttrMaxSize = $oAttDef->GetMaxSize();
+		$iOriginalCharLength = mb_strlen($sValueToSet);
+		$sMessage = " -truncated ($iOriginalCharLength chars)";
+
+		$this->assertStringEndsWith($sMessage, $sValueInObject, 'Trimmed value should keep the expected truncation suffix.');
+		$this->assertTrue(mb_check_encoding($sValueInObject, 'UTF-8'), 'Trimmed value should stay valid UTF-8.');
+		$this->assertLessThanOrEqual($iAttrMaxSize, strlen($sValueInObject), 'Trimmed value should never exceed attribute byte max size.');
+
+		if ($bExpectExactByteFill) {
+			$this->assertSame($iAttrMaxSize, strlen($sValueInObject), 'When byte cut lands on a character boundary, SetTrim should use all available bytes.');
+		}
+	}
+
+	public function SetTrimAttributeTextProvider()
+	{
+		return [
+			// 2-byte UTF-8 chars: truncation payload size is byte-aligned and should fill the max size exactly.
+			'pending_reason 2-byte chars on byte boundary' => ["\xC3\xA9", 32768, true],
+			// 4-byte UTF-8 chars: truncation payload size is not byte-aligned and must backtrack to valid UTF-8.
+			'pending_reason 4-byte chars with mid-character byte cut' => ['💃', 16385, false],
+		];
+	}
+
+	/**
+	 * @covers DBObject::SetTrim
+	 */
+	public function testSetTrimOnNonStringAttributeDoesNotTrim()
+	{
+		$oTicket = MetaModel::NewObject(UserRequest::class);
+		$oTicket->SetTrim('caller_id', '15');
+
+		$this->assertEquals(15, $oTicket->Get('caller_id'), 'SetTrim should keep non-string attributes untouched before regular Set conversion');
 	}
 
 	/**
