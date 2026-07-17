@@ -4261,6 +4261,9 @@ class AttributeText extends AttributeString
 
 	/**
 	 * @inheritDoc
+	 *
+	 * Unlike the default implementation, the size is expressed in **bytes**: MySQL TEXT columns are limited
+	 * in bytes (65535), not in characters, and {@see static::GetMaxSize()} for this class returns a number of bytes.
 	 */
 	public function GetSize($value)
 	{
