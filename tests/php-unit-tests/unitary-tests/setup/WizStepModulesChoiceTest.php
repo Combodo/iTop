@@ -78,9 +78,6 @@ class WizStepModulesChoiceTest extends ItopTestCase
 			],
 			'A missing extension should be disabled and unchecked' => [
 				'aExtensionsOnDiskOrDb' => [
-					'itop-ext1' => [
-						'installed' => false,
-					],
 				],
 				'aWizardStepDefinition' => [
 					'extension_code' => 'itop-ext1',
@@ -102,9 +99,6 @@ class WizStepModulesChoiceTest extends ItopTestCase
 			],
 			'A missing extension should always be disabled and unchecked, even when mandatory' => [
 				'aExtensionsOnDiskOrDb' => [
-					'itop-ext1' => [
-						'installed' => false,
-					],
 				],
 				'aWizardStepDefinition' => [
 					'extension_code' => 'itop-ext1',
@@ -126,9 +120,6 @@ class WizStepModulesChoiceTest extends ItopTestCase
 			],
 			'A missing extension should always be disabled and unchecked, even when non-uninstallable' => [
 				'aExtensionsOnDiskOrDb' => [
-					'itop-ext1' => [
-						'installed' => false,
-					],
 				],
 				'aWizardStepDefinition' => [
 					'extension_code' => 'itop-ext1',
