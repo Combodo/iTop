@@ -58,6 +58,51 @@ class AttributeText extends AttributeString
 		return "TEXT".CMDBSource::GetSqlStringColumnDefinition();
 	}
 
+	/**
+	 * @inheritDoc
+	 *
+	 * Unlike the default implementation, the size is expressed in **bytes**: MySQL TEXT columns are limited
+	 * in bytes (65535), not in characters, and {@see static::GetMaxSize()} for this class returns a number of bytes.
+	 */
+	public function GetSize(?string $sValue)
+	{
+		// If the value is null, we return 0
+		if ($sValue === null) {
+			return 0;
+		}
+
+		return strlen($sValue);
+	}
+	/**
+	 * @inheritDoc
+	 *
+	 * Truncation is performed on a **byte** budget (MySQL TEXT limit) without ever cutting through a multibyte
+	 * UTF-8 sequence: the returned value is always valid UTF-8 and never exceeds GetMaxSize() bytes,
+	 * truncation suffix included.
+	 */
+	public function TrimValue(?string $sValue)
+	{
+		// If the value is null, we return an empty string
+		if ($sValue === null) {
+			return '';
+		}
+
+		$iMaxSize = $this->GetMaxSize();
+		$iLength = strlen($sValue);
+		$iLengthChar = mb_strlen($sValue);
+		if ($iMaxSize && ($iLength > $iMaxSize)) {
+			$sMessage = " -truncated ($iLengthChar chars)";
+			$iTruncatedValueMaxSize = $iMaxSize - strlen($sMessage);
+			// mb_strcut cuts on a byte budget but moves the cut point back to a character boundary,
+			// so it never returns a broken multibyte sequence at the end of the value
+			$sTruncatedValue = mb_strcut($sValue, 0, $iTruncatedValueMaxSize, 'UTF-8');
+
+			return $sTruncatedValue.$sMessage;
+		}
+
+		return $sValue;
+	}
+
 	public function GetSQLColumns($bFullSpec = false)
 	{
 		$aColumns = [];
