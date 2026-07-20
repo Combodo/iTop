@@ -55,6 +55,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => '暂无任何活动',
 
 	// Closed cover
-	'UI:Layout:ActivityPanel:ClosedCover:Title' => '侧面板',
-	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => '点击打开侧面板',
+	'UI:Layout:ActivityPanel:ClosedCover:Title' => '活动侧板',
+	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => '点击打开活动侧板',
 ]);

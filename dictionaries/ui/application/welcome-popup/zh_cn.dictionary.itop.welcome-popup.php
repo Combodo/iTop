@@ -13,29 +13,29 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 // Message
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'UI:WelcomePopup:Message:330_01_Welcome:Title' => 'Welcome to '.ITOP_APPLICATION_SHORT.' 3.3~~',
-	'UI:WelcomePopup:Message:330_01_Welcome:Description' => '<div>We’re pleased to introduce this latest release, bringing you a range of updates and improvements !</div>
+	'UI:WelcomePopup:Message:330_01_Welcome:Title' => '欢迎使用 '.ITOP_APPLICATION_SHORT.' 3.3',
+	'UI:WelcomePopup:Message:330_01_Welcome:Description' => '<div>我们很高兴推出最新版本, 带来了一系列更新和改进!</div>
 <br>
-<div>Alongside new features like Multi-Factor Authentication, this version includes essential security updates, the first AI bricks, and various enhancements designed to deliver a smoother and more reliable experience.</div>
+<div>除了多因子认证等全新功能之外, 此版本还搭载了关键安全更新, 首批 AI 组件, 以及多项优化升级, 旨在带来更流畅稳定的使用体验.</div>
 <br>
-<div>We hope you enjoy using this version as much as we enjoyed building it.</div>
-<div>Don’t forget to adjust your iTop preferences to tailor the experience to your needs.</div>~~',
-	'UI:WelcomePopup:Message:330_02_AIFoundations:Title' => 'Laying the foundations for AI~~',
-	'UI:WelcomePopup:Message:330_02_AIFoundations:Description' => '<div>This release introduces the first building blocks for our upcoming AI-powered features.</div>
+<div>希望您能尽情享受这个版本, 就像我们构建它时一样.</div>
+<div>别忘了调整您的 iTop 偏好设置, 以满足您的个性化体验.</div>',
+	'UI:WelcomePopup:Message:330_02_AIFoundations:Title' => '为 AI 奠定基础',
+	'UI:WelcomePopup:Message:330_02_AIFoundations:Description' => '<div>本次版本更新推出了首批基础组件, 用于支撑我们即将上线的多个 AI 驱动的新功能.</div>
 <br>
 <div>We’ve implemented the core APIs that will support future enhancements, paving the way for new intelligent capabilities and richer experiences in the next updates.</div>
 <br>
 <div>Stay tuned—this is just the beginning of what’s ahead.</div>~~',
-	'UI:WelcomePopup:Message:330_03_CMDB:Title' => 'Enhanced CMDB~~',
-	'UI:WelcomePopup:Message:330_03_CMDB:Description' => '<div>This version brings several improvements to our datamodel to better support evolving needs.</div>
+	'UI:WelcomePopup:Message:330_03_CMDB:Title' => '加强版 CMDB',
+	'UI:WelcomePopup:Message:330_03_CMDB:Description' => '<div>此版本对数据模型进行了多项改进，以更好地适配持续变化的业务需求.</div>
 <br>
-<div>We’ve introduced containerization management, improved flow management, enriched class descriptions, and lifecycle management (End of Life / End of Support). The service management menu has also been redesigned for greater clarity and usability, along with the addition of images and logos on selected configuration items.</div>
+<div>我们引入了容器管理, 改进的工作流管理, 更丰富的类描述, 以及生命周期管理 (End of Life / End of Support). 服务管理菜单也经过重新设计, 界面更加清晰易用, 部分配置项中还新增了图片和 Logo.</div>
 <br>
-<div>These updates aim to provide a more structured and intuitive experience.</div>~~',
-	'UI:WelcomePopup:Message:330_04_MFA:Title' => 'Strengthening security with MFA~~',
-	'UI:WelcomePopup:Message:330_04_MFA:Description' => '<div>Multi-Factor Authentication (MFA) is now fully integrated into iTop.</div>
+<div>这些更新旨在带来更有条理、直观易懂的使用体验.</div>',
+	'UI:WelcomePopup:Message:330_04_MFA:Title' => '使用 MFA 增强安全',
+	'UI:WelcomePopup:Message:330_04_MFA:Description' => '<div>多因子认证(MFA) 现在已完全集成进入 iTop.</div>
 <br>
-<div>MFA, now built directly into the core experience, strengthens overall security while ensuring a more seamless and consistent user experience.</div>
+<div>MFA, 现已直接集成至核心使用流程, 在强化整体安全防护能力的同时, 保障用户获得更流畅统一的使用体验.</div>
 <br>
-<div>We encourage you to review your settings and enable MFA to benefit from enhanced account protection.</div>~~',
+<div>我们建议您检查账户设置并开启多因子认证，以获得更强的账户安全防护.</div>',
 ]);

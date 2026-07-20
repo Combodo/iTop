@@ -68,7 +68,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:FAQ/Attribute:error_code+' => '',
 	'Class:FAQ/Attribute:key_words' => '关键字',
 	'Class:FAQ/Attribute:key_words+' => '',
-	'Class:FAQ/Attribute:domains' => '范围',
+	'Class:FAQ/Attribute:domains' => '领域',
 ]);
 
 //
