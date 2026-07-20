@@ -90,7 +90,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Core:AttributeObsolescenceFlag/Value:yes+' => '该对象排除在影响分析中, 并且在搜索结果中隐藏',
 	'Core:AttributeObsolescenceFlag/Value:no' => '否',
 	'Core:AttributeObsolescenceFlag/Label' => '废弃标识',
-	'Core:AttributeObsolescenceFlag/Label+' => '基于其他属性动态计算',
+	'Core:AttributeObsolescenceFlag/Label+' => '基于其它属性动态计算',
 	'Core:AttributeObsolescenceDate/Label' => '废弃时间',
 	'Core:AttributeObsolescenceDate/Label+' => '该对象被废弃的大概日期',
 
@@ -540,16 +540,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => '相关的触发器',
 	'Class:Action/Attribute:trigger_list+' => '此操作相关的触发器',
-	'Class:Action/Attribute:asynchronous' => 'Asynchronous~~',
-	'Class:Action/Attribute:asynchronous+' => 'Whether this action should be executed in the background or not~~',
+	'Class:Action/Attribute:asynchronous' => '异步',
+	'Class:Action/Attribute:asynchronous+' => '此操作是否应在后台执行',
 	'Class:Action/Attribute:asynchronous/Value:use_global_setting' => '使用全局设置',
 	'Class:Action/Attribute:asynchronous/Value:yes' => '是',
 	'Class:Action/Attribute:asynchronous/Value:no' => '否',
 	'Class:Action/Attribute:finalclass' => '操作类型',
 	'Class:Action/Attribute:finalclass+' => '根本属性的名称',
 	'Action:WarningNoTriggerLinked' => '警告, 此动作没有关联任何触发器. 至少关联1个触发器才会启用.',
-	'Action:last_executions_tab' => 'Last executions~~',
-	'Action:last_executions_tab_panel_title' => 'Executions of this action (%1$s)~~',
+	'Action:last_executions_tab' => '最近执行记录',
+	'Action:last_executions_tab_panel_title' => '此操作的执行记录 (%1$s)',
 	'Action:last_executions_tab_limit_days' => '过去 %1$s 天',
 	'Action:last_executions_tab_limit_none' => '无限制',
 ]);
@@ -590,9 +590,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ActionEmail'                                     => '邮件通知',
 	'Class:ActionEmail+'                                    => '',
 	'Class:ActionEmail/Attribute:status+'                   => '此状态将决定提醒谁: 
-- 测试中: 仅测试者, 
-- 生产的: 所有人 (收件人, 抄送和密送) 
-- 禁用的: 没有人',
+- 正在测试: 仅测试收件人, 
+- 生产: 所有人 (收件人, 抄送和密送) 
+- 禁用: 没有人',
 	'Class:ActionEmail/Attribute:status/Value:test+'        => '仅测试收件人会被通知',
 	'Class:ActionEmail/Attribute:status/Value:enabled+'     => '通知所有人, 包含抄送和秘抄',
 	'Class:ActionEmail/Attribute:status/Value:disabled+'    => '不发送邮件通知',
@@ -681,7 +681,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 - Else the icon of the triggering object class,
 - Otherwise, the application compact logo will be used~~',
 	'Class:ActionNewsroom/Attribute:priority' => '优先级',
-	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by decreasing priority, when displayed in the Newsroom popup',
+	'Class:ActionNewsroom/Attribute:priority+' => '消息将按优先级降序排列，当在新闻室弹出窗口中显示时',
 	'Class:ActionNewsroom/Attribute:priority/Value:1' => '严重',
 	'Class:ActionNewsroom/Attribute:priority/Value:1+' => '严重',
 	'Class:ActionNewsroom/Attribute:priority/Value:2' => '紧急',
@@ -693,7 +693,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ActionNewsroom/Attribute:test_recipient_id' => '测试收件人',
 	'Class:ActionNewsroom/Attribute:test_recipient_id+' => 'Person used instead of Recipients when notification is being tested~~',
 	'Class:ActionNewsroom/Attribute:recipients' => '收件人',
-	'Class:ActionNewsroom/Attribute:recipients+' => 'An OQL query returning Contact objects~~',
+	'Class:ActionNewsroom/Attribute:recipients+' => '返回联系人的 OQL 查询',
 	'Class:ActionNewsroom/Attribute:url' => 'URL',
 	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.~~',
 ]);
@@ -716,11 +716,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Trigger/Attribute:context+'      => '允许此触发器开启的上下文',
 	'Class:Trigger/Attribute:complement'    => '其它信息',
 	'Class:Trigger/Attribute:complement+'   => '此触发器提供的更多信息, 使用英文',
-	'Class:Trigger/Attribute:subscription_policy'   => 'Subscription policy~~',
-	'Class:Trigger/Attribute:subscription_policy+'  => 'Allows users to unsubscribe from the trigger~~',
-	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow complete unsubscription~~',
-	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel (News or Email)~~',
-	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Deny unsubscription~~',
+	'Class:Trigger/Attribute:subscription_policy'   => '订阅策略',
+	'Class:Trigger/Attribute:subscription_policy+'  => '允许用户从触发器取消订阅',
+	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => '允许完全取消订阅',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => '强制至少选择一个通道 (新闻或邮件)',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => '拒绝取消订阅',
 ]);
 
 //
@@ -731,11 +731,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnObject'                         => '触发器 (类型依赖的)',
 	'Class:TriggerOnObject+'                        => '在指定类型对象上的触发器',
 	'Class:TriggerOnObject/Attribute:target_class'  => '目标类型',
-	'Class:TriggerOnObject/Attribute:target_class+' => 'Objects in this class will activate the trigger~~',
+	'Class:TriggerOnObject/Attribute:target_class+' => '可激活此触发器的类',
 	'Class:TriggerOnObject/Attribute:filter'        => '筛选器',
-	'Class:TriggerOnObject/Attribute:filter+'       => '限定将激活触发器的对象 (目标类型的)',
+	'Class:TriggerOnObject/Attribute:filter+'       => '限定将激活触发器的对象 (目标类型)',
 	'TriggerOnObject:WrongFilterQuery'              => '错误的筛选查询: %1$s',
-	'TriggerOnObject:WrongFilterClass'              => '筛选查询返回的对象必须是类型 "%1$s"',
+	'TriggerOnObject:WrongFilterClass'              => '筛选查询返回的对象必须是 "%1$s"',
 ]);
 
 //
@@ -801,7 +801,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnObjectUpdate' => '触发器 (对象被更新时)',
 	'Class:TriggerOnObjectUpdate+' => '指定类型或子类型对象更新时的触发器',
-	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'This filter is computed after the object update in database. It restricts the objects which can trigger the actions~~',
+	'Class:TriggerOnObjectUpdate/Attribute:filter+' => '此筛选器在数据库中的对象更新后开始计算. 它可限制可以触发操作的对象',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => '目标字段',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ]);
@@ -814,7 +814,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnObjectMention' => '触发器 (对象被提及时)',
 	'Class:TriggerOnObjectMention+' => '指定类型或子类型对象在属性日志中提及 (@xxx) 时的触发器',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => '提及筛选',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => '限丁将激活此触发器的提及对象. 如果为空则任何类的提及对象将激活此触发器.',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => '限定将激活此触发器的提及对象. 如果为空则任何类的提及对象将激活此触发器.',
 ]);
 
 //
@@ -1013,7 +1013,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:AsyncSendEmail/Attribute:to' => '收件人',
 	'Class:AsyncSendEmail/Attribute:subject' => '主题',
 	'Class:AsyncSendEmail/Attribute:body' => '正文',
-	'Class:AsyncSendEmail/Attribute:header' => '标头',
+	'Class:AsyncSendEmail/Attribute:header' => '标题',
 	'Class:CMDBChangeOpSetAttributeOneWayPassword' => '加密密码',
 	'Class:CMDBChangeOpSetAttributeOneWayPassword/Attribute:prev_pwd' => '原值',
 	'Class:CMDBChangeOpSetAttributeEncrypted' => '加密字段',
@@ -1024,7 +1024,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:SynchroAttribute/Attribute:sync_source_id' => '同步数据源',
 	'Class:SynchroAttribute/Attribute:attcode' => '属性编码',
 	'Class:SynchroAttribute/Attribute:update' => '更新',
-	'Class:SynchroAttribute/Attribute:reconcile' => '使一致',
+	'Class:SynchroAttribute/Attribute:reconcile' => '调和',
 	'Class:SynchroAttribute/Attribute:update_policy' => '更新策略',
 	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => '已锁定',
 	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => '未锁定',
@@ -1143,11 +1143,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Core:BulkExport:AvailableColumnsFrom_Class' => '%1$s属性中可用的列',
 	'Core:BulkExport:NoFieldSelected' => '请至少选择导出一列',
 	'Core:BulkExport:CheckAll' => '全选',
-	'Core:BulkExport:UncheckAll' => '反选',
+	'Core:BulkExport:UncheckAll' => '全不选',
 	'Core:BulkExport:ExportCancelledByUser' => '导出被用户取消',
-	'Core:BulkExport:CSVOptions' => 'CSV选项',
+	'Core:BulkExport:CSVOptions' => 'CSV 选项',
 	'Core:BulkExport:CSVLocalization' => '本地化',
-	'Core:BulkExport:PDFOptions' => 'PDF选项',
+	'Core:BulkExport:PDFOptions' => 'PDF 选项',
 	'Core:BulkExport:PDFPageFormat' => '页面格式',
 	'Core:BulkExport:PDFPageSize' => '页面大小:',
 	'Core:BulkExport:PageSize-A4' => 'A4',
@@ -1157,14 +1157,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Core:BulkExport:PageOrientation-L' => '横向',
 	'Core:BulkExport:PageOrientation-P' => '纵向',
 	'Core:BulkExport:XMLFormat' => 'XML文件 (*.xml)',
-	'Core:BulkExport:XMLOptions' => 'XML选项',
+	'Core:BulkExport:XMLOptions' => 'XML 选项',
 	'Core:BulkExport:SpreadsheetFormat' => 'HTML表单(*.html)',
 	'Core:BulkExport:SpreadsheetOptions' => '表单选项',
 	'Core:BulkExport:OptionNoLocalize' => '不要本地化这些值 (举的例子)',
 	'Core:BulkExport:OptionLinkSets' => '包含外链的对象',
 	'Core:BulkExport:OptionFormattedText' => '保持文本格式',
 	'Core:BulkExport:ScopeDefinition' => '定义要导出的对象',
-	'Core:BulkExportLabelOQLExpression' => 'OQL查询:',
+	'Core:BulkExportLabelOQLExpression' => 'OQL 查询:',
 	'Core:BulkExportLabelPhrasebookEntry' => '来自预定义查询:',
 	'Core:BulkExportMessageEmptyOQL' => '请输入有效的预定义查询.',
 	'Core:BulkExportMessageEmptyPhrasebookEntry' => '请选择有效的预定义查询.',
@@ -1172,7 +1172,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Core:BulkExportCanRunNonInteractive' => '点击这里运行非交互式导出.',
 	'Core:BulkExportLegacyExport' => '点击这里进入旧版导出.',
 	'Core:BulkExport:XLSXOptions' => 'Excel 选项',
-	'Core:BulkExport:TextFormat' => '文本中包含一些 HTML 标签',
+	'Core:BulkExport:TextFormat' => '包含 HTML 的文本',
+	'Core:BulkExport:TextFormat' => '包含 HTML 的文本',
 	'Core:BulkExport:DateTimeFormat' => '日期和时间格式',
 	'Core:BulkExport:DateTimeFormatDefault_Example' => '默认格式 (%1$s), e.g. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => '自定义格式: %1$s',
@@ -1201,7 +1202,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 // Class: TagSetFieldData
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:TagSetFieldData' => '类型%1$s的%2$s',
+	'Class:TagSetFieldData' => '%1$s %2$s',
 	'Class:TagSetFieldData+' => '',
 
 	'Class:TagSetFieldData/Attribute:code' => '代码',

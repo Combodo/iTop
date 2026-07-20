@@ -35,17 +35,19 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:Incident:Shortcuts+' => '',
 	'Menu:Incident:MyIncidents' => '分配给我的事件',
 	'Menu:Incident:MyIncidents+' => '分配给我的事件',
-	'Menu:Incident:MySupportIncidents' => 'Reported by me~~',
-	'Menu:Incident:MySupportIncidents+' => 'Non closed incidents where I am the caller~~',
+	'Menu:Incident:MySupportIncidents' => '由我报告的事件',
+	'Menu:Incident:MySupportIncidents+' => '由我发起且尚未关闭的的事件',
 	'Menu:Incident:EscalatedIncidents' => '已升级的事件',
-	'Menu:Incident:EscalatedIncidents+' => '已升级的事件',
-	'Menu:Incident:OpenIncidents' => '所有打开的事件',
-	'Menu:Incident:OpenIncidents+' => '所有打开的事件',
+	'Menu:Incident:EscalatedIncidents+' => '',
+	'Menu:Incident:OpenIncidents' => '所有待处理的事件',
+	'Menu:Incident:OpenIncidents+' => '',
 	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => '最近两周的事件 (按优先级)',
 	'UI-IncidentManagementOverview-Last-14-days' => '最近两周的事件 (按数量)',
-	'UI-IncidentManagementOverview-OpenIncidentByStatus' => '打开的事件 (按状态)',
-	'UI-IncidentManagementOverview-OpenIncidentByAgent' => '打开的事件 (按办理人)',
-	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => '打开的事件 (按客户)',
+	'UI-IncidentManagementOverview-OpenIncidentByStatus' => '待处理的事件 (按状态)',
+	'UI-IncidentManagementOverview-OpenIncidentByAgent' => '待处理的事件 (按办理人)',
+	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => '待处理的事件 (按客户)',
+	'Class:Incident/Method:UpdateChildTicketWith:public_log' => '<i><u>来自父级事件的公共日志 %2$s:</u></i><br><br>',
+	'Class:Incident/Method:UpdateChildTicketWith:private_log' => '<i>来自父级事件的私有日志 [[Incident:%1$s]]:</i><br><br>',
 ]);
 
 // Dictionnay conventions
@@ -245,5 +247,5 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 	'Class:Incident/Method:ResolveChildTickets' => '解决子工单',
 	'Class:Incident/Method:ResolveChildTickets+' => '递归解决子工单 (自动解决), 并调整相关字段与父级工单保持一致: 服务, 团队, 办理人, 解决方案',
-	'Tickets:Related:OpenIncidents' => '打开的事件',
+	'Tickets:Related:OpenIncidents' => '待处理的事件',
 ]);

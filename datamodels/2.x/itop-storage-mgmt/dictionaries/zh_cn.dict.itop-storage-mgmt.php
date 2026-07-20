@@ -31,9 +31,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:NASFileSystem/Attribute:org_id' => '组织 ID',
+	'Class:NASFileSystem/Attribute:org_id' => '组织id',
 	'Class:NASFileSystem/Attribute:org_id+' => '',
-	'Class:NASFileSystem/Attribute:location_id' => '位置 ID',
+	'Class:NASFileSystem/Attribute:location_id' => '位置id',
 	'Class:NASFileSystem/Attribute:location_id+' => '',
 	'Class:NASFileSystem/Attribute:location_name' => '位置名称',
 	'Class:NASFileSystem/Attribute:location_name+' => '',
@@ -45,9 +45,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:FiberChannelInterface/Name' => '%2$s %1$s',
-	'Class:FiberChannelInterface/Attribute:org_id' => '组织 ID',
+	'Class:FiberChannelInterface/Attribute:org_id' => '组织id',
 	'Class:FiberChannelInterface/Attribute:org_id+' => '',
-	'Class:FiberChannelInterface/Attribute:location_id' => '位置 ID',
+	'Class:FiberChannelInterface/Attribute:location_id' => '位置id',
 	'Class:FiberChannelInterface/Attribute:location_id+' => '',
 ]);
 
@@ -56,9 +56,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:LogicalVolume/Attribute:org_id' => '组织 ID',
+	'Class:LogicalVolume/Attribute:org_id' => '组织id',
 	'Class:LogicalVolume/Attribute:org_id+' => '',
-	'Class:LogicalVolume/Attribute:location_id' => '位置 ID',
+	'Class:LogicalVolume/Attribute:location_id' => '位置id',
 	'Class:LogicalVolume/Attribute:location_id+' => '',
 	'Class:LogicalVolume/Attribute:location_name' => '位置名称',
 	'Class:LogicalVolume/Attribute:location_name+' => '',
