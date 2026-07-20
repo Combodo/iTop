@@ -191,7 +191,6 @@ class DataFeatureRemovalController extends Controller
 			$bIsDirEmpty = count(scandir($sBuildDir)) === 2;
 			$bForceCompilation = Session::Get('bForceCompilation', false);
 			if ($bIsDirEmpty || $bForceCompilation) {
-				Session::Unset('bForceCompilation');
 				$oRuntimeEnvironment->CopySetupFiles();
 				if (count($aSelectedModules) === 0) {
 					$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
@@ -203,6 +202,7 @@ class DataFeatureRemovalController extends Controller
 					['sSourceEnv' => $sSourceEnv, 'sBuildDir' => $sBuildDir, 'bIsDirEmpty' => $bIsDirEmpty, glob("$sBuildDir/*")]
 				);
 				$oRuntimeEnvironment->DoCompile($aSelectedExtensions, $aRemovedExtensions, $aSelectedModules, MFCompiler::CanUseSymbolicLinks());
+				Session::Unset('bForceCompilation');
 			} else {
 				if (count($aSelectedModules) === 0) {
 					$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
