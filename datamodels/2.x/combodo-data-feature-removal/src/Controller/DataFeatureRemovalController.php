@@ -176,6 +176,8 @@ class DataFeatureRemovalController extends Controller
 		$aRemovedExtensions = json_decode($oParameters->GetParameter('removed_extensions', '[]'), true);
 
 		try {
+			$this->ValidateTransactionId();
+
 			$oConfig = MetaModel::GetConfig();
 			if (count($aSelectedModules) === 0) {
 				$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
@@ -213,6 +215,7 @@ class DataFeatureRemovalController extends Controller
 		}
 
 		$aParams['success_message'] = Dict::S('DataFeatureRemoval:Compile:Success');
+		$aParams['transaction_id'] = utils::GetNewTransactionId();
 
 		$oParameters->SetParameter('selected_modules', json_encode($aSelectedModules));
 		$this->DisplayJSONPage($aParams);
@@ -224,6 +227,8 @@ class DataFeatureRemovalController extends Controller
 		$aParams = [];
 		$aPageParams = [];
 		try {
+			$this->ValidateTransactionId();
+
 			$sSourceEnv = MetaModel::GetEnvironment();
 			$oSetupAudit = new SetupAudit($sSourceEnv);
 			$aRemovedClasses = array_keys($oSetupAudit->RunDataAudit());

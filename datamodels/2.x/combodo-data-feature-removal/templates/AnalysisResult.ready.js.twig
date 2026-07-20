@@ -1,11 +1,11 @@
 {# @copyright   Copyright (C) 2010-2026 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
-function ajax_run_audit() {
+function ajax_run_audit(sTransactionId) {
     $('#ajax_run_audit_in_progress_msg').removeClass('ibo-is-hidden');
     $.post(
         '{{ sAjaxURL|raw }}',
-        { operation: 'ajax_run_audit' },
+        { operation: 'ajax_run_audit', transaction_id: sTransactionId },
         function (data) {
             $('#ajax_run_audit_in_progress_msg').addClass('ibo-is-hidden');
 
@@ -30,7 +30,7 @@ function ajax_compile() {
 
     $.post(
         '{{ sAjaxURL|raw }}',
-        { operation: 'ajax_compile' },
+        { operation: 'ajax_compile', transaction_id: '{{ sTransactionId }}' },
         function (data) {
             $('#ajax_compile_in_progress_msg').addClass('ibo-is-hidden');
 
@@ -41,7 +41,7 @@ function ajax_compile() {
                 $('#ajax_compile_success_msg .ibo-alert--title').html(data.success_message);
                 $('#ajax_compile_success_msg').removeClass('ibo-is-hidden');
 
-                ajax_run_audit();
+                ajax_run_audit(data.transaction_id);
             }
         },
         'json'
