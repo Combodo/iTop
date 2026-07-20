@@ -2226,7 +2226,7 @@ JS
 		$sButtonLabel = '';
 		if ($sReturnApplication !== '') {
 			switch ($sReturnApplication) {
-				case 'itop':
+				case 'DataFeatureRemoval':
 					$sButtonUrl = utils::GetAbsoluteUrlModulePage('combodo-data-feature-removal', 'index.php');
 					$sButtonLabel = 'Back to application';
 					break;

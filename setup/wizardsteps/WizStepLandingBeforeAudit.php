@@ -32,9 +32,6 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 		$oWizard->SetParameter('db_tls_ca', $this->oConfig->Get('db_tls.ca') ?? '');
 		$oWizard->SetParameter('display_choices', '');
 
-		$oWizard->SaveParameter('extensions_not_uninstallable', '[]');
-		$oWizard->SaveParameter('use_symbolic_links', MFCompiler::UseSymbolicLinks());
-		$oWizard->SaveParameter('force-uninstall', false);
 		$oWizard->SaveParameter('skip_wizard', false);
 
 		// should be done at the end
@@ -64,16 +61,7 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 			$adModulesFromDatabase = ModuleInstallationRepository::GetInstance()->ReadComputeInstalledModules($oConfig);
 			$this->oWizard->SetParameter('selected_modules', json_encode(array_keys($adModulesFromDatabase)));
 		} else {
-			$this->oWizard->SavePostedParameter('selected_modules');
-			$this->oWizard->SavePostedParameter('selected_extensions');
-			$this->oWizard->SavePostedParameter('added_extensions');
-			$this->oWizard->SavePostedParameter('removed_extensions');
-			$this->oWizard->SavePostedParameter('extensions_not_uninstallable');
 			$this->oWizard->SavePostedParameter('copy_setup_files', '1');
-			$this->oWizard->SavePostedParameter('force-uninstall');
-			$this->oWizard->SavePostedParameter('use_symbolic_links');
-			$this->oWizard->SavePostedParameter('return_application');
-			$this->oWizard->SavePostedParameter('target_env');
 		}
 
 		$aWizardSteps = $this->oWizard->GetParameter('_steps', null);

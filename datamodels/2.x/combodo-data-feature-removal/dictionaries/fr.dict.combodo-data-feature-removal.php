@@ -20,6 +20,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 	'DataFeatureRemoval:Features:Title' => 'Extensions',
 	'DataFeatureRemoval:Result:Title' => 'Modification demandée',
+	'DataFeatureRemoval:NoResult:Title' => 'Aucune modification demandée',
 	'DataFeatureRemoval:Execution:Title' => 'Suppressions',
 	'DataFeatureRemoval:Analysis:Title' => 'Résultat de l’analyse',
 	'DataFeatureRemoval:Analysis:Subtitle' => 'Vérifier les éléments à nettoyer',
@@ -38,6 +39,14 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 	'DataFeatureRemoval:CleanupComplete:Title' => 'All clear.',
 	'DataFeatureRemoval:CompilComplete' => 'Compilation successful. No Cleanup needed. You can proceed to setup.',
+
+	'DataFeatureRemoval:Compile:InProgress' => 'Compilation en cours...',
+	'DataFeatureRemoval:Compile:Success' => 'Compilation terminée',
+	'DataFeatureRemoval:Compile:Error' => 'Erreur lors de la compilation',
+
+	'DataFeatureRemoval:RunAudit:InProgress' => 'Analyse en cours...',
+	'DataFeatureRemoval:RunAudit:Success' => 'Analyse terminée',
+	'DataFeatureRemoval:RunAudit:Error' => 'Erreur lors de l\'analyse',
 
 	'UI:Button:Analyze' => 'Analyser',
 	'UI:Button:ModifyChoices' => 'Modifier la sélection',
