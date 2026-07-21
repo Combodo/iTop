@@ -3002,8 +3002,6 @@ class SynchroExecution
 	 *     </ul>
 	 */
 	protected $m_oLastFullLoadStartDate = null;
-	/** @var bool true if the caller script gave the datetime before import phase was launched */
-	protected $m_bIsImportPhaseDateKnown;
 
 	/** @var \CMDBChange */
 	protected $m_oChange = null;
@@ -3028,10 +3026,7 @@ class SynchroExecution
 	public function __construct($oDataSource, $oImportPhaseStartDate = null)
 	{
 		$this->m_oDataSource = $oDataSource;
-
-		$this->m_bIsImportPhaseDateKnown = ($oImportPhaseStartDate != null);
 		$this->m_oImportPhaseStartDate = $oImportPhaseStartDate;
-
 		$this->m_oCtx = new ContextTag(ContextTag::TAG_SYNCHRO);
 		$this->m_oCtx1 = new ContextTag('Synchro:'.$oDataSource->GetRawName()); // More precise context information
 	}
@@ -3108,7 +3103,7 @@ class SynchroExecution
 		$this->m_oStatLog->Set('stats_nb_replica_total', $this->m_iCountAllReplicas);
 
 		$this->m_oStatLog->DBInsert();
-		$sLastFullLoad = ($this->m_bIsImportPhaseDateKnown) ? $this->m_oImportPhaseStartDate->format('Y-m-d H:i:s') : 'not specified';
+		$sLastFullLoad = (is_null($this->m_oImportPhaseStartDate)) ? 'not specified' : $this->m_oImportPhaseStartDate->format('Y-m-d H:i:s');
 		$this->m_oStatLog->AddTrace("###### STARTING SYNCHRONIZATION ##### Total: {$this->m_iCountAllReplicas} replica(s). Last full load: '$sLastFullLoad' ");
 		$sSql = 'SELECT NOW();';
 		$sDBNow = CMDBSource::QueryToScalar($sSql);
@@ -3212,21 +3207,18 @@ class SynchroExecution
 		// Compute and keep track of the limit date taken into account for obsoleting replicas
 		//
 		$iFullLoadInterval = $this->m_oDataSource->Get('full_load_periodicity'); // Duration in seconds
-		if ($this->m_bIsImportPhaseDateKnown) {
-			$oLimitDate = clone $this->m_oImportPhaseStartDate;
-			$sInterval = "-$iFullLoadInterval seconds";
-			$oLimitDate->Modify($sInterval);
-		} else {
+		if (is_null($this->m_oImportPhaseStartDate)) {
 			if ($iFullLoadInterval <= 0) {
 				// we are doing exec phase alone, and the full load interval is set to 0 => we should not update/delete replicas !!
 				// This will prevent actions in DoJob1() method
 				$oLimitDate = new DateTime('1970-01-01');
 			} else {
 				$oLimitDate = self::GetDataBaseCurrentDateTime();
-				$sInterval = "-$iFullLoadInterval seconds";
-				$oLimitDate->Modify($sInterval);
 			}
+		} else {
+			$oLimitDate = clone $this->m_oImportPhaseStartDate;
 		}
+		$this->ExactlySubtractSeconds($oLimitDate, $iFullLoadInterval);
 		$this->m_oLastFullLoadStartDate = $oLimitDate;
 		if ($bFirstPass) {
 			$this->m_oStatLog->AddTrace('Limit Date: '.$this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s'));
@@ -3346,10 +3338,10 @@ class SynchroExecution
 			$aArguments['log'] = $this->m_oStatLog->GetKey();
 			$aArguments['change'] = $this->m_oChange->GetKey();
 			$aArguments['chunk'] = $iMaxChunkSize;
-			if ($this->m_bIsImportPhaseDateKnown) {
-				$aArguments['last_full_load'] = $this->m_oImportPhaseStartDate->Format('Y-m-d H:i:s');
-			} else {
+			if (is_null($this->m_oImportPhaseStartDate)) {
 				$aArguments['last_full_load'] = '';
+			} else {
+				$aArguments['last_full_load'] = $this->m_oImportPhaseStartDate->Format('Y-m-d H:i:s');
 			}
 
 			$this->m_oStatLog->DBUpdate();
@@ -3701,13 +3693,11 @@ class SynchroExecution
 
 		// Get all the replicas that are to be deleted
 		//
-		$oDeletionDate = $this->m_oLastFullLoadStartDate;
+		$oDeletionDate = clone $this->m_oLastFullLoadStartDate;
 		$iDeleteRetention = $this->m_oDataSource->Get('delete_policy_retention'); // Duration in seconds
-		if ($iDeleteRetention > 0) {
-			$sInterval = "-$iDeleteRetention seconds";
-			$oDeletionDate->Modify($sInterval);
-		}
+		$this->ExactlySubtractSeconds($oDeletionDate, $iDeleteRetention);
 		$sDeletionDate = $oDeletionDate->Format('Y-m-d H:i:s');
+
 		if ($bFirstPass) {
 			$this->m_oStatLog->AddTrace("Deletion date: $sDeletionDate");
 		}
@@ -3756,5 +3746,22 @@ class SynchroExecution
 		$this->m_oStatLog->AddTrace("<<< End of DoJob3(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos) (completed)");
 
 		return false;
+	}
+
+	/** Take into account timechange to apply date difference operation
+	* @param \DateTime $oDate
+	* @param $iDurationInSeconds
+	* @return void
+	* @throws \Exception
+	 */
+	public function ExactlySubtractSeconds(DateTime $oDate, $iDurationInSeconds): void
+	{
+		if ($iDurationInSeconds > 0) {
+			$oDate->setTimezone(new DateTimeZone('UTC'));
+			$sInterval = "-$iDurationInSeconds seconds";
+			$oDate->Modify($sInterval);
+			$sTimezone = MetaModel::GetConfig()->Get('timezone');
+			$oDate->setTimezone(new DateTimeZone($sTimezone));
+		}
 	}
 }
