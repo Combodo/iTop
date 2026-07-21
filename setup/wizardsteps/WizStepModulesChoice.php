@@ -759,8 +759,8 @@ EOF
 			$bDisabled = true;
 			$bChecked = false;
 		} elseif ($bDependencyIssue) {
-			$bDisabled = true;
-			$bChecked = false;
+			$bDisabled = !$bDisableUninstallCheck;
+			$bChecked = true;
 		} elseif ($bMandatory) {
 			$bDisabled = true;
 			$bChecked = true;
@@ -813,6 +813,9 @@ EOF
 
 			if ($aFlags['disabled'] && !$aFlags['checked'] && !$bDisableUninstallCheck && (!$aFlags['uninstallable'] || $aFlags['mandatory'])) {
 				$this->bCanMoveForward = false;//Disable "Next"
+			} elseif (!$bDisableUninstallCheck && $aFlags['dependency_issue']) {
+				//If there is a dependency issue, the user cannot move forward without forced uninstall
+				$this->bCanMoveForward = false;
 			}
 
 			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $sChoiceId, $aFlags);
