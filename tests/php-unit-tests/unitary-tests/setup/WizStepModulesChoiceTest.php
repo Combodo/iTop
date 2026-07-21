@@ -394,7 +394,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'mandatory' => false,
 				],
 			],
-			'A non installed extension with missing dependencies should be not checked and disabled' => [
+			'A non installed extension with missing dependencies and without force uninstall should be checked and disabled' => [
 				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => false,
@@ -416,12 +416,12 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'missing' => false,
 					'installed' => false,
 					'disabled' => true,
-					'checked' => false,
+					'checked' => true,
 					'dependency_issue' => true,
 					'mandatory' => false,
 				],
 			],
-			'An installed extension with missing dependencies should be not checked and disabled' => [
+			'An installed extension with missing dependencies and without force uninstall should be checked and disabled' => [
 				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => true,
@@ -443,7 +443,61 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'missing' => false,
 					'installed' => true,
 					'disabled' => true,
-					'checked' => false,
+					'checked' => true,
+					'dependency_issue' => true,
+					'mandatory' => false,
+				],
+			],
+			'A non installed extension with missing dependencies and force uninstall should be checked and enabled' => [
+				'aExtensionsOnDiskOrDb' => [
+					'itop-ext1' => [
+						'installed' => false,
+						'missing_dependencies' => [
+							'itop-ext1-1',
+						],
+					],
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => false,
+					'uninstallable' => true,
+					'missing_dependencies' => true,
+				],
+				'bCurrentSelected' => false,
+				'bDisableUninstallChecks' => true,
+				'aExpectedFlags' => [
+					'uninstallable' => true,
+					'missing' => false,
+					'installed' => false,
+					'disabled' => false,
+					'checked' => true,
+					'dependency_issue' => true,
+					'mandatory' => false,
+				],
+			],
+			'An installed extension with missing dependencies and force uninstall should be checked and enabled' => [
+				'aExtensionsOnDiskOrDb' => [
+					'itop-ext1' => [
+						'installed' => true,
+						'missing_dependencies' => [
+							'itop-ext1-1',
+						],
+					],
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => false,
+					'uninstallable' => true,
+					'missing_dependencies' => true,
+				],
+				'bCurrentSelected' => false,
+				'bDisableUninstallChecks' => true,
+				'aExpectedFlags' => [
+					'uninstallable' => true,
+					'missing' => false,
+					'installed' => true,
+					'disabled' => false,
+					'checked' => true,
 					'dependency_issue' => true,
 					'mandatory' => false,
 				],
