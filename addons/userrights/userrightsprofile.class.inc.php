@@ -582,7 +582,9 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	 */
 	public function ListProfiles($oUser)
 	{
-		if (count($oUser->ListChanges()) === 0) { // backward compatibility
+		if (!array_key_exists('profile_list', $oUser->ListChanges())) {
+			// Profiles list is not modified on the $oUser object, we can use DBObjectSearch with `all data` capabilities
+			// Note: This is the default behavior
 			$aRet = [];
 			$oSearch = new DBObjectSearch('URP_UserProfile');
 			$oSearch->AllowAllData();
@@ -595,6 +597,8 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 			return $aRet;
 		} else {
+			// Profiles list must be computed with memory changes.
+			// Note: this is a bit tricky because the user object may have been modified in memory (e.g. a profile added or removed) and we need to take that into account
 			$aRet = [];
 			$oProfilesSet = $oUser->Get('profile_list');
 			foreach ($oProfilesSet as $oUserProfile) {
