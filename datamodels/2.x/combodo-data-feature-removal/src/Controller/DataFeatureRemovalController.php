@@ -347,7 +347,7 @@ class DataFeatureRemovalController extends Controller
 					'uninstallable' => $oExtension->CanBeUninstalled(),
 					'remote' => $oExtension->IsRemote(),
 					'missing' => $oExtension->bRemovedFromDisk,
-					'cannot-be-installed' => $oExtension->HasDependencyIssue(),
+					'dependency_issue' => $oExtension->HasDependencyIssue(),
 				],
 
 			];
