@@ -59,9 +59,11 @@ class StaticDeletionPlan
 	{
 		foreach ($aClasses as $sClass) {
 			$oDeletionPlanItem = $this->GetInitialClassDeletionPlan($sClass);
-			$oDeletionPlanEntity = new DeletionPlanEntity();
-			$oDeletionPlanEntity->oDelete->Merge($oDeletionPlanItem);
-			$this->aDeletionPlan[$sClass] = $oDeletionPlanEntity;
+			// N°9831 Do not overwrite existing entity as it may already exist for this class if a previously processed class references it (issues/updates already accumulated must be kept)
+			if (false === array_key_exists($sClass, $this->aDeletionPlan)) {
+				$this->aDeletionPlan[$sClass] = new DeletionPlanEntity();
+			}
+			$this->aDeletionPlan[$sClass]->oDelete->Merge($oDeletionPlanItem);
 
 			$this->DeletionPlanForReferencingClasses($sClass);
 		}

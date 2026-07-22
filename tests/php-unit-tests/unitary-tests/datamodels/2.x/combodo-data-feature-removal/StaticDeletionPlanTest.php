@@ -9,7 +9,6 @@ namespace Combodo\iTop\Test\UnitTest\Module\DataFeatureRemoval;
 
 use Combodo\iTop\DataFeatureRemoval\Entity\DataCleanupSummaryEntity;
 use Combodo\iTop\DataFeatureRemoval\Service\StaticDeletionPlan;
-use MetaModel;
 
 require_once __DIR__."/AbstractCleanup.php";
 class StaticDeletionPlanTest extends \AbstractCleanup
@@ -147,6 +146,66 @@ EOF);
 			'DFRManual'                   => ['iIssueCount' => 1],
 		];
 
+		$this->AssertSummaryEquals($aExpected, $aRes);
+	}
+
+	/**
+	 * N°9831
+	 *
+	 * A DEL_MANUAL issue must still be reported when the referencing class (DFRManual) is itself part
+	 * of the classes to remove AND is processed AFTER the class it points to (DFRToRemoveLeaf).
+	 *
+	 * This mirrors the real "VirtualMachine -> VirtualHost" case: the setup audit sorts the removed
+	 * classes alphabetically and drops abstract classes, so a referencing class such as VirtualMachine
+	 * ends up processed after its concrete targets (Farm/Hypervisor/Cloud). Here DFRToRemove is abstract
+	 * and DFRToRemoveLeaf is its concrete child, while DFRManual points to DFRToRemove with a mandatory
+	 * DEL_MANUAL external key.
+	 *
+	 * Regression: the plan entity accumulating the issue used to be overwritten when the referencing
+	 * class was processed as a top-level class, silently dropping the issue (no blocking message on the
+	 * summary page, then a crash at execution time).
+	 */
+	public function testGetCleanupSummary_IssueKeptWhenReferencingClassListedAfterTarget(): void
+	{
+		$this->GivenDFRObjectsInDB(<<<EOF
+			create DFRToRemoveLeaf (name = DFRToRemoveLeaf_1)
+			create DFRManual       (name = DFRManual_1, extkey_id = DFRToRemoveLeaf_1)
+EOF);
+
+		// Target listed BEFORE the referencing class, as produced by the alphabetically sorted audit
+		$aClasses = ['DFRToRemoveLeaf', 'DFRManual'];
+		$oService = new StaticDeletionPlan();
+		$aRes = $oService->GetCleanupSummary($aClasses);
+
+		$aExpected = [
+			'DFRToRemoveLeaf' => ['iDeleteCount' => 1],
+			'DFRManual'       => ['iDeleteCount' => 1, 'iIssueCount' => 1],
+		];
+		$this->AssertSummaryEquals($aExpected, $aRes);
+	}
+
+	/**
+	 * N°9831
+	 *
+	 * Control case: the same issue must also be reported when the referencing class is listed BEFORE
+	 * its target (this order already worked, e.g. "Enclosure -> Rack"). Together with the test above,
+	 * this locks in that issue detection is independent of the processing order.
+	 */
+	public function testGetCleanupSummary_IssueKeptWhenReferencingClassListedBeforeTarget(): void
+	{
+		$this->GivenDFRObjectsInDB(<<<EOF
+			create DFRToRemoveLeaf (name = DFRToRemoveLeaf_1)
+			create DFRManual       (name = DFRManual_1, extkey_id = DFRToRemoveLeaf_1)
+EOF);
+
+		$aClasses = ['DFRManual', 'DFRToRemoveLeaf'];
+		$oService = new StaticDeletionPlan();
+		$aRes = $oService->GetCleanupSummary($aClasses);
+
+		$aExpected = [
+			'DFRToRemoveLeaf' => ['iDeleteCount' => 1],
+			'DFRManual'       => ['iDeleteCount' => 1, 'iIssueCount' => 1],
+		];
 		$this->AssertSummaryEquals($aExpected, $aRes);
 	}
 
