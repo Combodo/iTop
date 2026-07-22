@@ -758,12 +758,11 @@ EOF
 		if ($bMissingFromDisk) {
 			$bDisabled = true;
 			$bChecked = false;
-		} elseif ($bDependencyIssue) {
-			$bDisabled = !$bDisableUninstallCheck;
-			$bChecked = true;
 		} elseif ($bMandatory) {
 			$bDisabled = true;
 			$bChecked = true;
+		} elseif ($bDependencyIssue) {
+			$bDisabled = !$bDisableUninstallCheck;
 		} elseif ($bInstalled && !$bCanBeUninstalled && !$bDisableUninstallCheck) {
 			$bChecked = true;
 			$bDisabled = true;
