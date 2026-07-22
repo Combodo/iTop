@@ -159,6 +159,7 @@ class UserRightsTest extends ItopDataTestCase
 	/**
 	 * Ensure profiles are obtained with persisted user when profiles list has NOT been changed.
 	 * @see N°9723 - IsActionAllowed should work with non instantiated users objects
+	 * @covers UserRightsProfile::ListProfiles
 	 */
 	public function testListProfilesUsesPersistedProfilesWhenOnlyNonProfileChangesExist(): void
 	{
@@ -212,6 +213,7 @@ class UserRightsTest extends ItopDataTestCase
 	/**
 	 * Ensure profiles are obtained with object in memory when profiles list has been changed.
 	 * @see N°9723 - IsActionAllowed should work with non instantiated users objects
+	 * @covers UserRightsProfile::ListProfiles
 	 */
 	public function testListProfilesUsesInMemoryProfilesWhenProfileListChanged(): void
 	{
