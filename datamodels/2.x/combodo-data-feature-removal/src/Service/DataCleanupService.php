@@ -134,10 +134,6 @@ class DataCleanupService
 				/** @var DBObject $oDependentObj */
 				while ($oDependentObj = $oSet->Fetch()) {
 					$iDeletePropagationOption = $oExtKeyAttDef->GetDeletionPropagationOption();
-					if ($iDeletePropagationOption == DEL_MANUAL) {
-						$this->oObjectService->SetIssue(get_class($oDependentObj));
-						continue;
-					}
 
 					if ($oExtKeyAttDef->IsNullAllowed()) {
 						// Optional external key, list to reset
@@ -152,6 +148,12 @@ class DataCleanupService
 							return false;
 						}
 					} else {
+						// Mandatory external key
+						if ($iDeletePropagationOption == DEL_MANUAL) {
+							// Cannot be deleted automatically, must be handled manually
+							$this->oObjectService->SetIssue(get_class($oDependentObj));
+							continue;
+						}
 						// Propagate deletion only if not visited
 						if ($this->IsVisited($oDependentObj)) {
 							continue;
