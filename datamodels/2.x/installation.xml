@@ -74,6 +74,7 @@
 						<module>itop-virtualization-mgmt</module>
 					</modules>
 					<default>true</default>
+					<uninstallable>no</uninstallable>
           <sub_options>
             <options type="array">
               <choice>
