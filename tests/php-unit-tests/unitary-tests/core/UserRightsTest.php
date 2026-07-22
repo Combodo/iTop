@@ -37,6 +37,7 @@ use Dict;
 use MetaModel;
 use UserLocal;
 use UserRights;
+use UserRightsProfile;
 use utils;
 
 /**
@@ -153,6 +154,127 @@ class UserRightsTest extends ItopDataTestCase
 			'profile_list' => $oProfiles,
 		]);
 		return $oUser;
+	}
+
+	/**
+	 * Ensure profiles are obtained with persisted user when profiles list has NOT been changed.
+	 * @see N°9723 - IsActionAllowed should work with non instantiated users objects
+	 */
+	public function testListProfilesUsesPersistedProfilesWhenOnlyNonProfileChangesExist(): void
+	{
+		// Create a user with a set of profiles and save it
+		$oUserInDataBase = $this->GivenUserWithProfiles('test1', [
+			self::$aURP_Profiles['Configuration Manager'],
+			self::$aURP_Profiles['Support Agent'],
+			self::$aURP_Profiles['Service Manager'],
+		]);
+		$oUserInDataBase->DBInsert();
+
+		// User to check profiles (give the persisted user id)
+		$oUser = new class ($oUserInDataBase) {
+			private $oUserInDataBase;
+
+			public function __construct($oUserInDataBase)
+			{
+				$this->oUserInDataBase = $oUserInDataBase;
+			}
+
+			public function ListChanges(): array
+			{
+				return ['login' => 'changed'];
+			}
+
+			public function GetKey(): int
+			{
+				return $this->oUserInDataBase->GetKey();
+			}
+
+			public function Get(string $sAttCode)
+			{
+				if ($sAttCode === 'profile_list') {
+					throw new \LogicException('profile_list should not be read when it is not part of ListChanges');
+				}
+				return null;
+			}
+		};
+
+		// List the profiles (persisted)
+		$oUserRights = new UserRightsProfile();
+		$aProfiles = $oUserRights->ListProfiles($oUser);
+
+		// Asserts
+		$this->assertCount(3, $aProfiles);
+		$this->assertArrayHasKey(3, $aProfiles);
+		$this->assertArrayHasKey(5, $aProfiles);
+		$this->assertArrayHasKey(10, $aProfiles);
+	}
+
+	/**
+	 * Ensure profiles are obtained with object in memory when profiles list has been changed.
+	 * @see N°9723 - IsActionAllowed should work with non instantiated users objects
+	 */
+	public function testListProfilesUsesInMemoryProfilesWhenProfileListChanged(): void
+	{
+		// First profile
+		$oUserProfile1 = new class () {
+			public function Get(string $sAttCode)
+			{
+				if ($sAttCode === 'profileid') {
+					return 3;
+				}
+				if ($sAttCode === 'profileid_friendlyname') {
+					return 'Configuration Manager';
+				}
+				return null;
+			}
+		};
+
+		// Second profile
+		$oUserProfile2 = new class () {
+			public function Get(string $sAttCode)
+			{
+				if ($sAttCode === 'profileid') {
+					return 10;
+				}
+				if ($sAttCode === 'profileid_friendlyname') {
+					return 'Portal power user';
+				}
+				return null;
+			}
+		};
+
+		// User in memory with first and second profile
+		$oUser = new class ($oUserProfile1, $oUserProfile2) {
+			private $aProfileList;
+
+			public function __construct($oUserProfile1, $oUserProfile2)
+			{
+				$this->aProfileList = [$oUserProfile1, $oUserProfile2];
+			}
+
+			public function ListChanges(): array
+			{
+				return ['profile_list' => true, 'login' => 'changed'];
+			}
+
+			public function Get(string $sAttCode)
+			{
+				if ($sAttCode === 'profile_list') {
+					return $this->aProfileList;
+				}
+				return null;
+			}
+		};
+
+		// List the profiles (memory)
+		$oUserRights = new UserRightsProfile();
+		$aProfiles = $oUserRights->ListProfiles($oUser);
+
+		// Asserts
+		$this->assertSame([
+			3 => 'Configuration Manager',
+			10 => 'Portal power user',
+		], $aProfiles);
 	}
 
 	public function testIsLoggedIn()
