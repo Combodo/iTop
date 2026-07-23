@@ -163,6 +163,58 @@ class DataCleanupServiceTest extends \AbstractCleanup
 		$this->AssertSummaryEquals($aExpected, $aRes);
 	}
 
+	/**
+	 * N°9831
+	 *
+	 * A nullable external key configured as DEL_MANUAL must NOT be treated as an issue: it is simply
+	 * reset (set to null), exactly like core DBObject::MakeDeletionPlan does. DEL_MANUAL only blocks
+	 * for mandatory keys. This mirrors the real "Hypervisor.farm_id -> Farm" case (nullable + DEL_MANUAL).
+	 *
+	 * Regression guard for the ordering of the IsNullAllowed()/DEL_MANUAL checks in RecursiveDeletion:
+	 * reverting that change would make ExecuteCleanup throw here instead of resetting the object.
+	 */
+	public function testExecuteCleanup_NullableManualShouldResetAndNotThrow()
+	{
+		$this->GivenDFRTreeInDB(<<<EOF
+			DFRToRemoveLeaf_1 <- DFRManualNullable_1
+		EOF);
+
+		$aClasses = [ 'DFRToRemoveLeaf' ];
+		$oService = new DataCleanupService();
+		// Must NOT throw: the nullable external key is reset, not reported as an issue
+		$aRes = $oService->ExecuteCleanup($aClasses);
+
+		$aExpected = [
+			['DFRManualNullable', 1, 0 ],
+			['DFRToRemoveLeaf', 0, 1 ],
+		];
+		$this->AssertSummaryEquals($aExpected, $aRes);
+	}
+
+	/**
+	 * N°9831
+	 *
+	 * Summary counterpart of the test above: a nullable DEL_MANUAL external key is reported as an
+	 * update (reset), with an issue count of 0. Reverting the RecursiveDeletion change would report
+	 * it as an issue instead.
+	 */
+	public function testGetCleanupSummary_NullableManualShouldBeUpdateNotIssue()
+	{
+		$this->GivenDFRTreeInDB(<<<EOF
+			DFRToRemoveLeaf_1 <- DFRManualNullable_1
+		EOF);
+
+		$aClasses = [ 'DFRToRemoveLeaf' ];
+		$oService = new DataCleanupService();
+		$aRes = $oService->GetCleanupSummary($aClasses);
+
+		$aExpected = [
+			['DFRManualNullable', 1, 0, 0 ],
+			['DFRToRemoveLeaf', 0, 1, 0 ],
+		];
+		$this->AssertSummaryEquals($aExpected, $aRes);
+	}
+
 	private function AssertSummaryEquals(array $expected, $actual, $sMessage = '')
 	{
 		$aExpected = [];
