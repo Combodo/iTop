@@ -277,23 +277,11 @@ abstract class WebServicesBase
 		$oLog->Set('userinfo', UserRights::GetUser());
 		$oLog->Set('verb', $sVerb);
 		$oLog->Set('result', $oRes->IsOk());
-		$this->TrimAndSetValue($oLog, 'log_info', (string)$oRes->GetInfoAsText());
-		$this->TrimAndSetValue($oLog, 'log_warning', (string)$oRes->GetWarningsAsText());
-		$this->TrimAndSetValue($oLog, 'log_error', (string)$oRes->GetErrorsAsText());
-		$this->TrimAndSetValue($oLog, 'data', (string)$oRes->GetReturnedDataAsText());
+		$oLog->SetTrim('log_info', (string)$oRes->GetInfoAsText());
+		$oLog->SetTrim('log_warning', (string)$oRes->GetWarningsAsText());
+		$oLog->SetTrim('log_error', (string)$oRes->GetErrorsAsText());
+		$oLog->SetTrim('data', (string)$oRes->GetReturnedDataAsText());
 		$oLog->DBInsertNoReload();
-	}
-
-	protected function TrimAndSetValue($oLog, $sAttCode, $sValue)
-	{
-		$oAttDef = MetaModel::GetAttributeDef(get_class($oLog), $sAttCode);
-		if (is_object($oAttDef)) {
-			$iMaxSize = $oAttDef->GetMaxSize();
-			if ($iMaxSize && (mb_strlen($sValue) > $iMaxSize)) {
-				$sValue = mb_substr($sValue, 0, $iMaxSize);
-			}
-			$oLog->Set($sAttCode, $sValue);
-		}
 	}
 
 	/**
