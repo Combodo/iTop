@@ -236,7 +236,7 @@ class UserRightsTest extends ItopDataTestCase
 			public function Get(string $sAttCode)
 			{
 				if ($sAttCode === 'profileid') {
-					return 10;
+					return 12;
 				}
 				if ($sAttCode === 'profileid_friendlyname') {
 					return 'Portal power user';
@@ -275,7 +275,7 @@ class UserRightsTest extends ItopDataTestCase
 		// Asserts
 		$this->assertSame([
 			3 => 'Configuration Manager',
-			10 => 'Portal power user',
+			12 => 'Portal power user',
 		], $aProfiles);
 	}
 
