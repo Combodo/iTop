@@ -64,6 +64,12 @@
           <is_null_allowed>false</is_null_allowed>
           <validation_pattern/>
         </field>
+        <field id="domains" xsi:type="AttributeTagSet">
+          <sql>domains</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+          <max_items>12</max_items>
+        </field>
       </fields>
       <methods/>
       <presentation/>
