@@ -8,6 +8,7 @@ use DBObjectSet;
 use IssueLog;
 use MetaModel;
 use SetupLog;
+use TagSetFieldData;
 
 require_once APPROOT.'setup/feature_removal/ModelReflectionSerializer.php';
 
@@ -65,6 +66,10 @@ abstract class AbstractSetupAudit
 
 		foreach ($this->GetRemovedClasses() as $sClass) {
 			if (MetaModel::IsAbstract($sClass)) {
+				continue;
+			}
+
+			if (MetaModel::IsSameFamily($sClass, TagSetFieldData::class)) {
 				continue;
 			}
 

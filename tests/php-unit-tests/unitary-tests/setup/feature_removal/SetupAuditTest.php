@@ -79,6 +79,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 			"Feature1Module1MyClass",
 			"FinalClassFeature2Module1MyClass",
 			"FinalClassFeature2Module1MyFinalClassFromLocation",
+			"TagSetFieldDataFor_FinalClassFeature2Module1MyFinalClassFromLocation__domains",
 		];
 		$this->assertEqualsCanonicalizing($expected, $oSetupAudit->GetRemovedClasses());
 
