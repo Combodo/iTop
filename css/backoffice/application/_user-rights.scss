@@ -4,7 +4,7 @@
  */
 
 $ibo-user-rights--padding-x: $ibo-spacing-400 !default;
-$ibo-user-rights--padding-y: $ibo-spacing-200 !default;
+$ibo-user-rights--padding-y: $ibo-spacing-100 !default;
 $ibo-user-rights--border-radius: $ibo-border-radius-400 !default;
 
 $ibo-user-rights--is-success--background-color: $ibo-color-success-100 !default;
@@ -18,6 +18,8 @@ $ibo-user-rights--is-failure--border-color: $ibo-color-danger-500 !default;
 $ibo-user-rights--is-failure--border: 1px solid $ibo-user-rights--is-failure--border-color !default;
 
 .ibo-user-rights {
+  display: inline-flex;
+  align-items: baseline;
   padding: $ibo-user-rights--padding-y $ibo-user-rights--padding-x;
   border-radius: $ibo-user-rights--border-radius;
   &.ibo-is-success {
