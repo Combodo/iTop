@@ -6,7 +6,6 @@
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
  * @author Robert Deng <denglx@gmail.com>
- *
  * This file is part of iTop.
  *
  * iTop is free software; you can redistribute it and/or modify
@@ -22,6 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -31,13 +31,15 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
+
 //
 // Class: UserLDAP
 //
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:UserLDAP' => 'LDAP用户',
-	'Class:UserLDAP+' => '用户身份由LDAP认证',
-	'UserLDAP:server' => 'LDAP详情',
+	'Class:UserLDAP' => 'LDAP 用户',
+	'Class:UserLDAP+' => '用户身份由 LDAP 认证',
+	'UserLDAP:server' => 'LDAP 详情',
 ]);
 
 //
@@ -45,6 +47,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server~~',
-	'Class:UserLDAP/Attribute:ldap_server+' => '~~',
+	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap 服务器',
+	'Class:UserLDAP/Attribute:ldap_server+' => '',
 ]);

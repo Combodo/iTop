@@ -21,19 +21,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:ChangeManagement' => '变更管理',
 	'Menu:Change:Overview' => '概况',
 	'Menu:Change:Overview+' => '',
 	'Menu:NewChange' => '新建变更',
-	'Menu:NewChange+' => '新建变更',
+	'Menu:NewChange+' => '新建变更工单',
 	'Menu:SearchChanges' => '搜索变更',
-	'Menu:SearchChanges+' => '搜索变更',
+	'Menu:SearchChanges+' => '搜索变更工单',
 	'Menu:Change:Shortcuts' => '快捷方式',
 	'Menu:Change:Shortcuts+' => '',
-	'Menu:WaitingAcceptance' => '等待审核的变更',
+	'Menu:WaitingAcceptance' => '等待核准的变更',
 	'Menu:WaitingAcceptance+' => '',
-	'Menu:WaitingApproval' => '等待批准的变更',
+	'Menu:WaitingApproval' => '等待审批的变更',
 	'Menu:WaitingApproval+' => '',
 	'Menu:Changes' => '所有打开的变更',
 	'Menu:Changes+' => '所有打开的变更',
@@ -74,7 +75,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Change/Attribute:status/Value:planned+' => '',
 	'Class:Change/Attribute:status/Value:rejected' => '已驳回',
 	'Class:Change/Attribute:status/Value:rejected+' => '',
-	'Class:Change/Attribute:status/Value:approved' => '已批准',
+	'Class:Change/Attribute:status/Value:approved' => '已审批',
 	'Class:Change/Attribute:status/Value:approved+' => '',
 	'Class:Change/Attribute:status/Value:closed' => '已关闭',
 	'Class:Change/Attribute:status/Value:closed+' => '',
@@ -109,7 +110,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Change/Attribute:fallback_plan' => '回滚计划',
 	'Class:Change/Attribute:fallback_plan+' => '',
 	'Class:Change/Attribute:related_request_list' => '相关需求',
-	'Class:Change/Attribute:related_request_list+' => '此变更相关的所有用户需求',
+	'Class:Change/Attribute:related_request_list+' => '此变更相关的所有需求',
 	'Class:Change/Attribute:related_incident_list' => '相关事件',
 	'Class:Change/Attribute:related_incident_list+' => '此变更相关的所有事件',
 	'Class:Change/Attribute:related_problems_list' => '相关问题',

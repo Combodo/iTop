@@ -1,15 +1,23 @@
 <?php
 
 /**
- * Localized data
+ * Copyright (C) 2013-2024 Combodo SAS
  *
- * @copyright Copyright (C) 2010-2024 Combodo SAS
- * @license    https://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
  *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
-/**
- *
- */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Attachments:TabTitle_Count' => '附件 (%1$d)',
 	'Attachments:EmptyTabTitle' => '附件',
@@ -23,7 +31,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Attachment:Max_Mo' => '(最大文件尺寸: %1$s MB)',
 	'Attachment:Max_Ko' => '(最大文件尺寸: %1$s KB)',
 	'Attachments:NoAttachment' => '没有附件. ',
-	'Attachments:PreviewNotAvailable' => '此附件类型不支持预览.',
+	'Attachments:PreviewNotAvailable' => '此类型的附件不支持预览.',
 	'Attachments:Error:FileTooLarge' => '上传的文件过大. %1$s',
 	'Attachments:Error:UploadedFileEmpty' => '收到的文件为空, 无法添加.
 可能是因为您发送的是空文件,
@@ -42,9 +50,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Attachment+' => '',
 	'Class:Attachment/Attribute:expire' => '过期',
 	'Class:Attachment/Attribute:expire+' => '',
-	'Class:Attachment/Attribute:temp_id' => '临时编号',
+	'Class:Attachment/Attribute:temp_id' => '临时id',
 	'Class:Attachment/Attribute:temp_id+' => '',
-	'Class:Attachment/Attribute:item_class' => '项目类型',
+	'Class:Attachment/Attribute:item_class' => '项目类别',
 	'Class:Attachment/Attribute:item_class+' => '',
 	'Class:Attachment/Attribute:item_id' => '项目',
 	'Class:Attachment/Attribute:item_id+' => '',
@@ -69,11 +77,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Attachment/Attribute:creation_date' => '创建日期',
-	'Class:Attachment/Attribute:creation_date+' => '~~',
-	'Class:Attachment/Attribute:user_id' => '用户编号',
-	'Class:Attachment/Attribute:user_id+' => '~~',
-	'Class:Attachment/Attribute:contact_id' => '联系人编号',
-	'Class:Attachment/Attribute:contact_id+' => '~~',
+	'Class:Attachment/Attribute:creation_date+' => '',
+	'Class:Attachment/Attribute:user_id' => '用户id',
+	'Class:Attachment/Attribute:user_id+' => '',
+	'Class:Attachment/Attribute:contact_id' => '联系人id',
+	'Class:Attachment/Attribute:contact_id+' => '',
 ]);
 
 //
@@ -81,6 +89,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:TriggerOnAttachmentDownload' => '触发器 (于对象附件下载时)',
-	'Class:TriggerOnAttachmentDownload+' => '触发器于指定类型 [子类型] 对象附件下载时',
+	'Class:TriggerOnAttachmentDownload' => '触发器 (对象附件被下载时)',
+	'Class:TriggerOnAttachmentDownload+' => '触发器于指定类别(含子类)对象附件被下载时',
 ]);

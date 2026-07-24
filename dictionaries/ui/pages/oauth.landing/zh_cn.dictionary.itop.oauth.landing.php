@@ -17,7 +17,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 // Navigation menu
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'core/Operation:Landing/Title' => 'OAuth令牌创建',
+	'core/Operation:Landing/Title' => 'OAuth token 创建',
 ]);

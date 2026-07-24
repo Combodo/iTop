@@ -4,7 +4,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
- * @license   https://opensource.org/licenses/AGPL-3.0
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -21,7 +21,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Core:ormValue:ormDocument:DownloadsCount' => '%1s~~',
-	'Core:ormValue:ormDocument:DownloadsCount+' => '已下载%1$s次',
+	'Core:ormValue:ormDocument:DownloadsCount' => '%1s',
+	'Core:ormValue:ormDocument:DownloadsCount+' => '已下载 %1$s 次',
 ]);
