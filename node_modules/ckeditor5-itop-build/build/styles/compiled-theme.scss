@@ -7525,9 +7525,14 @@ div.ck.ck-balloon-panel.ck-mention-balloon {
     margin-left: 0;
 }
 
-.ck-fullscreen__main-wrapper .ck-fullscreen__editable .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
+.ck-fullscreen__main-wrapper .ck-fullscreen__editable .ck.ck-editor__editable:not(.ck-editor__nested-editable),
+.ck-fullscreen__main-wrapper .ck-fullscreen__editable .ck-source-editing-area{
     height: 100%;
     width: 100%;
     max-width: 100%;
     padding: 0;
+}
+
+.ck-source-editing-area textarea {
+	overflow: auto;
 }
