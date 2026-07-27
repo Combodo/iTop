@@ -518,7 +518,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'missing_dependencies' => true,
 				],
 				'bCurrentSelected' => false,
-				'bDisableUninstallChecks' => true,
+				'bDisableUninstallChecks' => false,
 				'aExpectedFlags' => [
 					'uninstallable' => true,
 					'missing' => false,
@@ -545,7 +545,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'missing_dependencies' => true,
 				],
 				'bCurrentSelected' => false,
-				'bDisableUninstallChecks' => true,
+				'bDisableUninstallChecks' => false,
 				'aExpectedFlags' => [
 					'uninstallable' => true,
 					'missing' => false,
