@@ -73,7 +73,7 @@
 <summary>Fragenkatalog zur Analyse von Windows-Bluescreen-Problemen</summary>
 <description>&lt;h2&gt;🔍 Erste Prüfungen&lt;/h2&gt;&lt;p&gt;Tritt der Bluescreen wiederholt auf, bei einem bestimmten Schritt oder zufällig? Notieren Sie den angezeigten Fehlercode.&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;🛠️ Basismaßnahmen&lt;/h2&gt;&lt;p&gt;Neustart durchführen, Windows aktualisieren, externe Geräte trennen und einen Malware-Scan starten.&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;🖥️ Erweiterte Prüfungen&lt;/h2&gt;&lt;p&gt;Ereignisanzeige prüfen, Treiber aktualisieren sowie Systemprüfungen wie SFC, DISM, RAM- und Datenträgertests ausführen.&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;🔄 Wiederherstellungsoptionen&lt;/h2&gt;&lt;p&gt;Abgesicherten Modus testen, Systemwiederherstellung verwenden und falls nötig Windows zurücksetzen oder neu installieren.&lt;/p&gt;</description>
 <category_id>5</category_id>
-<error_code>Error 404</error_code>
+<error_code></error_code>
 <key_words>Blue Screen, Windows</key_words>
 <domains><Set>
 </Set>
