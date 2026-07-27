@@ -33,7 +33,7 @@ VMware Reference:
 
 Option 2: Désactiver le multipathing pour les LUNs concernés
  1. Dans vCenter, aller dans: Host &gt; Configure &gt; Storage &gt; Storage Devices.
- 2. Sélectionner le LUN concerné &gt; Edit Multipathing Policy &gt; Choisir &quot;Fixed&quot; (au lieu de &quot;Most Recently Used&quot;). ⚠️ isque : Perte de redondance en cas de panne d’un chemin.
+ 2. Sélectionner le LUN concerné &gt; Edit Multipathing Policy &gt; Choisir &quot;Fixed&quot; (au lieu de &quot;Most Recently Used&quot;). ⚠️ Risque : Perte de redondance en cas de panne d’un chemin.
 
 Option 3: Revenir à la version précédente de vCenter (8.0U2a)
 - Rollback du vCenter vers la version 8.0U2a (build 21495409).
