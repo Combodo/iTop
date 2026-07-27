@@ -55,7 +55,7 @@ Option 3: Revenir à la version précédente de vCenter (8.0U2a)
 <name>Service Apache HTTP Server (apache2) plante aléatoirement avec l'erreur 'Segmentation Fault' sur les serveurs Ubuntu 22.04 LTS après mise à jour du noyau (5.15.0-86-generic)</name>
 <org_id>2</org_id>
 <problem_id>0</problem_id>
-<symptom>- Le service Apache2 s'arrête brutalement sans journalisation claire dans in /var/log/apache2/error.log.
+<symptom>- Le service Apache2 s'arrête brutalement sans journalisation claire dans /var/log/apache2/error.log.
 - Message dans les logs système  (/var/log/syslog):
    Jul 14 08:45:23 web-server-01 kernel: [12345.678901] apache2[12345]: segfault at 7f8e12345678 ip 00007f8e12345678 sp 00007ffd12345678 error 4 in libapr-1.so.0.7.0[7f8e12345000+20000]
 
