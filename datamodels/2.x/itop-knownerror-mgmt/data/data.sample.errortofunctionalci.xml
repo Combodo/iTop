@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<lnkErrorToFunctionalCI alias="lnkErrorToFunctionalCI" id="4">
+<functionalci_id><![CDATA[SELECT FunctionalCI WHERE id='1']]></functionalci_id>
+<error_id>2</error_id>
+</lnkErrorToFunctionalCI>
+<lnkErrorToFunctionalCI alias="lnkErrorToFunctionalCI" id="1">
+<functionalci_id><![CDATA[SELECT FunctionalCI WHERE id='2']]></functionalci_id>
+<error_id>2</error_id>
+</lnkErrorToFunctionalCI>
+<lnkErrorToFunctionalCI alias="lnkErrorToFunctionalCI" id="2">
+<functionalci_id><![CDATA[SELECT FunctionalCI WHERE id='3']]></functionalci_id>
+<error_id>2</error_id>
+</lnkErrorToFunctionalCI>
+<lnkErrorToFunctionalCI alias="lnkErrorToFunctionalCI" id="3">
+<functionalci_id><![CDATA[SELECT FunctionalCI WHERE id='4']]></functionalci_id>
+<error_id>2</error_id>
+</lnkErrorToFunctionalCI>
+</Set>

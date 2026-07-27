@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<TagSetFieldDataFor_FAQ__domains alias="TagSetFieldDataFor_FAQ__domains" id="2">
+<code>hardware</code>
+<label>Matériel 💻</label>
+<description></description>
+</TagSetFieldDataFor_FAQ__domains>
+<TagSetFieldDataFor_FAQ__domains alias="TagSetFieldDataFor_FAQ__domains" id="4">
+<code>mobile</code>
+<label>Mobile 📱</label>
+<description></description>
+</TagSetFieldDataFor_FAQ__domains>
+<TagSetFieldDataFor_FAQ__domains alias="TagSetFieldDataFor_FAQ__domains" id="5">
+<code>network</code>
+<label>Réseau ☁️</label>
+<description></description>
+</TagSetFieldDataFor_FAQ__domains>
+<TagSetFieldDataFor_FAQ__domains alias="TagSetFieldDataFor_FAQ__domains" id="6">
+<code>printer</code>
+<label>Imprimante 🖨️</label>
+<description></description>
+</TagSetFieldDataFor_FAQ__domains>
+<TagSetFieldDataFor_FAQ__domains alias="TagSetFieldDataFor_FAQ__domains" id="7">
+<code>process</code>
+<label>Processus ⚙️</label>
+<description></description>
+</TagSetFieldDataFor_FAQ__domains>
+<TagSetFieldDataFor_FAQ__domains alias="TagSetFieldDataFor_FAQ__domains" id="3">
+<code>server</code>
+<label>Serveur 🏢</label>
+<description></description>
+</TagSetFieldDataFor_FAQ__domains>
+<TagSetFieldDataFor_FAQ__domains alias="TagSetFieldDataFor_FAQ__domains" id="1">
+<code>software</code>
+<label>Logiciel 💾</label>
+<description></description>
+</TagSetFieldDataFor_FAQ__domains>
+</Set>

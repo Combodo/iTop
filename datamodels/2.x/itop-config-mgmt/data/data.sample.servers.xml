@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-  <Server alias="Server" id="2">
+  <Server alias="Server" id="1">
     <name>Server1</name>
     <description></description>
     <org_id>2</org_id>
@@ -16,7 +16,7 @@
     <end_of_warranty></end_of_warranty>
     <rack_id>0</rack_id>
     <enclosure_id>0</enclosure_id>
-    <nb_u></nb_u>
+    <nb_u>2</nb_u>
     <managementip></managementip>
     <powerA_id>0</powerA_id>
     <powerB_id>0</powerB_id>
@@ -26,7 +26,7 @@
     <cpu></cpu>
     <ram></ram>
   </Server>
-  <Server alias="Server" id="3">
+  <Server alias="Server" id="2">
     <name>Server2</name>
     <description></description>
     <org_id>2</org_id>
@@ -40,9 +40,9 @@
     <asset_number></asset_number>
     <purchase_date></purchase_date>
     <end_of_warranty></end_of_warranty>
-    <rack_id>0</rack_id>
+    <rack_id></rack_id>
     <enclosure_id>0</enclosure_id>
-    <nb_u></nb_u>
+    <nb_u>1</nb_u>
     <managementip></managementip>
     <powerA_id>0</powerA_id>
     <powerB_id>0</powerB_id>
@@ -52,23 +52,23 @@
     <cpu></cpu>
     <ram></ram>
   </Server>
-  <Server alias="Server" id="4">
+  <Server alias="Server" id="3">
     <name>Server3</name>
     <description></description>
     <org_id>2</org_id>
     <business_criticity>low</business_criticity>
     <move2production></move2production>
     <serialnumber></serialnumber>
-    <location_id>0</location_id>
+    <location_id>2</location_id>
     <status>production</status>
     <brand_id>1</brand_id>
     <model_id>4</model_id>
     <asset_number></asset_number>
     <purchase_date></purchase_date>
     <end_of_warranty></end_of_warranty>
-    <rack_id>0</rack_id>
+    <rack_id></rack_id>
     <enclosure_id>0</enclosure_id>
-    <nb_u></nb_u>
+    <nb_u>2</nb_u>
     <managementip></managementip>
     <powerA_id>0</powerA_id>
     <powerB_id>0</powerB_id>
@@ -78,23 +78,23 @@
     <cpu></cpu>
     <ram></ram>
   </Server>
-  <Server alias="Server" id="15">
+  <Server alias="Server" id="4">
     <name>Server4</name>
     <description></description>
     <org_id>2</org_id>
     <business_criticity>low</business_criticity>
     <move2production></move2production>
     <serialnumber>US3215687014</serialnumber>
-    <location_id>0</location_id>
+    <location_id>2</location_id>
     <status>production</status>
     <brand_id>1</brand_id>
     <model_id>4</model_id>
     <asset_number></asset_number>
     <purchase_date>2021-07-30</purchase_date>
     <end_of_warranty>2025-07-29</end_of_warranty>
-    <rack_id>0</rack_id>
+    <rack_id></rack_id>
     <enclosure_id>0</enclosure_id>
-    <nb_u></nb_u>
+    <nb_u>2</nb_u>
     <managementip>10.10.24.2</managementip>
     <powerA_id>0</powerA_id>
     <powerB_id>0</powerB_id>
