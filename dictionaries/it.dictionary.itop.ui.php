@@ -384,7 +384,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Menu:WelcomeMenu' => 'Benveuto',
+	'Menu:WelcomeMenu' => 'Benvenuto',
 	'Menu:WelcomeMenu+' => '',
 	'Menu:WelcomeMenuPage' => 'Benvenuto',
 	'Menu:WelcomeMenuPage+' => '',
