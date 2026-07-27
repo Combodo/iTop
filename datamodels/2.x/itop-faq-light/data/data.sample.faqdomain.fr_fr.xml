@@ -2,7 +2,7 @@
 <Set>
 <TagSetFieldDataFor_FAQ__domains alias="TagSetFieldDataFor_FAQ__domains" id="2">
 <code>hardware</code>
-<label>Hardware 💻</label>
+<label>Matériel 💻</label>
 <description></description>
 </TagSetFieldDataFor_FAQ__domains>
 <TagSetFieldDataFor_FAQ__domains alias="TagSetFieldDataFor_FAQ__domains" id="4">
@@ -12,27 +12,27 @@
 </TagSetFieldDataFor_FAQ__domains>
 <TagSetFieldDataFor_FAQ__domains alias="TagSetFieldDataFor_FAQ__domains" id="5">
 <code>network</code>
-<label>Network ☁️</label>
+<label>Réseau ☁️</label>
 <description></description>
 </TagSetFieldDataFor_FAQ__domains>
 <TagSetFieldDataFor_FAQ__domains alias="TagSetFieldDataFor_FAQ__domains" id="6">
 <code>printer</code>
-<label>Printer 🖨️</label>
+<label>Imprimante 🖨️</label>
 <description></description>
 </TagSetFieldDataFor_FAQ__domains>
 <TagSetFieldDataFor_FAQ__domains alias="TagSetFieldDataFor_FAQ__domains" id="7">
 <code>process</code>
-<label>Process ⚙️</label>
+<label>Processus ⚙️</label>
 <description></description>
 </TagSetFieldDataFor_FAQ__domains>
 <TagSetFieldDataFor_FAQ__domains alias="TagSetFieldDataFor_FAQ__domains" id="3">
 <code>server</code>
-<label>Server 🏢</label>
+<label>Serveur 🏢</label>
 <description></description>
 </TagSetFieldDataFor_FAQ__domains>
 <TagSetFieldDataFor_FAQ__domains alias="TagSetFieldDataFor_FAQ__domains" id="1">
 <code>software</code>
-<label>Software 💾</label>
+<label>Logiciel 💾</label>
 <description></description>
 </TagSetFieldDataFor_FAQ__domains>
 </Set>
