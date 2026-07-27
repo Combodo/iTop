@@ -29,10 +29,10 @@
     </icon>
   </Service>
   <Service alias="Service" id="1">
-    <name>Computers and peripherals</name>
+    <name>Ordinateurs et périphériques</name>
     <org_id>2</org_id>
     <servicefamily_id>1</servicefamily_id>
-    <description>Ordering of new hardware (Desktop computer, laptop computer, monitor, mouse, keyboard...) and support in case of hardware failure.</description>
+    <description>Commande de nouveau matériel (ordinateur de bureau, ordinateur portable, écran, souris, clavier...) et support en cas de panne matérielle.</description>
     <status>production</status>
     <icon>
       <mimetype>image/svg+xml</mimetype>
