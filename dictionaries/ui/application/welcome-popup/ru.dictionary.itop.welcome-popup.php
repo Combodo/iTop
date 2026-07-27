@@ -6,36 +6,36 @@
  */
 // UI elements
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'UI:WelcomePopup:Button:RemindLater' => 'Remind me later~~',
-	'UI:WelcomePopup:Button:AcknowledgeAndNext' => 'Next~~',
-	'UI:WelcomePopup:Button:AcknowledgeAndClose' => 'Close~~',
+	'UI:WelcomePopup:Button:RemindLater' => 'Напомнить позже',
+	'UI:WelcomePopup:Button:AcknowledgeAndNext' => 'Далее',
+	'UI:WelcomePopup:Button:AcknowledgeAndClose' => 'Закрыть',
 ]);
 
 // Message
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'UI:WelcomePopup:Message:330_01_Welcome:Title' => 'Welcome to '.ITOP_APPLICATION_SHORT.' 3.3~~',
-	'UI:WelcomePopup:Message:330_01_Welcome:Description' => '<div>We’re pleased to introduce this latest release, bringing you a range of updates and improvements !</div>
+	'UI:WelcomePopup:Message:330_01_Welcome:Title' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT.' 3.3',
+	'UI:WelcomePopup:Message:330_01_Welcome:Description' => '<div>Мы рады представить этот новый релиз с рядом обновлений и улучшений!</div>
 <br>
-<div>Alongside new features like Multi-Factor Authentication, this version includes essential security updates, the first AI bricks, and various enhancements designed to deliver a smoother and more reliable experience.</div>
+<div>Помимо новых возможностей, таких как многофакторная аутентификация, эта версия включает важные обновления безопасности, первые компоненты на основе ИИ и различные улучшения для более плавной и надёжной работы.</div>
 <br>
-<div>We hope you enjoy using this version as much as we enjoyed building it.</div>
-<div>Don’t forget to adjust your iTop preferences to tailor the experience to your needs.</div>~~',
-	'UI:WelcomePopup:Message:330_02_AIFoundations:Title' => 'Laying the foundations for AI~~',
-	'UI:WelcomePopup:Message:330_02_AIFoundations:Description' => '<div>This release introduces the first building blocks for our upcoming AI-powered features.</div>
+<div>Мы надеемся, что вам понравится эта версия так же, как нам понравилось её создавать.</div>
+<div>Не забудьте настроить свои предпочтения iTop под свои задачи.</div>',
+	'UI:WelcomePopup:Message:330_02_AIFoundations:Title' => 'Закладываем основу для ИИ',
+	'UI:WelcomePopup:Message:330_02_AIFoundations:Description' => '<div>Этот релиз вводит первые строительные блоки для будущих функций на основе ИИ.</div>
 <br>
-<div>We’ve implemented the core APIs that will support future enhancements, paving the way for new intelligent capabilities and richer experiences in the next updates.</div>
+<div>Мы реализовали базовые API, которые будут поддерживать дальнейшие улучшения, открывая путь к новым интеллектуальным возможностям и более насыщенному опыту в следующих обновлениях.</div>
 <br>
-<div>Stay tuned—this is just the beginning of what’s ahead.</div>~~',
-	'UI:WelcomePopup:Message:330_03_CMDB:Title' => 'Enhanced CMDB~~',
-	'UI:WelcomePopup:Message:330_03_CMDB:Description' => '<div>This version brings several improvements to our datamodel to better support evolving needs.</div>
+<div>Следите за новостями — это только начало.</div>',
+	'UI:WelcomePopup:Message:330_03_CMDB:Title' => 'Улучшенная CMDB',
+	'UI:WelcomePopup:Message:330_03_CMDB:Description' => '<div>Эта версия вносит ряд улучшений в модель данных для лучшей поддержки меняющихся потребностей.</div>
 <br>
-<div>We’ve introduced containerization management, improved flow management, enriched class descriptions, and lifecycle management (End of Life / End of Support). The service management menu has also been redesigned for greater clarity and usability, along with the addition of images and logos on selected configuration items.</div>
+<div>Мы добавили управление контейнеризацией, улучшили управление потоками, обогатили описания классов и добавили управление жизненным циклом (окончание поддержки / окончание жизненного цикла). Меню управления услугами также было переработано для большей ясности и удобства, вместе с добавлением изображений и логотипов для отдельных конфигурационных единиц.</div>
 <br>
-<div>These updates aim to provide a more structured and intuitive experience.</div>~~',
-	'UI:WelcomePopup:Message:330_04_MFA:Title' => 'Strengthening security with MFA~~',
-	'UI:WelcomePopup:Message:330_04_MFA:Description' => '<div>Multi-Factor Authentication (MFA) is now fully integrated into iTop.</div>
+<div>Эти обновления призваны сделать работу более структурированной и интуитивной.</div>',
+	'UI:WelcomePopup:Message:330_04_MFA:Title' => 'Усиление безопасности с помощью MFA',
+	'UI:WelcomePopup:Message:330_04_MFA:Description' => '<div>Многофакторная аутентификация (MFA) теперь полностью интегрирована в iTop.</div>
 <br>
-<div>MFA, now built directly into the core experience, strengthens overall security while ensuring a more seamless and consistent user experience.</div>
+<div>MFA, встроенная прямо в основную функциональность, усиливает общую безопасность и обеспечивает более плавный и последовательный пользовательский опыт.</div>
 <br>
-<div>We encourage you to review your settings and enable MFA to benefit from enhanced account protection.</div>~~',
+<div>Рекомендуем проверить свои настройки и включить MFA для повышения защиты учётной записи.</div>',
 ]);

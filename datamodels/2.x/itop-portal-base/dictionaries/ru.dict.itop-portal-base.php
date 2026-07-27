@@ -59,11 +59,11 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 
 // Object form
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
+	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Закрыть эту запись',
 	'Portal:Form:Close:Warning' => 'Вы действительно хотите закрыть эту форму? Введённые данные могут быть утеряны.',
-	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting this form again.~~',
-	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting this form again.~~',
-	'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
+	'Portal:Error:ObjectCannotBeCreated' => 'Ошибка: объект не может быть создан. Проверьте связанные объекты и вложения перед повторной отправкой формы.',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Ошибка: объект не может быть обновлён. Проверьте связанные объекты и вложения перед повторной отправкой формы.',
+	'Portal:Error:CheckToWriteFailed' => 'Ошибка при проверке поля \'%1$s\': %2$s',
 ]);
 
 // UserProfile brick

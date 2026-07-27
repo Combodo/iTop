@@ -20,7 +20,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Черновик',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Журналы',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Показать / скрыть изменения журналов',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Choose which logs to display on this tab~~',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Выберите, какие журналы отображать на этой вкладке',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'Статус',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Показать / скрыть изменение статуса',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Изменения',

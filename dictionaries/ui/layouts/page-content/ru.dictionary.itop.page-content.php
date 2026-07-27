@@ -11,5 +11,5 @@
  *
  */
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'UIBlock:Error:CannotGetBlocks' => 'Could not retrieve blocks from content area "%1$s" as it does seem to exist for page content "%2$s"~~',
+	'UIBlock:Error:CannotGetBlocks' => 'Не удалось получить блоки из области контента "%1$s", так как её, похоже, не существует для содержимого страницы "%2$s"',
 ]);

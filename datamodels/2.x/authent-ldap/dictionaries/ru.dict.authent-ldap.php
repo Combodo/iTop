@@ -14,7 +14,7 @@
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:UserLDAP' => 'Пользователь LDAP',
 	'Class:UserLDAP+' => 'Пользователь, аутентифицируемый через LDAP',
-	'UserLDAP:server' => 'LDAP specifics~~',
+	'UserLDAP:server' => 'Особенности LDAP',
 ]);
 
 //
@@ -22,6 +22,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server~~',
-	'Class:UserLDAP/Attribute:ldap_server+' => '~~',
+	'Class:UserLDAP/Attribute:ldap_server' => 'Сервер LDAP',
+	'Class:UserLDAP/Attribute:ldap_server+' => '',
 ]);

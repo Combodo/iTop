@@ -7,7 +7,7 @@
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Login:Title'                  => 'Вход в '.ITOP_APPLICATION_SHORT,
-	'UI:Login:Logo:AltText'           => ITOP_APPLICATION_SHORT.' logo~~',
+	'UI:Login:Logo:AltText'           => ITOP_APPLICATION_SHORT.' — логотип',
 	'UI:Login:Welcome'                => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT.'!',
 	'UI:Login:IncorrectLoginPassword' => 'Неправильный логин/пароль. Пожалуйста, попробуйте еще раз.',
 	'UI:Login:IdentifyYourself'       => 'Пожалуйста, представьтесь',
@@ -27,7 +27,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:ResetPwd-Error-NoEmailAtt'    => 'аккаунт не ассоциирован с персоной, имеющей атрибут электронной почты. Пожалуйста, обратитесь к администратору.',
 	'UI:ResetPwd-Error-NoEmail'       => 'отсутствует адрес электронной почты. Пожалуйста, обратитесь к администратору.',
 	'UI:ResetPwd-Error-Send'          => 'технические проблемы с отправкой электронной почты. Пожалуйста, обратитесь к администратору.',
-	'UI:ResetPwd-EmailSent'           => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
+	'UI:ResetPwd-EmailSent'           => 'Проверьте свою почту и следуйте инструкциям. Если письмо не пришло, проверьте правильность введённого логина.',
 	'UI:ResetPwd-EmailSubject'        => 'Восстановление пароля',
 	'UI:ResetPwd-EmailBody'           => '<body><p>Вы запросили восстановление пароля '.ITOP_APPLICATION_SHORT.'.</p><p>Пожалуйста, воспользуйтесь <a href="%1$s">этой ссылкой</a> для задания нового пароля.</p></body>',
 	'UI:ResetPwd-Title'               => 'Восстановление пароля',
@@ -47,7 +47,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:LogOff:ClickHereToLoginAgain'              => 'Нажмите здесь, чтобы снова войти...',
 	'UI:ChangePwdMenu'                             => 'Изменить пароль...',
 	'UI:Login:PasswordChanged'                     => 'Пароль успешно изменён!',
-	'UI:Login:PasswordNotChanged'                  => 'Error: Password is the same!~~',
+	'UI:Login:PasswordNotChanged'                  => 'Ошибка: пароль не изменился!',
 	'UI:Login:RetypePwdDoesNotMatch'               => 'Пароли не совпадают',
 	'UI:Button:Login'                              => 'Войти',
 	'UI:Login:Error:AccessRestricted'              => 'Доступ к '.ITOP_APPLICATION_SHORT.' ограничен. Пожалуйста, свяжитесь с администратором '.ITOP_APPLICATION_SHORT.'.',

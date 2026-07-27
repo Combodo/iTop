@@ -20,5 +20,5 @@
 
 // Navigation menu
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'core/Operation:Landing/Title' => 'OAuth token creation~~',
+	'core/Operation:Landing/Title' => 'Создание токена OAuth',
 ]);

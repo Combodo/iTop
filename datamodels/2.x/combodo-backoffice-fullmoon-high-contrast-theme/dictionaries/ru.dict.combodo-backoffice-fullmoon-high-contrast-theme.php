@@ -23,5 +23,5 @@
  */
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'theme:fullmoon-high-contrast' => 'Fullmoon (High contrast)~~',
+	'theme:fullmoon-high-contrast' => 'Fullmoon (высокая контрастность)',
 ]);

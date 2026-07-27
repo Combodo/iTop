@@ -23,5 +23,5 @@
  */
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'theme:fullmoon-protanopia-deuteranopia' => 'Fullmoon (Protanopia & Deuteranopia)~~',
+	'theme:fullmoon-protanopia-deuteranopia' => 'Fullmoon (протанопия и дейтеранопия)',
 ]);

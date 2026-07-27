@@ -16,9 +16,9 @@
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'Virtualization:baseinfo' => 'General~~',
-	'Virtualization:moreinfo' => 'Virtualization specifics~~',
-	'Virtualization:otherinfo' => 'Dates and description~~',
+	'Virtualization:baseinfo' => 'Общее',
+	'Virtualization:moreinfo' => 'Особенности виртуализации',
+	'Virtualization:otherinfo' => 'Даты и описание',
 ]);
 
 //
@@ -28,13 +28,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Cloud/Name' => '%1$s',
 	'Class:Cloud/ComplementaryName' => '%1$s-%2$s',
-	'Class:Cloud' => 'Cloud~~',
-	'Class:Cloud+' => 'A Virtual Host operated by a Cloud provider. It can host Virtual Machines and Container Hosts.~~',
-	'Class:Cloud/Attribute:logo' => 'Logo~~',
-	'Class:Cloud/Attribute:logo+' => 'Used as object icon when this Cloud is displayed within impact analysis graphs~~',
-	'Class:Cloud/Attribute:provider_id+' => 'Who provides the cloud~~',
-	'Class:Cloud/Attribute:location_id' => 'Location~~',
-	'Class:Cloud/Attribute:location_id+' => 'Where is located the cloud~~',
+	'Class:Cloud' => 'Облако',
+	'Class:Cloud+' => 'Виртуальный хост, управляемый облачным провайдером. Может размещать виртуальные машины и хосты контейнеров.',
+	'Class:Cloud/Attribute:logo' => 'Логотип',
+	'Class:Cloud/Attribute:logo+' => 'Используется как иконка объекта на графах анализа влияния',
+	'Class:Cloud/Attribute:provider_id+' => 'Кто предоставляет облако',
+	'Class:Cloud/Attribute:location_id' => 'Местоположение',
+	'Class:Cloud/Attribute:location_id+' => 'Где расположено облако',
 ]);
 
 //
@@ -42,6 +42,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'Class:LogicalInterface/Attribute:org_id' => 'Organization~~',
-	'Class:LogicalInterface/Attribute:org_id+' => '~~',
+	'Class:LogicalInterface/Attribute:org_id' => 'Организация',
+	'Class:LogicalInterface/Attribute:org_id+' => '',
 ]);

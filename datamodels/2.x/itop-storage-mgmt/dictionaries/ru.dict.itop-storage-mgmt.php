@@ -20,12 +20,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'Class:NASFileSystem/Attribute:org_id' => 'Org id~~',
-	'Class:NASFileSystem/Attribute:org_id+' => '~~',
-	'Class:NASFileSystem/Attribute:location_id' => 'Location id~~',
-	'Class:NASFileSystem/Attribute:location_id+' => '~~',
-	'Class:NASFileSystem/Attribute:location_name' => 'Location name~~',
-	'Class:NASFileSystem/Attribute:location_name+' => '~~',
+	'Class:NASFileSystem/Attribute:org_id' => 'Организация',
+	'Class:NASFileSystem/Attribute:org_id+' => '',
+	'Class:NASFileSystem/Attribute:location_id' => 'Местоположение',
+	'Class:NASFileSystem/Attribute:location_id+' => '',
+	'Class:NASFileSystem/Attribute:location_name' => 'Название местоположения',
+	'Class:NASFileSystem/Attribute:location_name+' => '',
 ]);
 
 //
@@ -33,10 +33,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'Class:FiberChannelInterface/Attribute:org_id' => 'Org id~~',
-	'Class:FiberChannelInterface/Attribute:org_id+' => '~~',
-	'Class:FiberChannelInterface/Attribute:location_id' => 'Location id~~',
-	'Class:FiberChannelInterface/Attribute:location_id+' => '~~',
+	'Class:FiberChannelInterface/Attribute:org_id' => 'Организация',
+	'Class:FiberChannelInterface/Attribute:org_id+' => '',
+	'Class:FiberChannelInterface/Attribute:location_id' => 'Местоположение',
+	'Class:FiberChannelInterface/Attribute:location_id+' => '',
 ]);
 
 //
@@ -44,10 +44,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'Class:LogicalVolume/Attribute:org_id' => 'Org id~~',
-	'Class:LogicalVolume/Attribute:org_id+' => '~~',
-	'Class:LogicalVolume/Attribute:location_id' => 'Location id~~',
-	'Class:LogicalVolume/Attribute:location_id+' => '~~',
-	'Class:LogicalVolume/Attribute:location_name' => 'Location name~~',
-	'Class:LogicalVolume/Attribute:location_name+' => '~~',
+	'Class:LogicalVolume/Attribute:org_id' => 'Организация',
+	'Class:LogicalVolume/Attribute:org_id+' => '',
+	'Class:LogicalVolume/Attribute:location_id' => 'Местоположение',
+	'Class:LogicalVolume/Attribute:location_id+' => '',
+	'Class:LogicalVolume/Attribute:location_name' => 'Название местоположения',
+	'Class:LogicalVolume/Attribute:location_name+' => '',
 ]);

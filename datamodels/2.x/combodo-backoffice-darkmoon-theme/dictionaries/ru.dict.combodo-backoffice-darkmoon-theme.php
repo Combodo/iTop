@@ -11,5 +11,5 @@
  *
  */
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'theme:darkmoon' => 'Dark moon~~',
+	'theme:darkmoon' => 'Тёмная луна',
 ]);
