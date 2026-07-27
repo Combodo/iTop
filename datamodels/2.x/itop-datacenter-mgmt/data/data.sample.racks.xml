@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-  <Rack alias="Rack" id="1">
+  <Rack alias="Rack" id="15">
     <name>Rack1</name>
     <description></description>
     <org_id>2</org_id>
@@ -14,6 +14,6 @@
     <asset_number></asset_number>
     <purchase_date></purchase_date>
     <end_of_warranty></end_of_warranty>
-    <nb_u></nb_u>
+    <nb_u>12</nb_u>
   </Rack>
 </Set>
