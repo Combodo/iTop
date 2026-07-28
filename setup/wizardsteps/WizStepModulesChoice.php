@@ -759,7 +759,10 @@ EOF
 			$bDisabled = true;
 			$bChecked = false;
 		} elseif ($bDependencyIssue && ($oITopExtension->sSource !== iTopExtension::SOURCE_WIZARD || !$bMandatory)) {
-			$bDisabled = !$bDisableUninstallCheck;
+			// If the extension is not installed, the user cannot unselect it
+			// If the extension is installed and mandatory or not uninstallable, the user cannot unselect it
+			// Unless the user uses the "force-uninstall" option
+			$bDisabled = (!$bInstalled || $bMandatory || !$bCanBeUninstalled) && !$bDisableUninstallCheck;
 			// If the extension is a remote extension and not be installed means the user previously uninstalled it
 			// Otherwise, it will be checked if it is mandatory or if it was selected by the user
 			if ($oITopExtension->sSource !== iTopExtension::SOURCE_REMOTE || $bInstalled) {
@@ -819,8 +822,8 @@ EOF
 				// If the user cannot uninstall a mandatory extension, he cannot move forward unless he uses the "force-uninstall" option
 				// The same applies if the extension is not uninstallable (i.e. a product extension)
 				$this->bCanMoveForward = false;
-			} elseif ($aFlags['checked'] && $aFlags['dependency_issue'] && !$bDisableUninstallCheck) {
-				// If there is a dependency issue on a selected extension, the user cannot move forward unless he uses the "force-uninstall" option
+			} elseif ($aFlags['checked'] && $aFlags['disabled'] && $aFlags['dependency_issue'] && !$bDisableUninstallCheck) {
+				// If there is a dependency issue on a selected and disabled extension, the user cannot move forward unless he uses the "force-uninstall" option
 				$this->bCanMoveForward = false;
 			}
 
