@@ -759,7 +759,7 @@ EOF
 			$bDisabled = true;
 			$bChecked = false;
 		} elseif ($bDependencyIssue && ($oITopExtension->sSource !== iTopExtension::SOURCE_WIZARD || !$bMandatory)) {
-			// If the extension is not installed, the user cannot unselect it
+			// If the extension is not installed, the user cannot select it
 			// If the extension is installed and mandatory or not uninstallable, the user cannot unselect it
 			// Unless the user uses the "force-uninstall" option
 			$bDisabled = (!$bInstalled || $bMandatory || !$bCanBeUninstalled) && !$bDisableUninstallCheck;
