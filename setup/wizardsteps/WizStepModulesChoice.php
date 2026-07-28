@@ -758,11 +758,19 @@ EOF
 		if ($bMissingFromDisk) {
 			$bDisabled = true;
 			$bChecked = false;
+		} elseif ($bDependencyIssue && ($oITopExtension->sSource !== iTopExtension::SOURCE_WIZARD || !$bMandatory)) {
+			// If the extension is not installed, the user cannot select it
+			// If the extension is installed and mandatory or not uninstallable, the user cannot unselect it
+			// Unless the user uses the "force-uninstall" option
+			$bDisabled = (!$bInstalled || $bMandatory || !$bCanBeUninstalled) && !$bDisableUninstallCheck;
+			// If the extension is a remote extension and not be installed means the user previously uninstalled it
+			// Otherwise, it will be checked if it is mandatory or if it was selected by the user
+			if ($oITopExtension->sSource !== iTopExtension::SOURCE_REMOTE || $bInstalled) {
+				$bChecked = $bMandatory ?: $bSelected;
+			}
 		} elseif ($bMandatory) {
 			$bDisabled = true;
 			$bChecked = true;
-		} elseif ($bDependencyIssue) {
-			$bDisabled = !$bDisableUninstallCheck;
 		} elseif ($bInstalled && !$bCanBeUninstalled && !$bDisableUninstallCheck) {
 			$bChecked = true;
 			$bDisabled = true;
@@ -810,10 +818,12 @@ EOF
 			$sChoiceId = $sParentId.self::$SEP.$index;
 			$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck, $this->bUpgrade);
 
-			if ($aFlags['disabled'] && !$aFlags['checked'] && !$bDisableUninstallCheck && (!$aFlags['uninstallable'] || $aFlags['mandatory'])) {
-				$this->bCanMoveForward = false;//Disable "Next"
-			} elseif (!$bDisableUninstallCheck && $aFlags['dependency_issue']) {
-				//If there is a dependency issue, the user cannot move forward without forced uninstall
+			if (!$aFlags['checked'] && $aFlags['installed'] && !$bDisableUninstallCheck && (!$aFlags['uninstallable'] || $aFlags['mandatory'])) {
+				// If the user cannot uninstall a mandatory extension, he cannot move forward unless he uses the "force-uninstall" option
+				// The same applies if the extension is not uninstallable (i.e. a product extension)
+				$this->bCanMoveForward = false;
+			} elseif ($aFlags['checked'] && $aFlags['disabled'] && $aFlags['dependency_issue'] && !$bDisableUninstallCheck) {
+				// If there is a dependency issue on a selected and disabled extension, the user cannot move forward unless he uses the "force-uninstall" option
 				$this->bCanMoveForward = false;
 			}
 

@@ -421,7 +421,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'mandatory' => false,
 				],
 			],
-			'An installed non mandatory extension with missing dependencies and without force uninstall should be not checked and disabled' => [
+			'An installed non mandatory extension with missing dependencies and without force uninstall should be not checked and enabled' => [
 				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => true,
@@ -440,6 +440,33 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'bDisableUninstallChecks' => false,
 				'aExpectedFlags' => [
 					'uninstallable' => true,
+					'missing' => false,
+					'installed' => true,
+					'disabled' => false,
+					'checked' => false,
+					'dependency_issue' => true,
+					'mandatory' => false,
+				],
+			],
+			'An installed non mandatory and not uninstallable extension with missing dependencies and without force uninstall should be not checked and disabled' => [
+				'aExtensionsOnDiskOrDb' => [
+					'itop-ext1' => [
+						'installed' => true,
+						'missing_dependencies' => [
+							'itop-ext1-1',
+						],
+					],
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => false,
+					'uninstallable' => false,
+					'missing_dependencies' => true,
+				],
+				'bCurrentSelected' => false,
+				'bDisableUninstallChecks' => false,
+				'aExpectedFlags' => [
+					'uninstallable' => false,
 					'missing' => false,
 					'installed' => true,
 					'disabled' => true,
@@ -518,7 +545,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'missing_dependencies' => true,
 				],
 				'bCurrentSelected' => false,
-				'bDisableUninstallChecks' => true,
+				'bDisableUninstallChecks' => false,
 				'aExpectedFlags' => [
 					'uninstallable' => true,
 					'missing' => false,
@@ -545,7 +572,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'missing_dependencies' => true,
 				],
 				'bCurrentSelected' => false,
-				'bDisableUninstallChecks' => true,
+				'bDisableUninstallChecks' => false,
 				'aExpectedFlags' => [
 					'uninstallable' => true,
 					'missing' => false,
