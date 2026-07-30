@@ -130,8 +130,8 @@ class HubController
 		$oRuntimeEnv->MoveSelectedExtensions(APPROOT.'/data/downloaded-extensions/', $aSelectedExtensionDirs);
 
 		$oExtensionMap = iTopExtensionsMap::GetExtensionsMap($oRuntimeEnv->GetBuildEnv());
-		$aPreviousRemoteExtensions = $oExtensionMap->GetExtensionsFromDir(APPROOT.'data/'.$oRuntimeEnv->GetFinalEnv().'-modules/');
-		$aCurrentRemoteExtensions = $oExtensionMap->GetExtensionsFromDir(APPROOT.'data/'.$oRuntimeEnv->GetBuildEnv().'-modules/');
+		$aPreviousRemoteExtensions = $oExtensionMap->GetExtensionsFromDir(APPROOT.'data/'.$oRuntimeEnv->GetFinalEnv().'-modules/') ?: [];
+		$aCurrentRemoteExtensions = $oExtensionMap->GetExtensionsFromDir(APPROOT.'data/'.$oRuntimeEnv->GetBuildEnv().'-modules/') ?: [];
 		$aAddedExtensions = array_diff($aCurrentRemoteExtensions, $aPreviousRemoteExtensions);
 
 		$sBuildConfigFile = APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE;
