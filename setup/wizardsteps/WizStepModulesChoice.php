@@ -49,6 +49,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 	protected bool $bChoicesFromDatabase;
 
 	private array $aAnalyzeInstallationModules = [];
+	private ?array $aBasePackageModules = null;
 	private ?MissingDependencyException $oMissingDependencyException = null;
 
 	public function __construct(WizardController $oWizard, $sCurrentState, bool $bOverWriteConfig = true)
@@ -752,6 +753,7 @@ EOF
 		$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']);
 		$bInstalled = $bMissingFromDisk || $oITopExtension?->bInstalled ?? false;
 		$bDependencyIssue = $oITopExtension?->HasDependencyIssue() ?? false;
+		file_put_contents('C:/tmp/compute_choice_flags.log', "mandatory for ".$aChoice['extension_code']."=".(int)$bMandatory."\n", FILE_APPEND);
 
 		$bChecked = $bSelected;
 		$bDisabled = false;
@@ -898,6 +900,9 @@ EOF
 		if (isset($aChoice['version']) && isset($aChoice['source_label'])) {
 			$sMetadata = '<span>v'.$aChoice['version'].'</span><span>'.$aChoice['source_label'].'</span>';
 		}
+		if ($this->IsIncludedInBasePackage($aChoice)) {
+			$sMetadata .= '<span>Included in package</span>';
+		}
 		$sChoiceDisabled = $aFlags['disabled'] && !$aFlags['checked'] ? 'choice-disabled' : '';
 
 		$oPage->add('
@@ -935,6 +940,71 @@ EOF
 	{
 		$sSourceDir = $this->oWizard->GetParameter('source_dir');
 		return $sSourceDir.'/installation.xml';
+	}
+
+	private function GetBasePackageModules(): array
+	{
+		if ($this->aBasePackageModules !== null) {
+			return $this->aBasePackageModules;
+		}
+
+		$this->aBasePackageModules = [];
+		$sSourceDir = $this->NormalizePath($this->oWizard->GetParameter('source_dir', ''));
+		echo "<pre>";
+
+		foreach ($this->aAnalyzeInstallationModules as $sModuleId => $aModuleInfo) {
+			var_dump($sModuleId);
+			if ($sModuleId === ROOT_MODULE) {
+				continue;
+			}
+
+			$sRootDir = $aModuleInfo['root_dir'] ?? '';
+			var_dump($sRootDir);
+			if ($sRootDir === '') {
+				continue;
+			}
+
+			$sModuleRootDir = $this->NormalizePath($sRootDir);
+			if (($sSourceDir !== '') && utils::StartsWith($sModuleRootDir, $sSourceDir)) {
+				$this->aBasePackageModules[$sModuleId] = true;
+			}
+		}
+		echo "</pre>";
+
+		return $this->aBasePackageModules;
+	}
+
+
+	private function IsIncludedInBasePackage(array $aChoice): bool
+	{
+		$sExtensionCode = $aChoice['extension_code'] ?? '';
+		if ($sExtensionCode === '') {
+			return false;
+		}
+
+		$oExtension = $this->oExtensionsMap->GetFromExtensionCode($sExtensionCode);
+		if (($oExtension === null) || ($oExtension->sSource === iTopExtension::SOURCE_WIZARD)) {
+			return false;
+		}
+
+		$aModules = $aChoice['modules'] ?? [];
+		if (!is_array($aModules) || empty($aModules)) {
+			return false;
+		}
+
+		$aBasePackageModules = $this->GetBasePackageModules();
+		foreach ($aModules as $sModuleId) {
+			if (!array_key_exists($sModuleId, $aBasePackageModules)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private function NormalizePath(string $sPath): string
+	{
+		return rtrim(str_replace('\\', '/', $sPath), '/');
 	}
 
 	public function CanMoveForward()
