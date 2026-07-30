@@ -608,7 +608,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Trigger' => 'Trigger',
 	'Class:Trigger+' => 'Aanleiding tot het uitvoeren van een actie',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
+	'Class:Trigger/ComplementaryName' => '%1$s, toegepast op klasse: %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Beschrijving',
 	'Class:Trigger/Attribute:description+' => 'Beschrijving in één regel',
 	'Class:Trigger/Attribute:action_list' => 'Getriggerde acties',

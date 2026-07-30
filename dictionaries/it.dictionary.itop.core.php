@@ -606,7 +606,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Trigger' => 'Trigger',
 	'Class:Trigger+' => 'Gestore di eventi personalizzati',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
+	'Class:Trigger/ComplementaryName' => '%1$s, class restriction: %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Descrizione',
 	'Class:Trigger/Attribute:description+' => 'Una linea di descrizione',
 	'Class:Trigger/Attribute:action_list' => 'Azioni triggerate',

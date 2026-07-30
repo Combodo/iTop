@@ -688,7 +688,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Trigger' => 'Trigger',
 	'Class:Trigger+' => 'Custom event handler',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
+	'Class:Trigger/ComplementaryName' => '%1$s, class restriction: %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Description',
 	'Class:Trigger/Attribute:description+' => 'Be precise as your users will base their potential unsubscribing on this information',
 	'Class:Trigger/Attribute:action_list' => 'Triggered actions',

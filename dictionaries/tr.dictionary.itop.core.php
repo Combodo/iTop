@@ -611,7 +611,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Trigger' => 'Tetikleyici',
 	'Class:Trigger+' => 'Özel olay yürütücü',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
+	'Class:Trigger/ComplementaryName' =>  '%1$s, class restriction: %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Tanımlama',
 	'Class:Trigger/Attribute:description+' => 'tek satır tanımlama',
 	'Class:Trigger/Attribute:action_list' => 'Tetiklenen işlemler',

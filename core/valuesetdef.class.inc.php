@@ -404,7 +404,8 @@ class ValueSetObjects extends ValueSetDefinition
 			if (count($aAdditionalField) > 0) {
 				$aArguments = [];
 				foreach ($aAdditionalField as $sAdditionalField) {
-					array_push($aArguments, $oObject->Get($sAdditionalField));
+					$oAttrDef = MetaModel::GetAttributeDef(get_class($oObject), $sAdditionalField);
+					array_push($aArguments, $oAttrDef->GetValueLabel($oObject->Get($sAdditionalField)));
 				}
 				$aData['additional_field'] = utils::VSprintf($sFormatAdditionalField, $aArguments);
 			} else {

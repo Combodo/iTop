@@ -284,7 +284,8 @@ class UIExtKeyWidget
 				if ($bAddingValue) {
 					$aArguments = [];
 					foreach ($aAdditionalField as $sAdditionalField) {
-						array_push($aArguments, $oObj->Get($sAdditionalField));
+						$oAttrDef = MetaModel::GetAttributeDef(get_class($oObj), $sAdditionalField);
+						array_push($aArguments, $oAttrDef->GetValueLabel($oObj->Get($sAdditionalField)));
 					}
 					$aOption['additional_field'] = utils::HtmlEntities(utils::VSprintf($sFormatAdditionalField, $aArguments));
 				}

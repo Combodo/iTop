@@ -606,7 +606,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Trigger' => 'Eseményindító',
 	'Class:Trigger+' => 'Egyéni eseménykezelés',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
+	'Class:Trigger/ComplementaryName' => '%1$s, class restriction: %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Leírás',
 	'Class:Trigger/Attribute:description+' => 'Egysoros leírás',
 	'Class:Trigger/Attribute:action_list' => 'Elindított műveletek',
