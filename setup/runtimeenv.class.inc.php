@@ -1273,16 +1273,17 @@ class RunTimeEnvironment
 	 *
 	 * @param string $sSourceEnv The name of the source environment to 'imitate'
 	 * @param null $bUseSymLinks Whether to create symbolic links instead of copies
+	 * @param array $aAddedExtensions List of additional extensions to add to the build environment
 	 *
 	 * @return string[]
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
-	public function CompileFrom($sSourceEnv, $bUseSymLinks = null)
+	public function CompileFrom($sSourceEnv, $bUseSymLinks = null, $aAddedExtensions = [])
 	{
 		$oConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
 		$this->InitExtensionMap($oConfig);
-		$aSelectedExtensions = $this->GetExtensionMap()->GetSelectedExtensions($oConfig, [], []);
+		$aSelectedExtensions = $this->GetExtensionMap()->GetSelectedExtensions($oConfig, $aAddedExtensions, []);
 		$aSelectedModules = $this->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
 		return $this->DoCompile($aSelectedExtensions, [], $aSelectedModules, $bUseSymLinks ?? false);
 	}
