@@ -18,6 +18,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 	private const BADGE_ID_TO_BE_INSTALLED = 'to-be-installed';
 	private const BADGE_ID_TO_BE_UNINSTALLED = 'to-be-uninstalled';
 	private const BADGE_ID_NOT_UNINSTALLABLE = 'not-uninstallable';
+	private const BADGE_ID_ALREADY_PART_OF_ITOP = 'already-part-of-itop';
 	private const BADGE_ID_MISSING_FROM_DISK = 'missing-from-disk';
 	private const BADGE_ID_CANNOT_BE_INSTALLED = 'cannot-be-installed';
 
@@ -27,10 +28,11 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$bUninstallable = $aExtraFlags['uninstallable'] ?? true;
 		$bMissingFromDisk = $aExtraFlags['missing'] ?? false;
 		$bDependencyIssue = $aExtraFlags['dependency_issue'] ?? false;
+		$bAlreadyPartOfITop = $aExtraFlags['already_part_of_itop'] ?? false;
 		$bSelected = $aExtraFlags['selected'] ?? true;
 		$bDisabled = $aExtraFlags['disabled'] ?? false;
 		$bRemote = $aExtraFlags['remote'] ?? false;
-		self::AddExtraBadges($aBadges, $bUninstallable, $bMissingFromDisk, $bDependencyIssue, $sCode);
+		self::AddExtraBadges($aBadges, $bUninstallable, $bMissingFromDisk, $bDependencyIssue, $bAlreadyPartOfITop, $sCode);
 		$oBadgeInstalled = BadgeUIBlockFactory::MakeGreen(
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeInstalled'),
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeInstalled+'),
@@ -50,6 +52,9 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$oExtensionDetails->GetToggler()->SetIsToggled(true);
 		if ($bMissingFromDisk || $bDependencyIssue) {
 			$oExtensionDetails->GetToggler()->SetIsToggled(false);
+			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
+		} elseif ($bAlreadyPartOfITop) {
+			$oExtensionDetails->GetToggler()->SetIsToggled(true);
 			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
 		} elseif ((!$bUninstallable || $bRemote) && !$bDisabled) {
 			$oExtensionDetails->AllowForceUninstall();
@@ -72,9 +77,10 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$aBadges = [];
 		$bUninstallable = $aExtraFlags['uninstallable'] ?? true;
 		$bDependencyIssue = $aExtraFlags['dependency_issue'] ?? false;
+		$bAlreadyPartOfITop = $aExtraFlags['already_part_of_itop'] ?? false;
 		$bSelected = $aExtraFlags['selected'] ?? false;
 		$bDisabled = $aExtraFlags['disabled'] ?? false;
-		self::AddExtraBadges($aBadges, $bUninstallable, false, $bDependencyIssue, $sCode);
+		self::AddExtraBadges($aBadges, $bUninstallable, false, $bDependencyIssue, $bAlreadyPartOfITop, $sCode);
 		$oBadgeInstalled = BadgeUIBlockFactory::MakeGrey(
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeNotInstalled'),
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeNotInstalled+'),
@@ -94,6 +100,9 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		if ($bDependencyIssue) {
 			$oExtensionDetails->GetToggler()->SetIsToggled(false);
 			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
+		} elseif ($bAlreadyPartOfITop) {
+			$oExtensionDetails->GetToggler()->SetIsToggled(true);
+			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
 		}
 
 		if ($bSelected) {
@@ -107,7 +116,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		return $oExtensionDetails;
 	}
 
-	private static function AddExtraBadges(array &$aBadges, bool $bUninstallable, bool $bMissingFromDisk, bool $bDependencyIssue, string $sCode)
+	private static function AddExtraBadges(array &$aBadges, bool $bUninstallable, bool $bMissingFromDisk, bool $bDependencyIssue, bool $bAlreadyPartOfITop, string $sCode)
 	{
 		if (!$bUninstallable) {
 			$aBadges[] = BadgeUIBlockFactory::MakeYellow(
@@ -128,6 +137,13 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled'),
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled+'),
 				self::GetBadgeId($sCode, self::BADGE_ID_CANNOT_BE_INSTALLED)
+			);
+		}
+		if ($bAlreadyPartOfITop) {
+			$aBadges[] = BadgeUIBlockFactory::MakeYellow(
+				Dict::S('UI:Layout:ExtensionsDetails:BadgeAlreadyPartOfITop'),
+				Dict::S('UI:Layout:ExtensionsDetails:BadgeAlreadyPartOfITop+'),
+				self::GetBadgeId($sCode, self::BADGE_ID_ALREADY_PART_OF_ITOP)
 			);
 		}
 	}

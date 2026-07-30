@@ -38,6 +38,7 @@ class DataFeatureRemovalController extends Controller
 	private array $aCountClassesToCleanup = [];
 	private array $aAnalysisDataTable = [];
 	private array $aDeletionExecutionSummary = [];
+	private ?array $aBasePackageModules = null;
 
 	private int $iCount = 0;
 	private int $iColumnCount = 2;
@@ -363,32 +364,63 @@ class DataFeatureRemovalController extends Controller
 	private function GetAvailableExtensions(bool $bIncludePackageExtensions = false): array
 	{
 		$aExtensionsData = [];
+		$oExtensionMap = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap();
+		$aBasePackageModules = $this->GetBasePackageModules();
 		if ($bIncludePackageExtensions) {
-			$aExtensionsRef = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetAllExtensionsWithPreviouslyInstalled();
+			$aExtensionsRef = $oExtensionMap->GetAllExtensionsWithPreviouslyInstalled();
 		} else {
 			$aExtensionsRef = DataFeatureRemoverExtensionService::GetInstance()->ReadItopExtensions();
 		}
 
 		foreach ($aExtensionsRef as $oExtension) {
 			/** @var \iTopExtension $oExtension */
+			$aMetaData = [$oExtension->sVersion, $oExtension->GetExtensionSourceLabel(), $oExtension->sCode];
+			$bIsPackageExtension = SetupUtils::IsIncludedInPackage($oExtension, $aBasePackageModules);
+
 			$aExtensionsData[$oExtension->sCode] = [
 				'version' => $oExtension->sVersion,
 				'label' => $oExtension->sLabel,
 				'code' => $oExtension->sCode,
 				'description' => $oExtension->sDescription,
 				'source' => $oExtension->GetExtensionSourceLabel(),
+				'metadata' => $aMetaData,
 				'installed' => $oExtension->bInstalled,
 				'extra_flags' => [
 					'uninstallable' => $oExtension->CanBeUninstalled(),
 					'remote' => $oExtension->IsRemote(),
 					'missing' => $oExtension->bRemovedFromDisk,
 					'dependency_issue' => $oExtension->HasDependencyIssue(),
+					'already_part_of_itop' => $bIsPackageExtension,
 				],
 
 			];
 		}
 
 		return $aExtensionsData;
+	}
+
+	private function GetBasePackageModules(): array
+	{
+		if ($this->aBasePackageModules !== null) {
+			return $this->aBasePackageModules;
+		}
+
+		$oConfig = MetaModel::GetConfig();
+		$oExtensionsMap = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap();
+		$aSelectedExtensions = $oExtensionsMap->GetSelectedExtensions($oConfig);
+		foreach ($aSelectedExtensions as $index => $sExtensionCode) {
+			$oExtension = $oExtensionsMap->GetFromExtensionCode($sExtensionCode);
+			if ($oExtension->sSource !== iTopExtension::SOURCE_WIZARD) {
+				unset($aSelectedExtensions[$index]);
+			}
+		}
+
+		$sSourceEnv = MetaModel::GetEnvironment();
+		$oRuntimeEnvironment = new RunTimeEnvironment($sSourceEnv, false);
+		$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromSelectedExtensions($oConfig, $aSelectedExtensions);
+
+		$this->aBasePackageModules = aSelectedModules;
+		return $aSelectedModules;
 	}
 
 	private function GetExtensionsDiff(array $aAddedExtensions, array $aRemovedExtensions): array

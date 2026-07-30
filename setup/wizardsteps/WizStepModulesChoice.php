@@ -49,6 +49,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 	protected bool $bChoicesFromDatabase;
 
 	private array $aAnalyzeInstallationModules = [];
+	private ?array $aBasePackageModules = null;
 	private ?MissingDependencyException $oMissingDependencyException = null;
 
 	private array $aFlagsByChoiceId = [];
@@ -167,6 +168,35 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 		}
 		//Unused when going backward
 		return new WizardState(WizStepModulesChoice::class, (string)($index - 1));
+	}
+
+	protected ?array $aSelectedModules = null;
+
+	public function GetAllSelectedModulesUntilNow(): array {
+		if (!is_null($this->aSelectedModules)) {
+			return $this->aSelectedModules;
+		}
+
+		$this->aSelectedModules = [];
+		$aSelectedChoices = json_decode($this->oWizard->GetParameter('selected_components', '{}'), true);
+		$iNextStep = $this->GetStepIndex();
+		$index = $iNextStep;
+		while(isset($aSelectedChoices[$iNextStep])){
+			//Let's empty the next steps, we only want what has been chosen before
+			$aSelectedChoices[$iNextStep] = [];
+			$iNextStep++;
+		}
+
+		$aPreviousSteps = [];
+		for ($i = 0; $i < $index; $i++) {
+
+			$aStepInfo = $this->GetStepInfo($i);
+			$this->GetSelectedModules($aStepInfo, $aSelectedChoices[$i], $this->aSelectedModules );
+
+			$aPreviousSteps = array_merge($aPreviousSteps, $this->aSelectedModules);
+		}
+
+		return $this->aSelectedModules;
 	}
 
 	public function GetWizardSteps(): array
@@ -722,7 +752,7 @@ EOF
 	{
 		$index = $idx ?? $this->GetStepIndex();
 		if (is_null($this->aSteps)) {
-			$bRemoteExtensionsShouldBeMandatory = !$this->oWizard->GetParameter('force-uninstall', false);
+		$bRemoteExtensionsShouldBeMandatory = !$this->oWizard->GetParameter('force-uninstall', false);
 			$this->oWizard->SetParameter('additional_extensions_modules', json_encode([])); // Default value, no additional extensions
 
 			if (@file_exists($this->GetSourceFilePath())) {
@@ -761,6 +791,23 @@ EOF
 		return $this->aSteps[$index] ?? null;
 	}
 
+	public function ExtensionIsAlreadyIncludedInPreviousChoices(?iTopExtension $oITopExtension): bool
+	{
+
+
+		if(is_null($oITopExtension) || empty($oITopExtension->aModules)){
+			return false;
+		}
+		$aAllPreviousChoicesModules = $this->GetAllSelectedModulesUntilNow();
+
+		foreach($oITopExtension->aModules as $sModuleId) {
+			if (!isset($aAllPreviousChoicesModules[$sModuleId])) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck): array
 	{
 		if (array_key_exists($sChoiceId, $this->aFlagsByChoiceId)) {
@@ -777,6 +824,7 @@ EOF
 		$bDependencyIssue = $oITopExtension?->HasDependencyIssue() ?? false;
 		$bIsRemoteExtension = $oITopExtension?->sSource === iTopExtension::SOURCE_REMOTE;
 		$bIsPackageExtension = $oITopExtension?->sSource === iTopExtension::SOURCE_WIZARD;
+		$bAlreadyIncluded = $this->ExtensionIsAlreadyIncludedInPreviousChoices($oITopExtension);
 		$bDoNotUninstall = !$bCanBeUninstalled || $bIsRemoteExtension;
 
 		$bChecked = $bSelected;
@@ -788,33 +836,36 @@ EOF
 		} elseif ($bMandatory && $bIsPackageExtension) {
 			$bDisabled = true;
 			$bChecked = true;
-		} else {
+		} elseif($bAlreadyIncluded){
+			$bDisabled = true;
+			$bChecked = true;
+		}else {
 			if ($bDependencyIssue) {
 				// If the extension has a dependency issue, it cannot be checked and must be unchecked using the "force-uninstall" option
 				$bDisabled = !$bInstalled || !$bDisableUninstallCheck;
 			} elseif ($bInstalled && $bDoNotUninstall) {
 				// If the extension is not uninstallable, it must be unchecked using the "force-uninstall" option
-				$bDisabled = !$bDisableUninstallCheck;
-			}
+			$bDisabled = !$bDisableUninstallCheck;
+		}
 
 			if ($bDisabled) {
 				$bChecked = $bInstalled;
-			}
+		}
 
-			if (isset($aChoice['sub_options'])) {
-				$aOptions = $aChoice['sub_options']['options'] ?? [];
-				foreach ($aOptions as $index => $aSubChoice) {
-					$sSubChoiceId = $sChoiceId.self::$SEP.$index;
+		if (isset($aChoice['sub_options'])) {
+			$aOptions = $aChoice['sub_options']['options'] ?? [];
+			foreach ($aOptions as $index => $aSubChoice) {
+				$sSubChoiceId = $sChoiceId.self::$SEP.$index;
 					$aSubFlags = $this->ComputeChoiceFlags($aSubChoice, $sSubChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck);
-					if ($aSubFlags['checked']) {
-						$bChecked = true;
-						if ($aSubFlags['disabled']) {
+				if ($aSubFlags['checked']) {
+					$bChecked = true;
+					if ($aSubFlags['disabled']) {
 							// If some sub options are checked and cannot be unchecked, this choice also cannot be unchecked since it would uncheck all its sub options
-							$bDisabled = true;
-						}
+						$bDisabled = true;
 					}
 				}
 			}
+		}
 		}
 
 		if ($bAllDisabled) {
@@ -823,6 +874,7 @@ EOF
 
 		$aFlags = [
 			'uninstallable' => $bCanBeUninstalled,
+			'already_included' => $bAlreadyIncluded,
 			'dependency_issue' => $bDependencyIssue,
 			'mandatory' => $bMandatory,
 			'missing' => $bMissingFromDisk,
@@ -922,7 +974,7 @@ EOF
 			<a class="setup--wizard-choice--more-info" target="_blank" href="'.$aChoice['more_info'].'">
 				<i class="setup-extension--icon fas fa-external-link-alt" title="More information"></i>
 			</a>' : '';
-		$sDescription = isset($aChoice['description']) ? utils::EscapeHtml($aChoice['description']) : '';
+		$sDescription = isset($aChoice['description']) ? trim(utils::EscapeHtml($aChoice['description'])) : '';
 		$sId = utils::EscapeHtml($aChoice['extension_code']);
 		$sDataId = 'data-id="'.utils::EscapeHtml($aChoice['extension_code']).'"';
 		$sDisabled = $aFlags['disabled'] ? ' disabled data-disabled="disabled"' : '';
@@ -947,11 +999,15 @@ EOF
 		if ($aFlags['dependency_issue']) {
 			$sTooltip .= '<div id="badge--'.$sId.'--cannot-be-installed" class="ibo-badge ibo-block ibo-is-orange" title="This extension cannot be installed because one or more dependencies are not satisfied." >cannot be installed</div>';
 		}
+		if ($aFlags['already_included']) {
+			$sTooltip .= '<div id="badge--'.$sId.'--already-part-of-itop" class="ibo-badge ibo-block ibo-is-yellow" title="All the modules included in this extension are already part of iTop package choices. To uninstall this extension, you have to delete its folder." >already part of iTop</div>';
+		}
 
 		$sMetadata = '';
 		if (isset($aChoice['version']) && isset($aChoice['source_label'])) {
 			$sMetadata = '<span>v'.$aChoice['version'].'</span><span>'.$aChoice['source_label'].'</span><span>'.$aChoice['extension_code'].'</span>';
 		}
+
 		$sChoiceDisabled = $aFlags['disabled'] && !$aFlags['checked'] ? 'choice-disabled' : '';
 
 		$oPage->add('
@@ -990,6 +1046,7 @@ EOF
 		$sSourceDir = $this->oWizard->GetParameter('source_dir');
 		return $sSourceDir.'/installation.xml';
 	}
+
 
 	public function CanMoveForward()
 	{

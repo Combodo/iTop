@@ -1706,6 +1706,68 @@ JS
 	}
 
 	/**
+	 * Build a map of module IDs that belong to the package base scope.
+	 *
+	 * @param array $aAnalyzeInstallationModules Output from AnalyzeInstallation method
+	 * @param string $sSourceDir Base directory used as package scope
+	 *
+	 * @return array<string, bool>
+	 */
+	public static function GetBasePackageModules(array $aAnalyzeInstallationModules, string $sSourceDir): array
+	{
+		$aBasePackageModules = [];
+		$sNormalizedSourceDir = self::NormalizePathForComparison($sSourceDir);
+		if ($sNormalizedSourceDir === '') {
+			return $aBasePackageModules;
+		}
+
+		foreach ($aAnalyzeInstallationModules as $sModuleId => $aModuleInfo) {
+			if ($sModuleId === ROOT_MODULE) {
+				continue;
+			}
+
+			$sRootDir = $aModuleInfo['root_dir'] ?? '';
+			if ($sRootDir === '') {
+				continue;
+			}
+
+			$sModuleRootDir = self::NormalizePathForComparison($sRootDir);
+			if (utils::StartsWith($sModuleRootDir, $sNormalizedSourceDir)) {
+				$aBasePackageModules[$sModuleId] = true;
+			}
+		}
+
+		return $aBasePackageModules;
+	}
+
+	/**
+	 * Returns true when all modules of a non-package extension are already included in base package modules.
+	 */
+	public static function IsIncludedInPackage(?iTopExtension $oExtension, array $aBasePackageModules): bool
+	{
+		if (($oExtension === null) || ($oExtension->sSource === iTopExtension::SOURCE_WIZARD)) {
+			return false;
+		}
+
+		$aModules = $oExtension->aModules ?? [];
+		if (!is_array($aModules) || empty($aModules)) {
+			return false;
+		}
+
+		foreach ($aModules as $sModuleId) {
+			if (!in_array($sModuleId, $aBasePackageModules)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static function NormalizePathForComparison(string $sPath): string
+	{
+		return rtrim(str_replace('\\', '/', $sPath), '/');
+	}
+
+	/**
 	 * @param array $aModules List of available module codes
 	 *
 	 * @return bool true if the Hub connector is installed
