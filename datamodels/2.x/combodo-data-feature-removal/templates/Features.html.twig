@@ -12,9 +12,9 @@
 				{% UIColumn Standard {} %}
 					{% for aExtension in aAvailableExtensions[iColumnIndex] %}
 						{% if aExtension['installed'] %}
-							{% UIExtensionDetails Installed { sCode : aExtension['code'], sLabel : aExtension['label'], sDescription : aExtension['description'], aMetaData : [aExtension['version'], aExtension['source']], aExtraFlags : aExtension['extra_flags']} %}{% EndUIExtensionDetails %}
+							{% UIExtensionDetails Installed { sCode : aExtension['code'], sLabel : aExtension['label'], sDescription : aExtension['description'], aMetaData : aExtension['metadata'], aExtraFlags : aExtension['extra_flags']} %}{% EndUIExtensionDetails %}
 						{% else %}
-							{% UIExtensionDetails NotInstalled { sCode : aExtension['code'], sLabel : aExtension['label'], sDescription : aExtension['description'], aMetaData : [aExtension['version'], aExtension['source']], aExtraFlags : aExtension['extra_flags']} %}{% EndUIExtensionDetails %}
+							{% UIExtensionDetails NotInstalled { sCode : aExtension['code'], sLabel : aExtension['label'], sDescription : aExtension['description'], aMetaData : aExtension['metadata'], aExtraFlags : aExtension['extra_flags']} %}{% EndUIExtensionDetails %}
 						{% endif %}
 					{% endfor %}
 				{% EndUIColumn %}

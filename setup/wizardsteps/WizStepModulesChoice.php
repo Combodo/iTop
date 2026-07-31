@@ -899,9 +899,15 @@ EOF
 		$sMetadata = '';
 		if (isset($aChoice['version']) && isset($aChoice['source_label'])) {
 			$sMetadata = '<span>v'.$aChoice['version'].'</span><span>'.$aChoice['source_label'].'</span>';
-		}
-		if ($this->IsIncludedInBasePackage($aChoice)) {
-			$sMetadata .= '<span>Included in package</span>';
+			if ($this->aBasePackageModules === null) {
+				$this->aBasePackageModules = SetupUtils::GetBasePackageModules(
+					$this->aAnalyzeInstallationModules,
+					$this->oWizard->GetParameter('source_dir', '')
+				);
+			}
+			if (SetupUtils::IsIncludedInBasePackage($this->oExtensionsMap, $aChoice['extension_code'] ?? '', $this->aBasePackageModules)) {
+				$sMetadata .= '<span>Included in package</span>';
+			}
 		}
 		$sChoiceDisabled = $aFlags['disabled'] && !$aFlags['checked'] ? 'choice-disabled' : '';
 
@@ -942,70 +948,6 @@ EOF
 		return $sSourceDir.'/installation.xml';
 	}
 
-	private function GetBasePackageModules(): array
-	{
-		if ($this->aBasePackageModules !== null) {
-			return $this->aBasePackageModules;
-		}
-
-		$this->aBasePackageModules = [];
-		$sSourceDir = $this->NormalizePath($this->oWizard->GetParameter('source_dir', ''));
-		echo "<pre>";
-
-		foreach ($this->aAnalyzeInstallationModules as $sModuleId => $aModuleInfo) {
-			var_dump($sModuleId);
-			if ($sModuleId === ROOT_MODULE) {
-				continue;
-			}
-
-			$sRootDir = $aModuleInfo['root_dir'] ?? '';
-			var_dump($sRootDir);
-			if ($sRootDir === '') {
-				continue;
-			}
-
-			$sModuleRootDir = $this->NormalizePath($sRootDir);
-			if (($sSourceDir !== '') && utils::StartsWith($sModuleRootDir, $sSourceDir)) {
-				$this->aBasePackageModules[$sModuleId] = true;
-			}
-		}
-		echo "</pre>";
-
-		return $this->aBasePackageModules;
-	}
-
-
-	private function IsIncludedInBasePackage(array $aChoice): bool
-	{
-		$sExtensionCode = $aChoice['extension_code'] ?? '';
-		if ($sExtensionCode === '') {
-			return false;
-		}
-
-		$oExtension = $this->oExtensionsMap->GetFromExtensionCode($sExtensionCode);
-		if (($oExtension === null) || ($oExtension->sSource === iTopExtension::SOURCE_WIZARD)) {
-			return false;
-		}
-
-		$aModules = $aChoice['modules'] ?? [];
-		if (!is_array($aModules) || empty($aModules)) {
-			return false;
-		}
-
-		$aBasePackageModules = $this->GetBasePackageModules();
-		foreach ($aModules as $sModuleId) {
-			if (!array_key_exists($sModuleId, $aBasePackageModules)) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	private function NormalizePath(string $sPath): string
-	{
-		return rtrim(str_replace('\\', '/', $sPath), '/');
-	}
 
 	public function CanMoveForward()
 	{
