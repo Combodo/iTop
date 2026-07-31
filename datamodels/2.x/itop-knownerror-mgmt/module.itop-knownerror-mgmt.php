@@ -25,6 +25,8 @@ SetupWebPage::AddModule(
 			//'data.struct.itop-knownerror-mgmt.xml',
 		],
 		'data.sample' => [
+			'data/data.sample.knownerror.en_us.xml',
+			'data/data.sample.errortofunctionalci.xml',
 		],
 
 		// Documentation

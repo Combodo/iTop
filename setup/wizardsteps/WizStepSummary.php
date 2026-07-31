@@ -29,14 +29,19 @@ class WizStepSummary extends AbstractWizStepInstall
 		if ($sMode == 'install') {
 			return 'Ready to install';
 
-		} else {
-			return 'Ready to upgrade';
 		}
+
+		return 'Ready to upgrade';
 	}
 
 	public function GetPossibleSteps()
 	{
 		return [WizStepInstall::class];
+	}
+
+	public function CanAccessToWizardStep()
+	{
+		return true;
 	}
 
 	/**
@@ -45,7 +50,12 @@ class WizStepSummary extends AbstractWizStepInstall
 	 */
 	public function GetNextButtonLabel()
 	{
-		return 'Install';
+		$sMode = $this->oWizard->GetParameter('mode', 'install');
+		if ($sMode == 'install') {
+			return 'Install';
+		}
+
+		return 'Upgrade';
 	}
 
 	public function CanMoveForward()
@@ -106,7 +116,7 @@ class WizStepSummary extends AbstractWizStepInstall
 		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Extensions to be uninstalled">Extensions to be uninstalled</a>');
 
 		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('removed_extensions'), true) ?? [];
-		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable')) ?? [];
+		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable'), true) ?? [];
 		if (count($aExtensionsRemoved) > 0) {
 			$sExtensionsRemoved = '<ul>';
 			foreach ($aExtensionsRemoved as $sExtensionCode => $sLabel) {
@@ -123,21 +133,23 @@ class WizStepSummary extends AbstractWizStepInstall
 		$oPage->add($sExtensionsRemoved);
 		$oPage->add('</div>');
 
-		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Database Parameters">Database Parameters</a><ul>');
-		$oPage->add('<li>Server Name: '.$aInstallParams['database']['server'].'</li>');
-		$oPage->add('<li>DB User Name: '.$aInstallParams['database']['user'].'</li>');
-		$oPage->add('<li>DB user password: ***</li>');
-		if (($sMode == 'install') && ($this->oWizard->GetParameter('create_db') == 'yes')) {
-			$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].' (will be created)</li>');
-		} else {
-			$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].'</li>');
+		if ($this->oWizard->GetParameter('return_application') === '') {
+			$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Database Parameters">Database Parameters</a><ul>');
+			$oPage->add('<li>Server Name: '.$aInstallParams['database']['server'].'</li>');
+			$oPage->add('<li>DB User Name: '.$aInstallParams['database']['user'].'</li>');
+			$oPage->add('<li>DB user password: ***</li>');
+			if (($sMode == 'install') && ($this->oWizard->GetParameter('create_db') == 'yes')) {
+				$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].' (will be created)</li>');
+			} else {
+				$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].'</li>');
+			}
+			if ($aInstallParams['database']['prefix'] != '') {
+				$oPage->add('<li>Prefix for the '.ITOP_APPLICATION.' tables: '.$aInstallParams['database']['prefix'].'</li>');
+			} else {
+				$oPage->add('<li>Prefix for the '.ITOP_APPLICATION.' tables: none</li>');
+			}
+			$oPage->add('</ul></div>');
 		}
-		if ($aInstallParams['database']['prefix'] != '') {
-			$oPage->add('<li>Prefix for the '.ITOP_APPLICATION.' tables: '.$aInstallParams['database']['prefix'].'</li>');
-		} else {
-			$oPage->add('<li>Prefix for the '.ITOP_APPLICATION.' tables: none</li>');
-		}
-		$oPage->add('</ul></div>');
 
 		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Data Model Configuration">Data Model Configuration</a>');
 		$oPage->add($this->oWizard->GetParameter('display_choices'));
@@ -253,7 +265,7 @@ JS
 			$sButtonUrl = utils::HtmlEntities($sButtonUrl);
 			$oPage->add_ready_script(
 				<<<JS
-$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').after('<td style="text-align:center;"><button id="return-button" class="ibo-button ibo-is-alternative ibo-is-neutral" type="button" onclick="window.location.href=\'$sButtonUrl\'"><span class="ibo-button--label">$sButtonLabel</span></button></td>');
+$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').before('<td style="text-align:center;"><button id="return-button" class="ibo-button ibo-is-alternative ibo-is-neutral" type="button" onclick="window.location.href=\'$sButtonUrl\'"><span class="ibo-button--label">$sButtonLabel</span></button></td>');
 JS
 			);
 		}

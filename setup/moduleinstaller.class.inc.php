@@ -310,85 +310,47 @@ abstract class ModuleInstallerAPI
 	}
 
 	/**
+	 * Helper to load localized data in iTop not only at the module installation but also if during an upgrade you pass over the version which brought those data
+	 *
 	 * @param \Config $oConfiguration
-	 * @param string $sPreviousVersion The previous version of the module (empty string will force the loading)
-	 * @param string $sCurrentVersion The current version of the module
-	 * @param string $sFirstLoadingVersion The first module version for which the data loading should be performed (e.g. '3.0.0')
-	 * @param string $sFilePattern The pattern of the file to load, with {{language_code}} as placeholder for the language code (e.g. 'data.sample.{{language_code}}.xml')
+	 * Expected values for the three version parameters: Valid examples: '3.2', '3.2.0', '3.2-beta1'. Invalid examples: '3', '3.2.', '3.2-beta-1', '3.2 beta1'.
+	 * @param string $sPreviousVersion The previous version of the module (empty string in case of first install)
+	 * @param string $sCurrentVersion The current version of the module. Cannot be empty.
+	 * @param string $sFirstLoadingVersion If your upgrade passes over the FirstLoadingVersion or in case of fresh install, the localized data will be loaded. This is useful when you want to load (structural) data on a module upgrade. Cannot be empty.
+	 * @param string $sDefaultFileName The file to load (If localization is expected then provided file name must end by '.en_us.xml')
+	 * If the default iTop language is french and a localized variant of the $sDefaultFileName ending by '.fr_fr.xml' exists, then that file with french data will be loaded.
 	 *
 	 * @return void
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public static function LoadLocalizedData(Config $oConfiguration, string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, string $sFilePattern): void
+	public static function LoadLocalizedDataOnCrossingVersion(Config $oConfiguration, string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, string $sDefaultFileName): void
 	{
-		self::AssertLoadLocalizedDataParametersAreValid($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion, $sFilePattern);
-
-		// It's not very clear if it makes sense to test a particular version,
-		// as the loading mechanism checks object existence using reconc_keys
-		// and do not recreate them, nor update existing.
-		// Without test, new entries added to the data files, would be automatically loaded
-		if (($sPreviousVersion === '') ||
-			(version_compare($sPreviousVersion, $sCurrentVersion, '<')
-				&& version_compare($sPreviousVersion, $sFirstLoadingVersion, '<'))) {
-
-			// Note: There is an issue when upgrading, default language cannot be retrieved from the passed configuration, we have to read it from the disk
+		self::AssertLoadLocalizedDataOnCrossingVersionParametersAreValid($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion);
+		if (self::IsVersionCrossed($sPreviousVersion, $sCurrentVersion, $sFirstLoadingVersion)) {
+			// Note: on upgrade, the default language cannot be retrieved from the passed configuration, it must be read from disk (see StructureInstaller::AfterDatabaseCreation)
 			if (utils::IsNullOrEmptyString($sPreviousVersion)) {
-				// Fresh install
-				$sDefaultLanguage = $oConfiguration->GetDefaultLanguage();
+				$sWishedLanguage = $oConfiguration->GetDefaultLanguage();
 			} else {
-				// Upgrade
-				$sDefaultLanguage = utils::GetConfig(true)->GetDefaultLanguage();
+				$sWishedLanguage = utils::GetConfig(true)->GetDefaultLanguage();
 			}
-
-			$sFileName = self::GetLocalizedFileName($sDefaultLanguage, $sFilePattern);
-			if ($sFileName !== '') {
-				self::XMLFileLoad($sFileName);
-			}
+			self::LoadLocalizedData($sWishedLanguage, $sDefaultFileName);
 		}
 	}
 
 	/**
-	 * @throws \CoreUnexpectedValue
-	 */
-	private static function AssertLoadLocalizedDataParametersAreValid(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion, string $sFilePattern): void
-	{
-		if (($sPreviousVersion !== '') && !self::IsValidLocalizedDataVersion($sPreviousVersion)) {
-			throw new CoreUnexpectedValue("LoadLocalizedData expects sPreviousVersion to be empty or match x.y[.z][-name], got '{$sPreviousVersion}'");
-		}
-
-		if (!self::IsValidLocalizedDataVersion($sCurrentVersion)) {
-			throw new CoreUnexpectedValue("LoadLocalizedData expects sCurrentVersion to match x.y[.z][-name], got '{$sCurrentVersion}'");
-		}
-
-		if (!self::IsValidLocalizedDataVersion($sFirstLoadingVersion)) {
-			throw new CoreUnexpectedValue("LoadLocalizedData expects sFirstLoadingVersion to match x.y[.z][-name], got '{$sFirstLoadingVersion}'");
-		}
-
-		if (utils::IsNullOrEmptyString($sFilePattern)) {
-			throw new CoreUnexpectedValue('LoadLocalizedData expects sFilePattern to be a non-empty string');
-		}
-
-		if (substr_count($sFilePattern, '{{language_code}}') !== 1) {
-			throw new CoreUnexpectedValue("LoadLocalizedData expects sFilePattern to contain the exact placeholder '{{language_code}}' exactly once");
-		}
-	}
-
-	private static function IsValidLocalizedDataVersion(string $sVersion): bool
-	{
-		return (preg_match('/^\d+\.\d+(?:\.\d+)?(?:-[A-Za-z0-9]+)?$/', $sVersion) === 1);
-	}
-
-	/**
-	 * @param array|string $sFileName
-	 * @param \XMLDataLoader $oDataLoader
+	 * Helper to load a localized data file based on the default language of the application.
+	 * @param string $sDefaultLanguage The default language of the application, used to build the localized file name
+	 * @param string $sDefaultFile The default file to load, must be ending with .en_us.xml to be localized
 	 *
 	 * @return void
 	 * @throws \Exception
 	 */
-	public static function XMLFileLoad(string $sFileName): void
+	public static function LoadLocalizedData(string $sDefaultLanguage, string $sDefaultFile): void
 	{
+
+		$sFileName = self::GetLocalizedFileName($sDefaultLanguage, $sDefaultFile);
 		if (!file_exists($sFileName)) {
 			throw new Exception("File $sFileName not found");
 		}
@@ -402,26 +364,77 @@ abstract class ModuleInstallerAPI
 	}
 
 	/**
-	 * @param string $sLanguage The language code to use for localization (e.g. 'EN US')
-	 * @param string $sFilePattern The full path+name of the file to localize, with {{language_code}} as placeholder for the language code (e.g. 'data.sample.{{language_code}}.xml')
+	 * Helper to get the localized file name for a given language code, based on the original file name which must end by .en_us.xml
+	 * @param string $sLanguage The language code to use for localization (e.g. 'FR FR' or 'fr_fr')
+	 * @param string $sOriginalFileName The full path+name of the file to localize. If ending with .en_us.xml, it searches for a localized file.
 	 *
-	 * @return string The localized file name if found, or an empty string if not found
-	 * @throws \ConfigException
-	 * @throws \CoreException
+	 * @return string The localized file name if found otherwise the original file name
+	 * @throws \Exception If the original file name ends with .en_us.xml and does not exist
 	 */
-	public static function GetLocalizedFileName($sLanguage, string $sFilePattern): string
+	public static function GetLocalizedFileName(string $sLanguage, string $sOriginalFileName): string
 	{
-		$sLang = str_replace(' ', '_', strtolower($sLanguage));
-		$sFileName = str_replace('{{language_code}}', $sLang, $sFilePattern);
-		if (!file_exists($sFileName)) {
-			$sLang = 'en_us';
-			$sFileName = str_replace('{{language_code}}', $sLang, $sFilePattern);
-		}
-		if (file_exists($sFileName)) {
-			return $sFileName;
+		if (str_ends_with($sOriginalFileName, '.en_us.xml')) {
+			// If the original file which can be localized, does not exist, then even if the localized file itself exists, we want to raise this design issue.
+			if (!file_exists($sOriginalFileName)) {
+				throw new Exception("File $sOriginalFileName not found, it must exist when required by the module or as iTop fallback language when no localized file exists for the iTop default language");
+			}
+			// Search for a file for the requested language,
+			$sLang = '.'.str_replace(' ', '_', strtolower($sLanguage)).'.xml';
+			$sFileName = str_replace('.en_us.xml', $sLang, $sOriginalFileName);
+			// localized file not found, fall back to the original file (en_us)
+			if (!file_exists($sFileName)) {
+				SetupLog::Debug("File for iTop default language $sFileName not found, fall back to file $sOriginalFileName");
+				$sFileName = $sOriginalFileName;
+			}
 		} else {
-			SetupLog::Warning("No data file matching the pattern $sFilePattern and language_code $sLang was found.");
-			return '';
+			// If the original file is not localizable, then we just return it as is
+			$sFileName = $sOriginalFileName;
 		}
+		return $sFileName;
+	}
+
+	/**
+	 * @throws \CoreUnexpectedValue
+	 */
+	private static function AssertLoadLocalizedDataOnCrossingVersionParametersAreValid(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion): void
+	{
+		if (($sPreviousVersion !== '') && !self::IsValidVersionFormat($sPreviousVersion)) {
+			throw new CoreUnexpectedValue("LoadLocalizedDataOnCrossingVersion expects sPreviousVersion to be empty or match x.y[.z][-name], got '{$sPreviousVersion}'");
+		}
+		if (!self::IsValidVersionFormat($sCurrentVersion)) {
+			throw new CoreUnexpectedValue("LoadLocalizedDataOnCrossingVersion expects sCurrentVersion to match x.y[.z][-name], got '{$sCurrentVersion}'");
+		}
+		if (utils::IsNullOrEmptyString($sFirstLoadingVersion) || !self::IsValidVersionFormat($sFirstLoadingVersion)) {
+			throw new CoreUnexpectedValue("LoadLocalizedDataOnCrossingVersion expects sFirstLoadingVersion to match x.y[.z][-name], got '{$sFirstLoadingVersion}'");
+		}
+	}
+
+	/**
+	 * Checks if a module version matches x.y[.z][-name].
+	 * Valid examples: '3.2', '3.2.1', '3.2.3-2', '3.3.0-dev', '10.14-beta2'.
+	 * Invalid examples: '3', 'v3.2', '3.2.1.4', '3.2-rc.1', '3.2 beta1'.
+	 *
+	 * @param string $sVersion
+	 *
+	 * @return bool
+	 */
+	public static function IsValidVersionFormat(string $sVersion): bool
+	{
+		return (preg_match('/^\d+\.\d+(?:\.\d+)?(?:-[A-Za-z0-9]+)?$/', $sVersion) === 1);
+	}
+
+	/**
+	 * @param string $sPreviousVersion
+	 * @param string $sCurrentVersion
+	 * @param string $sFirstLoadingVersion
+	 *
+	 * @return bool
+	 */
+	public static function IsVersionCrossed(string $sPreviousVersion, string $sCurrentVersion, string $sFirstLoadingVersion): bool
+	{
+		return ($sPreviousVersion === '') ||
+			(version_compare($sPreviousVersion, $sCurrentVersion, '<')
+				&& version_compare($sPreviousVersion, $sFirstLoadingVersion, '<')
+				&& version_compare($sFirstLoadingVersion, $sCurrentVersion, '<='));
 	}
 }

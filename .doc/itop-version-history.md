@@ -2,13 +2,17 @@
 
 ```mermaid
 %%{init: { 'logLevel': 'debug', 'theme': 'base', 'themeVariables': {
-              'git0': 'lawngreen',
-              'git3': 'dodgerblue',
-              'git4': 'grey',
-              'git5': 'grey',
-              'git6': 'grey',
-              'git7': 'grey',
-              'git8': 'grey'
+              'git0': '#7ccf00',
+              'git1': '#7ccf00',
+              'git2': '#99a1af',
+              'git3': '#99a1af',
+              'git4': '#99a1af',
+              'git5': '#99a1af',
+              'git6': '#99a1af',
+              'git7': '#99a1af',
+              'git8': '#99a1af',
+              'git9': '#99a1af',
+              'git10': '#99a1af'
        }, 'gitGraph': {'showBranches': true,'mainBranchName': 'develop','rotateCommitLabel': true}} }%%
 gitGraph
     commit id: "2016-07-06" tag: "2.3.0" type: HIGHLIGHT
@@ -106,6 +110,8 @@ gitGraph
     commit id: "2025-09-25" tag: "2.7.13"
     checkout support/3.2
     commit id: "2026-04-27 " tag: "3.2.3"
+    checkout develop
+    commit id: "2026-07-23" tag: "3.3.0-beta1"
 ```
 
 To learn more, check the [iTop community versions history on the official wiki](https://www.itophub.io/wiki/page?id=latest:release:start).

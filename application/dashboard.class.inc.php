@@ -501,7 +501,7 @@ EOF
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = [], $bCanEdit = true)
 	{
-		$aExtraParams['dashboard_div_id'] = utils::Sanitize($aExtraParams['dashboard_div_id'] ?? null, $this->GetId(), utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
+		$aExtraParams['dashboard_div_id'] = utils::Sanitize($aExtraParams['dashboard_div_id'] ?? $this->GetId(), $this->GetId(), utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 
 		/** @var \DashboardLayoutMultiCol $oLayout */
 		$oLayout = new $this->sLayoutClass();

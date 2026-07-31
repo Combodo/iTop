@@ -32,7 +32,6 @@ SetupWebPage::AddModule(
 		],
 		'data.sample' => [
 			'data/data.sample.model.xml',
-			'data/data.sample.networkdevicetype.xml',
 			'data/data.sample.servers.xml',
 			'data/data.sample.nw-devices.xml',
 			'data/data.sample.software.xml',
@@ -106,6 +105,7 @@ if (!class_exists('ConfigMgmtInstaller')) {
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
+
 		}
 	}
 }

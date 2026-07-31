@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<FAQCategory alias="FAQCategory" id="1">
+<name>Konfiguration</name>
+</FAQCategory>
+<FAQCategory alias="FAQCategory" id="2">
+<name>Datenbank</name>
+</FAQCategory>
+<FAQCategory alias="FAQCategory" id="4">
+<name>Personalwesen</name>
+</FAQCategory>
+<FAQCategory alias="FAQCategory" id="6">
+<name>Netzwerk</name>
+</FAQCategory>
+<FAQCategory alias="FAQCategory" id="7">
+<name>PC</name>
+</FAQCategory>
+<FAQCategory alias="FAQCategory" id="3">
+<name>Drucker</name>
+</FAQCategory>
+<FAQCategory alias="FAQCategory" id="5">
+<name>Windows</name>
+</FAQCategory>
+</Set>
+

@@ -15,6 +15,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'UI:Layout:ExtensionsDetails:BadgeInstalled+' => 'This extension is part of the current installation.~~',
 	'UI:Layout:ExtensionsDetails:BadgeToBeInstalled' => 'to be installed~~',
 	'UI:Layout:ExtensionsDetails:BadgeToBeInstalled+' => 'This extension will be installed during the setup.~~',
+	'UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled' => 'cannot be installed~~',
+	'UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled+' => 'This extension cannot be installed because one or more dependencies cannot be fulfilled.~~',
 	'UI:Layout:ExtensionsDetails:BadgeNotInstalled' => 'not installed~~',
 	'UI:Layout:ExtensionsDetails:BadgeNotInstalled+' => 'This extension is not part of the current installation.~~',
 	'UI:Layout:ExtensionsDetails:BadgeToBeUninstalled' => 'to be uninstalled~~',

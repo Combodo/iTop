@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<FAQ alias="FAQ" id="6">
+<title>💻 Anfrage für IT-Ausrüstung</title>
+<summary>So beantragen Sie IT-Ausrüstung</summary>
+<description>&lt;h4&gt;&lt;strong&gt;📌 Zweck&lt;/strong&gt;&lt;/h4&gt;&lt;p&gt;Dieser Ablauf beschreibt die Schritte zur Beantragung von IT-Ausrüstung wie Laptops, Monitore, Peripheriegeräte oder Softwarelizenzen. Alle Anfragen müssen über die freigegebenen Kanäle eingereicht werden, damit Nachverfolgung, Genehmigung und Bereitstellung sichergestellt sind.&lt;/p&gt;&lt;hr&gt;&lt;h4&gt;&lt;strong&gt;👥 Geltungsbereich&lt;/strong&gt;&lt;/h4&gt;&lt;p&gt;Gilt für alle Mitarbeitenden, externen Kräfte und Abteilungen, die IT-Ausrüstung für ihre Arbeit benötigen.&lt;/p&gt;&lt;hr&gt;&lt;h4&gt;&lt;strong&gt;✅ Schritt 1: Bedarf klären&lt;/strong&gt;&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;Prüfen Sie, ob die Ausrüstung für Rolle oder Projekt erforderlich ist.&lt;/li&gt;&lt;li&gt;Prüfen Sie die Verfügbarkeit im IT-Bestand.&lt;/li&gt;&lt;li&gt;Stellen Sie sicher, dass die Anfrage den IT-Richtlinien entspricht.&lt;/li&gt;&lt;/ul&gt;&lt;hr&gt;&lt;h4&gt;&lt;strong&gt;📝 Schritt 2: Anfrage einreichen&lt;/strong&gt;&lt;/h4&gt;&lt;ol&gt;&lt;li&gt;Öffnen Sie das IT-Anfrageportal und füllen Sie das Formular vollständig aus.&lt;/li&gt;&lt;li&gt;Geben Sie Name, Abteilung, Gerätetyp, Menge, Begründung und gewünschtes Lieferdatum an.&lt;/li&gt;&lt;li&gt;Alternativ senden Sie eine E-Mail an it-requests@[yourorganization].com.&lt;/li&gt;&lt;/ol&gt;&lt;hr&gt;&lt;h4&gt;&lt;strong&gt;🔍 Schritt 3: Genehmigung&lt;/strong&gt;&lt;/h4&gt;&lt;p&gt;Die Führungskraft prüft geschäftlichen Bedarf und Budget. Danach validiert das IT-Team Kompatibilität, Verfügbarkeit und Sicherheitsvorgaben. Bei hohen Kosten kann zusätzlich eine Finanzfreigabe erforderlich sein.&lt;/p&gt;&lt;hr&gt;&lt;h4&gt;&lt;strong&gt;📦 Schritt 4: Bereitstellung&lt;/strong&gt;&lt;/h4&gt;&lt;p&gt;Lagerware wird nach Freigabe zeitnah ausgeliefert. Bei Sonderbestellungen informiert die IT über die Lieferzeit und übernimmt bei Bedarf die Ersteinrichtung.&lt;/p&gt;&lt;hr&gt;&lt;h4&gt;&lt;strong&gt;🔄 Rückgabe und Ersatz&lt;/strong&gt;&lt;/h4&gt;&lt;p&gt;Defekte oder nicht mehr benötigte Geräte werden über eine Rückgabeanfrage an die IT gemeldet und zurückgeführt.&lt;/p&gt;</description>
+<category_id>7</category_id>
+<error_code></error_code>
+<key_words>PC, Phone, Laptop, Desktop</key_words>
+<domains><Set>
+<Tag>hardware</Tag><Tag>process</Tag></Set>
+</domains>
+</FAQ>
+<FAQ alias="FAQ" id="8">
+<title>📌 Urlaubsverwaltung</title>
+<summary></summary>
+<description>&lt;h4&gt;&lt;strong&gt;❓ Wie beantrage ich Urlaub?&lt;/strong&gt;&lt;/h4&gt;&lt;p&gt;Sie können Urlaub über das interne HR-Portal oder per E-Mail an Ihre Führungskraft und HR beantragen. Geben Sie Name, Zeitraum und Urlaubsart an.&lt;/p&gt;&lt;hr&gt;&lt;h4&gt;&lt;strong&gt;⏳ Welche Fristen gelten?&lt;/strong&gt;&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;Regulärer Urlaub möglichst frühzeitig, idealerweise mindestens 15 Tage vorher.&lt;/li&gt;&lt;li&gt;Sonderurlaub so schnell wie möglich ankündigen.&lt;/li&gt;&lt;li&gt;Krankheit oder Unfall am selben Tag melden.&lt;/li&gt;&lt;/ul&gt;&lt;hr&gt;&lt;h4&gt;&lt;strong&gt;📅 Wie viele Urlaubstage habe ich?&lt;/strong&gt;&lt;/h4&gt;&lt;p&gt;Der Anspruch richtet sich nach Vertrag und lokaler Gesetzgebung. Ihr aktueller Saldo ist im HR-Portal sichtbar.&lt;/p&gt;&lt;hr&gt;&lt;h4&gt;&lt;strong&gt;🔄 Kann ich Urlaub ändern oder stornieren?&lt;/strong&gt;&lt;/h4&gt;&lt;p&gt;Ja, je nach Unternehmensrichtlinie und mit Zustimmung der Führungskraft. Änderungen sollten frühzeitig gemeldet werden.&lt;/p&gt;&lt;hr&gt;&lt;h4&gt;&lt;strong&gt;🆘 An wen wende ich mich bei Problemen?&lt;/strong&gt;&lt;/h4&gt;&lt;p&gt;Bei technischen Problemen kontaktieren Sie den IT-Support, bei Fragen zu Rechten und Saldo das HR-Team.&lt;/p&gt;</description>
+<category_id>4</category_id>
+<error_code></error_code>
+<key_words>Leave</key_words>
+<domains><Set>
+<Tag>process</Tag></Set>
+</domains>
+</FAQ>
+<FAQ alias="FAQ" id="1">
+<title>🖨️ Fehlerdiagnose bei Druckern</title>
+<summary>Fragenkatalog zur Analyse von Druckproblemen</summary>
+<description>&lt;h2&gt;❓ Fragen zur Fehlersuche&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Druckermarke bekannt?&lt;/strong&gt; HP, IBM, Epson oder andere.&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;strong&gt;Ist der Drucker mit Strom versorgt?&lt;/strong&gt; Ja oder Nein.&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;strong&gt;Ist der Drucker eingeschaltet?&lt;/strong&gt; Ja oder Nein.&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;strong&gt;Ist Papier eingelegt?&lt;/strong&gt; Ja oder Nein.&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;strong&gt;Gibt es Meldungen zum Tintenstand oder andere Warnungen?&lt;/strong&gt; Falls ja, welche?&lt;/p&gt;&lt;hr&gt;&lt;p&gt;&lt;strong&gt;Wurde bereits ein Neustart versucht?&lt;/strong&gt; Ja oder Nein.&lt;/p&gt;</description>
+<category_id>3</category_id>
+<error_code></error_code>
+<key_words>printer</key_words>
+<domains><Set>
+<Tag>printer</Tag><Tag>process</Tag></Set>
+</domains>
+</FAQ>
+<FAQ alias="FAQ" id="4">
+<title>📶 Fehlerdiagnose für WLAN-Verbindung</title>
+<summary>Fragenkatalog zur Analyse von WLAN-Problemen</summary>
+<description>&lt;h2&gt;🔍 Grundprüfungen&lt;/h2&gt;&lt;p&gt;Ist WLAN am Gerät aktiviert, ist das Symbol sichtbar und funktionieren andere Geräte im selben Netzwerk?&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;🌐 Netzwerkspezifische Prüfungen&lt;/h2&gt;&lt;p&gt;Ist der Router eingeschaltet, sind die LEDs normal, ist die SSID sichtbar und wurde das richtige Passwort verwendet?&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;💻 Gerätespezifische Prüfungen&lt;/h2&gt;&lt;p&gt;Wurde das Gerät neu gestartet, das WLAN neu verbunden und die Entfernung zum Router geprüft?&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;🛠️ Erweiterte Schritte&lt;/h2&gt;&lt;p&gt;Treiber aktualisieren, Störquellen prüfen, Routerkanal anpassen und bei Bedarf Router zurücksetzen.&lt;/p&gt;</description>
+<category_id>6</category_id>
+<error_code></error_code>
+<key_words></key_words>
+<domains><Set>
+<Tag>network</Tag></Set>
+</domains>
+</FAQ>
+<FAQ alias="FAQ" id="2">
+<title>🖥️ Fehlerdiagnose für Windows-Verbindung</title>
+<summary>Fragenkatalog zur Analyse von Windows-Verbindungsproblemen</summary>
+<description>&lt;h2&gt;🔍 Allgemeine Prüfungen&lt;/h2&gt;&lt;p&gt;Besteht eine Internetverbindung, ist das WLAN- oder Ethernet-Symbol sichtbar und funktionieren andere Geräte im selben Netzwerk?&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;🌐 Netzwerkspezifische Prüfungen&lt;/h2&gt;&lt;p&gt;Prüfen Sie Flugmodus, Router-Neustart, korrektes Passwort und ggf. den Einfluss eines VPN.&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;🔗 Windows-spezifische Prüfungen&lt;/h2&gt;&lt;p&gt;Computer neu starten, Windows-Updates prüfen, Netzwerktreiber aktualisieren und die integrierte Problembehandlung ausführen.&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;🛠️ Erweiterte Schritte&lt;/h2&gt;&lt;p&gt;Netzwerk zurücksetzen, Sicherheitssoftware prüfen und testweise ein anderes Netzwerk verwenden.&lt;/p&gt;</description>
+<category_id>5</category_id>
+<error_code></error_code>
+<key_words>windows connection</key_words>
+<domains><Set>
+<Tag>software</Tag></Set>
+</domains>
+</FAQ>
+<FAQ alias="FAQ" id="7">
+<title>🖨️🔄 Drucker-Firmware aktualisieren</title>
+<summary></summary>
+<description>&lt;h2&gt;📌 Vorbereitung&lt;/h2&gt;&lt;p&gt;Benötigt werden ein Computer im selben Netzwerk, die passende Firmware-Datei und eine stabile Verbindung. Der Drucker darf während des Updates nicht ausgeschaltet werden.&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;🔍 Modell und Version ermitteln&lt;/h2&gt;&lt;p&gt;Prüfen Sie das exakte Modell und notieren Sie die aktuell installierte Firmware-Version.&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;📥 Firmware herunterladen&lt;/h2&gt;&lt;p&gt;Laden Sie die aktuelle Version von der offiziellen Herstellerseite und prüfen Sie die Kompatibilität für Modell und Region.&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;🔄 Update durchführen&lt;/h2&gt;&lt;p&gt;Das Update kann über Hersteller-Software, Druckermenü oder per USB erfolgen. Folgen Sie den Schritten des Herstellers und unterbrechen Sie den Vorgang nicht.&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;✅ Nachkontrolle&lt;/h2&gt;&lt;p&gt;Drucker neu starten, Testseite drucken und Funktionen wie Drucken, Scannen und Netzwerk prüfen.&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;🚨 Fehlerbehebung&lt;/h2&gt;&lt;p&gt;Bei Fehlern Verbindung prüfen, neu starten und bei Bedarf den Herstellersupport kontaktieren.&lt;/p&gt;</description>
+<category_id>3</category_id>
+<category_id_friendlyname>Printer</category_id_friendlyname>
+<category_name>Printer</category_name>
+<error_code></error_code>
+<key_words>printer, firmware</key_words>
+<domains><Set>
+<Tag>printer</Tag></Set>
+</domains>
+</FAQ>
+<FAQ alias="FAQ" id="5">
+<title>💙💻 Fehlerdiagnose bei Windows-Bluescreen</title>
+<summary>Fragenkatalog zur Analyse von Windows-Bluescreen-Problemen</summary>
+<description>&lt;h2&gt;🔍 Erste Prüfungen&lt;/h2&gt;&lt;p&gt;Tritt der Bluescreen wiederholt auf, bei einem bestimmten Schritt oder zufällig? Notieren Sie den angezeigten Fehlercode.&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;🛠️ Basismaßnahmen&lt;/h2&gt;&lt;p&gt;Neustart durchführen, Windows aktualisieren, externe Geräte trennen und einen Malware-Scan starten.&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;🖥️ Erweiterte Prüfungen&lt;/h2&gt;&lt;p&gt;Ereignisanzeige prüfen, Treiber aktualisieren sowie Systemprüfungen wie SFC, DISM, RAM- und Datenträgertests ausführen.&lt;/p&gt;&lt;hr&gt;&lt;h2&gt;🔄 Wiederherstellungsoptionen&lt;/h2&gt;&lt;p&gt;Abgesicherten Modus testen, Systemwiederherstellung verwenden und falls nötig Windows zurücksetzen oder neu installieren.&lt;/p&gt;</description>
+<category_id>5</category_id>
+<error_code></error_code>
+<key_words>Blue Screen, Windows</key_words>
+<domains><Set>
+</Set>
+</domains>
+</FAQ>
+</Set>

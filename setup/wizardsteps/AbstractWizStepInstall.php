@@ -27,7 +27,7 @@ abstract class AbstractWizStepInstall extends WizardStep
 	 */
 	protected function BuildConfig()
 	{
-		$sMode = $this->oWizard->GetParameter('install_mode', 'install');
+		$sMode = $this->oWizard->GetParameter('mode', 'install');
 		$aSelectedModules = json_decode($this->oWizard->GetParameter('selected_modules'), true);
 		$aSelectedExtensions = json_decode($this->oWizard->GetParameter('selected_extensions'), true);
 		$sBackupDestination = '';
@@ -55,9 +55,6 @@ abstract class AbstractWizStepInstall extends WizardStep
 
 		$sSourceDir = $this->oWizard->GetParameter('source_dir');
 		if (($sMode == 'upgrade') && ($this->oWizard->GetParameter('upgrade_type') == 'keep-previous')) {
-			//$sPreviousVersionDir = $this->oWizard->GetParameter('previous_version_dir');
-			//$aCopies[] = ['source' => $sSourceDir, 'destination' => 'modules']; // Source is an absolute path, destination is relative to APPROOT
-			//$aCopies[] = ['source' => $sPreviousVersionDir.'/portal', 'destination' => 'portal']; // Source is an absolute path, destination is relative to APPROOT
 			$sSourceDir = APPROOT.'modules';
 		}
 

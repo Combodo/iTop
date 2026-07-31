@@ -132,7 +132,7 @@ if ($bUseItopConfig && file_exists($sConfigFile)) {
 	$aDBXmlSettings ['prefix'] = $oConfig->Get('db_subname');
 	$aDBXmlSettings ['db_tls_enabled'] = $oConfig->Get('db_tls.enabled');
 	//cannot be null or infinite loop triggered!
-	$aDBXmlSettings ['db_tls_ca'] = $oConfig->Get('db_tls.ca') ?? "";
+	$aDBXmlSettings ['db_tls_ca'] = $oConfig->Get('db_tls.ca') ?? '';
 	$oParams->Set('database', $aDBXmlSettings);
 
 	$aFields = [
@@ -244,7 +244,8 @@ $aChecks = SetupUtils::CheckBackupPrerequisites(APPROOT.'data'); // mmm should b
 $aSelectedModules = $oParams->Get('selected_modules');
 $sSourceDir = $oParams->Get('source_dir', 'datamodels/latest');
 $sExtensionDir = $oParams->Get('extensions_dir', 'extensions');
-$aChecks = array_merge($aChecks, SetupUtils::CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules));
+$aRelDirsToScan = [$sSourceDir, $sExtensionDir, "data/$sTargetEnvironment-modules"];
+$aChecks = array_merge($aChecks, SetupUtils::CheckSelectedModules($aRelDirsToScan, $aSelectedModules));
 
 foreach ($aChecks as $oCheckResult) {
 	switch ($oCheckResult->iSeverity) {

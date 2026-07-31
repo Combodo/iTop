@@ -1,21 +1,11 @@
 <?php
 
-// Copyright (C) 2010-2024 Combodo SAS
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * @copyright   Copyright (C) 2010-2026 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+use Combodo\iTop\Service\Session\SessionParameters;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/parameters.class.inc.php');
@@ -26,14 +16,12 @@ require_once(APPROOT.'setup/extensionsmap.class.inc.php');
 /**
  * Engine for displaying the various pages of a "wizard"
  * Each "step" of the wizard must be implemented as
- * separate class derived from WizardStep. each 'step' can also have its own
+ * separate classes derived from WizardStep. Each 'step' can also have its own
  * internal 'state' for developing complex wizards.
  * The WizardController provides the "<< Back" feature by storing a stack
  * of the previous screens. The WizardController also maintains from page
  * to page a list of "parameters" to be dispayed/edited by each of the steps.
  *
- * @copyright   Copyright (C) 2010-2024 Combodo SAS
- * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 class WizardController
@@ -41,37 +29,42 @@ class WizardController
 	protected $aWizardSteps;
 	protected $sInitialStepClass;
 	protected $sInitialState;
-	protected $aParameters;
+	protected SessionParameters $oSessionParameters;
 
 	/**
-	 * Initiailization of the wizard controller
+	 * Initialization of the wizard controller
 	 * @param string $sInitialStepClass Class of the initial step/page of the wizard
 	 * @param string $sInitialState Initial state of the initial page (if this class manages states)
 	 */
-	public function __construct($sInitialStepClass, $sInitialState = '')
+	public function __construct(string $sInitialStepClass, string $sInitialState = '')
 	{
 		$this->sInitialStepClass = $sInitialStepClass;
 		$this->sInitialState = $sInitialState;
-		$this->aParameters = [];
-		$this->aWizardSteps = [];
+		$this->oSessionParameters = new SessionParameters(SetupUtils::SESSION_PARAMETERS_NAME);
+		$this->oSessionParameters->LogParameters();
+		$this->aWizardSteps = $this->GetParameter('_steps', []);
 	}
 
 	/**
 	 * Pushes information about the current step onto the stack
 	 * @param array $aStepInfo Array('class' => , 'state' => )
 	 */
-	protected function PushStep($aStepInfo)
+	protected function PushStep(array $aStepInfo): void
 	{
-		array_push($this->aWizardSteps, $aStepInfo);
+		$this->aWizardSteps[] = $aStepInfo;
+		$this->SetParameter('_steps', $this->aWizardSteps);
 	}
 
 	/**
 	 * Removes information about the previous step from the stack
 	 * @return array{'class': string, 'state': string}
 	 */
-	protected function PopStep()
+	protected function PopStep(): array
 	{
-		return array_pop($this->aWizardSteps);
+		$aStep = array_pop($this->aWizardSteps);
+		$this->SetParameter('_steps', $this->aWizardSteps);
+
+		return $aStep;
 	}
 
 	/**
@@ -79,13 +72,9 @@ class WizardController
 	 * @param string $sParamCode The code identifying this parameter
 	 * @param mixed $defaultValue The default value of the parameter in case it was not set
 	 */
-	public function GetParameter($sParamCode, $defaultValue = '')
+	public function GetParameter(string $sParamCode, mixed $defaultValue = ''): mixed
 	{
-		if (array_key_exists($sParamCode, $this->aParameters)) {
-			return $this->aParameters[$sParamCode];
-		}
-
-		return $defaultValue;
+		return $this->oSessionParameters->GetParameter($sParamCode, $defaultValue);
 	}
 
 	/**
@@ -115,9 +104,9 @@ class WizardController
 	 * @param string $sParamCode The code identifying this parameter
 	 * @param mixed $value The value to store
 	 */
-	public function SetParameter($sParamCode, $value)
+	public function SetParameter(string $sParamCode, mixed $value): void
 	{
-		$this->aParameters[$sParamCode] = $value;
+		$this->oSessionParameters->SetParameter($sParamCode, $value);
 	}
 
 	/**
@@ -126,30 +115,46 @@ class WizardController
 	 * @param mixed $defaultValue The default value for the parameter
 	 * @param string $sSanitizationFilter A 'sanitization' fitler. Default is 'raw_data', which means no filtering
 	 */
-	public function SaveParameter($sParamCode, $defaultValue, $sSanitizationFilter = 'raw_data')
+	public function SaveParameter(string $sParamCode, mixed $defaultValue, string $sSanitizationFilter = 'raw_data'): void
 	{
-		$value = utils::ReadParam($sParamCode, $defaultValue, false, $sSanitizationFilter);
-		$this->aParameters[$sParamCode] = $value;
+		$this->oSessionParameters->SetParameterFromParams($sParamCode, $defaultValue, $sSanitizationFilter);
+	}
+
+	/**
+	 * Stores the value of the page's parameter in a "persistent" parameter in the wizard's context
+	 * @param string $sParamCode The code identifying this parameter
+	 * @param mixed $defaultValue The default value for the parameter
+	 * @param string $sSanitizationFilter A 'sanitization' fitler. Default is 'raw_data', which means no filtering
+	 */
+	public function SavePostedParameter(string $sParamCode, mixed $defaultValue = '', string $sSanitizationFilter = 'raw_data'): void
+	{
+		$this->oSessionParameters->SetParameterFromPostedParams($sParamCode, $defaultValue, $sSanitizationFilter);
 	}
 
 	/**
 	 * Starts the wizard by displaying it in its initial state
+	 *
+	 * @throws \Exception
 	 */
-	public function Start()
+	public function Start(): void
 	{
+		if ($this->GetParameter('return_application', '') === '') {
+			// Fresh restart of the wizard
+			$this->EraseParameters();
+		}
 		$sCurrentStepClass = $this->sInitialStepClass;
-		$oStep = $this->GetWizardStep($sCurrentStepClass, $this->sInitialState);
+		$oStep = $this->InstantiateWizardStep($sCurrentStepClass, $this->sInitialState);
 		$this->DisplayStep($oStep);
 	}
 	/**
 	 * Progress towards the next step of the wizard
 	 * @throws Exception
 	 */
-	protected function Next()
+	protected function Next(): void
 	{
 		$sCurrentStepClass = utils::ReadParam('_class', $this->sInitialStepClass);
 		$sCurrentState = utils::ReadParam('_state', $this->sInitialState);
-		$oStep = $this->GetWizardStep($sCurrentStepClass, $sCurrentState);
+		$oStep = $this->InstantiateWizardStep($sCurrentStepClass, $sCurrentState);
 		if ($oStep->ValidateParams()) {
 			$aPossibleSteps = $oStep->GetPossibleSteps();
 			if ($oStep->CanMoveBackward()) {
@@ -157,7 +162,7 @@ class WizardController
 			}
 			$oWizardState = $oStep->UpdateWizardStateAndGetNextStep(true); // true => moving forward
 			if (in_array($oWizardState->GetNextStep(), $aPossibleSteps)) {
-				$oNextStep = $this->GetWizardStep($oWizardState->GetNextStep(), $oWizardState->GetState());
+				$oNextStep = $this->InstantiateWizardStep($oWizardState->GetNextStep(), $oWizardState->GetState());
 				$this->DisplayStep($oNextStep);
 			} else {
 				throw new Exception("Internal error: Unexpected next step '{$oWizardState->GetNextStep()}'. The possible next steps are: ".implode(', ', $aPossibleSteps));
@@ -169,18 +174,20 @@ class WizardController
 
 	/**
 	 * Move one step back
+	 *
+	 * @throws \Exception
 	 */
-	protected function Back()
+	protected function Back(): void
 	{
 		// let the current step save its parameters
 		$sCurrentStepClass = utils::ReadParam('_class', $this->sInitialStepClass);
 		$sCurrentState = utils::ReadParam('_state', $this->sInitialState);
-		$oStep = $this->GetWizardStep($sCurrentStepClass, $sCurrentState);
+		$oStep = $this->InstantiateWizardStep($sCurrentStepClass, $sCurrentState);
 		$oStep->UpdateWizardStateAndGetNextStep(false); // false => Moving backwards
 
 		// Display the previous step
 		$aCurrentStepInfo = $this->PopStep();
-		$oStep = $this->GetWizardStep($aCurrentStepInfo['class'], $aCurrentStepInfo['state']);
+		$oStep = $this->InstantiateWizardStep($aCurrentStepInfo['class'], $aCurrentStepInfo['state']);
 		$this->DisplayStep($oStep);
 	}
 
@@ -195,8 +202,25 @@ class WizardController
 	{
 		SetupLog::Info("=== Setup screen: ".$oStep->GetTitle().' ('.get_class($oStep).')');
 		$oPage = new SetupPage($oStep->GetTitle());
+		if (!$oStep->CanAccessToWizardStep()) {
+			[$sButtonLabel, $sButtonUrl] = SetupUtils::GetBackButtonInfo($this->oSessionParameters->GetParameter('return_application', ''));
+			SetupUtils::ExitReadOnlyMode(false); // Reset readonly mode in case of problem
+			SetupUtils::EraseSetupToken();
+			$this->oSessionParameters->Erase();
+			$oP = new SetupPage('Installation Cannot Continue');
+			$oP->add("<h2>Fatal error</h2>\n");
+			$oP->error("<b>Error:</b> This setup step is not accessible with your access rights.");
+
+			$sButtonsHtml = <<<HTML
+<button type="button" class="ibo-button ibo-is-regular ibo-is-primary" onclick="window.location.href='$sButtonUrl'">$sButtonLabel</button>
+HTML;
+			$oP->p($sButtonsHtml);
+
+			$oP->output();
+			// Prevent token creation
+			exit;
+		}
 		$oPage->LinkScriptFromAppRoot('setup/setup.js');
-		$oStep->PreFormDisplay($oPage);
 
 		$oPage->add('<form id="wiz_form" class="ibo-setup--wizard" method="post">');
 		$oPage->add('<div class="ibo-setup--wizard--content">');
@@ -209,11 +233,6 @@ class WizardController
 		// to store the parameters
 		$oPage->add('<input type="hidden" id="_class" name="_class" value="'.get_class($oStep).'"/>');
 		$oPage->add('<input type="hidden" id="_state" name="_state" value="'.$oStep->GetState().'"/>');
-		foreach ($this->aParameters as $sCode => $value) {
-			$oPage->add('<input type="hidden" name="_params['.$sCode.']" value="'.utils::EscapeHtml($value).'"/>');
-		}
-
-		$oPage->add('<input type="hidden" name="_steps" value="'.utils::EscapeHtml(json_encode($this->aWizardSteps)).'"/>');
 		$oPage->add('<table style="width:100%;" class="ibo-setup--wizard--buttons-container"><tr>');
 		if (count($this->aWizardSteps) > 0) {
 			if ($oStep->CanMoveBackward()) {
@@ -268,7 +287,7 @@ EOF
 	 * Make the wizard run: 'Start', 'Next' or 'Back' depending WizardUpdateButtons();
 	 * on the page's parameters
 	 */
-	public function Run()
+	public function Run(): void
 	{
 		/**
 		 * @since 3.2.0 Add the ContextTag init
@@ -277,8 +296,6 @@ EOF
 		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
 		$sOperation = utils::ReadParam('operation');
-		$this->aParameters = utils::ReadParam('_params', [], false, 'raw_data');
-		$this->SetWizardSteps(json_decode(utils::ReadParam('_steps', '[]', false, 'raw_data'), true));
 
 		switch ($sOperation) {
 			case 'next':
@@ -294,65 +311,6 @@ EOF
 		}
 	}
 
-	/**
-	 * Provides information about the structure/workflow of the wizard by listing
-	 * the possible list of 'steps' and their dependencies
-	 * @param string $sStep Name of the class to start from (used for recursion)
-	 * @param array $aAllSteps List of steps (used for recursion)
-	 */
-	public function DumpStructure($sStep = '', $aAllSteps = null)
-	{
-		if ($aAllSteps == null) {
-			$aAllSteps = [];
-		}
-		if ($sStep == '') {
-			$sStep = $this->sInitialStepClass;
-		}
-
-		$oStep = $this->GetWizardStep($sStep);
-		$aAllSteps[$sStep] = $oStep->GetPossibleSteps();
-		foreach ($aAllSteps[$sStep] as $sNextStep) {
-			if (!array_key_exists($sNextStep, $aAllSteps)) {
-				$aAllSteps = $this->DumpStructure($sNextStep, $aAllSteps);
-			}
-		}
-
-		return $aAllSteps;
-	}
-
-	/**
-	 * Dump the wizard's structure as a string suitable to produce a chart
-	 * using graphviz's "dot" program
-	 * @return string The 'dot' formatted output
-	 */
-	public function DumpStructureAsDot()
-	{
-		$aAllSteps = $this->DumpStructure();
-		$sOutput = "digraph finite_state_machine {\n";
-		//$sOutput .= "\trankdir=LR;";
-		$sOutput .= "\tsize=\"10,12\"\n";
-
-		$aDeadEnds = [$this->sInitialStepClass];
-		foreach ($aAllSteps as $sStep => $aNextSteps) {
-			if (count($aNextSteps) == 0) {
-				$aDeadEnds[] = $sStep;
-			}
-		}
-		$sOutput .= "\tnode [shape = doublecircle]; ".implode(' ', $aDeadEnds).";\n";
-		$sOutput .= "\tnode [shape = box];\n";
-		foreach ($aAllSteps as $sStep => $aNextSteps) {
-			$oStep = $this->GetWizardStep($sStep);
-			$sOutput .= "\t$sStep [ label = \"".$oStep->GetTitle()."\"];\n";
-			if (count($aNextSteps) > 0) {
-				foreach ($aNextSteps as $sNextStep) {
-					$sOutput .= "\t$sStep -> $sNextStep;\n";
-				}
-			}
-		}
-		$sOutput .= "}\n";
-		return $sOutput;
-	}
-
 	public function SetWizardSteps(array $aWizardSteps): void
 	{
 		$this->aWizardSteps = $aWizardSteps;
@@ -365,11 +323,16 @@ EOF
 	 * @return \WizardStep
 	 * @throws \Exception
 	 */
-	private function GetWizardStep(string $sCurrentStepClass, string $sCurrentState = ''): WizardStep
+	private function InstantiateWizardStep(string $sCurrentStepClass, string $sCurrentState = ''): WizardStep
 	{
 		if (!is_subclass_of($sCurrentStepClass, WizardStep::class)) {
 			throw new Exception('Unknown step '.$sCurrentStepClass);
 		}
 		return new $sCurrentStepClass($this, $sCurrentState);
+	}
+
+	public function EraseParameters()
+	{
+		$this->oSessionParameters->Erase();
 	}
 }

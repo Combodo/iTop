@@ -2,7 +2,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Application;
 
-use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Service\Session\Session;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
@@ -121,6 +121,23 @@ class SessionTest extends ItopTestCase
 		$this->assertTrue(Session::IsSet(['test1', 'test2', 'test3']));
 		Session::Unset(['test1', 'test2', 'test3']);
 		$this->assertFalse(Session::IsSet(['test1', 'test2', 'test3']));
+	}
+
+	public function testUnsetAll()
+	{
+		Session::Start();
+		Session::Set('test', 'OK');
+		Session::Set(['test1', 'test2', 'test3'], 'OK');
+		Session::Set('another_test', ['foo' => 'bar']);
+		$this->assertTrue(Session::IsSet('test'));
+		$this->assertTrue(Session::IsSet(['test1', 'test2', 'test3']));
+		$this->assertTrue(Session::IsSet('another_test'));
+
+		Session::UnsetAll();
+		$this->assertEmpty($_SESSION);
+		$this->assertFalse(Session::IsSet('test'));
+		$this->assertFalse(Session::IsSet(['test1', 'test2', 'test3']));
+		$this->assertFalse(Session::IsSet('another_test'));
 	}
 
 	public function testRegenerateId()

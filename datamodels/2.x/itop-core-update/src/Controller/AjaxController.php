@@ -242,8 +242,7 @@ class AjaxController extends Controller
 			throw new SecurityException('Access forbidden');
 		}
 
-		$sConfigFile = APPCONF.'production/config-itop.php';
-		@chmod($sConfigFile, 0770); // Allow overwriting the file
+		SetupUtils::CreateSetupToken();
 
 		header('Location: ../setup/');
 	}

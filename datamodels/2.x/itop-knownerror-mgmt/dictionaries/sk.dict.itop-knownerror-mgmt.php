@@ -97,7 +97,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:ProblemManagement' => 'Problem Management~~',
-	'Menu:ProblemManagement+' => 'Problem Management~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Shortcuts~~',
 	'Menu:NewError' => 'New known error~~',
 	'Menu:NewError+' => 'Creation of a new known error~~',

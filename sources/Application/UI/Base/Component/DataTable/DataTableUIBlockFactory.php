@@ -555,7 +555,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 							'object_class' => $sClassName,
 							'class_alias' => $sClassAlias,
 							'attribute_code' => $sAttCode,
-							'attribute_type' => $oAttDef->GetType(),
+							'attribute_type' => $oAttDef->GetTypeShortClassName(),
 							'attribute_label' => $sAttLabel,
 							'render' => $oAttDef->GetRenderForDataTable($sClassAlias),
 						];
@@ -737,7 +737,7 @@ JS;
 							'object_class'    => $sClassName,
 							'class_alias'     => $sClassAlias,
 							'attribute_code'  => $sAttCode,
-							'attribute_type'  => $oAttDef->GetType(),
+							'attribute_type'  => $oAttDef->GetTypeShortClassName(),
 							'attribute_label' => $sAttLabel,
 						];
 						$aColumnDefinition["data"] = $sClassAlias."/".$sAttCode;

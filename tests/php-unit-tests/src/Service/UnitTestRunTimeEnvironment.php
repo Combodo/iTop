@@ -8,6 +8,7 @@
 namespace Combodo\iTop\Test\UnitTest\Service;
 
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
+use Config;
 use DOMFormatException;
 use MFCoreModule;
 use RecursiveDirectoryIterator;
@@ -57,17 +58,23 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 
 		SetupUtils::copydir(APPROOT.'/data/'.$sSourceEnv.'-modules', $sDestModulesDir, (true === $bUseSymLinks));
 
+		$aAddedExtensions = [];
 		if ($this->bUseAdditionalFeatures) {
 			foreach ($this->GetExtensionFoldersToAdd() as $sExtensionCode => $sFolderPath) {
 				\SetupLog::Info("ExtensionFoldersToAdd: $sExtensionCode => $sFolderPath");
 				$sFolderName = basename($sFolderPath);
 				@mkdir($sDestModulesDir.DIRECTORY_SEPARATOR.$sFolderName);
 				SetupUtils::copydir($sFolderPath, $sDestModulesDir.DIRECTORY_SEPARATOR.$sFolderName, (true === $bUseSymLinks));
+				$aAddedExtensions[] = $sExtensionCode;
 			}
 		}
 
 		try {
-			parent::CompileFrom($sSourceEnv, $bUseSymLinks);
+			$oConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
+			$this->InitExtensionMap($oConfig);
+			$aSelectedExtensions = $this->GetExtensionMap()->GetSelectedExtensions($oConfig, $aAddedExtensions, []);
+			$aSelectedModules = $this->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
+			return $this->DoCompile(array_keys($aSelectedExtensions), [], $aSelectedModules, $bUseSymLinks ?? false);
 		} catch (DOMFormatException $e) {
 			$sFileName = $sSourceEnv.'.delta.xml';
 			SetupLog::Error(__METHOD__, null, [$sFileName => @file_get_contents(APPROOT.'data/'.$sFileName)]);
@@ -108,11 +115,10 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 	/**
 	 * @inheritDoc
 	 */
-	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir): array
+	protected function GetAdditionalMFModulesBeforeFinalDeltaToCompile(string $sSourceEnv, array $aScannedModulesRootDirs): array
 	{
 		\SetupLog::Info(__METHOD__);
-		$aRet = parent::GetMFModulesToCompile($sSourceEnv, $sSourceDir);
-
+		$aRet = [];
 		if ($this->bUseDelta) {
 			foreach ($this->GetCustomDatamodelFiles() as $sDeltaFile) {
 				$sDeltaId = preg_replace('/[^\d\w]/', '', $sDeltaFile);
@@ -214,8 +220,8 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 					}
 				}
 
-				$aExtensionsPaths = $oTestClassInstance->GetAdditionalFeaturePaths();
-				$this->aAdditionExtensionFoldersByCode = array_merge($this->aAdditionExtensionFoldersByCode, $aExtensionsPaths);
+				// Add additional extension paths
+				$this->aAdditionExtensionFoldersByCode = array_merge($this->aAdditionExtensionFoldersByCode, $oTestClassInstance->GetAdditionalExtensionsPaths());
 			}
 		}
 	}

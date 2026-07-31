@@ -29,14 +29,15 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreCannotSaveObjectException;
-use CoreException;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
 use DeleteException;
+use Dict;
 use MetaModel;
 use UserLocal;
 use UserRights;
+use UserRightsProfile;
 use utils;
 
 /**
@@ -81,6 +82,65 @@ class UserRightsTest extends ItopDataTestCase
 		return $oUser;
 	}
 
+	public function testIsActionAllowedWithNonInstantiatedUserObject()
+	{
+		$oUser = $this->GivenUserWithProfiles('test1', [self::$aURP_Profiles['Configuration Manager']]); // not a readonly profile
+		$oAdminUser = $this->GivenUserWithProfiles('test2', [self::$aURP_Profiles['Administrator']]);
+		$oAdminUser->DBInsert();
+		$_SESSION = [];
+		UserRights::Login($oAdminUser->Get('login'));
+
+		self::assertTrue(UserRights::IsActionAllowed('Server', UR_ACTION_MODIFY, null, $oUser) === UR_ALLOWED_YES);
+	}
+
+	/**
+	 * @param array $aProfileIds
+	 * @param array $aShouldBeAllowedToSeeClass
+	 * @param array $aShouldBeAllowedToEditClass
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @dataProvider ReadOnlyProvider
+	 */
+	public function testReadOnlyUser(array $aProfileIds, array $aShouldBeAllowedToSeeClass, array $aShouldBeAllowedToEditClass): void
+	{
+
+		$oUser = $this->GivenUserWithProfiles('test1', $aProfileIds);
+		$oUser->DBInsert();
+		$_SESSION = [];
+		UserRights::Login($oUser->Get('login'));
+
+		$aClassesToTest = ['FunctionalCI', 'Ticket', 'ServiceFamily'];
+
+		foreach ($aClassesToTest as $sClass) {
+			$bShouldBeAllowedToSee = in_array($sClass, $aShouldBeAllowedToSeeClass);
+			$bIsAllowedReading = (bool)UserRights::IsActionAllowed($sClass, UR_ACTION_READ);
+
+			$this->assertSame(
+				$bShouldBeAllowedToSee,
+				$bIsAllowedReading,
+				"User with profiles ".implode(',', $aProfileIds)." should ".($bShouldBeAllowedToSee ? "" : "NOT ")."be allowed to see class $sClass"
+			);
+
+			$bShouldBeAllowedToEdit = in_array($sClass, $aShouldBeAllowedToEditClass);
+
+			$bIsAllowedEditing = (bool)UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY);
+
+			$this->assertSame(
+				$bIsAllowedEditing,
+				$bShouldBeAllowedToEdit,
+				"User with profiles ".implode(',', $aProfileIds)." should ".($bShouldBeAllowedToEdit ? "" : "NOT ")."be allowed to edit class $sClass"
+			);
+		}
+	}
+
 	protected function GivenUserWithProfiles(string $sLogin, array $aProfileIds): DBObject
 	{
 		$oProfiles = new \ormLinkSet(\UserLocal::class, 'profile_list', \DBObjectSet::FromScratch(\URP_UserProfile::class));
@@ -94,6 +154,129 @@ class UserRightsTest extends ItopDataTestCase
 			'profile_list' => $oProfiles,
 		]);
 		return $oUser;
+	}
+
+	/**
+	 * Ensure profiles are obtained with persisted user when profiles list has NOT been changed.
+	 * @see N°9723 - IsActionAllowed should work with non instantiated users objects
+	 * @covers UserRightsProfile::ListProfiles
+	 */
+	public function testListProfilesUsesPersistedProfilesWhenOnlyNonProfileChangesExist(): void
+	{
+		// Create a user with a set of profiles and save it
+		$oUserInDataBase = $this->GivenUserWithProfiles('test1', [
+			self::$aURP_Profiles['Configuration Manager'],
+			self::$aURP_Profiles['Support Agent'],
+			self::$aURP_Profiles['Service Manager'],
+		]);
+		$oUserInDataBase->DBInsert();
+
+		// User to check profiles (give the persisted user id)
+		$oUser = new class ($oUserInDataBase) {
+			private $oUserInDataBase;
+
+			public function __construct($oUserInDataBase)
+			{
+				$this->oUserInDataBase = $oUserInDataBase;
+			}
+
+			public function ListChanges(): array
+			{
+				return ['login' => 'changed'];
+			}
+
+			public function GetKey(): int
+			{
+				return $this->oUserInDataBase->GetKey();
+			}
+
+			public function Get(string $sAttCode)
+			{
+				if ($sAttCode === 'profile_list') {
+					throw new \LogicException('profile_list should not be read when it is not part of ListChanges');
+				}
+				return null;
+			}
+		};
+
+		// List the profiles (persisted)
+		$oUserRights = new UserRightsProfile();
+		$aProfiles = $oUserRights->ListProfiles($oUser);
+
+		// Asserts
+		$this->assertCount(3, $aProfiles);
+		$this->assertArrayHasKey(3, $aProfiles);
+		$this->assertArrayHasKey(5, $aProfiles);
+		$this->assertArrayHasKey(10, $aProfiles);
+	}
+
+	/**
+	 * Ensure profiles are obtained with object in memory when profiles list has been changed.
+	 * @see N°9723 - IsActionAllowed should work with non instantiated users objects
+	 * @covers UserRightsProfile::ListProfiles
+	 */
+	public function testListProfilesUsesInMemoryProfilesWhenProfileListChanged(): void
+	{
+		// First profile
+		$oUserProfile1 = new class () {
+			public function Get(string $sAttCode)
+			{
+				if ($sAttCode === 'profileid') {
+					return 3;
+				}
+				if ($sAttCode === 'profileid_friendlyname') {
+					return 'Configuration Manager';
+				}
+				return null;
+			}
+		};
+
+		// Second profile
+		$oUserProfile2 = new class () {
+			public function Get(string $sAttCode)
+			{
+				if ($sAttCode === 'profileid') {
+					return 12;
+				}
+				if ($sAttCode === 'profileid_friendlyname') {
+					return 'Portal power user';
+				}
+				return null;
+			}
+		};
+
+		// User in memory with first and second profile
+		$oUser = new class ($oUserProfile1, $oUserProfile2) {
+			private $aProfileList;
+
+			public function __construct($oUserProfile1, $oUserProfile2)
+			{
+				$this->aProfileList = [$oUserProfile1, $oUserProfile2];
+			}
+
+			public function ListChanges(): array
+			{
+				return ['profile_list' => true, 'login' => 'changed'];
+			}
+
+			public function Get(string $sAttCode)
+			{
+				if ($sAttCode === 'profile_list') {
+					return $this->aProfileList;
+				}
+				return null;
+			}
+		};
+
+		// List the profiles (memory)
+		$oUserRights = new UserRightsProfile();
+		$aProfiles = $oUserRights->ListProfiles($oUser);
+
+		// Asserts
+		$this->assertSame([
+			3 => 'Configuration Manager',
+			12 => 'Portal power user',
+		], $aProfiles);
 	}
 
 	public function testIsLoggedIn()
@@ -433,7 +616,7 @@ class UserRightsTest extends ItopDataTestCase
 		$oUser = $this->GivenUserWithProfiles('test1', [$iProfileId, 2]);
 
 		$this->expectException(CoreCannotSaveObjectException::class);
-		$this->expectExceptionMessage('Profile "Portal user" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)');
+		$this->expectExceptionMessage(Dict::Format('Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice', PORTAL_PROFILE_NAME));
 		$oUser->DBInsert();
 
 	}
@@ -571,5 +754,83 @@ class UserRightsTest extends ItopDataTestCase
 	{
 		$oUser = $this->InvokeNonPublicStaticMethod(UserRights::class, "FindUser", [$sLogin]);
 		static::assertNull($oUser, 'FindUser should return null when the login is unknown');
+	}
+
+	protected function ReadOnlyProvider(): array
+	{
+		return [
+			'CI' => [
+				'ProfilesId' => [
+					5500,
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'FunctionalCI',
+				],
+				'ShouldBeAllowedToEditClasses' => [],
+			],
+			'Tickets' => [
+				'ProfilesId' => [
+					5501,
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'Ticket',
+				],
+				'ShouldBeAllowedToEditClasses' => [],
+			],
+			'Catalog' => [
+				'ProfilesId' => [
+					5502,
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'ServiceFamily',
+				],
+				'ShouldBeAllowedToEditClasses' => [],
+			],
+			'CI and Tickets' => [
+				'ProfilesId' => [
+					5500, 5501,
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'FunctionalCI', 'Ticket',
+				],
+				'ShouldBeAllowedToEditClasses' => [],
+			],
+			'CI and Catalog' => [
+				'ProfilesId' => [
+					5500, 5502,
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'FunctionalCI', 'ServiceFamily',
+				],
+				'ShouldBeAllowedToEditClasses' => [],
+			],
+			'Tickets and Catalog' => [
+				'ProfilesId' => [
+					5501, 5502,
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'Ticket', 'ServiceFamily',
+				],
+				'ShouldBeAllowedToEditClasses' => [],
+			],
+			'Tickets and Catalog + profile Ccnfiguration Manager' => [
+				'ProfilesId' => [
+					5501, 5502, 3,
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'FunctionalCI', 'Ticket', 'ServiceFamily',
+				],
+				'ShouldBeAllowedToEditClasses' => ['FunctionalCI'],
+			],
+			'CI, Tickets and Catalog' => [
+				'ProfilesId' => [
+					5500, 5501, 5502,
+				],
+				'ShouldBeAllowedToSeeClasses' => [
+					'FunctionalCI', 'Ticket', 'ServiceFamily',
+				],
+				'ShouldBeAllowedToEditClasses' => [],
+			],
+		];
 	}
 }

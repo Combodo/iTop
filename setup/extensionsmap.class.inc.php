@@ -545,7 +545,7 @@ class iTopExtensionsMap
 				continue;
 			}
 
-			if (! $bKeepExtensionsHavingMissingDependencies && count($oExtension->aMissingDependencies) > 0) {
+			if (! $bKeepExtensionsHavingMissingDependencies && $oExtension->HasDependencyIssue()) {
 				//skip extensions with dependency issues
 				continue;
 			}
@@ -562,19 +562,20 @@ class iTopExtensionsMap
 	public function GetAllExtensionsOptionInfo(bool $bRemoteExtensionsShouldBeMandatory = true): array
 	{
 		$aRes = [];
-		foreach ($this->GetAllExtensionsToDisplayInSetup(false, $bRemoteExtensionsShouldBeMandatory) as $sCode => $oExtension) {
+		foreach ($this->GetAllExtensionsToDisplayInSetup(true, $bRemoteExtensionsShouldBeMandatory) as $sCode => $oExtension) {
 			$aRes[] = [
-				'extension_code' => $oExtension->sCode,
-				'title'          => $oExtension->sLabel,
-				'description'    => $oExtension->sDescription,
-				'more_info'      => $oExtension->sMoreInfoUrl,
-				'default'        => true, // by default offer to install all modules
-				'modules'        => $oExtension->aModules,
-				'mandatory'      => $oExtension->bMandatory,
-				'source_label'   => $oExtension->GetExtensionSourceLabel(),
-				'uninstallable'  => $oExtension->CanBeUninstalled(),
-				'missing'        => $oExtension->bRemovedFromDisk,
-				'version'        => $oExtension->sVersion,
+				'extension_code'      => $oExtension->sCode,
+				'title'               => $oExtension->sLabel,
+				'description'         => $oExtension->sDescription,
+				'more_info'           => $oExtension->sMoreInfoUrl,
+				'default'             => true, // by default offer to install all modules
+				'modules'             => $oExtension->aModules,
+				'mandatory'           => $oExtension->bMandatory,
+				'dependency_issue'    => $oExtension->HasDependencyIssue(),
+				'source_label'        => $oExtension->GetExtensionSourceLabel(),
+				'uninstallable'       => $oExtension->CanBeUninstalled(),
+				'missing'             => $oExtension->bRemovedFromDisk,
+				'version'             => $oExtension->sVersion,
 			];
 		}
 
@@ -762,5 +763,50 @@ class iTopExtensionsMap
 	public function GetScannedModulesRootDirs(): array
 	{
 		return $this->aScannedDirs;
+	}
+
+	/**
+	 * Validate extensions if an invalid extension is marked as chosen, then throw an exception
+	 *
+	 * @return bool true if all extensions are valid
+	 * @throws \CoreException
+	 */
+	public function CheckExtensionsValidity(): bool
+	{
+		$bSetupFailure = false;
+		$aNoCodeExtensionSourceDirs = [];
+		$aNoCodeExtensionLabelsThatBreakSetup = [];
+
+		/** @var iTopExtension $oExtension */
+		foreach ($this->aExtensions as $oExtension) {
+			if (!$oExtension->HasCode()) {
+				if ($oExtension->HasLabel()) {
+					$sExtensionLabel = $oExtension->sLabel;
+					$aNoCodeExtensionSourceDirs [$sExtensionLabel] = $oExtension->sSourceDir;
+				} else {
+					$sExtensionLabel = $oExtension->sSourceDir;
+					$aNoCodeExtensionSourceDirs [] = $oExtension->sSourceDir;
+				}
+
+				if ($oExtension->IsMarkedAsChosen()) {
+					$aNoCodeExtensionLabelsThatBreakSetup[] = $sExtensionLabel;
+					$bSetupFailure = true;
+				}
+			}
+		}
+
+		if (count($aNoCodeExtensionSourceDirs) > 0) {
+			if ($bSetupFailure) {
+				$sErrorMessage = sprintf('Selected extension(s) cannot be installed: Missing extension code (%s)', implode(',', $aNoCodeExtensionLabelsThatBreakSetup));
+				$e = new CoreException($sErrorMessage);
+				SetupLog::Exception($sErrorMessage, $e, null, $aNoCodeExtensionSourceDirs);
+				throw $e;
+			} else {
+				SetupLog::Warning('Non selected extension(s) cannot be installed: Missing extension code', null, $aNoCodeExtensionSourceDirs);
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

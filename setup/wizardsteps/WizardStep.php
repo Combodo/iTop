@@ -21,23 +21,27 @@
 /**
  * All the steps of the iTop installation wizard
  *
- * Steps order (can be retrieved using \WizardController::DumpStructure) :
+ * Steps order:
  *
  * WizStepWelcome
- * WizStepInstallOrUpgrade
+ *  (install)    (upgrade)
  *    +             +
  *    |             |
- *    v             +----->
- * WizStepLicense          WizStepDetectedInfo
- * WizStepDBParams           +              +
- * WizStepAdminAccount       |              |
- * WizStepInstallMiscParams  v              +------>
- *    +                    WizStepLicense2 +--> WizStepUpgradeMiscParams
- *    |                                            +
- *    +--->    <-----------------------------------+
- * WizStepModulesChoice
- * WizStepSummary
- * WizStepDone
+ *    v             +----------> WizStepDetectedInfo
+ * WizStepLicense                  +           +
+ * WizStepDBParams                 |           |
+ * WizStepAdminAccount             |           |
+ * WizStepInstallMiscParams        v           +------->
+ *    +                    WizStepLicense2 +-----------> WizStepUpgradeMiscParams
+ *    |                                                  +
+ *    |                                                  |
+ *    +----+---------------------------------------------+
+ *         |
+ *         v                                                +--- [Extension management]
+ * WizStepModulesChoice                                     |
+ * WizStepDataAudit    <----+ WizStepLandingBeforeAudit <---+--- [Hub Connector]
+ * WizStepSummary                                           |
+ * WizStepDone                                              +--- [Other Connector]
  */
 
 use Combodo\iTop\Application\WebPage\WebPage;
@@ -76,8 +80,9 @@ abstract class WizardStep
 	{
 	}
 
-	public function PreFormDisplay(SetupPage $oPage)
+	public function CanAccessToWizardStep()
 	{
+		return ($this->oWizard->GetParameter('return_application', '') === '');
 	}
 
 	protected function CheckDependencies()
@@ -192,15 +197,6 @@ abstract class WizardStep
 	}
 
 	/**
-	 * Tells whether this step of the wizard requires that the configuration file be writable
-	 * @return bool True if the wizard will possibly need to modify the configuration at some point
-	 */
-	public function RequiresWritableConfig()
-	{
-		return true;
-	}
-
-	/**
 	 * Overload this function to implement asynchronous action(s) (AJAX)
 	 * @param string $sCode The code of the action (if several actions need to be distinguished)
 	 * @param array $aParameters The action's parameters name => value
@@ -235,15 +231,15 @@ class Step1 extends WizardStep
 	public function ProcessParams($bMoveForward = true)
 	{
 		$sNextStep = '';
-		$sInstallMode = utils::ReadParam('install_mode');
+		$sInstallMode = utils::ReadParam('mode');
 		if ($sInstallMode == 'install')
 		{
-			$this->oWizard->SetParameter('install_mode', 'install');
+			$this->oWizard->SetParameter('mode', 'install');
 			$sNextStep = Step2::class;
 		}
 		else
 		{
-			$this->oWizard->SetParameter('install_mode', 'upgrade');
+			$this->oWizard->SetParameter('mode', 'upgrade');
 			$sNextStep = Step2bis::class;
 
 		}
@@ -253,11 +249,11 @@ class Step1 extends WizardStep
 	public function Display(WebPage $oPage)
 	{
 		$oPage->p('This is Step 1!');
-		$sInstallMode = $this->oWizard->GetParameter('install_mode', 'install');
+		$sInstallMode = $this->oWizard->GetParameter('mode', 'install');
 		$sChecked = ($sInstallMode == 'install') ? ' checked ' : '';
-		$oPage->p('<input type="radio" name="install_mode" value="install"'.$sChecked.'/> Install');
+		$oPage->p('<input type="radio" name="mode" value="install"'.$sChecked.'/> Install');
 		$sChecked = ($sInstallMode == 'upgrade') ? ' checked ' : '';
-		$oPage->p('<input type="radio" name="install_mode" value="upgrade"'.$sChecked.'/> Upgrade');
+		$oPage->p('<input type="radio" name="mode" value="upgrade"'.$sChecked.'/> Upgrade');
 	}
 }
 

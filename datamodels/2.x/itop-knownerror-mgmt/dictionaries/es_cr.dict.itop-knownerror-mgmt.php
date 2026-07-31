@@ -95,7 +95,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:ProblemManagement' => 'Administración de Problemas',
-	'Menu:ProblemManagement+' => 'GestAdministraciónión de problemas',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Acceso Rápido',
 	'Menu:NewError' => 'Nuevo Error Conocido',
 	'Menu:NewError+' => 'Nuevo Error Conocido',

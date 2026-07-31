@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<KnownError alias="KnownError" id="1">
+<name>Dégradation des performances des VMs sur les hôtes ESXi 8.0U2 après mise à jour du vCenter Server 8.0U2b</name>
+<org_id>3</org_id>
+<problem_id>0</problem_id>
+<symptom>-  Latence élevée (jusqu’à 500 ms) sur les opérations de stockage (lecture/écriture) pour les VMs hébergées sur les hôtes ESXi 8.0U2.
+- Alarmes vCenter:
+    + &quot;Storage device latency is high&quot; (Threshold exceeded: &gt; 30 ms).
+    + &quot;Virtual machine disk I/O latency is high&quot;.
+- Impact sur les applications :
+    + Ralentissements des bases de données (SQL, Oracle).
+    + Timeouts sur les applications critiques (ex. : ERP, SAP).
+- Période d'occurrence : Depuis la mise à jour du vCenter Server vers la version 8.0U2b (déployée le 10/07/2026).
+
+Environnement affecté :
+- Hôtes ESXi : 5 serveurs (Cluster PROD-01).
+- Stockage : Baie Dell EMC PowerStore 5000 (connectée en iSCSI).
+- vCenter Server : Version 8.0U2b (build 21513536).</symptom>
+<root_cause>Problème de compatibilité entre :
+- Le pilote iSCSI natif d’ESXi 8.0U2 (vmw_iscsi) et la version 8.0U2b du vCenter Server.
+- Un bug connu dans le scheduler de stockage NMP (Native Multi-Pathing) qui provoque une mauvaise gestion des chemins multiples (multipathing) après la mise à jour du vCenter.
+
+VMware Reference:
+- KB 90827 (similaire, mais non identique).
+- Log ESXi : Messages répétés &quot;NMP: nmp_DeviceRequestFastDeviceProbe: NMP device state in doubt&quot; dans /var/log/vmkernel.log.</root_cause>
+<workaround>Option 1: Réinitialiser le service NMP (temporaire)
+ 1. Se connecter en SSH à chaque hôte ESXi affecté.
+ 2. Exécuter les commandes :
+         esxcli storage nmp device list  # List affected devices
+         esxcli storage nmp device set --device &lt;NAA_ID&gt; --state in_use  # Force active path
+  3. Redémarrer les VMs concernées. ⚠️ Effet : Résout le problème pendant 24–48h, mais la latence réapparaît après un redémarrage de l’hôte.
+
+Option 2: Désactiver le multipathing pour les LUNs concernés
+ 1. Dans vCenter, aller dans: Host &gt; Configure &gt; Storage &gt; Storage Devices.
+ 2. Sélectionner le LUN concerné &gt; Edit Multipathing Policy &gt; Choisir &quot;Fixed&quot; (au lieu de &quot;Most Recently Used&quot;). ⚠️ Risque : Perte de redondance en cas de panne d’un chemin.
+
+Option 3: Revenir à la version précédente de vCenter (8.0U2a)
+- Rollback du vCenter vers la version 8.0U2a (build 21495409).
+- Impact : Perte des fonctionnalités de 8.0U2b (ex. : améliorations de sécurité).</workaround>
+<solution>- Action : Appliquer le correctif VMware ESXi 8.0U2c (patch ESXi80U2c-21567894), qui corrige le bug du scheduler NMP.
+- Responsable : Équipe Virtualisation + Stockage.
+- Date prévue : 18 juillet 2026 (fenêtre de maintenance planifiée).
+- Procédure:
+ 1. Mettre en maintenance les hôtes ESXi un par un.
+ 2. Appliquer le patch via vSphere Lifecycle Manager (vLCM).
+ 3. Redémarrer les hôtes et vérifier les performances.</solution>
+<error_code>&quot;Storage device latency is high&quot;  &quot;Virtual machine disk I/O latency is high&quot;</error_code>
+<domain>Application</domain>
+<vendor>VMWare</vendor>
+<model>ESXi</model>
+<version>8.0U2</version>
+</KnownError>
+<KnownError alias="KnownError" id="2">
+<name>Service Apache HTTP Server (apache2) plante aléatoirement avec l'erreur 'Segmentation Fault' sur les serveurs Ubuntu 22.04 LTS après mise à jour du noyau (5.15.0-86-generic)</name>
+<org_id>2</org_id>
+<problem_id>0</problem_id>
+<symptom>- Le service Apache2 s'arrête brutalement sans journalisation claire dans /var/log/apache2/error.log.
+- Message dans les logs système  (/var/log/syslog):
+   Jul 14 08:45:23 web-server-01 kernel: [12345.678901] apache2[12345]: segfault at 7f8e12345678 ip 00007f8e12345678 sp 00007ffd12345678 error 4 in libapr-1.so.0.7.0[7f8e12345000+20000]
+
+- Impact utilisateur:
+   + Indisponibilité totale du site web (HTTP 503 Service Unavailable).
+   + Durée moyenne de l'incident : 5 à 10 minutes (redémarrage manuel nécessaire).
+
+- Fréquence : 2 à 3 fois par jour depuis le 12 juillet 2026.
+
+- Environnement affecté :
+   + Serveurs : 3 serveurs web (web-server-01, web-server-02, web-server-03).
+   + Système d'exploitation : Ubuntu 22.04 LTS.
+   + Version du noyau : 5.15.0-86-generic (mis à jour le 12/07/2026).
+   + Version d'Apache : 2.4.52.
+   + Modules Apache chargés : mod_ssl, mod_rewrite, mod_php8.1, mod_security2.</symptom>
+<root_cause>- Conflit entre le noyau Linux 5.15.0-86-generic et le module mod_security2 (version 2.9.5) :
+   + Le noyau 5.15.0-86 introduit une modification dans la gestion de la mémoire pour les processus multi-threadés.
+   + Le module mod_security2 (utilisé pour la sécurité WAF) n'est pas compatible avec cette mise à jour, provoquant un segmentation fault (accès mémoire invalide).
+
+- Preuve :
+   + Le problème disparaît lorsque mod_security2 est désactivé.
+   + Le problème n'existe pas sur les serveurs sous le noyau 5.15.0-82-generic (version précédente).
+
+- Référence externe :
+   + Bug rapporté sur Apache JIRA (similaire).
+   + Discussion sur Server Fault (communauté).</root_cause>
+<workaround>- Option 1: Désactiver temporairement mod_security2
+  1. Éditer le fichier de configuration Apache :
+     sudo nano /etc/apache2/mods-enabled/security2.conf
+  2 . Commenter la ligne :
+    # SecRuleEngine On
+  3. Redémarrer Apache:
+    sudo systemctl restart apache2
+
+⚠️ Le serveur web devient vulnérable aux attaques (ex. : SQL injection, XSS).
+✅ Avantages : Résout immédiatement le problème.
+
+- Option 2: Revenir au noyau précédent (5.15.0-82-generic)
+  1. Redémarrer le serveur avec l'ancien noyau:
+     sudo reboot
+  2. Dans le GRUB, sélectionner le noyau 5.15.0-82-generic.⚠️ Impact : Le serveur ne bénéficie pas des correctifs de sécurité du noyau 5.15.0-86.
+
+- Option 3: Limiter le nombre de threads pour Apache
+  1. Modifier la configuration Apache (/etc/apache2/apache2.conf) :
+     StartServers 2
+     MinSpareThreads 5
+     MaxSpareThreads 10
+     ThreadsPerChild 5
+    MaxRequestWorkers 20
+  2. Redémarrer Apache :
+    sudo systemctl restart apache2
+   ⚠️ Impact : Réduction des performances (moins de requêtes simultanées gérées).</workaround>
+<solution>- Action: Mettre à jour mod_security2 vers la version 2.9.6 (compatible avec le noyau 5.15.0-86).
+   + Version corrigée : libapache2-mod-security2 2.9.6-1ubuntu0.22.04.1 (disponible dans les dépôts Ubuntu proposed).
+- Responsable : Équipe DevOps + Sécurité.
+- Date prévue : 17 juillet 2026 (fenêtre de maintenance de 02:00 à 04:00).
+- Procédure :
+   1. Ajouter le dépôt proposed :
+      sudo add-apt-repository ppa:ubuntu-security-proposed
+      sudo apt update
+   2. Mettre à jour mod_security2 :
+      sudo apt install --only-upgrade libapache2-mod-security2
+   3. Redémarrer Apache :
+      sudo systemctl restart apache2
+   4. Vérifier la version:
+      apache2ctl -M | grep security</solution>
+<error_code></error_code>
+<domain>Application</domain>
+<vendor>Linux</vendor>
+<model>Apache</model>
+<version>2.4.52</version>
+</KnownError>
+</Set>

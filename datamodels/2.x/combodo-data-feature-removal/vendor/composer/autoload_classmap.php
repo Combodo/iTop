@@ -8,6 +8,8 @@ $baseDir = dirname($vendorDir);
 return array(
     'Combodo\\iTop\\DataFeatureRemoval\\Controller\\DataFeatureRemovalController' => $baseDir . '/src/Controller/DataFeatureRemovalController.php',
     'Combodo\\iTop\\DataFeatureRemoval\\Entity\\DataCleanupSummaryEntity' => $baseDir . '/src/Entity/DataCleanupSummaryEntity.php',
+    'Combodo\\iTop\\DataFeatureRemoval\\Entity\\DeletionPlanEntity' => $baseDir . '/src/Entity/DeletionPlanEntity.php',
+    'Combodo\\iTop\\DataFeatureRemoval\\Entity\\DeletionPlanItem' => $baseDir . '/src/Entity/DeletionPlanItem.php',
     'Combodo\\iTop\\DataFeatureRemoval\\Helper\\DataFeatureRemovalConfig' => $baseDir . '/src/Helper/DataFeatureRemovalConfig.php',
     'Combodo\\iTop\\DataFeatureRemoval\\Helper\\DataFeatureRemovalException' => $baseDir . '/src/Helper/DataFeatureRemovalException.php',
     'Combodo\\iTop\\DataFeatureRemoval\\Helper\\DataFeatureRemovalHelper' => $baseDir . '/src/Helper/DataFeatureRemovalHelper.php',
@@ -16,6 +18,7 @@ return array(
     'Combodo\\iTop\\DataFeatureRemoval\\Service\\DataFeatureRemoverExtensionService' => $baseDir . '/src/Service/DataFeatureRemoverExtensionService.php',
     'Combodo\\iTop\\DataFeatureRemoval\\Service\\ObjectService' => $baseDir . '/src/Service/ObjectService.php',
     'Combodo\\iTop\\DataFeatureRemoval\\Service\\ObjectServiceSummary' => $baseDir . '/src/Service/ObjectServiceSummary.php',
+    'Combodo\\iTop\\DataFeatureRemoval\\Service\\StaticDeletionPlan' => $baseDir . '/src/Service/StaticDeletionPlan.php',
     'Combodo\\iTop\\DataFeatureRemoval\\Service\\iObjectService' => $baseDir . '/src/Service/iObjectService.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
 );

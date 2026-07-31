@@ -44,7 +44,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 ]);
 Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Menu:ProblemManagement' => 'Zarządzanie problemami',
-	'Menu:ProblemManagement+' => 'Zarządzanie problemami',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Skróty',
 	'Menu:FAQCategory' => 'Kategorie pytań FAQ',
 	'Menu:FAQCategory+' => 'Wszystkie kategorie pytań FAQ',

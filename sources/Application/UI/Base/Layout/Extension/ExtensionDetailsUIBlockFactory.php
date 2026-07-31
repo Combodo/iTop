@@ -19,16 +19,18 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 	private const BADGE_ID_TO_BE_UNINSTALLED = 'to-be-uninstalled';
 	private const BADGE_ID_NOT_UNINSTALLABLE = 'not-uninstallable';
 	private const BADGE_ID_MISSING_FROM_DISK = 'missing-from-disk';
+	private const BADGE_ID_CANNOT_BE_INSTALLED = 'cannot-be-installed';
 
 	public static function MakeInstalled(string $sCode, string $sLabel, string $sDescription = '', array $aMetaData = [], array $aExtraFlags = [], string $sAbout = '')
 	{
 		$aBadges = [];
 		$bUninstallable = $aExtraFlags['uninstallable'] ?? true;
 		$bMissingFromDisk = $aExtraFlags['missing'] ?? false;
+		$bDependencyIssue = $aExtraFlags['dependency_issue'] ?? false;
 		$bSelected = $aExtraFlags['selected'] ?? true;
 		$bDisabled = $aExtraFlags['disabled'] ?? false;
 		$bRemote = $aExtraFlags['remote'] ?? false;
-		self::AddExtraBadges($aBadges, $bUninstallable, $bMissingFromDisk, $sCode);
+		self::AddExtraBadges($aBadges, $bUninstallable, $bMissingFromDisk, $bDependencyIssue, $sCode);
 		$oBadgeInstalled = BadgeUIBlockFactory::MakeGreen(
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeInstalled'),
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeInstalled+'),
@@ -46,7 +48,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 
 		$oExtensionDetails = new ExtensionDetails($sCode, $sLabel, $sDescription, $aMetaData, $aBadges, $sAbout);
 		$oExtensionDetails->GetToggler()->SetIsToggled(true);
-		if ($bMissingFromDisk) {
+		if ($bMissingFromDisk || $bDependencyIssue) {
 			$oExtensionDetails->GetToggler()->SetIsToggled(false);
 			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
 		} elseif ((!$bUninstallable || $bRemote) && !$bDisabled) {
@@ -69,9 +71,10 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 	{
 		$aBadges = [];
 		$bUninstallable = $aExtraFlags['uninstallable'] ?? true;
+		$bDependencyIssue = $aExtraFlags['dependency_issue'] ?? false;
 		$bSelected = $aExtraFlags['selected'] ?? false;
 		$bDisabled = $aExtraFlags['disabled'] ?? false;
-		self::AddExtraBadges($aBadges, $bUninstallable, false, $sCode);
+		self::AddExtraBadges($aBadges, $bUninstallable, false, $bDependencyIssue, $sCode);
 		$oBadgeInstalled = BadgeUIBlockFactory::MakeGrey(
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeNotInstalled'),
 			Dict::S('UI:Layout:ExtensionsDetails:BadgeNotInstalled+'),
@@ -88,6 +91,11 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		$aBadges[] = $oBadgeToBeUninstalled;
 		$oExtensionDetails = new ExtensionDetails($sCode, $sLabel, $sDescription, $aMetaData, $aBadges, $sAbout);
 
+		if ($bDependencyIssue) {
+			$oExtensionDetails->GetToggler()->SetIsToggled(false);
+			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
+		}
+
 		if ($bSelected) {
 			$oExtensionDetails->GetToggler()->SetIsToggled(true);
 		}
@@ -99,10 +107,10 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 		return $oExtensionDetails;
 	}
 
-	private static function AddExtraBadges(array &$aBadges, bool $bUninstallable, bool $bMissingFromDisk, string $sCode)
+	private static function AddExtraBadges(array &$aBadges, bool $bUninstallable, bool $bMissingFromDisk, bool $bDependencyIssue, string $sCode)
 	{
 		if (!$bUninstallable) {
-			$aBadges[] = BadgeUIBlockFactory::MakeOrange(
+			$aBadges[] = BadgeUIBlockFactory::MakeYellow(
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeNotUninstallable'),
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeNotUninstallable+'),
 				self::GetBadgeId($sCode, self::BADGE_ID_NOT_UNINSTALLABLE)
@@ -113,6 +121,13 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeMissingFromDisk'),
 				Dict::S('UI:Layout:ExtensionsDetails:BadgeMissingFromDisk+'),
 				self::GetBadgeId($sCode, self::BADGE_ID_MISSING_FROM_DISK)
+			);
+		}
+		if ($bDependencyIssue) {
+			$aBadges[] = BadgeUIBlockFactory::MakeOrange(
+				Dict::S('UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled'),
+				Dict::S('UI:Layout:ExtensionsDetails:BadgeCannotBeInstalled+'),
+				self::GetBadgeId($sCode, self::BADGE_ID_CANNOT_BE_INSTALLED)
 			);
 		}
 	}

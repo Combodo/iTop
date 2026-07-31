@@ -15,6 +15,8 @@ use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
+require_once __DIR__."/AbstractCleanup.php";
+
 /**
  * Unit tests for the CleanupService cf the Combodo Data Feature Removal module.
  *
@@ -34,14 +36,9 @@ use PHPUnit\Framework\MockObject\MockObject;
  * @see DataCleanupSummaryEntity
  * @see ItopDataTestCase
  */
-class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
+class DataCleanupServiceTest extends \AbstractCleanup
 {
 	private ExecutionLimits&MockObject $oExecutionLimits;
-
-	public function GetDatamodelDeltaAbsPath(): string
-	{
-		return __DIR__.'/data_cleanup_delta.xml';
-	}
 
 	//--- GetCleanupSummary tests ---
 
@@ -166,6 +163,58 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 		$this->AssertSummaryEquals($aExpected, $aRes);
 	}
 
+	/**
+	 * N°9831
+	 *
+	 * A nullable external key configured as DEL_MANUAL must NOT be treated as an issue: it is simply
+	 * reset (set to null), exactly like core DBObject::MakeDeletionPlan does. DEL_MANUAL only blocks
+	 * for mandatory keys. This mirrors the real "Hypervisor.farm_id -> Farm" case (nullable + DEL_MANUAL).
+	 *
+	 * Regression guard for the ordering of the IsNullAllowed()/DEL_MANUAL checks in RecursiveDeletion:
+	 * reverting that change would make ExecuteCleanup throw here instead of resetting the object.
+	 */
+	public function testExecuteCleanup_NullableManualShouldResetAndNotThrow()
+	{
+		$this->GivenDFRTreeInDB(<<<EOF
+			DFRToRemoveLeaf_1 <- DFRManualNullable_1
+		EOF);
+
+		$aClasses = [ 'DFRToRemoveLeaf' ];
+		$oService = new DataCleanupService();
+		// Must NOT throw: the nullable external key is reset, not reported as an issue
+		$aRes = $oService->ExecuteCleanup($aClasses);
+
+		$aExpected = [
+			['DFRManualNullable', 1, 0 ],
+			['DFRToRemoveLeaf', 0, 1 ],
+		];
+		$this->AssertSummaryEquals($aExpected, $aRes);
+	}
+
+	/**
+	 * N°9831
+	 *
+	 * Summary counterpart of the test above: a nullable DEL_MANUAL external key is reported as an
+	 * update (reset), with an issue count of 0. Reverting the RecursiveDeletion change would report
+	 * it as an issue instead.
+	 */
+	public function testGetCleanupSummary_NullableManualShouldBeUpdateNotIssue()
+	{
+		$this->GivenDFRTreeInDB(<<<EOF
+			DFRToRemoveLeaf_1 <- DFRManualNullable_1
+		EOF);
+
+		$aClasses = [ 'DFRToRemoveLeaf' ];
+		$oService = new DataCleanupService();
+		$aRes = $oService->GetCleanupSummary($aClasses);
+
+		$aExpected = [
+			['DFRManualNullable', 1, 0, 0 ],
+			['DFRToRemoveLeaf', 0, 1, 0 ],
+		];
+		$this->AssertSummaryEquals($aExpected, $aRes);
+	}
+
 	private function AssertSummaryEquals(array $expected, $actual, $sMessage = '')
 	{
 		$aExpected = [];
@@ -259,36 +308,6 @@ class DataCleanupServiceTest extends ItopCustomDatamodelTestCase
 		$this->SetNonPublicProperty($oDeletionPlaService, 'oExecutionLimits', $this->oExecutionLimits);
 		$aRes = $oDeletionPlaService->ExecuteCleanup($aClasses);
 		$this->AssertSummaryEquals($aExpected, $aRes);
-	}
-
-	private function GivenDFRTreeInDB(string $sTree)
-	{
-		$aTree = explode("\n", $sTree);
-		foreach ($aTree as $sLine) {
-			if (trim($sLine) === "") {
-				continue;
-			}
-			$this->GivenDFRTreeLineInDB($sLine);
-		}
-	}
-
-	private array $aIdByObjectName = [];
-	private function GivenDFRTreeLineInDB(string $sLine)
-	{
-		[$sLeft, $sRight] = explode('<-', $sLine);
-		$sLeft = trim($sLeft);
-
-		$iLeftId = $this->aIdByObjectName[$sLeft] ?? 0;
-		if ($iLeftId === 0) {
-			[$sChildClass, ] = explode('_', $sLeft, 2);
-			$iLeftId = $this->GivenObjectInDB($sChildClass, ['name' => $sLeft]);
-			$this->aIdByObjectName[$sLeft] = $iLeftId;
-		}
-
-		$sRight = trim($sRight);
-		[$sChildClass, ] = explode('_', $sRight, 2);
-		$iRightId = $this->GivenObjectInDB($sChildClass, ['name' => $sRight, 'extkey_id' => $iLeftId]);
-		$this->aIdByObjectName[$sRight] = $iRightId;
 	}
 
 	private function GivenExecutionLimits(int $iStopAfterCallNumberReached): void

@@ -9,11 +9,6 @@ Any PRs not following the guidelines or with missing information will not be con
 
 ## Base information
 
-| Question                                                       | Answer 
-|----------------------------------------------------------------|--------
-| Related to a SourceForge thread / Another PR / A GitHub Issue / Combodo ticket? | <!-- Put the URL -->                 |
-| Type of change?                                                | Bug fix / Enhancement / Translations
-
 | Question                                                                        | Answer                               |
 |---------------------------------------------------------------------------------|--------------------------------------|
 | Related to a SourceForge thread / Another PR / A GitHub Issue / Combodo ticket? | <!-- Put the URL -->                 |

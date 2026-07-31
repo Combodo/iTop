@@ -24,11 +24,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Combodo\iTop\Setup\ModuleDependency\Module;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
-use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
 require_once APPROOT."setup/modulediscovery.class.inc.php";
 require_once APPROOT.'setup/modelfactory.class.inc.php';
@@ -71,27 +69,7 @@ class RunTimeEnvironment
 		return $this->oExtensionsMap;
 	}
 
-	protected function GetDirsToCompile(string $sSourceDir, string $sSourceEnv): array
-	{
-		$sSourceDirFull = APPROOT.$sSourceDir;
-		if (!is_dir($sSourceDirFull)) {
-			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
-		}
-		$aDirsToCompile = [$sSourceDirFull];
-		if (is_dir(APPROOT.'extensions')) {
-			$aDirsToCompile[] = APPROOT.'extensions';
-		}
-		$sExtraDir = utils::GetDataPath().$this->sBuildEnv.'-modules/';
-		if (is_dir($sExtraDir)) {
-			$aDirsToCompile[] = $sExtraDir;
-		}
-
-		$aExtraDirs = $this->GetExtraDirsToScan($aDirsToCompile);
-		$aDirsToCompile = array_merge($aDirsToCompile, $aExtraDirs);
-		return [$aExtraDirs, $aDirsToCompile];
-	}
-
-	public function InitExtensionMap(array $aExtraDirs, Config $oSourceConfig)
+	protected function InitExtensionMap(Config $oSourceConfig)
 	{
 		if (is_null($this->oExtensionsMap)) {
 			// Actually read the modules available for the build environment,
@@ -426,16 +404,6 @@ class RunTimeEnvironment
 	}
 
 	/**
-	 * Return an array with extra directories to scan for extensions/modules to install
-	 * @return string[]
-	 */
-	protected function GetExtraDirsToScan($aDirs = [])
-	{
-		// Do nothing, overload this method if needed
-		return [];
-	}
-
-	/**
 	 * Decide whether or not the given extension is selected for installation
 	 * @param iTopExtension $oExtension
 	 * @return boolean
@@ -465,81 +433,12 @@ class RunTimeEnvironment
 	}
 
 	/**
-	 * Get the installed modules (only the installed ones)
+	 * Get additional modules to compile just before delta
 	 * @return \MFModule[]
 	 */
-	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir): array
+	protected function GetAdditionalMFModulesBeforeFinalDeltaToCompile(string $sSourceEnv, array $aScannedModulesRootDirs): array
 	{
-		list($aExtraDirs, $aDirsToCompile) = $this->GetDirsToCompile($sSourceDir, $sSourceEnv);
-		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
-		$this->InitExtensionMap($aExtraDirs, $oSourceConfig);
-		$this->GetExtensionMap()->LoadChoicesFromDatabase($oSourceConfig);
-		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
-			if ($this->IsExtensionSelected($oExtension)) {
-				$this->GetExtensionMap()->MarkAsChosen($oExtension->sCode);
-			}
-		}
-		$aModulesToLoad = $this->GetModulesToLoad($this->sFinalEnv, $aDirsToCompile);
-		$aAvailableModules = $this->AnalyzeInstallation($oSourceConfig, $aDirsToCompile, true, $aModulesToLoad);
-
-		// Do load the required modules
-		$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
-
-		$aRet = [];
-		$aRet[$oDictModule->GetName()] = $oDictModule;
-
-		$oFactory = new ModelFactory($aDirsToCompile);
-		$sDeltaFile = APPROOT.'core/datamodel.core.xml';
-		if (file_exists($sDeltaFile)) {
-			$oCoreModule = new MFCoreModule('core', 'Core Module', $sDeltaFile);
-			$aRet[$oCoreModule->GetName()] = $oCoreModule;
-		}
-		$sDeltaFile = APPROOT.'application/datamodel.application.xml';
-		if (file_exists($sDeltaFile)) {
-			$oApplicationModule = new MFCoreModule('application', 'Application Module', $sDeltaFile);
-			$aRet[$oApplicationModule->GetName()] = $oApplicationModule;
-		}
-
-		$aModules = $oFactory->FindModules();
-		foreach ($aModules as $oModule) {
-			$sModule = $oModule->GetName();
-			$bIsExtra = $this->GetExtensionMap()->ModuleIsChosenAsPartOfAnExtension($sModule, iTopExtension::SOURCE_REMOTE);
-			if (array_key_exists($sModule, $aAvailableModules)) {
-				if (($aAvailableModules[$sModule]['installed_version'] != '') || $bIsExtra && !$oModule->IsAutoSelect()) { //Extra modules are always unless they are 'AutoSelect'
-					$aRet[$oModule->GetName()] = $oModule;
-				}
-			}
-		}
-
-		$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], ModuleFileReader::STATIC_CALL_AUTOSELECT_WHITELIST);
-
-		// Now process the 'AutoSelect' modules
-		do {
-			// Loop while new modules are added...
-			$bModuleAdded = false;
-			foreach ($aModules as $oModule) {
-				if (!array_key_exists($oModule->GetName(), $aRet) && $oModule->IsAutoSelect()) {
-					SetupInfo::SetSelectedModules($aRet);
-					try {
-						$bSelected = $oPhpExpressionEvaluator->ParseAndEvaluateBooleanExpression($oModule->GetAutoSelect());
-						if ($bSelected) {
-							$aRet[$oModule->GetName()] = $oModule; // store the Id of the selected module
-							$bModuleAdded = true;
-						}
-					} catch (ModuleFileReaderException $e) {
-						//do nothing. logged already
-					}
-				}
-			}
-		} while ($bModuleAdded);
-
-		$sDeltaFile = utils::GetDataPath().$this->sBuildEnv.'.delta.xml';
-		if (file_exists($sDeltaFile)) {
-			$oDelta = new MFDeltaModule($sDeltaFile);
-			$aRet[$oDelta->GetName()] = $oDelta;
-		}
-
-		return $aRet;
+		return [];
 	}
 
 	/**
@@ -1034,6 +933,8 @@ class RunTimeEnvironment
 			@chmod($sFinalConfig, 0440); // Read-only for owner and group, nothing for others
 
 			SetupUtils::rrmdir(dirname($sBuildConfig)); // Cleanup the temporary build dir if empty
+			MetaModel::ResetAllCaches($this->sBuildEnv);
+			MetaModel::ResetAllCaches($this->sFinalEnv);
 
 			if (! isset($_SESSION)) {
 				//used in all UI setups (not unattended)
@@ -1202,7 +1103,7 @@ class RunTimeEnvironment
 	{
 		$oConfig = MetaModel::GetConfig();
 		$oConfig->Set('access_mode', ACCESS_FULL);
-
+		$sDefaultLanguage = $oConfig->GetDefaultLanguage();
 		$oDataLoader = new XMLDataLoader();
 
 		CMDBObject::SetCurrentChangeFromParams("Initialization from XML files for the selected modules ");
@@ -1248,7 +1149,7 @@ class RunTimeEnvironment
 		// in the current database
 		foreach ($aPreviouslyLoadedFiles as $sFileRelativePath) {
 			$sFileName = APPROOT.$sFileRelativePath;
-			SetupLog::Info("Loading file: $sFileName (just to get the keys mapping)");
+			SetupLog::Info("Loading file: $sFileName (just to build & cache the keys mapping)");
 			if (!file_exists($sFileName)) {
 				throw(new Exception("File $sFileName does not exist"));
 			}
@@ -1264,7 +1165,7 @@ class RunTimeEnvironment
 			if (!file_exists($sFileName)) {
 				throw(new Exception("File $sFileName does not exist"));
 			}
-
+			$sFileName = ModuleInstallerAPI::GetLocalizedFileName($sDefaultLanguage, $sFileName);
 			$oDataLoader->LoadFile($sFileName);
 			$sResult = sprintf("loading of %s done.", basename($sFileName));
 			SetupLog::Info($sResult);
@@ -1344,7 +1245,7 @@ class RunTimeEnvironment
 		$iCount = $oSetupAudit->GetDataToCleanupCount();
 
 		if ($iCount > 0) {
-			throw new Exception("$iCount elements require data adjustments or cleanup in the backoffice", DataAuditSequencer::DATA_AUDIT_FAILED);
+			throw new Exception("Elements require data adjustments or cleanup in the backoffice", DataAuditSequencer::DATA_AUDIT_FAILED);
 		}
 	}
 
@@ -1379,41 +1280,11 @@ class RunTimeEnvironment
 	 */
 	public function CompileFrom($sSourceEnv, $bUseSymLinks = null)
 	{
-		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
-		$sSourceDir = $oSourceConfig->Get('source_dir');
-
-		$sSourceDirFull = APPROOT.$sSourceDir;
-		// Do load the required modules
-		//
-		$oFactory = new ModelFactory($sSourceDirFull);
-		$aModulesToCompile = $this->GetMFModulesToCompile($sSourceEnv, $sSourceDir);
-		$oModule = null;
-		foreach ($aModulesToCompile as $oModule) {
-			if ($oModule instanceof MFDeltaModule) {
-				// Just before loading the delta, let's save an image of the datamodel
-				// in case there is no delta the operation will be done after the end of the loop
-				$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'.xml');
-			}
-			$oFactory->LoadModule($oModule);
-		}
-
-		if (!is_null($oModule) && ($oModule instanceof MFDeltaModule)) {
-			// A delta was loaded, let's save a second copy of the datamodel
-			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'-with-delta.xml');
-		} else {
-			// No delta was loaded, let's save the datamodel now
-			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sBuildEnv.'.xml');
-		}
-
-		$sBuildDir = APPROOT.'env-'.$this->sBuildEnv;
-		self::MakeDirSafe($sBuildDir);
-		$bSkipTempDir = ($this->sFinalEnv != $this->sBuildEnv); // No need for a temporary directory if sBuildEnv is already a temporary directory
-		$oMFCompiler = new MFCompiler($oFactory, $this->sFinalEnv);
-		$oMFCompiler->Compile($sBuildDir, $bUseSymLinks, $bSkipTempDir);
-
-		MetaModel::ResetAllCaches($this->sBuildEnv);
-
-		return array_keys($aModulesToCompile);
+		$oConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
+		$this->InitExtensionMap($oConfig);
+		$aSelectedExtensions = $this->GetExtensionMap()->GetSelectedExtensions($oConfig, [], []);
+		$aSelectedModules = $this->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
+		return $this->DoCompile($aSelectedExtensions, [], $aSelectedModules, $bUseSymLinks ?? false);
 	}
 
 	/**
@@ -1422,12 +1293,12 @@ class RunTimeEnvironment
 	 * @param array $aSelectedModules
 	 * @param boolean $bUseSymbolicLinks
 	 *
-	 * @return void
+	 * @return string[]
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 *
 	 */
-	public function DoCompile(array $aSelectedExtensionCodes, array $aRemovedExtensionCodes, array $aSelectedModules, bool $bUseSymbolicLinks = false): void
+	public function DoCompile(array $aSelectedExtensionCodes, array $aRemovedExtensionCodes, array $aSelectedModules, bool $bUseSymbolicLinks = false): array
 	{
 		SetupLog::Info('Compiling data model.');
 
@@ -1450,45 +1321,16 @@ class RunTimeEnvironment
 			SetupUtils::tidydir($sBuildPath);
 		}
 
-		$oExtensionsMap = iTopExtensionsMap::GetExtensionsMap($this->GetFinalEnv());
+		$oExtensionsMap = iTopExtensionsMap::GetExtensionsMap($this->GetBuildEnv());
 		// Removed modules are stored as static for FindModules()
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
-		// Check that all the extensions have a code
-		$aNoCodeExtensionSourceDirs = [];
-		$bSetupFailure = false;
-		$aNoCodeExtensionLabelsThatBreakSetup = [];
 		foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
-			if (in_array($oExtension->sCode, $aSelectedExtensionCodes)) {
-				$oExtension->MarkAsChosen();
-			}
-
-			if (empty($oExtension->sCode)) {
-				if (empty($oExtension->sLabel)) {
-					$sExtensionLabel = $oExtension->sSourceDir;
-					$aNoCodeExtensionSourceDirs [] = $oExtension->sSourceDir;
-				} else {
-					$sExtensionLabel = $oExtension->sLabel;
-					$aNoCodeExtensionSourceDirs [$sExtensionLabel] = $oExtension->sSourceDir;
-				}
-
-				if ($oExtension->IsMarkedAsChosen()) {
-					$aNoCodeExtensionLabelsThatBreakSetup[] = $sExtensionLabel;
-					$bSetupFailure = true;
-				}
-			}
+			$oExtension->MarkAsChosen(in_array($oExtension->sCode, $aSelectedExtensionCodes));
 		}
 
-		if (count($aNoCodeExtensionSourceDirs) > 0) {
-			if ($bSetupFailure) {
-				$sErrorMessage = sprintf('Selected extension(s) cannot be installed: Missing extension code (%s)', implode(',', $aNoCodeExtensionLabelsThatBreakSetup));
-				$e = new CoreException($sErrorMessage);
-				SetupLog::Exception($sErrorMessage, $e, null, $aNoCodeExtensionSourceDirs);
-				throw $e;
-			} else {
-				SetupLog::Warning("Non selected extension(s) cannot be installed: Missing extension code", null, $aNoCodeExtensionSourceDirs);
-			}
-		}
+		// Check that all the extensions have a code
+		$oExtensionsMap->CheckExtensionsValidity();
 
 		$oFactory = new ModelFactory($oExtensionsMap->GetScannedModulesRootDirs());
 
@@ -1507,12 +1349,17 @@ class RunTimeEnvironment
 		}
 
 		$aModules = $oFactory->FindModules();
-
 		foreach ($aModules as $oModule) {
 			$sModule = $oModule->GetName();
 			if (in_array($sModule, $aSelectedModules)) {
 				$oFactory->LoadModule($oModule);
 			}
+		}
+
+		// For unit tests
+		$aModulesToCompile = $this->GetAdditionalMFModulesBeforeFinalDeltaToCompile($sEnvironment, $oExtensionsMap->GetScannedModulesRootDirs());
+		foreach ($aModulesToCompile as $oModule) {
+			$oFactory->LoadModule($oModule);
 		}
 
 		// Dump the "reference" model, just before loading any actual delta
@@ -1540,6 +1387,8 @@ class RunTimeEnvironment
 			$sInstanceUUID = utils::CreateUUID('filesystem');
 			file_put_contents($sInstanceUUIDFile, $sInstanceUUID);
 		}
+
+		return $aSelectedModules;
 	}
 
 	/**
@@ -1637,40 +1486,22 @@ class RunTimeEnvironment
 	}
 
 	/**
-	 * @param string $sSourceEnv
-	 * @param array<string> $aSearchDirs : module/extension dirs to load if they are included in choices
+	 * Return modules based on installation choices+package
 	 *
-	 * @return array| null
-	 * @throws \ConfigException
-	 * @throws \CoreException
+	 * @param \Config $oConfig
+	 * @param array|bool $aChoices
+	 *
+	 * @return array|null
 	 * @throws \ModuleInstallationException
 	 */
-	protected function GetModulesToLoad(string $sSourceEnv, array $aSearchDirs): ?array
-	{
-		if (is_null($this->GetExtensionMap())) {
-			return null;
-		}
-
-		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
-
-		$aChoices = $this->GetExtensionMap()->GetChoicesFromDatabase($oSourceConfig);
-		return $this->GetModulesToLoadFromChoices($oSourceConfig, $aChoices, $aSearchDirs);
-	}
-
-	/**
-	 * Return modules based on installation choices+package
-* @param \Config $oConfig
-* @param array|bool $aChoices
-* @param array $aSearchDirs
-* @return array|null
-* @throws \ModuleInstallationException
-	 */
-	public function GetModulesToLoadFromChoices(Config $oConfig, array|bool $aChoices, array $aSearchDirs): ?array
+	public function GetModulesToLoadFromChoices(Config $oConfig, array|bool $aChoices): ?array
 	{
 		if (false === $aChoices) {
 			return null;
 		}
 
+		$this->InitExtensionMap($oConfig);
+		$aSearchDirs = $this->GetExtensionMap()->GetScannedModulesRootDirs();
 		$sSourceDir = $oConfig->Get('source_dir');
 
 		$sInstallFilePath = APPROOT.$sSourceDir.'/installation.xml';
@@ -1681,7 +1512,7 @@ class RunTimeEnvironment
 		$aExtensionDirs = [];
 		$aFromSelectedExtensionModules = [];
 		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
-			if ($oExtension->IsMarkedAsChosen() && is_dir($oExtension->sSourceDir)) {
+			if (in_array($oExtension->sCode, $aChoices) && is_dir($oExtension->sSourceDir)) {
 				$aExtensionDirs [] = $oExtension->sSourceDir;
 				$aFromSelectedExtensionModules = array_merge($aFromSelectedExtensionModules, $oExtension->aModules);
 			}
@@ -1697,11 +1528,8 @@ class RunTimeEnvironment
 			$aModulesToLoad[] = $sModuleName;
 		}
 
-		foreach ($aFromSelectedExtensionModules as $sModuleName) {
-			if (! in_array($sModuleName, $aModulesToLoad)) {
-				$aModulesToLoad[] = $sModuleName;
-			}
-		}
+		$this->AnalyzeInstallation($oConfig, $aSearchDirs, true, $aModulesToLoad);
+
 		return $aModulesToLoad;
 	}
 

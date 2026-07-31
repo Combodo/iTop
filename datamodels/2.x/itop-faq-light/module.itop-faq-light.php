@@ -27,7 +27,9 @@ SetupWebPage::AddModule(
 			//'data.struct.itop-knownerror-mgmt.xml',
 		],
 		'data.sample' => [
-			'data/data.sample.faq-domains.xml',
+			'data/data.sample.faqdomain.en_us.xml',
+			'data/data.sample.faqcategory.en_us.xml',
+			'data/data.sample.faq.en_us.xml',
 		],
 
 		// Documentation

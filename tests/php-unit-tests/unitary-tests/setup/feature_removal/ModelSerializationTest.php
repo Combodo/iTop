@@ -20,10 +20,58 @@ class ModelSerializationTest extends ItopDataTestCase
 		$this->assertEqualsCanonicalizing(MetaModel::GetClasses(), $aModel);
 	}
 
-	public function testGetModelFromEnvironmentFailure()
+	public function testGetModelFromEnvironmentFailure_NoEnvt()
 	{
 		$this->expectException(\CoreException::class);
-		$this->expectExceptionMessage("Cannot get classes");
+		$sEnvDir = APPROOT."env-gabuzomeu";
+		$this->expectExceptionMessage("Data consistency check failed: Missing environment ($sEnvDir)");
 		ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment('gabuzomeu');
+	}
+
+	public function testGetModelFromEnvironmentFailure_NoConfiguration()
+	{
+		$sEnvDir = APPROOT."env-gabuzomeu";
+		$this->aFileToClean [] = $sEnvDir;
+		mkdir($sEnvDir);
+
+		$this->expectException(\CoreException::class);
+		$sConfigFile = APPROOT."conf/gabuzomeu/config-itop.php";
+		$this->expectExceptionMessage("Data consistency check failed: Missing configuration ($sConfigFile)");
+		ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment('gabuzomeu');
+	}
+
+	public function testGetModelFromEnvironmentFailure_BrokenConfiguration()
+	{
+		$sEnvDir = APPROOT."env-gabuzomeu";
+		mkdir($sEnvDir);
+		$this->aFileToClean [] = $sEnvDir;
+
+		mkdir(APPROOT."conf/gabuzomeu");
+		$this->aFileToClean [] = APPROOT."conf/gabuzomeu";
+		$sConfigFile = APPROOT."conf/gabuzomeu/config-itop.php";
+		touch($sConfigFile);
+		file_put_contents($sConfigFile, 'invalid php content...');
+
+		$this->expectException(\CoreException::class);
+		$sError = <<<ERROR
+Syntax error in configuration file: file = $sConfigFile, error = <tt>invalid php content...</tt>
+ERROR;
+
+		$this->expectExceptionMessage("Data consistency check failed: $sError");
+		ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment('gabuzomeu');
+	}
+
+	public function testGetModelFromEnvironmentFailure_ItopInMaintenanceMode()
+	{
+		touch(MAINTENANCE_MODE_FILE);
+		$this->aFileToClean [] = MAINTENANCE_MODE_FILE;
+
+		$this->expectException(\CoreException::class);
+		$sError = <<<ERROR
+This application is currently under maintenance.
+ERROR;
+
+		$this->expectExceptionMessage("Data consistency check failed: $sError");
+		ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->GetTestEnvironment());
 	}
 }

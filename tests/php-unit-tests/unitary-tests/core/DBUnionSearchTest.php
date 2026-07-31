@@ -9,6 +9,9 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 class DBUnionSearchTest extends ItopDataTestCase
 {
+	/** @var array<string, int>|null */
+	private ?array $aUnionSearchFixtureIds = null;
+
 	/**
 	 * @dataProvider UnionSearchProvider
 	 *
@@ -20,6 +23,7 @@ class DBUnionSearchTest extends ItopDataTestCase
 	 */
 	public function testUnionSearch($sOQL)
 	{
+		$sOQL = $this->ResolveUnionSearchFixtureOql($sOQL);
 		$oSearch = DBSearch::FromOQL($sOQL);
 
 		$oSet = new DBObjectSet($oSearch);
@@ -50,9 +54,70 @@ class DBUnionSearchTest extends ItopDataTestCase
 			'Same class' => ["SELECT Server UNION SELECT Server"],
 			'different class same alias' => ['SELECT Server AS fci UNION SELECT VirtualMachine AS fci'],
 			'different class no alias' => ['SELECT Server UNION SELECT VirtualMachine'],
-			'multiple classes same alias' => ['SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = 7) UNION SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = 2)'],
-			'multiple classes' => ['SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = 7) UNION SELECT `L1`, `P1` FROM Person AS `P1` JOIN Location AS `L1` ON `P1`.location_id = `L1`.id WHERE (`P1`.`org_id` = 2)'],
+			'multiple classes same alias' => [
+				'SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = {{ORG1_ID}}) UNION SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = {{ORG2_ID}})',
+			],
+			'multiple classes' => [
+				'SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = {{ORG1_ID}}) UNION SELECT `L1`, `P1` FROM Person AS `P1` JOIN Location AS `L1` ON `P1`.location_id = `L1`.id WHERE (`P1`.`org_id` = {{ORG2_ID}})',
+			],
 		];
+	}
+
+	private function ResolveUnionSearchFixtureOql(string $sOQL): string
+	{
+		if (strpos($sOQL, '{{ORG') === false) {
+			return $sOQL;
+		}
+
+		$aFixtures = $this->GetUnionSearchFixtureIds();
+
+		return strtr($sOQL, [
+			'{{ORG1_ID}}' => (string) $aFixtures['org1_id'],
+			'{{ORG2_ID}}' => (string) $aFixtures['org2_id'],
+		]);
+	}
+
+	/**
+	 * Create the minimum fixture set for UNION tests once per test instance.
+	 */
+	private function GetUnionSearchFixtureIds(): array
+	{
+		if ($this->aUnionSearchFixtureIds !== null) {
+			return $this->aUnionSearchFixtureIds;
+		}
+
+		$sSuffix = uniqid('dbunion_', false);
+		$iOrg1 = (int) $this->GivenObjectInDB('Organization', ['name' => 'Union Org 1 '.$sSuffix]);
+		$iOrg2 = (int) $this->GivenObjectInDB('Organization', ['name' => 'Union Org 2 '.$sSuffix]);
+
+		$iLocation1 = (int) $this->GivenObjectInDB('Location', [
+			'name' => 'Union Location 1 '.$sSuffix,
+			'org_id' => $iOrg1,
+		]);
+		$iLocation2 = (int) $this->GivenObjectInDB('Location', [
+			'name' => 'Union Location 2 '.$sSuffix,
+			'org_id' => $iOrg2,
+		]);
+
+		$this->GivenObjectInDB('Person', [
+			'name' => 'Union Person 1 '.$sSuffix,
+			'first_name' => 'Test',
+			'org_id' => $iOrg1,
+			'location_id' => $iLocation1,
+		]);
+		$this->GivenObjectInDB('Person', [
+			'name' => 'Union Person 2 '.$sSuffix,
+			'first_name' => 'Test',
+			'org_id' => $iOrg2,
+			'location_id' => $iLocation2,
+		]);
+
+		$this->aUnionSearchFixtureIds = [
+			'org1_id' => $iOrg1,
+			'org2_id' => $iOrg2,
+		];
+
+		return $this->aUnionSearchFixtureIds;
 	}
 
 	public function testFilterOnFirstSelectedClass()

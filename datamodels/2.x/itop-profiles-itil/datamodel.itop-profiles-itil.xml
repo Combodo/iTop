@@ -85,6 +85,13 @@
           <class id="Attachment"/>
         </classes>
       </group>
+      <group id="Ticket" _delta="define">
+        <classes>
+          <class id="Ticket"/>
+          <class id="WorkOrder"/>
+          <class id="Attachment"/>
+        </classes>
+      </group>
       <group id="Portal" _delta="define">
         <classes>
           <class id="lnkFunctionalCIToTicket"/>
@@ -205,6 +212,60 @@
       </group>
     </groups>
     <profiles>
+      <profile id="5500" _delta="define">
+        <name>Configuration ReadOnly</name>
+        <description>This read-only profile allows to see CIs objects.</description>
+        <groups>
+          <group id="Configuration">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+            </actions>
+          </group>
+          <group id="General">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+            </actions>
+          </group>
+        </groups>
+      </profile>
+      <profile id="5501" _delta="define">
+        <name>Ticket ReadOnly</name>
+        <description>This read-only profile allows to see Ticket objects.</description>
+        <groups>
+          <group id="Ticket">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+            </actions>
+          </group>
+          <group id="General">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+            </actions>
+          </group>
+        </groups>
+      </profile>
+      <profile id="5502" _delta="define">
+        <name>Service Catalog ReadOnly</name>
+        <description>This read-only profile allows to see Service Catalog objects.</description>
+        <groups>
+          <group id="Service">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+            </actions>
+          </group>
+          <group id="General">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+            </actions>
+          </group>
+        </groups>
+      </profile>
       <profile id="117" _delta="define">
         <name>SuperUser</name>
         <description>This profile allows all actions which are not Administrator restricted.</description>

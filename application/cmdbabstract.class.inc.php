@@ -1046,7 +1046,7 @@ HTML
 							// Add extra data for markup generation
 							// - Attribute code and AttributeDef. class
 							$val['attcode'] = $sAttCode;
-							$val['atttype'] = $oAttDef->GetType();
+							$val['atttype'] = $oAttDef->GetTypeShortClassName();
 							$val['attlabel'] = $sAttLabel;
 							$val['attflags'] = ($bEditMode) ? $this->GetFormAttributeFlags($sAttCode) : OPT_ATT_READONLY;
 
@@ -4507,7 +4507,7 @@ HTML;
 
 			$oDivField = FieldUIBlockFactory::MakeLarge("");
 			//	UIContentBlockUIBlockFactory::MakeStandard(null,["field_container field_large"]);
-			$oDivField->AddDataAttribute("attribute-type", $oAttDef->GetType());
+			$oDivField->AddDataAttribute("attribute-type", $oAttDef->GetTypeShortClassName());
 			$oDivField->AddDataAttribute("attribute-label", $sAttMetaDataLabel);
 			$oDivField->AddDataAttribute("attribute-flag-hidden", false);
 			$oDivField->AddDataAttribute("attribute-flag-read-only", false);

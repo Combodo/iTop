@@ -8,7 +8,6 @@
 namespace Combodo\iTop\DataFeatureRemoval\Controller;
 
 require_once APPROOT.'setup/feature_removal/SetupAudit.php';
-require_once APPROOT.'setup/feature_removal/DryRemovalRuntimeEnvironment.php';
 
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
@@ -18,7 +17,8 @@ use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalLog;
 use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
 use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
-use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
+use Combodo\iTop\DataFeatureRemoval\Service\StaticDeletionPlan;
+use Combodo\iTop\Service\Session\SessionParameters;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use ContextTag;
 use CoreException;
@@ -37,14 +37,21 @@ class DataFeatureRemovalController extends Controller
 	private array $aCountClassesToCleanup = [];
 	private array $aAnalysisDataTable = [];
 	private array $aDeletionExecutionSummary = [];
-	private ?RuntimeEnvironment $oRuntimeEnvironment = null;
 
 	private int $iCount = 0;
 	private int $iColumnCount = 2;
+	private RunTimeEnvironment $oRuntimeEnvironment;
 
 	public function OperationMain($sErrorMessage = null): void
 	{
 		$aParams = [];
+
+		SetupUtils::EraseSetupToken();
+		$oParameters = new SessionParameters(SetupUtils::SESSION_PARAMETERS_NAME);
+		$oParameters->Erase();
+		Session::Unset('aDeletionExecutionSummary');
+		Session::Set('bForceCompilation', true);
+		$oParameters->SetParameter('return_application', 'DataFeatureRemoval');
 
 		$this->AddAnalyzeParams();
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
@@ -57,7 +64,6 @@ class DataFeatureRemovalController extends Controller
 		$aParams['sSetupUrl'] = utils::GetAbsoluteUrlAppRoot().'setup';
 		$aParams['iCount'] = $this->iCount;
 
-		Session::Set('bForceCompilation', true);
 		$this->AddLinkedStylesheet(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/css/DataFeatureRemoval.css');
 		$this->AddLinkedScript(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/js/DataFeatureRemoval.js');
 		$this->DisplayPage($aParams);
@@ -91,7 +97,7 @@ class DataFeatureRemovalController extends Controller
 		}
 
 		// Display changed extensions
-		$aHiddenInputNames = [
+		$aSetupParameterNames = [
 			'selected_extensions' => '[]',
 			'selected_modules' => '[]',
 			'display_choices' => '',
@@ -105,31 +111,27 @@ class DataFeatureRemovalController extends Controller
 			'target_env' => ITOP_DEFAULT_ENV,
 		];
 
-		$aHiddenInputs = [];
-		foreach ($aHiddenInputNames as $sInputName => $defaultValue) {
-			$aHiddenInputs[$sInputName] = utils::ReadPostedParam($sInputName, $defaultValue, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$oParameters = new SessionParameters(SetupUtils::SESSION_PARAMETERS_NAME);
+		foreach ($aSetupParameterNames as $sInputName => $defaultValue) {
+			$oParameters->SetParameter($sInputName, $oParameters->GetParameter($sInputName, $defaultValue));
 		}
-		$aParams['aHiddenInputs'] = $aHiddenInputs;
 
-		$aAddedExtensions = json_decode($aHiddenInputs['added_extensions'], true);
-
-		$aRemovedExtensions = json_decode($aHiddenInputs['removed_extensions'], true);
-		if ("[]" === $aHiddenInputs['selected_modules']) {
+		$aAddedExtensions = json_decode($oParameters->GetParameter('added_extensions', '[]'), true);
+		$aRemovedExtensions = json_decode($oParameters->GetParameter('removed_extensions', '[]'), true);
+		if ('[]' === $oParameters->GetParameter('selected_modules', '[]')) {
 			//it does not come from setup
 			// we get extensions from 1st screen uiblocks
 			$this->ReadExtensionsDiff();
-			$aHiddenInputs['force-uninstall'] = $this->bForcedUninstallation ? 'on' : '';
+			$oParameters->SetParameter('force-uninstall', $this->bForcedUninstallation ? 'on' : '');
 			$aAddedExtensions = $this->aExtensionsToCheck['to_be_installed'];
-			$aHiddenInputs['added_extensions'] = $this->ConvertIntoSetupFormat($aAddedExtensions);
+			$oParameters->SetParameter('added_extensions', $this->ConvertIntoSetupFormat($aAddedExtensions));
 
 			$aRemovedExtensions = $this->aExtensionsToCheck['to_be_removed'];
-			$aHiddenInputs['removed_extensions'] = $this->ConvertIntoSetupFormat($aRemovedExtensions);
+			$oParameters->SetParameter('removed_extensions', $this->ConvertIntoSetupFormat($aRemovedExtensions));
+
+			$aExtensionsNotUninstallable = $this->aExtensionsToCheck['extensions_not_uninstallable'];
+			$oParameters->SetParameter('extensions_not_uninstallable', $this->ConvertIntoSetupFormat($aExtensionsNotUninstallable));
 		}
-
-		$aRemoveExtensionCodes = array_keys($aRemovedExtensions);
-
-		$aParams['aAddedExtensions'] = $aAddedExtensions;
-		$aParams['aRemovedExtensions'] = $aRemovedExtensions;
 
 		DataFeatureRemovalLog::Debug(__METHOD__.' Extensions given in parameter', null, [
 			'added_extensions' => $aAddedExtensions,
@@ -137,59 +139,10 @@ class DataFeatureRemovalController extends Controller
 
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
 		$aParams['iColumnCount'] = $this->iColumnCount;
-		$aParams['aAvailableExtensions'] = $this->SplitArrayIntoColumns($this->GetExtensionsDiff($aAddedExtensions, $aRemovedExtensions), $this->iColumnCount);
-
-		$bForceCompilation = Session::Get('bForceCompilation', false);
-		try {
-			$this->Compile($aAddedExtensions, $aRemoveExtensionCodes, $bForceCompilation);
-		} catch (CoreException $e) {
-			$aParams['DataFeatureRemovalErrorMessage'] = $e->getHtmlDesc();
-			$this->DisplayPage($aParams, 'AnalysisResult');
-			return;
-		} catch (Exception $e) {
-			$aParams['DataFeatureRemovalErrorMessage'] = $e->getMessage();
-			$this->DisplayPage($aParams, 'AnalysisResult');
-			return;
-		}
-
-		if ("[]" === $aHiddenInputs['selected_modules']) {
-			//to make setup redirection work, we need to pass complex data structures to setup wizards (ie extension/module lists)
-			$oConfig = MetaModel::GetConfig();
-			$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
-			$aHiddenInputs['selected_extensions'] = $this->ConvertIntoSetupFormat($aSelectedExtensions);
-
-			$oRunTimeEnvironment = $this->GetRuntimeEnvironment($aAddedExtensions, $aRemovedExtensions);
-			$aSearchDirs = [$oRunTimeEnvironment->GetBuildDir()];
-			$aSelectedModules = $oRunTimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions, $aSearchDirs);
-			$aHiddenInputs['selected_modules'] = $this->ConvertIntoSetupFormat($aSelectedModules);
-		}
-
-		$sSourceEnv = MetaModel::GetEnvironment();
-		$oSetupAudit = new SetupAudit($sSourceEnv);
-		$aGetRemovedClasses = array_keys($oSetupAudit->RunDataAudit());
-		DataFeatureRemovalLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
-
-		$aParams['aClasses'] = $aGetRemovedClasses;
-
-		new ContextTag(ContextTag::TAG_SETUP);
-		$aParams['sLaunchSetupUrl'] = utils::GetAbsoluteUrlAppRoot().'setup/wizard.php';
-		$aParams['aSetupParams'] = [
-			"_class" => "WizStepLandingBeforeAudit",
-			"operation" => "next",
-		];
-
-		foreach ($aHiddenInputs as $sInputName => $sInputValue) {
-			$aParams['aSetupParams']["_params[$sInputName]"] = $sInputValue;
-		}
-
-		[$aParams['aDeletionPlanSummary'], $aParams['iQueryCount'], $aParams['bDeletionPossible']] = $this->GetDeletionPlanSummaryTable($aGetRemovedClasses);
-		[$aParams['aDeletionExecutionSummary'], $aParams['bHasDeletionExecution']] = $this->GetExecutionSummaryTable();
-		$aParams['bDeletionNeeded'] = ($aParams['iQueryCount'] > 0);
-		Session::Set('aDeletionExecutionSummary', serialize($this->aDeletionExecutionSummary));
-
-		if (!$aParams['bDeletionNeeded']) {
-			SetupUtils::CreateSetupToken();
-		}
+		$aAvailableExtensions = $this->GetExtensionsDiff($aAddedExtensions, $aRemovedExtensions);
+		$aParams['aAvailableExtensionsCount'] = count($aAvailableExtensions);
+		$aParams['aAvailableExtensions'] = $this->SplitArrayIntoColumns($aAvailableExtensions, $this->iColumnCount);
+		$aParams['sAjaxURL'] = utils::GetAbsoluteUrlModulePage(DataFeatureRemovalHelper::MODULE_NAME, 'index.php');
 
 		$this->DisplayPage($aParams, 'AnalysisResult');
 	}
@@ -197,53 +150,124 @@ class DataFeatureRemovalController extends Controller
 	private function ConvertIntoSetupFormat(array $aData): string
 	{
 		$aNewData = [];
-		foreach ($aData as $k => $sVal) {
-			$aNewData[] = sprintf('"%s":"%s"', $k, $sVal);
+		foreach ($aData as $sCode => $sLabel) {
+			$aNewData[] = sprintf('"%s":"%s"', $sCode, $sLabel);
 		}
 
 		return "{".implode(',', $aNewData)."}";
 	}
 
 	/**
-* @param array $aAddedExtensions
-* @param array $aRemovedExtensions
-* @param bool $bForceCompilation
-* @return void
-* @throws \ConfigException
-* @throws \CoreException
+	 * @return void
+	 * @throws \ConfigException
+	 * @throws \CoreException
 	 */
-	private function Compile(array $aAddedExtensions, array $aRemovedExtensions, bool $bForceCompilation = true): void
+	public function OperationAjaxCompile(): void
 	{
+		$aParams = [];
+		//to make setup redirection work, we need to pass complex data structures to setup wizards (ie extension/module lists)
 		$sSourceEnv = MetaModel::GetEnvironment();
-		$sBuildDir = APPROOT."/env-$sSourceEnv-build";
-		if (! is_dir($sBuildDir)) {
-			SetupUtils::builddir($sBuildDir);
-		}
-		$bIsDirEmpty = count(scandir($sBuildDir)) === 2;
+		$oRuntimeEnvironment = new RunTimeEnvironment($sSourceEnv, false);
 
-		if ($bIsDirEmpty || $bForceCompilation) {
-			DataFeatureRemovalLog::Debug(
-				__METHOD__,
-				null,
-				['sSourceEnv' => $sSourceEnv, 'sBuildDir' => $sBuildDir, 'bIsDirEmpty' => $bIsDirEmpty, glob("$sBuildDir/*")]
-			);
-			$this->GetRuntimeEnvironment($aAddedExtensions, $aRemovedExtensions)->CompileFrom($sSourceEnv);
+		$oParameters = new SessionParameters(SetupUtils::SESSION_PARAMETERS_NAME);
+		$aSelectedModules = json_decode($oParameters->GetParameter('selected_modules', '[]'), true);
+		$aSelectedExtensions = json_decode($oParameters->GetParameter('selected_extensions', '[]'), true);
+		$aAddedExtensions = json_decode($oParameters->GetParameter('added_extensions', '[]'), true);
+		$aRemovedExtensions = json_decode($oParameters->GetParameter('removed_extensions', '[]'), true);
+
+		try {
+			$this->ValidateTransactionId();
+
+			$oConfig = MetaModel::GetConfig();
+			if (count($aSelectedModules) === 0) {
+				$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
+				$oParameters->SetParameter('selected_extensions', $this->ConvertIntoSetupFormat($aSelectedExtensions));
+			}
+
+			$sBuildDir = APPROOT."/env-$sSourceEnv-build";
+			if (! is_dir($sBuildDir)) {
+				SetupUtils::builddir($sBuildDir);
+			}
+			$bIsDirEmpty = count(scandir($sBuildDir)) === 2;
+			$bForceCompilation = Session::Get('bForceCompilation', false);
+			if ($bIsDirEmpty || $bForceCompilation) {
+				$oRuntimeEnvironment->CopySetupFiles();
+				if (count($aSelectedModules) === 0) {
+					$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
+				}
+
+				DataFeatureRemovalLog::Debug(
+					__METHOD__,
+					null,
+					['sSourceEnv' => $sSourceEnv, 'sBuildDir' => $sBuildDir, 'bIsDirEmpty' => $bIsDirEmpty, glob("$sBuildDir/*")]
+				);
+				$oRuntimeEnvironment->DoCompile($aSelectedExtensions, $aRemovedExtensions, $aSelectedModules, MFCompiler::CanUseSymbolicLinks());
+				Session::Unset('bForceCompilation');
+			} else {
+				if (count($aSelectedModules) === 0) {
+					$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
+				}
+			}
+		} catch (CoreException $e) {
+			$aParams['error_message'] = $e->getHtmlDesc();
+		} catch (Exception $e) {
+			$aParams['error_message'] = $e->getMessage();
 		}
+
+		$aParams['success_message'] = Dict::S('DataFeatureRemoval:Compile:Success');
+		$aParams['transaction_id'] = utils::GetNewTransactionId();
+
+		$oParameters->SetParameter('selected_modules', json_encode($aSelectedModules));
+		$this->DisplayJSONPage($aParams);
 	}
 
-	private function GetRuntimeEnvironment(array $aAddedExtensions, array $aRemovedExtensions): RunTimeEnvironment
+	public function OperationAjaxRunAudit(): void
 	{
-		if (is_null($this->oRuntimeEnvironment)) {
+		$oParameters = new SessionParameters(SetupUtils::SESSION_PARAMETERS_NAME);
+		$aParams = [];
+		$aPageParams = [];
+		try {
+			$this->ValidateTransactionId();
+
 			$sSourceEnv = MetaModel::GetEnvironment();
-			$this->oRuntimeEnvironment = new DryRemovalRuntimeEnvironment($sSourceEnv, $aAddedExtensions, $aRemovedExtensions);
+			$oSetupAudit = new SetupAudit($sSourceEnv);
+			$aRemovedClasses = array_keys($oSetupAudit->RunDataAudit());
+			$oParameters->SetParameter('classes', $aRemovedClasses);
+
+			new ContextTag(ContextTag::TAG_SETUP);
+			$aPageParams['sLaunchSetupUrl'] = utils::GetAbsoluteUrlAppRoot().'setup/wizard.php';
+			$aPageParams['aSetupParams'] = [
+				"_class" => "WizStepLandingBeforeAudit",
+				"operation" => "next",
+			];
+			$aPageParams['sTransactionId'] = utils::GetNewTransactionId();
+
+			$aDeletionPlanSummaryEntities = $this->GetDeletionPlanSummaryEntities($aRemovedClasses);
+			[$aPageParams['aDeletionPlanSummary'], $aPageParams['iQueryCount'], $aPageParams['bDeletionPossible']] = $this->GetDeletionPlanSummaryTable($aDeletionPlanSummaryEntities);
+			[$aPageParams['aDeletionExecutionSummary'], $aPageParams['bHasDeletionExecution']] = $this->GetExecutionSummaryTable();
+			$aPageParams['bDeletionNeeded'] = ($aPageParams['iQueryCount'] > 0);
+
+			if (!$aPageParams['bDeletionNeeded']) {
+				// Erase session setup parameters
+				SetupUtils::CreateSetupToken();
+			}
+
+			$this->DisplayAjaxPage($aPageParams, 'AjaxRunAudit');
+			return;
+		} catch (CoreException $e) {
+			$aParams['error_message'] = $e->getHtmlDesc();
+		} catch (Exception $e) {
+			$aParams['error_message'] = $e->getMessage();
 		}
 
-		return $this->oRuntimeEnvironment;
+		$this->DisplayJSONPage($aParams);
 	}
 
 	private function GetExecutionSummaryTable(): array
 	{
-		$sName = 'ExcutionSummary';
+		$sName = 'ExecutionSummary';
+
+		$this->aDeletionExecutionSummary = unserialize(Session::Get('aDeletionExecutionSummary') ?? serialize([]));
 
 		$aTableData = [];
 		if (count($this->aDeletionExecutionSummary) === 0) {
@@ -269,11 +293,15 @@ class DataFeatureRemovalController extends Controller
 
 	}
 
-	private function GetDeletionPlanSummaryTable(array $aRemovedClasses): array
+	private function GetDeletionPlanSummaryEntities(array $aRemovedClasses): array
+	{
+		$oDataCleanupService = new StaticDeletionPlan();
+		return $oDataCleanupService->GetCleanupSummary($aRemovedClasses);
+	}
+
+	private function GetDeletionPlanSummaryTable(array $aDeletionPlanSummaryEntities): array
 	{
 		$sName = 'DeletionPlanSummary';
-		$oDataCleanupService = new DataCleanupService();
-		$aDeletionPlanSummaryEntities = $oDataCleanupService->GetCleanupSummary($aRemovedClasses);
 		$aColumns = ['Class', 'Delete Count' , 'Update Count', 'Issue Count'];
 		$aRows = [];
 		$iQueryCount = 0;
@@ -296,9 +324,10 @@ class DataFeatureRemovalController extends Controller
 	{
 		$this->ValidateTransactionId();
 
-		$this->aDeletionExecutionSummary = unserialize(Session::Get('aDeletionExecutionSummary'));
+		$this->aDeletionExecutionSummary = unserialize(Session::Get('aDeletionExecutionSummary') ?? serialize([]));
 		Session::Unset('aDeletionExecutionSummary');
-		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
+		$oParameters = new SessionParameters(SetupUtils::SESSION_PARAMETERS_NAME);
+		$aClasses = $oParameters->GetParameter('classes', []);
 
 		$oDataCleanupService = new DataCleanupService();
 		$aDeletionExecutionSummary = $oDataCleanupService->ExecuteCleanup($aClasses);
@@ -313,6 +342,7 @@ class DataFeatureRemovalController extends Controller
 			$oSummary->iTotalUpdateCount += $oExecutionSummary->iUpdateCount;
 		}
 
+		Session::Set('aDeletionExecutionSummary', serialize($this->aDeletionExecutionSummary));
 		$this->OperationAnalysisResult();
 	}
 
@@ -338,6 +368,7 @@ class DataFeatureRemovalController extends Controller
 					'uninstallable' => $oExtension->CanBeUninstalled(),
 					'remote' => $oExtension->IsRemote(),
 					'missing' => $oExtension->bRemovedFromDisk,
+					'dependency_issue' => $oExtension->HasDependencyIssue(),
 				],
 
 			];
@@ -405,12 +436,11 @@ class DataFeatureRemovalController extends Controller
 
 	/**
 	 * Read extensions selected from posted parameters
-	 * @return int Number of extensions to be added or removed
 	 */
-	public function ReadExtensionsDiff(): int
+	public function ReadExtensionsDiff(): void
 	{
 		if (!is_null($this->aExtensionsToCheck)) {
-			return count($this->aExtensionsToCheck['to_be_installed']) + count($this->aExtensionsToCheck['to_be_removed']);
+			return;
 		}
 
 		$aAvailableExtensions = $this->GetAvailableExtensions();
@@ -418,6 +448,7 @@ class DataFeatureRemovalController extends Controller
 		$this->aExtensionsToCheck = [
 			'to_be_installed' => [],
 			'to_be_removed' => [],
+			'extensions_not_uninstallable' => [],
 		];
 		foreach ($aAvailableExtensions as $sCode => &$aExtensionData) {
 			if (!isset($aSelectedExtensionsFromUI[$sCode])) {
@@ -431,13 +462,15 @@ class DataFeatureRemovalController extends Controller
 				if (! $this->bForcedUninstallation && $aExtensionData['extra_flags']['uninstallable']) {
 					$this->bForcedUninstallation = true;
 				}
+				if (false === $aExtensionData['extra_flags']['uninstallable'] || true === $aExtensionData['extra_flags']['remote']) {
+					$this->aExtensionsToCheck['extensions_not_uninstallable'][] = $sCode;
+				}
 			} elseif (!$aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCode] === 'on') {
 				$aExtensionData['extra_flags']['selected'] = true;
 				$sLabel = $aAvailableExtensions[$sCode]['label'];
 				$this->aExtensionsToCheck['to_be_installed'][$sCode] = $sLabel;
 			}
 		}
-		return count($this->aExtensionsToCheck['to_be_installed']) + count($this->aExtensionsToCheck['to_be_removed']);
 	}
 
 	/**

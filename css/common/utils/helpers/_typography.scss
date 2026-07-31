@@ -11,6 +11,9 @@
  *
  * Usage: @extend %common-font-size-XXX;
  */
+%common-font-size-20 {
+  font-size: $common-font-size-20;
+}
 %common-font-size-50 {
   font-size: $common-font-size-50;
 }

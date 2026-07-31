@@ -176,7 +176,7 @@ class iTopExtension
 		};
 	}
 
-	public function IsRemote(): string
+	public function IsRemote(): bool
 	{
 		return $this->sSource === self::SOURCE_REMOTE;
 	}
@@ -189,5 +189,20 @@ class iTopExtension
 	public function MarkAsChosen(bool $bMarkedAsChosen = true): void
 	{
 		$this->bMarkedAsChosen = $bMarkedAsChosen;
+	}
+
+	public function HasCode(): bool
+	{
+		return $this->sCode !== '';
+	}
+
+	public function HasLabel(): bool
+	{
+		return $this->sLabel !== '';
+	}
+
+	public function HasDependencyIssue(): bool
+	{
+		return count($this->aMissingDependencies) > 0;
 	}
 }

@@ -260,34 +260,41 @@ class DBObjectTest extends ItopDataTestCase
 	 */
 	public function testAttributeRefresh_ExternalKeysAndFields()
 	{
-		$this->assertDBQueryCount(0, function () use (&$oObject) {
-			$oObject = \MetaModel::NewObject('Person', ['name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2]);
+		$aFixture = $this->GivenTwoOrganizationsWithLocations();
+
+		$this->assertDBQueryCount(0, function () use (&$oObject, $aFixture) {
+			$oObject = \MetaModel::NewObject('Person', [
+				'name' => 'Foo',
+				'first_name' => 'John',
+				'org_id' => $aFixture['org1_id'],
+				'location_id' => $aFixture['location1_id'],
+			]);
 		});
-		$this->assertDBQueryCount(2, function () use (&$oObject) {
-			static::assertEquals('Demo', $oObject->Get('org_id_friendlyname'));
-			static::assertEquals('Grenoble', $oObject->Get('location_id_friendlyname'));
+		$this->assertDBQueryCount(2, function () use (&$oObject, $aFixture) {
+			static::assertEquals($aFixture['org1_name'], $oObject->Get('org_id_friendlyname'));
+			static::assertEquals($aFixture['location1_name'], $oObject->Get('location_id_friendlyname'));
 		});
 
 		// External key given as an id
-		$this->assertDBQueryCount(1, function () use (&$oObject) {
-			$oObject->Set('org_id', 6);
-			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
+		$this->assertDBQueryCount(1, function () use (&$oObject, $aFixture) {
+			$oObject->Set('org_id', $aFixture['org2_id']);
+			static::assertEquals($aFixture['org2_name'], $oObject->Get('org_id_friendlyname'));
 		});
 
 		// External key given as an object
-		$this->assertDBQueryCount(1, function () use (&$oBordeaux) {
-			$oBordeaux = \MetaModel::GetObject('Location', 1);
+		$this->assertDBQueryCount(1, function () use (&$oBordeaux, $aFixture) {
+			$oBordeaux = \MetaModel::GetObject('Location', $aFixture['location2_id']);
 		});
 
-		$this->assertDBQueryCount(0, function () use (&$oBordeaux, &$oObject) {
+		$this->assertDBQueryCount(0, function () use (&$oBordeaux, &$oObject, $aFixture) {
 			/** @var DBObject $oObject */
 			$oObject->Set('location_id', $oBordeaux);
-			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
-			static::assertEquals('IT Department', $oObject->Get('org_name'));
-			static::assertEquals('Bordeaux', $oObject->Get('location_id_friendlyname'));
+			static::assertEquals($aFixture['org2_name'], $oObject->Get('org_id_friendlyname'));
+			static::assertEquals($aFixture['org2_name'], $oObject->Get('org_name'));
+			static::assertEquals($aFixture['location2_name'], $oObject->Get('location_id_friendlyname'));
 		});
 
-		static::assertEquals('Bordeaux', $oObject->Get('location_id_friendlyname'));
+		static::assertEquals($aFixture['location2_name'], $oObject->Get('location_id_friendlyname'));
 		//		static::assertEquals('toto', $oObject->EvaluateExpression(\Expression::FromOQL("CONCAT(org_name, '-', location_id_friendlyname)")));
 	}
 
@@ -299,9 +306,15 @@ class DBObjectTest extends ItopDataTestCase
 	public function testInsertNoReloadAttributeRefresh_ExternalKeysAndFields()
 	{
 		$this->ResetReloadCount();
+		$aFixture = $this->GivenTwoOrganizationsWithLocations();
 
-		$this->assertDBQueryCount(0, function () use (&$oObject) {
-			$oObject = \MetaModel::NewObject('Person', ['name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2]);
+		$this->assertDBQueryCount(0, function () use (&$oObject, $aFixture) {
+			$oObject = \MetaModel::NewObject('Person', [
+				'name' => 'Foo',
+				'first_name' => 'John',
+				'org_id' => $aFixture['org1_id'],
+				'location_id' => $aFixture['location1_id'],
+			]);
 		});
 		// The number of queries depends on the installed modules so it varies on CI
 		$oObject->DBInsertNoReload();
@@ -310,31 +323,31 @@ class DBObjectTest extends ItopDataTestCase
 		$this->debug("Created $sClass::$sKey");
 		$this->DebugReloadCount("Person::DBInsertNoReload()");
 
-		$this->assertDBQueryCount(0, function () use (&$oObject) {
-			static::assertEquals('Demo', $oObject->Get('org_id_friendlyname'));
-			static::assertEquals('Grenoble', $oObject->Get('location_id_friendlyname'));
+		$this->assertDBQueryCount(0, function () use (&$oObject, $aFixture) {
+			static::assertEquals($aFixture['org1_name'], $oObject->Get('org_id_friendlyname'));
+			static::assertEquals($aFixture['location1_name'], $oObject->Get('location_id_friendlyname'));
 		});
 		$this->DebugReloadCount("Get('org_id_friendlyname') and Get('location_id_friendlyname')");
 
 		// External key given as an id
-		$this->assertDBQueryCount(1, function () use (&$oObject) {
-			$oObject->Set('org_id', 6);
-			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
+		$this->assertDBQueryCount(1, function () use (&$oObject, $aFixture) {
+			$oObject->Set('org_id', $aFixture['org2_id']);
+			static::assertEquals($aFixture['org2_name'], $oObject->Get('org_id_friendlyname'));
 		});
 		$this->assertEquals(0, $this->GetObjectReloadCount($sClass, $sKey));
 		$this->DebugReloadCount("Set('org_id', 2) and Get('org_id_friendlyname')");
 
 		// External key given as an object
-		$this->assertDBQueryCount(1, function () use (&$oBordeaux) {
-			$oBordeaux = MetaModel::GetObject('Location', 1);
+		$this->assertDBQueryCount(1, function () use (&$oBordeaux, $aFixture) {
+			$oBordeaux = MetaModel::GetObject('Location', $aFixture['location2_id']);
 		});
 		$this->DebugReloadCount("GetObject('Location', 1)");
 
-		$this->assertDBQueryCount(0, function () use (&$oBordeaux, &$oObject) {
+		$this->assertDBQueryCount(0, function () use (&$oBordeaux, &$oObject, $aFixture) {
 			$oObject->Set('location_id', $oBordeaux);
-			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
-			static::assertEquals('IT Department', $oObject->Get('org_name'));
-			static::assertEquals('Bordeaux', $oObject->Get('location_id_friendlyname'));
+			static::assertEquals($aFixture['org2_name'], $oObject->Get('org_id_friendlyname'));
+			static::assertEquals($aFixture['org2_name'], $oObject->Get('org_name'));
+			static::assertEquals($aFixture['location2_name'], $oObject->Get('location_id_friendlyname'));
 		});
 		$this->DebugReloadCount("Set('location_id',...) Get('org_id_friendlyname') Get('org_name') Get('location_id_friendlyname')");
 	}
@@ -347,9 +360,15 @@ class DBObjectTest extends ItopDataTestCase
 	public function testInsertNoReloadAttributeLinkSet()
 	{
 		$this->ResetReloadCount();
+		$aFixture = $this->GivenTwoOrganizationsWithLocations();
 
-		$this->assertDBQueryCount(0, function () use (&$oPerson) {
-			$oPerson = MetaModel::NewObject('Person', ['name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2]);
+		$this->assertDBQueryCount(0, function () use (&$oPerson, $aFixture) {
+			$oPerson = MetaModel::NewObject('Person', [
+				'name' => 'Foo',
+				'first_name' => 'John',
+				'org_id' => $aFixture['org1_id'],
+				'location_id' => $aFixture['location1_id'],
+			]);
 		});
 		// The number of queries depends on the installed modules so it varies on CI
 		$oPerson->DBInsertNoReload();
@@ -358,8 +377,8 @@ class DBObjectTest extends ItopDataTestCase
 		$this->debug("Created $sPersonClass::$sPersonKey");
 		$this->DebugReloadCount("Person::DBInsertNoReload()");
 
-		$this->assertDBQueryCount(1, function () use (&$oTeam, &$oPerson) {
-			$oTeam = MetaModel::NewObject('Team', ['name' => 'Team Foo', 'org_id' => 3]);
+		$this->assertDBQueryCount(1, function () use (&$oTeam, &$oPerson, $aFixture) {
+			$oTeam = MetaModel::NewObject('Team', ['name' => 'Team Foo', 'org_id' => $aFixture['org1_id']]);
 			// Add person to team
 			$oNewLink = new lnkPersonToTeam();
 			$oNewLink->Set('person_id', $oPerson->GetKey());
@@ -384,9 +403,9 @@ class DBObjectTest extends ItopDataTestCase
 		$this->assertCount(0, $oTeam->ListChanges());
 
 		// External key given as an id
-		$this->assertDBQueryCount(1, function () use (&$oTeam) {
-			$oTeam->Set('org_id', 6);
-			static::assertEquals('IT Department', $oTeam->Get('org_id_friendlyname'));
+		$this->assertDBQueryCount(1, function () use (&$oTeam, $aFixture) {
+			$oTeam->Set('org_id', $aFixture['org2_id']);
+			static::assertEquals($aFixture['org2_name'], $oTeam->Get('org_id_friendlyname'));
 		});
 		$this->DebugReloadCount("Set('org_id', 2) and Get('org_id_friendlyname')");
 		$this->assertCount(1, $oTeam->ListChanges());
@@ -581,15 +600,10 @@ class DBObjectTest extends ItopDataTestCase
 	{
 		//--- Preparing data...
 		$this->bIsUsingSilo = true;
-		/** @var Organization $oCustomerOrg */
-		$oCustomerOrg = MetaModel::GetObjectByName(Organization::class, 'Customer');
-		/** @var Person $oPersonOnItDepartmentOrg */
-		$oPersonOnItDepartmentOrg = MetaModel::GetObjectByName(Person::class, 'Anna Gavalda');
-		/** @var Person $oPersonOnCustomerOrg */
-		$oPersonOnCustomerOrg = MetaModel::GetObjectByName(Person::class, 'Camille Cottin');
+		$aFixture = $this->GivenAllowedAndDeniedPersonsByOrg();
 
 		$sConfigManagerProfileId = 3; // access to Team and Contact objects
-		$sLogin = $this->GivenUserRestrictedToAnOrganizationInDB($oCustomerOrg->GetKey(), $sConfigManagerProfileId);
+		$sLogin = $this->GivenUserRestrictedToAnOrganizationInDB($aFixture['allowed_org_id'], $sConfigManagerProfileId);
 
 		//--- Now we can do some tests !
 		UserRights::Login($sLogin);
@@ -597,7 +611,7 @@ class DBObjectTest extends ItopDataTestCase
 
 		$oTeam = MetaModel::NewObject(Team::class, [
 			'name' => 'The A Team',
-			'org_id' => $oCustomerOrg->GetKey(),
+			'org_id' => $aFixture['allowed_org_id'],
 		]);
 
 		// Part 1 - Test with an invalid id (non-existing object)
@@ -629,7 +643,7 @@ class DBObjectTest extends ItopDataTestCase
 		//
 		$oPersonLinks = \DBObjectSet::FromScratch(lnkPersonToTeam::class);
 		$oPersonLinks->AddObject(MetaModel::NewObject(lnkPersonToTeam::class, [
-			'person_id' => $oPersonOnCustomerOrg->GetKey(),
+			'person_id' => $aFixture['allowed_person_id'],
 			'team_id' => $oTeam->GetKey(),
 		]));
 		$oTeam->Set('persons_list', $oPersonLinks);
@@ -651,7 +665,7 @@ class DBObjectTest extends ItopDataTestCase
 		//
 		$oPersonLinks = \DBObjectSet::FromScratch(lnkPersonToTeam::class);
 		$oPersonLinks->AddObject(MetaModel::NewObject(lnkPersonToTeam::class, [
-			'person_id' => $oPersonOnItDepartmentOrg->GetKey(),
+			'person_id' => $aFixture['denied_person_id'],
 			'team_id' => $oTeam->GetKey(),
 		]));
 		$oTeam->Set('persons_list', $oPersonLinks);
@@ -684,15 +698,10 @@ class DBObjectTest extends ItopDataTestCase
 	{
 		//--- Preparing data...
 		$this->bIsUsingSilo = true;
-		/** @var Organization $oCustomerOrg */
-		$oCustomerOrg = MetaModel::GetObjectByName(Organization::class, 'Customer');
-		/** @var Person $oPersonOnItDepartmentOrg */
-		$oPersonOnItDepartmentOrg = MetaModel::GetObjectByName(Person::class, 'Anna Gavalda');
-		/** @var Person $oPersonOnCustomerOrg */
-		$oPersonOnCustomerOrg = MetaModel::GetObjectByName(Person::class, 'Camille Cottin');
+		$aFixture = $this->GivenAllowedAndDeniedPersonsByOrg();
 
 		$sConfigManagerProfileId = 3; // access to Team and Contact objects
-		$sLogin = $this->GivenUserRestrictedToAnOrganizationInDB($oCustomerOrg->GetKey(), $sConfigManagerProfileId);
+		$sLogin = $this->GivenUserRestrictedToAnOrganizationInDB($aFixture['allowed_org_id'], $sConfigManagerProfileId);
 
 		//--- Now we can do some tests !
 		UserRights::Login($sLogin);
@@ -700,7 +709,7 @@ class DBObjectTest extends ItopDataTestCase
 
 		$oAttachment = MetaModel::NewObject(Attachment::class, [
 			'item_class' => Person::class,
-			'item_id' => $oPersonOnCustomerOrg->GetKey(),
+			'item_id' => $aFixture['allowed_person_id'],
 		]);
 		try {
 			$oAttachment->CheckChangedExtKeysValues();
@@ -710,7 +719,7 @@ class DBObjectTest extends ItopDataTestCase
 
 		$oAttachment = MetaModel::NewObject(Attachment::class, [
 			'item_class' => Person::class,
-			'item_id' => $oPersonOnItDepartmentOrg->GetKey(),
+			'item_id' => $aFixture['denied_person_id'],
 		]);
 		$this->ResetMetaModelQueyCacheGetObject();
 		try {
@@ -718,8 +727,69 @@ class DBObjectTest extends ItopDataTestCase
 			$this->fail('There should be an error on attachment pointing to a non allowed org object');
 		} catch (InvalidExternalKeyValueException $e) {
 			$this->assertEquals('item_id', $e->GetAttCode(), 'Should report the object key attribute');
-			$this->assertEquals($oPersonOnItDepartmentOrg->GetKey(), $e->GetAttValue(), 'Should report the object key value');
+			$this->assertEquals($aFixture['denied_person_id'], $e->GetAttValue(), 'Should report the object key value');
 		}
+	}
+
+	private function GivenTwoOrganizationsWithLocations(): array
+	{
+		$sSuffix = uniqid('dbobj_', false);
+		$sOrg1Name = 'DBObject Org 1 '.$sSuffix;
+		$sOrg2Name = 'DBObject Org 2 '.$sSuffix;
+		$sLocation1Name = 'DBObject Location 1 '.$sSuffix;
+		$sLocation2Name = 'DBObject Location 2 '.$sSuffix;
+
+		$iOrg1 = (int) $this->GivenObjectInDB(Organization::class, ['name' => $sOrg1Name]);
+		$iOrg2 = (int) $this->GivenObjectInDB(Organization::class, ['name' => $sOrg2Name]);
+		$iLocation1 = (int) $this->GivenObjectInDB('Location', ['name' => $sLocation1Name, 'org_id' => $iOrg1]);
+		$iLocation2 = (int) $this->GivenObjectInDB('Location', ['name' => $sLocation2Name, 'org_id' => $iOrg2]);
+
+		return [
+			'org1_id' => $iOrg1,
+			'org1_name' => $sOrg1Name,
+			'org2_id' => $iOrg2,
+			'org2_name' => $sOrg2Name,
+			'location1_id' => $iLocation1,
+			'location1_name' => $sLocation1Name,
+			'location2_id' => $iLocation2,
+			'location2_name' => $sLocation2Name,
+		];
+	}
+
+	private function GivenAllowedAndDeniedPersonsByOrg(): array
+	{
+		$sSuffix = uniqid('dbobj_silo_', false);
+		$iAllowedOrg = (int) $this->GivenObjectInDB(Organization::class, ['name' => 'Allowed Org '.$sSuffix]);
+		$iDeniedOrg = (int) $this->GivenObjectInDB(Organization::class, ['name' => 'Denied Org '.$sSuffix]);
+
+		$iAllowedLocation = (int) $this->GivenObjectInDB('Location', [
+			'name' => 'Allowed Location '.$sSuffix,
+			'org_id' => $iAllowedOrg,
+		]);
+		$iDeniedLocation = (int) $this->GivenObjectInDB('Location', [
+			'name' => 'Denied Location '.$sSuffix,
+			'org_id' => $iDeniedOrg,
+		]);
+
+		$iAllowedPerson = (int) $this->GivenObjectInDB(Person::class, [
+			'name' => 'Allowed Person '.$sSuffix,
+			'first_name' => 'Unit',
+			'org_id' => $iAllowedOrg,
+			'location_id' => $iAllowedLocation,
+		]);
+		$iDeniedPerson = (int) $this->GivenObjectInDB(Person::class, [
+			'name' => 'Denied Person '.$sSuffix,
+			'first_name' => 'Unit',
+			'org_id' => $iDeniedOrg,
+			'location_id' => $iDeniedLocation,
+		]);
+
+		return [
+			'allowed_org_id' => $iAllowedOrg,
+			'denied_org_id' => $iDeniedOrg,
+			'allowed_person_id' => $iAllowedPerson,
+			'denied_person_id' => $iDeniedPerson,
+		];
 	}
 
 	/**
@@ -1294,19 +1364,21 @@ class DBObjectTest extends ItopDataTestCase
 	{
 		return [
 			// UserRequest.title is an AttributeString (maxsize = 255)
-			'title 250 chars' => ['title', 250],
-			'title 254 chars' => ['title', 254],
-			'title 255 chars' => ['title', 255],
-			'title 256 chars' => ['title', 256],
-			'title 300 chars' => ['title', 300],
+			'title 250 chars'            => ['title', 250, 250, true],
+			'title 254 chars'            => ['title', 254, 254, true],
+			'title 255 chars'            => ['title', 255, 255, true],
+			'title 256 chars'            => ['title', 256, 255, false],
+			'title 300 chars'            => ['title', 300, 255, false],
 
 			// UserRequest.pending_reason is an AttributeText (maxsize=65535) with format=text
-			'pending_reason 250 chars' => ['pending_reason', 250],
-			'pending_reason 60000 chars' => ['pending_reason', 60000],
-			'pending_reason 65534 chars' => ['pending_reason', 65534],
-			'pending_reason 65535 chars' => ['pending_reason', 65535],
-			'pending_reason 65536 chars' => ['pending_reason', 65536],
-			'pending_reason 70000 chars' => ['pending_reason', 70000],
+			'pending_reason 250 chars'   => ['pending_reason', 250, 250, true],
+			'pending_reason 65534 chars' => ['pending_reason', 65534, 16403, false],
+			'pending_reason 65535 chars' => ['pending_reason', 65535, 16403, false],
+			'pending_reason 65536 chars' => ['pending_reason', 65536, 16403, false],
+			'pending_reason 16385 chars' => ['pending_reason', 16385, 16403, false],
+			'pending_reason 16384 chars' => ['pending_reason', 16384, 16384, true],
+			'pending_reason 16383 chars' => ['pending_reason', 16383, 16383, true],
+			'pending_reason 16382 chars' => ['pending_reason', 16382, 16382, true],
 		];
 	}
 
@@ -1319,7 +1391,7 @@ class DBObjectTest extends ItopDataTestCase
 	 *
 	 * @since 3.1.2 N°3448 - Framework field size check not correctly implemented for multi-bytes languages/strings
 	 */
-	public function testCheckLongValueInAttribute(string $sAttrCode, int $iValueLength)
+	public function testCheckLongValueInAttribute(string $sAttrCode, int $iValueLength, int $iExpectedLength, bool $bIsValueToSetBelowAttrMaxSize): void
 	{
 		$sPrefix = 'a'; // just a small prefix so that the emoji bytes won't have a power of 2 (we want a non even value)
 		$sEmojiToRepeat = '😎'; // this emoji is 4 bytes long
@@ -1340,17 +1412,18 @@ class DBObjectTest extends ItopDataTestCase
 
 		$oAttDef = MetaModel::GetAttributeDef(UserRequest::class, $sAttrCode);
 		$iAttrMaxSize = $oAttDef->GetMaxSize();
-		$bIsValueToSetBelowAttrMaxSize = ($iValueLength <= $iAttrMaxSize);
+		$bExpectedStatus = ($oAttDef->GetSize($sValueToSet) <= $iAttrMaxSize);
+		$this->assertSame($bExpectedStatus, $bIsValueToSetBelowAttrMaxSize, 'The data provider must stay aligned with the attribute max size logic.');
 		/** @noinspection PhpUnusedLocalVariableInspection */
 		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oTicket->CheckToWrite();
 		$this->assertEquals($bIsValueToSetBelowAttrMaxSize, $bCheckStatus, "CheckResult result:".var_export($aCheckIssues, true));
 
 		$oTicket->SetTrim($sAttrCode, $sValueToSet);
 		$sValueInObject = $oTicket->Get($sAttrCode);
+		$this->assertEquals($iExpectedLength, mb_strlen($sValueInObject), 'Should match expected resulting value length.');
 		if ($bIsValueToSetBelowAttrMaxSize) {
 			$this->assertEquals($sValueToSet, $sValueInObject, 'Should not alter string that is already shorter than attribute max length');
 		} else {
-			$this->assertEquals($iAttrMaxSize, mb_strlen($sValueInObject), 'Should truncate at the same length than attribute max length');
 			$sLastCharsOfValueInObject = mb_substr($sValueInObject, -30);
 			$this->assertStringContainsString(' -truncated', $sLastCharsOfValueInObject, 'Should end with "truncated" comment');
 		}
@@ -1381,6 +1454,61 @@ class DBObjectTest extends ItopDataTestCase
 		$oOrganisation = MetaModel::NewObject(Organization::class);
 		$oOrganisation->SetTrim('name', $sName);
 		$this->assertEquals($sResult, $oOrganisation->Get('name'), 'SetTrim must limit string to 255 characters');
+	}
+
+	/**
+	 * Check that DBObject::SetTrim doesn't cut through multibytes characters
+	 *
+	 * @covers DBObject::SetTrim
+	 * @dataProvider SetTrimAttributeTextProvider
+	 */
+	public function testSetTrimOnAttributeTextKeepsUtf8Validity(string $sChar, int $iRepeatCount, bool $bExpectExactByteFill): void
+	{
+		$oTicket = MetaModel::NewObject('UserRequest', [
+			'ref'         => 'Test Ticket',
+			'title'       => 'Create OK',
+			'description' => 'Create OK',
+			'caller_id'   => 15,
+			'org_id'      => 3,
+		]);
+
+		$sValueToSet = str_repeat($sChar, $iRepeatCount);
+		$oTicket->SetTrim('pending_reason', $sValueToSet);
+		$sValueInObject = $oTicket->Get('pending_reason');
+
+		$oAttDef = MetaModel::GetAttributeDef('UserRequest', 'pending_reason');
+		$iAttrMaxSize = $oAttDef->GetMaxSize();
+		$iOriginalCharLength = mb_strlen($sValueToSet);
+		$sMessage = " -truncated ($iOriginalCharLength chars)";
+
+		$this->assertStringEndsWith($sMessage, $sValueInObject, 'Trimmed value should keep the expected truncation suffix.');
+		$this->assertTrue(mb_check_encoding($sValueInObject, 'UTF-8'), 'Trimmed value should stay valid UTF-8.');
+		$this->assertLessThanOrEqual($iAttrMaxSize, strlen($sValueInObject), 'Trimmed value should never exceed attribute byte max size.');
+
+		if ($bExpectExactByteFill) {
+			$this->assertSame($iAttrMaxSize, strlen($sValueInObject), 'When byte cut lands on a character boundary, SetTrim should use all available bytes.');
+		}
+	}
+
+	public function SetTrimAttributeTextProvider()
+	{
+		return [
+			// 2-byte UTF-8 chars: truncation payload size is byte-aligned and should fill the max size exactly.
+			'pending_reason 2-byte chars on byte boundary' => ["\xC3\xA9", 32768, true],
+			// 4-byte UTF-8 chars: truncation payload size is not byte-aligned and must backtrack to valid UTF-8.
+			'pending_reason 4-byte chars with mid-character byte cut' => ['💃', 16385, false],
+		];
+	}
+
+	/**
+	 * @covers DBObject::SetTrim
+	 */
+	public function testSetTrimOnNonStringAttributeDoesNotTrim()
+	{
+		$oTicket = MetaModel::NewObject(UserRequest::class);
+		$oTicket->SetTrim('caller_id', '15');
+
+		$this->assertEquals(15, $oTicket->Get('caller_id'), 'SetTrim should keep non-string attributes untouched before regular Set conversion');
 	}
 
 	/**

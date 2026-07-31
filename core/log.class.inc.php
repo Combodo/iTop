@@ -614,6 +614,13 @@ class LogChannels
 	 * @since 3.2.0
 	 */
 	public const SECURITY = 'Security';
+
+	/**
+	 * For Session parameters
+	 *
+	 * @Since 3.3.0
+	 */
+	public const SESSION_PARAMETERS = 'SessionParameters';
 }
 
 abstract class LogAPI

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<KnownError alias="KnownError" id="1">
+<name>Degraded VM Performance on ESXi 8.0U2 Hosts After vCenter Server 8.0U2b Update</name>
+<org_id>3</org_id>
+<problem_id>0</problem_id>
+<symptom>-  High latency (up to 500 ms) on storage read/write operations for VMs hosted on ESXi 8.0U2 hosts.
+- vCenter Alarms:
+    + &quot;Storage device latency is high&quot; (Threshold exceeded: &gt; 30 ms).
+    + &quot;Virtual machine disk I/O latency is high&quot;.
+- Application Impact:
+    + Slowdowns in databases (SQL, Oracle).
+    + Timeouts in critical applications (e.g., ERP, SAP).
+- Occurrence Period: Since the vCenter Server update to version 8.0U2b (deployed on July 10, 2026).
+
+Affected Environment:
+- ESXi Hosts: 5 servers (PROD-01 Cluster).
+- Storage: Dell EMC PowerStore 5000 (connected via iSCSI).
+- vCenter Server: Version 8.0U2b (build 21513536).</symptom>
+<root_cause>Compatibility issue between:
+- The native iSCSI driver in ESXi 8.0U2 (vmw_iscsi) and vCenter Server 8.0U2b.
+- A known bug in the NMP (Native Multi-Pathing) storage scheduler causing incorrect multipathing management after the vCenter update.
+
+VMware Reference:
+- KB 90827 (similar but not identical).
+- ESXi Logs: Repeated messages &quot;NMP: nmp_DeviceRequestFastDeviceProbe: NMP device state in doubt&quot; in /var/log/vmkernel.log.</root_cause>
+<workaround>Option 1: Reset the NMP Service (Temporary)
+ 1. SSH into each affected ESXi host.
+ 2. Run the following commands:
+         esxcli storage nmp device list  # List affected devices
+         esxcli storage nmp device set --device &lt;NAA_ID&gt; --state in_use  # Force active path
+  3. Restart the affected VMs. ⚠️ Effect: Resolves the issue for 24–48 hours, but latency reappears after a host reboot.
+
+Option 2: Disable Multipathing for Affected LUNs
+ 1. In vCenter, navigate to: Host &gt; Configure &gt; Storage &gt; Storage Devices.
+ 2. Select the affected LUN &gt; Edit Multipathing Policy &gt; Choose &quot;Fixed&quot; (instead of &quot;Most Recently Used&quot;). ⚠️ Risk: Loss of redundancy if one path fails.
+
+Option 3: Roll Back vCenter to Version 8.0U2a
+- Rollback vCenter to version 8.0U2a (build 21495409).
+- Impact: Loss of 8.0U2b features (e.g., security improvements).</workaround>
+<solution>- Action: Apply the VMware ESXi 8.0U2c patch (patch ESXi80U2c-21567894), which fixes the NMP scheduler bug.
+- Responsible Team: Virtualization + Storage Team.
+- Planned Date: July 18, 2026 (scheduled maintenance window).
+- Procedure:
+ 1. Place ESXi hosts in maintenance mode one by one.
+ 2. Apply the patch via vSphere Lifecycle Manager (vLCM).
+ 3. Reboot hosts and verify performance.</solution>
+<error_code>&quot;Storage device latency is high&quot;  &quot;Virtual machine disk I/O latency is high&quot;</error_code>
+<domain>Application</domain>
+<vendor>VMWare</vendor>
+<model>ESXi</model>
+<version>8.0U2</version>
+</KnownError>
+<KnownError alias="KnownError" id="2">
+<name>Apache HTTP Server (apache2) Crashes Randomly with &apos;Segmentation Fault&apos; on Ubuntu 22.04 LTS Servers After Kernel Update (5.15.0-86-generic)</name>
+<org_id>2</org_id>
+<problem_id>0</problem_id>
+<symptom>- The Apache2 service crashes suddenly without clear logs in /var/log/apache2/error.log.
+- System logs (/var/log/syslog) show:
+   Jul 14 08:45:23 web-server-01 kernel: [12345.678901] apache2[12345]: segfault at 7f8e12345678 ip 00007f8e12345678 sp 00007ffd12345678 error 4 in libapr-1.so.0.7.0[7f8e12345000+20000]
+
+- User Impact:
+   + Total unavailability of the website (HTTP 503 Service Unavailable).
+   + Average downtime per incident: 5–10 minutes (manual restart required).
+
+- Frequency: 2–3 times per day since July 12, 2026.
+
+- Affected Environment:
+   + Servers: 3 web servers (web-server-01, web-server-02, web-server-03).
+   + Operating System: Ubuntu 22.04 LTS.
+   + Kernel Version: 5.15.0-86-generic (updated on July 12, 2026).
+   + Apache Version: 2.4.52.
+   + Loaded Apache Modules: mod_ssl, mod_rewrite, mod_php8.1, mod_security2.</symptom>
+<root_cause>- Conflict between Linux kernel 5.15.0-86-generic and mod_security2 (version 2.9.5):
+   + The 5.15.0-86 kernel introduces a change in memory management for multi-threaded processes.
+   + The mod_security2 module (used for WAF security) is not compatible with this update, causing a segmentation fault (invalid memory access).
+
+- Evidence:
+   + The issue disappears when mod_security2 is disabled.
+   + The issue does not occur on servers running kernel 5.15.0-82-generic (previous version).
+
+- External References:
+   + Reported bug on Apache JIRA (similar).
+   + Discussion on Server Fault (community).</root_cause>
+<workaround>- Option 1: Temporarily Disable mod_security2
+  1. Edit the Apache configuration file:
+     sudo nano /etc/apache2/mods-enabled/security2.conf
+  2 . Comment out the line:
+    # SecRuleEngine On
+  3. Restart Apache:
+    sudo systemctl restart apache2
+
+⚠️ Impact: The web server becomes vulnerable to attacks (e.g., SQL injection, XSS).
+✅ Benefits: Immediately resolves the issue.
+
+- Option 2: Revert to the Previous Kernel (5.15.0-82-generic)
+  1. Reboot the server with the older kernel:
+     sudo reboot
+  2. In GRUB, select kernel 5.15.0-82-generic.⚠️ Impact: The server misses security patches from kernel 5.15.0-86.
+
+- Option 3: Limit Apache Threads
+  1. Modify Apache configuration (/etc/apache2/apache2.conf):
+     StartServers 2
+     MinSpareThreads 5
+     MaxSpareThreads 10
+     ThreadsPerChild 5
+    MaxRequestWorkers 20
+  2. Restart Apache:
+    sudo systemctl restart apache2
+   ⚠️ Impact: Reduced performance (fewer concurrent requests handled).</workaround>
+<solution>- Action: Upgrade mod_security2 to version 2.9.6 (compatible with kernel 5.15.0-86).
+   + Fixed Version: libapache2-mod-security2 2.9.6-1ubuntu0.22.04.1 (available in Ubuntu proposed repository).
+- Responsible Team: DevOps + Security Team.
+- Planned Date: July 17, 2026 (maintenance window: 02:00–04:00 UTC).
+- Procedure:
+   1. Add the proposed repository:
+      sudo add-apt-repository ppa:ubuntu-security-proposed
+      sudo apt update
+   2. Upgrade mod_security2:
+      sudo apt install --only-upgrade libapache2-mod-security2
+   3. Restart Apache:
+      sudo systemctl restart apache2
+   4. Verify the version:
+      apache2ctl -M | grep security</solution>
+<error_code></error_code>
+<domain>Application</domain>
+<vendor>Linux</vendor>
+<model>Apache</model>
+<version>2.4.52</version>
+</KnownError>
+</Set>

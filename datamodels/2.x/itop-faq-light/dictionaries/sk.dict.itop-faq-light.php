@@ -44,12 +44,12 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 ]);
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:ProblemManagement' => 'Problem management~~',
-	'Menu:ProblemManagement+' => 'Problem management~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Shortcuts~~',
 	'Menu:FAQCategory' => 'FAQ categories~~',
-	'Menu:FAQCategory+' => 'All FAQ categories~~',
+	'Menu:FAQCategory+' => 'A typology to categorize frequently asked questions (FAQ)~~',
 	'Menu:FAQ' => 'FAQs~~',
-	'Menu:FAQ+' => 'All FAQs~~',
+	'Menu:FAQ+' => 'All Frequently Asked Questions~~',
 	'Brick:Portal:FAQ:Menu' => 'FAQ~~',
 	'Brick:Portal:FAQ:Title' => 'Frequently Asked Questions~~',
 	'Brick:Portal:FAQ:Title+' => '<p>In a hurry?</p><p>Check out the list of most common questions and (maybe) find the expected answer right away.</p>~~',

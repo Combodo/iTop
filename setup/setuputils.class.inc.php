@@ -103,6 +103,9 @@ class CheckResult
  */
 class SetupUtils
 {
+	// Name of the parameter array in session for setup
+	public const SESSION_PARAMETERS_NAME = 'setup_params';
+
 	// -- Minimum versions (requirements : forbids installation if not met)
 	public const PHP_MIN_VERSION             = '8.2.0';
 	public const MYSQL_MIN_VERSION           = '5.7.0'; // 5.6 is no longer supported
@@ -229,6 +232,13 @@ class SetupUtils
 				$aResult[] = new CheckResult(CheckResult::WARNING, "Missing optional PHP extension: $sExtension. ".$sMessage);
 			}
 		}
+
+		try {
+			SetupUtils::CheckCliPhpVersionIsOk();
+		} catch (CoreException $e) {
+			$aResult[] = new CheckResult(CheckResult::WARNING, $e->getMessage());
+		}
+
 		// Check some ini settings here
 		if (function_exists('php_ini_loaded_file')) { // PHP >= 5.2.4
 			$sPhpIniFile = php_ini_loaded_file();
@@ -442,19 +452,20 @@ class SetupUtils
 	}
 
 	/**
-	 * @param CheckResult[] $aResult checks log
-	 *
-	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
+	* @param CheckResult[] $aResult checks log
+	* @param string|null $sPhpVersion: if not provided, use current version
+	* @return void
 	 */
-	private static function CheckPhpVersion(array &$aResult)
+	private static function CheckPhpVersion(array &$aResult, ?string $sPhpVersion = null, ?string $sPhpVersionDesc = null)
 	{
 		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckPHPVersion');
-		$sPhpVersion = phpversion();
+		$sPhpVersion = $sPhpVersion ?? phpversion();
+		$sPhpVersionDesc = $sPhpVersionDesc ?? "The current PHP Version";
 
 		if (version_compare($sPhpVersion, self::PHP_MIN_VERSION, '>=')) {
 			$aResult[] = new CheckResult(
 				CheckResult::INFO,
-				"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")"
+				"$sPhpVersionDesc (".$sPhpVersion.") is greater than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")"
 			);
 
 			$sPhpNextMinVersion = self::PHP_NEXT_MIN_VERSION; // mandatory before PHP 5.5 (arbitrary expressions), keeping compat because we're in the setup !
@@ -463,12 +474,12 @@ class SetupUtils
 				if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>=')) {
 					$aResult[] = new CheckResult(
 						CheckResult::INFO,
-						"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." major release, which is (".self::PHP_NEXT_MIN_VERSION.")"
+						"$sPhpVersionDesc (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." major release, which is (".self::PHP_NEXT_MIN_VERSION.")"
 					);
 				} else {
 					$aResult[] = new CheckResult(
 						CheckResult::WARNING,
-						"The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." major release, which is (".self::PHP_NEXT_MIN_VERSION.")"
+						"$sPhpVersionDesc (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." major release, which is (".self::PHP_NEXT_MIN_VERSION.")"
 					);
 				}
 			}
@@ -476,14 +487,58 @@ class SetupUtils
 			if (version_compare($sPhpVersion, self::PHP_NOT_VALIDATED_VERSION, '>=')) {
 				$aResult[] = new CheckResult(
 					CheckResult::WARNING,
-					"The current PHP Version (".$sPhpVersion.") is not yet validated by Combodo. You may experience some incompatibility issues."
+					"$sPhpVersionDesc (".$sPhpVersion.") is not yet validated by Combodo. You may experience some incompatibility issues."
 				);
 			}
 		} else {
 			$aResult[] = new CheckResult(
 				CheckResult::ERROR,
-				"Error: The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")"
+				"Error: $sPhpVersionDesc (".$sPhpVersion.") is lower than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")"
 			);
+		}
+	}
+
+	/**
+	 * @param string $sErrorLabel: error label with 1 placeholder inside for detailed error
+	 * @return void
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
+	public static function CheckCliPhpVersionIsOk(string $sErrorLabel = '%s'): void
+	{
+		$sPHPExec = trim(utils::GetConfig()->Get('php_path'));
+		$aOutput = null;
+		$iRes = 0;
+		exec("$sPHPExec --version", $aOutput, $iRes);
+		if ($iRes != 0) {
+			$sError = sprintf($sErrorLabel, "Cannot check CLI/PHP version ($sPHPExec)");
+			SetupLog::Error($sError, null, ['code' => $iRes, "output" => $aOutput, 'php_path' => $sPHPExec]);
+			throw new CoreException($sError);
+		}
+
+		SetupUtils::CheckCliPhpVersionFromOutput($sErrorLabel, $sPHPExec, $aOutput);
+	}
+
+	private static function CheckCliPhpVersionFromOutput(string $sErrorLabel, string $sPHPExec, $aOutput): void
+	{
+		$sFoundVersion = trim($aOutput[0] ?? "");
+		if (false === preg_match('/(\d+\.\d+)(?:\.\d+)?/', $sFoundVersion, $aMatches)) {
+			// no php version parsed. no php version check is possible
+			// let itop work. it may raise error with less accurate symptoms in setup audit checks (composer blabla...)
+			return;
+		}
+
+		$sFoundVersion = $aMatches[0];
+		$aCheckResults = [];
+		self::CheckPhpVersion($aCheckResults, $sFoundVersion, 'The current CLI PHP Version');
+		foreach ($aCheckResults as $oCheckRes) {
+			/** @var CheckResult $oCheckRes */
+			if ($oCheckRes->iSeverity === CheckResult::ERROR) {
+				$sDetail = str_replace('Error: ', '', $oCheckRes->sLabel);
+				$sError = sprintf($sErrorLabel, $sDetail);
+				SetupLog::Error($sError, null, ["output" => $aOutput, 'php_path' => $sPHPExec]);
+				throw new CoreException($sError);
+			}
 		}
 	}
 
@@ -498,15 +553,14 @@ class SetupUtils
 	 *
 	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	public static function CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules)
+	public static function CheckSelectedModules(array $aRelDirsToScan, $aSelectedModules)
 	{
 		$aResult = [];
-
-		$aDirsToScan = [APPROOT.$sSourceDir];
-		$sExtensionsPath = APPROOT.$sExtensionDir;
-		if (is_dir($sExtensionsPath)) {
-			// if the extensions dir exists, scan it for additional modules as well
-			$aDirsToScan[] = $sExtensionsPath;
+		$aDirsToScan = [];
+		foreach ($aRelDirsToScan as $sRelDir) {
+			if (is_dir(APPROOT.$sRelDir)) {
+				$aDirsToScan[] = APPROOT.$sRelDir;
+			}
 		}
 		require_once(APPROOT.'setup/modulediscovery.class.inc.php');
 		try {
@@ -1427,7 +1481,7 @@ EOF
 			// Unsupported Password, warn the user
 			$oPage->add_ready_script(
 				<<<JS
-$("#db_info").html('<div class="message message-error"><span class="message-title">Error:</span>On Windows, the backup won\'t work because database password contains %, ! or &quot; character</div>');
+$("#db_info").html('<div class="message message-error ibo-is-html-content"><span class="message-title">Error:</span>On Windows, the backup won\'t work because database password contains %, ! or &quot; character</div>');
 JS
 			);
 		} else {
@@ -1607,11 +1661,14 @@ JS
 
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aDirsToScan, $bAbortOnMissingDependency, $aModulesToLoad);
 
-		foreach ($aAvailableModules as $key => $aModule) {
-			$bIsExtra = (array_key_exists('root_dir', $aModule) && (strpos($aModule['root_dir'], $sExtraDir) !== false)); // Some modules (root, datamodel) have no 'root_dir'
-			if ($bIsExtra) {
-				// Modules in data/production-modules/ are considered as mandatory and always installed
-				$aAvailableModules[$key]['visible'] = false;
+		$bRemoteExtensionsShouldBeMandatory = !$oWizard->GetParameter('force-uninstall', false);
+		if ($bRemoteExtensionsShouldBeMandatory) {
+			foreach ($aAvailableModules as $key => $aModule) {
+				$bIsExtra = (array_key_exists('root_dir', $aModule) && (strpos($aModule['root_dir'], $sExtraDir) !== false)); // Some modules (root, datamodel) have no 'root_dir'
+				if ($bIsExtra) {
+					// Modules in data/production-modules/ are considered as mandatory and always installed
+					$aAvailableModules[$key]['visible'] = false;
+				}
 			}
 		}
 
@@ -2169,7 +2226,7 @@ JS
 		$sButtonLabel = '';
 		if ($sReturnApplication !== '') {
 			switch ($sReturnApplication) {
-				case 'itop':
+				case 'DataFeatureRemoval':
 					$sButtonUrl = utils::GetAbsoluteUrlModulePage('combodo-data-feature-removal', 'index.php');
 					$sButtonLabel = 'Back to application';
 					break;

@@ -40,7 +40,7 @@ class WizStepWelcome extends WizardStep
 	}
 
 	/**
-	 * Returns the label for the " Next >> " button
+	 * Returns the label for the "Next >>" button
 	 * @return string The label for the button
 	 */
 	public function GetNextButtonLabel()
@@ -50,16 +50,43 @@ class WizStepWelcome extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return [WizStepInstallOrUpgrade::class];
+		return [WizStepDetectedInfo::class, WizStepLicense::class];
 	}
 
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
-		return new WizardState(WizStepInstallOrUpgrade::class);
+		if ($this->oWizard->GetParameter('mode', 'install') === 'install') {
+
+			return new WizardState(WizStepLicense::class);
+		}
+
+		return new WizardState(WizStepDetectedInfo::class);
 	}
 
 	public function Display(SetupPage $oPage): void
 	{
+		$this->oWizard->EraseParameters();
+		$this->oWizard->SetWizardSteps([]);
+
+		$aPreviousInstance = SetupUtils::GetPreviousInstance(APPROOT);
+		if ($aPreviousInstance['found']) {
+			$this->oWizard->SetParameter('mode', 'upgrade');
+			$this->oWizard->SetParameter('db_server', $aPreviousInstance['db_server']);
+			$this->oWizard->SetParameter('db_user', $aPreviousInstance['db_user']);
+			$this->oWizard->SetParameter('db_pwd', $aPreviousInstance['db_pwd']);
+			$this->oWizard->SetParameter('db_name', $aPreviousInstance['db_name']);
+			$this->oWizard->SetParameter('db_prefix', $aPreviousInstance['db_prefix']);
+			$this->oWizard->SetParameter('db_tls_enabled', $aPreviousInstance['db_tls_enabled']);
+			$this->oWizard->SetParameter('db_tls_ca', $aPreviousInstance['db_tls_ca'] ?? '');
+			$this->oWizard->SetParameter('graphviz_path', $aPreviousInstance['graphviz_path']);
+		} else {
+			$this->oWizard->SetParameter('mode', 'install');
+			$sFullSourceDir = SetupUtils::GetLatestDataModelDir();
+			$this->oWizard->SetParameter('source_dir', $sFullSourceDir);
+			$this->oWizard->SetParameter('datamodel_version', SetupUtils::GetDataModelVersion($sFullSourceDir));
+		}
+		$this->oWizard->SetParameter('previous_version_dir', APPROOT);
+
 		// Store the misc_options for the future...
 		$aMiscOptions = utils::ReadParam('option', [], false, 'raw_data');
 		$sMiscOptions = $this->oWizard->GetParameter('misc_options', json_encode($aMiscOptions));
@@ -124,17 +151,17 @@ HTML
 			if (file_exists($sBuildConfigFile)) {
 				$oPage->add(
 					<<<HTML
-					<form method="post">
+					<form id="fast_setup" method="post">
 						<input type="hidden" name="_class" value="WizStepLandingBeforeAudit"/>
 						<input type="hidden" name="operation" value="next"/>
-						<input type="hidden" name="_params[skip_wizard]" value="1"/>
-						<table style="width:100%;" class="ibo-setup--wizard--buttons-container">
-						<tr>
-							<td style="text-align: right"><button type="submit" class="ibo-button ibo-is-regular ibo-is-secondary">Keep current choices</button></td>
-						</tr>
-						</table>
+						<input type="hidden" name="skip_wizard" value="1"/>
 					</form>
 HTML
+				);
+				$oPage->add_ready_script(
+					<<<JS
+$('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').before('<td style="text-align:center;"><button class="ibo-button ibo-is-alternative ibo-is-neutral" form="fast_setup"><span class="ibo-button--label">Keep current choices</span></button></td>');
+JS
 				);
 			}
 		}

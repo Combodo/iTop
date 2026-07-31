@@ -357,9 +357,6 @@ class ModuleDiscovery
 	{
 		$sDirectory = $sRootDir.'/'.$sRelDir;
 
-		if (!is_dir(utils::RealPath($sDirectory, APPROOT))) {
-			throw new Exception('Data directory ('.$sDirectory.') Does not exist or is outside iTop.');
-		}
 		if ($hDir = opendir($sDirectory)) {
 			// This is the correct way to loop over the directory. (according to the documentation)
 			while (($sFile = readdir($hDir)) !== false) {

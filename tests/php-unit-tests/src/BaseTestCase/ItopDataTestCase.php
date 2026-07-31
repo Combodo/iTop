@@ -87,8 +87,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 */
 	public const DEFAULT_TEST_ENVIRONMENT = 'production';
 	public const USE_TRANSACTION = true;
-	public const CREATE_TEST_ORG = false;
-
 	protected static $aURP_Profiles = [
 		'Administrator'         => 1,
 		'Portal user'           => 2,
@@ -102,8 +100,14 @@ abstract class ItopDataTestCase extends ItopTestCase
 		'Service Manager'       => 10,
 		'Document author'       => 11,
 		'Portal power user'     => 12,
+		'Business partner user'     => 40,
 		'REST Services User'    => 1024,
+		'Configuration ReadOnly' => 5500,
+		'Ticket ReadOnly' => 5501,
+		'Service Catalog ReadOnly' => 5502,
 	];
+
+	public const CREATE_TEST_ORG = false;
 
 	/**
 	 * This method is called before the first test of this test class is run (in the current process).
@@ -1464,15 +1468,41 @@ abstract class ItopDataTestCase extends ItopTestCase
 	}
 
 	/**
+	 * @description To avoid adding finalclasses parameters to GivenUserInDB
+	 * @param string $sPassword
+	 * @param array $aProfiles Profile names Example: ['Administrator']
+	 * @param bool $bReturnLogin
+	 *
+	 * @return string|int The unique login
+	 * @throws \Exception
+	 */
+	protected function GivenTokenUserInDB(array $aProfiles, bool $bReturnLogin = true): string|int
+	{
+		$sLogin = 'demo_test_'.uniqid(__CLASS__, true);
+
+		$aProfileList = array_map(function ($sProfileId) {
+			return 'profileid:'.self::$aURP_Profiles[$sProfileId];
+		}, $aProfiles);
+
+		$iUser = $this->GivenObjectInDB('UserToken', [
+			'login' => $sLogin,
+			'language' => 'EN US',
+			'profile_list' => $aProfileList,
+		]);
+		return $bReturnLogin ? $sLogin : $iUser;
+	}
+
+	/**
 	 * @param string $sPassword
 	 * @param array $aProfiles Profile names Example: ['Administrator']
 	 * @param string|null $sLogin
 	 * @param string|null $sUserId
+	 * @param bool $bReturnLogin
 	 *
 	 * @return string The unique login
 	 * @throws \Exception
 	 */
-	protected function GivenUserInDB(string $sPassword, array $aProfiles, ?string $sLogin = null, ?string &$sUserId = null): string
+	protected function GivenUserInDB(string $sPassword, array $aProfiles, ?string $sLogin = null, ?string &$sUserId = null, bool $bReturnLogin = true): string
 	{
 		if (is_null($sLogin)) {
 			$sLogin = 'demo_test_'.uniqid(__CLASS__, true);
@@ -1489,7 +1519,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 			'profile_list' => $aProfileList,
 		]);
 
-		return $sLogin;
+		return $bReturnLogin ? $sLogin : $sUserId;
 	}
 
 	/**

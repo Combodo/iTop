@@ -36,20 +36,24 @@ class IpbDropdown extends HTMLElement {
 			return;
 		}
 
-		button.addEventListener('click', (event) => {
-			event.stopPropagation();
-			const isOpen = menu.classList.contains('show');
-			document.querySelectorAll('ipb-dropdown.show').forEach(m => m.classList.remove('show'));
+        // N°9385 - add a test in order to know if the event addEventListener is already added to the button, if not add it
+        if ($(button).data('has_listener') === undefined) {
+            button.addEventListener('click', (event) => {
+                event.stopPropagation();
+                const isOpen = menu.classList.contains('show');
+                document.querySelectorAll('ipb-dropdown.show').forEach(m => m.classList.remove('show'));
 
-			if (!isOpen) {
-				menu.classList.add('show');
-				if (container === 'body') {
-					this.moveToBody(menu);
-				}
-				this.changePlacement(menu, button);
-				this.changeZIndex(menu, button);
-			}
-		});
+                if (!isOpen) {
+                    menu.classList.add('show');
+                    if (container === 'body') {
+                        this.moveToBody(menu);
+                    }
+                    this.changePlacement(menu, button);
+                    this.changeZIndex(menu, button);
+                }
+            });
+            $(button).data('has_listener', true);
+        }
 		
 		let me = this;
 		document.addEventListener('click', (event) => {

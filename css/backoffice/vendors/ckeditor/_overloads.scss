@@ -70,7 +70,7 @@ $ibo-vendors-ckeditor--ck-mentions--item--padding-y: $ibo-spacing-200 !default;
   }
 }
 
-.ck-editor__editable_inline:not(.ck-comment__input *) {
+.ck-editor__editable_inline:not(.ck-comment__input *), .ck-source-editing-area {
   height: 200px;
 }
 
@@ -82,11 +82,6 @@ $ibo-vendors-ckeditor--ck-mentions--item--padding-y: $ibo-spacing-200 !default;
     padding: $ibo-vendors-ckeditor--ck-content-pre-language--code--padding !important;
     color: $ibo-vendors-ckeditor--ck-content-pre-language--code--color !important;
   }
-}
-
-// N°7552 Allow source editing area to be scrollable in full screen
-.ck-maximize_editor_main .ck-source-editing-area textarea{
-  overflow: auto !important;
 }
 
 /* Mentions */

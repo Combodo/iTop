@@ -408,7 +408,7 @@ class ormDocument
 	 * @param int $iMaxImageHeight Maximum height for the resized image
 	 * @param array|null $aFinalDimensions Image dimensions after resizing or null if unable to read the image
 	 * @return ormDocument The resampled image
-	 *
+	 * @since 3.3.0 N°3124
 	 */
 	public function ResizeImageToFit(int $iMaxWidth, int $iMaxHeight, array|null &$aFinalDimensions = null): static
 	{

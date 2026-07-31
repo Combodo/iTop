@@ -49,8 +49,6 @@ if (Session::IsSet('auth_user')) {
 	UserRights::Login($sAuthUser); // Set the user's language
 }
 
-LoginWebPage::ResetSession();
-
 $bLoginDebug = MetaModel::GetConfig()->Get('login_debug');
 if ($bLoginDebug) {
 	IssueLog::Info("---------------------------------");
@@ -88,7 +86,7 @@ if ($bLoginDebug) {
 	IssueLog::Info("--> Display logout page");
 }
 
-LoginWebPage::ResetSession(true);
+LoginWebPage::ResetSession();
 if ($bLoginDebug) {
 	$sSessionLog = session_id().' '.utils::GetSessionLog();
 	IssueLog::Info("SESSION: $sSessionLog");

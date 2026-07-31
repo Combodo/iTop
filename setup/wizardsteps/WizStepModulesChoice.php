@@ -171,13 +171,13 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 	{
 		$aSteps = [
 			["class" => "WizStepWelcome","state" => ""],
-			["class" => "WizStepInstallOrUpgrade","state" => ""],
 			["class" => "WizStepDetectedInfo","state" => ""],
 			["class" => "WizStepUpgradeMiscParams","state" => ""],
 		];
 		$i = 0;
 		$this->aSteps = null;
 		while (null != $this->GetStepInfo($i)) {
+			// Allow looping for all existing steps
 			$this->aSteps = null;
 			$aSteps [] = ["class" => "WizStepModulesChoice","state" => "$i"];
 			$i++;
@@ -275,7 +275,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 			$oPage->warning($this->oMissingDependencyException->getHtmlDesc(), $this->oMissingDependencyException->getMessage());
 		}
 
-		$this->bUpgrade = ($this->oWizard->GetParameter('install_mode') != 'install');
+		$this->bUpgrade = ($this->oWizard->GetParameter('mode') != 'install');
 		$aStepInfo = $this->GetStepInfo();
 		$oPage->add_style("div.choice { margin: 0.5em;}");
 		$oPage->add_style("div.choice a { text-decoration:none; font-weight: bold; color: #1C94C4 }");
@@ -587,7 +587,7 @@ EOF
 					break;
 				}
 			}
-			if ((isset($aChoice['mandatory']) && $aChoice['mandatory']) ||
+			if ((isset($aChoice['mandatory']) && $aChoice['mandatory'] && (!isset($aChoice['dependency_issue']) || !$aChoice['dependency_issue'])) ||
 				(isset($aSelectedChoices[$sChoiceId]) && ($aSelectedChoices[$sChoiceId] == $sChoiceId))) {
 				$sDisplayChoices .= '<li>'.$aChoice['title'].'</li>';
 				if (isset($aChoice['modules'])) {
@@ -637,7 +637,7 @@ EOF
 			if ($sChoiceName == null) {
 				$sChoiceName = $sChoiceId;
 			}
-			if ((isset($aChoice['mandatory']) && $aChoice['mandatory']) ||
+			if ((isset($aChoice['mandatory']) && $aChoice['mandatory'] && (!isset($aChoice['dependency_issue']) || !$aChoice['dependency_issue'])) ||
 				(isset($aSelectedChoices[$sChoiceName]) && ($aSelectedChoices[$sChoiceName] == $sChoiceId))) {
 				$sDisplayChoices .= '<li>'.$aChoice['title'].'</li>';
 				if ($aSelectedExtensions !== null) {
@@ -750,13 +750,24 @@ EOF
 		$bSelected = isset($aSelectedComponents[$sChoiceId]) && ($aSelectedComponents[$sChoiceId] === $sChoiceId);
 		$bMissingFromDisk = isset($aChoice['missing']) && $aChoice['missing'] === true;
 		$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']);
-		$bInstalled = $bMissingFromDisk || $oITopExtension->bInstalled;
+		$bInstalled = $bMissingFromDisk || $oITopExtension?->bInstalled ?? false;
+		$bDependencyIssue = $oITopExtension?->HasDependencyIssue() ?? false;
 
 		$bChecked = $bSelected;
 		$bDisabled = false;
 		if ($bMissingFromDisk) {
 			$bDisabled = true;
 			$bChecked = false;
+		} elseif ($bDependencyIssue && ($oITopExtension->sSource !== iTopExtension::SOURCE_WIZARD || !$bMandatory)) {
+			// If the extension is not installed, the user cannot select it
+			// If the extension is installed and mandatory or not uninstallable, the user cannot unselect it
+			// Unless the user uses the "force-uninstall" option
+			$bDisabled = (!$bInstalled || $bMandatory || !$bCanBeUninstalled) && !$bDisableUninstallCheck;
+			// If the extension is a remote extension and not be installed means the user previously uninstalled it
+			// Otherwise, it will be checked if it is mandatory or if it was selected by the user
+			if ($oITopExtension->sSource !== iTopExtension::SOURCE_REMOTE || $bInstalled) {
+				$bChecked = $bMandatory ?: $bSelected;
+			}
 		} elseif ($bMandatory) {
 			$bDisabled = true;
 			$bChecked = true;
@@ -787,6 +798,8 @@ EOF
 
 		return [
 			'uninstallable' => $bCanBeUninstalled,
+			'dependency_issue' => $bDependencyIssue,
+			'mandatory' => $bMandatory,
 			'missing' => $bMissingFromDisk,
 			'installed' => $bInstalled,
 			'disabled' => $bDisabled,
@@ -805,8 +818,13 @@ EOF
 			$sChoiceId = $sParentId.self::$SEP.$index;
 			$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck, $this->bUpgrade);
 
-			if ($aFlags['disabled'] && !$aFlags['checked'] && !$aFlags['uninstallable'] && !$bDisableUninstallCheck) {
-				$this->bCanMoveForward = false;//Disable "Next"
+			if (!$aFlags['checked'] && $aFlags['installed'] && !$bDisableUninstallCheck && (!$aFlags['uninstallable'] || $aFlags['mandatory'])) {
+				// If the user cannot uninstall a mandatory extension, he cannot move forward unless he uses the "force-uninstall" option
+				// The same applies if the extension is not uninstallable (i.e. a product extension)
+				$this->bCanMoveForward = false;
+			} elseif ($aFlags['checked'] && $aFlags['disabled'] && $aFlags['dependency_issue'] && !$bDisableUninstallCheck) {
+				// If there is a dependency issue on a selected and disabled extension, the user cannot move forward unless he uses the "force-uninstall" option
+				$this->bCanMoveForward = false;
 			}
 
 			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $sChoiceId, $aFlags);
@@ -880,7 +898,10 @@ EOF
 			$sTooltip .= '<div id="badge--'.$sId.'--not-installed" class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</div>';
 		}
 		if (!$aFlags['uninstallable']) {
-			$sTooltip .= '<div id="badge--'.$sId.'--not-uninstallable" class="ibo-badge ibo-block ibo-is-orange" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</div>';
+			$sTooltip .= '<div id="badge--'.$sId.'--not-uninstallable" class="ibo-badge ibo-block ibo-is-yellow" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</div>';
+		}
+		if ($aFlags['dependency_issue']) {
+			$sTooltip .= '<div id="badge--'.$sId.'--cannot-be-installed" class="ibo-badge ibo-block ibo-is-orange" title="This extension cannot be installed because one or more dependencies are not satisfied." >cannot be installed</div>';
 		}
 
 		$sMetadata = '';
@@ -939,10 +960,6 @@ EOF
 
 	public function GetNextButtonLabel()
 	{
-		if (!$this->bCanMoveForward) {
-			return 'Non-uninstallable extension missing';
-		}
-
 		if ($this->GetStepInfo(1 + $this->GetStepIndex()) === null) {
 			return 'Check compatibility';
 		}

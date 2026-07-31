@@ -97,7 +97,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 
 Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:ProblemManagement' => '問題管理',
-	'Menu:ProblemManagement+' => '問題管理',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'ショートカット',
 	'Menu:NewError' => '新規既知のエラー',
 	'Menu:NewError+' => '新規既知のエラーの作成',

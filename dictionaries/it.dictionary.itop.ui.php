@@ -116,6 +116,18 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Query/Attribute:export_last_user_id+' => 'L\'utente che ha eseguito l\'ultima esportazione',
 	'Class:Query/Attribute:export_last_user_contact' => 'Contatto',
 	'Class:Query/Attribute:export_last_user_contact+' => 'Il contatto che ha eseguito l\'ultima esportazione',
+	'Class:Query/Attribute:usages' => 'Usages~~',
+		'Class:Query/Attribute:usages+' => 'Specify the possible usages for this query.
+ - The "Reference for AI" tag assumes the description is very explicit and compliant with OQL. It may be used as an example for building OQL queries by AI.
+ - The "Notification" tag implies the class of returned objects has one and only one field of type email.
+ - The "Dashlet" tag assumes the OQL returns a single class of objects.~~',
+	'Class:Query/Attribute:usages/Value:export' => 'Export~~',
+	'Class:Query/Attribute:usages/Value:reference' => 'Reference for AI~~',
+	'Class:Query/Attribute:usages/Value:notif' => 'Notification~~',
+	'Class:Query/Attribute:usages/Value:draft' => 'Draft~~',
+	'Class:Query/Attribute:usages/Value:dashlet' => 'Dashlet~~',
+	'Class:Query/Attribute:owner_id' => 'Owner~~',
+	'Class:Query/Attribute:owner_id+' => 'Team or person responsible for this query~~',
 	'Query:baseinfo' => 'Informazioni generali',
 	'Query:exportInfo' => 'Informazioni sull\'esportazione',
 	'Class:QueryOQL/Attribute:fields' => 'Campi',
@@ -372,7 +384,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
 Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Menu:WelcomeMenu' => 'Benveuto',
+	'Menu:WelcomeMenu' => 'Benvenuto',
 	'Menu:WelcomeMenu+' => '',
 	'Menu:WelcomeMenuPage' => 'Benvenuto',
 	'Menu:WelcomeMenuPage+' => '',

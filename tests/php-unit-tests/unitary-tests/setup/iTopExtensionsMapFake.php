@@ -23,6 +23,7 @@ class iTopExtensionsMapFake extends iTopExtensionsMap
 			$oExtension->sVersion = $aExtension['version'] ?? '1.0.0';
 			$oExtension->sSource = $aExtension['source'] ?? iTopExtension::SOURCE_MANUAL;
 			$oExtension->aModuleInfo = $aExtension['module_info'] ?? [];
+			$oExtension->aMissingDependencies = $aExtension['missing_dependencies'] ?? [];
 			$oMap->AddExtension($oExtension);
 		}
 		return $oMap;

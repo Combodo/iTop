@@ -2174,22 +2174,5 @@
     </profiles>
   </user_rights>
   <constants/>
-  <snippets>
-    <snippet id="GestionCssInfo" _delta="define">
-      <placement>module</placement>
-      <module>itop-structure</module>
-      <rank>-1</rank>
-      <content>
-        <![CDATA[
-        class GestionCssInfo implements iBackofficeStyleExtension
-          {
-            	public function GetStyle(): string
-            {
-               return '.ibo-field--label>.ibo-has-description::after, .ibo-input-with-label--label.ibo-has-description::after{content:"\1F6C8"; font-weight: 200;} ';
-            }
-          }
-        ]]>
-      </content>
-    </snippet>
-  </snippets>
+  <snippets/>
 </itop_design>

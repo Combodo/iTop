@@ -58,11 +58,11 @@ const CombodoCKEditorHandler = {
 				// Adjust size if passed in configuration
 				// - Width
 				if (aConfiguration.width !== undefined) {
-					editor.editing.view.on('change', writer => { writer.setStyle( 'width', aConfiguration.width, editor.editing.view.document.getRoot() ); } );
+                    editor.editing.view.change( writer => { writer.setStyle( 'width', aConfiguration.width, editor.editing.view.document.getRoot() ); } );
 				}
 				// - Height
 				if (aConfiguration.height !== undefined) {
-					editor.editing.view.on('change',  writer => { writer.setStyle( 'height', aConfiguration.height, editor.editing.view.document.getRoot() ); } );
+                    editor.editing.view.change( writer => { writer.setStyle( 'height', aConfiguration.height, editor.editing.view.document.getRoot() ); } );
 				}
 
 				this.instances[sElem] = editor;

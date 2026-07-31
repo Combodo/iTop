@@ -6,7 +6,7 @@
     <is_template>yes</is_template>
     <oql><![CDATA[SELECT Person WHERE id=:this->agent_id]]></oql>
     <fields>id,email</fields>
-    <finalclass>QueryOQL</finalclass>
+    <usages>notif</usages>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="4">
     <name>L'agent du Ticket s'il n'a pas déclenché la notification</name>
@@ -14,7 +14,7 @@
     <is_template>yes</is_template>
     <oql><![CDATA[SELECT Person WHERE id=:this->agent_id AND id != :current_contact_id]]></oql>
     <fields>id,email</fields>
-    <finalclass>QueryOQL</finalclass>
+    <usages>notif</usages>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="3">
     <name>Le demandeur et les contacts liés au Ticket</name>
@@ -24,7 +24,7 @@
       UNION SELECT Person WHERE id=:this->caller_id
     ]]></oql>
     <fields>id,email</fields>
-    <finalclass>QueryOQL</finalclass>
+    <usages>notif</usages>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="1">
     <name>Le demandeur du Ticket</name>
@@ -32,7 +32,7 @@
     <is_template>yes</is_template>
     <oql><![CDATA[SELECT Person WHERE id=:this->caller_id]]></oql>
     <fields>id,email</fields>
-    <finalclass>QueryOQL</finalclass>
+    <usages>notif</usages>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="2">
     <name>Les contacts liés au Ticket</name>
@@ -40,7 +40,7 @@
     <is_template>yes</is_template>
     <oql><![CDATA[SELECT Contact AS C JOIN lnkContactToTicket AS L ON L.contact_id=C.id WHERE L.ticket_id=:this->id]]></oql>
     <fields>id,email</fields>
-    <finalclass>QueryOQL</finalclass>
+    <usages>notif</usages>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="7">
     <name>Le manager du demandeur</name>
@@ -48,7 +48,7 @@
     <is_template>yes</is_template>
     <oql><![CDATA[SELECT Person AS manager JOIN Person AS employee ON employee.manager_id = manager.id WHERE employee.id=:this->caller_id]]></oql>
     <fields>id,email</fields>
-    <finalclass>QueryOQL</finalclass>
+    <usages>notif</usages>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="9">
     <name>La personne qui a déclenché la notification</name>
@@ -58,7 +58,7 @@
     <is_template>yes</is_template>
     <oql><![CDATA[SELECT Person WHERE id = :current_contact_id]]></oql>
     <fields>id,email</fields>
-    <finalclass>QueryOQL</finalclass>
+    <usages>notif</usages>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="6">
     <name>Les membres de l'équipe en charge du Ticket</name>
@@ -68,7 +68,7 @@
       WHERE L.team_id = :this->team_id
     ]]></oql>
     <fields>id,email</fields>
-    <finalclass>QueryOQL</finalclass>
+    <usages>notif</usages>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="5">
     <name>Les membres de l'équipe hors l'agent</name>
@@ -80,7 +80,7 @@
       WHERE L.team_id = :this->team_id AND P.id != :this->agent_id
     ]]></oql>
     <fields>id,email</fields>
-    <finalclass>QueryOQL</finalclass>
+    <usages>notif</usages>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="10">
     <name>L'équipe du Ticket</name>
@@ -88,7 +88,7 @@
     <is_template>yes</is_template>
     <oql><![CDATA[SELECT Team WHERE id = :this->team_id]]></oql>
     <fields>id,email</fields>
-    <finalclass>QueryOQL</finalclass>
+    <usages>notif</usages>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="11">
     <name>Les contacts d'un CI fonctionnel</name>
@@ -98,7 +98,7 @@
       WHERE L.functionalci_id = :this->id
     ]]></oql>
     <fields>id,email</fields>
-    <finalclass>QueryOQL</finalclass>
+    <usages>notif</usages>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="12">
     <name>Les contacts d'un Service</name>
@@ -108,7 +108,7 @@
       WHERE L.service_id = :this->id
     ]]></oql>
     <fields>id,email</fields>
-    <finalclass>QueryOQL</finalclass>
+    <usages>notif</usages>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="13">
     <name>Les contacts d'un Contrat</name>
@@ -118,6 +118,6 @@
       WHERE L.contract_id = :this->id
     ]]></oql>
     <fields>id,email</fields>
-    <finalclass>QueryOQL</finalclass>
+    <usages>notif</usages>
   </QueryOQL>
 </Set>

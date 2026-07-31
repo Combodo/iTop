@@ -1,6 +1,6 @@
 {# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
-<div id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}" data-role="ibo-extension-details">
+<div id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}" data-id="{{ oUIBlock.GetCode() }}" data-role="ibo-extension-details">
 	<div class="ibo-extension-details--information">
 		<div class="ibo-extension-details--information--label">
 			{{ oUIBlock.GetLabel() }}
