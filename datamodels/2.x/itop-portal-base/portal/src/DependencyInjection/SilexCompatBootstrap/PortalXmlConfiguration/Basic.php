@@ -73,7 +73,7 @@ class Basic extends AbstractConfiguration
 		$aPortalConf = [
 			'properties' => [
 				'id'              => $_ENV['PORTAL_ID'],
-				'ui_version' => 'v3',
+				'ui_version' => '2025',
 				'ui_settings' => [
 					'navigation_menu' => 'vertical',
 				],
