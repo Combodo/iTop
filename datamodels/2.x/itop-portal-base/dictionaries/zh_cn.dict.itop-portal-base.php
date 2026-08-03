@@ -49,7 +49,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Portal:Datatables:Language:Info' => '第 _PAGE_ 页,共 _PAGES_ 页',
 	'Portal:Datatables:Language:InfoEmpty' => '没有信息',
 	'Portal:Datatables:Language:InfoFiltered' => '最多筛选 _MAX_ 项',
-	'Portal:Datatables:Language:EmptyTable' => '表格中没有数据',
+	'Portal:Datatables:Language:EmptyTable' => '暂无数据',
 	'Portal:Datatables:Language:DisplayLength:All' => '全部',
 	'Portal:Datatables:Language:Paginate:First' => '首页',
 	'Portal:Datatables:Language:Paginate:Previous' => '上一页',
