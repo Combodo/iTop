@@ -11,5 +11,5 @@
  *
  */
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s is already linked to %3$s: %4$s, duplicates are not allowed on this relation.~~',
+	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s уже связан с %3$s: %4$s, дубликаты в этой связи не допускаются.',
 ]);

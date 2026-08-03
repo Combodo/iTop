@@ -11,5 +11,5 @@
  *
  */
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'theme:light-grey' => 'Light Grey (deprecated)~~',
+	'theme:light-grey' => 'Светло-серая (устарела)',
 ]);

@@ -11,8 +11,8 @@
  *
  */
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'UI:Object:Modal:Title' => 'Create an object~~',
-	'UI:Object:Modal:Create:MandatoryAttributeBlobInputs:Warning:Text' => 'This form contains a mandatory file attribute which cannot be set in modal mode. The creation of this object will be incomplete, edit it in a full-page form to complete it.~~',
-	'UI:Object:Modal:Modify:MandatoryAttributeBlobInputs:Warning:Text' => 'This form contains a mandatory file attribute which cannot be set in modal mode. This object is incomplete, edit it in a full-page form to complete it.~~',
-	'UI:Object:Modal:Modify:Filled:MandatoryAttributeBlobInputs:Warning:Text' => 'This form contains mandatory file attribute which cannot be modified in modal mode.~~',
+	'UI:Object:Modal:Title' => 'Создание объекта',
+	'UI:Object:Modal:Create:MandatoryAttributeBlobInputs:Warning:Text' => 'Эта форма содержит обязательный атрибут-файл, который нельзя задать в модальном режиме. Создание этого объекта будет неполным — завершите его на полноэкранной форме.',
+	'UI:Object:Modal:Modify:MandatoryAttributeBlobInputs:Warning:Text' => 'Эта форма содержит обязательный атрибут-файл, который нельзя задать в модальном режиме. Этот объект не полностью заполнен — завершите его на полноэкранной форме.',
+	'UI:Object:Modal:Modify:Filled:MandatoryAttributeBlobInputs:Warning:Text' => 'Эта форма содержит обязательный атрибут-файл, который нельзя изменить в модальном режиме.',
 ]);

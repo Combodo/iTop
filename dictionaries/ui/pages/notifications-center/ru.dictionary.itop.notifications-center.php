@@ -19,15 +19,15 @@
  */
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'UI:NotificationsCenter:Page:Title' => 'Notifications center~~',
-	'UI:NotificationsCenter:Panel:Title' => 'Notifications center~~',
-	'UI:NotificationsCenter:Panel:SubTitle' => 'Manage Notifications that you have received : unsubscribe or limit them to a single channel~~',
-	'UI:NotificationsCenter:Panel:Toolbar:ViewAllNews:Title' => 'View all my news~~',
-	'UI:NotificationsCenter:Panel:Table:Channels' => 'Channels~~',
-	'UI:NotificationsCenter:Unsubscribe:Success' => 'You have been successfully unsubscribed from the selected notifications.~~',
-	'UI:NotificationsCenter:Unsubscribe:Error' => 'An error occurred while unsubscribing from the selected notifications.~~',
-	'UI:NotificationsCenter:Subscribe:Success' => 'You have been successfully subscribed to the selected notifications.~~',
-	'UI:NotificationsCenter:Subscribe:Error' => 'An error occurred while subscribing to the selected notifications.~~',
-	'UI:NotificationsCenter:Channel:OutOf:Text' => '%1$s out of %2$s~~',
-	'UI:NotificationsCenter:Advanced:Input:Label' => '%1$s: %2$s~~',
+	'UI:NotificationsCenter:Page:Title' => 'Центр уведомлений',
+	'UI:NotificationsCenter:Panel:Title' => 'Центр уведомлений',
+	'UI:NotificationsCenter:Panel:SubTitle' => 'Управляйте получаемыми уведомлениями: отписывайтесь от них или ограничивайте одним каналом',
+	'UI:NotificationsCenter:Panel:Toolbar:ViewAllNews:Title' => 'Показать все мои новости',
+	'UI:NotificationsCenter:Panel:Table:Channels' => 'Каналы',
+	'UI:NotificationsCenter:Unsubscribe:Success' => 'Вы успешно отписались от выбранных уведомлений.',
+	'UI:NotificationsCenter:Unsubscribe:Error' => 'Произошла ошибка при отписке от выбранных уведомлений.',
+	'UI:NotificationsCenter:Subscribe:Success' => 'Вы успешно подписались на выбранные уведомления.',
+	'UI:NotificationsCenter:Subscribe:Error' => 'Произошла ошибка при подписке на выбранные уведомления.',
+	'UI:NotificationsCenter:Channel:OutOf:Text' => '%1$s из %2$s',
+	'UI:NotificationsCenter:Advanced:Input:Label' => '%1$s: %2$s',
 ]);

@@ -23,5 +23,5 @@
  */
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'theme:fullmoon-tritanopia' => 'Fullmoon (Tritanopia)~~',
+	'theme:fullmoon-tritanopia' => 'Fullmoon (тританопия)',
 ]);

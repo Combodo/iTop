@@ -11,10 +11,10 @@
  *
  */
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'UI:Modal:Confirmation:DefaultTitle' => 'Confirmation~~',
-	'UI:Modal:Informative:Title' => 'Informative Modal~~',
-	'UI:Modal:InformativeError:Title' => 'Error~~',
-	'UI:Modal:InformativeWarning:Title' => 'Warning~~',
-	'UI:Modal:InformativeInformation:Title' => 'Information~~',
-	'UI:Modal:InformativeSuccess:Title' => 'Success~~',
+	'UI:Modal:Confirmation:DefaultTitle' => 'Подтверждение',
+	'UI:Modal:Informative:Title' => 'Информационное окно',
+	'UI:Modal:InformativeError:Title' => 'Ошибка',
+	'UI:Modal:InformativeWarning:Title' => 'Предупреждение',
+	'UI:Modal:InformativeInformation:Title' => 'Информация',
+	'UI:Modal:InformativeSuccess:Title' => 'Успешно',
 ]);

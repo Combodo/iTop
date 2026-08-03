@@ -11,5 +11,5 @@
  *
  */
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Add an entry in the list~~',
+	'UI:DisplayBlock:List:AddEntry:Tooltip' => 'Добавить запись в список',
 ]);

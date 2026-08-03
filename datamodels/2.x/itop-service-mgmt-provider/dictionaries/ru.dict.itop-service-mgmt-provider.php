@@ -35,20 +35,20 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:DeliveryModel+' => 'Модели предоставления услуг (Delivery Models)',
 	'Menu:ServiceFamily' => 'Пакеты услуг',
 	'Menu:ServiceFamily+' => 'Пакеты услуг',
-	'Menu:ServiceCatalog' => 'Service catalog~~',
-	'Menu:ServiceCatalog+' => 'Define the service elements of your offering~~',
-	'UI-ServiceCatalogMenu-Title' => 'Service catalog~~',
-	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal~~',
-	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'Only Service and Subcategory on production are visible in User Portal~~',
-	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers~~',
-	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal~~',
-	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
-	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
-	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
+	'Menu:ServiceCatalog' => 'Каталог услуг',
+	'Menu:ServiceCatalog+' => 'Определите элементы услуг вашего предложения',
+	'UI-ServiceCatalogMenu-Title' => 'Каталог услуг',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Не отображается в портале пользователя',
+	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'В портале пользователя видны только услуги и подкатегории в статусе "Эксплуатация"',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Услуги, не используемые ни одним заказчиком',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Услуги без семейства услуг не отображаются в портале пользователя',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Количество SLT в каждом SLA',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Количество контрактов, использующих услугу',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Количество контрактов, использующих SLA',
 
-	'Contract:baseinfo' => 'General information~~',
-	'Contract:moreinfo' => 'Contractual information~~',
-	'Contract:cost' => 'Cost information~~',
+	'Contract:baseinfo' => 'Общая информация',
+	'Contract:moreinfo' => 'Информация о контракте',
+	'Contract:cost' => 'Информация о стоимости',
 ]);
 
 //
@@ -163,7 +163,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkContactToContract' => 'Связь Контакт/Договор',
 	'Class:lnkContactToContract+' => '',
-	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
+	'Class:lnkContactToContract/Name' => '%1$s / %2$s',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Договор',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '',
 	'Class:lnkContactToContract/Attribute:contract_name' => 'Договор',
@@ -181,7 +181,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkContractToDocument' => 'Связь Договор/Документ',
 	'Class:lnkContractToDocument+' => '',
-	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
+	'Class:lnkContractToDocument/Name' => '%1$s / %2$s',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Договор',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
 	'Class:lnkContractToDocument/Attribute:contract_name' => 'Договор',
@@ -199,7 +199,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkFunctionalCIToProviderContract' => 'Связь Функциональная КЕ/Договор с поставщиком',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
+	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Договор с поставщиком',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Договор с поставщиком',
@@ -232,7 +232,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Service' => 'Услуга',
 	'Class:Service+' => '',
-	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:Service/ComplementaryName' => '%1$s - %2$s',
 	'Class:Service/Attribute:name' => 'Название',
 	'Class:Service/Attribute:name+' => '',
 	'Class:Service/Attribute:org_id' => 'Поставщик',
@@ -242,7 +242,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Service/Attribute:description' => 'Описание',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Пакет услуг',
-	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
+	'Class:Service/Attribute:servicefamily_id+' => 'Требуется, чтобы услуга была видна в портале пользователя',
 	'Class:Service/Attribute:servicefamily_name' => 'Пакет услуг',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:documents_list' => 'Документы',
@@ -250,7 +250,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Service/Attribute:contacts_list' => 'Контакты',
 	'Class:Service/Attribute:contacts_list+' => 'Связанные контакты',
 	'Class:Service/Attribute:status' => 'Статус',
-	'Class:Service/Attribute:status+' => 'By default only Service in production are visible by Portal users~~',
+	'Class:Service/Attribute:status+' => 'По умолчанию пользователям портала видны только услуги в статусе "Эксплуатация"',
 	'Class:Service/Attribute:status/Value:implementation' => 'Внедрение',
 	'Class:Service/Attribute:status/Value:implementation+' => 'Внедрение',
 	'Class:Service/Attribute:status/Value:obsolete' => 'Устаревший',
@@ -272,7 +272,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkDocumentToService' => 'Связь Документ/Услуга',
 	'Class:lnkDocumentToService+' => '',
-	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
+	'Class:lnkDocumentToService/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Услуга',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'Услуга',
@@ -290,7 +290,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkContactToService' => 'Связь Контакт/Услуга',
 	'Class:lnkContactToService+' => '',
-	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
+	'Class:lnkContactToService/Name' => '%1$s / %2$s',
 	'Class:lnkContactToService/Attribute:service_id' => 'Услуга',
 	'Class:lnkContactToService/Attribute:service_id+' => '',
 	'Class:lnkContactToService/Attribute:service_name' => 'Услуга',
@@ -308,7 +308,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ServiceSubcategory' => 'Подкатегория услуги',
 	'Class:ServiceSubcategory+' => '',
-	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
 	'Class:ServiceSubcategory/Attribute:name' => 'Название',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
 	'Class:ServiceSubcategory/Attribute:description' => 'Описание',
@@ -326,7 +326,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Эксплуатация',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'Эксплуатация',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Тип запроса',
-	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user selects this service subcategory.~~',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Определяет тип тикета (Инцидент или Запрос на обслуживание), который будет создан, когда пользователь портала выберет эту подкатегорию услуги.',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Инцидент',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'Инцидент',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Запрос на обслуживание',
@@ -354,7 +354,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:SLA/Attribute:slts_list+' => 'Целевой показатель уровня услуги (Service Level Target)',
 	'Class:SLA/Attribute:customercontracts_list' => 'Договоры с заказчиками',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Договоры с заказчиками, в которых используется SLA',
-	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
+	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Не удалось сохранить связь с контрактом заказчика %1$s и услугой %2$s: SLA уже существует',
 ]);
 
 //
@@ -405,7 +405,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkSLAToSLT' => 'Связь SLA/SLT',
 	'Class:lnkSLAToSLT+' => '',
-	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
+	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'SLA',
@@ -433,7 +433,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkCustomerContractToService' => 'Связь Договор с заказчиком/Услуга',
 	'Class:lnkCustomerContractToService+' => '',
-	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
+	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Договор с заказчиком',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Договор с заказчиком',
@@ -446,8 +446,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Поставщик',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '',
 ]);
 
 //
@@ -457,7 +457,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkCustomerContractToProviderContract' => 'Связь Договор с заказчиком/Договор с поставщиком',
 	'Class:lnkCustomerContractToProviderContract+' => '',
-	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s~~',
+	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id' => 'Договор с заказчиком',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name' => 'Договор с заказчиком',
@@ -475,7 +475,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkCustomerContractToFunctionalCI' => 'Связь Договор с заказчиком/Функциональная КЕ',
 	'Class:lnkCustomerContractToFunctionalCI+' => '',
-	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s~~',
+	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id' => 'Договор с заказчиком',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name' => 'Договор с заказчиком',
@@ -514,7 +514,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkDeliveryModelToContact' => 'Связь Модель предоставления услуг/Контакт',
 	'Class:lnkDeliveryModelToContact+' => '',
-	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
+	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Модель предоставления услуг',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => 'Модель предоставления услуг',
@@ -534,10 +534,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
-	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
-	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
+	'Class:lnkContactToContract/Attribute:customer_id' => 'Заказчик',
+	'Class:lnkContactToContract/Attribute:customer_id+' => '',
+	'Class:lnkContactToContract/Attribute:provider_id' => 'Поставщик',
+	'Class:lnkContactToContract/Attribute:provider_id+' => '',
 ]);
 
 //
@@ -545,8 +545,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
-	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
-	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
+	'Class:lnkContractToDocument/Attribute:customer_id' => 'Заказчик',
+	'Class:lnkContractToDocument/Attribute:customer_id+' => '',
+	'Class:lnkContractToDocument/Attribute:provider_id' => 'Поставщик',
+	'Class:lnkContractToDocument/Attribute:provider_id+' => '',
 ]);

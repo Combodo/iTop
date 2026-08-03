@@ -81,7 +81,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Contact' => 'Контакт',
 	'Class:Contact+' => 'Контакт',
-	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
 	'Class:Contact/Attribute:name' => 'Название',
 	'Class:Contact/Attribute:name+' => '',
 	'Class:Contact/Attribute:status' => 'Статус',
@@ -119,7 +119,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Person' => 'Персона',
 	'Class:Person+' => 'Персона',
-	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => 'Фамилия',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'Имя',
@@ -140,8 +140,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Person/Attribute:team_list+' => 'Команды с участием персоны',
 	'Class:Person/Attribute:tickets_list' => 'Тикеты',
 	'Class:Person/Attribute:tickets_list+' => 'Связанные тикеты',
-	'Class:Person/Attribute:user_list' => 'Users~~',
-	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
+	'Class:Person/Attribute:user_list' => 'Пользователи',
+	'Class:Person/Attribute:user_list+' => 'Все пользователи, связанные с этим контактом',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Руководитель',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Фотография',
@@ -150,7 +150,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Person/UniquenessRule:employee_number' => 'В организации \'$this->org_name$\' уже есть персона с таким номером сотрудника',
 	'Class:Person/UniquenessRule:name+' => 'Имя сотрудника должно быть уникальным внутри организации',
 	'Class:Person/UniquenessRule:name' => 'В организации \'$this->org_name$\' уже есть персона с таким именем',
-	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
+	'Class:Person/Error:ChangingOrgDenied' => 'Невозможно перенести этот контакт в организацию \'%1$s\', так как это нарушит его доступ к порталу пользователя: связанный с ним пользователь не имеет прав на эту организацию',
 ]);
 
 //
@@ -160,16 +160,16 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Team' => 'Команда',
 	'Class:Team+' => 'Команда',
-	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => 'Участники',
 	'Class:Team/Attribute:persons_list+' => 'Участники команды',
-	'Class:Team/Attribute:overview' => 'Overview~~',
-	'Team:Overview' => 'Tickets and CIs managed by the team~~',
-	'Team:Overview:ActiveTickets' => 'Active tickets~~',
-	'Team:Overview:FunctionalCIs-ByType' => 'Functional CIs~~',
-	'Team:Overview:UserRequest-ByStatus' => 'User requests by status~~',
-	'Team:Overview:UserRequest-ClosedByMonth' => 'User requests closed in last 12 months~~',
-	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months~~',
+	'Class:Team/Attribute:overview' => 'Обзор',
+	'Team:Overview' => 'Тикеты и КЕ, за которые отвечает команда',
+	'Team:Overview:ActiveTickets' => 'Активные тикеты',
+	'Team:Overview:FunctionalCIs-ByType' => 'Функциональные КЕ',
+	'Team:Overview:UserRequest-ByStatus' => 'Запросы пользователей по статусу',
+	'Team:Overview:UserRequest-ClosedByMonth' => 'Запросы пользователей, закрытые за последние 12 месяцев',
+	'Team:Overview:UserRequest-ClosedByAgent' => 'Запросы пользователей, закрытые по агентам за последние 12 месяцев',
 	'Class:Team/Attribute:tickets_list' => 'Тикеты',
 	'Class:Team/Attribute:tickets_list+' => 'Все тикеты, назначенные на команду',
 ]);
@@ -181,7 +181,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Document' => 'Документ',
 	'Class:Document+' => 'Документ',
-	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
+	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Document/Attribute:name' => 'Название',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => 'Организация',
@@ -281,8 +281,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkPersonToTeam' => 'Связь Персона/Команда',
 	'Class:lnkPersonToTeam+' => '',
-	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
-	'Class:lnkPersonToTeam/Name+' => '~~',
+	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
+	'Class:lnkPersonToTeam/Name+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Команда',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Команда',
@@ -346,13 +346,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Person:info' => 'Основная информация',
 	'User:info' => 'Основная информация',
-	'User:profiles' => 'Profiles (minimum one)~~',
+	'User:profiles' => 'Профили (минимум один)',
 	'Person:personal_info' => 'Личная информация',
 	'Person:notifiy' => 'Уведомления',
 ]);
 
 // Themes
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'theme:fullmoon' => 'Full moon~~',
-	'theme:test-red' => 'Test instance (Red)~~',
+	'theme:fullmoon' => 'Полнолуние',
+	'theme:test-red' => 'Тестовый инстанс (красный)',
 ]);

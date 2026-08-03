@@ -11,5 +11,5 @@
  *
  */
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Previous pages~~',
+	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Предыдущие страницы',
 ]);

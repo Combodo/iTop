@@ -11,6 +11,6 @@
  *
  */
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'Core:ormValue:ormDocument:DownloadsCount' => '%1s~~',
-	'Core:ormValue:ormDocument:DownloadsCount+' => 'Downloaded %1$s time(s)~~',
+	'Core:ormValue:ormDocument:DownloadsCount' => '%1s',
+	'Core:ormValue:ormDocument:DownloadsCount+' => 'Скачано раз: %1$s',
 ]);

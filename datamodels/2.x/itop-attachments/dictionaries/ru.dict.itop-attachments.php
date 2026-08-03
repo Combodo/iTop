@@ -26,12 +26,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Attachments:NoAttachment' => 'Нет вложений.',
 	'Attachments:PreviewNotAvailable' => 'Предварительный просмотр не доступен для этого типа вложений.',
 	'Attachments:Error:FileTooLarge' => 'Файл слишком велик для загрузки. %1$s',
-	'Attachments:Error:UploadedFileEmpty' => 'The received file is empty and cannot be attached.
-Either you have pushed an empty file,
-or ask your '.ITOP_APPLICATION_SHORT.' administrator if the '.ITOP_APPLICATION_SHORT.' server disk is full.~~',
-	'Attachments:Render:Icons' => 'Display as icons~~',
-	'Attachments:Render:Table' => 'Display as list~~',
-	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
+	'Attachments:Error:UploadedFileEmpty' => 'Полученный файл пуст и не может быть прикреплён.
+Либо вы загрузили пустой файл,
+либо обратитесь к администратору '.ITOP_APPLICATION_SHORT.' — возможно, диск сервера '.ITOP_APPLICATION_SHORT.' переполнен.',
+	'Attachments:Render:Icons' => 'Отображать как иконки',
+	'Attachments:Render:Table' => 'Отображать как список',
+	'UI:Attachments:DropYourFileHint' => 'Перетащите файлы в любое место этой области',
 ]);
 
 //
@@ -62,7 +62,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Attachments:File:Uploader' => 'Пользователь',
 	'Attachments:File:Size' => 'Размер',
 	'Attachments:File:MimeType' => 'Тип',
-	'Attachments:File:DownloadsCount' => 'Downloads~~',
+	'Attachments:File:DownloadsCount' => 'Скачиваний',
 ]);
 //
 // Class: Attachment
@@ -82,15 +82,15 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
-	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
-	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment creation)~~',
-	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment creation~~',
-	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email~~',
-	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
-	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment deletion)~~',
-	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment deletion~~',
-	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email' => 'Add deleted file in email~~',
-	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email+' => 'If checked, the deleted file will be automatically attached to the email when an email action is triggered~~',
-	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',
+	'Class:TriggerOnAttachmentDownload' => 'Триггер (на скачивание вложения объекта)',
+	'Class:TriggerOnAttachmentDownload+' => 'Триггер на скачивание вложения объекта заданного класса (или его дочернего класса)',
+	'Class:TriggerOnAttachmentCreate'                         => 'Триггер (на создание вложения объекта)',
+	'Class:TriggerOnAttachmentCreate+'                        => 'Триггер на создание вложения объекта',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Добавлять файл в email',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'Если отмечено, файл будет автоматически прикреплён к письму при срабатывании действия email',
+	'Class:TriggerOnAttachmentDelete'                         => 'Триггер (на удаление вложения объекта)',
+	'Class:TriggerOnAttachmentDelete+'                        => 'Триггер на удаление вложения объекта',
+	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email' => 'Добавлять удалённый файл в email',
+	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email+' => 'Если отмечено, удалённый файл будет автоматически прикреплён к письму при срабатывании действия email',
+	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Триггер на объект не допускается для класса Attachment. Используйте специальный триггер',
 ]);
