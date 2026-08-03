@@ -1707,7 +1707,7 @@ JS
 		$oBlock->bAdvancedMode = utils::ReadParam('advanced', false);
 
 		$oBlock->sCsvFile = strtolower($this->m_oFilter->GetClass()).'.csv';
-		$oBlock->sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?expression='.urlencode($this->m_oFilter->ToOQL(true)).'&format=csv&filename='.urlencode($oBlock->sCsvFile);
+		$oBlock->sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?expression='.urlencode($this->m_oFilter->ToOQL(true)).'&format=csv&filename='.urlencode($oBlock->sCsvFile);
 		$oBlock->sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search'.$oAppContext->GetForLink(true).'&filter='.rawurlencode($this->m_oFilter->serialize()).'&format=csv';
 		// Pass the parameters via POST, since expression may be very long
 		$aParamsToPost = [
@@ -1724,7 +1724,7 @@ JS
 			$oBlock->sLinkToToggle = $oBlock->sLinkToToggle.'&advanced=1';
 			$oBlock->sChecked = '';
 		}
-		$oBlock->sAjaxLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php';
+		$oBlock->sAjaxLink = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php';
 
 		$oBlock->sCharsetNotice = false;
 		$oBlock->sJsonParams = json_encode($aParamsToPost);

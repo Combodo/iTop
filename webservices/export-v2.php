@@ -145,7 +145,6 @@ function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExcep
 
 	$oPanel->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), "", "", true, "next-btn"));
 	$oP->p('<a target="_blank" href="'.utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php">'.Dict::S('Core:BulkExportCanRunNonInteractive').'</a>');
-	$oP->p('<a target="_blank" href="'.utils::GetAbsoluteUrlAppRoot().'webservices/export.php">'.Dict::S('Core:BulkExportLegacyExport').'</a>');
 	$sJSEmptyOQL = json_encode(Dict::S('Core:BulkExportMessageEmptyOQL'));
 	$sJSEmptyQueryId = json_encode(Dict::S('Core:BulkExportMessageEmptyPhrasebookEntry'));
 
