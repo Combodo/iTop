@@ -361,12 +361,8 @@ class DataFeatureRemovalController extends Controller
 		foreach ($aExtensionsRef as $oExtension) {
 			/** @var \iTopExtension $oExtension */
 			$aMetaData = [$oExtension->sVersion, $oExtension->GetExtensionSourceLabel()];
-			if (SetupUtils::IsIncludedInBasePackage(
-				$oExtensionMap,
-				$oExtension->sCode,
-				$aBasePackageModules
-			)) {
-				$aMetaData[] = 'Included in package';
+			if (SetupUtils::IsIncludedInPackage($oExtensionMap->GetFromExtensionCode($oExtension->sCode), $aBasePackageModules)) {
+				$aMetaData[] = 'Already in package';
 			}
 
 			$aExtensionsData[$oExtension->sCode] = [
@@ -398,8 +394,10 @@ class DataFeatureRemovalController extends Controller
 
 		try {
 			$oRuntimeEnvironment = new RunTimeEnvironment(MetaModel::GetEnvironment(), false);
-			$aAvailableModules = $oRuntimeEnvironment->AnalyzeInstallation(MetaModel::GetConfig(), [APPROOT], false, null);
+			$aAvailableModules = $oRuntimeEnvironment->AnalyzeInstallation(MetaModel::GetConfig(), [APPROOT]);
 			$this->aBasePackageModules = SetupUtils::GetBasePackageModules($aAvailableModules, APPROOT.'datamodels');
+
+			echo implode(', <br/>', $this->aBasePackageModules);
 		} catch (Exception $e) {
 			DataFeatureRemovalLog::Warning(__METHOD__, null, ['error' => $e->getMessage()]);
 			$this->aBasePackageModules = [];

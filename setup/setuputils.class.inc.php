@@ -1708,9 +1708,9 @@ JS
 	}
 
 	/**
-	 * Build a map of modules that belong to the package base scope.
+	 * Build a map of module IDs that belong to the package base scope.
 	 *
-	 * @param array $aAnalyzeInstallationModules Output from AnalyzeInstallation-like methods
+	 * @param array $aAnalyzeInstallationModules Output from AnalyzeInstallation method
 	 * @param string $sSourceDir Base directory used as package scope
 	 *
 	 * @return array<string, bool>
@@ -1745,13 +1745,8 @@ JS
 	/**
 	 * Returns true when all modules of a non-package extension are already included in base package modules.
 	 */
-	public static function IsIncludedInBasePackage(iTopExtensionsMap $oExtensionsMap, string $sExtensionCode, array $aBasePackageModules): bool
+	public static function IsIncludedInPackage(?iTopExtension $oExtension, array $aBasePackageModules): bool
 	{
-		if ($sExtensionCode === '') {
-			return false;
-		}
-
-		$oExtension = $oExtensionsMap->GetFromExtensionCode($sExtensionCode);
 		if (($oExtension === null) || ($oExtension->sSource === iTopExtension::SOURCE_WIZARD)) {
 			return false;
 		}

@@ -168,6 +168,33 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 		return new WizardState(WizStepModulesChoice::class, (string)($index - 1));
 	}
 
+
+	public function GetAllSelectedModulesUntilNow(): array
+	{
+		$aModules = [];
+		$aSelectedChoices = json_decode($this->oWizard->GetParameter('selected_components', '{}'), true);
+		$iNextStep = $this->GetStepIndex();
+		$index = $iNextStep;
+		while(isset($aSelectedChoices[$iNextStep])){
+			//Let's empty the next steps, we only want what has been chosen before
+			$aSelectedChoices[$iNextStep] = [];
+			$iNextStep++;
+		}
+
+		for ($i = 0; $i < $index; $i++) {
+			$aStepInfo = $this->GetStepInfo($i);
+			$this->GetSelectedModules($aStepInfo, $aSelectedChoices[$i], $aModules );
+		}
+
+		/*
+		echo "===GetAllSelectedModulesUntilNow : ===<br/>";
+		echo implode(', <br/>',array_keys($aModules));
+		echo "<br/>=======<br/><hr/>";
+		*/
+
+		return $aModules;
+	}
+
 	public function GetWizardSteps(): array
 	{
 		$aSteps = [
@@ -571,6 +598,7 @@ EOF
 			foreach ($this->aAnalyzeInstallationModules as $sModuleId => $aModule) {
 				if (($sModuleId != ROOT_MODULE) && !isset($aModules[$sModuleId])) {
 					if (($aModule['category'] == 'authentication') || (!$aModule['visible'] && !isset($aModule['auto_select']))) {
+						//echo "Set module ".$sModuleId." to selected1<br/>";
 						$aModules[$sModuleId] = true;
 						$sDisplayChoices .= '<li><i>'.$aModule['label'].' (hidden)</i></li>';
 					}
@@ -613,6 +641,7 @@ EOF
 							}
 						}
 						if ($bSelected) {
+							//echo "Set module ".$sModuleId." to selected 2<br/>";
 							$aModules[$sModuleId] = true; // store the Id of the selected module
 							SetupInfo::SetSelectedModules($aModules);
 						}
@@ -743,8 +772,22 @@ EOF
 		return $this->aSteps[$index] ?? null;
 	}
 
-	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck, bool $bUpgradeMode)
+	public function ExtensionIsAlreadyIncludedInPreviousChoices(?iTopExtension $oITopExtension): bool
 	{
+		if(is_null($oITopExtension) || empty($oITopExtension->aModules)){
+			return false;
+		}
+		$aAllPreviousChoicesModules = $this->GetAllSelectedModulesUntilNow();
+
+		foreach($oITopExtension->aModules as $sModuleId) {
+			if (!isset($aAllPreviousChoicesModules[$sModuleId])) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck, bool $bUpgradeMode) {
 		$oITopExtension = $this->oExtensionsMap->GetFromExtensionCode($aChoice['extension_code']);
 		//If the extension is missing from disk, it won't exist in the ExtensionsMap, thus returning null
 		$bCanBeUninstalled = isset($aChoice['uninstallable']) ? $aChoice['uninstallable'] === true || $aChoice['uninstallable'] === 'yes' : $oITopExtension->CanBeUninstalled();
@@ -753,14 +796,17 @@ EOF
 		$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']);
 		$bInstalled = $bMissingFromDisk || $oITopExtension?->bInstalled ?? false;
 		$bDependencyIssue = $oITopExtension?->HasDependencyIssue() ?? false;
-		file_put_contents('C:/tmp/compute_choice_flags.log', "mandatory for ".$aChoice['extension_code']."=".(int)$bMandatory."\n", FILE_APPEND);
+		$bAlreadyIncluded = $this->ExtensionIsAlreadyIncludedInPreviousChoices($oITopExtension);
 
 		$bChecked = $bSelected;
 		$bDisabled = false;
 		if ($bMissingFromDisk) {
 			$bDisabled = true;
 			$bChecked = false;
-		} elseif ($bMandatory) {
+		}elseif($bAlreadyIncluded){
+			$bDisabled = true;
+			$bChecked = true;
+		}elseif ($bMandatory) {
 			$bDisabled = true;
 			$bChecked = true;
 		} elseif ($bDependencyIssue) {
@@ -792,6 +838,7 @@ EOF
 
 		return [
 			'uninstallable' => $bCanBeUninstalled,
+			'already_included' => $bAlreadyIncluded,
 			'dependency_issue' => $bDependencyIssue,
 			'mandatory' => $bMandatory,
 			'missing' => $bMissingFromDisk,
@@ -870,7 +917,7 @@ EOF
 			<a class="setup--wizard-choice--more-info" target="_blank" href="'.$aChoice['more_info'].'">
 				<i class="setup-extension--icon fas fa-external-link-alt" title="More information"></i>
 			</a>' : '';
-		$sDescription = isset($aChoice['description']) ? utils::EscapeHtml($aChoice['description']) : '';
+		$sDescription = isset($aChoice['description']) ? trim(utils::EscapeHtml($aChoice['description'])) : '';
 		$sId = utils::EscapeHtml($aChoice['extension_code']);
 		$sDataId = 'data-id="'.utils::EscapeHtml($aChoice['extension_code']).'"';
 		$sDisabled = $aFlags['disabled'] ? ' disabled data-disabled="disabled"' : '';
@@ -895,20 +942,18 @@ EOF
 		if ($aFlags['dependency_issue']) {
 			$sTooltip .= '<div id="badge--'.$sId.'--cannot-be-installed" class="ibo-badge ibo-block ibo-is-orange" title="This extension cannot be installed because one or more dependencies are not satisfied." >cannot be installed</div>';
 		}
+		if ($aFlags['already_included']) {
+			if(mb_strlen($sDescription) > 0){
+				$sDescription .= '<br/>';
+			}
+			$sDescription .= '<b>All the modules included in this extension are also included in the package. To uninstall this extension, you have to delete its folder.</b>';
+		}
 
 		$sMetadata = '';
 		if (isset($aChoice['version']) && isset($aChoice['source_label'])) {
 			$sMetadata = '<span>v'.$aChoice['version'].'</span><span>'.$aChoice['source_label'].'</span>';
-			if ($this->aBasePackageModules === null) {
-				$this->aBasePackageModules = SetupUtils::GetBasePackageModules(
-					$this->aAnalyzeInstallationModules,
-					$this->oWizard->GetParameter('source_dir', '')
-				);
-			}
-			if (SetupUtils::IsIncludedInBasePackage($this->oExtensionsMap, $aChoice['extension_code'] ?? '', $this->aBasePackageModules)) {
-				$sMetadata .= '<span>Included in package</span>';
-			}
 		}
+
 		$sChoiceDisabled = $aFlags['disabled'] && !$aFlags['checked'] ? 'choice-disabled' : '';
 
 		$oPage->add('
