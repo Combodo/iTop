@@ -2,12 +2,12 @@
 
 /*
  * @copyright   Copyright (C) 2010-2026 Combodo SAS
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @license     https://opensource.org/licenses/AGPL-3.0
  */
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Login:Title'                  => ITOP_APPLICATION_SHORT.'登录',
-	'UI:Login:Logo:AltText'           => ITOP_APPLICATION_SHORT.' logo~~',
+	'UI:Login:Logo:AltText'           => ITOP_APPLICATION_SHORT.' Logo',
 	'UI:Login:Welcome'                => '欢迎使用'.ITOP_APPLICATION_SHORT.'!',
 	'UI:Login:IncorrectLoginPassword' => '用户名或密码错误, 请重试.',
 	'UI:Login:IdentifyYourself'       => '请完成身份认证',
