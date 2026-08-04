@@ -1007,7 +1007,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:AllowDeleteAllPageTitle'   => 'Allow propagation of Replica deletion to their destination object~~',
 	'UI:DenyDeleteAllTabTitle'     => 'Deny deletion of synchronized object~~',
 	'UI:DenyDeleteAllPageTitle'    => 'Deny propagation of Replica deletion to their destination object~~',
-	
+
 	'Class:appUserPreferences' => 'Bruger Indstillinger',
 	'Class:appUserPreferences/Attribute:userid' => 'Bruger',
 	'Class:appUserPreferences/Attribute:preferences' => 'Inst.',

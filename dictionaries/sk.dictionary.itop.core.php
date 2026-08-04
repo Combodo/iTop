@@ -1025,7 +1025,7 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'UI:AllowDeleteAllPageTitle'   => 'Allow propagation of Replica deletion to their destination object~~',
 	'UI:DenyDeleteAllTabTitle'     => 'Deny deletion of synchronized object~~',
 	'UI:DenyDeleteAllPageTitle'    => 'Deny propagation of Replica deletion to their destination object~~',
-	
+
 	'Class:appUserPreferences' => 'Užívateľské preferencie',
 	'Class:appUserPreferences/Attribute:userid' => 'Užívateľ',
 	'Class:appUserPreferences/Attribute:preferences' => 'Preferencie',
