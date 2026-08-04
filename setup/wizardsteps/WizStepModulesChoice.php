@@ -772,8 +772,8 @@ EOF
 			// If the extension is mandatory, it is always checked and can be unchecked only if the user uses the "force-uninstall" option and the extension is not a product extension
 			$bDisabled = $oITopExtension->sSource === iTopExtension::SOURCE_WIZARD || !$bDisableUninstallCheck;
 			$bChecked = true;
-		} elseif ($bInstalled && !$bCanBeUninstalled) {
-			// If the extension is installed and cannot be uninstalled, it is always checked and can be unchecked only if the user uses the "force-uninstall" option
+		} elseif ($bInstalled && (!$bCanBeUninstalled || $oITopExtension->sSource === iTopExtension::SOURCE_REMOTE)) {
+			// If the extension is installed and cannot be uninstalled or is a remote extension, it is always checked and can be unchecked only if the user uses the "force-uninstall" option
 			$bDisabled = !$bDisableUninstallCheck;
 			$bChecked = true;
 		}
