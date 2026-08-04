@@ -232,7 +232,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'mandatory' => true,
 				],
 			],
-			'A mandatory extension should be checked and disabled even if the "disable uninstallation check" flag is set' => [
+			'A mandatory extension should be checked and enabled if the "disable uninstallation check" flag is set' => [
 				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => false,
@@ -249,7 +249,55 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'uninstallable' => true,
 					'missing' => false,
 					'installed' => false,
+					'disabled' => false,
+					'checked' => true,
+					'dependency_issue' => false,
+					'mandatory' => true,
+				],
+			],
+			'A mandatory extension included in package should be checked and disabled if the "disable uninstallation check" flag is set' => [
+				'aExtensionsOnDiskOrDb' => [
+					'itop-ext1' => [
+						'installed' => false,
+						'source' => 'datamodels', // iTopExtension::SOURCE_WIZARD
+					],
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => true,
+					'uninstallable' => true,
+				],
+				'bCurrentSelected' => false,
+				'bDisableUninstallChecks' => true,
+				'aExpectedFlags' => [
+					'uninstallable' => true,
+					'missing' => false,
+					'installed' => false,
 					'disabled' => true,
+					'checked' => true,
+					'dependency_issue' => false,
+					'mandatory' => true,
+				],
+			],
+			'A remote mandatory extension should be checked and enabled if the "disable uninstallation check" flag is set' => [
+				'aExtensionsOnDiskOrDb' => [
+					'itop-ext1' => [
+						'installed' => false,
+						'source' => 'data', // iTopExtension::SOURCE_REMOTE
+					],
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => true,
+					'uninstallable' => true,
+				],
+				'bCurrentSelected' => false,
+				'bDisableUninstallChecks' => true,
+				'aExpectedFlags' => [
+					'uninstallable' => true,
+					'missing' => false,
+					'installed' => false,
+					'disabled' => false,
 					'checked' => true,
 					'dependency_issue' => false,
 					'mandatory' => true,
@@ -557,7 +605,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'mandatory' => true,
 				],
 			],
-			'An non installed mandatory extension with missing dependencies and without force uninstall should be checked and disabled' => [
+			'A non installed mandatory extension with missing dependencies and without force uninstall should be checked and disabled' => [
 				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => false,
@@ -584,6 +632,54 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'mandatory' => true,
 				],
 			],
+			'An installed extension without force uninstall should be checked and disabled' => [
+				'aExtensionsOnDiskOrDb' => [
+					'itop-ext1' => [
+						'installed' => false,
+					],
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => true,
+					'uninstallable' => true,
+					'missing_dependencies' => false,
+				],
+				'bCurrentSelected' => false,
+				'bDisableUninstallChecks' => false,
+				'aExpectedFlags' => [
+					'uninstallable' => true,
+					'missing' => false,
+					'installed' => false,
+					'disabled' => true,
+					'checked' => true,
+					'dependency_issue' => false,
+					'mandatory' => true,
+				],
+			],
+			'An installed extension with force uninstall should be checked and enabled' => [
+				'aExtensionsOnDiskOrDb' => [
+					'itop-ext1' => [
+						'installed' => false,
+					],
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => true,
+					'uninstallable' => true,
+					'missing_dependencies' => false,
+				],
+				'bCurrentSelected' => false,
+				'bDisableUninstallChecks' => true,
+				'aExpectedFlags' => [
+					'uninstallable' => true,
+					'missing' => false,
+					'installed' => false,
+					'disabled' => false,
+					'checked' => true,
+					'dependency_issue' => false,
+					'mandatory' => true,
+				],
+			],
 		];
 	}
 
@@ -595,44 +691,6 @@ class WizStepModulesChoiceTest extends ItopTestCase
 		$this->oWizStepModulesChoiceFake->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
 		$aFlags = $this->oWizStepModulesChoiceFake->ComputeChoiceFlags($aWizardStepDefinition, '_0', $bIsCurrentSelected ? ['_0' => '_0'] : [], false, $bDisableUninstallChecks, true);
 		$this->assertEquals($aExpectedFlags, $aFlags);
-	}
-
-	public function ProviderGetAllExtensionsToDisplayInSetupMandatoryFlag()
-	{
-		return [
-			'A manually added extension should not be mandatory by default' => [
-				'bExtensionSource' =>  'extensions',//iTopExtension::SOURCE_MANUAL
-				'bDisableUninstallChecks' => false,
-				'bExpectedMandatory' => false,
-			],
-			'A remotely added extension should be mandatory by default' => [
-				'bExtensionSource' =>  'data',//iTopExtension::SOURCE_REMOTE
-				'bDisableUninstallChecks' => false,
-				'bExpectedMandatory' => true,
-			],
-			'A remotely added extension should not be mandatory by default if uninstall checks has been disabled' => [
-				'bExtensionSource' =>  'data',//iTopExtension::SOURCE_REMOTE
-				'bDisableUninstallChecks' => true,
-				'bExpectedMandatory' => false,
-			],
-
-		];
-	}
-
-	/**
-	 * @dataProvider ProviderGetAllExtensionsToDisplayInSetupMandatoryFlag
-	 */
-	public function testGetAllExtensionsToDisplayInSetupMandatoryFlag($bExtensionSource, $bDisableUninstallChecks, $bExpectedMandatory)
-	{
-		$aExtensionsOnDiskOrDb = [
-			'itop-ext1' => [
-				'installed' => true,
-				'source' => $bExtensionSource,
-			],
-		];
-		$oMap = iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb);
-		$aExtensions = $oMap->GetAllExtensionsToDisplayInSetup(false, !$bDisableUninstallChecks);
-		$this->assertEquals($bExpectedMandatory, $aExtensions['itop-ext1']->bMandatory);
 	}
 
 	public function ProviderGetAddedAndRemovedExtensions()
