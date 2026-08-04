@@ -4,7 +4,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -21,6 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 // Dictionnary conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -32,6 +33,7 @@
 // Class:<class_name>/Stimulus:<stimulus_code>+
 // Class:<class_name>/UniquenessRule:<rule_code>
 // Class:<class_name>/UniquenessRule:<rule_code>+
+
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
@@ -39,14 +41,16 @@
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
+
 //
 // Class: Organization
 //
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Organization' => '组织',
 	'Class:Organization+' => '',
 	'Class:Organization/Attribute:name' => '名称',
-	'Class:Organization/Attribute:name+' => '常用名称',
+	'Class:Organization/Attribute:name+' => '通用名称',
 	'Class:Organization/Attribute:code' => '编码',
 	'Class:Organization/Attribute:code+' => '组织编码 (Siret, DUNS,...)',
 	'Class:Organization/Attribute:status' => '状态',
@@ -63,9 +67,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_name' => '交付模式名称',
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
-	'Class:Organization/Attribute:parent_id_friendlyname' => '上级组织',
-	'Class:Organization/Attribute:parent_id_friendlyname+' => '上级组织',
-	'Class:Organization/Attribute:overview' => '概览',
+	'Class:Organization/Attribute:parent_id_friendlyname' => '父级组织昵称',
+	'Class:Organization/Attribute:parent_id_friendlyname+' => '',
+	'Class:Organization/Attribute:overview' => '概况',
 	'Organization:Overview:FunctionalCIs' => '此组织的所有配置项',
 	'Organization:Overview:FunctionalCIs:subtitle' => '按类型',
 	'Organization:Overview:Users' => '此组织里所有的'.ITOP_APPLICATION_SHORT.'用户',
@@ -76,8 +80,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:Location' => '地点',
-	'Class:Location+' => '任何类型的地点: 区域, 国家, 城市, 位置, 建筑, 楼层, 房间, 机架,...',
+	'Class:Location' => '位置',
+	'Class:Location+' => '任何类型的位置: 区域, 国家, 城市, 位置, 建筑, 楼层, 房间, 机架,...',
 	'Class:Location/Attribute:name' => '名称',
 	'Class:Location/Attribute:name+' => '',
 	'Class:Location/Attribute:status' => '状态',
@@ -134,10 +138,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Contact/Attribute:notify/Value:no+' => '否',
 	'Class:Contact/Attribute:notify/Value:yes' => '是',
 	'Class:Contact/Attribute:notify/Value:yes+' => '是',
-	'Class:Contact/Attribute:function' => '职责',
+	'Class:Contact/Attribute:function' => '职务',
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => '配置项',
-	'Class:Contact/Attribute:cis_list+' => '此联系人关联的所有配置项',
+	'Class:Contact/Attribute:cis_list+' => '此联系人相关的所有配置项',
 	'Class:Contact/Attribute:finalclass' => '联系人类型',
 	'Class:Contact/Attribute:finalclass+' => '根本属性的名称',
 ]);
@@ -147,9 +151,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:Person' => '人员',
+	'Class:Person' => '个体',
 	'Class:Person+' => '',
-	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => '姓',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => '名',
@@ -158,21 +162,21 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Person/Attribute:employee_number+' => '',
 	'Class:Person/Attribute:mobile_phone' => '手机',
 	'Class:Person/Attribute:mobile_phone+' => '',
-	'Class:Person/Attribute:location_id' => '地点',
+	'Class:Person/Attribute:location_id' => '位置',
 	'Class:Person/Attribute:location_id+' => '',
 	'Class:Person/Attribute:location_name' => '名称',
 	'Class:Person/Attribute:location_name+' => '',
-	'Class:Person/Attribute:manager_id' => '直属上级',
+	'Class:Person/Attribute:manager_id' => '经理',
 	'Class:Person/Attribute:manager_id+' => '',
-	'Class:Person/Attribute:manager_name' => '名称',
+	'Class:Person/Attribute:manager_name' => '经理姓名',
 	'Class:Person/Attribute:manager_name+' => '',
 	'Class:Person/Attribute:team_list' => '团队',
-	'Class:Person/Attribute:team_list+' => '这人员归属的所有团队',
+	'Class:Person/Attribute:team_list+' => '此人所属的团队',
 	'Class:Person/Attribute:tickets_list' => '工单',
-	'Class:Person/Attribute:tickets_list+' => '此人发起的所有工单',
+	'Class:Person/Attribute:tickets_list+' => '此人发起的工单',
 	'Class:Person/Attribute:user_list' => '用户',
-	'Class:Person/Attribute:user_list+' => '所有关联到此人员的用户',
-	'Class:Person/Attribute:manager_id_friendlyname' => '直属上级姓名',
+	'Class:Person/Attribute:user_list+' => '此人相关的所有用户',
+	'Class:Person/Attribute:manager_id_friendlyname' => '经理昵称',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => '头像',
 	'Class:Person/Attribute:picture+' => '',
@@ -180,7 +184,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Person/UniquenessRule:employee_number' => '\'$this->org_name$\' 内已经有人占用了这个员工号',
 	'Class:Person/UniquenessRule:name+' => '同一组织内的员工姓名必须唯一',
 	'Class:Person/UniquenessRule:name' => '\'$this->org_name$\' 内已经有人叫这个名字',
-	'Class:Person/Error:ChangingOrgDenied' => '无法移动此人员到组织 \'%1$s\' 因为这将终端其用户门户的访问, 其关联的用户没有被授权访问此组织',
+	'Class:Person/Error:ChangingOrgDenied' => '无法移动此人到组织 \'%1$s\' 因为这将终端其用户门户的访问, 其关联的用户没有被授权访问此组织',
 ]);
 
 //
@@ -228,7 +232,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Document/Attribute:status/Value:published' => '正式',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => '配置项',
-	'Class:Document/Attribute:cis_list+' => '此文档关联的所有配置项',
+	'Class:Document/Attribute:cis_list+' => '此文档相关的所有配置项',
 	'Class:Document/Attribute:finalclass' => '文档类型',
 	'Class:Document/Attribute:finalclass+' => '根本属性的名称',
 ]);
@@ -302,16 +306,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:lnkPersonToTeam' => '关联 人员/团队',
+	'Class:lnkPersonToTeam' => '链接 个体/团队',
 	'Class:lnkPersonToTeam+' => '',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
 	'Class:lnkPersonToTeam/Name+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_id' => '团队',
-	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_id+' => '个体所属的团队',
 	'Class:lnkPersonToTeam/Attribute:team_name' => '团队名称',
 	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
-	'Class:lnkPersonToTeam/Attribute:person_id' => '人员',
-	'Class:lnkPersonToTeam/Attribute:person_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_id' => '个体',
+	'Class:lnkPersonToTeam/Attribute:person_id+' => '团队中的成员',
 	'Class:lnkPersonToTeam/Attribute:person_name' => '姓名',
 	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
 	'Class:lnkPersonToTeam/Attribute:role_id' => '角色',
@@ -327,11 +331,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:DataAdministration' => '数据管理',
 	'Menu:DataAdministration+' => '数据管理',
-	'Menu:Catalogs' => '类别',
+	'Menu:Catalogs' => '类型',
 	'Menu:Catalogs+' => '数据类型',
 	'Menu:Audit' => '审计',
 	'Menu:Audit+' => '审计',
-	'Menu:CSVImport' => 'CSV导入',
+	'Menu:CSVImport' => 'CSV 导入',
 	'Menu:CSVImport+' => '批量创建或更新',
 	'Menu:Organization' => '组织',
 	'Menu:Organization+' => '所有组织',
@@ -339,18 +343,18 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:ConfigManagement+' => '配置管理',
 	'Menu:ConfigManagementCI' => '配置项',
 	'Menu:ConfigManagementCI+' => '配置项',
-	'Menu:ConfigManagementOverview' => '概览',
-	'Menu:ConfigManagementOverview+' => '概览',
+	'Menu:ConfigManagementOverview' => '概况',
+	'Menu:ConfigManagementOverview+' => '概况',
 	'Menu:Contact' => '联系人',
 	'Menu:Contact+' => '联系人',
 	'Menu:Contact:Count' => '%1$d 个联系人',
-	'Menu:Person' => '人员',
-	'Menu:Person+' => '所有人员',
+	'Menu:Person' => '个体',
+	'Menu:Person+' => '所有个体',
 	'Menu:Team' => '团队',
 	'Menu:Team+' => '所有团队',
 	'Menu:Document' => '文档',
 	'Menu:Document+' => '所有文档',
-	'Menu:Location' => '地点',
+	'Menu:Location' => '位置',
 	'Menu:Location+' => '所有位置',
 	'Menu:NewContact' => '新建联系人',
 	'Menu:NewContact+' => '新建联系人',
@@ -358,10 +362,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:SearchContacts+' => '搜索联系人',
 	'Menu:ConfigManagement:Shortcuts' => '快捷方式',
 	'Menu:ConfigManagement:AllContacts' => '所有联系人: %1$d',
-	'Menu:Typology' => '类型配置',
-	'Menu:Typology+' => '类型配置',
+	'Menu:Typology' => '拓扑配置',
+	'Menu:Typology+' => '拓扑配置',
 	'UI_WelcomeMenu_AllConfigItems' => '摘要',
-	'Menu:ConfigManagement:Typology' => '类型配置',
+	'Menu:ConfigManagement:Typology' => '拓扑配置',
 ]);
 
 // Add translation for Fieldsets
@@ -376,6 +380,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 // Themes
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'theme:fullmoon' => '满月',
-	'theme:test-red' => '测试 (红色)',
+	'theme:fullmoon' => 'Full moon',
+	'theme:test-red' => '测试实例 (红色)',
 ]);

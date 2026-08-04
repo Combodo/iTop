@@ -4,7 +4,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -23,5 +23,5 @@
  */
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'theme:fullmoon-high-contrast' => 'Fullmoon (High contrast)~~',
+	'theme:fullmoon-high-contrast' => 'Fullmoon (高对比度)',
 ]);

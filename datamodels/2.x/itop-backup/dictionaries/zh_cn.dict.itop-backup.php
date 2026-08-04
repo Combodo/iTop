@@ -21,25 +21,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
+
 	'bkp-backup-running' => '备份正在进行, 请稍候...',
-	'bkp-restore-running' => '还原正在进行, 请稍等...',
+	'bkp-restore-running' => '还原正在进行, 请稍候...',
+
 	'Menu:BackupStatus' => '定时备份',
 	'bkp-status-title' => '定时备份',
 	'bkp-status-checks' => '设置与检查',
-	'bkp-mysqldump-ok' => '已找到 mysqldump : %1$s',
-	'bkp-mysqldump-notfound' => 'mysqldump找不到: %1$s - 请确认它安装在正确的路径, 或者调整'.ITOP_APPLICATION_SHORT.'配置文件的参数mysql_bindir.',
-	'bkp-mysqldump-issue' => 'mysqldump无法运行 (retcode=%1$d): 请确认它安装在正确的路径, 或者调整'.ITOP_APPLICATION_SHORT.'配置文件的参数mysql_bindir',
+	'bkp-mysqldump-ok' => 'mysqldump 已存在: %1$s',
+	'bkp-mysqldump-notfound' => 'mysqldump 找不到: %1$s - 请确认它安装在正确的路径, 或者调整配置文件参数 mysql_bindir.',
+	'bkp-mysqldump-issue' => 'mysqldump 无法运行 (retcode=%1$d): 请确认它安装在正确的路径, 或者调整配置文件参数 mysql_bindir',
 	'bkp-missing-dir' => '目标目录<code>%1$s</code>找不到',
-	'bkp-free-disk-space' => '<b>%1$s可用空间</b>位于<code>%2$s</code>',
-	'bkp-dir-not-writeable' => '%1$s没有写入权限',
+	'bkp-free-disk-space' => '<b>%1$s 可用空间 </b> 位于 <code>%2$s</code>',
+	'bkp-dir-not-writeable' => '%1$s 没有写入权限',
 	'bkp-wrong-format-spec' => '当前文件名格式错误 (%1$s). 默认格式应该是: %2$s',
 	'bkp-name-sample' => '备份文件将以数据库名, 日期和时间进行命名. 例如: %1$s',
-	'bkp-week-days' => '在每个<b>%1$s的%2$s</b>进行备份',
-	'bkp-retention' => '最多<b>%1$d份备份文件</b>在目标目录.',
-	'bkp-next-to-delete' => '当下一次备份时将被删除 (参阅设置 "retention_count")',
+	'bkp-week-days' => '在每个 <b>%1$s 的 %2$s </b>进行备份',
+	'bkp-retention' => '最多保留 <b>%1$d 个备份</b>.',
+	'bkp-next-to-delete' => '当下一次备份时将被删除 (见设置 "保留个数")',
 	'bkp-table-file' => '文件',
-	'bkp-table-file+' => '只有扩展名是.zip的文件才被认为是备份文件',
+	'bkp-table-file+' => '只有扩展名是.zip 的文件才被认为是备份文件',
 	'bkp-table-size' => '大小',
 	'bkp-table-size+' => '',
 	'bkp-table-actions' => '操作',

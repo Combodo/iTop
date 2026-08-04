@@ -17,6 +17,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
+// Global search
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => '上一页',
 ]);

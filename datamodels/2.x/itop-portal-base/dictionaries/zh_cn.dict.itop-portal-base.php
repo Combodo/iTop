@@ -3,7 +3,6 @@
 /**
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
  * This file is part of iTop.
  *
  * iTop is free software; you can redistribute it and/or modify
@@ -18,6 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 // Portal
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Page:DefaultTitle' => '%1$s 用户门户',
@@ -38,18 +38,18 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Error:HTTP:400' => '请求错误',
 	'Error:HTTP:401' => '认证错误',
 	'Error:HTTP:404' => '页面找不到',
-	'Error:HTTP:500' => '啊! 发生了错误.',
+	'Error:HTTP:500' => '哦哦! 发生了报错.',
 	'Error:HTTP:GetHelp' => '如果问题仍然存在,请联系管理员.',
 	'Error:XHR:Fail' => '无法加载数据, 请联系管理员',
 	'Portal:ErrorUserLoggedOut' => '您已退出,请重新登录.',
 	'Portal:Datatables:Language:Processing' => '请稍候...',
 	'Portal:Datatables:Language:Search' => '筛选器:',
 	'Portal:Datatables:Language:LengthMenu' => '每页显示 _MENU_ 项',
-	'Portal:Datatables:Language:ZeroRecords' => '没有结果',
+	'Portal:Datatables:Language:ZeroRecords' => '没有可显示的结果',
 	'Portal:Datatables:Language:Info' => '第 _PAGE_ 页,共 _PAGES_ 页',
 	'Portal:Datatables:Language:InfoEmpty' => '没有信息',
 	'Portal:Datatables:Language:InfoFiltered' => '最多筛选 _MAX_ 项',
-	'Portal:Datatables:Language:EmptyTable' => '表格中没有数据',
+	'Portal:Datatables:Language:EmptyTable' => '暂无数据',
 	'Portal:Datatables:Language:DisplayLength:All' => '全部',
 	'Portal:Datatables:Language:Paginate:First' => '首页',
 	'Portal:Datatables:Language:Paginate:Previous' => '上一页',
@@ -57,7 +57,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Portal:Datatables:Language:Paginate:Last' => '尾页',
 	'Portal:Datatables:Language:Sort:Ascending' => '升序',
 	'Portal:Datatables:Language:Sort:Descending' => '降序',
-	'Portal:Autocomplete:NoResult' => '没有数据',
+	'Portal:Autocomplete:NoResult' => '没有可显示的数据',
 	'Portal:Attachments:DropZone:Message' => '把文件添加为附件',
 	'Portal:File:None' => '没有文件',
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
@@ -71,7 +71,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Portal:Form:Close:Warning' => '确定要离开表单吗? 已输入数据会丢失',
 	'Portal:Error:ObjectCannotBeCreated' => '错误: 无法创建对象. 请在再次提交表单前检查相关对象和附件.',
 	'Portal:Error:ObjectCannotBeUpdated' => '错误: 无法更新对象. 请在再次提交表单前检查相关对象和附件.',
-	'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
+	'Portal:Error:CheckToWriteFailed' => '字段 \'%1$s\' 校验时发生错误: %2$s',
 ]);
 
 // UserProfile brick
@@ -84,7 +84,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => '确认密码',
 	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => '要修改密码, 请联系管理员',
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => '无法修改密码, 请联系管理员',
-	'Brick:Portal:UserProfile:PersonalInformations:Title' => '人员信息',
+	'Brick:Portal:UserProfile:PersonalInformations:Title' => '个体信息',
 	'Brick:Portal:UserProfile:Photo:Title' => '头像',
 ]);
 
@@ -106,18 +106,18 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:Browse:Action:CreateObjectFromThis' => '新建 %1$s',
 	'Brick:Portal:Browse:Tree:ExpandAll' => '全部展开',
 	'Brick:Portal:Browse:Tree:CollapseAll' => '全部收起',
-	'Brick:Portal:Browse:Filter:NoData' => '没有项目',
+	'Brick:Portal:Browse:Filter:NoData' => '暂无数据',
 ]);
 
 // ManageBrick brick
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:Manage:Name' => '管理项目',
-	'Brick:Portal:Manage:Table:NoData' => '没有项目.',
+	'Brick:Portal:Manage:Table:NoData' => '暂无数据.',
 	'Brick:Portal:Manage:Table:ItemActions' => '操作',
 	'Brick:Portal:Manage:DisplayMode:list' => '列表',
-	'Brick:Portal:Manage:DisplayMode:pie-chart' => '饼图',
+	'Brick:Portal:Manage:DisplayMode:pie-chart' => '饼状图',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => '条形图',
-	'Brick:Portal:Manage:Others' => 'Others',
+	'Brick:Portal:Manage:Others' => '其它',
 	'Brick:Portal:Manage:All' => '全部',
 	'Brick:Portal:Manage:Group' => '分组',
 	'Brick:Portal:Manage:fct:count' => '个数',

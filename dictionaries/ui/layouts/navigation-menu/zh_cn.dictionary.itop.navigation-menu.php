@@ -17,9 +17,10 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 // Navigation menu
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => '公司标志',
+	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => '公司Logo',
 	'UI:Layout:NavigationMenu:Silo:Label' => '请选择要筛选的组织',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => '展开/折叠',
 	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => '展开/折叠 (筛选%1$s)',

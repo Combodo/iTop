@@ -2,8 +2,9 @@
 
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @license     https://opensource.org/licenses/AGPL-3.0
  */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:RequestManagement' => '服务台',
 	'Menu:RequestManagement+' => '',
@@ -13,10 +14,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:UserRequest:Provider+' => '',
 	'Menu:UserRequest:Overview' => '概况',
 	'Menu:UserRequest:Overview+' => '',
-	'Menu:NewUserRequest' => '新建用户需求',
-	'Menu:NewUserRequest+' => '新建用户需求工单',
-	'Menu:SearchUserRequests' => '搜索用户需求',
-	'Menu:SearchUserRequests+' => '搜索用户需求',
+	'Menu:NewUserRequest' => '新建需求',
+	'Menu:NewUserRequest+' => '新建需求工单',
+	'Menu:SearchUserRequests' => '搜索需求',
+	'Menu:SearchUserRequests+' => '搜索需求',
 	'Menu:UserRequest:Shortcuts' => '快捷方式',
 	'Menu:UserRequest:Shortcuts+' => '',
 	'Menu:UserRequest:MyRequests' => '分配给我的需求',
@@ -35,7 +36,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI-RequestManagementOverview-OpenRequestByType' => '打开的需求 (按类型)',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => '打开的需求 (按客户)',
 	'Class:UserRequest:KnownErrorList' => '已知错误',
-	'Class:UserRequest:KnownErrorList+' => '和当前工单关联的功能配置项相关的已知错误',
+	'Class:UserRequest:KnownErrorList+' => '链接到当前工单相关的功能配置项的已知错误',
 ]);
 
 // Dictionnay conventions
@@ -53,7 +54,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:UserRequest' => '用户需求',
+	'Class:UserRequest' => '需求',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => '状态',
 	'Class:UserRequest/Attribute:status+' => '',
@@ -65,9 +66,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest/Attribute:status/Value:assigned+' => '',
 	'Class:UserRequest/Attribute:status/Value:escalated_ttr' => '已升级TTR',
 	'Class:UserRequest/Attribute:status/Value:escalated_ttr+' => '',
-	'Class:UserRequest/Attribute:status/Value:waiting_for_approval' => '等待批准',
+	'Class:UserRequest/Attribute:status/Value:waiting_for_approval' => '等待审批',
 	'Class:UserRequest/Attribute:status/Value:waiting_for_approval+' => '',
-	'Class:UserRequest/Attribute:status/Value:approved' => '已批准',
+	'Class:UserRequest/Attribute:status/Value:approved' => '已审批',
 	'Class:UserRequest/Attribute:status/Value:approved+' => '',
 	'Class:UserRequest/Attribute:status/Value:rejected' => '已驳回',
 	'Class:UserRequest/Attribute:status/Value:rejected+' => '',
@@ -91,24 +92,24 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest/Attribute:impact/Value:3+' => '',
 	'Class:UserRequest/Attribute:priority' => '优先级',
 	'Class:UserRequest/Attribute:priority+' => '',
-	'Class:UserRequest/Attribute:priority/Value:1' => '紧急',
-	'Class:UserRequest/Attribute:priority/Value:1+' => '紧急',
+	'Class:UserRequest/Attribute:priority/Value:1' => '严重',
+	'Class:UserRequest/Attribute:priority/Value:1+' => '最高优先级',
 	'Class:UserRequest/Attribute:priority/Value:2' => '高',
-	'Class:UserRequest/Attribute:priority/Value:2+' => '高',
+	'Class:UserRequest/Attribute:priority/Value:2+' => '',
 	'Class:UserRequest/Attribute:priority/Value:3' => '中',
-	'Class:UserRequest/Attribute:priority/Value:3+' => '中',
+	'Class:UserRequest/Attribute:priority/Value:3+' => '',
 	'Class:UserRequest/Attribute:priority/Value:4' => '低',
-	'Class:UserRequest/Attribute:priority/Value:4+' => '低',
+	'Class:UserRequest/Attribute:priority/Value:4+' => '最低优先级',
 	'Class:UserRequest/Attribute:urgency' => '紧急度',
 	'Class:UserRequest/Attribute:urgency+' => '',
-	'Class:UserRequest/Attribute:urgency/Value:1' => '紧急',
-	'Class:UserRequest/Attribute:urgency/Value:1+' => '紧急',
+	'Class:UserRequest/Attribute:urgency/Value:1' => '严重',
+	'Class:UserRequest/Attribute:urgency/Value:1+' => '最高紧急性',
 	'Class:UserRequest/Attribute:urgency/Value:2' => '高',
-	'Class:UserRequest/Attribute:urgency/Value:2+' => '高',
+	'Class:UserRequest/Attribute:urgency/Value:2+' => '',
 	'Class:UserRequest/Attribute:urgency/Value:3' => '中',
-	'Class:UserRequest/Attribute:urgency/Value:3+' => '中',
+	'Class:UserRequest/Attribute:urgency/Value:3+' => '',
 	'Class:UserRequest/Attribute:urgency/Value:4' => '低',
-	'Class:UserRequest/Attribute:urgency/Value:4+' => '低',
+	'Class:UserRequest/Attribute:urgency/Value:4+' => '最低紧急性',
 	'Class:UserRequest/Attribute:origin' => '来自',
 	'Class:UserRequest/Attribute:origin+' => '',
 	'Class:UserRequest/Attribute:origin/Value:in_person' => '当面',
@@ -123,7 +124,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest/Attribute:origin/Value:phone+' => '通过电话收到的需求',
 	'Class:UserRequest/Attribute:origin/Value:portal' => '门户',
 	'Class:UserRequest/Attribute:origin/Value:portal+' => '通过门户收到的需求',
-	'Class:UserRequest/Attribute:approver_id' => '批准人',
+	'Class:UserRequest/Attribute:approver_id' => '审批人',
 	'Class:UserRequest/Attribute:approver_id+' => '',
 	'Class:UserRequest/Attribute:approver_email' => '邮箱',
 	'Class:UserRequest/Attribute:approver_email+' => '',
@@ -135,7 +136,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest/Attribute:servicesubcategory_id+' => '',
 	'Class:UserRequest/Attribute:servicesubcategory_name' => '子服务名称',
 	'Class:UserRequest/Attribute:servicesubcategory_name+' => '',
-	'Class:UserRequest/Attribute:escalation_flag' => '升级标签',
+	'Class:UserRequest/Attribute:escalation_flag' => '热门标识',
 	'Class:UserRequest/Attribute:escalation_flag+' => '',
 	'Class:UserRequest/Attribute:escalation_flag/Value:no' => '否',
 	'Class:UserRequest/Attribute:escalation_flag/Value:no+' => '否',
@@ -204,10 +205,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest/Attribute:parent_change_ref' => '变更编号',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:parent_incident_ref' => '父级事件编号',
-	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
+	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => '子需求',
-	'Class:UserRequest/Attribute:related_request_list+' => '此父级需求相关的所有衍生需求',
-	'Class:UserRequest/Attribute:public_log' => '评论',
+	'Class:UserRequest/Attribute:related_request_list+' => '所有链接到此需求的需求',
+	'Class:UserRequest/Attribute:public_log' => '公共日志',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => '用户满意度',
 	'Class:UserRequest/Attribute:user_satisfaction+' => '',
@@ -221,7 +222,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => '非常不满意',
 	'Class:UserRequest/Attribute:user_comment' => '用户评论',
 	'Class:UserRequest/Attribute:user_comment+' => '',
-	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => 'parent_request_id_friendlyname',
+	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => '父级需求昵称',
 	'Class:UserRequest/Attribute:parent_request_id_friendlyname+' => '',
 	'Class:UserRequest/Stimulus:ev_assign' => '分配',
 	'Class:UserRequest/Stimulus:ev_assign+' => '',
@@ -245,15 +246,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest/Stimulus:ev_close+' => '',
 	'Class:UserRequest/Stimulus:ev_reopen' => '重新打开',
 	'Class:UserRequest/Stimulus:ev_reopen+' => '',
-	'Class:UserRequest/Stimulus:ev_wait_for_approval' => '等待批准',
+	'Class:UserRequest/Stimulus:ev_wait_for_approval' => '等待审批',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => '无法分配父级需求给自己',
+
 	'Class:UserRequest/Method:ResolveChildTickets' => '解决子工单',
 	'Class:UserRequest/Method:ResolveChildTickets+' => '递归解决子工单 (自动解决), 并调整相关字段与父级工单保持一致: 服务, 团队, 办理人, 解决方案信息',
 ]);
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Organization:Overview:UserRequests' => '此组织的所有用户需求',
-	'Organization:Overview:MyUserRequests' => '我在此组织发起的需求',
-	'Organization:Overview:Tickets' => '此组织内的所有工单',
+	'Organization:Overview:UserRequests' => '来自此组织的需求',
+	'Organization:Overview:MyUserRequests' => '我在此组织的需求',
+	'Organization:Overview:Tickets' => '来自此组织内的工单',
 ]);
