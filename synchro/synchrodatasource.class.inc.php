@@ -2402,8 +2402,9 @@ class SynchroReplica extends DBObject implements iDisplay
 	 */
 	public function ReSynchro(): SynchroLog
 	{
+		IssueLog::Error('ReSynchro: ');
 		$oDataSource = MetaModel::GetObject(SynchroDataSource::class, $this->Get('sync_source_id'));
-
+		SynchroExecution::$m_oCurrentTask = $oDataSource;
 		$oStatLog = new SynchroLog();
 		$oStatLog->Set('sync_source_id', $oDataSource->GetKey());
 		$oStatLog->Set('start_date', time());
@@ -2464,7 +2465,7 @@ class SynchroReplica extends DBObject implements iDisplay
 
 		$this->Synchro($oDataSource, $aReconciliationKeys, $aAttributesToUpdate, $oChange, $oStatLog);
 		$this->DBUpdate();
-
+		SynchroExecution::$m_oCurrentTask = null;
 		return $oStatLog;
 	}
 
@@ -2884,7 +2885,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			$oActionsToolbar->AddSubBlock($oActionButton);
 		}
 
-		$sUrl = "{$sRootUrl}pages/$sUIPage?operation=display&class=$sClass&id=$sId{$sContext}";
+		$sUrl = "{$sRootUrl}pages/$sUIPage?operation=details&class=$sClass&id=$sId{$sContext}";
 		$oActionButton = ButtonUIBlockFactory::MakeAlternativeNeutral('', 'UI:Button:Refresh');
 		$oActionButton->SetIconClass('fas fa-sync-alt')
 			->SetOnClickJsCode('window.location.href=\''.$sUrl.'\'')
