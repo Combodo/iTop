@@ -702,8 +702,8 @@ EOF
 	protected function GetStepInfo($idx = null)
 	{
 		$index = $idx ?? $this->GetStepIndex();
-		$bRemoteExtensionsShouldBeMandatory = !$this->oWizard->GetParameter('force-uninstall', false);
 		if (is_null($this->aSteps)) {
+			$bRemoteExtensionsShouldBeMandatory = !$this->oWizard->GetParameter('force-uninstall', false);
 			$this->oWizard->SetParameter('additional_extensions_modules', json_encode([])); // Default value, no additional extensions
 
 			if (@file_exists($this->GetSourceFilePath())) {
@@ -817,15 +817,7 @@ EOF
 		foreach ($aOptions as $index => $aChoice) {
 			$sChoiceId = $sParentId.self::$SEP.$index;
 			$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck, $this->bUpgrade);
-
-			if (!$aFlags['checked'] && $aFlags['installed'] && !$bDisableUninstallCheck && (!$aFlags['uninstallable'] || $aFlags['mandatory'])) {
-				// If the user cannot uninstall a mandatory extension, he cannot move forward unless he uses the "force-uninstall" option
-				// The same applies if the extension is not uninstallable (i.e. a product extension)
-				$this->bCanMoveForward = false;
-			} elseif ($aFlags['checked'] && $aFlags['disabled'] && $aFlags['dependency_issue'] && !$bDisableUninstallCheck) {
-				// If there is a dependency issue on a selected and disabled extension, the user cannot move forward unless he uses the "force-uninstall" option
-				$this->bCanMoveForward = false;
-			}
+			$this->bCanMoveForward = $this->bCanMoveForward && $this->CanMoveForwardFromChoiceFlags($aFlags, $bDisableUninstallCheck);
 
 			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $sChoiceId, $aFlags);
 		}
@@ -870,6 +862,20 @@ EOF
 			$aFlags['checked'] = $bSelected;
 			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceName, $sChoiceId, $aFlags, 'radio');
 		}
+	}
+
+	protected function CanMoveForwardFromChoiceFlags(array $aFlags, bool $bDisableUninstallCheck): bool
+	{
+		if (!$aFlags['checked'] && $aFlags['installed'] && !$bDisableUninstallCheck && (!$aFlags['uninstallable'] || $aFlags['mandatory'])) {
+			// If the user cannot uninstall a mandatory extension, he cannot move forward unless he uses the "force-uninstall" option
+			// The same applies if the extension is not uninstallable (i.e. a product extension)
+			return false;
+		} elseif ($aFlags['checked'] && $aFlags['disabled'] && $aFlags['dependency_issue'] && !$bDisableUninstallCheck) {
+			// If there is a dependency issue on a selected and disabled extension, the user cannot move forward unless he uses the "force-uninstall" option
+			return false;
+		}
+
+		return true;
 	}
 
 	protected function DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceName, $sChoiceId, $aFlags, $sInputType = 'checkbox')

@@ -80,6 +80,22 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 				$aSelectedComponents = json_decode($this->oWizard->GetParameter('selected_components'), true);
 			}
 
+			$bDisableUninstallCheck = (bool)$this->oWizard->GetParameter('force-uninstall', false);
+			$bRemoteExtensionsShouldBeMandatory = !$bDisableUninstallCheck;
+			$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo($bRemoteExtensionsShouldBeMandatory);
+			foreach ($aOptions as $index => $aChoice) {
+				$sChoiceId = self::$SEP.$index;
+				$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, false, $bDisableUninstallCheck, true);
+				if (!$this->CanMoveForwardFromChoiceFlags($aFlags, $bDisableUninstallCheck)) {
+					// If the user has selected incompatible modules, we need to go back to the extensions choice step which is the last modules choice step in the wizard
+					$iCountModulesChoiceSteps = count(array_filter($aWizardSteps, fn (array $step): bool => $step['class'] === WizStepModulesChoice::class));
+					array_pop($aWizardSteps);
+					$this->oWizard->SetWizardSteps($aWizardSteps);
+					$this->oWizard->SetParameter('_steps', $aWizardSteps);
+					return new WizardState(WizStepModulesChoice::class, $iCountModulesChoiceSteps - 1);
+				}
+			}
+
 			// Save the choices for the summary step
 			$sDisplayChoices = '<ul>';
 			$i = 0;
@@ -104,7 +120,7 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 
 	public function GetPossibleSteps()
 	{
-		return [WizStepDataAudit::class];
+		return [WizStepDataAudit::class, WizStepModulesChoice::class];
 	}
 
 	public function GetNextButtonLabel()
