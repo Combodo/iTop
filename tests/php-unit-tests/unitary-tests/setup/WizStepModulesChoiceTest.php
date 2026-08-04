@@ -635,7 +635,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 			'An installed extension without force uninstall should be checked and disabled' => [
 				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
-						'installed' => false,
+						'installed' => true,
 					],
 				],
 				'aWizardStepDefinition' => [
@@ -649,7 +649,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'aExpectedFlags' => [
 					'uninstallable' => true,
 					'missing' => false,
-					'installed' => false,
+					'installed' => true,
 					'disabled' => true,
 					'checked' => true,
 					'dependency_issue' => false,
@@ -659,7 +659,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 			'An installed extension with force uninstall should be checked and enabled' => [
 				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
-						'installed' => false,
+						'installed' => true,
 					],
 				],
 				'aWizardStepDefinition' => [
@@ -673,7 +673,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'aExpectedFlags' => [
 					'uninstallable' => true,
 					'missing' => false,
-					'installed' => false,
+					'installed' => true,
 					'disabled' => false,
 					'checked' => true,
 					'dependency_issue' => false,
