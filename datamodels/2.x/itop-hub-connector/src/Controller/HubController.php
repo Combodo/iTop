@@ -25,6 +25,7 @@ require_once(APPROOT.'core/mutex.class.inc.php');
 require_once(APPROOT.'core/dict.class.inc.php');
 require_once(APPROOT.'setup/xmldataloader.class.inc.php');
 require_once(__DIR__.'/../setup/hubruntimeenvironment.class.inc.php');
+require_once(__DIR__.'/../Model/DBBackupWithErrorReporting.php');
 
 class HubController
 {
@@ -125,15 +126,21 @@ class HubController
 		// First step: prepare the datamodel, if it fails, roll-back
 		$aSelectedExtensionDirs = utils::ReadParam('extension_dirs', [], false, utils::ENUM_SANITIZATION_FILTER_MODULE_CODE);
 
-		$oRuntimeEnv = new HubRunTimeEnvironment('production', false); // use a temp environment: production-build
+		$oRuntimeEnv = new HubRunTimeEnvironment(ITOP_DEFAULT_ENV, false); // use a temp environment: production-build
 		$oRuntimeEnv->MoveSelectedExtensions(APPROOT.'/data/downloaded-extensions/', $aSelectedExtensionDirs);
 
-		$oConfig = new Config(APPCONF.'production/'.ITOP_CONFIG_FILE);
+		$oExtensionMap = iTopExtensionsMap::GetExtensionsMap($oRuntimeEnv->GetBuildEnv());
+		$aPreviousRemoteExtensions = $oExtensionMap->GetExtensionsFromDir(APPROOT.'data/'.$oRuntimeEnv->GetFinalEnv().'-modules/') ?: [];
+		$aCurrentRemoteExtensions = $oExtensionMap->GetExtensionsFromDir(APPROOT.'data/'.$oRuntimeEnv->GetBuildEnv().'-modules/') ?: [];
+		$aAddedExtensions = array_diff($aCurrentRemoteExtensions, $aPreviousRemoteExtensions);
+
+		$sBuildConfigFile = APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE;
+		$oConfig = new Config($sBuildConfigFile);
 		if ($oConfig->Get('demo_mode')) {
 			throw new Exception('Sorry the installation of extensions is not allowed in demo mode');
 		}
 
-		$oRuntimeEnv->CompileFrom('production'); // WARNING symlinks does not seem to be compatible with manual Commit
+		$oRuntimeEnv->CompileFrom(ITOP_DEFAULT_ENV, aAddedExtensions: array_keys($aAddedExtensions)); // WARNING symlinks does not seem to be compatible with manual Commit
 		$oRuntimeEnv->UpdateIncludes($oConfig);
 
 		$oRuntimeEnv->InitDataModel($oConfig, true /* model only */);

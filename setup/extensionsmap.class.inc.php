@@ -40,14 +40,14 @@ class iTopExtensionsMap
 	/**
 	 * @throws \Exception
 	 */
-	public static function GetExtensionsMap(string $sFromEnvironment = ITOP_DEFAULT_ENV, ?string $sAppRootForTests = null): iTopExtensionsMap
+	public static function GetExtensionsMap(string $sFromEnvironment = ITOP_DEFAULT_ENV, array $aExtraDirs = [], ?string $sAppRootForTests = null): iTopExtensionsMap
 	{
 		if (!is_null($sAppRootForTests)) {
-			return new iTopExtensionsMap($sFromEnvironment, $sAppRootForTests);
+			return new iTopExtensionsMap($sFromEnvironment, $aExtraDirs, $sAppRootForTests);
 		}
 
 		if (!isset(self::$aInstancesByEnvironment[$sFromEnvironment])) {
-			self::$aInstancesByEnvironment[$sFromEnvironment] = new iTopExtensionsMap($sFromEnvironment);
+			self::$aInstancesByEnvironment[$sFromEnvironment] = new iTopExtensionsMap($sFromEnvironment, $aExtraDirs);
 		}
 
 		return self::$aInstancesByEnvironment[$sFromEnvironment];
@@ -57,11 +57,12 @@ class iTopExtensionsMap
 	 * The list of all discovered extensions
 	 *
 	 * @param string $sFromEnvironment The environment to scan
+	 * @param array $aExtraDirs extensions dir to scan
 	 * @param string|null $sAppRootForTests
 	 *
 	 * @throws \Exception
 	 */
-	private function __construct(string $sFromEnvironment = ITOP_DEFAULT_ENV, ?string $sAppRootForTests = null)
+	private function __construct(string $sFromEnvironment = ITOP_DEFAULT_ENV, array $aExtraDirs = [], ?string $sAppRootForTests = null)
 	{
 		$this->aExtensions = [];
 		$this->aExtensionsByCode = [];
@@ -69,6 +70,11 @@ class iTopExtensionsMap
 
 		$sAppRoot = $sAppRootForTests ?? APPROOT;
 		$this->ScanDisk($sFromEnvironment, $sAppRoot);
+
+		foreach ($aExtraDirs as $sDir) {
+			$this->ReadDir($sDir, iTopExtension::SOURCE_REMOTE, bIsRootDir: true);
+		}
+
 		$this->CheckDependencies($sAppRoot);
 	}
 

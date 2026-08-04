@@ -49,7 +49,7 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 	 */
 	protected $aAdditionExtensionFoldersByCode = null;
 
-	public function CompileFrom($sSourceEnv, $bUseSymLinks = null)
+	public function CompileFrom($sSourceEnv, $bUseSymLinks = null, $aAddedExtensions = [])
 	{
 		$sDestModulesDir = APPROOT.'data/'.$this->sBuildEnv.'-modules/';
 		if (is_dir($sDestModulesDir)) {
