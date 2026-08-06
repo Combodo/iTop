@@ -344,17 +344,25 @@ SQL
 	}
 
 	/**
+	 * Doesn't test the localized data per se, but test that sample data are indeed loaded on a version crossing
 	 * @covers \ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion
 	 */
 	public function testLoadLocalizedData_LoadsWhenVersionCrossingIsTrue(): void
 	{
-		$this->markTestSkipped('Test skipped because failing in CI. Investigation required, cf Bug N°9787');
+		[$oConfig, $sPattern] = $this->GivenLocalizedDataTestContext('en_us', 'data.sample.organizations.en_us.xml');
 
-		[$oConfig, $sPattern] = $this->GivenLocalizedDataTestContext('FR FR', 'data.sample.organizations.en_us.xml');
+		// Get the original number of organization
+		$oOriginalOrganizationSet = new \DBObjectSet(\DBSearch::FromOQL("SELECT Organization"));
+		$iOriginalOrganizationCount = $oOriginalOrganizationSet->Count();
+		// We expect original + 6 (data.sample.organizations.en_us.xml number of organization) organization
+		$iExpectedOrganizationCount = $iOriginalOrganizationCount + 6;
 
 		ModuleInstallerAPI::LoadLocalizedDataOnCrossingVersion($oConfig, '3.0.0', '3.2.0', '3.1.0', $sPattern);
 
-		$this->AssertOrganizationNamesExist(['Client (Test)', 'Département informatique (Test)']);
+		$oFinalOrganizationSet = new \DBObjectSet(\DBSearch::FromOQL("SELECT Organization"));
+		$iFinalOrganizationCount = $oFinalOrganizationSet->Count();
+
+		$this->assertEquals($iExpectedOrganizationCount, $iFinalOrganizationCount);
 	}
 	/**
 	 * Test that loading a file twice (because of the version conditions) does not create duplicates (idempotent loading).
