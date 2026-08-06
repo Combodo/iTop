@@ -1594,7 +1594,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Search:Criteria:Raw:Filtered' => '已筛选',
 	'UI:Search:Criteria:Raw:FilteredOn' => '基于 %1$s 筛选',
 
-	'UI:StateChanged' => '状态已改变'
+	'UI:StateChanged' => '状态已改变',
 ]);
 
 //

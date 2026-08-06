@@ -23,5 +23,5 @@
  */
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'theme:fullmoon-protanopia-deuteranopia' => 'Fullmoon (红绿色盲 & 绿色色盲)'
+	'theme:fullmoon-protanopia-deuteranopia' => 'Fullmoon (红绿色盲 & 绿色色盲)',
 ]);

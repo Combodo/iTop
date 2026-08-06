@@ -26,7 +26,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	// $%3s : current tab name
 	// $%4s : remote object class name
 	// $%5s : remote object friendlyname
- 
+
 	'UI:Links:Object:New:Modal:Title'       => '创建对象',
 
 	// Create

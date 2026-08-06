@@ -377,7 +377,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventNotification/Attribute:action_id' => '操作',
 	'Class:EventNotification/Attribute:action_id+' => '',
 	'Class:EventNotification/Attribute:object_id' => '对象id',
-	'Class:EventNotification/Attribute:object_id+' => '对象编号 (由触发器定义的类?)'
+	'Class:EventNotification/Attribute:object_id+' => '对象编号 (由触发器定义的类?)',
 ]);
 
 //
@@ -1304,5 +1304,5 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 // addion translation for zh_cn
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN'
+	'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
 ]);
