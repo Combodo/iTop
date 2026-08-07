@@ -23,7 +23,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:NewUserRequest+' => 'Créer un nouveau ticket de demande utilisateur',
 	'Menu:SearchUserRequests' => 'Rechercher des demandes',
 	'Menu:SearchUserRequests+' => 'Rechercher parmi les demandes utilisateur',
-	'Menu:UserRequest:Shortcuts' => 'Les Demandes',
+	'Menu:UserRequest:Shortcuts' => 'Demandes',
 	'Menu:UserRequest:Shortcuts+' => '',
 	'Menu:UserRequest:MyRequests' => 'Qui me sont assignées',
 	'Menu:UserRequest:MyRequests+' => 'Demandes en cours pour lesquelles je suis l\'agent assigné',
