@@ -752,30 +752,31 @@ EOF
 		$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']);
 		$bInstalled = $bMissingFromDisk || $oITopExtension?->bInstalled ?? false;
 		$bDependencyIssue = $oITopExtension?->HasDependencyIssue() ?? false;
+		$bIsRemoteExtension = $oITopExtension !== null && $oITopExtension->sSource === iTopExtension::SOURCE_REMOTE;
+		$bIsPackageExtension = $oITopExtension !== null && $oITopExtension->sSource === iTopExtension::SOURCE_WIZARD;
+		$bDoNotUninstall = !$bCanBeUninstalled || $bIsRemoteExtension || $bMandatory;
 
-		$bDisabled = false;
 		$bChecked = $bSelected;
+		$bDisabled = false;
+
 		if ($bMissingFromDisk) {
-			// If the extension is missing from disk, the user cannot select it
 			$bDisabled = true;
 			$bChecked = false;
-		} elseif ($bDependencyIssue && ($oITopExtension->sSource !== iTopExtension::SOURCE_WIZARD || !$bMandatory)) {
-			// If the extension is not installed, the user cannot select it
-			// If the extension is installed and mandatory or not uninstallable, the user cannot unselect it
-			// Unless the user uses the "force-uninstall" option
-			$bDisabled = (!$bInstalled || $bMandatory || !$bCanBeUninstalled) && !$bDisableUninstallCheck;
-			// If the extension is a remote extension and not be installed means the user previously uninstalled it so it should not be selected by default
-			if ($oITopExtension->sSource !== iTopExtension::SOURCE_REMOTE || $bInstalled) {
-				$bChecked = $bMandatory ?: $bSelected;
+		} elseif($bMandatory && $bIsPackageExtension){
+			$bDisabled = true;
+			$bChecked = true;
+		} elseif($bDependencyIssue && !$bInstalled) {
+			$bDisabled = true;
+			$bChecked = false;
+		} elseif (!$bDisableUninstallCheck) {
+			//Besides the other priority cases, the disable_check unlock everything else
+			if ($bMandatory) {
+				$bDisabled = true;
+				$bChecked = true;
+			}else if($bDoNotUninstall && $bInstalled) {
+				$bDisabled = true;
+				$bChecked = true;
 			}
-		} elseif ($bMandatory) {
-			// If the extension is mandatory, it is always checked and can be unchecked only if the user uses the "force-uninstall" option and the extension is not a product extension
-			$bDisabled = $oITopExtension->sSource === iTopExtension::SOURCE_WIZARD || !$bDisableUninstallCheck;
-			$bChecked = true;
-		} elseif ($bInstalled && (!$bCanBeUninstalled || $oITopExtension->sSource === iTopExtension::SOURCE_REMOTE)) {
-			// If the extension is installed and cannot be uninstalled or is a remote extension, it is always checked and can be unchecked only if the user uses the "force-uninstall" option
-			$bDisabled = !$bDisableUninstallCheck;
-			$bChecked = true;
 		}
 
 		if ($bAllDisabled) {
@@ -794,7 +795,6 @@ EOF
 						$bDisabled = true;
 					}
 				}
-
 			}
 		}
 
