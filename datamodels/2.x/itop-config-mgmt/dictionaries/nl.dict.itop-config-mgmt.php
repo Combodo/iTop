@@ -848,7 +848,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Tape' => 'Tape',
-	'Class:Tape+' => 'Een Tape (of cartridge) binnen '.ITOP_APPLICATION_SHORT.' is een verwijderbaar opbergonderdeel van een tapebibliotheek.',
+	'Class:Tape+' => 'Een Tape (of cartridge) binnen '.ITOP_APPLICATION_SHORT.' is een verwijderbaar opslagonderdeel van een tapebibliotheek.',
 	'Class:Tape/Attribute:name' => 'Naam',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => 'Omschrijving',
