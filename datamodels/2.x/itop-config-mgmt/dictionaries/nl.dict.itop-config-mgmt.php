@@ -494,8 +494,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Alle configuratie-items die deze applicatie-oplossing tot stand brengen',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Bedrijfsprocessen',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Alle bedrijfsprocessen die afhankelijk zijn van deze applicatie-oplossing',
-	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
-	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:ApplicationSolution/Attribute:logo' => 'Logo',
+	'Class:ApplicationSolution/Attribute:logo+' => 'Wordt gebruikt als objectpictogram bij weergave in impactanalyse.',
 	'Class:ApplicationSolution/Attribute:status' => 'Status',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Actief',
@@ -517,8 +517,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Applicatie-oplossing',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Alle applicatie-oplossingen die impact hebben op dit bedrijfsproces',
-	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
-	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:BusinessProcess/Attribute:logo' => 'Logo',
+	'Class:BusinessProcess/Attribute:logo+' => 'Wordt gebruikt als objectpictogram bij weergave in impactanalyse.',
 	'Class:BusinessProcess/Attribute:status' => 'Status',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'Actief',
@@ -615,8 +615,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:MiddlewareInstance' => 'Middleware-instantie',
 	'Class:MiddlewareInstance+' => '',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
-	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
-	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Wordt gebruikt als objectpictogram bij weergave in impactanalyse.',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Naam middleware',
@@ -649,8 +649,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => 'Naam webserver',
 	'Class:WebApplication/Attribute:webserver_name+' => '',
-	'Class:WebApplication/Attribute:logo' => 'Logo~~',
-	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:WebApplication/Attribute:logo' => 'Logo',
+	'Class:WebApplication/Attribute:logo+' => 'Wordt gebruikt als objectpictogram bij weergave in impactanalyse.',
 	'Class:WebApplication/Attribute:url' => 'Link (URL)',
 	'Class:WebApplication/Attribute:url+' => '',
 ]);
@@ -848,7 +848,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Tape' => 'Tape',
-	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
+	'Class:Tape+' => 'Een Tape (of cartridge) binnen '.ITOP_APPLICATION_SHORT.' is een verwijderbaar opslagonderdeel van een tapebibliotheek.',
 	'Class:Tape/Attribute:name' => 'Naam',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => 'Omschrijving',
@@ -898,8 +898,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => 'Documenten',
 	'Class:Software/Attribute:documents_list+' => 'Alle documenten gelinkt aan deze software',
-	'Class:Software/Attribute:logo' => 'Logo~~',
-	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs~~',
+	'Class:Software/Attribute:logo' => 'Logo',
+	'Class:Software/Attribute:logo+' => 'Wordt gebruikt als pictogram voor alle software-instanties die deze software gebruiken, wanneer deze worden weergegeven in impactanalyses.',
 	'Class:Software/Attribute:type' => 'Type',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'Databaseserver',
@@ -1015,7 +1015,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:OSLicence/Attribute:osversion_id' => 'Versie besturingssysteem',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
 	'Class:OSLicence/Attribute:osfamily_id' => 'Soort besturingssysteem',
-	'Class:OSLicence/Attribute:osfamily_id+' => '~~',
+	'Class:OSLicence/Attribute:osfamily_id+' => '',
 	'Class:OSLicence/Attribute:osversion_name' => 'Naam versie bestandssysteem',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtuele machines',
@@ -1069,8 +1069,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Naam soort besturingssysteem',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
-	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
-	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Naam moet uniek zijn binnen de soort besturingssysteem',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'Deze versie van het besturingssysteem bestaat al binnen de soort besturingssysteem',
 ]);
 
 //
@@ -1080,8 +1080,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:OSFamily' => 'Soort Besturingssysteem',
 	'Class:OSFamily+' => '',
-	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
-	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
+	'Class:OSFamily/UniquenessRule:name+' => 'Naam moet uniek zijn',
+	'Class:OSFamily/UniquenessRule:name' => 'Deze soort besturingssysteem bestaat al',
 ]);
 
 //
@@ -1091,12 +1091,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Brand' => 'Merk',
 	'Class:Brand+' => '',
-	'Class:Brand/Attribute:logo' => 'Logo~~',
-	'Class:Brand/Attribute:logo+' => '~~',
+	'Class:Brand/Attribute:logo' => 'Logo',
+	'Class:Brand/Attribute:logo+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Fysieke apparaten',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Alle fysieke apparaten van dit merk',
 	'Class:Brand/UniquenessRule:name+' => 'De naam van het merk moet uniek zijn',
-	'Class:Brand/UniquenessRule:name' => 'De naam van het merk bestaat al',
+	'Class:Brand/UniquenessRule:name' => 'Dit merk bestaat al',
 ]);
 
 //
@@ -1111,8 +1111,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Model/Attribute:brand_id+' => '',
 	'Class:Model/Attribute:brand_name' => 'Naam merk',
 	'Class:Model/Attribute:brand_name+' => '',
-	'Class:Model/Attribute:picture' => 'Picture~~',
-	'Class:Model/Attribute:picture+' => '~~',
+	'Class:Model/Attribute:picture' => 'Afbeelding',
+	'Class:Model/Attribute:picture+' => '',
 	'Class:Model/Attribute:type' => 'Soort apparaat',
 	'Class:Model/Attribute:type+' => '',
 	'Class:Model/Attribute:type/Value:PowerSource' => 'Stroombron',
@@ -1164,8 +1164,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:NetworkDeviceType' => 'Soort netwerkapparaat',
 	'Class:NetworkDeviceType+' => '',
-	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
-	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Wordt gebruikt als pictogram voor alle netwerkapparaten van dit type wanneer deze in de console worden weergegeven (details, overzichtskaart en impactanalyse).',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Netwerkapparaten',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Alle netwerkapparaten van deze soort',
 ]);
@@ -1181,8 +1181,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Naam merk',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
-	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
-	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Naam moet uniek zijn binnen het merk',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'Deze IOS versie bestaat al binnen dit merk',
 ]);
 
 //
@@ -1550,13 +1550,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 // Add translation for Fieldsets
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'ConfigMgmt:baseinfo' => 'General~~',
-	'ConfigMgmt:moreinfo' => 'CI specifics~~',
-	'Storage:moreinfo' => 'Storage specifics~~',
-	'ConfigMgmt:otherinfo' => 'Description~~',
-	'ConfigMgmt:dates' => 'Dates~~',
-	'Software:moreinfo' => 'Software specifics~~',
-	'Phone:moreinfo' => 'Phone specifics~~',
+	'ConfigMgmt:baseinfo' => 'Globale informatie',
+	'ConfigMgmt:moreinfo' => 'CI specifieke informatie',
+	'Storage:moreinfo' => 'Opslaginformatie',
+	'ConfigMgmt:otherinfo' => 'Andere informatie',
+	'ConfigMgmt:dates' => 'Datums',
+	'Software:moreinfo' => 'Software informatie',
+	'Phone:moreinfo' => 'Telefoon informatie',
 	'Server:baseinfo' => 'Globale informatie',
 	'Server:Date' => 'Datum',
 	'Server:moreinfo' => 'Meer informatie',
@@ -1645,8 +1645,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
-	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
-	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organisatie',
+	'Class:PhysicalInterface/Attribute:org_id+' => '',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Locatie',
+	'Class:PhysicalInterface/Attribute:location_id+' => '',
 ]);
