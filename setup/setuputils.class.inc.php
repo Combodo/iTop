@@ -537,6 +537,7 @@ class SetupUtils
 				$sDetail = str_replace('Error: ', '', $oCheckRes->sLabel);
 				$sError = sprintf($sErrorLabel, $sDetail);
 				SetupLog::Error($sError, null, ["output" => $aOutput, 'php_path' => $sPHPExec]);
+				$sError .= '. You may change the CLI PHP executable path by setting the "php_path" config parameter.';
 				throw new CoreException($sError);
 			}
 		}
