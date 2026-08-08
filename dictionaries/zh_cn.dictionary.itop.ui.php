@@ -129,6 +129,18 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Query/Attribute:export_last_user_id+'      => '最近一次执行导出的用户',
 	'Class:Query/Attribute:export_last_user_contact'  => '联系人',
 	'Class:Query/Attribute:export_last_user_contact+' => '最近一次执行导出的联系人',
+	'Class:Query/Attribute:usages' => '用法',
+	'Class:Query/Attribute:usages+' => '说明该查询可能的用法.
+ - "参考 AI" 标签, 假定描述非常明确且符合 OQL 标准。它可以作为通过 AI 构建 OQL 查询的范例。
+ - "通知" 标签, 表示返回的对象，有且仅有一个类型为 email 的字段。
+ - "仪表" 标签, 假定 OQL 返回一个单一类型的对象.',
+	'Class:Query/Attribute:usages/Value:export' => '导出',
+	'Class:Query/Attribute:usages/Value:reference' => '参考 AI',
+	'Class:Query/Attribute:usages/Value:notif' => '通知',
+	'Class:Query/Attribute:usages/Value:draft' => '草稿',
+	'Class:Query/Attribute:usages/Value:dashlet' => '仪表',
+	'Class:Query/Attribute:owner_id' => '负责人',
+	'Class:Query/Attribute:owner_id+' => '负责此查询的团队或个体',
 	'Query:baseinfo'                                  => '基本信息',
 	'Query:exportInfo'                                => '导出信息',
 	'Class:QueryOQL/Attribute:fields'                 => '字段',
