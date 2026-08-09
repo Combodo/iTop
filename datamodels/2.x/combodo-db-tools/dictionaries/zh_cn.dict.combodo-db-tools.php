@@ -33,10 +33,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'DBTools:Disclaimer' => '免责申明: 在应用修复之前, 应先备份数据库',
 	'DBTools:Error' => '错误',
 	'DBTools:Count' => '个数',
-	'DBTools:SQLquery' => 'SQL查询',
-	'DBTools:FixitSQLquery' => '修复问题的SQL查询 (指示)',
-	'DBTools:SQLresult' => 'SQL结果',
-	'DBTools:NoError' => '数据库正确',
+	'DBTools:SQLquery' => 'SQL 查询',
+	'DBTools:FixitSQLquery' => '用于修复问题的 SQL 查询(说明)',
+	'DBTools:SQLresult' => 'SQL 结果',
+	'DBTools:NoError' => '数据库 OK',
 	'DBTools:HideIds' => '错误列表',
 	'DBTools:ShowIds' => '详细视图',
 	'DBTools:ShowReport' => '报告',
@@ -73,7 +73,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 // Lost attachments
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'DBTools:LostAttachments' => '附件缺失',
-	'DBTools:LostAttachments:Disclaimer' => '可以在此搜索数据库中丢失或错放的附件. 这不是数据恢复工具, 其无法恢复已删除的数据.',
+	'DBTools:LostAttachments:Disclaimer' => '可以在此搜索数据库中丢失或错放的附件. 请注意, 这不是数据恢复工具, 无法恢复已删除的数据.',
 
 	'DBTools:LostAttachments:Button:Analyze' => '分析',
 	'DBTools:LostAttachments:Button:Restore' => '还原',

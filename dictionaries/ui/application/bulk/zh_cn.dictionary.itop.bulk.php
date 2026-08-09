@@ -17,15 +17,14 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 	// Bulk modify
 	'UI:Bulk:modify:IncompatibleAttribute' => '此属性无法在批量操作中编辑',
 	'UI:Bulk:Export:MaliciousInjection:Alert:Title' => 'Excel 安全警告',
-	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => '在 MS Excel 中打开不信任的文件可能会导致公式注入. 请确保 Excel 的设置能够安全的处理该文件. <a href="%1$s">可以在我们的文档中了解更多.</a>',
-	'UI:Bulk:Export:MaliciousInjection:Sanitization:Alert:Message' => '部分数值已被脱敏处理, 以以规避 MS Excel 中可能出现的安全隐患. <a href="%1$s" target="_blank">可以在我们的文档中了解更多.</a>',
-	'UI:Bulk:Export:MaliciousInjection:Input:Label' => '数据脱敏',
-	'UI:Bulk:Export:MaliciousInjection:Input:Tooltip' => '启用该功能后, 导出过程中将对存在安全隐患的数据值进行脱敏处理. 这能避免 MS Excel 将其识别为公式. 请注意，该操作可能会在原始数据前添加一个单引号(\')作为前缀, 以保证数据被正确识别为文本格式.',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => '在 Microsoft Excel 中打开不信任的文件可能导致公式注入. 请确保 Excel 设置能够安全的处理该文件. <a href="%1$s" target="_blank">进入我们的文档了解更多.</a>',
+	'UI:Bulk:Export:MaliciousInjection:Sanitization:Alert:Message' => '部分数据已进行脱敏处理以规避 Microsoft Excel 中可能的潜在安全问题. <a href="%1$s" target="_blank">进入我们的文档了解更多.</a>',
+	'UI:Bulk:Export:MaliciousInjection:Input:Label' => '对危险数据进行脱敏',
+	'UI:Bulk:Export:MaliciousInjection:Input:Tooltip' => '当启用时, 导出过程中会对危险数据进行脱敏. 这样做可以阻止 Microsoft Excel 把它们当作公式. 请注意，该操作可能会在原始数据前添加单引号(\')作为前缀，以此确保数据被正确识别为文本格式.',
 	'Core:BulkExport:Security' => '安全',
 ]);

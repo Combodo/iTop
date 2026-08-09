@@ -40,26 +40,26 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:ServiceManagement+' => '服务管理概况',
 	'Menu:Service:Overview' => '概况',
 	'Menu:Service:Overview+' => '',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => '合同 (按服务等级)',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => '合同 (按服务级别)',
 	'UI-ServiceManagementMenu-ContractsByStatus' => '合同 (按状态)',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '近30天内截止的合同',
 
 	'Menu:ProviderContract' => '供应商合同',
-	'Menu:ProviderContract+' => '供应商合同',
+	'Menu:ProviderContract+' => '为外部公司采购',
 	'Menu:CustomerContract' => '客户合同',
-	'Menu:CustomerContract+' => '客户合同',
+	'Menu:CustomerContract+' => '谁购买的服务',
 	'Menu:ServiceSubcategory' => '子服务',
-	'Menu:ServiceSubcategory+' => '子服务',
+	'Menu:ServiceSubcategory+' => '服务架构的最低层级',
 	'Menu:Service' => '服务',
-	'Menu:Service+' => '服务',
+	'Menu:Service+' => '服务架构的第二层级',
 	'Menu:SLA' => 'SLA',
-	'Menu:SLA+' => '服务等级协议',
+	'Menu:SLA+' => '服务级别协议',
 	'Menu:SLT' => 'SLT',
-	'Menu:SLT+' => '服务等级目标',
+	'Menu:SLT+' => '服务级别目标',
 	'Menu:DeliveryModel' => '交付模式',
-	'Menu:DeliveryModel+' => '交付模式',
+	'Menu:DeliveryModel+' => '处理工单的团队',
 	'Menu:ServiceFamily' => '服务家族',
-	'Menu:ServiceFamily+' => '服务家族',
+	'Menu:ServiceFamily+' => '服务架构的最高层级',
 	'Menu:ServiceCatalog' => '服务清单',
 	'Menu:ServiceCatalog+' => '定义所有提供的服务',
 	'UI-ServiceCatalogMenu-Title' => '服务清单',
@@ -71,7 +71,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI-ServiceCatalogMenu-ContractByService' => '统计 服务/合同',
 	'UI-ServiceCatalogMenu-ContractBySLA' => '统计 SLA/合同',
 
-	'Contract:baseinfo' => '常规信息',
+	'Contract:baseinfo' => '基本信息',
 	'Contract:moreinfo' => '合同信息',
 	'Contract:cost' => '费用信息',
 ]);
@@ -140,15 +140,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Contract/Attribute:provider_name' => '供应商名称',
 	'Class:Contract/Attribute:provider_name+' => '',
 	'Class:Contract/Attribute:status' => '状态',
-	'Class:Contract/Attribute:status+' => '',
+	'Class:Contract/Attribute:status+' => '状态并非由起止日期自动计算, 必须手动设置.',
 	'Class:Contract/Attribute:status/Value:implementation' => '生效',
 	'Class:Contract/Attribute:status/Value:implementation+' => '生效',
 	'Class:Contract/Attribute:status/Value:obsolete' => '废弃',
 	'Class:Contract/Attribute:status/Value:obsolete+' => '废弃',
 	'Class:Contract/Attribute:status/Value:production' => '正式',
 	'Class:Contract/Attribute:status/Value:production+' => '正式',
-	'Class:Contract/Attribute:finalclass' => '合同类型',
-	'Class:Contract/Attribute:finalclass+' => '',
+	'Class:Contract/Attribute:finalclass' => '合同子类',
+	'Class:Contract/Attribute:finalclass+' => '根本属性的名称',
 ]);
 
 //
@@ -157,7 +157,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CustomerContract' => '客户合同',
-	'Class:CustomerContract+' => 'Agreement between a client and a provider for the delivery of services with an optional level of commitment (SLA, Coverage Window).~~',
+	'Class:CustomerContract+' => '客户与供应商之间关于服务交付的协议，可选择包含承诺服务级别 (SLA, 窗口时间).',
 	'Class:CustomerContract/Attribute:services_list' => '服务',
 	'Class:CustomerContract/Attribute:services_list+' => '此合同包含的所有服务',
 	'Class:CustomerContract/Attribute:functionalcis_list' => '配置项',
@@ -172,13 +172,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ProviderContract' => '供应商合同',
-	'Class:ProviderContract+' => 'Agreement between an external provider and an internal organization.~~',
+	'Class:ProviderContract+' => '外部供应商与内部组织之间的协议.',
 	'Class:ProviderContract/Attribute:functionalcis_list' => '配置项',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => '此合同包含的所有配置项',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
-	'Class:ProviderContract/Attribute:sla+' => '服务等级协议',
+	'Class:ProviderContract/Attribute:sla+' => '服务级别协议',
 	'Class:ProviderContract/Attribute:coverage' => '服务时间',
-	'Class:ProviderContract/Attribute:coverage+' => '',
+	'Class:ProviderContract/Attribute:coverage+' => '合同覆盖的服务时间, 例如 24x7, 9x5 等.',
 ]);
 
 //
@@ -187,7 +187,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkContactToContract' => '链接 联系人/合同',
-	'Class:lnkContactToContract+' => 'Manages key contacts on each Customer or Provider Contract.~~',
+	'Class:lnkContactToContract+' => '管理客户或供应商合同中的关键联系人.',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s',
 	'Class:lnkContactToContract/Attribute:contract_id' => '合同',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '',
@@ -267,7 +267,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Service/Attribute:description' => '描述',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:servicefamily_id' => '服务家族',
-	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
+	'Class:Service/Attribute:servicefamily_id+' => '在用户门户中可见所必需',
 	'Class:Service/Attribute:servicefamily_name' => '服务家族名称',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:documents_list' => '文档',
@@ -343,7 +343,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ServiceSubcategory/Attribute:service_name' => '服务名称',
 	'Class:ServiceSubcategory/Attribute:service_name+' => '',
 	'Class:ServiceSubcategory/Attribute:status' => '状态',
-	'Class:ServiceSubcategory/Attribute:status+' => '',
+	'Class:ServiceSubcategory/Attribute:status+' => '子服务状态通常影响在用户门户的可见性',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation' => '生效',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation+' => '生效',
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete' => '废弃',
@@ -351,7 +351,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => '生产',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => '生产',
 	'Class:ServiceSubcategory/Attribute:request_type' => '需求类型',
-	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user selects this service subcategory.~~',
+	'Class:ServiceSubcategory/Attribute:request_type+' => '定义工单类型(事件或服务需求)，当门户用户选择此服务子类时将创建的工单.',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => '事件',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => '事件',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => '服务需求',
@@ -366,7 +366,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:SLA' => 'SLA',
-	'Class:SLA+' => 'Service Level Agreement (SLA) 适用于客户订阅的服务，并通过 SLT 进行衡量和考核.',
+	'Class:SLA+' => '服务级别协议 (SLA) 适用于客户订阅的服务，并通过 SLT 进行衡量和考核.',
 	'Class:SLA/Attribute:name' => '名称',
 	'Class:SLA/Attribute:name+' => '',
 	'Class:SLA/Attribute:description' => '描述',
@@ -376,7 +376,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:SLA/Attribute:organization_name' => '组织名称',
 	'Class:SLA/Attribute:organization_name+' => '',
 	'Class:SLA/Attribute:slts_list' => 'SLT',
-	'Class:SLA/Attribute:slts_list+' => '此 SLA 包含的所有服务等级目标',
+	'Class:SLA/Attribute:slts_list+' => '此 SLA 包含的所有服务级别目标',
 	'Class:SLA/Attribute:customercontracts_list' => '客户合同',
 	'Class:SLA/Attribute:customercontracts_list+' => '使用此 SLA 的所有客户合同',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => '不能保存客户合同 %1$s 于服务 %2$s 的关联: SLA 已存在',
@@ -388,11 +388,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:SLT' => 'SLT',
-	'Class:SLT+' => '服务水平目标位于服务水平协议(SLA)之下. 它定义了(TTO 或 TTR)指标的最大时限, 需求类型 (事件或服务需求) 和优先级.',
+	'Class:SLT+' => '服务级别目标(SLT)位于服务级别协议(SLA)之下. 它定义了(TTO 或 TTR)指标的最大时限, 需求类型 (事件或服务需求) 和优先级.',
 	'Class:SLT/Attribute:name' => '名称',
 	'Class:SLT/Attribute:name+' => '',
 	'Class:SLT/Attribute:priority' => '优先级',
-	'Class:SLT/Attribute:priority+' => '',
+	'Class:SLT/Attribute:priority+' => '此 SLT 适用的工单优先级。仅有此优先级的工单需遵守此 SLT 的要求.',
 	'Class:SLT/Attribute:priority/Value:1' => '紧急',
 	'Class:SLT/Attribute:priority/Value:1+' => '紧急',
 	'Class:SLT/Attribute:priority/Value:2' => '高',
@@ -402,21 +402,21 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:SLT/Attribute:priority/Value:4' => '低',
 	'Class:SLT/Attribute:priority/Value:4+' => '低',
 	'Class:SLT/Attribute:request_type' => '需求类型',
-	'Class:SLT/Attribute:request_type+' => '',
+	'Class:SLT/Attribute:request_type+' => '定义当用户选择此服务子类别时将创建的工单类型 (事件或服务需求).',
 	'Class:SLT/Attribute:request_type/Value:incident' => '事件',
 	'Class:SLT/Attribute:request_type/Value:incident+' => '事件',
 	'Class:SLT/Attribute:request_type/Value:service_request' => '服务需求',
 	'Class:SLT/Attribute:request_type/Value:service_request+' => '服务需求',
 	'Class:SLT/Attribute:metric' => '衡量指标',
-	'Class:SLT/Attribute:metric+' => '',
+	'Class:SLT/Attribute:metric+' => '定义适用于此 SLT 的衡量指标, TTO (响应时间) 或 TTR (解决时限).',
 	'Class:SLT/Attribute:metric/Value:tto' => 'TTO',
 	'Class:SLT/Attribute:metric/Value:tto+' => '响应时间',
 	'Class:SLT/Attribute:metric/Value:ttr' => 'TTR',
 	'Class:SLT/Attribute:metric/Value:ttr+' => '解决时限',
 	'Class:SLT/Attribute:value' => '值',
-	'Class:SLT/Attribute:value+' => '',
+	'Class:SLT/Attribute:value+' => '定义符合目标要求的最大延迟值, 在 "度量单位" 属性中定义.',
 	'Class:SLT/Attribute:unit' => '度量单位',
-	'Class:SLT/Attribute:unit+' => '',
+	'Class:SLT/Attribute:unit+' => '时间的单位',
 	'Class:SLT/Attribute:unit/Value:hours' => '小时',
 	'Class:SLT/Attribute:unit/Value:hours+' => '小时',
 	'Class:SLT/Attribute:unit/Value:minutes' => '分钟',
@@ -464,15 +464,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => '客户合同名称',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '',
 	'Class:lnkCustomerContractToService/Attribute:service_id' => '服务',
-	'Class:lnkCustomerContractToService/Attribute:service_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:service_id+' => '与该服务相关的所有子服务也均包含在本合同范围内',
 	'Class:lnkCustomerContractToService/Attribute:service_name' => '服务名称',
 	'Class:lnkCustomerContractToService/Attribute:service_name+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_id' => 'SLA',
-	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '适用于此客户合同的服务级别协议. 该 SLA 也适用于与该服务相关的所有子服务.',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA名称',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => '供应商',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '',
 ]);
 
 //
@@ -528,7 +528,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:DeliveryModel/Attribute:description' => '描述',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => '联系人',
-	'Class:DeliveryModel/Attribute:contacts_list+' => '此交付模式的所有联系人 (包括团队和个体)',
+	'Class:DeliveryModel/Attribute:contacts_list+' => '必须至少有一个团队才能进行工单分配',
 	'Class:DeliveryModel/Attribute:customers_list' => '客户',
 	'Class:DeliveryModel/Attribute:customers_list+' => '使用此交付模式的所有客户',
 ]);
@@ -560,10 +560,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
-	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
-	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
+	'Class:lnkContactToContract/Attribute:customer_id' => '客户id',
+	'Class:lnkContactToContract/Attribute:customer_id+' => '',
+	'Class:lnkContactToContract/Attribute:provider_id' => '供应商id',
+	'Class:lnkContactToContract/Attribute:provider_id+' => '',
 ]);
 
 //
@@ -571,8 +571,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
-	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
-	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
+	'Class:lnkContractToDocument/Attribute:customer_id' => '客户id',
+	'Class:lnkContractToDocument/Attribute:customer_id+' => '',
+	'Class:lnkContractToDocument/Attribute:provider_id' => '供应商id',
+	'Class:lnkContractToDocument/Attribute:provider_id+' => '',
 ]);

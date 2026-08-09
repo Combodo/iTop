@@ -49,7 +49,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Portal:Datatables:Language:Info' => '第 _PAGE_ 页,共 _PAGES_ 页',
 	'Portal:Datatables:Language:InfoEmpty' => '没有信息',
 	'Portal:Datatables:Language:InfoFiltered' => '最多筛选 _MAX_ 项',
-	'Portal:Datatables:Language:EmptyTable' => '表格中没有数据',
+	'Portal:Datatables:Language:EmptyTable' => '暂无数据',
 	'Portal:Datatables:Language:DisplayLength:All' => '全部',
 	'Portal:Datatables:Language:Paginate:First' => '首页',
 	'Portal:Datatables:Language:Paginate:Previous' => '上一页',
@@ -106,14 +106,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:Browse:Action:CreateObjectFromThis' => '新建 %1$s',
 	'Brick:Portal:Browse:Tree:ExpandAll' => '全部展开',
 	'Brick:Portal:Browse:Tree:CollapseAll' => '全部收起',
-	'Brick:Portal:Browse:Filter:NoData' => '没有项目',
+	'Brick:Portal:Browse:Filter:NoData' => '没有数据',
 	'Brick:Portal:Browse:Mosaic:Back' => '返回',
 ]);
 
 // ManageBrick brick
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:Manage:Name' => '管理项目',
-	'Brick:Portal:Manage:Table:NoData' => '没有项目.',
+	'Brick:Portal:Manage:Table:NoData' => '没有数据.',
 	'Brick:Portal:Manage:Table:ItemActions' => '操作',
 	'Brick:Portal:Manage:DisplayMode:list' => '列表',
 	'Brick:Portal:Manage:DisplayMode:pie-chart' => '饼图',
