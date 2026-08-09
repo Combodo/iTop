@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Implement this interface to add sass file (SCSS) to the backoffice pages.
+ * Implement this interface to add sass files (SCSS) to the backoffice pages.
  * example: return "css/setup.scss"
  *
  * @api
@@ -11,9 +11,9 @@
 interface iBackofficeSassExtension
 {
 	/**
-	 * @return string
-	 * @see \iTopWebPage::$a_styles
+	 * @return array An array of relative paths (from loaded import paths) to the files to compile and include
+	 * @see \iTopWebPage::$a_linked_stylesheets
 	 * @api
 	 */
-	public function GetSass(): string;
+	public function GetSassRelPaths(): array;
 }

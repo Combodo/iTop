@@ -222,9 +222,11 @@ CSS;
       <content><![CDATA[
 class ExampleFor_iBackofficeSassExtension implements \iBackofficeSassExtension
 {
-	public function GetSass(): string
+	public function GetSassRelPaths(): array
 	{
-		return "css/setup.scss";
+		return [
+		  "css/setup.scss"
+    ];
 	}
 }
       ]]></content>

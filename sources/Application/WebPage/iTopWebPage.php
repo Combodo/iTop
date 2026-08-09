@@ -826,7 +826,9 @@ HTML;
 
 		/** @var \iBackofficeSassExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iBackofficeSassExtension') as $oExtensionInstance) {
-			$this->add_saas($oExtensionInstance->GetSass());
+			foreach ($oExtensionInstance->GetSassRelPaths() as $sSassFileRelPath) {
+				$this->add_saas($sSassFileRelPath);
+			}
 		}
 
 		// TODO 3.0.0 not displayed ?
