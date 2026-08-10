@@ -49,7 +49,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:DataFlow/Attribute:destination_impact/Value:no' => 'нет',
 	'Class:DataFlow/Attribute:destination_impact/Value:no+' => 'Если поток останавливается, назначение не подвержено влиянию',
 	'Class:DataFlow/Attribute:dataflowtype_id' => 'Тип потока',
-	'Class:DataFlow/Attribute:dataflowtype_id+' => 'Values defined in a typology of Data Flow Type~~'
+	'Class:DataFlow/Attribute:dataflowtype_id+' => 'Values defined in a typology of Data Flow Type~~',
 	'Class:DataFlow/Attribute:dataflowprotocol_id' => 'Протокол потока',
 	'Class:DataFlow/Attribute:dataflowprotocol_id+' => 'Values defined in a typology of Data Flow Protocol~~',
 	'Class:DataFlow/Attribute:documentation_url' => 'Ссылка на документацию',
