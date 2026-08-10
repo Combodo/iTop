@@ -49,7 +49,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:DataFlow/Attribute:destination_impact/Value:no' => 'нет',
 	'Class:DataFlow/Attribute:destination_impact/Value:no+' => 'Если поток останавливается, назначение не подвержено влиянию',
 	'Class:DataFlow/Attribute:dataflowtype_id' => 'Тип потока',
-	'Class:DataFlow/Attribute:dataflowtype_id+' => 'Типология потока.',
+	'Class:DataFlow/Attribute:dataflowtype_id+' => 'Values defined in a typology of Data Flow Typel~~',
+	'Class:DataFlow/Attribute:dataflowprotocol_id' => 'Протокол потока',
+	'Class:DataFlow/Attribute:dataflowprotocol_id+' => 'Values defined in a typology of Data Flow Protocol~~',
+	'Class:DataFlow/Attribute:documentation_url' => 'Ссылка на документацию',
+	'Class:DataFlow/Attribute:documentation_url+' => 'Ссылка на документацию потока данных',
+	'Class:DataFlow/Attribute:last_change_date' => 'Дата последнего изменения',
+	'Class:DataFlow/Attribute:last_change_date+' => 'Дата последнего изменения программного обеспечения или конфигурации потока данных',
 	'Class:DataFlow/Attribute:status' => 'Статус',
 	'Class:DataFlow/Attribute:status+' => '',
 	'Class:DataFlow/Attribute:status/Value:active' => 'активен',
@@ -78,18 +84,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:DataFlowType' => 'Тип потока данных',
 	'Class:DataFlowType+' => 'Типология потоков данных',
 
-/*
-	'Class:DataFlow/Attribute:source_id_friendlyname'             => 'source_id_friendlyname',
-	'Class:DataFlow/Attribute:source_id_friendlyname+'            => 'Full name',
-	'Class:DataFlow/Attribute:source_id_finalclass_recall'        => 'source_id->CI sub-class',
-	'Class:DataFlow/Attribute:source_id_finalclass_recall+'       => 'Name of the final class',
-	'Class:DataFlow/Attribute:source_id_obsolescence_flag'        => 'source_id->Obsolete',
-	'Class:DataFlow/Attribute:source_id_obsolescence_flag+'       => 'Computed dynamically on other attributes',
-	'Class:DataFlow/Attribute:destination_id_friendlyname'        => 'destination_id_friendlyname',
-	'Class:DataFlow/Attribute:destination_id_friendlyname+'       => 'Full name',
-	'Class:DataFlow/Attribute:destination_id_finalclass_recall'   => 'destination_id->CI sub-class',
-	'Class:DataFlow/Attribute:destination_id_finalclass_recall+'  => 'Name of the final class',
-	'Class:DataFlow/Attribute:destination_id_obsolescence_flag'   => 'destination_id->Obsolete',
-	'Class:DataFlow/Attribute:destination_id_obsolescence_flag+'  => 'Computed dynamically on other attributes',
-*/
+	'Class:DataFlowProtocol' => 'Протокол потока данных',
+	'Class:DataFlowProtocol+' => 'Типология протоколов потоков данных',
+
 ]);

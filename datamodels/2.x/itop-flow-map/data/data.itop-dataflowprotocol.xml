@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+  <DataFlowProtocol alias="DataFlowProtocol" id="1">
+    <name>HTTP</name>
+  </DataFlowProtocol>
+  <DataFlowProtocol alias="DataFlowProtocol" id="2">
+    <name>HTTPS</name>
+  </DataFlowProtocol>
+  <DataFlowProtocol alias="DataFlowProtocol" id="3">
+    <name>FTP</name>
+  </DataFlowProtocol>
+  <DataFlowProtocol alias="DataFlowProtocol" id="4">
+    <name>SFTP</name>
+  </DataFlowProtocol>
+  <DataFlowProtocol alias="DataFlowProtocol" id="5">
+    <name>AS2</name>
+  </DataFlowProtocol>
+  <DataFlowProtocol alias="DataFlowProtocol" id="6">
+    <name>X.400</name>
+  </DataFlowProtocol>
+  <DataFlowProtocol alias="DataFlowProtocol" id="7">
+    <name>FTPS</name>
+  </DataFlowProtocol>
+</Set>

@@ -97,6 +97,31 @@
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <tracking_level>all</tracking_level>
         </field>
+        <field id="dataflowprotocol_id" xsi:type="AttributeExternalKey">
+          <sql>dataflowprotocol_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>DataFlowProtocol</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="documentation_url" xsi:type="AttributeURL">
+          <sql>documentation_url</sql>
+          <default_value/>
+          <target>_blank</target>
+          <dependencies/>
+          <validation_pattern/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="last_change_date" xsi:type="AttributeDate">
+          <sql>last_change_date</sql>
+          <default_value/>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
         <field id="status" xsi:type="AttributeEnum">
           <sql>status</sql>
           <values>
@@ -266,8 +291,11 @@
                     <item id="dataflowtype_id">
                       <rank>50</rank>
                     </item>
-                    <item id="execution_frequency">
+                    <item id="dataflowprotocol_id">
                       <rank>60</rank>
+                    </item>
+                    <item id="execution_frequency">
+                      <rank>70</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -282,6 +310,9 @@
                     <item id="move2production">
                       <rank>10</rank>
                     </item>
+                    <item id="last_change_date">
+                      <rank>20</rank>
+                    </item>
                   </items>
                   <rank>10</rank>
                 </item>
@@ -290,8 +321,11 @@
                     <item id="description">
                       <rank>10</rank>
                     </item>
-                    <item id="groups_list">
+                    <item id="documentation_url">
                       <rank>20</rank>
+                    </item>
+                    <item id="groups_list">
+                      <rank>30</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -374,6 +408,60 @@
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
         <db_table>dataflowtype</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules>
+          <rule id="name">
+            <attributes>
+              <attribute id="name"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+      </properties>
+      <fields/>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="DataFlowProtocol" _delta="define">
+      <parent>Typology</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dataflowprotocol</db_table>
         <naming>
           <attributes>
             <attribute id="name"/>
@@ -627,6 +715,10 @@
               <dashlet id="DataFlowType" xsi:type="DashletBadge" _delta="define">
                 <rank>23</rank>
                 <class>DataFlowType</class>
+              </dashlet>
+              <dashlet id="DataFlowProtocol" xsi:type="DashletBadge" _delta="define">
+                <rank>24</rank>
+                <class>DataFlowProtocol</class>
               </dashlet>
             </dashlets>
           </cell>

@@ -9,11 +9,11 @@
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
-	'Relation:dataflows/Description'    => 'DataFlows between CIs~~',
-	'Relation:dataflows/DownStream'     => 'Outbound flows...',
-	'Relation:dataflows/DownStream+'    => 'Outbound flows map from',
-	'Relation:dataflows/UpStream'       => 'Inbound flows...',
-	'Relation:dataflows/UpStream+'      => 'Inbound flows map to',
+	'Relation:dataflows/Description'    => '配置项之间的数据流',
+	'Relation:dataflows/DownStream'     => '出站数据流...',
+	'Relation:dataflows/DownStream+'    => '出站数据流图，源自',
+	'Relation:dataflows/UpStream'       => '入站数据流...',
+	'Relation:dataflows/UpStream+'      => '入站数据流图，指向',
 
 	'Class:FunctionalCI/Attribute:dataflows' => '数据流',
 	'Class:FunctionalCI/Attribute:dataflows+' => '该对象作为源或目标的数据流',
@@ -24,7 +24,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'DataFlow:moreinfo' => '数据流详情',
 
 	'Class:DataFlow' => '数据流',
-	'Class:DataFlow+' => 'For application flow for example~~',
+	'Class:DataFlow+' => '例如应用数据流',
 	'Class:DataFlow/Name' => '%1$s',
 	'Class:DataFlow/Attribute:name' => '名称',
 	'Class:DataFlow/Attribute:name+' => '已传输的数据',
@@ -45,7 +45,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:DataFlow/Attribute:destination_impact/Value:no' => '否',
 	'Class:DataFlow/Attribute:destination_impact/Value:no+' => '如果数据流停止，目标不受影响',
 	'Class:DataFlow/Attribute:dataflowtype_id' => '数据流类型',
-	'Class:DataFlow/Attribute:dataflowtype_id+' => '数据流的分类',
+	'Class:DataFlow/Attribute:dataflowtype_id+' => 'Values defined in a typology of Data Flow Typel~~',
+	'Class:DataFlow/Attribute:dataflowprotocol_id' => '数据流协议',
+	'Class:DataFlow/Attribute:dataflowprotocol_id+' => 'Values defined in a typology of Data Flow Protocol~~',
+	'Class:DataFlow/Attribute:documentation_url' => '文档链接',
+	'Class:DataFlow/Attribute:documentation_url+' => '数据流文档链接',
+	'Class:DataFlow/Attribute:last_change_date' => '最后修改日期',
+	'Class:DataFlow/Attribute:last_change_date+' => '数据流软件或配置的最后修改时间',
 	'Class:DataFlow/Attribute:status' => '状态',
 	'Class:DataFlow/Attribute:status+' => '',
 	'Class:DataFlow/Attribute:status/Value:active' => '启用',
@@ -68,24 +74,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:DataFlow/Attribute:execution_frequency/Value:yearly+' => '',
 	'Class:DataFlow/Attribute:documents_list+' => '例如: 技术规范, 操作手册等.',
 	'Class:DataFlow/Attribute:contacts_list+' => '例如: 数据流所有者, 技术支持等.',
-	'Class:DataFlow/Error:CheckSource' => 'The source of a data flow cannot be a data flow itself. Choose another source CI than %1$s~~',
-	'Class:DataFlow/Error:CheckDestination' => 'The destination of a data flow cannot be a data flow itself. Choose another destination CI than %1$s~~',
+	'Class:DataFlow/Error:CheckSource' => '数据流的源头不能是数据流本身。请选择一个不同的源配置项，而不是 %1$s',
+	'Class:DataFlow/Error:CheckDestination' => '数据流的目标不能是数据流本身。请选择一个不同的目标配置项，而不是 %1$s',
 
 	'Class:DataFlowType' => '数据流类型',
 	'Class:DataFlowType+' => '数据流的分类',
 
-/*
-	'Class:DataFlow/Attribute:source_id_friendlyname'             => 'source_id_friendlyname',
-	'Class:DataFlow/Attribute:source_id_friendlyname+'            => 'Full name',
-	'Class:DataFlow/Attribute:source_id_finalclass_recall'        => 'source_id->CI sub-class',
-	'Class:DataFlow/Attribute:source_id_finalclass_recall+'       => 'Name of the final class',
-	'Class:DataFlow/Attribute:source_id_obsolescence_flag'        => 'source_id->Obsolete',
-	'Class:DataFlow/Attribute:source_id_obsolescence_flag+'       => 'Computed dynamically on other attributes',
-	'Class:DataFlow/Attribute:destination_id_friendlyname'        => 'destination_id_friendlyname',
-	'Class:DataFlow/Attribute:destination_id_friendlyname+'       => 'Full name',
-	'Class:DataFlow/Attribute:destination_id_finalclass_recall'   => 'destination_id->CI sub-class',
-	'Class:DataFlow/Attribute:destination_id_finalclass_recall+'  => 'Name of the final class',
-	'Class:DataFlow/Attribute:destination_id_obsolescence_flag'   => 'destination_id->Obsolete',
-	'Class:DataFlow/Attribute:destination_id_obsolescence_flag+'  => 'Computed dynamically on other attributes',
-*/
+	'Class:DataFlowProtocol' => '数据流协议',
+	'Class:DataFlowProtocol+' => '数据流协议的分类',
+
 ]);
