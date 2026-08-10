@@ -45,7 +45,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:DataFlow/Attribute:destination_impact/Value:no' => 'Nee',
 	'Class:DataFlow/Attribute:destination_impact/Value:no+' => 'Als de gegevensstroom stopt, heeft dit geen gevolgen voor de bestemming.',
 	'Class:DataFlow/Attribute:dataflowtype_id' => 'Type',
-	'Class:DataFlow/Attribute:dataflowtype_id+' => 'Values defined in a typology of Data Flow Typel~~',
+	'Class:DataFlow/Attribute:dataflowtype_id+' => 'Values defined in a typology of Data Flow Type~~'
 	'Class:DataFlow/Attribute:dataflowprotocol_id' => 'Flowprotocol',
 	'Class:DataFlow/Attribute:dataflowprotocol_id+' => 'Values defined in a typology of Data Flow Protocol~~',
 	'Class:DataFlow/Attribute:documentation_url' => 'Documentatie-URL',
