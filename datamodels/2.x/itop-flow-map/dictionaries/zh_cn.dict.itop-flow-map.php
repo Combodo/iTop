@@ -45,7 +45,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:DataFlow/Attribute:destination_impact/Value:no' => '否',
 	'Class:DataFlow/Attribute:destination_impact/Value:no+' => '如果数据流停止，目标不受影响',
 	'Class:DataFlow/Attribute:dataflowtype_id' => '数据流类型',
-	'Class:DataFlow/Attribute:dataflowtype_id+' => 'Values defined in a typology of Data Flow Typel~~',
+	'Class:DataFlow/Attribute:dataflowtype_id+' => 'Values defined in a typology of Data Flow Type~~'
 	'Class:DataFlow/Attribute:dataflowprotocol_id' => '数据流协议',
 	'Class:DataFlow/Attribute:dataflowprotocol_id+' => 'Values defined in a typology of Data Flow Protocol~~',
 	'Class:DataFlow/Attribute:documentation_url' => '文档链接',
