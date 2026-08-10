@@ -111,7 +111,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:FunctionalCI/Attribute:documents_list+' => 'All the documents linked to this configuration item',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Application solutions',
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'All the application solutions depending on this configuration item',
-	'Class:FunctionalCI/Attribute:softwares_list' => 'Softwares',
+	'Class:FunctionalCI/Attribute:softwares_list' => 'Software',
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'All the software installed on this configuration item',
 	'Class:FunctionalCI/Attribute:finalclass' => 'CI sub-class',
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class',
