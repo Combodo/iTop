@@ -84,7 +84,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 					// Add attribute only if not already there (can be in leaf classes but not the root)
 					if (!array_key_exists($sAttCode, $aAllAttributes)) {
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-						$sAttDefClass = get_class($oAttDef);
+						$sAttDefClass = $oAttDef->GetTypeShortClassName();
 
 						// Skip excluded attdefs
 						if (isset($aExcludeDefs[$sAttDefClass])) {
