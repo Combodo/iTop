@@ -31,7 +31,8 @@ SetupWebPage::AddModule(
 
 		],
 		'data.struct' => [
-			'data/data.itop-flow-map.en_us.xml',
+			'data/data.itop-dataflowtype.xml',
+			'data/data.itop-dataflowprotocol.xml',
 		],
 		'data.sample' => [
 			// add your sample data XML files here,

@@ -45,7 +45,13 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:DataFlow/Attribute:destination_impact/Value:no' => 'no',
 	'Class:DataFlow/Attribute:destination_impact/Value:no+' => 'If the flow stops, the destination is not impacted',
 	'Class:DataFlow/Attribute:dataflowtype_id' => 'Flow type',
-	'Class:DataFlow/Attribute:dataflowtype_id+' => 'Typology of Flow.',
+	'Class:DataFlow/Attribute:dataflowtype_id+' => 'Values defined in a typology of Data Flow Type',
+	'Class:DataFlow/Attribute:dataflowprotocol_id' => 'Flow protocol',
+	'Class:DataFlow/Attribute:dataflowprotocol_id+' => 'Values defined in a typology of Data Flow Protocol',
+	'Class:DataFlow/Attribute:documentation_url' => 'Documentation URL',
+	'Class:DataFlow/Attribute:documentation_url+' => 'URL to the documentation of the data flow',
+	'Class:DataFlow/Attribute:last_change_date' => 'Last change date',
+	'Class:DataFlow/Attribute:last_change_date+' => 'Last time the software or configuration of the Data Flow was updated',
 	'Class:DataFlow/Attribute:status' => 'Status',
 	'Class:DataFlow/Attribute:status+' => '',
 	'Class:DataFlow/Attribute:status/Value:active' => 'active',
@@ -74,18 +80,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:DataFlowType' => 'Data Flow Type',
 	'Class:DataFlowType+' => 'Typology of Data Flow',
 
-/*
-	'Class:DataFlow/Attribute:source_id_friendlyname'             => 'source_id_friendlyname',
-	'Class:DataFlow/Attribute:source_id_friendlyname+'            => 'Full name',
-	'Class:DataFlow/Attribute:source_id_finalclass_recall'        => 'source_id->CI sub-class',
-	'Class:DataFlow/Attribute:source_id_finalclass_recall+'       => 'Name of the final class',
-	'Class:DataFlow/Attribute:source_id_obsolescence_flag'        => 'source_id->Obsolete',
-	'Class:DataFlow/Attribute:source_id_obsolescence_flag+'       => 'Computed dynamically on other attributes',
-	'Class:DataFlow/Attribute:destination_id_friendlyname'        => 'destination_id_friendlyname',
-	'Class:DataFlow/Attribute:destination_id_friendlyname+'       => 'Full name',
-	'Class:DataFlow/Attribute:destination_id_finalclass_recall'   => 'destination_id->CI sub-class',
-	'Class:DataFlow/Attribute:destination_id_finalclass_recall+'  => 'Name of the final class',
-	'Class:DataFlow/Attribute:destination_id_obsolescence_flag'   => 'destination_id->Obsolete',
-	'Class:DataFlow/Attribute:destination_id_obsolescence_flag+'  => 'Computed dynamically on other attributes',
-*/
+	'Class:DataFlowProtocol' => 'Data Flow Protocol',
+	'Class:DataFlowProtocol+' => 'Typology of Data Flow Protocol',
+
 ]);

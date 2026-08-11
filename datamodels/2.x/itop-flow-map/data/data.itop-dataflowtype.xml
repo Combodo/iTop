@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
   <DataFlowType alias="DataFlowType" id="1">
-    <name>HTTP</name>
+    <name>REST API</name>
   </DataFlowType>
   <DataFlowType alias="DataFlowType" id="2">
-    <name>HTTPS</name>
+    <name>KAFKA</name>
   </DataFlowType>
   <DataFlowType alias="DataFlowType" id="3">
-    <name>FTP</name>
+    <name>JSON</name>
   </DataFlowType>
   <DataFlowType alias="DataFlowType" id="4">
-    <name>SFTP</name>
+    <name>XML</name>
   </DataFlowType>
   <DataFlowType alias="DataFlowType" id="5">
-    <name>AS2</name>
-  </DataFlowType>
-  <DataFlowType alias="DataFlowType" id="6">
-    <name>X.400</name>
-  </DataFlowType>
-  <DataFlowType alias="DataFlowType" id="7">
-    <name>FTPS</name>
+    <name>CSV</name>
   </DataFlowType>
 </Set>
