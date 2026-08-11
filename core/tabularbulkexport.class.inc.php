@@ -8,6 +8,13 @@
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Core\AttributeDefinition\AttributeExternalField;
+use Combodo\iTop\Core\AttributeDefinition\AttributeExternalKey;
+use Combodo\iTop\Core\AttributeDefinition\AttributeFriendlyName;
+use Combodo\iTop\Core\AttributeDefinition\AttributeHierarchicalKey;
+use Combodo\iTop\Core\AttributeDefinition\AttributeLinkedSet;
+use Combodo\iTop\Core\AttributeDefinition\AttributeStopWatch;
+use Combodo\iTop\Core\AttributeDefinition\AttributeSubItem;
 
 /**
  * Bulk export: Tabular export: abstract base class for all "tabular" exports.
@@ -91,8 +98,8 @@ abstract class TabularBulkExport extends BulkExport
 	{
 		$aResult = [];
 		switch (get_class($oAttDef)) {
-			case 'AttributeExternalKey':
-			case 'AttributeHierarchicalKey':
+			case AttributeExternalKey::class:
+			case AttributeHierarchicalKey::class:
 
 				$bAddFriendlyName = true;
 				$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
@@ -142,7 +149,7 @@ abstract class TabularBulkExport extends BulkExport
 				}
 				break;
 
-			case 'AttributeStopWatch':
+			case AttributeStopWatch::class:
 				foreach (MetaModel::ListAttributeDefs($sClass) as $sSubAttCode => $oSubAttDef) {
 					if ($oSubAttDef instanceof AttributeSubItem) {
 						if ($oSubAttDef->GetParentAttCode() == $sAttCode) {
