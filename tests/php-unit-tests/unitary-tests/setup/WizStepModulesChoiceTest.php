@@ -232,7 +232,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'mandatory' => true,
 				],
 			],
-			'A mandatory but not installed extension should be not checked and enabled if the "disable uninstallation check" flag is set' => [
+			'A mandatory but not installed extension should be checked and enabled if the "disable uninstallation check" flag is set' => [
 				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => false,
@@ -250,7 +250,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'missing' => false,
 					'installed' => false,
 					'disabled' => false,
-					'checked' => false,
+					'checked' => true,
 					'dependency_issue' => false,
 					'mandatory' => true,
 				],
@@ -470,7 +470,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'mandatory' => false,
 				],
 			],
-			'An installed non mandatory extension with missing dependencies and without force uninstall should be not checked and enabled' => [
+			'An installed non mandatory extension with missing dependencies and without force uninstall should be not checked and disabled' => [
 				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => true,
@@ -491,7 +491,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'uninstallable' => true,
 					'missing' => false,
 					'installed' => true,
-					'disabled' => false,
+					'disabled' => true,
 					'checked' => false,
 					'dependency_issue' => true,
 					'mandatory' => false,
@@ -512,7 +512,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'uninstallable' => false,
 					'missing_dependencies' => true,
 				],
-				'bCurrentSelected' => false,
+				'bCurrentSelected' => true,
 				'bDisableUninstallChecks' => false,
 				'aExpectedFlags' => [
 					'uninstallable' => false,
@@ -551,7 +551,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'mandatory' => false,
 				],
 			],
-			'An installed non mandatory extension with missing dependencies and force uninstall should be not checked and enabled' => [
+			'An installed non mandatory extension with missing dependencies and force uninstall should be checked and enabled' => [
 				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => true,
@@ -566,14 +566,14 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'uninstallable' => true,
 					'missing_dependencies' => true,
 				],
-				'bCurrentSelected' => false,
+				'bCurrentSelected' => true,
 				'bDisableUninstallChecks' => true,
 				'aExpectedFlags' => [
 					'uninstallable' => true,
 					'missing' => false,
 					'installed' => true,
 					'disabled' => false,
-					'checked' => false,
+					'checked' => true,
 					'dependency_issue' => true,
 					'mandatory' => false,
 				],
@@ -593,7 +593,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'uninstallable' => true,
 					'missing_dependencies' => true,
 				],
-				'bCurrentSelected' => false,
+				'bCurrentSelected' => true,
 				'bDisableUninstallChecks' => false,
 				'aExpectedFlags' => [
 					'uninstallable' => true,
@@ -679,6 +679,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => true,
 				],
+				'bHasSavedSelectionForStep' => true,
 			],
 		];
 	}
@@ -686,10 +687,11 @@ class WizStepModulesChoiceTest extends ItopTestCase
 	/**
 	 * @dataProvider ProviderComputeChoiceFlags
 	 */
-	public function testComputeChoiceFlags($aExtensionsOnDiskOrDb, $aWizardStepDefinition, $bIsCurrentSelected, $bDisableUninstallChecks, $aExpectedFlags)
+	public function testComputeChoiceFlags($aExtensionsOnDiskOrDb, $aWizardStepDefinition, $bIsCurrentSelected, $bDisableUninstallChecks, $aExpectedFlags, $bHasSavedSelectionForStep = false)
 	{
+		$this->oWizStepModulesChoiceFake->SetHasSavedSelectionForStep($bHasSavedSelectionForStep);
 		$this->oWizStepModulesChoiceFake->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
-		$aFlags = $this->oWizStepModulesChoiceFake->ComputeChoiceFlags($aWizardStepDefinition, '_0', $bIsCurrentSelected ? ['_0' => '_0'] : [], false, $bDisableUninstallChecks, true);
+		$aFlags = $this->oWizStepModulesChoiceFake->ComputeChoiceFlags($aWizardStepDefinition, '_0', $bIsCurrentSelected ? ['_0' => '_0'] : [], false, $bDisableUninstallChecks);
 		$this->assertEquals($aExpectedFlags, $aFlags);
 	}
 

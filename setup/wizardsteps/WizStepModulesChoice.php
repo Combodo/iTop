@@ -47,6 +47,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 	 * @var bool
 	 */
 	protected bool $bChoicesFromDatabase;
+	protected bool $bHasSavedSelectionForStep = false;
 
 	private array $aAnalyzeInstallationModules = [];
 	private ?MissingDependencyException $oMissingDependencyException = null;
@@ -315,7 +316,8 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 		// retrieve the saved selection
 		// use json_encode:decode to store a hash array: step_id => array(input_name => selected_input_id)
 		$aParameters = json_decode($this->oWizard->GetParameter('selected_components', '{}'), true);
-		if (!isset($aParameters[$index])) {
+		$this->bHasSavedSelectionForStep = array_key_exists($index, $aParameters);
+		if (!$this->bHasSavedSelectionForStep) {
 			$aParameters[$index] = $aDefaults;
 		}
 		$aSelectedComponents = $aParameters[$index];
@@ -742,7 +744,7 @@ EOF
 		return $this->aSteps[$index] ?? null;
 	}
 
-	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck, bool $bUpgradeMode)
+	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck)
 	{
 		$oITopExtension = $this->oExtensionsMap->GetFromExtensionCode($aChoice['extension_code']);
 		//If the extension is missing from disk, it won't exist in the ExtensionsMap, thus returning null
@@ -752,8 +754,8 @@ EOF
 		$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']);
 		$bInstalled = $bMissingFromDisk || $oITopExtension?->bInstalled ?? false;
 		$bDependencyIssue = $oITopExtension?->HasDependencyIssue() ?? false;
-		$bIsRemoteExtension = $oITopExtension !== null && $oITopExtension->sSource === iTopExtension::SOURCE_REMOTE;
-		$bIsPackageExtension = $oITopExtension !== null && $oITopExtension->sSource === iTopExtension::SOURCE_WIZARD;
+		$bIsRemoteExtension = $oITopExtension?->sSource === iTopExtension::SOURCE_REMOTE;
+		$bIsPackageExtension = $oITopExtension?->sSource === iTopExtension::SOURCE_WIZARD;
 		$bDoNotUninstall = !$bCanBeUninstalled || $bIsRemoteExtension || $bMandatory;
 
 		$bChecked = $bSelected;
@@ -762,21 +764,19 @@ EOF
 		if ($bMissingFromDisk) {
 			$bDisabled = true;
 			$bChecked = false;
-		} elseif($bMandatory && $bIsPackageExtension){
+		} elseif ($bMandatory && $bIsPackageExtension) {
 			$bDisabled = true;
 			$bChecked = true;
-		} elseif($bDependencyIssue && !$bInstalled) {
-			$bDisabled = true;
+		} elseif ($bDependencyIssue) {
+			// If there is a dependency issue, the user cannot uninstall the extension unless he uses the "force-uninstall" option
+			$bDisabled = !$bInstalled || !$bDisableUninstallCheck;
+		} elseif ($bIsRemoteExtension && !$bInstalled) {
+			// If the extension is a remote extension and not be installed means the user previously uninstalled it so we don't force it to be selected again
 			$bChecked = false;
-		} elseif (!$bDisableUninstallCheck) {
-			//Besides the other priority cases, the disable_check unlock everything else
-			if ($bMandatory) {
-				$bDisabled = true;
-				$bChecked = true;
-			}else if($bDoNotUninstall && $bInstalled) {
-				$bDisabled = true;
-				$bChecked = true;
-			}
+		} elseif ($bMandatory || ($bInstalled && $bDoNotUninstall)) {
+			$bDisabled = !$bDisableUninstallCheck;
+			// If this step has no selection saved yet, we force the mandatory extensions to be selected, otherwise we keep the previous selection
+			$bChecked = !$this->bHasSavedSelectionForStep ? true : $bSelected;
 		}
 
 		if ($bAllDisabled) {
@@ -787,7 +787,7 @@ EOF
 			$aOptions = $aChoice['sub_options']['options'] ?? [];
 			foreach ($aOptions as $index => $aSubChoice) {
 				$sSubChoiceId = $sChoiceId.self::$SEP.$index;
-				$aSubFlags = $this->ComputeChoiceFlags($aSubChoice, $sSubChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck, $bUpgradeMode);
+				$aSubFlags = $this->ComputeChoiceFlags($aSubChoice, $sSubChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck);
 				if ($aSubFlags['checked']) {
 					$bChecked = true;
 					if ($aSubFlags['disabled']) {
@@ -818,7 +818,7 @@ EOF
 
 		foreach ($aOptions as $index => $aChoice) {
 			$sChoiceId = $sParentId.self::$SEP.$index;
-			$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck, $this->bUpgrade);
+			$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck);
 			$this->bCanMoveForward = $this->bCanMoveForward && $this->CanMoveForwardFromChoiceFlags($aFlags, $bDisableUninstallCheck);
 
 			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $sChoiceId, $aFlags);
@@ -858,7 +858,7 @@ EOF
 				$bSelected = ($sChoiceId === $sChoiceIdNone);
 			}
 
-			$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck, $this->bUpgrade);
+			$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck);
 			//ComputeChoiceFlags does not completely compute alternative flags
 			$aFlags['disabled'] = $bDisabled;
 			$aFlags['checked'] = $bSelected;
@@ -987,4 +987,8 @@ EOF
 		return 'Next';
 	}
 
+	public function SetHasSavedSelectionForStep(bool $bHasSavedSelectionForStep): void
+	{
+		$this->bHasSavedSelectionForStep = $bHasSavedSelectionForStep;
+	}
 }
