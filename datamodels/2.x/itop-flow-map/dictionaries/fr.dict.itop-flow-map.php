@@ -52,7 +52,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DataFlow/Attribute:documentation_url+'                          => 'URL vers la documentation du flux de données',
 	'Class:DataFlow/Attribute:last_change_date' => 'Dernière mise à jour',
 	'Class:DataFlow/Attribute:last_change_date+' => 'Date de la dernière mise à jour du logiciel ou de la configuration du flux de données',
-	'Class:DataFlow/Attribute:status'                => 'Etat',
+	'Class:DataFlow/Attribute:status'                => 'État',
 	'Class:DataFlow/Attribute:status+'              => '',
 	'Class:DataFlow/Attribute:status/Value:active'               => 'actif',
 	'Class:DataFlow/Attribute:status/Value:inactive'             => 'inactif',
