@@ -885,13 +885,16 @@ class SetupUtils
 	/**
 	 * Helper to copy a directory to a target directory, skipping .SVN files (for developer's comfort!)
 	 * Returns true if successful
-	 * @param $sSource
-	 * @param $sDest
+	 *
+	 * @param string $sSource
+	 * @param string $sDest
 	 * @param bool $bUseSymbolicLinks
+	 * @param bool $bCreateDirsIfNeeded
+	 *
 	 * @return bool
-	 * @throws Exception
+	 * @throws \Exception
 	 */
-	public static function copydir(string $sSource, string $sDest, bool $bUseSymbolicLinks = false): bool
+	public static function copydir(string $sSource, string $sDest, bool $bUseSymbolicLinks = false, bool $bCreateDirsIfNeeded = false): bool
 	{
 		if (is_dir($sSource)) {
 			if (!is_dir($sDest)) {
@@ -934,6 +937,12 @@ class SetupUtils
 				return copy($sSource, $sDest);
 			}
 		} else {
+			if ($bCreateDirsIfNeeded) {
+				$bRet = mkdir($sSource, 0777, true);
+				$bRet &= mkdir($sDest, 0777, true);
+
+				return $bRet;
+			}
 			return false;
 		}
 	}
