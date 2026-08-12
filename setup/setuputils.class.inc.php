@@ -2177,11 +2177,13 @@ JS
 	 */
 	public static function EraseSetupToken()
 	{
-		$sTokenFile = utils::GetDataPath().'setup/authent';
-		if (is_file($sTokenFile)) {
-			unlink($sTokenFile);
+		if (self::IsSessionSetupTokenValid()) {
+			$sTokenFile = utils::GetDataPath().'setup/authent';
+			if (is_file($sTokenFile)) {
+				unlink($sTokenFile);
+			}
+			Session::Unset('setup_token');
 		}
-		Session::Unset('setup_token');
 	}
 
 	/**
