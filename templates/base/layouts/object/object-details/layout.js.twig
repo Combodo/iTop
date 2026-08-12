@@ -15,12 +15,12 @@
         $('#{{ oUIBlock.GetId() }}').on('edit_object', function(){
             let oFavoriteButton = $(this).find('#UIMenuModify');
             if(oFavoriteButton[0]){
-                oFavoriteButton[0].trigger('click');
+                oFavoriteButton[0].click();
             }
             else{
                 let oPopupItemButton = $('[data-role="ibo-popover-menu"]').find('[data-resource-id="UI:Menu:Modify"]');
                 if(oPopupItemButton[0]){
-                    oPopupItemButton[0].trigger('click');
+                    oPopupItemButton[0].click();
                 }
             }
         });
@@ -28,12 +28,12 @@
         $('#{{ oUIBlock.GetId() }}').on('delete_object', function(){
             let oFavoriteButton = $(this).find('#UIMenuDelete');
             if(oFavoriteButton[0]){
-                oFavoriteButton[0].trigger('click');
+                oFavoriteButton[0].click();
             }
             else{
                 let oPopupItemButton = $('[data-role="ibo-popover-menu"]').find('[data-resource-id="UI:Menu:Delete"]');
                 if(oPopupItemButton[0]){
-                    oPopupItemButton[0].trigger('click');
+                    oPopupItemButton[0].click();
                 }
             }
         });
@@ -41,12 +41,12 @@
         $('#{{ oUIBlock.GetId() }}').on('new_object', function(){
             let oFavoriteButton = $(this).find('#UIMenuNew');
             if(oFavoriteButton[0]){
-                oFavoriteButton[0].trigger('click');
+                oFavoriteButton[0].click();
             }
             else{
                 let oPopupItemButton = $('[data-role="ibo-popover-menu"]').find('[data-resource-id="UI:Menu:New"]');
                 if(oPopupItemButton[0]){
-                    oPopupItemButton[0].trigger('click');
+                    oPopupItemButton[0].click();
                 }
             }
         });
