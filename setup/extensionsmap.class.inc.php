@@ -394,12 +394,13 @@ class iTopExtensionsMap
 	 *
 	 * @param string $sSearchDir The directory to scan
 	 *
-	 * @return string[]|bool
+	 * @return string[]
 	 */
-	public function GetExtensionsFromDir(string $sSearchDir): array|bool
+	public function GetExtensionsFromDir(string $sSearchDir): array
 	{
 		if (!is_readable($sSearchDir)) {
-			return false;
+			SetupLog::Error("No extension found: Directory $sSearchDir is not readable");
+			return [];
 		}
 
 		$aExtensions = [];
