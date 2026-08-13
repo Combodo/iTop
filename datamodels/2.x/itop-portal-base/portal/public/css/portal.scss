@@ -1150,6 +1150,10 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 
 .ck-source-editing-area {
   height: 180px;
+  textarea {
+    // Unset bootstrap inherit on textarea element
+    font: unset;
+  }
 }
 
 .form_field_label > .control-label[data-tooltip-instantiated="true"] {
