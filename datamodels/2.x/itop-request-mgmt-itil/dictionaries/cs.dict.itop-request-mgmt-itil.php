@@ -217,6 +217,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent incident ref~~',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
+	'Class:UserRequest/Attribute:related_incident_list' => 'Child Incidents~~',
+	'Class:UserRequest/Attribute:related_incident_list+' => 'All the incidents that are linked to this parent request~~',
 	'Class:UserRequest/Attribute:related_request_list' => 'Podřízené požadavky',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Všechny požadavky spojené s tímto nadřízeným požadavkem',
 	'Class:UserRequest/Attribute:public_log' => 'Veřejný záznam',

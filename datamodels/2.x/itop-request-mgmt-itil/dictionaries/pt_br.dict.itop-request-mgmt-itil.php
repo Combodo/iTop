@@ -215,6 +215,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:parent_incident_ref' => 'Ref. incidente pai',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
+	'Class:UserRequest/Attribute:related_incident_list' => 'Child Incidents~~',
+	'Class:UserRequest/Attribute:related_incident_list+' => 'All the incidents that are linked to this parent request~~',
 	'Class:UserRequest/Attribute:related_request_list' => 'Subsolicitações',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Todas as solicitações associadas à esta solicitação pai',
 	'Class:UserRequest/Attribute:public_log' => 'Log público',

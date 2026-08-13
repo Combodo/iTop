@@ -216,6 +216,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent-Incident-Referenz',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
+	'Class:UserRequest/Attribute:related_incident_list' => 'Abgeleitete Incidents',
+	'Class:UserRequest/Attribute:related_incident_list+' => 'Alle Incidents, die mit dieser Benutzeranfrage verknüpft sind',
 	'Class:UserRequest/Attribute:related_request_list' => 'Abgeleitete Requests',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Alle abgeleitete Anfragen, die mit dieser Benutzeranfrage verknüpft sind',
 	'Class:UserRequest/Attribute:public_log' => 'Öffentliches Log',

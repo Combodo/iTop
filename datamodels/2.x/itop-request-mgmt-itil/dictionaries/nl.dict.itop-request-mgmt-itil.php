@@ -216,6 +216,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:parent_incident_ref' => 'Ref. hoofdincident',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
+	'Class:UserRequest/Attribute:related_incident_list' => 'Child Incidents~~',
+	'Class:UserRequest/Attribute:related_incident_list+' => 'All the incidents that are linked to this parent request~~',
 	'Class:UserRequest/Attribute:related_request_list' => 'Subverzoeken',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Alle verzoeken die gerelateerd zijn aan dit hoofdverzoek',
 	'Class:UserRequest/Attribute:public_log' => 'Publieke log',
