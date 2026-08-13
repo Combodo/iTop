@@ -8,6 +8,6 @@
   <DeliveryModel alias="DeliveryModel" id="1">
     <name>Support interne</name>
     <org_id>2</org_id>
-    <description>Ce modèle de support s'applique aux clients internes. Il permet d'affecter les tickets aux équipes &quot;Helpdesk&quot;, &quot;Network Support&quot; , &quot;Hardware Support&quot; et &quot;Systems and application support&quot;</description>
+    <description>Ce modèle de support s'applique aux clients internes. Il permet d'affecter les tickets aux équipes &quot;Helpdesk&quot;, &quot;Network Support&quot;, &quot;Hardware Support&quot; et &quot;Systems and application support&quot;</description>
   </DeliveryModel>
 </Set>
