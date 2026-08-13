@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+  <DeliveryModel alias="DeliveryModel" id="2">
+    <name>Support externe</name>
+    <org_id>2</org_id>
+    <description>Ce modèle de support s'applique aux clients externes. Il permet d'affecter les tickets aux équipes &quot;Helpdesk&quot;, &quot;Network Support&quot; et &quot;Systems and application support&quot;</description>
+  </DeliveryModel>
+  <DeliveryModel alias="DeliveryModel" id="1">
+    <name>Support interne</name>
+    <org_id>2</org_id>
+    <description>Ce modèle de support s'applique aux clients internes. Il permet d'affecter les tickets aux équipes &quot;Helpdesk&quot;, &quot;Network Support&quot; , &quot;Hardware Support&quot; et &quot;Systems and application support&quot;</description>
+  </DeliveryModel>
+</Set>
