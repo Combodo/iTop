@@ -35,7 +35,8 @@ class_alias(\Combodo\iTop\Application\WebPage\UnauthenticatedWebPage::class, 'Un
 class_alias(\Combodo\iTop\Application\WebPage\WebPage::class, 'WebPage');
 class_alias(\Combodo\iTop\Application\WebPage\XMLPage::class, 'XMLPage');
 
-// attribute definitions
+// Attribute definitions
+// N°8699: These aliases are not deprecated and are likely to stay because we didn't find a way to write a migration check that could find if a class usage was missing a use statement
 class_alias(\Combodo\iTop\Core\AttributeDefinition\AttributeApplicationLanguage::class, 'AttributeApplicationLanguage');
 class_alias(\Combodo\iTop\Core\AttributeDefinition\AttributeArchiveDate::class, 'AttributeArchiveDate');
 class_alias(\Combodo\iTop\Core\AttributeDefinition\AttributeArchiveFlag::class, 'AttributeArchiveFlag');
