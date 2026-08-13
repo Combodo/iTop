@@ -56,7 +56,7 @@ class NiceWebPage extends WebPage
 		'js/field_sorter.js',
 		'js/table-selectable-lines.js',
 		// - Not used internally or by extensions yet
-		'js/clipboard.min.js', // 3.2.0 N°5261 moved to NPM
+		'node_modules/clipboard/dist/clipboard.min.js', // 3.2.0 N°5261 moved to NPM
 		'js/clipboardwidget.js',
 		// - SearchForm
 		'js/searchformforeignkeys.js',
