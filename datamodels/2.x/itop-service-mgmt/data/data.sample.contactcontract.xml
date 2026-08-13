@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+  <lnkContactToContract alias="lnkContactToContract" id="2">
+    <contract_id>1</contract_id>
+    <contact_id>5</contact_id>
+  </lnkContactToContract>
+  <lnkContactToContract alias="lnkContactToContract" id="3">
+    <contract_id>3</contract_id>
+    <contact_id>45</contact_id>
+  </lnkContactToContract>
+  <lnkContactToContract alias="lnkContactToContract" id="4">
+    <contract_id>3</contract_id>
+    <contact_id>4</contact_id>
+  </lnkContactToContract>
+  <lnkContactToContract alias="lnkContactToContract" id="1">
+    <contract_id>1</contract_id>
+    <contact_id>4</contact_id>
+  </lnkContactToContract>
+</Set>

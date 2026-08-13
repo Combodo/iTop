@@ -3,11 +3,13 @@
   <DeliveryModel alias="DeliveryModel" id="2">
     <name>External support</name>
     <org_id>2</org_id>
+    <org_id_obsolescence_flag>no</org_id_obsolescence_flag>
     <description>This support model applies to external customers. It allows tickets to be assigned to&quot;Helpdesk&quot;, &quot;Network Support&quot; and &quot;Systems and application support&quot; teams</description>
   </DeliveryModel>
   <DeliveryModel alias="DeliveryModel" id="1">
     <name>Internal support</name>
     <org_id>2</org_id>
+    <org_id_obsolescence_flag>no</org_id_obsolescence_flag>
     <description>This support model applies to internal customers. It allows tickets to be assigned to&quot;Helpdesk&quot;, &quot;Network Support&quot; , &quot;Hardware Support&quot; and &quot;Systems and application support&quot; teams</description>
   </DeliveryModel>
 </Set>
