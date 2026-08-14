@@ -3038,9 +3038,14 @@ TXT
 		$aMentionedObjects = [];
 		$aMentionAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
 		$oDom = new \DOMDocument();
-		libxml_use_internal_errors(true); // to keep processing even in case of "invalid" HTML, cf. testGetMentionedObjectsFromText
-		$oDom->loadHTML('<?xml encoding="UTF-8">'.$sText);
+		$bPreviousUseInternalErrors = libxml_use_internal_errors(true); // to keep processing even in case of "invalid" HTML, cf. testGetMentionedObjectsFromText
 
+		try {
+			$oDom->loadHTML('<?xml encoding="UTF-8">'.$sText);
+		} finally {
+			libxml_clear_errors();
+			libxml_use_internal_errors($bPreviousUseInternalErrors);
+		}
 		$oXpath = new \DOMXPath($oDom);
 		$oNodes = $oXpath->query('//a[@data-object-class and @data-object-key]');
 
