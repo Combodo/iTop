@@ -216,6 +216,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent incident ref~~',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
+	'Class:UserRequest/Attribute:related_incident_list' => 'Child Incidents~~',
+	'Class:UserRequest/Attribute:related_incident_list+' => 'All the incidents that are linked to this parent request~~',
 	'Class:UserRequest/Attribute:related_request_list' => 'Afledte Anmodninger',
 	'Class:UserRequest/Attribute:related_request_list+' => 'All the requests that are linked to this parent request~~',
 	'Class:UserRequest/Attribute:public_log' => 'Offentlig Log',

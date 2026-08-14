@@ -212,6 +212,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:parent_incident_ref' => '父级事件编号',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
+	'Class:UserRequest/Attribute:related_incident_list' => 'Child Incidents~~',
+	'Class:UserRequest/Attribute:related_incident_list+' => 'All the incidents that are linked to this parent request~~',
 	'Class:UserRequest/Attribute:related_request_list' => '子需求',
 	'Class:UserRequest/Attribute:related_request_list+' => '此父级需求相关的所有衍生需求',
 	'Class:UserRequest/Attribute:public_log' => '公共日志',

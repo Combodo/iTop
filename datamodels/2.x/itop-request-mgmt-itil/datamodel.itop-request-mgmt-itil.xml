@@ -549,6 +549,13 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
+        <field id="related_incident_list" xsi:type="AttributeLinkedSet">
+          <linked_class>Incident</linked_class>
+          <ext_key_to_me>parent_request_id</ext_key_to_me>
+          <edit_mode>add_remove</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
         <field id="public_log" xsi:type="AttributeCaseLog">
           <sql>public_log</sql>
           <default_value/>
@@ -1512,11 +1519,14 @@
             <item id="contacts_list">
               <rank>20</rank>
             </item>
-            <item id="related_request_list">
+            <item id="workorders_list">
               <rank>30</rank>
             </item>
-            <item id="workorders_list">
+            <item id="related_request_list">
               <rank>40</rank>
+            </item>
+            <item id="related_incident_list">
+              <rank>45</rank>
             </item>
             <item id="col:col1">
               <rank>50</rank>

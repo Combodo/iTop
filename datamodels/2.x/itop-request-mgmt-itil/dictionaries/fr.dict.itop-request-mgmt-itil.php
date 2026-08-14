@@ -217,6 +217,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:parent_incident_ref' => 'Référence Incident parent',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
+	'Class:UserRequest/Attribute:related_incident_list' => 'Incidents fils',
+	'Class:UserRequest/Attribute:related_incident_list+' => 'Tous les incidents liés à cette requête parente',
 	'Class:UserRequest/Attribute:related_request_list' => 'Requêtes filles',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Toutes les requêtes liées à cette requête parente',
 	'Class:UserRequest/Attribute:related_request_list/UI:Links:Create:Button+' => 'Créer une %4$s',

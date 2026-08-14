@@ -215,6 +215,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:UserRequest/Attribute:parent_change_ref+' => '~~',
 	'Class:UserRequest/Attribute:parent_incident_ref' => 'Referenciaszám.',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
+	'Class:UserRequest/Attribute:related_incident_list' => 'Child Incidents~~',
+	'Class:UserRequest/Attribute:related_incident_list+' => 'All the incidents that are linked to this parent request~~',
 	'Class:UserRequest/Attribute:related_request_list' => 'Kapcsolódó kérelmek',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Ehhez a kérelemhez kapcsolódó kérelmek',
 	'Class:UserRequest/Attribute:public_log' => 'Nyilvános napló',
