@@ -3035,20 +3035,19 @@ TXT
 	 */
 	public static function GetMentionedObjectsFromText(string $sText): array
 	{
-		$aMentionAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
 		$aMentionedObjects = [];
-
+		$aMentionAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
 		$oDom = new \DOMDocument();
 		libxml_use_internal_errors(true); // to keep processing even in case of "invalid" HTML, cf. testGetMentionedObjectsFromText
-		$oDom->loadHTML($sText);
+		$oDom->loadHTML('<?xml encoding="UTF-8">'.$sText);
 
 		$oXpath = new \DOMXPath($oDom);
 		$oNodes = $oXpath->query('//a[@data-object-class and @data-object-key]');
 
 		foreach ($oNodes as $oObjNode) {
-			$sObjClass = $oObjNode->getAttribute('data-object-class');
-			$sObjId = $oObjNode->getAttribute('data-object-key');
-			$sText = $oNode->getText();
+			$sMatchedClass = $oObjNode->getAttribute('data-object-class');
+			$sMatchedId = $oObjNode->getAttribute('data-object-key');
+			$sMatchedName = trim($oObjNode->textContent);
 
 			// Ensure that what we found is actually configured as a mention
 			$sMentionPrefix = array_search($sMatchedClass, $aMentionAllowedClasses);
@@ -3073,12 +3072,12 @@ TXT
 			}
 
 			// Prepare array for matched class if not already present
-			if (!array_key_exists($sObjClass, $aMentionedObjects)) {
-				$aMentionedObjects[$sObjClass] = [];
+			if (!array_key_exists($sMatchedClass, $aMentionedObjects)) {
+				$aMentionedObjects[$sMatchedClass] = [];
 			}
 			// Add matched ID if not already there
-			if (!in_array($sObjId, $aMentionedObjects[$sObjClass])) {
-				$aMentionedObjects[$sObjClass][] = $sObjId;
+			if (!in_array($sMatchedId, $aMentionedObjects[$sMatchedClass])) {
+				$aMentionedObjects[$sMatchedClass][] = $sMatchedId;
 			}
 		}
 
