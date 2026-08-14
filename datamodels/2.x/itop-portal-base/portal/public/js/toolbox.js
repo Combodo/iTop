@@ -22,29 +22,7 @@
  * @since 2.7.0
  */
 const CombodoPortalToolbox = {
-	/**
-	 * Close all opened modals on the page
-	 * @deprecated 3.1.0 Use CombodoModal.CloseAllModals() instead
-	 */
-	CloseAllModals: function() {
-		CombodoModal.CloseAllModals();
-	},
-	/**
-	 * @deprecated 3.1.0 Use CombodoModal.OpenUrlInModal() instead
-	 */
-	OpenUrlInModal: function(sTargetUrl, bCloseOtherModals) {
-		CombodoModal.OpenUrlInModal(sTargetUrl, bCloseOtherModals);
-	},
-	/**
-	 * @deprecated 3.1.0 Use CombodoModal.OpenModal() instead
-	 */
-	OpenModal: function(oOptions) {
-		// Default value fallback for calls prior to 3.1.0
-		if (oOptions.size === undefined) {
-			oOptions.size = 'lg';
-		}
-		return CombodoModal.OpenModal(oOptions);
-	},
+
 	/**
 	 * Generic function to call a specific endpoint with callbacks
 	 *

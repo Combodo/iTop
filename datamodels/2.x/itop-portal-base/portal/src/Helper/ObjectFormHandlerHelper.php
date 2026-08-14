@@ -216,9 +216,6 @@ class ObjectFormHandlerHelper
 			$aNavigationRules = $this->oNavigationRuleHelper->PrepareRulesForForm($aFormProperties, $oObject, $bModal);
 			$aFormData['submit_rule'] = $aNavigationRules['submit'];
 			$aFormData['cancel_rule'] = $aNavigationRules['cancel'];
-			/** @deprecated We keep the "xxx_callback" name to keep compatibility with extensions using the portal_form_handler.js widget but they will be removed in a future version. */
-			$aFormData['submit_callback'] = $aNavigationRules['submit']['url'];
-			$aFormData['cancel_callback'] = $aNavigationRules['cancel']['url'];
 
 			// Preparing renderer
 			// Note : We might need to distinguish form & renderer endpoints
