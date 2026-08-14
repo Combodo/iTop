@@ -304,37 +304,6 @@ if ($bInstall) {
 	if (!$bRes) {
 		echo "\nencountered installation issues!";
 		$bFoundIssues = true;
-	} else {
-		try {
-			$sDeltaFile = APPROOT.'data/'.$sTargetEnvironment.'.delta.xml';
-			if (is_readable($sDeltaFile)) {
-				$oMysqli = CMDBSource::GetMysqliInstance($sDBServer, $sDBUser, $sDBPwd, null, $bDBTlsEnabled, $sDBTlsCa, true);
-				if ($oMysqli->select_db($sDBName)) {
-					// Check the presence of a table to record information about the MTP (from the Designer)
-					$sDesignerUpdatesTable = $sDBPrefix.'priv_designer_update';
-					$sSQL = "SELECT id FROM `$sDesignerUpdatesTable`";
-					if ($oMysqli->query($sSQL) !== false) {
-						// Record the Designer Udpates in the priv_designer_update table
-						// Retrieve the revision
-						$oDoc = new DOMDocument();
-						$oDoc->load($sDeltaFile);
-						$iRevision = 0;
-						$iRevision = $oDoc->firstChild->getAttribute('revision_id');
-						if ($iRevision > 0) { // Safety net, just in case...
-							$sDate = date('Y-m-d H:i:s');
-							$sSQL = "INSERT INTO `$sDesignerUpdatesTable` (revision_id, compilation_date, comment) VALUES ($iRevision, '$sDate', 'Deployed using unattended.php.')";
-							if ($oMysqli->query($sSQL) !== false) {
-								echo "\nDesigner update (MTP at revision $iRevision) successfully recorded.\n";
-							} else {
-								echo "\nFailed to record designer updates(".$oMysqli->error.").\n";
-							}
-						}
-					}
-				}
-			}
-		} catch (MySQLException $e) {
-			// Continue anyway
-		}
 	}
 } else {
 	echo "No installation requested.\n";
