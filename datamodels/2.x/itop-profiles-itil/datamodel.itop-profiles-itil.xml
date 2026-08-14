@@ -203,6 +203,7 @@
           <class id="ResourceDesignerConnectorMenu"/>
           <class id="ResourceSystemMenu"/>
           <class id="RessourceHybridAuthMenu"/>
+          <class id="ResourceDataFeatureRemoval"/>
         </classes>
       </group>
       <group id="Event" _delta="define">
