@@ -1886,7 +1886,7 @@ SQL;
 			CURLOPT_HEADER         => false,    // don't return the headers in the output
 			CURLOPT_FOLLOWLOCATION => true,     // follow redirects
 			CURLOPT_ENCODING       => "",       // handle all encodings
-			CURLOPT_USERAGENT      => "spider", // who am i
+			CURLOPT_USERAGENT      => static::GetConfig()->Get('http.request.user_agent'), // who am i
 			CURLOPT_AUTOREFERER    => true,     // set referer on redirect
 			CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
 			CURLOPT_TIMEOUT        => 120,      // timeout on response
@@ -3040,10 +3040,21 @@ TXT
 		$aMentionMatches = [];
 		$sText = html_entity_decode($sText);
 
-		preg_match_all('/<a\s*([^>]*)data-object-class="([^"]*)"\s.*data-object-key="([^"]*)"/Ui', $sText, $aMentionMatches);
+		$aMentionAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
+		preg_match_all('/<a\s*([^>]*)data-object-class="([^"]*)"\s.*data-object-key="([^"]*)"\s*([^>]*)>(.*)<\/a>/Ui', $sText, $aMentionMatches);
 		foreach ($aMentionMatches[0] as $iMatchIdx => $sCompleteMatch) {
 			$sMatchedClass = $aMentionMatches[2][$iMatchIdx];
 			$sMatchedId = $aMentionMatches[3][$iMatchIdx];
+			$sMatchedName = $aMentionMatches[5][$iMatchIdx];
+
+			$sMentionPrefix = array_search($sMatchedClass, $aMentionAllowedClasses);
+			if ($sMentionPrefix === false) {
+				continue;
+			}
+			// Test if the name starts with $sMentionPrefix (e.g. '@' for 'Contact' class)
+			if (str_starts_with($sMatchedName, $sMentionPrefix) === false) {
+				continue;
+			}
 
 			// Prepare array for matched class if not already present
 			if (!array_key_exists($sMatchedClass, $aMentionedObjects)) {
