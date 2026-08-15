@@ -3047,12 +3047,25 @@ TXT
 			$sMatchedId = $aMentionMatches[3][$iMatchIdx];
 			$sMatchedName = $aMentionMatches[5][$iMatchIdx];
 
+			// Ensure that what we found is actually configured as a mention
 			$sMentionPrefix = array_search($sMatchedClass, $aMentionAllowedClasses);
-			if ($sMentionPrefix === false) {
-				continue;
+			// - No direct configuration for the matched class, let's look for a configuration on parent classes
+			if (false === $sMentionPrefix) {
+				$bHasMentionConfigurationForParentClass = false;
+				foreach (MetaModel::EnumParentClasses($sMatchedClass, ENUM_PARENT_CLASSES_EXCLUDELEAF, false) as $aMatchedParentClass) {
+					$sMentionPrefix = array_search($aMatchedParentClass, $aMentionAllowedClasses);
+					if (false !== $sMentionPrefix) {
+						$bHasMentionConfigurationForParentClass = true;
+						break;
+					}
+				}
+
+				if (false === $bHasMentionConfigurationForParentClass) {
+					continue;
+				}
 			}
-			// Test if the name starts with $sMentionPrefix (e.g. '@' for 'Contact' class)
-			if (str_starts_with($sMatchedName, $sMentionPrefix) === false) {
+			// - Test if the name starts with $sMentionPrefix (e.g. '@' for 'Contact' class)
+			if (false === str_starts_with($sMatchedName, $sMentionPrefix)) {
 				continue;
 			}
 
