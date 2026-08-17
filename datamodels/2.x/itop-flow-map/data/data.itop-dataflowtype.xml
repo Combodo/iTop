@@ -15,4 +15,37 @@
   <DataFlowType alias="DataFlowType" id="5">
     <name>CSV</name>
   </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="6">
+    <name>SOAP</name>
+  </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="7">
+    <name>EDI</name>
+  </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="8">
+    <name>Avro</name>
+  </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="9">
+    <name>Parquet</name>
+  </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="10">
+    <name>Protobuf</name>
+  </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="11">
+    <name>PDF</name>
+  </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="12">
+    <name>Binary</name>
+  </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="13">
+    <name>Other/Proprietary</name>
+  </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="14">
+    <name>Plain Text</name>
+  </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="15">
+    <name>HTML</name>
+  </DataFlowType>
+  <DataFlowType alias="DataFlowType" id="16">
+    <name>YAML</name>
+  </DataFlowType>
 </Set>

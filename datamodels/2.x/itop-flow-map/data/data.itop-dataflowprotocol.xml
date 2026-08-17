@@ -19,6 +19,27 @@
     <name>X.400</name>
   </DataFlowProtocol>
   <DataFlowProtocol alias="DataFlowProtocol" id="7">
-    <name>FTPS</name>
+    <name>TCP</name>
+  </DataFlowProtocol>
+  <DataFlowProtocol alias="DataFlowProtocol" id="8">
+    <name>UDP</name>
+  </DataFlowProtocol>
+  <DataFlowProtocol alias="DataFlowProtocol" id="9">
+    <name>SMTP</name>
+  </DataFlowProtocol>
+  <DataFlowProtocol alias="DataFlowProtocol" id="10">
+    <name>IMAP</name>
+  </DataFlowProtocol>
+  <DataFlowProtocol alias="DataFlowProtocol" id="11">
+    <name>SSH</name>
+  </DataFlowProtocol>
+  <DataFlowProtocol alias="DataFlowProtocol" id="12">
+    <name>UDP</name>
+  </DataFlowProtocol>
+  <DataFlowProtocol alias="DataFlowProtocol" id="13">
+    <name>NFS</name>
+  </DataFlowProtocol>
+  <DataFlowProtocol alias="DataFlowProtocol" id="14">
+    <name>MQTT/AMQP</name>
   </DataFlowProtocol>
 </Set>
