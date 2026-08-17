@@ -25,7 +25,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'abgelaufen',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'einmaliges Passwort',
-	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Das Passwort kann vom Benutzer nicht geändert werden.',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Letzte Passworterneuerung',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Letztes Änderungsdatum',
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Das Passwort muss mindestens 12 Zeichen lang sein und Großbuchstaben, Kleinbuchstaben, Zahlen und Sonderzeichen enthalten.',

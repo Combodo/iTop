@@ -64,7 +64,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'DBTools:LostAttachments:Step:Analyze' => 'Suche zunächst nach verlorenen / falsch platzierten Attachments mittels einer Analyse der Datenbank',
 	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Analyseergebnisse:',
 	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Toll! Alles scheint am richtigen Ort zu sein.',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Manche Attachments scheinen am falschen Ort zu sein. Werfen Sie einen Blick auf die folgende Liste und wählen Sie diejenigen aus, die Sie gerne verschieben möchten.',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Manche Attachments (%1$d) scheinen am falschen Ort zu sein. Werfen Sie einen Blick auf die folgende Liste und wählen Sie diejenigen aus, die Sie gerne verschieben möchten.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Dateiname',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Derzeitiger Ort',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Verschieben nach...',

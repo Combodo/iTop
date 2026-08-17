@@ -27,9 +27,9 @@
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'Virtualization:baseinfo' => 'General~~',
-	'Virtualization:moreinfo' => 'Virtualization specifics~~',
-	'Virtualization:otherinfo' => 'Dates and description~~',
+	'Virtualization:baseinfo' => 'Allgemein',
+	'Virtualization:moreinfo' => 'Virtualisierungsspezifische Angaben',
+	'Virtualization:otherinfo' => 'Daten und Beschreibung',
 ]);
 
 //
@@ -39,13 +39,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Cloud/Name' => '%1$s',
 	'Class:Cloud/ComplementaryName' => '%1$s-%2$s',
-	'Class:Cloud' => 'Cloud~~',
-	'Class:Cloud+' => 'A Virtual Host operated by a Cloud provider. It can host Virtual Machines and Container Hosts.~~',
-	'Class:Cloud/Attribute:logo' => 'Logo~~',
-	'Class:Cloud/Attribute:logo+' => 'Used as object icon when this Cloud is displayed within impact analysis graphs~~',
-	'Class:Cloud/Attribute:provider_id+' => 'Who provides the cloud~~',
-	'Class:Cloud/Attribute:location_id' => 'Location~~',
-	'Class:Cloud/Attribute:location_id+' => 'Where is located the cloud~~',
+	'Class:Cloud' => 'Cloud',
+	'Class:Cloud+' => 'Ein von einem Cloud-Anbieter betriebener virtueller Host. Er kann virtuelle Maschinen und Container-Hosts beherbergen.',
+	'Class:Cloud/Attribute:logo' => 'Logo',
+	'Class:Cloud/Attribute:logo+' => 'Wird als Objektsymbol verwendet, wenn diese Cloud in Impact-Analyse-Graphen dargestellt wird',
+	'Class:Cloud/Attribute:provider_id+' => 'Anbieter der Cloud',
+	'Class:Cloud/Attribute:location_id' => 'Standort',
+	'Class:Cloud/Attribute:location_id+' => 'Standort der Cloud',
 ]);
 
 //
@@ -53,6 +53,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'Class:LogicalInterface/Attribute:org_id' => 'Organization~~',
-	'Class:LogicalInterface/Attribute:org_id+' => '~~',
+	'Class:LogicalInterface/Attribute:org_id' => 'Organisation',
+	'Class:LogicalInterface/Attribute:org_id+' => '',
+	'Class:Cloud/Attribute:provider_id' => 'Provider',
+	'Class:LogicalInterface/Name' => '%2$s %1$s',
 ]);

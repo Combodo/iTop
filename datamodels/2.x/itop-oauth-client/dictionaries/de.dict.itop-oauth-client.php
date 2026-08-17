@@ -13,7 +13,7 @@
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:CreateMailbox' => 'Mailpostfach erstellen...',
 	'Menu:OAuthClient' => 'Mailpostfach-OAuth-Client',
-	'Menu:OAuthClient+' => '',
+	'Menu:OAuthClient+' => 'OAuth für den E-Mail-Zugriff',
 	'Menu:GenerateTokens' => 'Zugriffstoken generieren...',
 	'Menu:RegenerateTokens' => 'Zugriffstoken neu generieren...',
 	'itop-oauth-client/Operation:CreateMailBox/Title' => 'Mailpostfach-Erstellung',
@@ -39,7 +39,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:OAuthClient/Attribute:provider' => 'Provider',
 	'Class:OAuthClient/Attribute:provider+' => '',
 	'Class:OAuthClient/Attribute:name' => 'Login',
-	'Class:OAuthClient/Attribute:name+' => '',
+	'Class:OAuthClient/Attribute:name+' => 'In der Regel ist dies Ihre E-Mail-Adresse',
 	'Class:OAuthClient/Attribute:status' => 'Status',
 	'Class:OAuthClient/Attribute:status+' => 'Führen Sie nach der Objekterstellung die Aktion "Zugriffstoken generieren..." aus, um diesen oAuth-Client zu aktivieren.',
 	'Class:OAuthClient/Attribute:status/Value:active' => 'Zugriffstoken erstellt',

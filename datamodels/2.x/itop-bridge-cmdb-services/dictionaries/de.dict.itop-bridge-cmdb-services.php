@@ -13,7 +13,7 @@
  */
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkFunctionalCIToProviderContract' => 'Verknüpfung FunctionalCI/Provider-Vertrag',
-	'Class:lnkFunctionalCIToProviderContract+' => '',
+	'Class:lnkFunctionalCIToProviderContract+' => 'Diese Verknüpfung bildet ab, welche funktionalen CIs über einen Provider-Vertrag von einem externen Unternehmen betreut werden.',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Provider-Vertrag',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
@@ -31,7 +31,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkFunctionalCIToService' => 'Verknüpfung FunctionalCI/Service',
-	'Class:lnkFunctionalCIToService+' => '',
+	'Class:lnkFunctionalCIToService+' => 'Diese Verknüpfung bildet ab, welche funktionalen CIs zur Erbringung eines Services benötigt werden und deren Ausfall die Qualität des Services beeinträchtigen würde.',
 	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Service',
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
@@ -49,9 +49,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Provider-Verträge',
-	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
+	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Alle Provider-Verträge zu diesem Konfigurationselement',
 	'Class:FunctionalCI/Attribute:services_list' => 'Services',
-	'Class:FunctionalCI/Attribute:services_list+' => '',
+	'Class:FunctionalCI/Attribute:services_list+' => 'Alle Services, die von diesem Konfigurationselement beeinträchtigt werden',
 ]);
 
 //

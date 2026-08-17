@@ -19,7 +19,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:iTopHub:MyExtensions+' => 'Liste der auf ihrer '.ITOP_APPLICATION_SHORT.' Instanz installierten Erweiterungen',
 	'Menu:iTopHub:BrowseExtensions' => 'Erweiterungen vom iTop Hub beziehen',
 	'Menu:iTopHub:BrowseExtensions+' => 'Mehr Erweiterungen auf dem iTop Hub entdecken',
-	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Zugriff auf die Community-Plattform iTop Hub!<br>Hier finden sie Informationen zu ihren '.ITOP_APPLICATION_SHORT.' Instanzen, können diese mit personalisierten Tools verwalten und sich Erweiterungen installieren.<br><br>Durch die Verbindung mit dem iTop Hub, werden Informationen zu Ihrer '.ITOP_APPLICATION_SHORT.' Instanz zum iTop Hub übertragen.</p>',
+	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Werfen Sie einen Blick in den Store des iTop Hub – die zentrale Anlaufstelle für großartige iTop-Erweiterungen!<br>Finden Sie dort diejenigen, mit denen Sie '.ITOP_APPLICATION_SHORT.' an Ihre Prozesse anpassen.<br><br>Durch die Verbindung mit dem iTop Hub von dieser Seite aus werden Informationen zu dieser '.ITOP_APPLICATION_SHORT.'-Instanz an den Hub übertragen.</p>',
 	'iTopHub:GoBtn' => 'Gehe zum iTop Hub',
 	'iTopHub:CloseBtn' => 'Schließen',
 	'iTopHub:GoBtn:Tooltip' => 'Gehe zu www.itophub.io',

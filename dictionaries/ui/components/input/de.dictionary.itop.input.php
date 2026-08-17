@@ -14,4 +14,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Component:Input:ChangeNotAllowed' => 'Diese Änderung ist nicht erlaubt',
 	'UI:Component:Input:Password:DoesNotMatch' => 'Passwörter stimmen nicht überein',
 	'UI:Component:Input:Set:MinimumItems' => 'Mindestens %1$s Element(e) benötigt',
+	'UI:Component:Input:Select:Select_item' => 'Eintrag auswählen...',
 ]);
