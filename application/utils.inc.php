@@ -3022,7 +3022,6 @@ TXT
 	 * Note: Only works for backoffice URLs for now
 	 *
 	 * @param string $sText Text containing the mentioned objects to be found
-	 * @param string $sFormat {@uses static::ENUM_TEXT_FORMAT_HTML, ...}
 	 *
 	 * @return array Array of object classes / IDs for the ones found in $sText
 	 *
@@ -3037,15 +3036,23 @@ TXT
 	public static function GetMentionedObjectsFromText(string $sText): array
 	{
 		$aMentionedObjects = [];
-		$aMentionMatches = [];
-		$sText = html_entity_decode($sText);
-
 		$aMentionAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
-		preg_match_all('/<a\s*([^>]*)data-object-class="([^"]*)"\s.*data-object-key="([^"]*)"\s*([^>]*)>(.*)<\/a>/Ui', $sText, $aMentionMatches);
-		foreach ($aMentionMatches[0] as $iMatchIdx => $sCompleteMatch) {
-			$sMatchedClass = $aMentionMatches[2][$iMatchIdx];
-			$sMatchedId = $aMentionMatches[3][$iMatchIdx];
-			$sMatchedName = $aMentionMatches[5][$iMatchIdx];
+		$oDom = new \DOMDocument();
+		$bPreviousUseInternalErrors = libxml_use_internal_errors(true); // to keep processing even in case of "invalid" HTML, cf. testGetMentionedObjectsFromText
+
+		try {
+			$oDom->loadHTML('<?xml encoding="UTF-8">'.$sText);
+		} finally {
+			libxml_clear_errors();
+			libxml_use_internal_errors($bPreviousUseInternalErrors);
+		}
+		$oXpath = new \DOMXPath($oDom);
+		$oNodes = $oXpath->query('//a[@data-object-class and @data-object-key]');
+
+		foreach ($oNodes as $oObjNode) {
+			$sMatchedClass = $oObjNode->getAttribute('data-object-class');
+			$sMatchedId = $oObjNode->getAttribute('data-object-key');
+			$sMatchedName = trim($oObjNode->textContent);
 
 			// Ensure that what we found is actually configured as a mention
 			$sMentionPrefix = array_search($sMatchedClass, $aMentionAllowedClasses);
