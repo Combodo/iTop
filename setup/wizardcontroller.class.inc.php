@@ -341,14 +341,13 @@ EOF
 	 *
 	 * @return WizardState
 	 */
-	public function GetLatestWizardStateFromStepClass(string $sStepClass, bool $bPopStep = true): WizardState
+	public function GetLatestWizardStateFromStepClass(string $sStepClass): WizardState
 	{
 		$iCountModulesChoiceSteps = count(array_filter($this->aWizardSteps, fn (array $step): bool => $step['class'] === $sStepClass && $step['state'] !== ''));
 		$sStepState = $iCountModulesChoiceSteps > 0 ? (string) ($iCountModulesChoiceSteps - 1) : '';
 
-		if ($bPopStep) {
-			$this->PopStep();
-		}
+		// Pop the latest step from the stack, since we are going back to it
+		$this->PopStep();
 
 		return new WizardState($sStepClass, $sStepState);
 	}

@@ -1675,12 +1675,11 @@ HTML,
 			['WizStepDetectedInfo', ''],
 			['WizStepUpgradeMiscParams', ''],
 			['WizStepModulesChoice', '5'],
-			['WizStepModulesChoice', '5', false],
 		];
 	}
 
 	/** @dataProvider provideGetLatestWizardStateFromStepClass */
-	public function testGetLatestWizardStateFromStepClass(string $sStepClass, string $sExpectedState, bool $bPopStep = true): void
+	public function testGetLatestWizardStateFromStepClass(string $sStepClass, string $sExpectedState): void
 	{
 		$aSteps = [
 			['class' => 'WizStepWelcome', 'state' => ''],
@@ -1696,14 +1695,10 @@ HTML,
 		$this->oWizard->SetParameter('_steps', $aSteps);
 		$this->oWizard->SetWizardSteps($aSteps);
 
-		$oWizardState = $this->oWizard->GetLatestWizardStateFromStepClass($sStepClass, $bPopStep);
+		$oWizardState = $this->oWizard->GetLatestWizardStateFromStepClass($sStepClass);
 		$this->assertEquals(new WizardState($sStepClass, $sExpectedState), $oWizardState);
 
 		$aNewSteps = $this->oWizard->GetParameter('_steps', []);
-		if ($bPopStep) {
-			$this->assertCount(count($aSteps) - 1, $aNewSteps);
-		} else {
-			$this->assertCount(count($aSteps), $aNewSteps);
-		}
+		$this->assertCount(count($aSteps) - 1, $aNewSteps);
 	}
 }
