@@ -1642,7 +1642,7 @@ abstract class MetaModel
 		if ($sFilterCode == 'id') {
 			return true;
 		}
-		if (array_key_exists($sClass, self::$m_aMagicFields) && array_key_exists($sFilterCode, self::$m_aMagicFields[$sClass])) {
+		if (array_key_exists($sClass, self::$m_aMagicFields) && in_array($sFilterCode, self::$m_aMagicFields[$sClass])) {
 			return true;
 		}
 		if (array_key_exists($sClass, self::$m_aFilterForbiddenAttributes) && array_key_exists($sFilterCode, self::$m_aFilterForbiddenAttributes[$sClass])) {
@@ -2963,6 +2963,7 @@ abstract class MetaModel
 						self::$m_aMagicFields[] = $sClass;
 					}
 					self::$m_aMagicFields[$sClass][] = $sCode;
+					self::$m_aAttribOrigins[$sClass][$sCode] = self::$m_aAttribOrigins[$sClass][$sAttCode] ;
 				}
 				if (!$oAttDef->IsSearchable()) {
 					if (!array_key_exists($sClass, self::$m_aFilterForbiddenAttributes)) {
