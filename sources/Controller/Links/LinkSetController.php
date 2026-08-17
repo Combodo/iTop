@@ -7,19 +7,18 @@
 
 namespace Combodo\iTop\Controller\Links;
 
-use Combodo\iTop\Application\WebPage\AjaxPage;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\Helper\FormHelper;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
-use Combodo\iTop\Controller\AbstractController;
-use Combodo\iTop\Service\Links\LinkSetModel;
-use Combodo\iTop\Service\Router\Router;
-use Combodo\iTop\Service\Base\ObjectRepository;
-use Dict;
-use Exception;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
+use Combodo\iTop\Controller\AbstractController;
+use Combodo\iTop\Service\Base\ObjectRepository;
+use Combodo\iTop\Service\Router\Router;
 use CoreException;
 use DBObject;
+use Dict;
+use Exception;
 use MetaModel;
 use UserRights;
 use utils;
@@ -68,7 +67,7 @@ class LinkSetController extends AbstractController
 				$sErrorMessage = $e->getMessage();
 			}
 		} else {
-			$sErrorMessage = 'invalid transaction id';
+			$sErrorMessage = Dict::S('UI:Error:InvalidToken');
 		}
 		$oPage->SetData([
 			'success'       => $bOperationSuccess,
@@ -111,7 +110,7 @@ class LinkSetController extends AbstractController
 				$sErrorMessage = $e->getMessage();
 			}
 		} else {
-			$sErrorMessage = 'invalid transaction id';
+			$sErrorMessage = Dict::S('UI:Error:InvalidToken');
 		}
 		$oPage->SetData([
 			'success'       => $bOperationSuccess,

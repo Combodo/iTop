@@ -498,7 +498,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:Error:InvalidDashboard' => 'Erreur: Le tableau de bord est invalide',
 	'UI:Error:MaintenanceMode' => 'L\'application est en maintenance',
 	'UI:Error:MaintenanceTitle' => 'Maintenance',
-	'UI:Error:InvalidToken' => 'Erreur: l\'opération a déjà été effectuée (CSRF token not found)',
+	'UI:Error:InvalidToken' => 'La session actuelle est invalide. Veuillez actualiser la page et réessayer. Si le problème persiste, veuillez vous déconnecter puis vous reconnecter.',
 	'UI:Error:SMTP:UnknownVendor' => 'Le provider SMTP OAuth 2.0 %1$s n\'existe pas',
 	'UI:GroupBy:Count' => 'Nombre',
 	'UI:GroupBy:Count+' => 'Nombre d\'éléments',

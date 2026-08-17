@@ -487,7 +487,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI:Error:InvalidDashboard' => 'Hiba: Érvénytelen műszerfal',
 	'UI:Error:MaintenanceMode' => 'Az alkalmazás jelenleg karbantartás alatt van',
 	'UI:Error:MaintenanceTitle' => 'Karbantartás',
-	'UI:Error:InvalidToken' => 'Hiba: a kért művelet már végrehajtásra került (CSRF token nem található)',
+	'UI:Error:InvalidToken' => 'Az aktuális munkamenet érvénytelen. Frissítse az oldalt, majd próbálja újra. Ha a probléma továbbra is fennáll, jelentkezzen ki, majd jelentkezzen be újra.',
 	'UI:Error:SMTP:UnknownVendor' => 'A %1$s OAuth SMTP szolgáltató nem létezik  (email_transport_smtp.oauth.provider)',
 	'UI:GroupBy:Count' => 'Mennyiség',
 	'UI:GroupBy:Count+' => '',

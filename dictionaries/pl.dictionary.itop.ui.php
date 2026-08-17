@@ -488,7 +488,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'UI:Error:InvalidDashboard' => 'Błąd: nieprawidłowy pulpit nawigacyjny',
 	'UI:Error:MaintenanceMode' => 'Aplikacja jest obecnie w trakcie konserwacji',
 	'UI:Error:MaintenanceTitle' => 'Konserwacja',
-	'UI:Error:InvalidToken' => 'Błąd: żądana operacja została już wykonana (nie znaleziono tokena CSRF)',
+	'UI:Error:InvalidToken' => 'Bieżąca sesja jest nieprawidłowa. Odśwież stronę i spróbuj ponownie. Jeśli problem będzie się powtarzał, wyloguj się i zaloguj ponownie.',
 	'UI:Error:SMTP:UnknownVendor' => 'Dostawca OAuth SMTP %1$s nie istnieje (email_transport_smtp.oauth.provider)',
 	'UI:GroupBy:Count' => 'Licznik',
 	'UI:GroupBy:Count+' => 'Liczba elementów',

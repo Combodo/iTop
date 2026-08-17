@@ -905,7 +905,7 @@ try {
 				if (!utils::IsTransactionValid($sTransactionId)) {
 					$sUser = UserRights::GetUser();
 					IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser'");
-					$oP->p(Dict::S('UI:Error:ObjectAlreadyUpdated'));
+					$oP->p(Dict::S('UI:Error:InvalidToken'));
 				} else {
 					// For archiving the modification
 					$oFilter = DBObjectSearch::unserialize($sFilter);

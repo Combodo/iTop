@@ -484,7 +484,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Error:InvalidDashboard' => 'Fehler: Ungültiges Dashboard',
 	'UI:Error:MaintenanceMode' => 'Die Anwendung befindet sich derzeit im Wartungsmodus.',
 	'UI:Error:MaintenanceTitle' => 'Wartung',
-	'UI:Error:InvalidToken' => 'Fehler: The angeforderte Operation wurde bereits ausgeführt (CSRF-Token nicht gefunden)',
+	'UI:Error:InvalidToken' => 'Die aktuelle Sitzung ist ungültig. Bitte aktualisieren Sie die Seite und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, melden Sie sich bitte ab und wieder an.',
 	'UI:Error:SMTP:UnknownVendor' => 'Der oAuth-SMTP-Provider %1$s existiert nicht (email_transport_smtp.oauth.provider)',
 	'UI:GroupBy:Count' => 'Anzahl',
 	'UI:GroupBy:Count+' => 'Anzahl der Elemente',

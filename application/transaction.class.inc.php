@@ -115,7 +115,7 @@ class privUITransactionSession
 		// Strictly speaking, the two lines below should be grouped together
 		// by a critical section
 		// sem_acquire($rSemIdentified);
-		$id = static::GetUserPrefix().str_replace(['.', ' '], '', microtime());
+		$id = static::GetUserPrefix().str_replace(['.', ' '], '', microtime()).'-'.bin2hex(random_bytes(24));
 		Session::Set(['transactions', $id], true);
 		// sem_release($rSemIdentified);
 
@@ -236,13 +236,40 @@ class privUITransactionFile
 
 		self::CleanupOldTransactions();
 
-		$sTransactionIdFullPath = tempnam(APPROOT.'data/transactions', static::GetUserPrefix());
+		$sTransactionIdFullPath = static::CreateUniqueTransactionFilePath(APPROOT.'data/transactions', static::GetUserPrefix());
 		file_put_contents($sTransactionIdFullPath, $iCurrentUserId, LOCK_EX);
 
 		$sTransactionIdFileName = basename($sTransactionIdFullPath);
 		self::Info('GetNewTransactionId: Created transaction: '.$sTransactionIdFileName);
 
 		return $sTransactionIdFileName;
+	}
+
+	/**
+	 * Create a transaction file path with a longer random suffix and create it atomically.
+	 *
+	 * @param string $sDir
+	 * @param string $sPrefix
+	 *
+	 * @return string
+	 *
+	 * @throws CoreException
+	 */
+	private static function CreateUniqueTransactionFilePath(string $sDir, string $sPrefix): string
+	{
+		$iMaxAttempts = 10;
+		for ($i = 0; $i < $iMaxAttempts; $i++) {
+			$sFileName = $sPrefix.bin2hex(random_bytes(24)); // 48 random hex chars
+			$sFullPath = $sDir.'/'.$sFileName;
+
+			$hFile = @fopen($sFullPath, 'x');
+			if ($hFile !== false) {
+				fclose($hFile);
+				return $sFullPath;
+			}
+		}
+
+		throw new CoreException('Failed to allocate a unique transaction file name after multiple attempts.');
 	}
 
 	/**
@@ -278,6 +305,18 @@ class privUITransactionFile
 		$sTransactionIdUserId = file_get_contents($sFilepath);
 		if ($iCurrentUserId != $sTransactionIdUserId) {
 			self::Info("IsTransactionValid: Transaction '$id' not existing for current user. Pending transactions:\n".implode("\n", self::GetPendingTransactions()));
+			return false;
+		}
+
+		$iTime = filemtime($sFilepath);
+		$iLifetime = (int) MetaModel::GetConfig()->Get('transactions_file_lifetime');
+		$iLimit = time() - $iLifetime;
+		if ($iTime < $iLimit) {
+			self::Info("IsTransactionValid: Transaction '$id' expired.");
+			if ($iLifetime < 3600) {
+				IssueLog::Warning("IsTransactionValid: Transaction '$id' expired after only $iLifetime seconds. Consider increasing the 'transactions_file_lifetime' configuration parameter.");
+			}
+			@unlink($sFilepath);
 			return false;
 		}
 
@@ -327,7 +366,7 @@ class privUITransactionFile
 		}
 
 		clearstatcache();
-		$iLimit = time() - 24 * 3600;
+		$iLimit = time() - (int) MetaModel::GetConfig()->Get('transactions_file_lifetime');
 		$sPattern = $sTransactionDir ? "$sTransactionDir/*" : APPROOT.'data/transactions/*';
 		$aTransactions = glob($sPattern);
 		foreach ($aTransactions as $sFileName) {

@@ -1289,6 +1289,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+		'transactions_file_lifetime' => [
+			'type'                => 'integer',
+			'description'         => 'Value in seconds for the lifetime of a transaction file (after this duration, the transaction will be invalid and the garbage collector could delete it).',
+			'default'             => 3600,
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 		'log_transactions' => [
 			'type'                => 'bool',
 			'description'         => 'Whether or not to enable the debug log for the transactions.',
