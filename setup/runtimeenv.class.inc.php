@@ -24,6 +24,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Service\Session\SessionParameters;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Combodo\iTop\Setup\ModuleDependency\Module;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
@@ -351,26 +352,18 @@ class RunTimeEnvironment
 
 	/**
 	 * @param \Config $oConfig
-	 * @param string $sDataModelVersion
-	 * @param array $aSelectedModuleCodes
-	 * @param array $aSelectedExtensionCodes
-	 * @param string|null $sInstallComment
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \MySQLException
 	 * @throws \Exception
 	 */
-	public function DoCreateConfig(Config $oConfig, string $sDataModelVersion, array $aSelectedModuleCodes, array $aSelectedExtensionCodes, ?string $sInstallComment = null, string $sSourceDesc = 'Setup')
+	public function DoCreateConfig(Config $oConfig, string $sSourceDesc = 'Setup')
 	{
 		$oConfig->Set('access_mode', ACCESS_FULL);
 
 		// Record which modules are installed...
 		$this->InitDataModel($oConfig, true);  // load data model and connect to the database
-
-		if (!$this->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sInstallComment)) {
-			throw new Exception('Failed to record the installation information');
-		}
 
 		$oConfig->UpdateIncludes('env-'.$this->sBuildEnv);
 		$sEnvironmentLabel = $this->GetFinalEnv().' (built on '.date('Y-m-d').')';
@@ -649,9 +642,9 @@ class RunTimeEnvironment
 	public function RecordInstallation(Config $oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sShortComment = null)
 	{
 		// Have it work fine even if the DB has been set in read-only mode for the users
-		$iPrevAccessMode = MetaModel::GetConfig()->Get('access_mode');
-		MetaModel::GetConfig()->Set('access_mode', ACCESS_FULL);
-		//$oConfig->Set('access_mode', ACCESS_FULL);
+		$iPrevAccessMode = $oConfig->Get('access_mode');
+		$oConfig->Set('access_mode', ACCESS_FULL);
+		$this->InitDataModel($oConfig, true);  // load data model and connect to the database
 
 		if (CMDBSource::DBName() == '') {
 			// In case this has not yet been done
@@ -753,6 +746,16 @@ class RunTimeEnvironment
 				$oInstallRec->Set('description', $oExtension->sDescription);
 				$oInstallRec->DBInsertNoReload();
 			}
+		}
+
+		$oParams = new SessionParameters(SetupUtils::SESSION_PARAMETERS_NAME);
+		if (class_exists('DesignerUpdate') && $oParams->GetParameter('return_application') === 'designer') {
+			// Now keep track of this update
+			$oLog = new DesignerUpdate();
+			$oLog->Set('revision_id', $oParams->GetParameter('revision_id', 0));
+			$oLog->Set('comment', $oParams->GetParameter('comment', ''));
+			$oLog->Set('compilation_date', time());
+			$oLog->DBInsert();
 		}
 
 		// Restore the previous access mode
