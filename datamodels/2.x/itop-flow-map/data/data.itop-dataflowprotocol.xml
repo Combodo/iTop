@@ -34,7 +34,7 @@
     <name>SSH</name>
   </DataFlowProtocol>
   <DataFlowProtocol alias="DataFlowProtocol" id="12">
-    <name>UDP</name>
+    <name>WebSocket</name>
   </DataFlowProtocol>
   <DataFlowProtocol alias="DataFlowProtocol" id="13">
     <name>NFS</name>
