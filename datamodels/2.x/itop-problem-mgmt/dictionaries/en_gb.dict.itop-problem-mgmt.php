@@ -49,11 +49,11 @@
 
 Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:ProblemManagement' => 'Problem management',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload',
 	'Menu:Problem:Overview' => 'Overview',
 	'Menu:Problem:Overview+' => 'Overview',
 	'Menu:NewProblem' => 'New problem',
-	'Menu:NewProblem+' => 'Create a new problem ticket~~',
+	'Menu:NewProblem+' => 'Create a new problem ticket',
 	'Menu:SearchProblems' => 'Search for problems',
 	'Menu:SearchProblems+' => 'Search for problems tickets',
 	'Menu:Problem:Shortcuts' => 'Shortcuts',
