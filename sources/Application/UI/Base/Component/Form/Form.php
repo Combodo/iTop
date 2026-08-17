@@ -25,7 +25,7 @@ class Form extends UIContentBlock
 	/** @var string */
 	protected $sAction;
 	/** @var string */
-	protected $sEncType = "application/x-www-form-urlencoded";
+	protected $sEncType = "multipart/form-data";
 
 	public function __construct(?string $sId = null)
 	{
