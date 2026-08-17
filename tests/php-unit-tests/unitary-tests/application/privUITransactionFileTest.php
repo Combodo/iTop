@@ -42,9 +42,10 @@ class privUITransactionFileTest extends ItopDataTestCase
 	 */
 	public function testCleanupOldTransactions($iCleanableCreated, $iPreservableCreated, $sCleanablePrefix, $sPreservablePrefix)
 	{
-		MetaModel::GetConfig()->Set('transactions_gc_threshold', 100);
-
-		$iBaseLimit = time() - 24 * 3600; //24h
+		$oConfig = MetaModel::GetConfig();
+		$oConfig->Set('transactions_gc_threshold', 100);
+		$iOriginalLifetime = (int) $oConfig->Get('transactions_file_lifetime');
+		$iBaseLimit = time() - $iOriginalLifetime; //24h
 
 		$sBaseDir = sys_get_temp_dir();
 		$sDir = "$sBaseDir/privUITransactionFileTest/cleanupOldTransactions";
@@ -185,4 +186,42 @@ class privUITransactionFileTest extends ItopDataTestCase
 		$bResult = privUITransactionFile::RemoveTransaction($sTransactionIdUnauthenticatedUser);
 		$this->assertTrue($bResult, 'Token created by unauthenticated user must be removed when no user logged');
 	}
+
+	/**
+	 * Validate that transactions_file_lifetime drives transaction expiration.
+	 *
+	 * @throws \Exception
+	 */
+	public function testIsTransactionValidUsesConfiguredFileLifetime()
+	{
+		$this->CreateUser(static::USER1_TEST_LOGIN, self::SAMPLE_DATA_SUPPORT_PROFILE_ID);
+		$bUserLogin = UserRights::Login(self::USER1_TEST_LOGIN);
+		$this->assertTrue($bUserLogin, 'Login with test user throw an error');
+
+		$oConfig = MetaModel::GetConfig();
+		$iOriginalLifetime = (int) $oConfig->Get('transactions_file_lifetime');
+		$iTestAgeInSeconds = 30;
+
+		try {
+			$oConfig->Set('transactions_file_lifetime', 3600);
+			$sLongLifetimeTransactionId = privUITransactionFile::GetNewTransactionId();
+			$sLongLifetimeTransactionFilePath = \utils::GetDataPath().'transactions/'.$sLongLifetimeTransactionId;
+			$bTouchSuccess = touch($sLongLifetimeTransactionFilePath, time() - $iTestAgeInSeconds);
+			$this->assertTrue($bTouchSuccess, 'Unable to age transaction file for long-lifetime scenario');
+			$bResult = privUITransactionFile::IsTransactionValid($sLongLifetimeTransactionId, false);
+			$this->assertTrue($bResult, 'Transaction should still be valid when its age is below transactions_file_lifetime');
+			privUITransactionFile::RemoveTransaction($sLongLifetimeTransactionId);
+
+			$oConfig->Set('transactions_file_lifetime', 5);
+			$sShortLifetimeTransactionId = privUITransactionFile::GetNewTransactionId();
+			$sShortLifetimeTransactionFilePath = \utils::GetDataPath().'transactions/'.$sShortLifetimeTransactionId;
+			$bTouchSuccess = touch($sShortLifetimeTransactionFilePath, time() - $iTestAgeInSeconds);
+			$this->assertTrue($bTouchSuccess, 'Unable to age transaction file for short-lifetime scenario');
+			$bResult = privUITransactionFile::IsTransactionValid($sShortLifetimeTransactionId, false);
+			$this->assertFalse($bResult, 'Transaction should be invalid when its age is above transactions_file_lifetime');
+		} finally {
+			$oConfig->Set('transactions_file_lifetime', $iOriginalLifetime);
+		}
+	}
+
 }
