@@ -488,7 +488,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Error:MaintenanceMode' => 'Приложение в режиме технического обслуживания',
 	'UI:Error:MaintenanceTitle' => 'Техническое обслуживание',
 	'UI:Error:InvalidToken' => 'Текущий сеанс недействителен. Обновите страницу и повторите попытку. Если проблема сохраняется, выйдите из системы и войдите снова.',
-	'UI:Error:SMTP:UnknownVendor' => 'Провайдер OAuth SMTP %1$s не существует (email_transport_smtp.oauth.provider)',
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 	'UI:GroupBy:Count' => 'Количество',
 	'UI:GroupBy:Count+' => 'Количество элементов',
 	'UI:CountOfObjects' => '%1$d объектов соответствует критериям.',
