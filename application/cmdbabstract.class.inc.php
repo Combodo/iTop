@@ -3983,6 +3983,27 @@ HTML;
 				$sTagSetJson = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
 				if ($sTagSetJson !== null) { // bulk modify, direct linked set not handled
 					$value = json_decode($sTagSetJson, true);
+					if ($this->IsNew()) {
+						if (is_array($value['orig_value'])) {
+							foreach ($value['orig_value'] as $val) {
+								if (!in_array($val, $value['removed'])) {
+									$value['added'][] = $val;
+								}
+							}
+						}
+					} else {
+						$aCurrentValues = $this->Get($sAttCode)->GetValues();
+						foreach ($value['orig_value'] as $val) {
+							if (!in_array($val, $aCurrentValues) && !in_array($val, $value['removed']) && !in_array($val, $value['added'])) {
+								$value['added'][] = $val;
+							}
+						}
+						foreach ($aCurrentValues as $val) {
+							if (!in_array($val, $value['orig_value']) && !in_array($val, $value['removed']) && !in_array($val, $value['added'])) {
+								$value['removed'][] = $val;
+							}
+						}
+					}
 				}
 				break;
 
