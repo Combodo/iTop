@@ -7,6 +7,7 @@ use iTopExtensionsMap;
 use iTopExtensionsMapFake;
 use ModuleDiscovery;
 use WizardController;
+use WizardState;
 use WizStepModulesChoiceFake;
 use XMLParameters;
 
@@ -1665,5 +1666,39 @@ HTML,
 			$expected [] = ["class" => "WizStepModulesChoice","state" => "".$i];
 		}
 		$this->assertEquals($expected, $this->oWizStepModulesChoiceFake->GetWizardSteps());
+	}
+
+	public function provideGetLatestWizardStateFromStepClass(): array
+	{
+		return [
+			['WizStepWelcome', ''],
+			['WizStepDetectedInfo', ''],
+			['WizStepUpgradeMiscParams', ''],
+			['WizStepModulesChoice', '5'],
+		];
+	}
+
+	/** @dataProvider provideGetLatestWizardStateFromStepClass */
+	public function testGetLatestWizardStateFromStepClass(string $sStepClass, string $sExpectedState): void
+	{
+		$aSteps = [
+			['class' => 'WizStepWelcome', 'state' => ''],
+			['class' => 'WizStepDetectedInfo', 'state' => ''],
+			['class' => 'WizStepUpgradeMiscParams', 'state' => ''],
+			['class' => 'WizStepModulesChoice', 'state' => '0'],
+			['class' => 'WizStepModulesChoice', 'state' => '1'],
+			['class' => 'WizStepModulesChoice', 'state' => '2'],
+			['class' => 'WizStepModulesChoice', 'state' => '3'],
+			['class' => 'WizStepModulesChoice', 'state' => '4'],
+			['class' => 'WizStepModulesChoice', 'state' => '5'],
+		];
+		$this->oWizard->SetParameter('_steps', $aSteps);
+		$this->oWizard->SetWizardSteps($aSteps);
+
+		$oWizardState = $this->oWizard->GetLatestWizardStateFromStepClass($sStepClass);
+		$this->assertEquals(new WizardState($sStepClass, $sExpectedState), $oWizardState);
+
+		$aNewSteps = $this->oWizard->GetParameter('_steps', []);
+		$this->assertCount(count($aSteps) - 1, $aNewSteps);
 	}
 }

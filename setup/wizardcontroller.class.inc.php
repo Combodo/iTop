@@ -59,7 +59,7 @@ class WizardController
 	 * Removes information about the previous step from the stack
 	 * @return array{'class': string, 'state': string}
 	 */
-	protected function PopStep(): array
+	public function PopStep(): array
 	{
 		$aStep = array_pop($this->aWizardSteps);
 		$this->SetParameter('_steps', $this->aWizardSteps);
@@ -334,5 +334,21 @@ EOF
 	public function EraseParameters()
 	{
 		$this->oSessionParameters->Erase();
+	}
+
+	/**
+	 * @param string $sStepClass The class name of the step to find the latest state for
+	 *
+	 * @return WizardState
+	 */
+	public function GetLatestWizardStateFromStepClass(string $sStepClass): WizardState
+	{
+		$iCountModulesChoiceSteps = count(array_filter($this->aWizardSteps, fn (array $step): bool => $step['class'] === $sStepClass && $step['state'] !== ''));
+		$sStepState = $iCountModulesChoiceSteps > 0 ? (string) ($iCountModulesChoiceSteps - 1) : '';
+
+		// Pop the latest step from the stack, since we are going back to it
+		$this->PopStep();
+
+		return new WizardState($sStepClass, $sStepState);
 	}
 }
