@@ -174,8 +174,9 @@ class SetupUtilsTest extends ItopTestCase
 		$this->RequireOnceItopFile('/setup/feature_removal/ModelReflectionSerializer.php');
 
 		$this->expectException(\CoreException::class);
-		$sDetails = sprintf('The current CLI PHP Version (%s) is lower than the minimum version required to run %s, which is (%s)', $sFoundVersion, ITOP_APPLICATION, SetupUtils::PHP_MIN_VERSION);
+		$sDetails = sprintf('The current CLI PHP Version (%s) is lower than the minimum version required to run %s, which is (%s). You may change the CLI PHP executable path by setting the "php_path" config parameter.', $sFoundVersion, ITOP_APPLICATION, SetupUtils::PHP_MIN_VERSION);
 
+		$this->expectException(\CoreException::class);
 		$this->expectExceptionMessage("Data consistency check failed: $sDetails");
 		$this->InvokeNonPublicStaticMethod(SetupUtils::class, 'CheckCliPhpVersionFromOutput', [ModelReflectionSerializer::ERROR_LABEL, 'sPHPExec', [$sOutput]]);
 	}
