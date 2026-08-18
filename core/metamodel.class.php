@@ -2963,7 +2963,7 @@ abstract class MetaModel
 						self::$m_aMagicFields[] = $sClass;
 					}
 					self::$m_aMagicFields[$sClass][] = $sCode;
-					//self::$m_aAttribOrigins[$sClass][$sCode] = self::$m_aAttribOrigins[$sClass][$sAttCode];
+					self::$m_aAttribOrigins[$sClass][$sCode] = self::$m_aAttribOrigins[$sClass][$sAttCode];
 				}
 				if (!$oAttDef->IsSearchable()) {
 					if (!array_key_exists($sClass, self::$m_aFilterForbiddenAttributes)) {

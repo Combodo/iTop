@@ -32,8 +32,6 @@ class OQLResolverTest extends ItopCustomDatamodelTestCase
 		$oSet = new DBObjectSet($oSearch);
 		$oSet->OptimizeColumnLoad(['OQLResolverChild' => ['cumulatedpending']]);
 
-		$sQuery = $oSet->GetFilter()->MakeSelectQuery([], [], $oSet->m_aAttToLoad);
-		echo $sQuery."\n";
 		$oActual = $oSet->Fetch();
 
 		// Then
