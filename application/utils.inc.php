@@ -29,6 +29,7 @@ use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
 use ScssPhp\ScssPhp\ValueConverter;
 use Soundasleep\Html2Text;
+use ZipArchive;
 
 /**
  * Static class utils
@@ -3248,5 +3249,47 @@ TXT
 			default:
 				return (int)$sLimit;
 		}
+	}
+
+	/**
+	 * Open archive and raise appropriate exception.
+	 * Warning: do not forget to close archive afterwhile
+	 * @param string $sArchiveFilePath
+	 * @param int|null $flags
+	 * @return \ZipArchive
+	 * @throws \Exception
+	 */
+	public static function ZipArchiveOpen(string $sArchiveFilePath, int|null $flags = null): \ZipArchive
+	{
+		$oZip = new \ZipArchive();
+		if (is_null($flags)) {
+			$code = $oZip->open($sArchiveFilePath);
+		} else {
+			$code = $oZip->open($sArchiveFilePath, $flags);
+		}
+		if (true !== $code) {
+			//ZipArchive::ZIP_ER_NOZIP : 19
+			if ($code === 19) {
+				throw new \Exception(sprintf('Cannot to open zip file due to inconsistent or empty content'));
+			}
+
+			throw new \Exception(sprintf('Cannot to open zip file due to error code %s', $code));
+		}
+		return $oZip;
+	}
+
+	/**
+	* @param string $sDirectory
+	* @param string $sPrefix
+	* @return array
+	* @throws \Exception
+	 */
+	public static function ZipArchiveOpenWithTempNam(string $sDirectory, string $sPrefix): array
+	{
+		$sTempnam = tempnam($sDirectory, $sPrefix);
+		unlink($sTempnam);
+		$sArchiveName = $sTempnam.'.zip';;
+
+		return [ self::ZipArchiveOpen($sArchiveName, \ZipArchive::CREATE), $sArchiveName ];
 	}
 }
