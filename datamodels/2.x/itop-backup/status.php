@@ -21,7 +21,6 @@
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Spinner\SpinnerUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
@@ -410,8 +409,11 @@ JS
 
 	$sEnvironment = addslashes(utils::GetCurrentEnvironment());
 
-	$oModalSpinner = SpinnerUIBlockFactory::MakeMedium(null, $sPleaseWaitBackup);
-	$sModalSpinnerHtml = BlockRenderer::RenderBlockTemplates($oModalSpinner);
+	$oBackupModalSpinner = SpinnerUIBlockFactory::MakeMedium(null, $sPleaseWaitBackup);
+	$sBackupModalSpinnerHtml = BlockRenderer::RenderBlockTemplates($oBackupModalSpinner);
+
+	$oRestoreModalSpinner = SpinnerUIBlockFactory::MakeMedium(null, $sPleaseWaitRestore);
+	$sRestoreModalSpinnerHtml = BlockRenderer::RenderBlockTemplates($oRestoreModalSpinner);
 
 	$oP->add_script(
 		<<<JS
@@ -424,7 +426,7 @@ function LaunchBackupNow()
 	{
 		const oModal = CombodoModal.OpenModal({
 				title: '$sBackUpNow',
-				content: `$sModalSpinnerHtml`
+				content: `$sBackupModalSpinnerHtml`
 		});
 
 		var oParams = {};
@@ -450,10 +452,10 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 	{
 		return;
 	}
-
+    
 	const oModal = CombodoModal.OpenModal({
 		title: '$sRestore',
-		content: '<i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitRestore'
+		content: `$sRestoreModalSpinnerHtml`
 	});
 
 	$('#backup_success').addClass('ibo-is-hidden');
