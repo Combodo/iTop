@@ -488,7 +488,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
-	'UI:Error:InvalidToken' => 'Geçerli oturum geçersiz. Lütfen sayfayı yenileyip tekrar deneyin. Sorun devam ederse, oturumu kapatıp yeniden açın.',
+	'UI:Error:InvalidToken' => 'Mevcut oturum geçersiz. Lütfen sayfayı yenileyip tekrar deneyin. Sorun devam ederse, oturumu kapatıp yeniden açın.',
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 	'UI:GroupBy:Count' => 'Say',
 	'UI:GroupBy:Count+' => 'Eleman sayısı',
