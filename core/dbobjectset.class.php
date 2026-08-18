@@ -40,7 +40,7 @@ class DBObjectSet implements iDBObjectSetIterator
 	/**
 	 * @var array
 	 */
-	protected $m_aAttToLoad;
+	public $m_aAttToLoad;
 	/**
 	 * @var null|array
 	 */
