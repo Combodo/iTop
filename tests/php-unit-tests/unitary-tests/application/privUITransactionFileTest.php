@@ -45,7 +45,7 @@ class privUITransactionFileTest extends ItopDataTestCase
 		$oConfig = MetaModel::GetConfig();
 		$oConfig->Set('transactions_gc_threshold', 100);
 		$iOriginalLifetime = (int) $oConfig->Get('transactions_file_lifetime');
-		$iBaseLimit = time() - $iOriginalLifetime; //24h
+		$iBaseLimit = time() - $iOriginalLifetime;
 
 		$sBaseDir = sys_get_temp_dir();
 		$sDir = "$sBaseDir/privUITransactionFileTest/cleanupOldTransactions";
