@@ -353,7 +353,7 @@ class privUITransactionFile
 	}
 
 	/**
-	 * Cleanup old transactions which have been pending since more than 24 hours
+	 * Cleanup old transactions which have been pending since more than the lifetime defined in the configuration parameter 'transactions_file_lifetime'.
 	 * Use filemtime instead of filectime since filectime may be affected by operations on the directory (like changing the access rights)
 	 */
 	protected static function CleanupOldTransactions($sTransactionDir = null)

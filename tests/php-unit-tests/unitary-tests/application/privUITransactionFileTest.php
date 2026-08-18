@@ -224,4 +224,33 @@ class privUITransactionFileTest extends ItopDataTestCase
 		}
 	}
 
+	/**
+	 * @throws \SecurityException
+	 * @throws \Exception
+	 */
+	public function testTransactionIdsContain48RandomHexCharsForSessionAndFileStorage()
+	{
+		$this->CreateUser(static::USER1_TEST_LOGIN, self::SAMPLE_DATA_SUPPORT_PROFILE_ID);
+		$bUserLogin = UserRights::Login(self::USER1_TEST_LOGIN);
+		$this->assertTrue($bUserLogin, 'Login with test user throw an error');
+
+		$sSessionTransactionId = \privUITransactionSession::GetNewTransactionId();
+		$this->assertTransactionIdHas48HexSuffix($sSessionTransactionId);
+		\privUITransactionSession::RemoveTransaction($sSessionTransactionId);
+
+		$sFileTransactionId = privUITransactionFile::GetNewTransactionId();
+		$this->assertTransactionIdHas48HexSuffix($sFileTransactionId);
+		privUITransactionFile::RemoveTransaction($sFileTransactionId);
+	}
+
+	private function assertTransactionIdHas48HexSuffix(string $sTransactionId): void
+	{
+		$aParts = explode('-', $sTransactionId);
+		$sHexSuffix = end($aParts);
+
+		$this->assertNotFalse($sHexSuffix, 'Transaction ID suffix is missing');
+		$this->assertSame(48, strlen($sHexSuffix), "Transaction ID '$sTransactionId' must end with 48 hex chars");
+		$this->assertMatchesRegularExpression('/^[a-f0-9]{48}$/', $sHexSuffix, "Transaction ID '$sTransactionId' suffix must be lowercase hexadecimal");
+	}
+
 }
