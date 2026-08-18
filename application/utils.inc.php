@@ -3288,7 +3288,8 @@ TXT
 	{
 		$sTempnam = tempnam($sDirectory, $sPrefix);
 		unlink($sTempnam);
-		$sArchiveName = $sTempnam.'.zip';;
+		$sArchiveName = $sTempnam.'.zip';
+		;
 
 		return [ self::ZipArchiveOpen($sArchiveName, \ZipArchive::CREATE), $sArchiveName ];
 	}

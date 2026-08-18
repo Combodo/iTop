@@ -116,7 +116,7 @@ function DoLanding(WebPage $oPage)
 
 		try {
 			$oZip = utils::ZipArchiveOpen($sZipArchiveFile);
-		} catch(\Exception $e){
+		} catch (\Exception $e) {
 			throw new Exception('Unable to open "'.$sZipArchiveFile.'" for extraction. Make sure that the directory "'.'data/downloaded-extensions/'.'" is writable for the web server.');
 		}
 		for ($idx = 0; $idx < $oZip->numFiles; $idx++) {

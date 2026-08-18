@@ -1102,7 +1102,7 @@ INI;
 		$oZip->addFile(__FILE__);
 		$oZip->close();
 
-		self::assertTrue(in_array($sFilePath, glob(sys_get_temp_dir() . '/**')));
+		self::assertTrue(in_array($sFilePath, glob(sys_get_temp_dir().'/**')));
 		self::assertTrue(is_file($sFilePath), $sFilePath);
 		unlink($sFilePath);
 	}
