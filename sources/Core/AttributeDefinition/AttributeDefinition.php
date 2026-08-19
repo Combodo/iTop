@@ -193,6 +193,11 @@ abstract class AttributeDefinition
 		return $this->GetSearchType() != static::SEARCH_WIDGET_TYPE_RAW;
 	}
 
+	public function IsValidFilterAttribute()
+	{
+		return true;
+	}
+
 	/** @var string */
 	protected $m_sCode;
 	/** @var array */

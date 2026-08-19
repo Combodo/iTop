@@ -2965,7 +2965,7 @@ abstract class MetaModel
 					self::$m_aMagicFields[$sClass][] = $sCode;
 					self::$m_aAttribOrigins[$sClass][$sCode] = self::$m_aAttribOrigins[$sClass][$sAttCode];
 				}
-				if (!$oAttDef->IsSearchable()) {
+				if (!$oAttDef->IsValidFilterAttribute()) {
 					if (!array_key_exists($sClass, self::$m_aFilterForbiddenAttributes)) {
 						self::$m_aFilterForbiddenAttributes[] = $sClass;
 					}

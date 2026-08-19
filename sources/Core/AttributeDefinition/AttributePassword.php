@@ -68,6 +68,10 @@ class AttributePassword extends AttributeString implements iAttributeNoGroupBy
 			return '******';
 		}
 	}
+	public function IsValidFilterAttribute()
+	{
+		return false;
+	}
 
 	public function IsPartOfFingerprint()
 	{

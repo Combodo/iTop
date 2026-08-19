@@ -248,4 +248,9 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 	{
 		return CMDBChangeOpSetAttributeOneWayPassword::class;
 	}
+
+	public function IsValidFilterAttribute()
+	{
+		return false;
+	}
 }
