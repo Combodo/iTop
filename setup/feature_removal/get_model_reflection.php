@@ -17,10 +17,10 @@ if (is_null($sEnv)) {
 }
 
 $sConfFile = utils::GetConfigFilePath($sEnv);
-$oConfig = new Config($sConfFile);
-$oConfig->Set('expression_cache_enabled', false);
 
 try {
+	$oConfig = new Config($sConfFile);
+	$oConfig->Set('expression_cache_enabled', false);
 	MetaModel::Startup($oConfig, false /* $bModelOnly */, false /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
 } catch (\Throwable $e) {
 	SetupLog::Enable(APPROOT.'log/setup.log');
