@@ -1715,13 +1715,9 @@ HTML,
 			['class' => 'WizStepModulesChoice', 'state' => '4'],
 			['class' => 'WizStepModulesChoice', 'state' => '5'],
 		];
-		$this->oWizard->SetParameter('_steps', $aSteps);
 		$this->oWizard->SetWizardSteps($aSteps);
 
 		$oWizardState = $this->oWizard->GetLatestWizardStateFromStepClass($sStepClass);
 		$this->assertEquals(new WizardState($sStepClass, $sExpectedState), $oWizardState);
-
-		$aNewSteps = $this->oWizard->GetParameter('_steps', []);
-		$this->assertCount(count($aSteps) - 1, $aNewSteps);
 	}
 }

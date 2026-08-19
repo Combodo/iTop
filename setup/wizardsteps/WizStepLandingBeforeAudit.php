@@ -82,15 +82,19 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 			}
 
 			$bForceUninstall = (bool)$this->oWizard->GetParameter('force-uninstall', false);
-			if (!$bForceUninstall) {
+			if ($bSkipWizard && !$bForceUninstall) {
 				// Check if the current choices allow going to the data audit step
 				$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo();
 				foreach ($aOptions as $index => $aChoice) {
 					$sChoiceId = self::$SEP.$index;
-					$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, false, false, true);
+					$oLatestWizardState = $this->oWizard->GetLatestWizardStateFromStepClass(WizStepModulesChoice::class);
+					$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents[$oLatestWizardState->GetState()], false, false);
 					if (!$this->CanMoveForwardFromChoiceFlags($aFlags)) {
+						// Pop the latest step from the stack, since we are going back to it
+						$this->oWizard->PopStep();
+
 						// If the user has selected incompatible modules, we need to go back to the extension choices step, which is the last module choices step in the wizard
-						return $this->oWizard->GetLatestWizardStateFromStepClass(WizStepModulesChoice::class);
+						return $oLatestWizardState;
 					}
 				}
 			}

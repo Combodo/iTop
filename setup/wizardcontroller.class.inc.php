@@ -57,9 +57,9 @@ class WizardController
 
 	/**
 	 * Removes information about the previous step from the stack
-	 * @return array{'class': string, 'state': string}
+	 * @return null|array{'class': string, 'state': string}
 	 */
-	public function PopStep(): array
+	public function PopStep(): ?array
 	{
 		$aStep = array_pop($this->aWizardSteps);
 		$this->SetParameter('_steps', $this->aWizardSteps);
@@ -343,11 +343,8 @@ EOF
 	 */
 	public function GetLatestWizardStateFromStepClass(string $sStepClass): WizardState
 	{
-		$iCountModulesChoiceSteps = count(array_filter($this->aWizardSteps, fn (array $step): bool => $step['class'] === $sStepClass && $step['state'] !== ''));
-		$sStepState = $iCountModulesChoiceSteps > 0 ? (string) ($iCountModulesChoiceSteps - 1) : '';
-
-		// Pop the latest step from the stack, since we are going back to it
-		$this->PopStep();
+		$iStepStateOccurrences = count(array_filter($this->aWizardSteps, fn (array $step): bool => $step['class'] === $sStepClass && $step['state'] !== ''));
+		$sStepState = $iStepStateOccurrences > 0 ? (string) ($iStepStateOccurrences - 1) : '';
 
 		return new WizardState($sStepClass, $sStepState);
 	}
