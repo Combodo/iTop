@@ -3251,6 +3251,7 @@ TXT
 	}
 
 	/**
+	 * @since 3.3.0 N°9875
 	 * Open archive and raise appropriate exception.
 	 * Warning: do not forget to close archive afterwhile
 	 * @param string $sArchiveFilePath
@@ -3278,6 +3279,7 @@ TXT
 	}
 
 	/**
+	* @since 3.3.0 N°9875
 	* @param string $sDirectory
 	* @param string $sPrefix
 	* @return ZipArchive
