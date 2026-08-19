@@ -1094,8 +1094,9 @@ INI;
 
 	public function testZipArchiveCreateWithTempNam()
 	{
-		list($oZip, $sFilePath) = utils::ZipArchiveCreateWithTempNam(sys_get_temp_dir(), "testZipArchiveOpenWithTempFile_");
+		$oZip = utils::ZipArchiveCreateWithTempNam(sys_get_temp_dir(), "testZipArchiveOpenWithTempFile_");
 		self::assertNotNull($oZip);
+		$sFilePath = $oZip->filename;
 
 		self::assertFalse(is_file($sFilePath), $sFilePath);
 

@@ -3280,15 +3280,15 @@ TXT
 	/**
 	* @param string $sDirectory
 	* @param string $sPrefix
-	* @return array
+	* @return ZipArchive
 	* @throws \Exception
 	 */
-	public static function ZipArchiveCreateWithTempNam(string $sDirectory, string $sPrefix): array
+	public static function ZipArchiveCreateWithTempNam(string $sDirectory, string $sPrefix): ZipArchive
 	{
 		$sTempnam = tempnam($sDirectory, $sPrefix);
 		unlink($sTempnam);
 		$sArchiveName = $sTempnam.'.zip';
 
-		return [ self::ZipArchiveOpen($sArchiveName, ZipArchive::CREATE), $sArchiveName ];
+		return self::ZipArchiveOpen($sArchiveName, ZipArchive::CREATE);
 	}
 }
