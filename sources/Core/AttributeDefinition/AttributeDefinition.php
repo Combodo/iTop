@@ -193,7 +193,12 @@ abstract class AttributeDefinition
 		return $this->GetSearchType() != static::SEARCH_WIDGET_TYPE_RAW;
 	}
 
-	public function IsValidFilterAttribute()
+	/**
+	 * Indicates whether this attribute can be used in search filters in OQL queries
+	 *
+	 * @return bool
+	 */
+	public function IsValidFilterAttribute(): bool
 	{
 		return true;
 	}

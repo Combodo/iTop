@@ -68,7 +68,7 @@ class AttributePassword extends AttributeString implements iAttributeNoGroupBy
 			return '******';
 		}
 	}
-	public function IsValidFilterAttribute()
+	public function IsValidFilterAttribute(): bool
 	{
 		return false;
 	}

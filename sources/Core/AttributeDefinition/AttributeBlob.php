@@ -386,7 +386,7 @@ class AttributeBlob extends AttributeDefinition
 	{
 		return CMDBChangeOpSetAttributeBlob::class;
 	}
-	public function IsValidFilterAttribute()
+	public function IsValidFilterAttribute(): bool
 	{
 		return false;
 	}

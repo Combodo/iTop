@@ -92,7 +92,7 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 	{
 		return CMDBChangeOpSetAttributeEncrypted::class;
 	}
-	public function IsValidFilterAttribute()
+	public function IsValidFilterAttribute(): bool
 	{
 		return false;
 	}
