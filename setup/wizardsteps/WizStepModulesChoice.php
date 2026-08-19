@@ -760,7 +760,7 @@ EOF
 		return $this->aSteps[$index] ?? null;
 	}
 
-	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck)
+	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck): array
 	{
 		if (array_key_exists($sChoiceId, $this->aFlagsByChoiceId)) {
 			return $this->aFlagsByChoiceId[$sChoiceId];
@@ -774,48 +774,46 @@ EOF
 		$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']);
 		$bInstalled = $bMissingFromDisk || $oITopExtension?->bInstalled ?? false;
 		$bDependencyIssue = $oITopExtension?->HasDependencyIssue() ?? false;
+		$bIsRemoteExtension = $oITopExtension?->sSource === iTopExtension::SOURCE_REMOTE;
+		$bIsPackageExtension = $oITopExtension?->sSource === iTopExtension::SOURCE_WIZARD;
+		$bDoNotUninstall = !$bCanBeUninstalled || $bIsRemoteExtension;
 
 		$bChecked = $bSelected;
 		$bDisabled = false;
+
 		if ($bMissingFromDisk) {
 			$bDisabled = true;
 			$bChecked = false;
-		} elseif ($bDependencyIssue && ($oITopExtension->sSource !== iTopExtension::SOURCE_WIZARD || !$bMandatory)) {
-			// If the extension is not installed, the user cannot select it
-			// If the extension is installed and mandatory or not uninstallable, the user cannot unselect it
-			// Unless the user uses the "force-uninstall" option
-			$bDisabled = (!$bInstalled || $bMandatory || !$bCanBeUninstalled) && !$bDisableUninstallCheck;
-			// If the extension is a remote extension and not be installed means the user previously uninstalled it
-			// Otherwise, it will be checked if it is mandatory or if it was selected by the user
-			if ($oITopExtension->sSource !== iTopExtension::SOURCE_REMOTE || $bInstalled) {
-				$bChecked = $bMandatory ?: $bSelected;
+		} elseif ($bMandatory && $bIsPackageExtension) {
+			$bDisabled = true;
+			$bChecked = true;
+		} else {
+			if ($bDependencyIssue) {
+				// If the extension has a dependency issue, it cannot be checked and must be unchecked using the "force-uninstall" option
+				$bDisabled = !$bInstalled || !$bDisableUninstallCheck;
+			} elseif ($bInstalled && $bDoNotUninstall) {
+				// If the extension is uninstallable, it must be unchecked using the "force-uninstall" option
+				$bDisabled = !$bDisableUninstallCheck;
 			}
-		} elseif ($bMandatory) {
-			$bDisabled = true;
-			$bChecked = true;
-		} elseif ($bInstalled && !$bCanBeUninstalled && !$bDisableUninstallCheck) {
-			$bChecked = true;
-			$bDisabled = true;
+
+			if (isset($aChoice['sub_options'])) {
+				$aOptions = $aChoice['sub_options']['options'] ?? [];
+				foreach ($aOptions as $index => $aSubChoice) {
+					$sSubChoiceId = $sChoiceId.self::$SEP.$index;
+					$aSubFlags = $this->ComputeChoiceFlags($aSubChoice, $sSubChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck);
+					if ($aSubFlags['checked']) {
+						$bChecked = true;
+						if ($aSubFlags['disabled']) {
+							// If some sub options are checked and cannot be unchecked, this choice also cannot be unchecked since it would uncheck all its sub options
+							$bDisabled = true;
+						}
+					}
+				}
+			}
 		}
 
 		if ($bAllDisabled) {
 			$bDisabled = true;
-		}
-
-		if (isset($aChoice['sub_options'])) {
-			$aOptions = $aChoice['sub_options']['options'] ?? [];
-			foreach ($aOptions as $index => $aSubChoice) {
-				$sSubChoiceId = $sChoiceId.self::$SEP.$index;
-				$aSubFlags = $this->ComputeChoiceFlags($aSubChoice, $sSubChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck);
-				if ($aSubFlags['checked']) {
-					$bChecked = true;
-					if ($aSubFlags['disabled']) {
-						//If some sub options are enabled and cannot be disabled, this choice should also cannot be disabled since it would disable all its sub options
-						$bDisabled = true;
-					}
-				}
-
-			}
 		}
 
 		$aFlags = [
@@ -905,10 +903,6 @@ EOF
 		} elseif ($aFlags['installed']) {
 			// An extension cannot be uninstalled if it is not uninstallable
 			if (!$aFlags['uninstallable']) {
-				return false;
-			}
-			// An extension cannot be uninstalled if it is mandatory
-			if ($aFlags['mandatory']) {
 				return false;
 			}
 		}
@@ -1010,5 +1004,4 @@ EOF
 
 		return 'Next';
 	}
-
 }

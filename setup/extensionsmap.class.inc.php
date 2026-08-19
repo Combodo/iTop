@@ -557,9 +557,6 @@ class iTopExtensionsMap
 				continue;
 			}
 
-			if (!$oExtension->bMandatory && $bRemoteExtensionsShouldBeMandatory) {
-				$oExtension->bMandatory = ($oExtension->sSource === iTopExtension::SOURCE_REMOTE);
-			}
 			$aRes[$oExtension->sCode] = $oExtension;
 		}
 
