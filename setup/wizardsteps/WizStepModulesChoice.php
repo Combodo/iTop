@@ -760,7 +760,7 @@ EOF
 		return $this->aSteps[$index] ?? null;
 	}
 
-	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck)
+	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck): array
 	{
 		if (array_key_exists($sChoiceId, $this->aFlagsByChoiceId)) {
 			return $this->aFlagsByChoiceId[$sChoiceId];
