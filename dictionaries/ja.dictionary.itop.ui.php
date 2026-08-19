@@ -488,7 +488,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
-	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
+	'UI:Error:InvalidToken' => '現在のセッションは無効です。ページを更新してもう一度お試しください。問題が解決しない場合は、一度ログアウトしてから再度ログインしてください。',
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 	'UI:GroupBy:Count' => 'カウント',
 	'UI:GroupBy:Count+' => '要素数',

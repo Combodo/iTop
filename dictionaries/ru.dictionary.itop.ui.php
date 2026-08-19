@@ -487,7 +487,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Error:InvalidDashboard' => 'Ошибка: недопустимый дашборд',
 	'UI:Error:MaintenanceMode' => 'Приложение в режиме технического обслуживания',
 	'UI:Error:MaintenanceTitle' => 'Техническое обслуживание',
-	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
+	'UI:Error:InvalidToken' => 'Текущий сеанс недействителен. Обновите страницу и повторите попытку. Если проблема сохраняется, выйдите из системы и войдите снова.',
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 	'UI:GroupBy:Count' => 'Количество',
 	'UI:GroupBy:Count+' => 'Количество элементов',

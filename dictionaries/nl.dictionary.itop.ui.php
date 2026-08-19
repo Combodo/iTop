@@ -486,7 +486,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Error:InvalidDashboard' => 'Fout: ongeldig dashboard',
 	'UI:Error:MaintenanceMode' => 'Toepassing is momenteel in onderhoud',
 	'UI:Error:MaintenanceTitle' => 'Onderhoud',
-	'UI:Error:InvalidToken' => 'Fout: de gevraagde bewerking werd al uitgevoerd (CSRF token niet gevonden)',
+	'UI:Error:InvalidToken' => 'De huidige sessie is ongeldig. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, log dan uit en weer in.',
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s bestaat niet (email_transport_smtp.oauth.provider)',
 	'UI:GroupBy:Count' => 'Aantal',
 	'UI:GroupBy:Count+' => 'Aantal objecten',

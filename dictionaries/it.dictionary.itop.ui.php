@@ -487,7 +487,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:Error:InvalidDashboard' => 'Errore: cruscotto non valido',
 	'UI:Error:MaintenanceMode' => 'L\'applicazione è attualmente in manutenzione',
 	'UI:Error:MaintenanceTitle' => 'Manutenzione',
-	'UI:Error:InvalidToken' => 'Errore: l\'operazione richiesta è già stata eseguita (token CSRF non trovato)',
+	'UI:Error:InvalidToken' => 'La sessione corrente non è valida. Aggiorna la pagina e riprova. Se il problema persiste, esegui la disconnessione e accedi di nuovo.',
 	'UI:Error:SMTP:UnknownVendor' => 'Il fornitore OAuth SMTP %1$s non esiste (email_transport_smtp.oauth.provider)',
 	'UI:GroupBy:Count' => 'Conteggio',
 	'UI:GroupBy:Count+' => '',

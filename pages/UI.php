@@ -905,7 +905,7 @@ try {
 				if (!utils::IsTransactionValid($sTransactionId)) {
 					$sUser = UserRights::GetUser();
 					IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser'");
-					$oP->p(Dict::S('UI:Error:ObjectAlreadyUpdated'));
+					$oP->p(Dict::S('UI:Error:InvalidToken'));
 				} else {
 					// For archiving the modification
 					$oFilter = DBObjectSearch::unserialize($sFilter);
@@ -1086,7 +1086,7 @@ try {
 					if (!utils::IsTransactionValid($sTransactionId)) {
 						$sUser = UserRights::GetUser();
 						IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
-						$sMessage = Dict::S('UI:Error:ObjectAlreadyUpdated');
+						$sMessage = Dict::S('UI:Error:InvalidToken');
 						$sSeverity = 'info';
 					} elseif ((get_class($aStimuli[$sStimulus]) !== 'StimulusUserAction') || (UserRights::IsStimulusAllowed($sClass, $sStimulus) === UR_ALLOWED_NO)) {
 						$sUser = UserRights::GetUser();

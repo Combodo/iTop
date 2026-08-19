@@ -484,7 +484,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'UI:Error:InvalidDashboard' => 'Erro: painel inválido',
 	'UI:Error:MaintenanceMode' => 'A aplicação está em manutenção',
 	'UI:Error:MaintenanceTitle' => 'Manutenção',
-	'UI:Error:InvalidToken' => 'Erro: A operação solicitada já foi executada (token CSRF não encontrado)',
+	'UI:Error:InvalidToken' => 'A sessão atual é inválida. Atualize a página e tente novamente. Se o problema persistir, saia e entre novamente.',
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 	'UI:GroupBy:Count' => 'Número',
 	'UI:GroupBy:Count+' => 'Número de elementos',

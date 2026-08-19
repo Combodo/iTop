@@ -503,7 +503,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'UI:Error:InvalidDashboard'                           => 'Error: invalid dashboard',
 	'UI:Error:MaintenanceMode'                            => 'Application is currently in maintenance',
 	'UI:Error:MaintenanceTitle'                           => 'Maintenance',
-	'UI:Error:InvalidToken'                               => 'Error: the requested operation has already been performed (CSRF token not found)',
+	'UI:Error:InvalidToken'                               => 'The current session is invalid. Please refresh the page and try again. If the problem persists, please log out and log in again.',
 
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)',
 

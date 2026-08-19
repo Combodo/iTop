@@ -483,7 +483,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Error:InvalidDashboard' => 'Error: Dashboard inválido',
 	'UI:Error:MaintenanceMode' => 'La aplicación se encuentra actualmente en mantenimiento',
 	'UI:Error:MaintenanceTitle' => 'Mantenimiento',
-	'UI:Error:InvalidToken' => 'Error: La operación solicitada ya se habia realizado (CSRF token not found)',
+	'UI:Error:InvalidToken' => 'La sesión actual no es válida. Actualice la página e inténtelo de nuevo. Si el problema persiste, cierre sesión y vuelva a iniciarla.',
 	'UI:Error:SMTP:UnknownVendor' => 'El proveedor SMTP de OAuth %1$s no existe (email_transport_smtp.oauth.provider)',
 	'UI:GroupBy:Count' => 'Cuenta',
 	'UI:GroupBy:Count+' => 'Número de Elementos',

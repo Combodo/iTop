@@ -503,7 +503,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Error:InvalidDashboard'                     => '错误: 无效的仪表盘',
 	'UI:Error:MaintenanceMode'                      => '应用正处于维护中',
 	'UI:Error:MaintenanceTitle'                     => '维护',
-	'UI:Error:InvalidToken'                         => '错误: 所请求的操作已执行 (没有CSRF token)',
+	'UI:Error:InvalidToken'                         => '当前会话无效。请刷新页面后重试。如果问题仍然存在，请先退出登录再重新登录。',
 
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP 提供者 %1$s 不存在 (email_transport_smtp.oauth.provider)',
 
