@@ -646,7 +646,7 @@ abstract class Controller extends AbstractController
 	 */
 	final protected function ZipDownloadRemoveFile(array $aFiles, string $sDownloadArchiveName, bool $bUnlinkFiles = false): void
 	{
-		list($sArchiveFileFullPath, $oArchive) = utils::ZipArchiveOpenWithTempNam(SetupUtils::GetTmpDir(), 'itop_download-');
+		list($oArchive, $sArchiveFileFullPath) = utils::ZipArchiveCreateWithTempNam(SetupUtils::GetTmpDir(), 'itop_download-');
 		foreach ($aFiles as $sFile) {
 			$oArchive->addFile($sFile, basename($sFile));
 		}

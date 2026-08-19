@@ -1088,12 +1088,13 @@ INI;
 			self::assertNotNull($oZip);
 			$oZip->close();
 			touch($sFolderPath);
+			$this->aFileToClean[] = $sFolderPath;
 		}
 	}
 
-	public function testZipArchiveOpenWithTempNam()
+	public function testZipArchiveCreateWithTempNam()
 	{
-		list($oZip, $sFilePath) = utils::ZipArchiveOpenWithTempNam(sys_get_temp_dir(), "testZipArchiveOpenWithTempFile_");
+		list($oZip, $sFilePath) = utils::ZipArchiveCreateWithTempNam(sys_get_temp_dir(), "testZipArchiveOpenWithTempFile_");
 		self::assertNotNull($oZip);
 
 		self::assertFalse(is_file($sFilePath), $sFilePath);

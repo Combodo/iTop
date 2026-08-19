@@ -29,7 +29,6 @@ use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
 use ScssPhp\ScssPhp\ValueConverter;
 use Soundasleep\Html2Text;
-use ZipArchive;
 
 /**
  * Static class utils
@@ -3256,12 +3255,12 @@ TXT
 	 * Warning: do not forget to close archive afterwhile
 	 * @param string $sArchiveFilePath
 	 * @param int|null $flags
-	 * @return \ZipArchive
+	 * @return ZipArchive
 	 * @throws \Exception
 	 */
-	public static function ZipArchiveOpen(string $sArchiveFilePath, int|null $flags = null): \ZipArchive
+	public static function ZipArchiveOpen(string $sArchiveFilePath, int|null $flags = null): ZipArchive
 	{
-		$oZip = new \ZipArchive();
+		$oZip = new ZipArchive();
 		if (is_null($flags)) {
 			$code = $oZip->open($sArchiveFilePath);
 		} else {
@@ -3284,13 +3283,12 @@ TXT
 	* @return array
 	* @throws \Exception
 	 */
-	public static function ZipArchiveOpenWithTempNam(string $sDirectory, string $sPrefix): array
+	public static function ZipArchiveCreateWithTempNam(string $sDirectory, string $sPrefix): array
 	{
 		$sTempnam = tempnam($sDirectory, $sPrefix);
 		unlink($sTempnam);
 		$sArchiveName = $sTempnam.'.zip';
-		;
 
-		return [ self::ZipArchiveOpen($sArchiveName, \ZipArchive::CREATE), $sArchiveName ];
+		return [ self::ZipArchiveOpen($sArchiveName, ZipArchive::CREATE), $sArchiveName ];
 	}
 }
