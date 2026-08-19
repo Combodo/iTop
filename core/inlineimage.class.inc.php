@@ -563,7 +563,7 @@ class InlineImageGC implements iBackgroundProcess
 	 */
 	public function GetPeriodicity()
 	{
-		return 1;
+		return 600;
 	}
 
 	/**

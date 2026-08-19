@@ -3249,4 +3249,24 @@ TXT
 				return (int)$sLimit;
 		}
 	}
+
+	/**
+	 * Count the number of cron.php  processes currently running
+	 *
+	 * @return int process count
+	 * @throws \Exception
+	 */
+	public static function CountCronRunning(): int
+	{
+		$iMaxCronProcess = max(MetaModel::GetConfig()->Get('cron.max_processes'), 1);
+		$iCount = 0;
+		for ($i = 0; $i < $iMaxCronProcess; $i++) {
+			$oMutex = new iTopMutex("cron#$i");
+			if ($oMutex->IsLocked()) {
+				$iCount++;
+			}
+		}
+
+		return $iCount;
+	}
 }

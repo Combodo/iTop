@@ -578,18 +578,10 @@ class Config
 		'cron_max_execution_time' => [
 			'type'                => 'integer',
 			'description'         => 'Duration (seconds) of the cron.php script : if exceeded the script will exit even if there are remaining tasks to process. Must be shorter than php max_execution_time setting (note than when using CLI, this is set to 0 by default which means unlimited). If cron.php is ran via web, it must be shorter than the web server response timeout.',
-			'default'             => 600,
-			'value'               => 600,
+			'default'             => 590,
+			'value'               => 590,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
-		],
-		'cron_task_max_execution_time' => [
-			'type' => 'integer',
-			'description' => 'Background tasks will use this value (integer) multiplicated by its periodicity (in seconds) as max duration per cron execution. 0 is unlimited time',
-			'default' => 0,
-			'value' => 0,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
 		],
 		'cron_sleep' => [
 			'type' => 'integer',
@@ -598,6 +590,14 @@ class Config
 			'value' => 2,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
+		],
+		'cron.max_processes' => [
+			'type' => 'integer',
+			'description' => 'Maximum number of cron processes to run',
+			'default' => 10,
+			'value' => 10,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
 		],
 		'async_task_retries' => [
 			'type' => 'array',
