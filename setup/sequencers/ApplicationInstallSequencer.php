@@ -48,6 +48,7 @@ class ApplicationInstallSequencer extends StepSequencer
 		'migrate-after' => 'Migrate data after database upgrade',
 		'after-db-create' => 'Load data after database create',
 		'load-data' => 'Loading data',
+		'record-installation' => 'Recording installation',
 		'create-config' => 'Creating the configuration File',
 		'commit' => 'Finalize',
 	];
@@ -59,6 +60,7 @@ class ApplicationInstallSequencer extends StepSequencer
 		'migrate-after' => 'Post-upgrade data migration completed',
 		'after-db-create' => 'Post-creation data loaded',
 		'load-data' => 'Data loaded',
+		'record-installation' => 'Installation recorded',
 		'create-config' => 'Configuration file created',
 	];
 
@@ -129,16 +131,22 @@ class ApplicationInstallSequencer extends StepSequencer
 					$this->oRunTimeEnvironment->DoLoadData($this->GetConfig(), $bSampleData, $aSelectedModules);
 					return $this->ComputeNextStep($sStep);
 
-				case 'create-config':
+				case 'record-installation':
 					$sDataModelVersion = $this->oParams->Get('datamodel_version', '0.0.0');
 					$aSelectedModuleCodes = $this->oParams->Get('selected_modules', []);
 					$aSelectedExtensionCodes = $this->oParams->Get('selected_extensions', []);
-					$this->oRunTimeEnvironment->DoCreateConfig(
+					$this->oRunTimeEnvironment->RecordInstallation(
 						$this->GetConfig(),
 						$sDataModelVersion,
 						$aSelectedModuleCodes,
 						$aSelectedExtensionCodes,
-						$sInstallComment,
+						$sInstallComment
+					);
+					return $this->ComputeNextStep($sStep);
+
+				case 'create-config':
+					$this->oRunTimeEnvironment->DoCreateConfig(
+						$this->GetConfig(),
 						$this->sSourceDesc
 					);
 					return $this->ComputeNextStep($sStep);
@@ -208,6 +216,7 @@ class ApplicationInstallSequencer extends StepSequencer
 		$aOthers = [
 			'after-db-create',
 			'load-data',
+			'record-installation',
 			'create-config',
 			'commit',
 		];

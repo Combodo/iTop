@@ -3066,8 +3066,12 @@ EOF
 							}
 							$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
 							if (is_array($aAllowedValues) && count($aAllowedValues) == 1) {
-								$aValues = array_keys($aAllowedValues);
-								$this->Set($sAttCode, $aValues[0]);
+								// linkset are ignored
+								// N°9622 - Error in the user story life cycle
+								if (!$oAttDef->IsLinkSet()) {
+									$aValues = array_keys($aAllowedValues);
+									$this->Set($sAttCode, $aValues[0]);
+								}
 							}
 						}
 					}
@@ -3983,6 +3987,27 @@ HTML;
 				$sTagSetJson = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
 				if ($sTagSetJson !== null) { // bulk modify, direct linked set not handled
 					$value = json_decode($sTagSetJson, true);
+					if ($this->IsNew()) {
+						if (is_array($value['orig_value'])) {
+							foreach ($value['orig_value'] as $val) {
+								if (!in_array($val, $value['removed'])) {
+									$value['added'][] = $val;
+								}
+							}
+						}
+					} else {
+						$aCurrentValues = $this->Get($sAttCode)->GetValues();
+						foreach ($value['orig_value'] as $val) {
+							if (!in_array($val, $aCurrentValues) && !in_array($val, $value['removed']) && !in_array($val, $value['added'])) {
+								$value['added'][] = $val;
+							}
+						}
+						foreach ($aCurrentValues as $val) {
+							if (!in_array($val, $value['orig_value']) && !in_array($val, $value['removed']) && !in_array($val, $value['added'])) {
+								$value['removed'][] = $val;
+							}
+						}
+					}
 				}
 				break;
 

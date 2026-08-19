@@ -51,6 +51,8 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 	private array $aAnalyzeInstallationModules = [];
 	private ?MissingDependencyException $oMissingDependencyException = null;
 
+	private array $aFlagsByChoiceId = [];
+
 	public function __construct(WizardController $oWizard, $sCurrentState, bool $bOverWriteConfig = true)
 	{
 		parent::__construct($oWizard, $sCurrentState);
@@ -290,6 +292,34 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 			$oPage->warning($sManualInstallError);
 		}
 
+		// Build the default choices
+		$aDefaults = $this->GetDefaults($aStepInfo, $this->aAnalyzeInstallationModules);
+		$index = $this->GetStepIndex();
+
+		// retrieve the saved selection
+		// use json_encode:decode to store a hash array: step_id => array(input_name => selected_input_id)
+		$aParameters = json_decode($this->oWizard->GetParameter('selected_components', '{}'), true);
+		if (!isset($aParameters[$index])) {
+			$aParameters[$index] = $aDefaults;
+		}
+		$aSelectedComponents = $aParameters[$index];
+
+		$bDisableUninstallCheck = (bool)$this->oWizard->GetParameter('force-uninstall', false);
+
+		$aOptions = $aStepInfo['options'] ?? [];
+		foreach ($aOptions as $index => $aChoice) {
+			$sChoiceId = self::$SEP.$index;
+			$this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, false, $bDisableUninstallCheck);
+		}
+
+		if (!$this->bCanMoveForward) {
+			if (SetupUtils::IsConnectableToITopHub($this->aAnalyzeInstallationModules)) {
+				$oPage->error('Due to some inconsistencies the upgrade can\'t continue. You must deactivate "consistency protections" in the previous steps and restore a consistent environment.');
+			} else {
+				$oPage->error('Due to some inconsistencies the upgrade can\'t continue, please contact Combodo support.');
+			}
+		}
+
 		$oPage->add('<div class="module-selection-banner">');
 		$sBannerPath = isset($aStepInfo['banner']) ? $aStepInfo['banner'] : '';
 		if (!empty($sBannerPath)) {
@@ -307,18 +337,6 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 		$sDescription = $aStepInfo['description'] ?? '';
 		$oPage->add('<span>'.$sDescription.'</span>');
 		$oPage->add('</div>');
-
-		// Build the default choices
-		$aDefaults = $this->GetDefaults($aStepInfo, $this->aAnalyzeInstallationModules);
-		$index = $this->GetStepIndex();
-
-		// retrieve the saved selection
-		// use json_encode:decode to store a hash array: step_id => array(input_name => selected_input_id)
-		$aParameters = json_decode($this->oWizard->GetParameter('selected_components', '{}'), true);
-		if (!isset($aParameters[$index])) {
-			$aParameters[$index] = $aDefaults;
-		}
-		$aSelectedComponents = $aParameters[$index];
 
 		$oPage->add('<div class="module-selection-body">');
 		$this->DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $aDefaults);
@@ -742,8 +760,12 @@ EOF
 		return $this->aSteps[$index] ?? null;
 	}
 
-	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck): array
+	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck)
 	{
+		if (array_key_exists($sChoiceId, $this->aFlagsByChoiceId)) {
+			return $this->aFlagsByChoiceId[$sChoiceId];
+		}
+
 		$oITopExtension = $this->oExtensionsMap->GetFromExtensionCode($aChoice['extension_code']);
 		//If the extension is missing from disk, it won't exist in the ExtensionsMap, thus returning null
 		$bCanBeUninstalled = isset($aChoice['uninstallable']) ? $aChoice['uninstallable'] === true || $aChoice['uninstallable'] === 'yes' : $oITopExtension->CanBeUninstalled();
@@ -794,7 +816,7 @@ EOF
 			$bDisabled = true;
 		}
 
-		return [
+		$aFlags = [
 			'uninstallable' => $bCanBeUninstalled,
 			'dependency_issue' => $bDependencyIssue,
 			'mandatory' => $bMandatory,
@@ -803,6 +825,11 @@ EOF
 			'disabled' => $bDisabled,
 			'checked' => $bChecked,
 		];
+
+		$this->bCanMoveForward = $this->bCanMoveForward && $this->CanMoveForwardFromChoiceFlags($aFlags, $bDisableUninstallCheck);
+		$this->aFlagsByChoiceId[$sChoiceId] = $aFlags;
+
+		return $aFlags;
 	}
 
 	public function DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $aDefaults, $sParentId = '', $bAllDisabled = false)
@@ -815,7 +842,6 @@ EOF
 		foreach ($aOptions as $index => $aChoice) {
 			$sChoiceId = $sParentId.self::$SEP.$index;
 			$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck);
-			$this->bCanMoveForward = $this->bCanMoveForward && $this->CanMoveForwardFromChoiceFlags($aFlags, $bDisableUninstallCheck);
 
 			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $sChoiceId, $aFlags);
 		}
