@@ -1291,7 +1291,7 @@ class Config
 		],
 		'transactions_file_lifetime' => [
 			'type'                => 'integer',
-			'description'         => 'Value in seconds for the lifetime of a transaction file (after this duration, the transaction will be invalid and the garbage collector could delete it).',
+			'description'         => 'Value in seconds for the lifetime of a transaction file (after this duration, the transaction will be invalid and the garbage collector could delete it). This only works if the "transaction_storage" parameter is set to "File".',
 			'default'             => 3600,
 			'value'               => '',
 			'source_of_value'     => '',
