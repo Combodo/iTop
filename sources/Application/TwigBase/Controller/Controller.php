@@ -646,9 +646,7 @@ abstract class Controller extends AbstractController
 	 */
 	final protected function ZipDownloadRemoveFile(array $aFiles, string $sDownloadArchiveName, bool $bUnlinkFiles = false): void
 	{
-		$sArchiveFileFullPath = tempnam(SetupUtils::GetTmpDir(), 'itop_download-').'.zip';
-		$oArchive = new ZipArchive();
-		$oArchive->open($sArchiveFileFullPath, ZipArchive::CREATE);
+		$oArchive = utils::ZipArchiveCreateWithTempNam(SetupUtils::GetTmpDir(), 'itop_download-');
 		foreach ($aFiles as $sFile) {
 			$oArchive->addFile($sFile, basename($sFile));
 		}
@@ -660,7 +658,7 @@ abstract class Controller extends AbstractController
 			}
 		}
 
-		$this->SendFileContent($sArchiveFileFullPath, $sDownloadArchiveName.'.zip', true, true);
+		$this->SendFileContent($oArchive->filename, $sDownloadArchiveName.'.zip', true, true);
 	}
 
 	final protected function SendFileContent($sFilePath, $sDownloadArchiveName = null, $bFileTransfer = true, $bRemoveFile = false, $aHeaders = []): void

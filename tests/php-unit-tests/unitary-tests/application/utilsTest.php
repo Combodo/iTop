@@ -1009,4 +1009,103 @@ INI;
 		utils::Unserialize($sData);
 
 	}
+
+	public static function ZipArchiveOpen_ValidZipFileProvider()
+	{
+		return [
+			"RDONLY" => [\ZipArchive::RDONLY],
+			"null" => [null],
+		];
+	}
+
+	/**
+	 * @dataProvider ZipArchiveOpen_ValidZipFileProvider
+	 */
+	public function testZipArchiveOpen_ValidZipFile($flags)
+	{
+		$sArchiveName = tempnam(sys_get_temp_dir(), "testZipArchiveOpen_ValidZipFile_");
+		unlink($sArchiveName);
+		$oZip = new \ZipArchive();
+		$oZip->open($sArchiveName, \ZipArchive::CREATE);
+		$oZip->addFile(__FILE__);
+		$oZip->close();
+
+		$this->aFileToClean [] = $sArchiveName;
+
+		$oZip = utils::ZipArchiveOpen($sArchiveName, $flags);
+		self::assertNotNull($oZip);
+		$oZip->close();
+	}
+
+	public static function ZipArchiveOpen_EmptyExistingFileProvider()
+	{
+		return [
+			"RDONLY" => [\ZipArchive::RDONLY, 'Cannot to open zip file due to inconsistent or empty content'],
+			"OVERWRITE" => [\ZipArchive::OVERWRITE],
+		];
+	}
+
+	/**
+	 * @dataProvider ZipArchiveOpen_EmptyExistingFileProvider
+	 */
+	public function testZipArchiveOpen_EmptyExistingFile($flags, $sExpectedMessage = null)
+	{
+		$sFolderPath = tempnam(sys_get_temp_dir(), "testZipArchiveOpen_ZipFile_");
+		$this->aFileToClean [] = $sFolderPath;
+
+		if (! is_null($sExpectedMessage)) {
+			$this->expectExceptionMessage($sExpectedMessage);
+		}
+		$oZip = utils::ZipArchiveOpen($sFolderPath, $flags);
+		if (is_null($sExpectedMessage)) {
+			self::assertNotNull($oZip);
+			$oZip->close();
+			touch($sFolderPath);
+		}
+	}
+
+	public static function ZipArchiveOpen_NotyExistingFileProvider()
+	{
+		return [
+			"CREATE" => [\ZipArchive::CREATE],
+			"null" => [null, 'Cannot to open zip file due to error code 9'],
+		];
+	}
+
+	/**
+	 * @dataProvider ZipArchiveOpen_NotyExistingFileProvider
+	 */
+	public function testZipArchiveOpen_NotyExistingFile($flags, $sExpectedMessage = null)
+	{
+		$sFolderPath = tempnam(sys_get_temp_dir(), "testZipArchiveOpen_ZipFile_");
+		@unlink($sFolderPath);
+
+		if (! is_null($sExpectedMessage)) {
+			$this->expectExceptionMessage($sExpectedMessage);
+		}
+		$oZip = utils::ZipArchiveOpen($sFolderPath, $flags);
+		if (is_null($sExpectedMessage)) {
+			self::assertNotNull($oZip);
+			$oZip->close();
+			touch($sFolderPath);
+			$this->aFileToClean[] = $sFolderPath;
+		}
+	}
+
+	public function testZipArchiveCreateWithTempNam()
+	{
+		$oZip = utils::ZipArchiveCreateWithTempNam(sys_get_temp_dir(), "testZipArchiveOpenWithTempFile_");
+		self::assertNotNull($oZip);
+		$sFilePath = $oZip->filename;
+
+		self::assertFalse(is_file($sFilePath), $sFilePath);
+
+		$oZip->addEmptyDir('toto');
+		$oZip->addFile(__FILE__);
+		$oZip->close();
+
+		self::assertTrue(in_array($sFilePath, glob(sys_get_temp_dir().'/**')));
+		self::assertTrue(is_file($sFilePath), $sFilePath);
+		unlink($sFilePath);
+	}
 }
