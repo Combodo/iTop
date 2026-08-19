@@ -3270,10 +3270,10 @@ TXT
 		if (true !== $code) {
 			//ZipArchive::ZIP_ER_NOZIP : 19
 			if ($code === 19) {
-				throw new \Exception(sprintf('Cannot to open zip file due to inconsistent or empty content'));
+				throw new \Exception(sprintf('Cannot open zip file due to inconsistent or empty content'));
 			}
 
-			throw new \Exception(sprintf('Cannot to open zip file due to error code %s', $code));
+			throw new \Exception(sprintf('Cannot open zip file due to error code %s', $code));
 		}
 		return $oZip;
 	}

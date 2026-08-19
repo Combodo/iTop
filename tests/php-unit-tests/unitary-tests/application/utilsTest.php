@@ -1040,7 +1040,7 @@ INI;
 	public static function ZipArchiveOpen_EmptyExistingFileProvider()
 	{
 		return [
-			"RDONLY" => [\ZipArchive::RDONLY, 'Cannot to open zip file due to inconsistent or empty content'],
+			"RDONLY" => [\ZipArchive::RDONLY, 'Cannot open zip file due to inconsistent or empty content'],
 			"OVERWRITE" => [\ZipArchive::OVERWRITE],
 		];
 	}
@@ -1068,7 +1068,7 @@ INI;
 	{
 		return [
 			"CREATE" => [\ZipArchive::CREATE],
-			"null" => [null, 'Cannot to open zip file due to error code 9'],
+			"null" => [null, 'Cannot open zip file due to error code 9'],
 		];
 	}
 
