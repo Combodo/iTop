@@ -118,7 +118,11 @@ class DataAuditSequencer extends StepSequencer
 		}
 
 		$sFinalEnvDir = APPROOT.'env-'.$this->oRunTimeEnvironment->GetFinalEnv();
-		return is_dir($sFinalEnvDir);
+		if (! is_dir($sFinalEnvDir)) {
+			return false;
+		}
+
+		return count(glob($sFinalEnvDir."/**")) > 0;
 	}
 
 	public function GetStepNames(): array
