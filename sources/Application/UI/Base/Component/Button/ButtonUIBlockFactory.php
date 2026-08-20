@@ -22,6 +22,8 @@ namespace Combodo\iTop\Application\UI\Base\Component\Button;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Dict;
+use JSPopupMenuItem;
+use URLPopupMenuItem;
 use utils;
 
 /**
@@ -376,6 +378,79 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		return $oButton;
 	}
 
+	public static function MakeIconButtonFromApplicationPopupMenuItem($oPopupItem, $sColor = Button::ENUM_COLOR_SCHEME_NEUTRAL, $sActionType = Button::ENUM_ACTION_TYPE_ALTERNATIVE)
+	{
+		if ($oPopupItem instanceof JSPopupMenuItem) {
+			$oButton = self::MakeIconAction(
+				$oPopupItem->GetIconClass(),
+				$oPopupItem->GetTooltip()
+			);
+
+			$oButton->SetOnClickJsCode($oPopupItem->GetJsCode());
+			$oButton->SetActionType($sActionType);
+			$oButton->SetColor($sColor);
+
+			return $oButton;
+		} elseif ($oPopupItem instanceof URLPopupMenuItem) {
+			$oButton = self::MakeIconLink(
+				$oPopupItem->GetIconClass(),
+				$oPopupItem->GetTooltip(),
+				$oPopupItem->GetURL(),
+				$oPopupItem->GetTarget(),
+			);
+
+			$oButton->SetActionType($sActionType);
+			$oButton->SetColor($sColor);
+
+			return $oButton;
+		}
+
+		return null;
+	}
+
+	public static function MakeButtonFromApplicationPopupMenuItem($oPopupItem, $sColor = Button::ENUM_COLOR_SCHEME_NEUTRAL, $sActionType = Button::ENUM_ACTION_TYPE_ALTERNATIVE)
+	{
+		if ($oPopupItem instanceof JSPopupMenuItem) {
+			$oButton = self::MakeForAction(
+				$oPopupItem->GetLabel(),
+				$sColor,
+				$sActionType,
+			);
+
+			if (utils::IsNotNullOrEmptyString($oPopupItem->GetIconClass())) {
+				$oButton->SetIconClass($oPopupItem->GetIconClass());
+			}
+			if (utils::IsNotNullOrEmptyString($oPopupItem->GetTooltip())) {
+				$oButton->SetTooltip($oPopupItem->GetTooltip());
+			}
+
+			$oButton->SetOnClickJsCode($oPopupItem->GetJsCode());
+
+			return $oButton;
+		} elseif ($oPopupItem instanceof URLPopupMenuItem) {
+			$oButton = self::MakeForLink(
+				$oPopupItem->GetLabel(),
+				$oPopupItem->GetURL(),
+				$sColor,
+				$sActionType,
+				$oPopupItem->GetTarget()
+			);
+
+			if (utils::IsNotNullOrEmptyString($oPopupItem->GetIconClass())) {
+				$oButton->SetIconClass($oPopupItem->GetIconClass());
+			}
+			if (utils::IsNotNullOrEmptyString($oPopupItem->GetTooltip())) {
+				$oButton->SetTooltip($oPopupItem->GetTooltip());
+			}
+			if (utils::IsNotNullOrEmptyString($oPopupItem->GetTarget())) {
+				$oButton->SetTarget($oPopupItem->GetTarget());
+			}
+
+			return $oButton;
+		}
+
+		return null;
+	}
 	//----------------------------------------------------------------------------------------------
 	// Link buttons, mostly used outside forms, to redirect somewhere whilst keeping a button aspect
 	//----------------------------------------------------------------------------------------------

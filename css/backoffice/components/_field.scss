@@ -265,3 +265,10 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
 .ibo-input-select--action-buttons a  {
   @extend %ibo-hyperlink-inherited-colors;
 }
+
+.ibo-field--action {
+  padding: 3px 6px;
+  ~ .ibo-field--action {
+    margin-left: 2px;
+  }
+}

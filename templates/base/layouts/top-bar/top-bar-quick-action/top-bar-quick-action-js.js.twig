@@ -1,0 +1,4 @@
+$('#{{ oUIBlock.GetId() }} [data-role="ibo-top-bar-quick-action--icon"]').on('click', function (event) {
+    event.preventDefault();
+    {{ oUIBlock.GetJsCode()|raw }}
+});

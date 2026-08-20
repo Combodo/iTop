@@ -1,0 +1,62 @@
+$ibo-activity-panel--activity-actions--right: 12px !default;
+$ibo-activity-panel--activity-actions--top: 76px + $ibo-activity-panel--activity-actions--right +36px + 8px !default;
+$ibo-activity-panel--activity-action--diameter: 36px !default;
+$ibo-activity-panel--activity-action--background-color: $ibo-color-primary-600 !default;
+$ibo-activity-panel--activity-action--background-color--on-hover: $ibo-color-primary-500 !default;
+$ibo-activity-panel--activity-action--background-color--is-active: $ibo-color-primary-700 !default;
+$ibo-activity-panel--activity-action--color: $ibo-color-white-100 !default;
+$ibo-activity-panel--activity-action--border-radius: $ibo-border-radius-full !default;
+$ibo-activity-panel--activity-action--box-shadow: $ibo-elevation-100 !default;
+$ibo-activity-panel--activity-action--hover--box-shadow: $ibo-elevation-200 !default;
+
+$ibo-activity-panel--activity-action--icon--height: 100% !default;
+$ibo-activity-panel--activity-action--icon--width: $ibo-activity-panel--activity-action--icon--height !default;
+$ibo-activity-panel--activity-action--icon--font-size: $ibo-font-size-200 !default;
+$ibo-activity-panel--activity-action--icon--line-height: 33px !default;
+
+
+.ibo-activity-panel--activity-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: absolute;
+  z-index: 1;
+  right: $ibo-activity-panel--activity-actions--right;
+  top: $ibo-activity-panel--activity-actions--top;
+  &.ibo-is-hidden{
+    display: none;
+  }
+}
+
+.ibo-activity-panel--activity-action {
+  @extend %ibo-baseline-centered-content;
+
+  width: $ibo-activity-panel--activity-action--diameter;
+  height: $ibo-activity-panel--activity-action--diameter;
+
+  background-color: $ibo-activity-panel--activity-action--background-color;
+  color: $ibo-activity-panel--activity-action--color;
+
+  border-radius: $ibo-activity-panel--activity-action--border-radius;
+  box-shadow: $ibo-activity-panel--activity-action--box-shadow;
+
+  > i{
+    text-align: center;
+    height: $ibo-activity-panel--activity-action--icon--height;
+    width: $ibo-activity-panel--activity-action--icon--width;
+    font-size: $ibo-activity-panel--activity-action--icon--font-size;
+    line-height: $ibo-activity-panel--activity-action--icon--line-height;
+  }
+  &:hover {
+    color: $ibo-activity-panel--activity-action--color;
+    background-color: $ibo-activity-panel--activity-action--background-color--on-hover;
+    box-shadow: $ibo-activity-panel--activity-action--hover--box-shadow;
+  }
+  &:active {
+    color: $ibo-activity-panel--activity-action--color;
+    background-color: $ibo-activity-panel--activity-action--background-color--is-active;
+  }
+  &.ibo-is-hidden{
+    display: none;
+  }
+}

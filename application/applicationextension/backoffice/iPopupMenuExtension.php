@@ -95,7 +95,21 @@ interface iPopupMenuExtension
 	 * @todo
 	 */
 	public const PORTAL_MENU_ACTIONS = 10;
-
+	/**
+	 * Get the list of items to be added to the backoffice top-bar items
+	 * $param is null for now, in a distant future we want to give a complete context
+	 */
+	public const MENU_TOPBAR_ACTIONS = 11;
+	/**
+	 * Get the list of items to be added to the actions on a given form field (i.e. the attribute of an object)
+	 * $param is an array: ['object' => DBObject, att_code, mode=edit/read]
+	 */
+	public const MENU_OBJDETAILS_FIELD_ACTIONS = 12;
+	/**
+	 * Get the list of items to be added to the actions in the activity panel (read-only mode)
+	 * $param = ['object' => DBObject, caselog_attcode =>  caselog attcode or 'activity']
+	 */
+	public const MENU_OBJDETAILS_ACTIVITY_PANEL_ACTIONS = 13;
 	/**
 	 * Get the list of items to be added to a menu.
 	 *

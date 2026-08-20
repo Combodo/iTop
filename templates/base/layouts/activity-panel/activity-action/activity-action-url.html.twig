@@ -1,0 +1,17 @@
+<a href="{{ oUIBlock.GetUrl() }}"
+   id="{{ oUIBlock.GetId() }}"
+   class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-activity-panel--activity-action"
+   data-role="ibo-activity-panel--activity-action"
+   {% if oUIBlock.GetTooltip() is not empty %}
+   data-tooltip-content="{{ oUIBlock.GetTooltip() }}"
+   aria-label="{{ oUIBlock.GetTooltip() }}"
+   {% endif %}
+>
+    {% if oUIBlock.GetIconClass() is not empty %}
+        <i class="{{ oUIBlock.GetIconClass() }}"></i>
+    {% endif %}
+{#    <span>{{ oUIBlock.GetLabel() }}</span>#}
+</a>
+{% if oUIBlock.HasPopoverMenu() %}
+    {{ render_block(oUIBlock.GetPopoverMenu()) }}
+{% endif %}

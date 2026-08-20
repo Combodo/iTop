@@ -59,6 +59,17 @@ abstract class ApplicationPopupMenuItem
 	}
 
 	/**
+	 * @param string $sLabel
+	 *
+	 * @api
+	 * @since 3.3.0
+	 */
+	public function SetLabel($sLabel)
+	{
+		$this->sLabel = $sLabel;
+	}
+
+	/**
 	 * Get the CSS classes
 	 *
 	 * @return array

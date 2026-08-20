@@ -57,14 +57,16 @@ class Field extends UIContentBlock
 	/** @var string */
 	protected $sComments;
 
+	protected $oValue;
+
+	protected $aActions = [];
+
 	public function __construct(string $sLabel, ?UIBlock $oValue = null, ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->sLabel = $sLabel;
 		$this->sValueId = null;
-		if (!is_null($oValue)) {
-			$this->AddSubBlock($oValue);
-		}
+		$this->oValue = $oValue;
 	}
 
 	/**
@@ -287,6 +289,10 @@ class Field extends UIContentBlock
 		return $this;
 	}
 
+	public function HasValue(): bool
+	{
+		return !is_null($this->oValue);
+	}
 	/**
 	 * @return \Combodo\iTop\Application\UI\Base\UIBlock
 	 */
@@ -389,5 +395,37 @@ class Field extends UIContentBlock
 	public function HasDescription(): bool
 	{
 		return utils::IsNotNullOrEmptyString($this->GetDescription());
+	}
+
+	public function GetActions(): array
+	{
+		return $this->aActions;
+	}
+	public function AddAction(UIBlock $oAction)
+	{
+		$this->aActions[] = $oAction;
+		return $this;
+	}
+	public function HasActions(): bool
+	{
+		return !empty($this->aActions);
+	}
+
+	public function SetActions(array $aActions)
+	{
+		$this->aActions = $aActions;
+		return $this;
+	}
+
+	public function GetSubBlocks(): array
+	{
+		$aSubBlocks = [];
+		if (!is_null($this->oValue)) {
+			$aSubBlocks[$this->oValue->GetId()] = $this->oValue;
+		}
+		foreach ($this->aActions as $oAction) {
+			$aSubBlocks[$oAction->GetId()] = $oAction;
+		}
+		return $aSubBlocks;
 	}
 }

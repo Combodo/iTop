@@ -24,6 +24,8 @@ use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearch;
 use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreate;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
+use Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBarAction\TopBarQuickAction;
+use Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBarAction\TopBarQuickActionJS;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
 /**
@@ -48,6 +50,8 @@ class TopBar extends UIBlock
 	protected $oBreadcrumbs;
 	/** @var Toolbar|null */
 	protected $oToolbar;
+	/** @var array $aActions */
+	protected array $aActions = [];
 
 	/**
 	 * TopBar constructor.
@@ -205,7 +209,8 @@ class TopBar extends UIBlock
 	{
 		$aSubBlocks = [];
 
-		$aSubBlocksNames = ['QuickCreate', 'GlobalSearch', 'Breadcrumbs', 'Toolbar'];
+		// Add single objects
+		$aSubBlocksNames = ['QuickCreate', 'GlobalSearch', 'Breadcrumbs', 'Toolbar', ];
 		foreach ($aSubBlocksNames as $sSubBlockName) {
 			$sHasMethodName = 'Has'.$sSubBlockName;
 			if (true === call_user_func_array([$this, $sHasMethodName], [])) {
@@ -214,6 +219,40 @@ class TopBar extends UIBlock
 			}
 		}
 
+		// Add object arrays
+		$aSubBlocksNames = ['Actions'];
+		foreach ($aSubBlocksNames as $sSubBlockName) {
+			$sHasMethodName = 'Has'.$sSubBlockName;
+			if (true === call_user_func_array([$this, $sHasMethodName], [])) {
+				$sPropertyName = 'a'.$sSubBlockName;
+				foreach ($this->$sPropertyName as $oSubBlock) {
+					$aSubBlocks[$oSubBlock->GetId()] = $oSubBlock;
+				}
+			}
+		}
+
 		return $aSubBlocks;
+	}
+
+	public function HasActions(): bool
+	{
+		return count($this->GetActions()) > 0;
+	}
+
+	public function GetActions(): array
+	{
+		return $this->aActions;
+	}
+
+	public function SetActions(array $aActions)
+	{
+		$this->aActions = $aActions;
+		return $this;
+	}
+
+	public function AddAction(TopBarQuickAction $oAction)
+	{
+		$this->aActions[] = $oAction;
+		return $this;
 	}
 }

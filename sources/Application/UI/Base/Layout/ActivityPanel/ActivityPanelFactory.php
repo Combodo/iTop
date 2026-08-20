@@ -22,12 +22,15 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel;
 
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
+use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanelAction\ActivityPanelActionFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryFormFactory;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
+use Dict;
 use Exception;
 use ExecutionKPI;
+use iPopupMenuExtension;
 use IssueLog;
 use MetaModel;
 
@@ -170,6 +173,50 @@ class ActivityPanelFactory
 					unset($oNotifEventsSet);
 				}
 			}
+		}
+
+		if ($sMode === cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW) {
+			$aActionItems = [];
+			/** @var \iPopupMenuExtension $oExtensionInstance */
+			foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance) {
+				// Iterate over every case log tab to retrieve the actions for each of them
+				foreach ($aCaseLogTabs as $sCaseLogAttCode => $aCaseLogData) {
+					$aCaselogActions = [];
+
+					// Let's iterate over the menu items for this case log
+					foreach ($oExtensionInstance::EnumItems(iPopupMenuExtension::MENU_OBJDETAILS_ACTIVITY_PANEL_ACTIONS, ['object' => $oObject, 'caselog_att_code' => $sCaseLogAttCode]) as $oMenuItem) {
+						$aCaselogActions[] = $oMenuItem;
+					}
+
+					if (empty($aCaselogActions)) {
+						continue;
+					}
+
+					// Create a new section for the case log if it doesn't exist yet
+					if (!array_key_exists($sCaseLogAttCode, $aActionItems)) {
+						$aActionItems[$sCaseLogAttCode] = [
+							'label' => MetaModel::GetLabel($sObjClass, $sCaseLogAttCode),
+							'items' => [],
+						];
+					}
+
+					$aActionItems[$sCaseLogAttCode]['items'] = array_merge($aActionItems[$sCaseLogAttCode]['items'], $aCaselogActions);
+				}
+
+				$aActivityItems = [];
+				// Don't forget 1 last iteration for the activity tab
+				foreach ($oExtensionInstance::EnumItems(iPopupMenuExtension::MENU_OBJDETAILS_ACTIVITY_PANEL_ACTIONS, ['object' => $oObject, 'caselog_att_code' => 'activity']) as $oMenuItem) {
+					$aActivityItems[] = $oMenuItem;
+				}
+				if (!empty($aActivityItems)) {
+					$aActionItems['activity'] = [
+						'label' => Dict::S('UI:Layout:ActivityPanel:Tab:Activity:Title'),
+						'items' => $aActivityItems,
+					];
+				}
+			}
+
+			$oActivityPanel->SetActivityActions(ActivityPanelActionFactory::MakeFromApplicationPopupItems($aActionItems));
 		}
 
 		$oKPI->ComputeStatsForExtension(new ActivityPanelFactory(), 'MakeForObjectDetails');

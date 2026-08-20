@@ -71,6 +71,8 @@ $(function()
 					authors_count: '[data-role="ibo-activity-panel--tab-toolbar-info-authors-count"]',
 					messages_count: '[data-role="ibo-activity-panel--tab-toolbar-info-messages-count"]',
 					compose_button: '[data-role="ibo-activity-panel--add-caselog-entry-button"]',
+                    activity_actions: '[data-role="ibo-activity-panel--activity-actions"]',
+                    activity_action: '[data-role="ibo-activity-panel--activity-action"]',
 					compose_menu: '#ibo-activity-panel--compose-menu',
 					compose_menu_item: '#ibo-activity-panel--compose-menu [data-role="ibo-popover-menu--item"]',
 					caselog_entry_form: '[data-role="ibo-caselog-entry-form"]',
@@ -194,6 +196,11 @@ $(function()
 				this.element.find(this.js_selectors.compose_button).on('click', function (oEvent) {
 					me._onComposeButtonClick(oEvent);
 				});
+
+                this.element.find('[data-role="ibo-activity-panel--activity-action"]').on('click', function (oEvent) {
+                    me._onActivityActionClick(oEvent, $(this));
+                });
+
 				// - Click on the compose menu items
 				this.element.find(this.js_selectors.compose_menu_item).on('click', function (oEvent) {
 					me._onComposeMenuItemClick(oEvent, $(this));
@@ -375,6 +382,25 @@ $(function()
 
 				// Else, the compose menu will open automatically
 			},
+
+            _onActivityActionClick: function (oEvent, oActionElem) {
+                oEvent.preventDefault();
+                const oActiveTabData = this._GetActiveTabData();
+                const oActionElement = $(oEvent.target).closest(this.js_selectors.activity_action);
+                const oActionElementMenu = $('#'+oActionElement.attr('id')+'-menu');
+                const oTabCode = oActiveTabData.type === 'caselog' ? oActiveTabData.att_code : oActiveTabData.type;
+                const oActionElementMenuItem = oActionElementMenu.find('[data-caselog-attribute-code="'+oTabCode+'"]');
+
+                // If the current tab has a corresponding menu item, click on it to trigger it directly
+                if (oActionElementMenuItem.length > 0) {
+                    // Note: Stop propagation to avoid the menu to be opened automatically by the popover handler
+                    oEvent.stopImmediatePropagation();
+
+                    oActionElementMenuItem.click();
+                }
+                // Else let the popover menu open automatically, the user will have to choose a case log
+            },
+
 			/**
 			 * @param oEvent {Object}
 			 * @param oItemElem {Object} jQuery object representing the clicked item
@@ -784,6 +810,7 @@ $(function()
 			_ShowCaseLogsEntryForms: function () {
 				this.element.find(this.js_selectors.caselog_entry_form).trigger('show_form.caselog_entry_form.itop');
 				this.element.find(this.js_selectors.compose_button).addClass(this.css_classes.is_hidden);
+				this.element.find(this.js_selectors.activity_actions).addClass(this.css_classes.is_hidden);
 			},
 			/**
 			 * Hide all case logs entry forms.
@@ -795,6 +822,7 @@ $(function()
 			_HideCaseLogsEntryForms: function () {
 				this.element.find(this.js_selectors.caselog_entry_form).trigger('hide_form.caselog_entry_form.itop');
 				this.element.find(this.js_selectors.compose_button).removeClass(this.css_classes.is_hidden);
+				this.element.find(this.js_selectors.activity_actions).removeClass(this.css_classes.is_hidden);
 			},
 			/**
 			 * Empty all case logs entry forms

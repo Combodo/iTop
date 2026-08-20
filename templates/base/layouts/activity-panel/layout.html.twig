@@ -84,6 +84,13 @@
             {{ render_block(oUIBlock.GetComposeMenu()) }}
         {% endif %}
     {% endif %}
+    {% if oUIBlock.HasActivityActions() %}
+        <div class="ibo-activity-panel--activity-actions" data-role="ibo-activity-panel--activity-actions">
+            {% for oActivityAction in oUIBlock.GetActivityActions() %}
+                {{ render_block(oActivityAction) }}
+            {% endfor %}
+        </div>
+    {% endif %}
     <div class="ibo-activity-panel--body" data-role="ibo-activity-panel--body">
         {% if oUIBlock.GetGroupedEntries()|length > 0 %}
             {% for aEntryGroup in oUIBlock.GetGroupedEntries() %}

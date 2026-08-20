@@ -1065,6 +1065,14 @@ HTML
 								}
 							}
 							$val['value_raw'] = ($bExcludeRawValue === false) ? $this->Get($sAttCode) : '';
+							$val['actions'] = [];
+
+							/** @var \iPopupMenuExtension $oExtensionInstance */
+							foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance) {
+								foreach ($oExtensionInstance::EnumItems(iPopupMenuExtension::MENU_OBJDETAILS_FIELD_ACTIONS, ['object' => $this, 'att_code' => $sAttCode, 'mode' => $bEditMode ? 'edit' : 'read']) as $oMenuItem) {
+									$val['actions'][] = $oMenuItem;
+								}
+							}
 
 							// The field is visible, add it to the current column
 							$oField = FieldUIBlockFactory::MakeFromParams($val);
