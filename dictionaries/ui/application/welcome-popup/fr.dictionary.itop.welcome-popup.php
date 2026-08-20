@@ -43,4 +43,10 @@ Dict::Add('FR FR', 'French', 'Français', [
 <div>La MFA, désormais intégrée directement à l’expérience coeur, renforce la sécurité globale tout en garantissant une expérience utilisateur plus fluide et cohérente.</div>
 <br>
 <div>Nous vous encourageons à vérifier vos paramètres et à activer la MFA afin de bénéficier d’une meilleure protection de compte.</div>',
+	'UI:WelcomePopup:Message:330_05_Portal:Title' => 'Nouvelle expérience portail',
+	'UI:WelcomePopup:Message:330_05_Portal:Description' => '<div>Cette nouvelle version propose nativement une expérience plus moderne, flexible et responsive pour le portail, avec un look et une sensation alignés avec la console.</div>
+<br>
+<div>Nous avons repensé la navigation pour une expérience plus claire et plus cohérente, amélioré la flexibilité des menus et des tableaux de bord, et introduit des cartes responsives qui s’adaptent à différentes tailles d’écran. "Mon profil" a également été amélioré, permettant aux utilisateurs de gérer plus facilement leur compte et les paramètres MFA.</div>
+<br>
+<div>Le portail peut également être personnalisé avec votre propre style, vous aidant à offrir une expérience plus cohérente et plus marquée à vos utilisateurs.</div>',
 ]);

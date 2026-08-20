@@ -7,14 +7,11 @@
 
 namespace Combodo\iTop\Application\WelcomePopup\Provider;
 
-use Combodo\iTop\Controller\Newsroom\iTopNewsroomController;
-use Combodo\iTop\Controller\Notifications\NotificationsCenterController;
-use Combodo\iTop\Service\Router\Router;
-use Dict;
 use AbstractWelcomePopupExtension;
+use Combodo\iTop\Application\WelcomePopup\MessageFactory;
+use Dict;
 use UserRights;
 use utils;
-use Combodo\iTop\Application\WelcomePopup\MessageFactory;
 
 /**
  * Implementation of the "default" Welcome Popup message
@@ -65,6 +62,13 @@ class DefaultProvider extends AbstractWelcomePopupExtension
 				Dict::S("UI:WelcomePopup:Message:330_04_MFA:Title"),
 				Dict::S("UI:WelcomePopup:Message:330_04_MFA:Description"),
 				utils::GetAbsoluteUrlAppRoot()."images/illustrations/undraw_two_factor_authentication.svg"
+			);
+
+			$aMessages[] = MessageFactory::MakeForLeftTextsRightIllustrationAsSVGMarkup(
+				"330_05_Portal",
+				Dict::S("UI:WelcomePopup:Message:330_05_Portal:Title"),
+				Dict::S("UI:WelcomePopup:Message:330_05_Portal:Description"),
+				utils::GetAbsoluteUrlAppRoot()."images/illustrations/undraw_prototyping_process.svg"
 			);
 		}
 
