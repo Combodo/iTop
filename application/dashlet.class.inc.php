@@ -25,6 +25,20 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Core\AttributeDefinition\AttributeDateTime;
+use Combodo\iTop\Core\AttributeDefinition\AttributeDecimal;
+use Combodo\iTop\Core\AttributeDefinition\AttributeDuration;
+use Combodo\iTop\Core\AttributeDefinition\AttributeEncryptedString;
+use Combodo\iTop\Core\AttributeDefinition\AttributeEnum;
+use Combodo\iTop\Core\AttributeDefinition\AttributeExternalField;
+use Combodo\iTop\Core\AttributeDefinition\AttributeFriendlyName;
+use Combodo\iTop\Core\AttributeDefinition\AttributeInteger;
+use Combodo\iTop\Core\AttributeDefinition\AttributeLinkedSet;
+use Combodo\iTop\Core\AttributeDefinition\AttributeOneWayPassword;
+use Combodo\iTop\Core\AttributeDefinition\AttributePassword;
+use Combodo\iTop\Core\AttributeDefinition\AttributePercentage;
+use Combodo\iTop\Core\AttributeDefinition\AttributeSubItem;
+use Combodo\iTop\Core\AttributeDefinition\iAttributeNoGroupBy;
 
 require_once(APPROOT.'application/forms.class.inc.php');
 
@@ -440,7 +454,7 @@ EOF
 				// For external fields, find the real type of the target
 				$sExtFieldAttCode = $sAttCode;
 				$sTargetClass = $sClass;
-				while (is_a($sAttType, 'AttributeExternalField', true)) {
+				while (is_a($sAttType, AttributeExternalField::class, true)) {
 					$sExtKeyAttCode = $this->oModelReflection->GetAttributeProperty($sTargetClass, $sExtFieldAttCode, 'extkey_attcode');
 					$sTargetAttCode = $this->oModelReflection->GetAttributeProperty($sTargetClass, $sExtFieldAttCode, 'target_attcode');
 					$sTargetClass = $this->oModelReflection->GetAttributeProperty($sTargetClass, $sExtKeyAttCode, 'targetclass');
@@ -450,13 +464,13 @@ EOF
 				}
 
 				$aForbidenAttType = [
-					'AttributeLinkedSet',
-					'AttributeFriendlyName',
+					AttributeLinkedSet::class,
+					AttributeFriendlyName::class,
 
-					'iAttributeNoGroupBy', //we cannot only use iAttributeNoGroupBy since this method is also used by the designer who do not have access to the classes' PHP reflection API. So the known classes has to be listed altogether
-					'AttributeOneWayPassword',
-					'AttributeEncryptedString',
-					'AttributePassword',
+					iAttributeNoGroupBy::class, //we cannot only use iAttributeNoGroupBy since this method is also used by the designer who do not have access to the classes' PHP reflection API. So the known classes has to be listed altogether
+					AttributeOneWayPassword::class,
+					AttributeEncryptedString::class,
+					AttributePassword::class,
 				];
 				foreach ($aForbidenAttType as $sForbidenAttType) {
 					if (is_a($sAttType, $sForbidenAttType, true)) {
@@ -468,7 +482,7 @@ EOF
 				if (!in_array($sLabel, $aGroupBy)) {
 					$aGroupBy[$sAttCode] = $sLabel;
 
-					if (is_a($sAttType, 'AttributeDateTime', true)) {
+					if (is_a($sAttType, AttributeDateTime::class, true)) {
 						$aGroupBy[$sAttCode.':hour'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Hour', $sLabel);
 						$aGroupBy[$sAttCode.':month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Month', $sLabel);
 						$aGroupBy[$sAttCode.':day_of_week'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek', $sLabel);
@@ -1102,7 +1116,7 @@ abstract class DashletGroupBy extends Dashlet
 			$aAttributeTypes = $this->oModelReflection->ListAttributes($this->sClass);
 			if (isset($aAttributeTypes[$this->sGroupByAttCode])) {
 				$sAttributeType = $aAttributeTypes[$this->sGroupByAttCode];
-				if (is_subclass_of($sAttributeType, 'AttributeDateTime') || $sAttributeType == 'AttributeDateTime') {
+				if (is_subclass_of($sAttributeType, AttributeDateTime::class) || $sAttributeType == AttributeDateTime::class) {
 					$this->sOrderDirection = 'asc';
 				} else {
 					$this->sOrderDirection = 'desc';
@@ -1258,7 +1272,7 @@ abstract class DashletGroupBy extends Dashlet
 		if ($this->oModelReflection->IsValidAttCode($sClass, $this->sGroupByAttCode)) {
 			$aAttributeTypes = $this->oModelReflection->ListAttributes($sClass);
 			$sAttributeType = $aAttributeTypes[$this->sGroupByAttCode];
-			if (is_subclass_of($sAttributeType, 'AttributeDateTime') || $sAttributeType == 'AttributeDateTime') {
+			if (is_subclass_of($sAttributeType, AttributeDateTime::class) || $sAttributeType == AttributeDateTime::class) {
 				// Note: an alternative to this somewhat hardcoded way of doing things would be to implement...
 				//$oExpr = Expression::FromOQL($this->sGroupByExpr);
 				//$aTranslationData = array($oQuery->GetClassAlias() => array($this->sGroupByAttCode => new ScalarExpression(date('Y-m-d H:i:s', $iTime))));
@@ -1289,7 +1303,7 @@ abstract class DashletGroupBy extends Dashlet
 				foreach ($aValues as $sValue) {
 					$aDisplayValues[] = ['label' => $sValue, 'value' => (int)rand(1, 15)];
 				}
-			} elseif (is_subclass_of($sAttributeType, 'AttributeEnum') || $sAttributeType == 'AttributeEnum') {
+			} elseif (is_subclass_of($sAttributeType, AttributeEnum::class) || $sAttributeType == AttributeEnum::class) {
 				$aAllowed = $this->oModelReflection->GetAllowedValues_att($sClass, $this->sGroupByAttCode);
 				if ($aAllowed) { // null for non enums
 					foreach ($aAllowed as $sValue => $sValueLabel) {
@@ -1458,11 +1472,11 @@ abstract class DashletGroupBy extends Dashlet
 			}
 			foreach ($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType) {
 				switch ($sAttType) {
-					case 'AttributeDecimal':
-					case 'AttributeDuration':
-					case 'AttributeInteger':
-					case 'AttributePercentage':
-					case 'AttributeSubItem': // TODO: Known limitation: no unit displayed (values in sec)
+					case AttributeDecimal::class:
+					case AttributeDuration::class:
+					case AttributeInteger::class:
+					case AttributePercentage::class:
+					case AttributeSubItem::class: // TODO: Known limitation: no unit displayed (values in sec)
 						$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
 						$aFunctionAttributes[$sAttCode] = $sLabel;
 						break;
