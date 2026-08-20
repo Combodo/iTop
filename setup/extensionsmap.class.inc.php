@@ -260,14 +260,17 @@ class iTopExtensionsMap
 	public function DeclareExtensionAsRemoved(array $aExtensionCodes): void
 	{
 		$aRemovedExtension = [];
+
 		foreach ($aExtensionCodes as $sCode => $sLabel) {
+			$sRealCode = is_int($sCode) ? $sLabel : $sCode;
+
 			/** @var \iTopExtension $oExtension */
-			$oExtension = $this->GetFromExtensionCode($sCode);
+			$oExtension = $this->GetFromExtensionCode($sRealCode);
 			if (!is_null($oExtension)) {
 				$aRemovedExtension [] = $oExtension;
 				\IssueLog::Debug(__METHOD__.": remove extension locally", null, ['extension_code' => $oExtension->sCode]);
 			} else {
-				\IssueLog::Warning(__METHOD__." cannot find extensions", null, ['code' => $sCode]);
+				\IssueLog::Warning(__METHOD__." cannot find extensions", null, ['code' => $sRealCode]);
 			}
 		}
 

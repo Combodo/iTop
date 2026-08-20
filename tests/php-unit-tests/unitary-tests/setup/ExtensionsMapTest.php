@@ -37,20 +37,38 @@ class ExtensionsMapTest extends ItopTestCase
 		$this->assertEquals($expected, array_keys($aExtensions));
 	}
 
-	public function testDeclareExtensionAsRemoved()
+	public function testDeclareExtensionAsRemoved_WithDictPassed()
 	{
-		$oExtensionsMap = $this->GiveExtensionMapWithAllTypeOfExtensions();
-		//non existing extension
-		$aExtensionCodes = ['unexisting_extension_code' => 'label_unexisting_extension_code'];
-		//extension ok
-		$aExtensionCodes ['installed_ext1'] = $oExtensionsMap->GetFromExtensionCode('installed_ext1')->sLabel;
-		//search extension by label ko
-		$sLabel = $oExtensionsMap->GetFromExtensionCode('installed_ext_in_package')->sLabel;
-		$aExtensionCodes [$sLabel] = $sLabel;
+		try {
+			$oExtensionsMap = $this->GiveExtensionMapWithAllTypeOfExtensions();
+			//non existing extension
+			$aExtensionCodes = ['unexisting_extension_code' => 'label_unexisting_extension_code'];
+			//extension ok
+			$aExtensionCodes ['installed_ext1'] = $oExtensionsMap->GetFromExtensionCode('installed_ext1')->sLabel;
+			//search extension by label ko
+			$sLabel = $oExtensionsMap->GetFromExtensionCode('installed_ext_in_package')->sLabel;
+			$aExtensionCodes [$sLabel] = $sLabel;
 
-		$oExtensionsMap->DeclareExtensionAsRemoved($aExtensionCodes);
+			$oExtensionsMap->DeclareExtensionAsRemoved($aExtensionCodes);
 
-		$this->assertEquals(["installed_ext1"], ModuleDiscovery::GetRemovedExtensionCodes());
+			$this->assertEquals(["installed_ext1"], ModuleDiscovery::GetRemovedExtensionCodes());
+		} finally {
+			ModuleDiscovery::DeclareRemovedExtensions([]);
+		}
+	}
+
+	public function testDeclareExtensionAsRemoved_WithListPassed()
+	{
+		try {
+			$oExtensionsMap = $this->GiveExtensionMapWithAllTypeOfExtensions();
+			$aExtensionCodes = ['unexisting_extension_code', 'installed_ext1'];
+			$aExtensionCodes [] = $oExtensionsMap->GetFromExtensionCode('installed_ext_in_package')->sLabel;
+			$oExtensionsMap->DeclareExtensionAsRemoved($aExtensionCodes);
+
+			$this->assertEquals(["installed_ext1"], ModuleDiscovery::GetRemovedExtensionCodes());
+		} finally {
+			ModuleDiscovery::DeclareRemovedExtensions([]);
+		}
 	}
 
 	public function testGetAllExtensionsToDisplayInSetup_WithExtensionsHavingDependencyIssues()
