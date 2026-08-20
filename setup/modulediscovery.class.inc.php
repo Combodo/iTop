@@ -250,7 +250,7 @@ class ModuleDiscovery
 	{
 		$aRes = [];
 		foreach (self::$m_aRemovedExtensions as $oExtension) {
-			$aRes [] = $oExtension->sCode;
+			$aRes[] = $oExtension->sCode;
 		}
 		return $aRes;
 	}
