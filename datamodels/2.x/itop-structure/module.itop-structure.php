@@ -405,8 +405,8 @@ if (!class_exists('StructureInstaller')) {
 				$oAction->DBWrite();
 			}
 
-			//N°824 - Fill object_class in EventNotification from the Triggers target_class
-			if (version_compare($sPreviousVersion, '3.2.0', '<')) {
+			// N°824 - Fill object_class in EventNotification from the Triggers target_class
+			if (version_compare($sPreviousVersion, '3.3.0', '<')) {
 				SetupLog::Info("Filling object_class in EventNotification from the Triggers target_class");
 				$iNbProcessed = 0;
 

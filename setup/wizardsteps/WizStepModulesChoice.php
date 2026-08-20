@@ -51,6 +51,8 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 	private array $aAnalyzeInstallationModules = [];
 	private ?MissingDependencyException $oMissingDependencyException = null;
 
+	private array $aFlagsByChoiceId = [];
+
 	public function __construct(WizardController $oWizard, $sCurrentState, bool $bOverWriteConfig = true)
 	{
 		parent::__construct($oWizard, $sCurrentState);
@@ -290,6 +292,34 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 			$oPage->warning($sManualInstallError);
 		}
 
+		// Build the default choices
+		$aDefaults = $this->GetDefaults($aStepInfo, $this->aAnalyzeInstallationModules);
+		$index = $this->GetStepIndex();
+
+		// retrieve the saved selection
+		// use json_encode:decode to store a hash array: step_id => array(input_name => selected_input_id)
+		$aParameters = json_decode($this->oWizard->GetParameter('selected_components', '{}'), true);
+		if (!isset($aParameters[$index])) {
+			$aParameters[$index] = $aDefaults;
+		}
+		$aSelectedComponents = $aParameters[$index];
+
+		$bDisableUninstallCheck = (bool)$this->oWizard->GetParameter('force-uninstall', false);
+
+		$aOptions = $aStepInfo['options'] ?? [];
+		foreach ($aOptions as $index => $aChoice) {
+			$sChoiceId = self::$SEP.$index;
+			$this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, false, $bDisableUninstallCheck);
+		}
+
+		if (!$this->bCanMoveForward) {
+			if (SetupUtils::IsConnectableToITopHub($this->aAnalyzeInstallationModules)) {
+				$oPage->error('Due to some inconsistencies the upgrade can\'t continue. You must deactivate "consistency protections" in the previous steps and restore a consistent environment.');
+			} else {
+				$oPage->error('Due to some inconsistencies the upgrade can\'t continue, please contact Combodo support.');
+			}
+		}
+
 		$oPage->add('<div class="module-selection-banner">');
 		$sBannerPath = isset($aStepInfo['banner']) ? $aStepInfo['banner'] : '';
 		if (!empty($sBannerPath)) {
@@ -307,18 +337,6 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 		$sDescription = $aStepInfo['description'] ?? '';
 		$oPage->add('<span>'.$sDescription.'</span>');
 		$oPage->add('</div>');
-
-		// Build the default choices
-		$aDefaults = $this->GetDefaults($aStepInfo, $this->aAnalyzeInstallationModules);
-		$index = $this->GetStepIndex();
-
-		// retrieve the saved selection
-		// use json_encode:decode to store a hash array: step_id => array(input_name => selected_input_id)
-		$aParameters = json_decode($this->oWizard->GetParameter('selected_components', '{}'), true);
-		if (!isset($aParameters[$index])) {
-			$aParameters[$index] = $aDefaults;
-		}
-		$aSelectedComponents = $aParameters[$index];
 
 		$oPage->add('<div class="module-selection-body">');
 		$this->DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $aDefaults);
@@ -742,8 +760,12 @@ EOF
 		return $this->aSteps[$index] ?? null;
 	}
 
-	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck, bool $bUpgradeMode)
+	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck): array
 	{
+		if (array_key_exists($sChoiceId, $this->aFlagsByChoiceId)) {
+			return $this->aFlagsByChoiceId[$sChoiceId];
+		}
+
 		$oITopExtension = $this->oExtensionsMap->GetFromExtensionCode($aChoice['extension_code']);
 		//If the extension is missing from disk, it won't exist in the ExtensionsMap, thus returning null
 		$bCanBeUninstalled = isset($aChoice['uninstallable']) ? $aChoice['uninstallable'] === true || $aChoice['uninstallable'] === 'yes' : $oITopExtension->CanBeUninstalled();
@@ -752,51 +774,49 @@ EOF
 		$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']);
 		$bInstalled = $bMissingFromDisk || $oITopExtension?->bInstalled ?? false;
 		$bDependencyIssue = $oITopExtension?->HasDependencyIssue() ?? false;
+		$bIsRemoteExtension = $oITopExtension?->sSource === iTopExtension::SOURCE_REMOTE;
+		$bIsPackageExtension = $oITopExtension?->sSource === iTopExtension::SOURCE_WIZARD;
+		$bDoNotUninstall = !$bCanBeUninstalled || $bIsRemoteExtension;
 
 		$bChecked = $bSelected;
 		$bDisabled = false;
+
 		if ($bMissingFromDisk) {
 			$bDisabled = true;
 			$bChecked = false;
-		} elseif ($bDependencyIssue && ($oITopExtension->sSource !== iTopExtension::SOURCE_WIZARD || !$bMandatory)) {
-			// If the extension is not installed, the user cannot select it
-			// If the extension is installed and mandatory or not uninstallable, the user cannot unselect it
-			// Unless the user uses the "force-uninstall" option
-			$bDisabled = (!$bInstalled || $bMandatory || !$bCanBeUninstalled) && !$bDisableUninstallCheck;
-			// If the extension is a remote extension and not be installed means the user previously uninstalled it
-			// Otherwise, it will be checked if it is mandatory or if it was selected by the user
-			if ($oITopExtension->sSource !== iTopExtension::SOURCE_REMOTE || $bInstalled) {
-				$bChecked = $bMandatory ?: $bSelected;
+		} elseif ($bMandatory && $bIsPackageExtension) {
+			$bDisabled = true;
+			$bChecked = true;
+		} else {
+			if ($bDependencyIssue) {
+				// If the extension has a dependency issue, it cannot be checked and must be unchecked using the "force-uninstall" option
+				$bDisabled = !$bInstalled || !$bDisableUninstallCheck;
+			} elseif ($bInstalled && $bDoNotUninstall) {
+				// If the extension is uninstallable, it must be unchecked using the "force-uninstall" option
+				$bDisabled = !$bDisableUninstallCheck;
 			}
-		} elseif ($bMandatory) {
-			$bDisabled = true;
-			$bChecked = true;
-		} elseif ($bInstalled && !$bCanBeUninstalled && !$bDisableUninstallCheck) {
-			$bChecked = true;
-			$bDisabled = true;
+
+			if (isset($aChoice['sub_options'])) {
+				$aOptions = $aChoice['sub_options']['options'] ?? [];
+				foreach ($aOptions as $index => $aSubChoice) {
+					$sSubChoiceId = $sChoiceId.self::$SEP.$index;
+					$aSubFlags = $this->ComputeChoiceFlags($aSubChoice, $sSubChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck);
+					if ($aSubFlags['checked']) {
+						$bChecked = true;
+						if ($aSubFlags['disabled']) {
+							// If some sub options are checked and cannot be unchecked, this choice also cannot be unchecked since it would uncheck all its sub options
+							$bDisabled = true;
+						}
+					}
+				}
+			}
 		}
 
 		if ($bAllDisabled) {
 			$bDisabled = true;
 		}
 
-		if (isset($aChoice['sub_options'])) {
-			$aOptions = $aChoice['sub_options']['options'] ?? [];
-			foreach ($aOptions as $index => $aSubChoice) {
-				$sSubChoiceId = $sChoiceId.self::$SEP.$index;
-				$aSubFlags = $this->ComputeChoiceFlags($aSubChoice, $sSubChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck, $bUpgradeMode);
-				if ($aSubFlags['checked']) {
-					$bChecked = true;
-					if ($aSubFlags['disabled']) {
-						//If some sub options are enabled and cannot be disabled, this choice should also cannot be disabled since it would disable all its sub options
-						$bDisabled = true;
-					}
-				}
-
-			}
-		}
-
-		return [
+		$aFlags = [
 			'uninstallable' => $bCanBeUninstalled,
 			'dependency_issue' => $bDependencyIssue,
 			'mandatory' => $bMandatory,
@@ -805,6 +825,11 @@ EOF
 			'disabled' => $bDisabled,
 			'checked' => $bChecked,
 		];
+
+		$this->bCanMoveForward = $this->bCanMoveForward && $this->CanMoveForwardFromChoiceFlags($aFlags, $bDisableUninstallCheck);
+		$this->aFlagsByChoiceId[$sChoiceId] = $aFlags;
+
+		return $aFlags;
 	}
 
 	public function DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $aDefaults, $sParentId = '', $bAllDisabled = false)
@@ -816,8 +841,7 @@ EOF
 
 		foreach ($aOptions as $index => $aChoice) {
 			$sChoiceId = $sParentId.self::$SEP.$index;
-			$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck, $this->bUpgrade);
-			$this->bCanMoveForward = $this->bCanMoveForward && $this->CanMoveForwardFromChoiceFlags($aFlags, $bDisableUninstallCheck);
+			$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck);
 
 			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $sChoiceId, $aFlags);
 		}
@@ -856,7 +880,7 @@ EOF
 				$bSelected = ($sChoiceId === $sChoiceIdNone);
 			}
 
-			$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck, $this->bUpgrade);
+			$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck);
 			//ComputeChoiceFlags does not completely compute alternative flags
 			$aFlags['disabled'] = $bDisabled;
 			$aFlags['checked'] = $bSelected;
@@ -879,10 +903,6 @@ EOF
 		} elseif ($aFlags['installed']) {
 			// An extension cannot be uninstalled if it is not uninstallable
 			if (!$aFlags['uninstallable']) {
-				return false;
-			}
-			// An extension cannot be uninstalled if it is mandatory
-			if ($aFlags['mandatory']) {
 				return false;
 			}
 		}
@@ -984,5 +1004,4 @@ EOF
 
 		return 'Next';
 	}
-
 }

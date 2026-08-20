@@ -14,15 +14,15 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 // Message
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'UI:WelcomePopup:Message:330_01_Welcome:Title' => 'Willkommen bei '.ITOP_APPLICATION_SHORT.' 3.3',
-	'UI:WelcomePopup:Message:330_01_Welcome:Description' => '<div>Wir freuen uns, Ihnen dieses neue Release vorzustellen, das zahlreiche Neuerungen und Verbesserungen mitbringt!</div>
+	'UI:WelcomePopup:Message:330_01_Welcome:Title' => 'Welcome to '.ITOP_APPLICATION_SHORT.' 3.3~~',
+	'UI:WelcomePopup:Message:330_01_Welcome:Description' => '<div>We’re pleased to introduce this latest release, bringing you a range of updates and improvements!</div>
 <br>
-<div>Neben neuen Funktionen wie der Multi-Faktor-Authentifizierung enthält diese Version wichtige Sicherheits-Updates, die ersten KI-Bausteine sowie verschiedene Verbesserungen für ein flüssigeres und zuverlässigeres Arbeiten.</div>
+<div>Alongside new features like Multi-Factor Authentication, this version includes essential security updates, the first AI bricks, and various enhancements designed to deliver a smoother and more reliable experience. The CMDB also benefits from several improvements, including enhanced containerization and flow management, richer class descriptions, and lifecycle management. The portal has also received a new, more modern and flexible look, now natively integrated into the application.</div>
 <br>
-<div>Wir hoffen, Sie haben mit dieser Version so viel Freude wie wir bei ihrer Entwicklung.</div>
-<div>Vergessen Sie nicht, Ihre iTop-Einstellungen anzupassen, um die Anwendung auf Ihre Bedürfnisse zuzuschneiden.</div>',
-	'UI:WelcomePopup:Message:330_02_AIFoundations:Title' => 'Das Fundament für KI',
-	'UI:WelcomePopup:Message:330_02_AIFoundations:Description' => '<div>Dieses Release führt die ersten Bausteine für unsere kommenden KI-gestützten Funktionen ein.</div>
+<div>We hope you enjoy using this version as much as we enjoyed building it.</div>
+<div>Don’t forget to adjust your iTop preferences to tailor the experience to your needs.</div>',
+	'UI:WelcomePopup:Message:330_02_AIFoundations:Title' => 'Laying the foundations for AI~~',
+	'UI:WelcomePopup:Message:330_02_AIFoundations:Description' => '<div>This release introduces the first building blocks for our upcoming AI-powered features.</div>
 <br>
 <div>Wir haben die zentralen APIs umgesetzt, auf denen künftige Erweiterungen aufbauen. Damit ist der Weg für neue intelligente Funktionen und ein reichhaltigeres Arbeiten in den nächsten Updates bereitet.</div>
 <br>
@@ -38,5 +38,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 <br>
 <div>MFA ist nun direkt im Kern der Anwendung verankert. Das erhöht die Sicherheit insgesamt und sorgt zugleich für ein nahtloseres und einheitlicheres Nutzungserlebnis.</div>
 <br>
-<div>Wir empfehlen Ihnen, Ihre Einstellungen zu prüfen und MFA zu aktivieren, um Ihr Konto besser zu schützen.</div>',
+<div>Wir empfehlen Ihnen, Ihre Einstellungen zu prüfen und MFA zu aktivieren, um Ihr Konto besser zu schützen.</div>~~',
+	'UI:WelcomePopup:Message:330_05_Portal:Title' => 'New Portal Experience~~',
+	'UI:WelcomePopup:Message:330_05_Portal:Description' => '<div>This new version natively brings a more modern, flexible, and responsive experience to the portal, with a look and feel aligned with the console.</div>
+<br>
+<div>We’ve redesigned the navigation for a clearer and more consistent experience, enhanced the flexibility of menus and dashboards, and introduced responsive cards that adapt to different screen sizes. "My Profile" has also been enhanced, allowing users to manage their account and MFA settings more easily.</div>
+<br>
+<div>The portal can also be customized with your own look and feel, helping you deliver a more consistent and branded experience to your users.</div>~~',
 ]);

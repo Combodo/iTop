@@ -38,4 +38,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 <div>MFA, встроенная прямо в основную функциональность, усиливает общую безопасность и обеспечивает более плавный и последовательный пользовательский опыт.</div>
 <br>
 <div>Рекомендуем проверить свои настройки и включить MFA для повышения защиты учётной записи.</div>',
+	'UI:WelcomePopup:Message:330_05_Portal:Title' => 'New Portal Experience~~',
+	'UI:WelcomePopup:Message:330_05_Portal:Description' => '<div>This new version natively brings a more modern, flexible, and responsive experience to the portal, with a look and feel aligned with the console.</div>
+<br>
+<div>We’ve redesigned the navigation for a clearer and more consistent experience, enhanced the flexibility of menus and dashboards, and introduced responsive cards that adapt to different screen sizes. "My Profile" has also been enhanced, allowing users to manage their account and MFA settings more easily.</div>
+<br>
+<div>The portal can also be customized with your own look and feel, helping you deliver a more consistent and branded experience to your users.</div>~~',
 ]);

@@ -3249,4 +3249,48 @@ TXT
 				return (int)$sLimit;
 		}
 	}
+
+	/**
+	 * @since 3.3.0 N°9875
+	 * Open archive and raise appropriate exception.
+	 * Warning: do not forget to close archive afterwhile
+	 * @param string $sArchiveFilePath
+	 * @param int|null $flags
+	 * @return ZipArchive
+	 * @throws \Exception
+	 */
+	public static function ZipArchiveOpen(string $sArchiveFilePath, int|null $flags = null): ZipArchive
+	{
+		$oZip = new ZipArchive();
+		if (is_null($flags)) {
+			$code = $oZip->open($sArchiveFilePath);
+		} else {
+			$code = $oZip->open($sArchiveFilePath, $flags);
+		}
+		if (true !== $code) {
+			//ZipArchive::ZIP_ER_NOZIP : 19
+			if ($code === 19) {
+				throw new \Exception(sprintf('Cannot open zip file due to inconsistent or empty content'));
+			}
+
+			throw new \Exception(sprintf('Cannot open zip file due to error code %s', $code));
+		}
+		return $oZip;
+	}
+
+	/**
+	* @since 3.3.0 N°9875
+	* @param string $sDirectory
+	* @param string $sPrefix
+	* @return ZipArchive
+	* @throws \Exception
+	 */
+	public static function ZipArchiveCreateWithTempNam(string $sDirectory, string $sPrefix): ZipArchive
+	{
+		$sTempnam = tempnam($sDirectory, $sPrefix);
+		unlink($sTempnam);
+		$sArchiveName = $sTempnam.'.zip';
+
+		return self::ZipArchiveOpen($sArchiveName, ZipArchive::CREATE);
+	}
 }

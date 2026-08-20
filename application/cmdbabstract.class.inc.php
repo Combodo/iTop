@@ -3066,8 +3066,12 @@ EOF
 							}
 							$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
 							if (is_array($aAllowedValues) && count($aAllowedValues) == 1) {
-								$aValues = array_keys($aAllowedValues);
-								$this->Set($sAttCode, $aValues[0]);
+								// linkset are ignored
+								// N°9622 - Error in the user story life cycle
+								if (!$oAttDef->IsLinkSet()) {
+									$aValues = array_keys($aAllowedValues);
+									$this->Set($sAttCode, $aValues[0]);
+								}
 							}
 						}
 					}

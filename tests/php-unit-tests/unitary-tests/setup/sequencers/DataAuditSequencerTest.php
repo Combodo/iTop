@@ -376,6 +376,27 @@ class DataAuditSequencerTest extends ItopTestCase
 		self::assertFalse($this->InvokeNonPublicMethod(DataAuditSequencer::class, "IsDataAuditRequired", $oSequencer));
 	}
 
+	public function testIsDataAuditRequired_NoAuditWhenEnvProductionFolderIsEmpty()
+	{
+		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);
+		$oRunTimeEnvironment->expects($this->once())->method('GetApplicationVersion')
+			->willReturn(['product_version' => ITOP_VERSION_FULL]);
+		$oRunTimeEnvironment->expects($this->once())->method("GetFinalEnv")->willReturn("production-gabuzomeu");
+
+		$sFolder = APPROOT.'env-production-gabuzomeu';
+		if (! is_dir($sFolder)) {
+			mkdir($sFolder);
+			$this->aFileToClean [] = $sFolder;
+		}
+
+		$aAdditionalParams = [
+			'mode' => 'upgrade',
+			'optional_steps' => ['setup-audit' => true ],
+		];
+		$oSequencer = new DataAuditSequencer($this->GivenParams($aAdditionalParams), $oRunTimeEnvironment);
+		self::assertFalse($this->InvokeNonPublicMethod(DataAuditSequencer::class, "IsDataAuditRequired", $oSequencer));
+	}
+
 	public function testIsDataAuditRequired_NoAuditTriggeredBecauseDisabled()
 	{
 		$oRunTimeEnvironment = $this->createMock(\RunTimeEnvironment::class);

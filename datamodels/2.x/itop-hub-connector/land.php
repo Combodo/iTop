@@ -113,8 +113,10 @@ function DoLanding(WebPage $oPage)
 		file_put_contents($sZipArchiveFile, $sArchive);
 		// Expand the content of extension-x.zip into  utils::GetDataPath().'downloaded-extensions/'
 		// where the installation will load the extension automatically
-		$oZip = new ZipArchive();
-		if (!$oZip->open($sZipArchiveFile)) {
+
+		try {
+			$oZip = utils::ZipArchiveOpen($sZipArchiveFile);
+		} catch (\Exception $e) {
 			throw new Exception('Unable to open "'.$sZipArchiveFile.'" for extraction. Make sure that the directory "'.'data/downloaded-extensions/'.'" is writable for the web server.');
 		}
 		for ($idx = 0; $idx < $oZip->numFiles; $idx++) {

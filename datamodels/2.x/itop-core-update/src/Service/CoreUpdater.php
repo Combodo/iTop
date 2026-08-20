@@ -217,8 +217,7 @@ final class CoreUpdater
 			throw new Exception(Dict::S('iTopUpdate:Error:BadFileFormat'));
 		}
 
-		$oArchive = new ZipArchive();
-		$oArchive->open($sArchiveFile);
+		$oArchive = utils::ZipArchiveOpen($sArchiveFile);
 
 		self::RRmdir(self::UPDATE_DIR);
 		SetupUtils::builddir(self::UPDATE_DIR);

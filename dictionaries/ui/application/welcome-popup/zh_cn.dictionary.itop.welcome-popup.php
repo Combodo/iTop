@@ -39,4 +39,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 <div>MFA, 现已直接集成至核心使用流程, 在强化整体安全防护能力的同时, 保障用户获得更流畅统一的使用体验.</div>
 <br>
 <div>我们建议您检查账户设置并开启多因子认证，以获得更强的账户安全防护.</div>',
+	'UI:WelcomePopup:Message:330_05_Portal:Title' => 'New Portal Experience~~',
+	'UI:WelcomePopup:Message:330_05_Portal:Description' => '<div>This new version natively brings a more modern, flexible, and responsive experience to the portal, with a look and feel aligned with the console.</div>
+<br>
+<div>We’ve redesigned the navigation for a clearer and more consistent experience, enhanced the flexibility of menus and dashboards, and introduced responsive cards that adapt to different screen sizes. "My Profile" has also been enhanced, allowing users to manage their account and MFA settings more easily.</div>
+<br>
+<div>The portal can also be customized with your own look and feel, helping you deliver a more consistent and branded experience to your users.</div>~~',
 ]);
