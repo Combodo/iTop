@@ -37,6 +37,22 @@ class ExtensionsMapTest extends ItopTestCase
 		$this->assertEquals($expected, array_keys($aExtensions));
 	}
 
+	public function testDeclareExtensionAsRemoved()
+	{
+		$oExtensionsMap = $this->GiveExtensionMapWithAllTypeOfExtensions();
+		//non existing extension
+		$aExtensionCodes = ['unexisting_extension_code' => 'label_unexisting_extension_code'];
+		//extension ok
+		$aExtensionCodes ['installed_ext1'] = $oExtensionsMap->GetFromExtensionCode('installed_ext1')->sLabel;
+		//search extension by label ko
+		$sLabel = $oExtensionsMap->GetFromExtensionCode('installed_ext_in_package')->sLabel;
+		$aExtensionCodes [$sLabel] = $sLabel;
+
+		$oExtensionsMap->DeclareExtensionAsRemoved($aExtensionCodes);
+
+		$this->assertEquals(["installed_ext1"], ModuleDiscovery::GetRemovedExtensionCodes());
+	}
+
 	public function testGetAllExtensionsToDisplayInSetup_WithExtensionsHavingDependencyIssues()
 	{
 		$oExtensionsMap = $this->GiveExtensionMapWithAllTypeOfExtensions();
@@ -137,6 +153,7 @@ class ExtensionsMapTest extends ItopTestCase
 	{
 		$oExt = new iTopExtension();
 		$oExt->sCode = $sCode;
+		$oExt->sLabel = "LABEL_".$sCode;
 		$oExt->sVersion = $sVersion;
 		$oExt->bVisible = $bVisible;
 		$oExt->sSource = $sSource;
@@ -147,6 +164,7 @@ class ExtensionsMapTest extends ItopTestCase
 
 	private function AddExtension(iTopExtensionsMap $oExtensionsMap, iTopExtension $oExt, string $mapKeyInItopExtensionMap)
 	{
+		$this->InvokeNonPublicMethod(iTopExtensionsMap::class, 'AddExtension', $oExtensionsMap, [$oExt]);
 		$aMap = $this->GetNonPublicProperty($oExtensionsMap, $mapKeyInItopExtensionMap);
 		$aMap[$oExt->sCode.'/'.$oExt->sVersion] = $oExt;
 		$this->SetNonPublicProperty($oExtensionsMap, $mapKeyInItopExtensionMap, $aMap);

@@ -230,6 +230,7 @@ class ModuleDiscovery
 	}
 
 	/**
+	* @since 3.3
 	* @param array<\iTopExtension> $aRemovedExtension
 	* @return void
 	 */
@@ -239,6 +240,19 @@ class ModuleDiscovery
 			self::ResetCache();
 		}
 		self::$m_aRemovedExtensions = $aRemovedExtension;
+	}
+
+	/**
+	* @since 3.3
+	* @return string[]
+	*/
+	public static function GetRemovedExtensionCodes(): array
+	{
+		$aRes = [];
+		foreach (self::$m_aRemovedExtensions as $oExtension) {
+			$aRes [] = $oExtension->sCode;
+		}
+		return $aRes;
 	}
 
 	private static function Init($aSearchDirs): void
