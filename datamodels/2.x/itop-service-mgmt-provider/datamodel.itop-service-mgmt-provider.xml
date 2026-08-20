@@ -2786,7 +2786,7 @@ public function PrefillSearchForm(&$aContextParam)
       <do_search>1</do_search>
     </menu>
     <menu id="ServiceCatalog" xsi:type="DashboardMenuNode" _delta="define">
-      <rank>10</rank>
+      <rank>5</rank>
       <parent>ServiceManagement</parent>
       <definition>
         <layout>DashboardLayoutTwoCols</layout>
