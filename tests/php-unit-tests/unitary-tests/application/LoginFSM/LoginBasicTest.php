@@ -30,7 +30,7 @@ class LoginBasicTest extends ItopDataTestCase
 	{
 		// Given
 		$oLoginBasic = new LoginBasic();
-		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer '.base64_encode("Login:BasicTest");
+		$_SERVER['HTTP_AUTHORIZATION'] = 'Basic '.base64_encode("Login:BasicTest");
 
 		// When
 		$_SESSION = [];
