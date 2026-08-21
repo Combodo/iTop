@@ -28,3 +28,9 @@ $ibo-top-bar-quick-action--icon--color--on-active: $ibo-color-primary-800 !defau
     color: $ibo-top-bar-quick-action--icon--color--on-active;
   }
 }
+
+.ibo-top-bar-quick-action-separator {
+  width: 2px;
+  background-color: $ibo-color-grey-300;
+  margin: 0 8px;
+}

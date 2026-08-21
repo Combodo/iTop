@@ -21,6 +21,7 @@
 namespace Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBarAction;
 
 use JSPopupMenuItem;
+use SeparatorPopupMenuItem;
 use URLPopupMenuItem;
 
 /**
@@ -32,7 +33,7 @@ use URLPopupMenuItem;
  */
 class TopBarQuickActionFactory
 {
-	public static function MakeFromApplicationPopupItem($oApplicationPopupItem)
+	public static function MakeFromApplicationPopupItem($oApplicationPopupItem): ?TopBarQuickAction
 	{
 		if ($oApplicationPopupItem instanceof JSPopupMenuItem) {
 			$oTopBarAction = new TopBarQuickActionJS(
@@ -56,9 +57,13 @@ class TopBarQuickActionFactory
 			$oTopBarAction->SetUrl($oApplicationPopupItem->GetUrl());
 			$oTopBarAction->SetTarget($oApplicationPopupItem->GetTarget());
 			return $oTopBarAction;
+		} elseif ($oApplicationPopupItem instanceof SeparatorPopupMenuItem) {
+			$oTopBarAction = new TopBarQuickActionSeparator($oApplicationPopupItem->GetUID());
+			$oTopBarAction->SetCSSClasses($oApplicationPopupItem->GetCssClasses());
+			return $oTopBarAction;
 		}
 
-		//TODO How to handle other types of ApplicationPopupMenuItem? For now, we return null.
+		// Should never happen, but just in case a new type is added, return null
 		return null;
 	}
 }

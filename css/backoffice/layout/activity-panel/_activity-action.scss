@@ -13,6 +13,9 @@ $ibo-activity-panel--activity-action--icon--height: 100% !default;
 $ibo-activity-panel--activity-action--icon--width: $ibo-activity-panel--activity-action--icon--height !default;
 $ibo-activity-panel--activity-action--icon--font-size: $ibo-font-size-200 !default;
 $ibo-activity-panel--activity-action--icon--line-height: 33px !default;
+$ibo-activity-panel--activity-action-separator--width: 24px !default;
+$ibo-activity-panel--activity-action-separator--height: 1px !default;
+$ibo-activity-panel--activity-action-separator--background-color: $ibo-color-grey-500 !default;
 
 
 .ibo-activity-panel--activity-actions {
@@ -59,4 +62,12 @@ $ibo-activity-panel--activity-action--icon--line-height: 33px !default;
   &.ibo-is-hidden{
     display: none;
   }
+}
+
+.ibo-activity-panel--activity-action-separator {
+  display: block;
+  width: $ibo-activity-panel--activity-action-separator--width;
+  height: $ibo-activity-panel--activity-action-separator--height;
+  margin: auto;
+  background-color: $ibo-activity-panel--activity-action-separator--background-color;
 }

@@ -267,14 +267,19 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
 }
 
 .ibo-field--label {
-  .ibo-field--action {
+  .ibo-field--action:not(.ibo-button-separator) {
     width: 20px;
     height: 20px;
     padding: 0;
     border-radius: $ibo-field--fullscreen-toggler--border-radius;
     font-size: $ibo-font-size-50;
+    vertical-align: center;
     ~ .ibo-field--action {
       margin-left: 2px;
     }
+  }
+  .ibo-field--action.ibo-button-separator {
+    margin: 0 2px;
+    vertical-align: center;
   }
 }

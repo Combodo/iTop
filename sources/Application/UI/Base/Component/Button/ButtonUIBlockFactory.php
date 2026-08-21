@@ -20,9 +20,11 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\Button;
 
+use ApplicationPopupMenuItem;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Dict;
 use JSPopupMenuItem;
+use SeparatorPopupMenuItem;
 use URLPopupMenuItem;
 use utils;
 
@@ -378,7 +380,14 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		return $oButton;
 	}
 
-	public static function MakeIconButtonFromApplicationPopupMenuItem($oPopupItem, $sColor = Button::ENUM_COLOR_SCHEME_NEUTRAL, $sActionType = Button::ENUM_ACTION_TYPE_ALTERNATIVE)
+	/**
+	 * @param ApplicationPopupMenuItem $oPopupItem
+	 * @param string $sColor
+	 * @param string $sActionType
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button|\Combodo\iTop\Application\UI\Base\Component\Button\ButtonSeparator|null
+	 */
+	public static function MakeIconButtonFromApplicationPopupMenuItem(ApplicationPopupMenuItem $oPopupItem, $sColor = Button::ENUM_COLOR_SCHEME_NEUTRAL, $sActionType = Button::ENUM_ACTION_TYPE_ALTERNATIVE): Button|ButtonSeparator|null
 	{
 		if ($oPopupItem instanceof JSPopupMenuItem) {
 			$sTooltip = $oPopupItem->GetTooltip();
@@ -416,14 +425,25 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 			$oButton->SetColor($sColor);
 
 			return $oButton;
+		} elseif ($oPopupItem instanceof SeparatorPopupMenuItem) {
+			$oSeparator = new ButtonSeparator($oPopupItem->GetUID());
+			$oSeparator->SetCSSClasses($oPopupItem->GetCssClasses());
+			return $oSeparator;
 		}
 
-		//TODO How to handle other types of ApplicationPopupMenuItem? For now, we return null.
+		// Should never happen, but just in case a new type is added, return null
 
 		return null;
 	}
 
-	public static function MakeButtonFromApplicationPopupMenuItem($oPopupItem, $sColor = Button::ENUM_COLOR_SCHEME_NEUTRAL, $sActionType = Button::ENUM_ACTION_TYPE_ALTERNATIVE)
+	/**
+	 * @param ApplicationPopupMenuItem $oPopupItem
+	 * @param string $sColor
+	 * @param string $sActionType
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button|\Combodo\iTop\Application\UI\Base\Component\Button\ButtonSeparator|null
+	 */
+	public static function MakeButtonFromApplicationPopupMenuItem(ApplicationPopupMenuItem $oPopupItem, $sColor = Button::ENUM_COLOR_SCHEME_NEUTRAL, $sActionType = Button::ENUM_ACTION_TYPE_ALTERNATIVE): Button|ButtonSeparator|null
 	{
 		if ($oPopupItem instanceof JSPopupMenuItem) {
 			$oButton = self::MakeForAction(
@@ -466,9 +486,13 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 			}
 
 			return $oButton;
+		} elseif ($oPopupItem instanceof SeparatorPopupMenuItem) {
+			$oSeparator = new ButtonSeparator($oPopupItem->GetUID());
+			$oSeparator->SetCSSClasses($oPopupItem->GetCssClasses());
+			return $oSeparator;
 		}
 
-		//TODO How to handle other types of ApplicationPopupMenuItem? For now, we return null.
+		// Should never happen, but just in case a new type is added, return null
 
 		return null;
 	}

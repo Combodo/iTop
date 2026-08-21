@@ -72,7 +72,7 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 
 		if (isset($aParams['actions'])) {
 			//TODO make this a configuration parameter
-			$iMaxActions = 2;
+			$iMaxActions = 50;
 			$aActions = [];
 			// Create a button for a few action or a kebab button for multiple actions that a more than what's configured
 			if (count($aParams['actions']) > $iMaxActions) {

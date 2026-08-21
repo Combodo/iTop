@@ -24,6 +24,7 @@ use ApplicationPopupMenuItem;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use JSPopupMenuItem;
+use SeparatorPopupMenuItem;
 use URLPopupMenuItem;
 
 /**
@@ -61,24 +62,36 @@ class ActivityPanelActionFactory
 				$aSectionPopupItems = [$aSectionPopupItems];
 			}
 
+			// Special index as separators aren't meant to be multiple action across different caselogs
+			$iSectionSeparatorIndex = 0;
 			foreach ($aSectionPopupItems as $oPopupItem) {
 				if (!$oPopupItem instanceof ApplicationPopupMenuItem) {
 					continue;
 				}
 
 				$sUid = $oPopupItem->GetUID();
+				if ($oPopupItem instanceof SeparatorPopupMenuItem) {
+					$iSectionSeparatorIndex++;
+					$sUid = 'ibo-activity-panel--activity-action-separator--'.$iSectionSeparatorIndex;
+				}
 				if (!isset($aActionsByUid[$sUid])) {
 					$oActivityAction = static::MakeFromApplicationPopupItem($oPopupItem);
 					if ($oActivityAction === null) {
 						continue;
 					}
 
-					$oPopoverMenu = new PopoverMenu($oActivityAction->GetId().'-menu');
-					$oPopoverMenu->SetContainer(PopoverMenu::ENUM_CONTAINER_BODY);
-					$oPopoverMenu->SetTogglerFromBlock($oActivityAction);
-					$oActivityAction->SetPopoverMenu($oPopoverMenu);
+					if (false === ($oActivityAction instanceof ActivityPanelActionSeparator)) {
+						$oPopoverMenu = new PopoverMenu($oActivityAction->GetId().'-menu');
+						$oPopoverMenu->SetContainer(PopoverMenu::ENUM_CONTAINER_BODY);
+						$oPopoverMenu->SetTogglerFromBlock($oActivityAction);
+						$oActivityAction->SetPopoverMenu($oPopoverMenu);
+					}
 
 					$aActionsByUid[$sUid] = $oActivityAction;
+				}
+
+				if ($aActionsByUid[$sUid] instanceof ActivityPanelActionSeparator) {
+					continue;
 				}
 
 				$oPopupItemForPopoverMenuItem = clone $oPopupItem;
@@ -108,9 +121,7 @@ class ActivityPanelActionFactory
 			$oAction->SetIncludeJSFiles($oPopupItem->GetLinkedScripts());
 
 			return $oAction;
-		}
-
-		if ($oPopupItem instanceof URLPopupMenuItem) {
+		} elseif ($oPopupItem instanceof URLPopupMenuItem) {
 			$oAction = new ActivityPanelActionURL(
 				$oPopupItem->GetLabel(),
 				$oPopupItem->GetIconClass(),
@@ -121,9 +132,11 @@ class ActivityPanelActionFactory
 			$oAction->SetTarget($oPopupItem->GetTarget());
 
 			return $oAction;
+		} elseif ($oPopupItem instanceof SeparatorPopupMenuItem) {
+			return new ActivityPanelActionSeparator($oPopupItem->GetUID());
 		}
 
-		//TODO How to handle other types of ApplicationPopupMenuItem? For now, we return null.
+		// Should never happen, but just in case a new type is added, return null
 
 		return null;
 	}
