@@ -185,7 +185,10 @@ class XMLDataLoader
 		foreach ($oXml as $sClass => $oXmlObj) {
 			if (!MetaModel::IsValidClass($sClass)) {
 				SetupLog::Error("Unknown class - $sClass");
-				continue; // Trying to load non-existing class, ignore it
+if ($bUpdateKeyCacheOnly) {
+					continue; // A class from the previous data model may no longer exist during an upgrade
+				}
+				throw(new Exception("Unknown class - $sClass"));
 			}
 
 			$iSrcId = (int)$oXmlObj['id']; // Mandatory to cast
