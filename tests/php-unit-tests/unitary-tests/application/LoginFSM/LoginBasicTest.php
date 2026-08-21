@@ -38,11 +38,43 @@ class LoginBasicTest extends ItopDataTestCase
 		$sActualRes = $oLoginBasic->LoginAction(LoginWebPage::LOGIN_STATE_MODE_DETECTION, $iErrorCode);
 
 		// Then
-		$this->assertTrue(Session::IsSet('login_mode'));
-		$this->assertEquals(LoginWebPage::LOGIN_FSM_CONTINUE, $sActualRes);
+		$this->assertEquals('basic', $_SESSION['login_mode'], 'Login mode should have detected basic mode');
+		$this->assertEquals(LoginWebPage::LOGIN_FSM_CONTINUE, $sActualRes, 'No Login FSM error should have been detected');
 	}
 
-	public function testOnModeDetectionForToken()
+	public function testOnModeDetectionForRedirect()
+	{
+		// Given
+		$oLoginBasic = new LoginBasic();
+		$_SERVER['REDIRECT_HTTP_AUTHORIZATION'] = 'Basic '.base64_encode('Login:BasicTest');
+
+		// When
+		$_SESSION = [];
+		$iErrorCode = 0;
+		$sActualRes = $oLoginBasic->LoginAction(LoginWebPage::LOGIN_STATE_MODE_DETECTION, $iErrorCode);
+
+		// Then
+		$this->assertEquals('basic', $_SESSION['login_mode'], 'Login mode should have detected basic mode');
+		$this->assertEquals(LoginWebPage::LOGIN_FSM_CONTINUE, $sActualRes, 'No Login FSM error should have been detected');
+	}
+
+	public function testOnModeDetectionForBasicLoginPassword()
+	{
+		// Given
+		$oLoginBasic = new LoginBasic();
+		$_SERVER['REDIRECT_HTTP_AUTHORIZATION'] = 'Basic '.base64_encode('Login:BasicTest');
+
+		// When
+		$_SESSION = [];
+		$iErrorCode = 0;
+		$sActualRes = $oLoginBasic->LoginAction(LoginWebPage::LOGIN_STATE_MODE_DETECTION, $iErrorCode);
+
+		// Then
+		$this->assertEquals('basic', $_SESSION['login_mode'], 'Login mode should have detected basic mode');
+		$this->assertEquals(LoginWebPage::LOGIN_FSM_CONTINUE, $sActualRes, 'No Login FSM error should have been detected');
+	}
+
+	public function testOnModeDetectionForBearerToken()
 	{
 		// Given
 		$oLoginBasic = new LoginBasic();
@@ -54,7 +86,7 @@ class LoginBasicTest extends ItopDataTestCase
 		$sActualRes = $oLoginBasic->LoginAction(LoginWebPage::LOGIN_STATE_MODE_DETECTION, $iErrorCode);
 
 		// Then
-		$this->assertFalse(Session::IsSet('login_mode'));
-		$this->assertEquals(LoginWebPage::LOGIN_FSM_CONTINUE, $sActualRes);
+		$this->assertFalse(Session::IsSet('login_mode'), 'No basic login mode should have been detected');
+		$this->assertEquals(LoginWebPage::LOGIN_FSM_CONTINUE, $sActualRes, 'No Login FSM error should have been detected');
 	}
 }
