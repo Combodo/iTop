@@ -62,7 +62,8 @@ class LoginBasicTest extends ItopDataTestCase
 	{
 		// Given
 		$oLoginBasic = new LoginBasic();
-		$_SERVER['REDIRECT_HTTP_AUTHORIZATION'] = 'Basic '.base64_encode('Login:BasicTest');
+		$_SERVER['PHP_AUTH_USER'] = 'Login';
+		$_SERVER['PHP_AUTH_PW'] = 'Passwd';
 
 		// When
 		$_SESSION = [];
