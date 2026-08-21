@@ -710,7 +710,7 @@ class iTopExtensionsMap
 		}
 	}
 
-	public static function GetChoicesFromDatabase(Config $oConfig): array|false
+	public function GetChoicesFromDatabase(Config $oConfig): array|false
 	{
 		try {
 			if (CMDBSource::DBName() === null) {
@@ -739,7 +739,7 @@ class iTopExtensionsMap
 	 */
 	public function GetSelectedExtensions(Config $oConfig, array $aAddedExtensions, array $aRemovedExtensions): array
 	{
-		$aDbChoices = self::GetChoicesFromDatabase($oConfig);
+		$aDbChoices = $this->GetChoicesFromDatabase($oConfig);
 		foreach ($aDbChoices as $i => $sChoice) {
 			if (in_array($sChoice, $aRemovedExtensions)) {
 				unset($aDbChoices[$i]);

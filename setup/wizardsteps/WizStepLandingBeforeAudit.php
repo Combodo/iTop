@@ -74,7 +74,6 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 
 			// Component selection in previous screens
 			if ($this->oWizard->GetParameter('selected_components', '[]') === '[]') {
-
 				$aSelectedComponents = $this->GetSelectedComponents($this->aSteps, $this->oWizard->GetParameter('selected_extensions', '[]'));
 				$this->oWizard->SetParameter('selected_components', json_encode($aSelectedComponents));
 			} else {
