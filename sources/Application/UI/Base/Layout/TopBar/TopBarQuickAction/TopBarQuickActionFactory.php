@@ -32,7 +32,7 @@ use URLPopupMenuItem;
  */
 class TopBarQuickActionFactory
 {
-	public static function MakeFromApplicationPopupItem($oApplicationPopupItem): TopBarQuickAction
+	public static function MakeFromApplicationPopupItem($oApplicationPopupItem)
 	{
 		if ($oApplicationPopupItem instanceof JSPopupMenuItem) {
 			$oTopBarAction = new TopBarQuickActionJS(
@@ -43,6 +43,8 @@ class TopBarQuickActionFactory
 			);
 			$oTopBarAction->SetJsCode($oApplicationPopupItem->GetJsCode());
 			$oTopBarAction->SetUrl($oApplicationPopupItem->GetUrl());
+
+			$oTopBarAction->SetIncludeJSFiles($oApplicationPopupItem->GetLinkedScripts());
 			return $oTopBarAction;
 		} elseif ($oApplicationPopupItem instanceof URLPopupMenuItem) {
 			$oTopBarAction = new TopBarQuickActionURL(
@@ -55,5 +57,8 @@ class TopBarQuickActionFactory
 			$oTopBarAction->SetTarget($oApplicationPopupItem->GetTarget());
 			return $oTopBarAction;
 		}
+
+		//TODO How to handle other types of ApplicationPopupMenuItem? For now, we return null.
+		return null;
 	}
 }

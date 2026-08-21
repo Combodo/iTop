@@ -88,7 +88,6 @@ class ActivityPanelActionFactory
 				$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oPopupItemForPopoverMenuItem);
 				$oPopoverMenuItem->AddDataAttribute('caselog-attribute-code', (string) $sSectionId);
 				$aActionsByUid[$sUid]->GetPopoverMenu()->AddItem((string) $sSectionId, $oPopoverMenuItem);
-				$aActionsByUid[$sUid]->AddPopupItem((string) $sSectionId, $oPopupItem);
 			}
 		}
 
@@ -123,6 +122,8 @@ class ActivityPanelActionFactory
 
 			return $oAction;
 		}
+
+		//TODO How to handle other types of ApplicationPopupMenuItem? For now, we return null.
 
 		return null;
 	}

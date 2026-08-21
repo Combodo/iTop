@@ -266,9 +266,15 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
   @extend %ibo-hyperlink-inherited-colors;
 }
 
-.ibo-field--action {
-  padding: 3px 6px;
-  ~ .ibo-field--action {
-    margin-left: 2px;
+.ibo-field--label {
+  .ibo-field--action {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border-radius: $ibo-field--fullscreen-toggler--border-radius;
+    font-size: $ibo-font-size-50;
+    ~ .ibo-field--action {
+      margin-left: 2px;
+    }
   }
 }

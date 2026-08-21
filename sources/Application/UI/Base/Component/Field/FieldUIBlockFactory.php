@@ -10,6 +10,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Field;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuFactory;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
@@ -71,18 +72,24 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 
 		if (isset($aParams['actions'])) {
 			//TODO make this a configuration parameter
-			$iMaxActions = 3;
+			$iMaxActions = 2;
 			$aActions = [];
 			// Create a button for a few action or a kebab button for multiple actions that a more than what's configured
 			if (count($aParams['actions']) > $iMaxActions) {
-				$oKebabButton = ButtonUIBlockFactory::MakeIconAction('fa-ellipsis-v', 'More actions', 'kebab');
+				$oKebabButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', 'More actions', 'kebab');
+				$oKebabButton->AddCSSClass('ibo-field--action');
+
 				$aKebabActions = [];
 				foreach ($aParams['actions'] as $oAction) {
 					$aKebabActions[] = $oAction->GetMenuItem();
 				}
+				//TODO: Make a dict entry for the kebab menu label
 				$oKebabPopoverMenu = PopoverMenuFactory::MakeMenuForActions($oField->GetId().'--kebab-menu', $aKebabActions);
+				$oKebabPopoverMenu->SetTogglerFromBlock($oKebabButton);
+				$oKebabPopoverMenu->SetContainer(PopoverMenu::ENUM_CONTAINER_BODY);
 
 				$aActions[] = $oKebabButton;
+				$aActions[] = $oKebabPopoverMenu;
 			} else {
 				foreach ($aParams['actions'] as $oAction) {
 					$oActionButton = ButtonUIBlockFactory::MakeIconButtonFromApplicationPopupMenuItem($oAction);

@@ -209,10 +209,13 @@ class ActivityPanelFactory
 					$aActivityItems[] = $oMenuItem;
 				}
 				if (!empty($aActivityItems)) {
-					$aActionItems['activity'] = [
-						'label' => Dict::S('UI:Layout:ActivityPanel:Tab:Activity:Title'),
-						'items' => $aActivityItems,
-					];
+					if (!array_key_exists('activity', $aActionItems)) {
+						$aActionItems['activity'] = [
+							'label' => Dict::S('UI:Layout:ActivityPanel:Tab:Activity:Title'),
+							'items' => [],
+						];
+					}
+					$aActionItems['activity']['items'] = array_merge($aActionItems['activity']['items'], $aActivityItems);
 				}
 			}
 

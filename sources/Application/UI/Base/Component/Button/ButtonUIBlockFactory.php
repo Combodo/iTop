@@ -381,20 +381,33 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	public static function MakeIconButtonFromApplicationPopupMenuItem($oPopupItem, $sColor = Button::ENUM_COLOR_SCHEME_NEUTRAL, $sActionType = Button::ENUM_ACTION_TYPE_ALTERNATIVE)
 	{
 		if ($oPopupItem instanceof JSPopupMenuItem) {
+			$sTooltip = $oPopupItem->GetTooltip();
+			if (!utils::IsNotNullOrEmptyString($sTooltip)) {
+				$sTooltip = $oPopupItem->GetLabel();
+			}
+
 			$oButton = self::MakeIconAction(
 				$oPopupItem->GetIconClass(),
-				$oPopupItem->GetTooltip()
+				$sTooltip
 			);
 
 			$oButton->SetOnClickJsCode($oPopupItem->GetJsCode());
+			foreach ($oPopupItem->GetLinkedScripts() as $sLinkedScript) {
+				$oButton->AddJsFileRelPath($sLinkedScript);
+			}
 			$oButton->SetActionType($sActionType);
 			$oButton->SetColor($sColor);
 
 			return $oButton;
 		} elseif ($oPopupItem instanceof URLPopupMenuItem) {
+			$sTooltip = $oPopupItem->GetTooltip();
+			if (!utils::IsNotNullOrEmptyString($sTooltip)) {
+				$sTooltip = $oPopupItem->GetLabel();
+			}
+
 			$oButton = self::MakeIconLink(
 				$oPopupItem->GetIconClass(),
-				$oPopupItem->GetTooltip(),
+				$sTooltip,
 				$oPopupItem->GetURL(),
 				$oPopupItem->GetTarget(),
 			);
@@ -404,6 +417,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 
 			return $oButton;
 		}
+
+		//TODO How to handle other types of ApplicationPopupMenuItem? For now, we return null.
 
 		return null;
 	}
@@ -425,6 +440,10 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 			}
 
 			$oButton->SetOnClickJsCode($oPopupItem->GetJsCode());
+
+			foreach ($oPopupItem->GetLinkedScripts() as $sLinkedScript) {
+				$oButton->AddJsFileRelPath($sLinkedScript);
+			}
 
 			return $oButton;
 		} elseif ($oPopupItem instanceof URLPopupMenuItem) {
@@ -448,6 +467,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 
 			return $oButton;
 		}
+
+		//TODO How to handle other types of ApplicationPopupMenuItem? For now, we return null.
 
 		return null;
 	}
