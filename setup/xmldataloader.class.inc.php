@@ -184,6 +184,10 @@ class XMLDataLoader
 		$aReplicas = [];
 		foreach ($oXml as $sClass => $oXmlObj) {
 			if (!MetaModel::IsValidClass($sClass)) {
+				if ($bUpdateKeyCacheOnly) {
+					SetupLog::Warning("Unknown class - $sClass");
+					continue; // A class from the previous data model may no longer exist during an upgrade
+				}
 				SetupLog::Error("Unknown class - $sClass");
 				throw(new Exception("Unknown class - $sClass"));
 			}
