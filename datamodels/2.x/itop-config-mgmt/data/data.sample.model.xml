@@ -2,163 +2,163 @@
 <Set>
   <Model alias="Model" id="176">
     <name>3PAR StoreServ 8440</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support>2028-12-31</end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="246">
     <name>860 PRO SSD</name>
-    <brand_id>17</brand_id>
+    <brand_id>11</brand_id>
     <end_of_support>2025-12-31</end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="249">
     <name>970 EVO Plus SSD</name>
-    <brand_id>17</brand_id>
+    <brand_id>11</brand_id>
     <end_of_support>2024-12-31</end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="248">
     <name>980 PRO SSD</name>
-    <brand_id>17</brand_id>
+    <brand_id>11</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="247">
     <name>990 EVO SSD</name>
-    <brand_id>17</brand_id>
+    <brand_id>11</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="85">
     <name>Altos R380 F2</name>
-    <brand_id>7</brand_id>
+    <brand_id>6</brand_id>
     <end_of_support>2021-12-31</end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="86">
     <name>Altos R380 F3</name>
-    <brand_id>7</brand_id>
+    <brand_id>6</brand_id>
     <end_of_support>2022-12-31</end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="87">
     <name>Altos R580 F2</name>
-    <brand_id>7</brand_id>
+    <brand_id>6</brand_id>
     <end_of_support>2023-12-31</end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="88">
     <name>Altos R780 F2</name>
-    <brand_id>7</brand_id>
+    <brand_id>6</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="89">
     <name>Altos R980 F2</name>
-    <brand_id>7</brand_id>
+    <brand_id>6</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="81">
     <name>AMS2000</name>
-    <brand_id>7</brand_id>
+    <brand_id>6</brand_id>
     <end_of_support>2019-12-31</end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="80">
     <name>AMS2100</name>
-    <brand_id>7</brand_id>
+    <brand_id>6</brand_id>
     <end_of_support>2020-12-31</end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="82">
     <name>AMS2300</name>
-    <brand_id>7</brand_id>
+    <brand_id>6</brand_id>
     <end_of_support>2021-12-31</end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="90">
     <name>Aspire TC</name>
-    <brand_id>7</brand_id>
+    <brand_id>6</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="112">
     <name>ASUSTOR Drivestor 2 Pro</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>NAS</type>
   </Model>
   <Model alias="Model" id="110">
     <name>ASUSTOR Drivestor 4 Gen2</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>NAS</type>
   </Model>
   <Model alias="Model" id="111">
     <name>ASUSTOR Lockerstor 4 Gen2</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>NAS</type>
   </Model>
   <Model alias="Model" id="233">
     <name>BlackWidow V4</name>
-    <brand_id>16</brand_id>
+    <brand_id>4</brand_id>
     <end_of_support></end_of_support>
     <type>Peripheral</type>
   </Model>
   <Model alias="Model" id="228">
     <name>Blade 14</name>
-    <brand_id>16</brand_id>
+    <brand_id>4</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="227">
     <name>Blade 15</name>
-    <brand_id>16</brand_id>
+    <brand_id>4</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="226">
     <name>Blade 16</name>
-    <brand_id>16</brand_id>
+    <brand_id>4</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="225">
     <name>Blade 18 (2026)</name>
-    <brand_id>16</brand_id>
+    <brand_id>4</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="229">
     <name>Blade Stealth</name>
-    <brand_id>16</brand_id>
+    <brand_id>4</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="256">
     <name>Bravia XR A95L</name>
-    <brand_id>18</brand_id>
+    <brand_id>12</brand_id>
     <end_of_support></end_of_support>
     <type>Peripheral</type>
   </Model>
   <Model alias="Model" id="264">
     <name>Canvio Advance HDD</name>
-    <brand_id>19</brand_id>
+    <brand_id>13</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="265">
     <name>Canvio Flex HDD</name>
-    <brand_id>19</brand_id>
+    <brand_id>13</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="263">
     <name>Canvio Gaming HDD</name>
-    <brand_id>19</brand_id>
+    <brand_id>13</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
@@ -183,7 +183,7 @@
   </Model>
   <Model alias="Model" id="94">
     <name>Chromebook Spin 714</name>
-    <brand_id>7</brand_id>
+    <brand_id>6</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
@@ -195,31 +195,31 @@
   </Model>
   <Model alias="Model" id="190">
     <name>D3610</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support></end_of_support>
     <type>Enclosure</type>
   </Model>
   <Model alias="Model" id="191">
     <name>D3710</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support></end_of_support>
     <type>Enclosure</type>
   </Model>
   <Model alias="Model" id="270">
     <name>DCL341L0B</name>
-    <brand_id>19</brand_id>
+    <brand_id>13</brand_id>
     <end_of_support></end_of_support>
     <type>PowerSource</type>
   </Model>
   <Model alias="Model" id="232">
     <name>DeathAdder V3</name>
-    <brand_id>16</brand_id>
+    <brand_id>4</brand_id>
     <end_of_support></end_of_support>
     <type>Peripheral</type>
   </Model>
   <Model alias="Model" id="169">
     <name>DeskJet 2755e</name>
-    <brand_id>12</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support>2023-12-31</end_of_support>
     <type>Printer</type>
   </Model>
@@ -231,115 +231,115 @@
   </Model>
   <Model alias="Model" id="260">
     <name>DR-X150</name>
-    <brand_id>18</brand_id>
+    <brand_id>12</brand_id>
     <end_of_support>2023-12-31</end_of_support>
     <type>Printer</type>
   </Model>
   <Model alias="Model" id="192">
     <name>DS8000 Series</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support>2026-12-31</end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="162">
     <name>EliteDesk 800 G6</name>
-    <brand_id>12</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support>2026-12-31</end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="199">
     <name>FlashSystem</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="193">
     <name>FlashSystem 5200</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support></end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="194">
     <name>FlashSystem 7300</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support></end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="195">
     <name>FlashSystem 9200</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support></end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="239">
     <name>Galaxy S25 Ultra</name>
-    <brand_id>17</brand_id>
+    <brand_id>11</brand_id>
     <end_of_support></end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="240">
     <name>Galaxy S25+</name>
-    <brand_id>17</brand_id>
+    <brand_id>11</brand_id>
     <end_of_support></end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="238">
     <name>Galaxy S26</name>
-    <brand_id>17</brand_id>
+    <brand_id>11</brand_id>
     <end_of_support></end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="236">
     <name>Galaxy S26 Ultra</name>
-    <brand_id>17</brand_id>
+    <brand_id>11</brand_id>
     <end_of_support></end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="237">
     <name>Galaxy S26+</name>
-    <brand_id>17</brand_id>
+    <brand_id>11</brand_id>
     <end_of_support></end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="245">
     <name>Galaxy Tab S10</name>
-    <brand_id>17</brand_id>
+    <brand_id>11</brand_id>
     <end_of_support></end_of_support>
     <type>Tablet</type>
   </Model>
   <Model alias="Model" id="243">
     <name>Galaxy Tab S10 Ultra</name>
-    <brand_id>17</brand_id>
+    <brand_id>11</brand_id>
     <end_of_support></end_of_support>
     <type>Tablet</type>
   </Model>
   <Model alias="Model" id="244">
     <name>Galaxy Tab S10+</name>
-    <brand_id>17</brand_id>
+    <brand_id>11</brand_id>
     <end_of_support></end_of_support>
     <type>Tablet</type>
   </Model>
   <Model alias="Model" id="242">
     <name>Galaxy Z Flip 7</name>
-    <brand_id>17</brand_id>
+    <brand_id>11</brand_id>
     <end_of_support></end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="241">
     <name>Galaxy Z Fold 7</name>
-    <brand_id>17</brand_id>
+    <brand_id>11</brand_id>
     <end_of_support></end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="97">
     <name>iMac</name>
-    <brand_id>8</brand_id>
+    <brand_id>2</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="160">
     <name>Inspiron 16</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
@@ -363,139 +363,139 @@
   </Model>
   <Model alias="Model" id="105">
     <name>iPad Air</name>
-    <brand_id>8</brand_id>
+    <brand_id>2</brand_id>
     <end_of_support></end_of_support>
     <type>Tablet</type>
   </Model>
   <Model alias="Model" id="106">
     <name>iPad Mini</name>
-    <brand_id>8</brand_id>
+    <brand_id>2</brand_id>
     <end_of_support></end_of_support>
     <type>Tablet</type>
   </Model>
   <Model alias="Model" id="104">
     <name>iPad Pro</name>
-    <brand_id>8</brand_id>
+    <brand_id>2</brand_id>
     <end_of_support></end_of_support>
     <type>Tablet</type>
   </Model>
   <Model alias="Model" id="103">
     <name>iPhone 14 Pro</name>
-    <brand_id>8</brand_id>
+    <brand_id>2</brand_id>
     <end_of_support>2028-12-31</end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="102">
     <name>iPhone 14 Pro Max</name>
-    <brand_id>8</brand_id>
+    <brand_id>2</brand_id>
     <end_of_support>2028-12-31</end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="101">
     <name>iPhone 15</name>
-    <brand_id>8</brand_id>
+    <brand_id>2</brand_id>
     <end_of_support></end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="100">
     <name>iPhone 15 Pro</name>
-    <brand_id>8</brand_id>
+    <brand_id>2</brand_id>
     <end_of_support></end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="99">
     <name>iPhone 15 Pro Max</name>
-    <brand_id>8</brand_id>
+    <brand_id>2</brand_id>
     <end_of_support></end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="231">
     <name>Kraken V3</name>
-    <brand_id>16</brand_id>
+    <brand_id>4</brand_id>
     <end_of_support></end_of_support>
     <type>Peripheral</type>
   </Model>
   <Model alias="Model" id="170">
     <name>LaserJet Enterprise MFP M634f</name>
-    <brand_id>12</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support>2026-12-31</end_of_support>
     <type>Printer</type>
   </Model>
   <Model alias="Model" id="167">
     <name>LaserJet Pro MFP M428fdw</name>
-    <brand_id>12</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support>2025-12-31</end_of_support>
     <type>Printer</type>
   </Model>
   <Model alias="Model" id="161">
     <name>Latitude 7440</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="96">
     <name>Mac Mini</name>
-    <brand_id>8</brand_id>
+    <brand_id>2</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="107">
     <name>Mac Pro (M2 Ultra)</name>
-    <brand_id>8</brand_id>
+    <brand_id>2</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="95">
     <name>Mac Studio</name>
-    <brand_id>8</brand_id>
+    <brand_id>2</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="98">
     <name>MacBook Pro</name>
-    <brand_id>8</brand_id>
+    <brand_id>2</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="83">
     <name>MD1400</name>
-    <brand_id>7</brand_id>
+    <brand_id>6</brand_id>
     <end_of_support>2022-12-31</end_of_support>
     <type>Enclosure</type>
   </Model>
   <Model alias="Model" id="142">
     <name>MD1400</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support>2024-12-31</end_of_support>
     <type>Enclosure</type>
   </Model>
   <Model alias="Model" id="84">
     <name>MD1420</name>
-    <brand_id>7</brand_id>
+    <brand_id>6</brand_id>
     <end_of_support>2023-12-31</end_of_support>
     <type>Enclosure</type>
   </Model>
   <Model alias="Model" id="143">
     <name>MD1420</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support>2025-12-31</end_of_support>
     <type>Enclosure</type>
   </Model>
   <Model alias="Model" id="144">
     <name>MD3400</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support>2023-12-31</end_of_support>
     <type>Enclosure</type>
   </Model>
   <Model alias="Model" id="145">
     <name>MD3420</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support>2024-12-31</end_of_support>
     <type>Enclosure</type>
   </Model>
   <Model alias="Model" id="146">
     <name>MD3460</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support>2025-12-31</end_of_support>
     <type>Enclosure</type>
   </Model>
@@ -513,61 +513,61 @@
   </Model>
   <Model alias="Model" id="266">
     <name>MG08 Series</name>
-    <brand_id>19</brand_id>
+    <brand_id>13</brand_id>
     <end_of_support>2025-12-31</end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="267">
     <name>MG09 Series</name>
-    <brand_id>19</brand_id>
+    <brand_id>13</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="268">
     <name>MG10 Series</name>
-    <brand_id>19</brand_id>
+    <brand_id>13</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="269">
     <name>MG11 Series</name>
-    <brand_id>19</brand_id>
+    <brand_id>13</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="177">
     <name>MSA 2060</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support>2026-12-31</end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="178">
     <name>MSA 2062</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support>2027-12-31</end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="179">
     <name>MSA 2070</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="187">
     <name>MSL3040</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support>2025-12-31</end_of_support>
     <type>TapeLibrary</type>
   </Model>
   <Model alias="Model" id="188">
     <name>MSL6480</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support>2027-12-31</end_of_support>
     <type>TapeLibrary</type>
   </Model>
   <Model alias="Model" id="235">
     <name>Naga Pro</name>
-    <brand_id>16</brand_id>
+    <brand_id>4</brand_id>
     <end_of_support></end_of_support>
     <type>Peripheral</type>
   </Model>
@@ -585,211 +585,211 @@
   </Model>
   <Model alias="Model" id="175">
     <name>Nimble HF20</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support>2026-12-31</end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="174">
     <name>Nimble HF40</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support>2027-12-31</end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="180">
     <name>Nimble Storage</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support></end_of_support>
     <type>NAS</type>
   </Model>
   <Model alias="Model" id="92">
     <name>Nitro 50</name>
-    <brand_id>7</brand_id>
+    <brand_id>6</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="168">
     <name>OfficeJet Pro 9025</name>
-    <brand_id>12</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support>2024-12-31</end_of_support>
     <type>Printer</type>
   </Model>
   <Model alias="Model" id="165">
     <name>Omen Obelisk</name>
-    <brand_id>12</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="158">
     <name>OptiPlex 7010</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="171">
     <name>PageWide Pro MFP 577dw</name>
-    <brand_id>12</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support>2025-12-31</end_of_support>
     <type>Printer</type>
   </Model>
   <Model alias="Model" id="166">
     <name>Pavilion Gaming Desktop</name>
-    <brand_id>12</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="230">
     <name>Phone 2</name>
-    <brand_id>16</brand_id>
+    <brand_id>4</brand_id>
     <end_of_support>2022-12-31</end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="118">
     <name>PIKE</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="204">
     <name>Power System E1080</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="207">
     <name>Power System S1022</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="203">
     <name>Power System S1024</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="148">
     <name>PowerEdge R650</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="150">
     <name>PowerEdge R660</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="147">
     <name>PowerEdge R750</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="149">
     <name>PowerEdge R760</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="151">
     <name>PowerEdge R960</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="137">
     <name>PowerMax</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="152">
     <name>PowerScale</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>NAS</type>
   </Model>
   <Model alias="Model" id="156">
     <name>PowerScale A210</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>NAS</type>
   </Model>
   <Model alias="Model" id="153">
     <name>PowerScale F210</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>NAS</type>
   </Model>
   <Model alias="Model" id="154">
     <name>PowerScale F610</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>NAS</type>
   </Model>
   <Model alias="Model" id="155">
     <name>PowerScale H510</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>NAS</type>
   </Model>
   <Model alias="Model" id="138">
     <name>PowerStore</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="273">
     <name>PowerSwitch</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>SANSwitch</type>
   </Model>
   <Model alias="Model" id="276">
     <name>PowerSwitch S5048F-ON</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>SANSwitch</type>
   </Model>
   <Model alias="Model" id="274">
     <name>PowerSwitch S5248F-ON</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>SANSwitch</type>
   </Model>
   <Model alias="Model" id="275">
     <name>PowerSwitch S5296F-ON</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>SANSwitch</type>
   </Model>
   <Model alias="Model" id="140">
     <name>PowerVault ME4 Series</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support>2025-12-31</end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="141">
     <name>PowerVault ME5 Series</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support>2026-12-31</end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="139">
     <name>PowerVault ME5024</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support>2026-12-31</end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="157">
     <name>Precision 7670</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="91">
     <name>Predator Orion 9000</name>
-    <brand_id>7</brand_id>
+    <brand_id>6</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
@@ -801,247 +801,247 @@
   </Model>
   <Model alias="Model" id="163">
     <name>ProDesk 600 G6</name>
-    <brand_id>12</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support>2025-12-31</end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="184">
     <name>ProLiant DL320 Gen11</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="185">
     <name>ProLiant DL340 Gen11</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="183">
     <name>ProLiant DL360 Gen11</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="182">
     <name>ProLiant DL380 Gen11</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="186">
     <name>ProLiant DL385 Gen11</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="120">
     <name>ROG Strix G15</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="119">
     <name>ROG Strix G16</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="117">
     <name>RS500A-E11</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="116">
     <name>RS520A-E11</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="115">
     <name>RS700A-E11</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="114">
     <name>RS720A-E11</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="261">
     <name>S300 Pro Surveillance HDD</name>
-    <brand_id>19</brand_id>
+    <brand_id>13</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="181">
     <name>StoreEasy</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support>2025-12-31</end_of_support>
     <type>NAS</type>
   </Model>
   <Model alias="Model" id="189">
     <name>StoreEver LTO-9</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support></end_of_support>
     <type>TapeLibrary</type>
   </Model>
   <Model alias="Model" id="198">
     <name>Storwize V3700</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support>2023-12-31</end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="197">
     <name>Storwize V5000</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support>2024-12-31</end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="196">
     <name>Storwize V7000</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support>2025-12-31</end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="250">
     <name>T7 Portable SSD</name>
-    <brand_id>17</brand_id>
+    <brand_id>11</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="234">
     <name>Tartarus V2</name>
-    <brand_id>16</brand_id>
+    <brand_id>4</brand_id>
     <end_of_support></end_of_support>
     <type>Peripheral</type>
   </Model>
   <Model alias="Model" id="217">
     <name>ThinkSystem DE120S</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support></end_of_support>
     <type>Enclosure</type>
   </Model>
   <Model alias="Model" id="216">
     <name>ThinkSystem DE240S</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support></end_of_support>
     <type>Enclosure</type>
   </Model>
   <Model alias="Model" id="214">
     <name>ThinkSystem DE4000H</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="213">
     <name>ThinkSystem DE4200H</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="215">
     <name>ThinkSystem DE6200H</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="208">
     <name>ThinkSystem DS2200</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support>2025-12-31</end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="212">
     <name>ThinkSystem DS240N</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support></end_of_support>
     <type>Enclosure</type>
   </Model>
   <Model alias="Model" id="209">
     <name>ThinkSystem DS4200</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support>2026-12-31</end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="210">
     <name>ThinkSystem DS6200</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support></end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="211">
     <name>ThinkSystem DS7200</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support></end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="223">
     <name>ThinkSystem SN550</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support></end_of_support>
     <type>NetworkDevice</type>
   </Model>
   <Model alias="Model" id="224">
     <name>ThinkSystem SN850</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support></end_of_support>
     <type>NetworkDevice</type>
   </Model>
   <Model alias="Model" id="219">
     <name>ThinkSystem SR630 V3</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="221">
     <name>ThinkSystem SR640 V3</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="218">
     <name>ThinkSystem SR650 V3</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="222">
     <name>ThinkSystem SR655 V3</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="220">
     <name>ThinkSystem SR670 V3</name>
-    <brand_id>15</brand_id>
+    <brand_id>9</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="201">
     <name>TS1150</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support>2025-12-31</end_of_support>
     <type>TapeLibrary</type>
   </Model>
   <Model alias="Model" id="200">
     <name>TS1160</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support></end_of_support>
     <type>TapeLibrary</type>
   </Model>
   <Model alias="Model" id="202">
     <name>TS7700</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support></end_of_support>
     <type>TapeLibrary</type>
   </Model>
   <Model alias="Model" id="123">
     <name>TUF Gaming A15</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
@@ -1077,127 +1077,127 @@
   </Model>
   <Model alias="Model" id="93">
     <name>Veriton N4640G</name>
-    <brand_id>7</brand_id>
+    <brand_id>6</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="122">
     <name>VivoBook S 14</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="109">
     <name>VS320D-RS24</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="108">
     <name>VS320D-RS26</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="259">
     <name>WF-1000XM5</name>
-    <brand_id>18</brand_id>
+    <brand_id>12</brand_id>
     <end_of_support></end_of_support>
     <type>Peripheral</type>
   </Model>
   <Model alias="Model" id="258">
     <name>WH-1000XM4</name>
-    <brand_id>18</brand_id>
+    <brand_id>12</brand_id>
     <end_of_support>2024-12-31</end_of_support>
     <type>Peripheral</type>
   </Model>
   <Model alias="Model" id="257">
     <name>WH-1000XM5</name>
-    <brand_id>18</brand_id>
+    <brand_id>12</brand_id>
     <end_of_support></end_of_support>
     <type>Peripheral</type>
   </Model>
   <Model alias="Model" id="262">
     <name>X300 Performance HDD</name>
-    <brand_id>19</brand_id>
+    <brand_id>13</brand_id>
     <end_of_support></end_of_support>
     <type>StorageSystem</type>
   </Model>
   <Model alias="Model" id="113">
     <name>XA NB3I-E12</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="173">
     <name>XP7 Storage</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support></end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="172">
     <name>XP8 Storage</name>
-    <brand_id>13</brand_id>
+    <brand_id>1</brand_id>
     <end_of_support></end_of_support>
     <type>DiskArray</type>
   </Model>
   <Model alias="Model" id="252">
     <name>Xperia 1 V</name>
-    <brand_id>18</brand_id>
+    <brand_id>12</brand_id>
     <end_of_support></end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="251">
     <name>Xperia 1 VI</name>
-    <brand_id>18</brand_id>
+    <brand_id>12</brand_id>
     <end_of_support></end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="255">
     <name>Xperia 10 IV</name>
-    <brand_id>18</brand_id>
+    <brand_id>12</brand_id>
     <end_of_support>2025-12-31</end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="254">
     <name>Xperia 10 V</name>
-    <brand_id>18</brand_id>
+    <brand_id>12</brand_id>
     <end_of_support></end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="253">
     <name>Xperia 5 V</name>
-    <brand_id>18</brand_id>
+    <brand_id>12</brand_id>
     <end_of_support></end_of_support>
     <type>MobilePhone</type>
   </Model>
   <Model alias="Model" id="159">
     <name>XPS 15</name>
-    <brand_id>11</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="206">
     <name>Z15</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support>2026-12-31</end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="205">
     <name>Z16</name>
-    <brand_id>14</brand_id>
+    <brand_id>8</brand_id>
     <end_of_support></end_of_support>
     <type>Server</type>
   </Model>
   <Model alias="Model" id="164">
     <name>ZBook Studio G9</name>
-    <brand_id>12</brand_id>
+    <brand_id>5</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
   <Model alias="Model" id="121">
     <name>ZenBook Pro 14</name>
-    <brand_id>9</brand_id>
+    <brand_id>3</brand_id>
     <end_of_support></end_of_support>
     <type>PC</type>
   </Model>
