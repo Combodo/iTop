@@ -491,8 +491,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'All the configuration items that compose this application solution',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Business processes',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'All the business processes depending on this application solution',
-	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
-	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:ApplicationSolution/Attribute:logo' => 'Logo',
+	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs',
 	'Class:ApplicationSolution/Attribute:status' => 'Status',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'active',
@@ -514,8 +514,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Application solutions',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'All the application solutions that impact this business process',
-	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
-	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:BusinessProcess/Attribute:logo' => 'Logo',
+	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs',
 	'Class:BusinessProcess/Attribute:status' => 'Status',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'active',
@@ -612,8 +612,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:MiddlewareInstance' => 'Middleware Instance',
 	'Class:MiddlewareInstance+' => '',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
-	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
-	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Middleware name',
@@ -646,8 +646,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => 'Web server name',
 	'Class:WebApplication/Attribute:webserver_name+' => '',
-	'Class:WebApplication/Attribute:logo' => 'Logo~~',
-	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:WebApplication/Attribute:logo' => 'Logo',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '',
 ]);
@@ -845,7 +845,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 
 Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Tape' => 'Tape',
-	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library',
 	'Class:Tape/Attribute:name' => 'Name',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => 'Description',
@@ -895,8 +895,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => 'Documents',
 	'Class:Software/Attribute:documents_list+' => 'All the documents linked to this software',
-	'Class:Software/Attribute:logo' => 'Logo~~',
-	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs~~',
+	'Class:Software/Attribute:logo' => 'Logo',
+	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs',
 	'Class:Software/Attribute:type' => 'Type',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'DB Server',
@@ -945,7 +945,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'All the systems where this patch is installed',
 	'Class:OSPatch/Attribute:osversion_id' => 'OS version',
 	'Class:OSPatch/Attribute:osversion_id+' => '',
-	'Class:OSPatch/Attribute:osfamily_id' => 'OS Family~~',
+	'Class:OSPatch/Attribute:osfamily_id' => 'OS Family',
 	'Class:OSPatch/Attribute:osfamily_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'OS version name',
 	'Class:OSPatch/Attribute:osversion_name+' => '',
@@ -1012,8 +1012,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:OSLicence/Attribute:osversion_id' => 'OS version',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
-	'Class:OSLicence/Attribute:osfamily_id' => 'OS Family~~',
-	'Class:OSLicence/Attribute:osfamily_id+' => '~~',
+	'Class:OSLicence/Attribute:osfamily_id' => 'OS Family',
+	'Class:OSLicence/Attribute:osfamily_id+' => '',
 	'Class:OSLicence/Attribute:osversion_name' => 'OS version name',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtual machines',
@@ -1067,8 +1067,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'OS family name',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
-	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
-	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family',
 ]);
 
 //
@@ -1078,8 +1078,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:OSFamily' => 'OS Family',
 	'Class:OSFamily+' => '',
-	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
-	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
+	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique',
+	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists',
 ]);
 
 //
@@ -1162,8 +1162,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:NetworkDeviceType' => 'Network Device Type',
 	'Class:NetworkDeviceType+' => '',
-	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
-	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
+	'Class:NetworkDeviceType/Attribute:logo' => 'Logo',
+	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Network devices',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'All the network devices corresponding to this type',
 ]);
@@ -1179,8 +1179,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Brand name',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
-	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
-	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand',
 ]);
 
 //
@@ -1368,7 +1368,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Device name',
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organization',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
 	'Class:PhysicalInterface/Attribute:org_id+' => '',
 	'Class:PhysicalInterface/Attribute:location_id' => 'Location',
 	'Class:PhysicalInterface/Attribute:location_id+' => '',
@@ -1559,8 +1559,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'ConfigMgmt:otherinfo' => 'Description',
 	'ConfigMgmt:dates' => 'Dates',
 	'Storage:moreinfo' => 'Storage specifics',
-	'Software:moreinfo' => 'Software specifics~~',
-	'Phone:moreinfo' => 'Phone specifics~~',
+	'Software:moreinfo' => 'Software specifics',
+	'Phone:moreinfo' => 'Phone specifics',
 	'Server:baseinfo' => 'General',
 	'Server:moreinfo' => 'Device specifics',
 	'Server:Date' => 'Dates',

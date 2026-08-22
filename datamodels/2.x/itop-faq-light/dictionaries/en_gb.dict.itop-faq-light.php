@@ -85,10 +85,10 @@ Dict::Add('EN GB', 'British English', 'British English', [
 ]);
 Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:ProblemManagement' => 'Problem management',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
+	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload',
 	'Menu:Problem:Shortcuts' => 'Shortcuts',
 	'Menu:FAQCategory' => 'FAQ categories',
-	'Menu:FAQCategory+' => 'A typology to categorize frequently asked questions (FAQ)',
+	'Menu:FAQCategory+' => 'A typology to categorise frequently asked questions (FAQ)',
 	'Menu:FAQ' => 'FAQs',
 	'Menu:FAQ+' => 'All Frequently Asked Questions',
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
