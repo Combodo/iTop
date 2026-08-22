@@ -17,7 +17,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'itop-core-update:UI:UpdateCoreFiles' => 'Upgrade der '.ITOP_APPLICATION_SHORT.'-Core-Dateien',
 	'iTopUpdate:UI:MaintenanceModeActive' => 'Die Anwendung läuft im Wartungsmodus, Benutzerzugriffe sind nicht möglich. Führen Sie erneut ein Setup oder Restore der Anwendung aus, um in den normalen Betriebsmodus zurückzukehren.',
 	'itop-core-update:UI:UpdateDone' => 'Upgrade abgeschlossen',
-	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Upgrade',
+	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Upgrade der Anwendung',
 	'itop-core-update/Operation:ConfirmUpdate/Title' => 'Upgrade bestätigen',
 	'itop-core-update/Operation:UpdateCoreFiles/Title' => 'Anwendungsupgrade',
 	'itop-core-update/Operation:UpdateDone/Title' => 'App-Upgrade abgeschlossen',

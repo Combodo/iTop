@@ -13,7 +13,7 @@
  */
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkFunctionalCIToTicket' => 'Verknüpfung FunctionalCI/Ticket',
-	'Class:lnkFunctionalCIToTicket+' => '',
+	'Class:lnkFunctionalCIToTicket+' => 'Diese Verknüpfung bildet ab, welche funktionalen CIs von einem Ticket betroffen sind (etwa von einer Benutzeranfrage, einem Incident, einem Change ...)',
 	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',

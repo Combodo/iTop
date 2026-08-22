@@ -14,7 +14,7 @@
  */
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Organization' => 'Organisation',
-	'Class:Organization+' => '',
+	'Class:Organization+' => 'Das kann ein Kunde, ein Provider, Ihr eigenes Unternehmen oder eine Abteilung darin sein. Organisationen lassen sich hierarchisch gliedern. Benutzer können auf Objekte bestimmter Organisationen eingeschränkt werden.',
 	'Class:Organization/Attribute:name' => 'Name',
 	'Class:Organization/Attribute:name+' => 'Gemeinsamer Name',
 	'Class:Organization/Attribute:code' => 'Kennziffer',
@@ -34,9 +34,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery-Modell-Name',
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Parent',
-	'Class:Organization/Attribute:parent_id_friendlyname+' => '',
+	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Übergeordnete Organisation',
 	'Class:Organization/Attribute:overview' => 'Überblick',
-	'Organization:Overview:FunctionalCIs' => 'CIs dieser Organisation',
+	'Organization:Overview:FunctionalCIs' => 'Konfigurationselemente dieser Organisation',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'nach Typ',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Benutzer innerhalb dieser Organisation',
 ]);
@@ -80,7 +80,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Contact' => 'Kontakt',
-	'Class:Contact+' => '',
+	'Class:Contact+' => 'Abstrakte Klasse. Ein Kontakt kann zu verschiedenen Zwecken mit Tickets und funktionalen CIs verknüpft werden, etwa für die Ticketverteilung und für Benachrichtigungen.',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
 	'Class:Contact/Attribute:name' => 'Name',
 	'Class:Contact/Attribute:name+' => '',
@@ -118,7 +118,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Person' => 'Person',
-	'Class:Person+' => '',
+	'Class:Person+' => 'Eine Art von Kontakt zur Beschreibung natürlicher Personen. Personen können zu Teams zusammengefasst und mit anderen Konfigurationselementen verknüpft werden (etwa um zu dokumentieren, wer bei einer Störung einer Anwendung zu kontaktieren ist).
+Weitere Verwendung: Der Melder einer Benutzeranfrage ist ebenso eine Person wie der Bearbeiter, der sie lösen soll.',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => 'Name',
 	'Class:Person/Attribute:name+' => '',
@@ -159,17 +160,17 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Team' => 'Team',
-	'Class:Team+' => '',
+	'Class:Team+' => 'Eine Art von Kontakt. Häufig, aber nicht nur, zur Gruppierung von Personen verwendet. Von Teams wird erwartet, dass sie die ihnen zugewiesenen Tickets im Blick behalten und einem Bearbeiter zuweisen, üblicherweise einem Mitglied des Teams.',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => 'Mitglieder',
 	'Class:Team/Attribute:persons_list+' => 'Alle Personen, die zu diesem Team gehören',
-	'Class:Team/Attribute:overview' => 'Overview~~',
-	'Team:Overview' => 'Tickets and CIs managed by the team~~',
-	'Team:Overview:ActiveTickets' => 'Active tickets~~',
-	'Team:Overview:FunctionalCIs-ByType' => 'Functional CIs~~',
-	'Team:Overview:UserRequest-ByStatus' => 'User requests by status~~',
-	'Team:Overview:UserRequest-ClosedByMonth' => 'User requests closed in last 12 months~~',
-	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months~~',
+	'Class:Team/Attribute:overview' => 'Übersicht',
+	'Team:Overview' => 'Tickets und CIs, die das Team betreut',
+	'Team:Overview:ActiveTickets' => 'Aktive Tickets',
+	'Team:Overview:FunctionalCIs-ByType' => 'Funktionale CIs',
+	'Team:Overview:UserRequest-ByStatus' => 'Benutzeranfragen nach Status',
+	'Team:Overview:UserRequest-ClosedByMonth' => 'In den letzten 12 Monaten geschlossene Benutzeranfragen',
+	'Team:Overview:UserRequest-ClosedByAgent' => 'In den letzten 12 Monaten je Bearbeiter geschlossene Benutzeranfragen',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
 	'Class:Team/Attribute:tickets_list+' => 'Alle diesem Team zugewiesenen Tickets',
 ]);
@@ -180,7 +181,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Document' => 'Dokument',
-	'Class:Document+' => '',
+	'Class:Document+' => 'Abstrakte Klasse. Ein Dokument, das mehreren Objekten gemeinsam zugeordnet werden kann und dadurch von allen relevanten Stellen aus schnell zu finden ist.',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Document/Attribute:name' => 'Name',
 	'Class:Document/Attribute:name+' => '',
@@ -216,7 +217,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:DocumentFile' => 'Dokument (Datei)',
-	'Class:DocumentFile+' => '',
+	'Class:DocumentFile+' => 'Eine Art von Dokument, die eine hochgeladene Datei enthält – in beliebigem Format: Word, PDF, Tabelle usw.',
 	'Class:DocumentFile/Attribute:file' => 'Datei',
 	'Class:DocumentFile/Attribute:file+' => '',
 ]);
@@ -227,7 +228,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:DocumentNote' => 'Dokument (Notiz)',
-	'Class:DocumentNote+' => '',
+	'Class:DocumentNote+' => 'Dient zum Speichern eines Textdokuments. HTML-Formatierung wird über den WYSIWYG-Editor unterstützt. Der Inhalt ist durchsuchbar.',
 	'Class:DocumentNote/Attribute:text' => 'Text',
 	'Class:DocumentNote/Attribute:text+' => '',
 ]);
@@ -238,7 +239,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:DocumentWeb' => 'Dokument (Web)',
-	'Class:DocumentWeb+' => '',
+	'Class:DocumentWeb+' => 'Hyperlinks auf externe Anwendungen oder Dokumente, die als Verweise auf externe Ressourcen dienen. In ihrem Inhalt kann nicht gesucht werden.',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
 ]);
@@ -249,7 +250,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Typology' => 'Typologie',
-	'Class:Typology+' => '',
+	'Class:Typology+' => 'Abstrakte Klasse. Externe Schlüssel auf eine Unterklasse von Typologie werden anstelle eines Enum-Attributs verwendet, um dynamischere Werte zu ermöglichen.',
 	'Class:Typology/Attribute:name' => 'Name',
 	'Class:Typology/Attribute:name+' => '',
 	'Class:Typology/Attribute:finalclass' => 'Typ',
@@ -262,7 +263,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:DocumentType' => 'Dokumenttyp',
-	'Class:DocumentType+' => '',
+	'Class:DocumentType+' => 'Typologie. Ein Klassifikationssystem, um Dokumente zu ordnen und logisch zu gruppieren',
 ]);
 
 //
@@ -271,7 +272,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ContactType' => 'Kontakttyp',
-	'Class:ContactType+' => '',
+	'Class:ContactType+' => 'Typologie, um Ihre Kontakte zu ordnen und für Sie logisch zu gruppieren.',
 ]);
 
 //
@@ -280,15 +281,15 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkPersonToTeam' => 'Verknüpfung Person/Team',
-	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam+' => 'Diese Verknüpfung gibt an, dass eine Person Mitglied eines Teams ist.',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
 	'Class:lnkPersonToTeam/Name+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Team',
-	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_id+' => 'Ein Team, dem die Person angehört',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Teamname',
 	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
 	'Class:lnkPersonToTeam/Attribute:person_id' => 'Person',
-	'Class:lnkPersonToTeam/Attribute:person_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_id+' => 'Ein Mitglied des Teams',
 	'Class:lnkPersonToTeam/Attribute:person_name' => 'Personenname',
 	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
 	'Class:lnkPersonToTeam/Attribute:role_id' => 'Rolle',
@@ -355,4 +356,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'theme:fullmoon' => 'Full Moon',
 	'theme:test-red' => 'Test Red (Testinstanz)',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => '%4$s für %2$s anlegen',
 ]);

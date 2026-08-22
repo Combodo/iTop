@@ -7,7 +7,7 @@
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Login:Title'                  => ITOP_APPLICATION_SHORT.' Login',
-	'UI:Login:Logo:AltText'           => ITOP_APPLICATION_SHORT.' logo~~',
+	'UI:Login:Logo:AltText'           => ITOP_APPLICATION_SHORT.'-Logo',
 	'UI:Login:Welcome'                => 'Willkommen bei '.ITOP_APPLICATION_SHORT.'!',
 	'UI:Login:IncorrectLoginPassword' => 'Ungültiges Passwort oder Login-Daten. Bitte versuchen Sie es erneut.',
 	'UI:Login:IdentifyYourself'       => 'Bitte identifizieren Sie sich, bevor Sie fortfahren.',
@@ -27,7 +27,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:ResetPwd-Error-NoEmailAtt'    => 'das Benutzerkonto ist nicht mit einer Person verknüpft, die eine Mailadresse besitzt. Bitte wenden Sie sich an Ihren Administrator. ',
 	'UI:ResetPwd-Error-NoEmail'       => 'die E-Mail-Adresse dieses Accounts fehlt. Bitte kontaktieren Sie Ihren Administrator.',
 	'UI:ResetPwd-Error-Send'          => 'Beim Versenden der E-Mail trat ein technisches Problem auf. Bitte kontaktieren Sie Ihren Administrator.',
-	'UI:ResetPwd-EmailSent'           => 'Bitte schauen Sie in Ihre Mailbox und folgen Sie den Anweisungen.',
+	'UI:ResetPwd-EmailSent'           => 'Bitte schauen Sie in Ihr E-Mail-Postfach und folgen Sie den Anweisungen. Sollten Sie keine E-Mail erhalten, prüfen Sie bitte den eingegebenen Login-Namen.',
 	'UI:ResetPwd-EmailSubject'        => 'Zurücksetzen Ihres '.ITOP_APPLICATION_SHORT.'-Passworts',
 	'UI:ResetPwd-EmailBody'           => '<body><p>Sie haben das Zurücksetzen Ihres '.ITOP_APPLICATION_SHORT.' Passworts angefordert.</p><p>Bitte folgen Sie diesem Link (funktioniert nur einmalig) : <a href="%1$s">neues Passwort eingeben</a></p>.',
 	'UI:ResetPwd-Title'               => 'Passwort zurücksetzen',

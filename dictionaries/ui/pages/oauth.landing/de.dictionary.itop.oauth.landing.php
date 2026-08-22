@@ -20,5 +20,5 @@
 
 // Navigation menu
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'core/Operation:Landing/Title' => 'OAuth token creation~~',
+	'core/Operation:Landing/Title' => 'Erstellung eines OAuth-Tokens',
 ]);

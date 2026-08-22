@@ -40,7 +40,7 @@ oder melden Sie dem '.ITOP_APPLICATION_SHORT.' Administrator diesen Fehler, weil
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Attachment' => 'Attachment',
-	'Class:Attachment+' => '',
+	'Class:Attachment+' => 'Datei – Text oder Bild –, die mit genau einem Objekt verknüpft ist. Sie kann nicht geändert, sondern nur gelöscht werden. Anhänge lassen sich ausschließlich beim Bearbeiten ihres Objekts anlegen.',
 	'Class:Attachment/Attribute:expire' => 'Läuft ab',
 	'Class:Attachment/Attribute:expire+' => '',
 	'Class:Attachment/Attribute:temp_id' => 'Temporäre ID',
@@ -84,13 +84,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (beim Herunterladen eines Attachment eines Objekts)',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger für das Herunterladen des Attachments der angegebenen Klasse oder einer Unterklasse',
-	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment creation)~~',
-	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment creation~~',
-	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email~~',
-	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
-	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment deletion)~~',
-	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment deletion~~',
-	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email' => 'Add deleted file in email~~',
-	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email+' => 'If checked, the deleted file will be automatically attached to the email when an email action is triggered~~',
-	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',
+	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (bei Erstellung eines Anhangs)',
+	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger bei Erstellung eines Anhangs an einem Objekt',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Datei an E-Mail anhängen',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'Wenn aktiviert, wird die Datei automatisch an die E-Mail angehängt, sobald eine E-Mail-Aktion ausgelöst wird',
+	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (bei Löschung eines Anhangs)',
+	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger bei Löschung eines Anhangs an einem Objekt',
+	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email' => 'Gelöschte Datei an E-Mail anhängen',
+	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email+' => 'Wenn aktiviert, wird die gelöschte Datei automatisch an die E-Mail angehängt, sobald eine E-Mail-Aktion ausgelöst wird',
+	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Ein klassenunabhängiger Trigger ist für die Klasse Attachment nicht zulässig. Bitte verwenden Sie einen spezifischen Trigger',
 ]);

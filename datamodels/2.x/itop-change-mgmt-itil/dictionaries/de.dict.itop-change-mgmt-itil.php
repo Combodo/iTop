@@ -19,14 +19,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:NewChange+' => 'Einen neuen Change erstellen',
 	'Menu:SearchChanges' => 'Suche nach Changes',
 	'Menu:SearchChanges+' => 'Unter den bestehenden Changes suchen',
-	'Menu:Change:Shortcuts' => 'Changes~~',
-	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
+	'Menu:Change:Shortcuts' => 'Changes',
+	'Menu:Change:Shortcuts+' => 'Verknüpfungen zu vordefinierten Change-Listen',
 	'Menu:WaitingAcceptance' => 'Changes, die auf Annahme warten',
 	'Menu:WaitingAcceptance+' => 'Changes, die auf Annahme warten',
 	'Menu:WaitingApproval' => 'Changes, die auf Genehmigung warten',
 	'Menu:WaitingApproval+' => 'Changes, die auf Genehmigung warten',
 	'Menu:Changes' => 'Offene Changes',
-	'Menu:Changes+' => 'Offene Changes',
+	'Menu:Changes+' => 'Alle Changes, die nicht im Status "geschlossen" sind',
 	'Menu:MyChanges' => 'Changes, die mir zugewiesen sind',
 	'Menu:MyChanges+' => 'Changes, die mir zugewiesen sind',
 	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes der letzten sieben Tage nach Kategorie',
@@ -53,7 +53,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Change' => 'Change',
-	'Class:Change+' => '',
+	'Class:Change+' => 'Abstrakte Klasse. Ein Ticket-Typ zur Behandlung von Changes, die sich auf erbrachte Services auswirken.',
 	'Class:Change/Attribute:status' => 'Status',
 	'Class:Change/Attribute:status+' => '',
 	'Class:Change/Attribute:status/Value:new' => 'Neu',
@@ -76,7 +76,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Change/Attribute:status/Value:monitored+' => '',
 	'Class:Change/Attribute:status/Value:closed' => 'Geschlossen',
 	'Class:Change/Attribute:status/Value:closed+' => '',
-	'Class:Change/Attribute:reason' => 'Ursache',
+	'Class:Change/Attribute:reason' => 'Ablehnungsgrund',
 	'Class:Change/Attribute:reason+' => '',
 	'Class:Change/Attribute:requestor_id' => 'Antragsteller',
 	'Class:Change/Attribute:requestor_id+' => '',
@@ -92,7 +92,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Change/Attribute:supervisor_group_name+' => '',
 	'Class:Change/Attribute:supervisor_id' => 'Aufsicht',
 	'Class:Change/Attribute:supervisor_id+' => '',
-	'Class:Change/Attribute:supervisor_email' => 'Aufsicht',
+	'Class:Change/Attribute:supervisor_email' => 'E-Mail der Aufsicht',
 	'Class:Change/Attribute:supervisor_email+' => '',
 	'Class:Change/Attribute:manager_group_id' => 'Manager-Team',
 	'Class:Change/Attribute:manager_group_id+' => '',
@@ -100,7 +100,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Change/Attribute:manager_group_name+' => '',
 	'Class:Change/Attribute:manager_id' => 'Manager',
 	'Class:Change/Attribute:manager_id+' => '',
-	'Class:Change/Attribute:manager_email' => 'Manager',
+	'Class:Change/Attribute:manager_email' => 'E-Mail des Managers',
 	'Class:Change/Attribute:manager_email+' => '',
 	'Class:Change/Attribute:outage' => 'Ausfall',
 	'Class:Change/Attribute:outage+' => '',
@@ -156,7 +156,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:RoutineChange' => 'Routine Change',
-	'Class:RoutineChange+' => '',
+	'Class:RoutineChange+' => 'Standard-Change mit geringem Risiko, ohne zusätzliche Genehmigung, für den ein freigegebenes Verfahren existiert, das angewendet werden muss.',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Validieren',
 	'Class:RoutineChange/Stimulus:ev_validate+' => '',
 	'Class:RoutineChange/Stimulus:ev_reject' => 'Ablehnen',
@@ -187,7 +187,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ApprovedChange' => 'Genehmigte Changes',
-	'Class:ApprovedChange+' => '',
+	'Class:ApprovedChange+' => 'Abstrakte Klasse. Normale und Notfall-Changes, die eine Genehmigung erfordern.',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Datum der Genehmigung',
 	'Class:ApprovedChange/Attribute:approval_date+' => '',
 	'Class:ApprovedChange/Attribute:approval_comment' => 'Kommentar zur Genehmigung',
@@ -222,7 +222,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:NormalChange' => 'Normaler Change',
-	'Class:NormalChange+' => '',
+	'Class:NormalChange+' => 'Change-Typ',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Datum der Annahme',
 	'Class:NormalChange/Attribute:acceptance_date+' => '',
 	'Class:NormalChange/Attribute:acceptance_comment' => 'Kommentar zur Annahme',
@@ -257,7 +257,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EmergencyChange' => 'Emergency Change',
-	'Class:EmergencyChange+' => '',
+	'Class:EmergencyChange+' => 'Change-Ticket für Notfallsituationen (Fehlfunktionen, Sicherheit). Der Genehmigungsprozess ist verkürzt, der Notfall-Change wird so schnell wie möglich umgesetzt.',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Validieren',
 	'Class:EmergencyChange/Stimulus:ev_validate+' => '',
 	'Class:EmergencyChange/Stimulus:ev_reject' => 'Ablehnen',

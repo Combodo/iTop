@@ -12,7 +12,7 @@
  *
  */
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'Menu:ConfigFileEditor' => 'Plain text editor~~',
+	'Menu:ConfigFileEditor' => 'Texteditor',
 	'itop-config/Operation:Edit/Title' => 'Konfigurations-Editor',
 	'config-edit-intro' => 'Achtung: Eine falsche Konfiguration kann dazu führen, dass '.ITOP_APPLICATION_SHORT.' für alle Benutzer unbenutzbar ist!',
 	'Menu:ConfigEditor' => 'Konfiguration',

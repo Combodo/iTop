@@ -13,7 +13,7 @@
  */
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Ticket' => 'Ticket',
-	'Class:Ticket+' => '',
+	'Class:Ticket+' => 'Abstrakte Klasse',
 	'Class:Ticket/Attribute:ref' => 'Referenz',
 	'Class:Ticket/Attribute:ref+' => '',
 	'Class:Ticket/Attribute:org_id' => 'Organisation',
@@ -53,7 +53,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Ticket/Attribute:workorders_list' => 'Arbeitsaufträge',
 	'Class:Ticket/Attribute:workorders_list+' => 'Alle Arbeitsaufträge für dieses Ticket',
 	'Class:Ticket/Attribute:finalclass' => 'Typ',
-	'Class:Ticket/Attribute:finalclass+' => '',
+	'Class:Ticket/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
 	'Class:Ticket/Attribute:operational_status' => 'Betriebsstatus',
 	'Class:Ticket/Attribute:operational_status+' => 'Berechnet aus dem Status jeder Ticketart',
 	'Class:Ticket/Attribute:operational_status/Value:ongoing' => 'In Bearbeitung',
@@ -71,7 +71,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkContactToTicket' => 'Verknüpfung Kontakt/Ticket',
-	'Class:lnkContactToTicket+' => '',
+	'Class:lnkContactToTicket+' => 'Ermöglicht es, zusätzlich zum Melder und zum Bearbeiter weitere Kontakte zu verknüpfen, um sie über den Fortgang von Tickets zu informieren.',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
@@ -97,7 +97,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:WorkOrder' => 'Arbeitsauftrag',
-	'Class:WorkOrder+' => '',
+	'Class:WorkOrder+' => 'Eine Aufgabe, die zur Lösung eines Tickets erforderlich ist und einem Team oder auch einem einzelnen Bearbeiter zugewiesen wird.',
 	'Class:WorkOrder/Attribute:name' => 'Name',
 	'Class:WorkOrder/Attribute:name+' => '',
 	'Class:WorkOrder/Attribute:status' => 'Status',
@@ -228,6 +228,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'Class:Ticket/Attribute:team_email' => 'Team email~~',
-	'Class:Ticket/Attribute:team_email+' => '~~',
+	'Class:Ticket/Attribute:team_email' => 'Team-E-Mail',
+	'Class:Ticket/Attribute:team_email+' => '',
 ]);

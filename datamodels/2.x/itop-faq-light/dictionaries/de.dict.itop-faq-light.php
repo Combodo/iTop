@@ -13,7 +13,7 @@
  */
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:FAQ' => 'FAQ',
-	'Class:FAQ+' => '',
+	'Class:FAQ+' => 'Häufig gestellte Fragen',
 	'Class:FAQ/Attribute:title' => 'Titel',
 	'Class:FAQ/Attribute:title+' => '',
 	'Class:FAQ/Attribute:summary' => 'Zusammenfassung',
@@ -37,7 +37,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:FAQCategory' => 'FAQ-Kategorie',
-	'Class:FAQCategory+' => '',
+	'Class:FAQCategory+' => 'Typologie für häufig gestellte Fragen (FAQ)',
 	'Class:FAQCategory/Attribute:name' => 'Name',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
@@ -45,12 +45,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 ]);
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:ProblemManagement' => 'Problem Management',
-	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
+	'Menu:ProblemManagement+' => 'Ein ITIL-Prozess, der die Ursachen von Incidents ermittelt sowie Known Errors und FAQs dokumentiert, um die Auslastung des Helpdesks zu verringern',
 	'Menu:Problem:Shortcuts' => 'Shortcuts',
 	'Menu:FAQCategory' => 'FAQ-Kategorien',
-	'Menu:FAQCategory+' => 'A typology to categorize frequently asked questions (FAQ)~~',
+	'Menu:FAQCategory+' => 'Eine Systematik zur Kategorisierung häufig gestellter Fragen (FAQ)',
 	'Menu:FAQ' => 'FAQs',
-	'Menu:FAQ+' => '',
+	'Menu:FAQ+' => 'Alle häufig gestellten Fragen',
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Oft gestellte Fragen (FAQs)',
 	'Brick:Portal:FAQ:Title+' => '<p>In Eile?</p><p>Sehen Sie sich die meistgestellten Fragen an (FAQs) und finden Sie (eventuell) die Antwort direkt dort.</p>',
