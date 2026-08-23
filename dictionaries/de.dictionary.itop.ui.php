@@ -385,8 +385,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 //
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:WelcomeMenu' => 'Willkommen',
-	'Menu:WelcomeMenu+' => 'Willkommen bei '.ITOP_APPLICATION_SHORT, 'Menu:WelcomeMenuPage' => 'Willkommen',
-	'Menu:WelcomeMenuPage+' => 'Willkommen bei '.ITOP_APPLICATION_SHORT, 'Menu:AdminTools' => 'Admin-Tools',
+	'Menu:WelcomeMenu+' => 'Willkommen bei '.ITOP_APPLICATION_SHORT,
+	'Menu:WelcomeMenuPage' => 'Willkommen',
+	'Menu:WelcomeMenuPage+' => 'Willkommen bei '.ITOP_APPLICATION_SHORT,
+	'Menu:AdminTools' => 'Admin-Tools',
 	'Menu:AdminTools+' => 'Administrationswerkzeuge',
 	'Menu:AdminTools?' => 'Werkzeuge, die nur für Benutzer mit Adminstratorprofil zugänglich sind',
 	'Menu:CSVImportMenu' => 'CSV-Import',
@@ -410,7 +412,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'BooleanLabel:yes' => 'Ja',
 	'BooleanLabel:no' => 'Nein',
-	'UI:WelcomeMenu:Title' => 'Willkommen bei '.ITOP_APPLICATION_SHORT, 'UI:WelcomeMenu:AllOpenRequests' => 'Offene Requests: %1$d',
+	'UI:WelcomeMenu:Title' => 'Willkommen bei '.ITOP_APPLICATION_SHORT,
+	'UI:WelcomeMenu:AllOpenRequests' => 'Offene Requests: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'An mich gestellte Benutzeranfragen',
 	'UI:WelcomeMenu:OpenIncidents' => 'Offene Incidents: %1$d',
 	'UI:WelcomeMenu:AllConfigItems' => 'Configuration Items: %1$d',
@@ -1381,7 +1384,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:AddAnExisting_Class' => 'Objekte des Typs %1$s hinzufügen...',
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s',
 	'UI:AboutBox' => 'Über '.ITOP_APPLICATION_SHORT.'...',
-	'UI:About:Title' => 'Über '.ITOP_APPLICATION_SHORT, 'UI:About:DataModel' => 'Datenmodell',
+	'UI:About:Title' => 'Über '.ITOP_APPLICATION_SHORT,
+	'UI:About:DataModel' => 'Datenmodell',
 	'UI:About:Support' => 'Support-Information',
 	'UI:About:Licenses' => 'Lizenzen',
 	'UI:About:InstallationOptions' => 'Installationsoptionen',
