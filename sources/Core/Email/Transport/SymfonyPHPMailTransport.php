@@ -82,8 +82,9 @@ class SymfonyPHPMailTransport extends AbstractTransport
 		$sSubject = $this->prepareSubject($oRawEmail);
 		$sBody = $this->prepareBody($oRawEmail);
 		$sHeaders = $this->prepareHeaders($oRawEmail);
+		$sAdditionalParameters = '-f '.$message->getEnvelope()->getSender()->getAddress();
 
-		$success = mail($sTo, $sSubject, $sBody, $sHeaders);
+		$success = mail($sTo, $sSubject, $sBody, $sHeaders, $sAdditionalParameters);
 
 		if (!$success) {
 			throw new \RuntimeException('The mail() function failed to send the message. Check server mail configuration.');
