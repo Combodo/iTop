@@ -20,7 +20,7 @@ class SymfonyPHPMailTransport extends AbstractTransport
 	{
 		$oHeaders = $oRawEmail->getHeaders();
 
-		return $oHeaders->get('To')->getBodyAsString();
+		return $oHeaders->get('To') ? $oHeaders->get('To')->getBodyAsString() : '';
 	}
 
 	/**
