@@ -24,8 +24,8 @@ use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchFactory;
 use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateFactory;
 use Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBarAction\TopBarQuickActionFactory;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use iPopupMenuExtension;
-use MetaModel;
 use utils;
 
 /**
@@ -62,7 +62,7 @@ class TopBarFactory
 		}
 
 		/** @var \iPopupMenuExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance) {
+		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses('iPopupMenuExtension') as $oExtensionInstance) {
 			foreach ($oExtensionInstance::EnumItems(iPopupMenuExtension::MENU_TOPBAR_ACTIONS, []) as $oMenuItem) {
 				$oTopBar->AddAction(TopBarQuickActionFactory::MakeFromApplicationPopupItem($oMenuItem));
 			}

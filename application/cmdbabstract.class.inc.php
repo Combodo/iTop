@@ -49,6 +49,7 @@ use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\Service\Links\LinkSetDataTransformer;
 use Combodo\iTop\Service\Links\LinkSetModel;
 use Combodo\iTop\Service\TemporaryObjects\TemporaryObjectHelper;
@@ -1068,7 +1069,7 @@ HTML
 							$val['actions'] = [];
 
 							/** @var \iPopupMenuExtension $oExtensionInstance */
-							foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance) {
+							foreach (InterfaceDiscovery::GetInstance()->FindItopClasses('iPopupMenuExtension') as $oExtensionInstance) {
 								foreach ($oExtensionInstance::EnumItems(iPopupMenuExtension::MENU_OBJDETAILS_FIELD_ACTIONS, ['object' => $this, 'att_code' => $sAttCode, 'mode' => $bEditMode ? 'edit' : 'read']) as $oMenuItem) {
 									$val['actions'][] = $oMenuItem;
 								}

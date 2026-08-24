@@ -12,8 +12,8 @@ use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
-use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use DBObject;
 use DBObjectSet;
 use Dict;
@@ -53,7 +53,7 @@ class CaseLogEntryFormFactory
 		// Build extra actions
 		$aPopupItems = [];
 		/** @var \iPopupMenuExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance) {
+		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses('iPopupMenuExtension') as $oExtensionInstance) {
 			foreach ($oExtensionInstance::EnumItems(iPopupMenuExtension::MENU_OBJDETAILS_FIELD_ACTIONS, ['object' => $oObject, 'att_code' => $sCaseLogAttCode, 'mode' => $sObjectMode === cmdbAbstractObject::ENUM_DISPLAY_MODE_EDIT ? 'edit' : 'read']) as $oMenuItem) {
 				$aPopupItems[] = $oMenuItem;
 			}

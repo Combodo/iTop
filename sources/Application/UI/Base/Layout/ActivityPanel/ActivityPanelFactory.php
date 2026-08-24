@@ -24,6 +24,7 @@ use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanelAction\ActivityPanelActionFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryFormFactory;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
@@ -178,7 +179,7 @@ class ActivityPanelFactory
 		if ($sMode === cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW) {
 			$aActionItems = [];
 			/** @var \iPopupMenuExtension $oExtensionInstance */
-			foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance) {
+			foreach (InterfaceDiscovery::GetInstance()->FindItopClasses('iPopupMenuExtension') as $oExtensionInstance) {
 				// Iterate over every case log tab to retrieve the actions for each of them
 				foreach ($aCaseLogTabs as $sCaseLogAttCode => $aCaseLogData) {
 					$aCaselogActions = [];
