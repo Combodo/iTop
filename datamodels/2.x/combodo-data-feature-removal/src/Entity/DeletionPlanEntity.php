@@ -12,7 +12,7 @@ class DeletionPlanEntity
 	public readonly DeletionPlanItem $oDelete;
 	public readonly DeletionPlanItem $oUpdate;
 	public readonly DeletionPlanItem $oIssue;
-	
+
 	public function __construct()
 	{
 		$this->oDelete = new DeletionPlanItem();
