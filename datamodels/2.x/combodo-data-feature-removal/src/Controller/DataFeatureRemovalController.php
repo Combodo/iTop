@@ -179,6 +179,15 @@ class DataFeatureRemovalController extends Controller
 			$this->ValidateTransactionId();
 
 			$oConfig = MetaModel::GetConfig();
+			DataFeatureRemovalLog::Debug(
+				__METHOD__.": extension lists",
+				null,
+				['removed_extensions' => $aRemovedExtensions,
+				 'selected_extensions' => $aSelectedExtensions,
+				 'added_extensions' => $aAddedExtensions,
+				]
+			);
+
 			if (count($aSelectedModules) === 0) {
 				$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
 				$oParameters->SetParameter('selected_extensions', $this->ConvertIntoSetupFormat($aSelectedExtensions));
@@ -193,6 +202,9 @@ class DataFeatureRemovalController extends Controller
 			if ($bIsDirEmpty || $bForceCompilation) {
 				$oRuntimeEnvironment->CopySetupFiles();
 				if (count($aSelectedModules) === 0) {
+					$oExtensionsMap = \iTopExtensionsMap::GetExtensionsMap($oRuntimeEnvironment->GetBuildEnv());
+					// Removed modules are stored as static for FindModules()
+					$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensions);
 					$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
 				}
 
@@ -208,6 +220,7 @@ class DataFeatureRemovalController extends Controller
 					$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
 				}
 			}
+			DataFeatureRemovalLog::Debug(__METHOD__.": modules", null, ['selected_modules' => $aSelectedModules]);
 		} catch (CoreException $e) {
 			$aParams['error_message'] = $e->getHtmlDesc();
 		} catch (Exception $e) {
