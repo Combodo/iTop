@@ -199,7 +199,6 @@ class DataFeatureRemovalController extends Controller
 				DataFeatureRemovalLog::Debug(__METHOD__, null, ['added_extensions' => $aAddedExtensions]);
 
 				$oRuntimeEnvironment->CopySetupFiles();
-				$oRuntimeEnvironment->CopySetupFiles();
 				if (count($aSelectedModules) === 0) {
 					$oExtensionsMap = \iTopExtensionsMap::GetExtensionsMap($oRuntimeEnvironment->GetBuildEnv());
 					// Removed modules are stored as static for FindModules()
