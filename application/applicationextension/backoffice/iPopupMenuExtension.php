@@ -98,6 +98,7 @@ interface iPopupMenuExtension
 	/**
 	 * Get the list of items to be added to the backoffice top-bar items
 	 * $param is null for now, in a distant future we want to give a complete context
+	 * @since 3.3.0
 	 */
 	public const MENU_TOPBAR_ACTIONS = 11;
 	/**
