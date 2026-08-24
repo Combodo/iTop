@@ -82,7 +82,7 @@ class SymfonyPHPMailTransport extends AbstractTransport
 		$sSubject = $this->prepareSubject($oRawEmail);
 		$sBody = $this->prepareBody($oRawEmail);
 		$sHeaders = $this->prepareHeaders($oRawEmail);
-		$sAdditionalParameters = '-f '.$message->getEnvelope()->getSender()->getAddress();
+		$sAdditionalParameters = '-f'.escapeshellarg($message->getEnvelope()->getSender()->getEncodedAddress());
 
 		$success = mail($sTo, $sSubject, $sBody, $sHeaders, $sAdditionalParameters);
 
