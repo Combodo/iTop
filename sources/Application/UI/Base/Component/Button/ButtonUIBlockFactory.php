@@ -386,8 +386,9 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 * @param string $sActionType
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button|\Combodo\iTop\Application\UI\Base\Component\Button\ButtonSeparator|null
+	 * @since 3.3.0
 	 */
-	public static function MakeIconButtonFromApplicationPopupMenuItem(ApplicationPopupMenuItem $oPopupItem, $sColor = Button::ENUM_COLOR_SCHEME_NEUTRAL, $sActionType = Button::ENUM_ACTION_TYPE_ALTERNATIVE): Button|ButtonSeparator|null
+	public static function MakeIconButtonFromApplicationPopupMenuItem(ApplicationPopupMenuItem $oPopupItem, string $sColor = Button::ENUM_COLOR_SCHEME_NEUTRAL, string $sActionType = Button::ENUM_ACTION_TYPE_ALTERNATIVE): Button|ButtonSeparator|null
 	{
 		if ($oPopupItem instanceof JSPopupMenuItem) {
 			$sTooltip = $oPopupItem->GetTooltip();
@@ -442,8 +443,9 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 * @param string $sActionType
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button|\Combodo\iTop\Application\UI\Base\Component\Button\ButtonSeparator|null
+	 * @since 3.3.0
 	 */
-	public static function MakeButtonFromApplicationPopupMenuItem(ApplicationPopupMenuItem $oPopupItem, $sColor = Button::ENUM_COLOR_SCHEME_NEUTRAL, $sActionType = Button::ENUM_ACTION_TYPE_ALTERNATIVE): Button|ButtonSeparator|null
+	public static function MakeButtonFromApplicationPopupMenuItem(ApplicationPopupMenuItem $oPopupItem, string $sColor = Button::ENUM_COLOR_SCHEME_NEUTRAL, string $sActionType = Button::ENUM_ACTION_TYPE_ALTERNATIVE): Button|ButtonSeparator|null
 	{
 		if ($oPopupItem instanceof JSPopupMenuItem) {
 			$oButton = self::MakeForAction(

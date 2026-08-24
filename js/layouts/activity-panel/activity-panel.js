@@ -197,7 +197,7 @@ $(function()
 					me._onComposeButtonClick(oEvent);
 				});
 
-                this.element.find('[data-role="ibo-activity-panel--activity-action"]').on('click', function (oEvent) {
+                this.element.find(this.js_selectors.activity_action).on('click', function (oEvent) {
                     me._onActivityActionClick(oEvent, $(this));
                 });
 

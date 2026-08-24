@@ -68,7 +68,7 @@ abstract class TopBarQuickAction extends UIBlock
 		return $this->sLabel;
 	}
 
-	public function SetLabel(string $sLabel): TopBarQuickAction
+	public function SetLabel(string $sLabel): static
 	{
 		$this->sLabel = $sLabel;
 		return $this;
