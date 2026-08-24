@@ -175,13 +175,19 @@ class DataFeatureRemovalController extends Controller
 		$aAddedExtensions = json_decode($oParameters->GetParameter('added_extensions', '[]'), true);
 		$aRemovedExtensions = json_decode($oParameters->GetParameter('removed_extensions', '[]'), true);
 
-		DataFeatureRemovalLog::Debug(__METHOD__, null, ['removed_extensions' => $aRemovedExtensions]);
-		DataFeatureRemovalLog::Debug(__METHOD__, null, ['selected_modules' => $aSelectedModules]);
-		DataFeatureRemovalLog::Debug(__METHOD__, null, ['added_extensions' => $aAddedExtensions]);
 		try {
 			$this->ValidateTransactionId();
 
 			$oConfig = MetaModel::GetConfig();
+			DataFeatureRemovalLog::Debug(
+				__METHOD__.": extension lists",
+				null,
+				['removed_extensions' => $aRemovedExtensions,
+				 'selected_extensions' => $aSelectedExtensions,
+				 'added_extensions' => $aAddedExtensions,
+				]
+			);
+
 			if (count($aSelectedModules) === 0) {
 				$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
 				$oParameters->SetParameter('selected_extensions', $this->ConvertIntoSetupFormat($aSelectedExtensions));
@@ -194,7 +200,6 @@ class DataFeatureRemovalController extends Controller
 			$bIsDirEmpty = count(scandir($sBuildDir)) === 2;
 			$bForceCompilation = Session::Get('bForceCompilation', false);
 			if ($bIsDirEmpty || $bForceCompilation) {
-
 				$oRuntimeEnvironment->CopySetupFiles();
 				if (count($aSelectedModules) === 0) {
 					$oExtensionsMap = \iTopExtensionsMap::GetExtensionsMap($oRuntimeEnvironment->GetBuildEnv());
@@ -215,6 +220,7 @@ class DataFeatureRemovalController extends Controller
 					$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
 				}
 			}
+			DataFeatureRemovalLog::Debug(__METHOD__.": modules", null, ['selected_modules' => $aSelectedModules]);
 		} catch (CoreException $e) {
 			$aParams['error_message'] = $e->getHtmlDesc();
 		} catch (Exception $e) {
