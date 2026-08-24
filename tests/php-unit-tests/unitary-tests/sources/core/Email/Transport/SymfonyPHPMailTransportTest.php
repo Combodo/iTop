@@ -6,7 +6,7 @@ use Symfony\Component\Mime\Email;
 
 class SymfonyPHPMailTransportTest extends ItopTestCase
 {
-	public function testPrepareToReturnsEmptyStringWhenToHeaderIsMissing(): void
+	public function testPrepareMustNotThrowErrorWhenToHeaderIsMissing(): void
 	{
 		$oEmail = new Email()
 			->from('sender@example.com')
