@@ -175,6 +175,9 @@ class DataFeatureRemovalController extends Controller
 		$aAddedExtensions = json_decode($oParameters->GetParameter('added_extensions', '[]'), true);
 		$aRemovedExtensions = json_decode($oParameters->GetParameter('removed_extensions', '[]'), true);
 
+		DataFeatureRemovalLog::Error(__METHOD__, null, ['selected_modules' => $aSelectedModules]);
+		DataFeatureRemovalLog::Error(__METHOD__, null, ['added_extensions' => $aAddedExtensions]);
+		DataFeatureRemovalLog::Error(__METHOD__, null, ['removed_extensions' => $aRemovedExtensions]);
 		try {
 			$this->ValidateTransactionId();
 
@@ -191,8 +194,16 @@ class DataFeatureRemovalController extends Controller
 			$bIsDirEmpty = count(scandir($sBuildDir)) === 2;
 			$bForceCompilation = Session::Get('bForceCompilation', false);
 			if ($bIsDirEmpty || $bForceCompilation) {
+				DataFeatureRemovalLog::Debug(__METHOD__, null, ['removed_extensions' => $aRemovedExtensions]);
+				DataFeatureRemovalLog::Debug(__METHOD__, null, ['selected_modules' => $aSelectedModules]);
+				DataFeatureRemovalLog::Debug(__METHOD__, null, ['added_extensions' => $aAddedExtensions]);
+
+				$oRuntimeEnvironment->CopySetupFiles();
 				$oRuntimeEnvironment->CopySetupFiles();
 				if (count($aSelectedModules) === 0) {
+					$oExtensionsMap = \iTopExtensionsMap::GetExtensionsMap($oRuntimeEnvironment->GetBuildEnv());
+					// Removed modules are stored as static for FindModules()
+					$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensions);
 					$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
 				}
 
