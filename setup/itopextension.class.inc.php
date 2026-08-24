@@ -13,6 +13,7 @@ class iTopExtension
 	public const SOURCE_WIZARD = 'datamodels';
 	public const SOURCE_MANUAL = 'extensions';
 	public const SOURCE_REMOTE = 'data';
+	public const CODE_NO_CODE = 'error-extension-code-missing';
 
 	/**
 	 * @var string
