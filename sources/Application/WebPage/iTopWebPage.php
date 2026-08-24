@@ -58,8 +58,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// - TabContainer
 		'js/jquery.ba-bbq.min.js',
 		// - DashletGroupBy & other specific places
-		'js/d3.js', // 3.2.0 N°5261 moved to NPM
-		'js/c3.js', // 3.2.0 N°5261 moved to NPM
+		'node_modules/d3/d3.min.js', // 3.2.0 N°5261 moved to NPM
+		'node_modules/c3/c3.min.js', // 3.2.0 N°5261 moved to NPM
 		// - DisplayableGraph, impact analysis
 		'js/raphael-min.js',
 		'js/jquery.mousewheel.js',
