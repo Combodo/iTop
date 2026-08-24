@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
   <DataFlowType alias="DataFlowType" id="1">
-    <name>REST API</name>
+    <name>HTML</name>
   </DataFlowType>
   <DataFlowType alias="DataFlowType" id="2">
-    <name>KAFKA</name>
+    <name>Plain Text</name>
   </DataFlowType>
   <DataFlowType alias="DataFlowType" id="3">
     <name>JSON</name>
@@ -40,12 +40,6 @@
     <name>Other/Proprietary</name>
   </DataFlowType>
   <DataFlowType alias="DataFlowType" id="14">
-    <name>Plain Text</name>
-  </DataFlowType>
-  <DataFlowType alias="DataFlowType" id="15">
-    <name>HTML</name>
-  </DataFlowType>
-  <DataFlowType alias="DataFlowType" id="16">
     <name>YAML</name>
   </DataFlowType>
 </Set>

@@ -42,4 +42,10 @@
   <DataFlowProtocol alias="DataFlowProtocol" id="14">
     <name>MQTT/AMQP</name>
   </DataFlowProtocol>
+  <DataFlowProtocol alias="DataFlowProtocol" id="15">
+    <name>REST</name>
+  </DataFlowProtocol>
+  <DataFlowProtocol alias="DataFlowProtocol" id="16">
+    <name>KAFKA</name>
+  </DataFlowProtocol>
 </Set>
