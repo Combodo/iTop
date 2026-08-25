@@ -70,6 +70,13 @@ class SymfonyPHPMailTransport extends AbstractTransport
 		return $sHeaders;
 	}
 
+	public function prepareAdditionalParameters(SentMessage $message): string
+	{
+		$sender = $message->getEnvelope()->getSender()->getEncodedAddress();
+
+		return '-f'.escapeshellarg($sender);
+	}
+
 	protected function doSend(SentMessage $message): void
 	{
 		$oRawEmail = $message->getOriginalMessage();
@@ -82,8 +89,9 @@ class SymfonyPHPMailTransport extends AbstractTransport
 		$sSubject = $this->prepareSubject($oRawEmail);
 		$sBody = $this->prepareBody($oRawEmail);
 		$sHeaders = $this->prepareHeaders($oRawEmail);
+		$sAdditionalParameters = $this->prepareAdditionalParameters($message);
 
-		$success = mail($sTo, $sSubject, $sBody, $sHeaders);
+		$success = mail($sTo, $sSubject, $sBody, $sHeaders, $sAdditionalParameters);
 
 		if (!$success) {
 			throw new \RuntimeException('The mail() function failed to send the message. Check server mail configuration.');
