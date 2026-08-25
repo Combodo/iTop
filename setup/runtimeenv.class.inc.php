@@ -645,6 +645,7 @@ class RunTimeEnvironment
 		$iPrevAccessMode = $oConfig->Get('access_mode');
 		$oConfig->Set('access_mode', ACCESS_FULL);
 		$this->InitDataModel($oConfig, true);  // load data model and connect to the database
+		$oParams = new SessionParameters(SetupUtils::SESSION_PARAMETERS_NAME);
 
 		if (CMDBSource::DBName() == '') {
 			// In case this has not yet been done
@@ -652,7 +653,7 @@ class RunTimeEnvironment
 		}
 
 		if ($sShortComment === null) {
-			$sShortComment = 'Done by the setup program';
+			$sShortComment = $oParams->GetParameter('install_comment', 'Done by the setup program');
 		}
 		$sMainComment = $sShortComment."\nBuilt on ".ITOP_BUILD_DATE;
 
@@ -748,7 +749,6 @@ class RunTimeEnvironment
 			}
 		}
 
-		$oParams = new SessionParameters(SetupUtils::SESSION_PARAMETERS_NAME);
 		if (class_exists('DesignerUpdate') && $oParams->GetParameter('return_application') === 'designer') {
 			// Now keep track of this update
 			$oLog = new DesignerUpdate();
