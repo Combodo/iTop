@@ -7,8 +7,8 @@ use Symfony\Component\Mailer\Transport\AbstractTransport;
 use Symfony\Component\Mime\Email;
 
 /**
-* Transport that uses PHP's mail() function to send emails
-*/
+ * Transport that uses PHP's mail() function to send emails
+ */
 class SymfonyPHPMailTransport extends AbstractTransport
 {
 	/**
@@ -20,7 +20,7 @@ class SymfonyPHPMailTransport extends AbstractTransport
 	{
 		$oHeaders = $oRawEmail->getHeaders();
 
-		return $oHeaders->get('To')->getBodyAsString();
+		return $oHeaders->get('To') ? $oHeaders->get('To')->getBodyAsString() : '';
 	}
 
 	/**
@@ -70,6 +70,13 @@ class SymfonyPHPMailTransport extends AbstractTransport
 		return $sHeaders;
 	}
 
+	public function prepareAdditionalParameters(SentMessage $message): string
+	{
+		$sender = $message->getEnvelope()->getSender()->getEncodedAddress();
+
+		return '-f'.escapeshellarg($sender);
+	}
+
 	protected function doSend(SentMessage $message): void
 	{
 		$oRawEmail = $message->getOriginalMessage();
@@ -82,7 +89,7 @@ class SymfonyPHPMailTransport extends AbstractTransport
 		$sSubject = $this->prepareSubject($oRawEmail);
 		$sBody = $this->prepareBody($oRawEmail);
 		$sHeaders = $this->prepareHeaders($oRawEmail);
-		$sAdditionalParameters = '-f'.escapeshellarg($message->getEnvelope()->getSender()->getEncodedAddress());
+		$sAdditionalParameters = $this->prepareAdditionalParameters($message);
 
 		$success = mail($sTo, $sSubject, $sBody, $sHeaders, $sAdditionalParameters);
 
