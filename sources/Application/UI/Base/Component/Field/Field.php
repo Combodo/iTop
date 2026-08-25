@@ -401,7 +401,7 @@ class Field extends UIContentBlock
 	{
 		return $this->aActions;
 	}
-	public function AddAction(UIBlock $oAction)
+	public function AddAction(UIBlock $oAction): static
 	{
 		$this->aActions[] = $oAction;
 		return $this;
@@ -411,7 +411,7 @@ class Field extends UIContentBlock
 		return !empty($this->aActions);
 	}
 
-	public function SetActions(array $aActions)
+	public function SetActions(array $aActions): static
 	{
 		$this->aActions = $aActions;
 		return $this;

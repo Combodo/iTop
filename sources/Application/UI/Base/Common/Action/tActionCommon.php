@@ -42,7 +42,7 @@ trait tActionCommon
 		return $this->sUid;
 	}
 
-	public function SetUID(string $sUid)
+	public function SetUID(string $sUid): static
 	{
 		$this->sUid = $sUid;
 		return $this;
@@ -53,7 +53,7 @@ trait tActionCommon
 		return $this->sLabel;
 	}
 
-	public function SetLabel(string $sLabel)
+	public function SetLabel(string $sLabel): static
 	{
 		$this->sLabel = $sLabel;
 		return $this;
@@ -64,7 +64,7 @@ trait tActionCommon
 		return $this->sIconClass;
 	}
 
-	public function SetIconClass(string $sIconClass)
+	public function SetIconClass(string $sIconClass): static
 	{
 		$this->sIconClass = $sIconClass;
 		return $this;
@@ -75,7 +75,7 @@ trait tActionCommon
 		return $this->sTooltip;
 	}
 
-	public function SetTooltip(?string $sTooltip)
+	public function SetTooltip(?string $sTooltip): static
 	{
 		$this->sTooltip = $sTooltip;
 		return $this;
@@ -86,13 +86,13 @@ trait tActionCommon
 		return $this->aCssClasses;
 	}
 
-	public function SetCssClasses(array $aCssClasses)
+	public function SetCssClasses(array $aCssClasses): static
 	{
 		$this->aCssClasses = $aCssClasses;
 		return $this;
 	}
 
-	public function AddCssClass(string $sCssClass)
+	public function AddCssClass(string $sCssClass): static
 	{
 		$this->aCssClasses[] = $sCssClass;
 		return $this;

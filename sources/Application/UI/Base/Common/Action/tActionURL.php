@@ -39,7 +39,7 @@ trait tActionURL
 		return $this->sUrl;
 	}
 
-	public function SetUrl(string $sUrl)
+	public function SetUrl(string $sUrl): static
 	{
 		$this->sUrl = $sUrl;
 		return $this;
@@ -50,7 +50,7 @@ trait tActionURL
 		return $this->sTarget;
 	}
 
-	public function SetTarget(?string $sTarget)
+	public function SetTarget(?string $sTarget): static
 	{
 		$this->sTarget = $sTarget;
 		return $this;

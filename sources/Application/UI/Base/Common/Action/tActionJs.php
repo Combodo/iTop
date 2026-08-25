@@ -40,7 +40,7 @@ trait tActionJs
 		return $this->sJsCode;
 	}
 
-	public function SetJsCode(string $sJsCode)
+	public function SetJsCode(string $sJsCode): static
 	{
 		$this->sJsCode = $sJsCode;
 		return $this;
@@ -51,7 +51,7 @@ trait tActionJs
 		return $this->sUrl;
 	}
 
-	public function SetUrl(string $sUrl)
+	public function SetUrl(string $sUrl): static
 	{
 		$this->sUrl = $sUrl;
 		return $this;
@@ -62,7 +62,7 @@ trait tActionJs
 		return $this->aIncludeJSFiles;
 	}
 
-	public function SetIncludeJSFiles(array $aIncludeJSFiles)
+	public function SetIncludeJSFiles(array $aIncludeJSFiles): static
 	{
 		$this->aIncludeJSFiles = $aIncludeJSFiles;
 		return $this;

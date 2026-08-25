@@ -56,13 +56,13 @@ abstract class ActivityPanelAction extends UIBlock
 		$this->sTooltip = $sTooltip;
 	}
 
-	public function SetPopupItems(array $aPopupItems)
+	public function SetPopupItems(array $aPopupItems): static
 	{
 		$this->aPopupItems = $aPopupItems;
 		return $this;
 	}
 
-	public function AddPopupItem(string $sSectionId, \ApplicationPopupMenuItem $oPopupItem)
+	public function AddPopupItem(string $sSectionId, \ApplicationPopupMenuItem $oPopupItem): static
 	{
 		if (!array_key_exists($sSectionId, $this->aPopupItems)) {
 			$this->aPopupItems[$sSectionId] = [];
@@ -77,7 +77,7 @@ abstract class ActivityPanelAction extends UIBlock
 		return $this->aPopupItems;
 	}
 
-	public function SetPopoverMenu(PopoverMenu $oPopoverMenu)
+	public function SetPopoverMenu(PopoverMenu $oPopoverMenu): static
 	{
 		$this->oPopoverMenu = $oPopoverMenu;
 		return $this;
