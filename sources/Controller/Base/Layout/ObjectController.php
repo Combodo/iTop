@@ -7,7 +7,6 @@
 
 namespace Combodo\iTop\Controller\Base\Layout;
 
-use Combodo\iTop\Application\WebPage\AjaxPage;
 use ApplicationContext;
 use ApplicationException;
 use cmdbAbstractObject;
@@ -18,9 +17,13 @@ use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectSummary;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
 use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Service\Base\ObjectRepository;
 use Combodo\iTop\Service\Router\Router;
+use Combodo\iTop\Service\SummaryCard\SummaryCardService;
 use CoreCannotSaveObjectException;
 use DBObjectSearch;
 use DBObjectSet;
@@ -31,11 +34,8 @@ use Dict;
 use Exception;
 use IssueLog;
 use iTopOwnershipLock;
-use Combodo\iTop\Application\WebPage\iTopWebPage;
-use Combodo\iTop\Application\WebPage\JsonPage;
 use MetaModel;
 use SecurityException;
-use Combodo\iTop\Service\SummaryCard\SummaryCardService;
 use UserRights;
 use utils;
 
@@ -361,9 +361,9 @@ JS;
 			IssueLog::Error(__CLASS__.'::'.__METHOD__." : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 
 			if ($this->IsHandlingXmlHttpRequest()) {
-				$aResult['data'] = ['error_message' => Dict::S('UI:Error:ObjectAlreadyCreated')];
+				$aResult['data'] = ['error_message' => Dict::S('UI:Error:InvalidToken')];
 			} else {
-				$oErrorAlert = AlertUIBlockFactory::MakeForFailure(Dict::S('UI:Error:ObjectAlreadyCreated'));
+				$oErrorAlert = AlertUIBlockFactory::MakeForFailure(Dict::S('UI:Error:InvalidToken'));
 				$oErrorAlert->SetIsClosable(false)
 					->SetIsCollapsible(false);
 				$oPage->AddUiBlock($oErrorAlert);
@@ -552,13 +552,13 @@ JS;
 			IssueLog::Error(__CLASS__.'::'.__METHOD__."  : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 
 			if ($this->IsHandlingXmlHttpRequest()) {
-				$aResult['data'] = ['error_message' => Dict::S('UI:Error:ObjectAlreadyUpdated')];
+				$aResult['data'] = ['error_message' => Dict::S('UI:Error:InvalidToken')];
 			} else {
 				$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-				$oPage->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
+				$oPage->p("<strong>".Dict::S('UI:Error:InvalidToken')."</strong>\n");
 			}
 
-			$sMessage = Dict::Format('UI:Error:ObjectAlreadyUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
+			$sMessage = Dict::Format('UI:Error:InvalidToken');
 			$sSeverity = 'error';
 
 			IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not updated (invalid transaction_id)', $sClass, [

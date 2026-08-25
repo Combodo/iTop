@@ -503,7 +503,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'UI:Error:InvalidDashboard' => 'Chyba: neplatná nástěnka',
 	'UI:Error:MaintenanceMode' => 'Aktuálně probíhá údržba systému',
 	'UI:Error:MaintenanceTitle' => 'Údržba aplikace',
-	'UI:Error:InvalidToken' => 'Chyba: požadovaná operace byla již provedena (CSRF token nebyl nalezen)',
+	'UI:Error:InvalidToken' => 'Aktuální relace je neplatná. Obnovte stránku a zkuste to znovu. Pokud problém přetrvává, odhlaste se a znovu se přihlaste.',
 	'UI:Error:SMTP:UnknownVendor' => 'Poskytovatel OAuth SMTP %1$s neexistuje  (email_transport_smtp.oauth.provider)',
 	'UI:GroupBy:Count' => 'Množství',
 	'UI:GroupBy:Count+' => 'Množství prvků',

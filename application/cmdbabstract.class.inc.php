@@ -4651,7 +4651,7 @@ EOF
 			// Not in preview mode, do the update for real
 			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 			if (!utils::IsTransactionValid($sTransactionId, false)) {
-				throw new Exception(Dict::S('UI:Error:ObjectAlreadyUpdated'));
+				throw new Exception(Dict::S('UI:Error:InvalidToken'));
 			}
 			utils::RemoveTransaction($sTransactionId);
 		}
