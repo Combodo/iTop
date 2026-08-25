@@ -7,8 +7,8 @@ use Symfony\Component\Mailer\Transport\AbstractTransport;
 use Symfony\Component\Mime\Email;
 
 /**
- * Transport that uses PHP's mail() function to send emails
- */
+* Transport that uses PHP's mail() function to send emails
+*/
 class SymfonyPHPMailTransport extends AbstractTransport
 {
 	/**
