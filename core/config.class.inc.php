@@ -607,6 +607,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'attribute.max_actions_items' => [
+			'type' => 'integer',
+			'description' => 'Maximum number of actions to display before it\'s compacted into a single action (0 means no limit)',
+			'default' => 2,
+			'value' => 2,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'email_asynchronous' => [
 			'type' => 'bool',
 			'description' => 'If set, the emails are sent off line, which requires cron.php to be activated. Exception: some features like the email test utility will force the serialized mode',

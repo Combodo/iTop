@@ -13,6 +13,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuFactory;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use utils;
 
 /**
  * Class FieldUIBlockFactory
@@ -71,8 +72,7 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 		}
 
 		if (isset($aParams['actions'])) {
-			//TODO make this a configuration parameter
-			$iMaxActions = 50;
+			$iMaxActions = utils::GetConfig()->Get('attribute.max_actions_items');
 			$aActions = [];
 			// Create a button for a few action or a kebab button for multiple actions that a more than what's configured
 			if (count($aParams['actions']) > $iMaxActions) {
