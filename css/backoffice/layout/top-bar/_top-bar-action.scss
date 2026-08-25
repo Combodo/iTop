@@ -5,6 +5,10 @@ $ibo-top-bar-quick-action--icon-padding-y: $ibo-spacing-0 !default;
 $ibo-top-bar-quick-action--icon--color: $ibo-color-primary-600 !default;
 $ibo-top-bar-quick-action--icon--color--on-hover: $ibo-color-primary-700 !default;
 $ibo-top-bar-quick-action--icon--color--on-active: $ibo-color-primary-800 !default;
+$ibo-top-bar-quick-action-separator--width: 2px !default;
+$ibo-top-bar-quick-action-separator--background-color: $ibo-color-grey-300 !default;
+$ibo-top-bar-quick-action-separator--margin-y: $ibo-spacing-0 !default;
+$ibo-top-bar-quick-action-separator--margin-x: $ibo-spacing-300 !default;
 
 .ibo-top-bar-quick-action{
   position: relative;
@@ -30,7 +34,7 @@ $ibo-top-bar-quick-action--icon--color--on-active: $ibo-color-primary-800 !defau
 }
 
 .ibo-top-bar-quick-action-separator {
-  width: 2px;
-  background-color: $ibo-color-grey-300;
-  margin: 0 8px;
+  width: $ibo-top-bar-quick-action-separator--width;
+  background-color: $ibo-top-bar-quick-action-separator--background-color;
+  margin: $ibo-top-bar-quick-action-separator--margin-y $ibo-top-bar-quick-action-separator--margin-x;
 }

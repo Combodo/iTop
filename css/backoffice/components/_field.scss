@@ -37,6 +37,12 @@ $ibo-field--enable-bulk--border-radius: $ibo-border-radius-500 !default;
 
 $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
 
+$ibo-field--label--action--margin-y: $ibo-spacing-0 !default;
+$ibo-field--label--action--margin-x: $ibo-spacing-100 !default;
+$ibo-field--label--action--size: $ibo-field--fullscreen-toggler--size !default;
+$ibo-field--label--action--padding: $ibo-spacing-0 !default;
+$ibo-field--label--action--font-size: $ibo-font-size-50 !default;
+
 /* SCSS rules */
 .ibo-field {
   @extend %ibo-font-size-150;
@@ -274,17 +280,17 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
     justify-content: center;
     vertical-align: center;
 
-    width: 20px;
-    height: 20px;
-    padding: 0;
+    width: $ibo-field--label--action--size;
+    height: $ibo-field--label--action--size;
+    padding: $ibo-field--label--action--padding;
     border-radius: $ibo-field--fullscreen-toggler--border-radius;
-    font-size: $ibo-font-size-50;
+    font-size: $ibo-field--label--action--font-size;
     ~ .ibo-field--action {
-      margin-left: 2px;
+      margin-left: $ibo-field--label--action--margin-x;
     }
   }
   .ibo-field--action.ibo-button-separator {
-    margin: 0 2px;
+    margin:  $ibo-field--label--action--margin-y $ibo-field--label--action--margin-x;
     vertical-align: center;
   }
 }
