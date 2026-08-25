@@ -8,7 +8,7 @@ class SymfonyPHPMailTransportTest extends ItopTestCase
 {
 	public function testPrepareMustNotThrowErrorWhenToHeaderIsMissing(): void
 	{
-		$oEmail = new Email()
+		$oEmail = (new Email())
 			->from('sender@example.com')
 			->cc('cc1@example.com', 'cc2@example.com')
 			->text('Body');
