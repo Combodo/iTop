@@ -655,6 +655,7 @@ class RunTimeEnvironment
 		if ($sShortComment === null) {
 			$sShortComment = $oParams->GetParameter('install_comment', 'Done by the setup program');
 		}
+		$oParams->SetParameter('install_comment', null);
 		$sMainComment = $sShortComment."\nBuilt on ".ITOP_BUILD_DATE;
 
 		// Record datamodel version
