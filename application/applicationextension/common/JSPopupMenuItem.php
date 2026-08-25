@@ -3,7 +3,7 @@
 /**
  * Class for adding an item into a popup menu that triggers some Javascript code
  *
- * Note: This works only in the backoffice, {@see \JSButtonItem} for the end-user portal
+ * Note: This works only in the backoffice, {@see \common\JSButtonItem} for the end-user portal
  *
  * @api
  * @package     UIExtensibilityAPI

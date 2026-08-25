@@ -3,7 +3,7 @@
 /**
  * Class for adding an item into a popup menu that browses to the given URL
  *
- * Note: This works only in the backoffice, {@see \URLButtonItem} for the end-user portal
+ * Note: This works only in the backoffice, {@see \common\URLButtonItem} for the end-user portal
  *
  * @api
  * @package     UIExtensibilityAPI

@@ -64,7 +64,7 @@ abstract class ApplicationPopupMenuItem
 	 * @api
 	 * @since 3.3.0
 	 */
-	public function SetLabel(string $sLabel) : void
+	public function SetLabel(string $sLabel): void
 	{
 		$this->sLabel = $sLabel;
 	}
