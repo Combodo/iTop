@@ -25,7 +25,6 @@ use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearch;
 use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreate;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBarAction\TopBarQuickAction;
-use Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBarAction\TopBarQuickActionJS;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
 /**
@@ -50,8 +49,8 @@ class TopBar extends UIBlock
 	protected $oBreadcrumbs;
 	/** @var Toolbar|null */
 	protected $oToolbar;
-	/** @var array $aActions */
-	protected array $aActions = [];
+	/** @var array $aQuickActions */
+	protected array $aQuickActions = [];
 
 	/**
 	 * TopBar constructor.
@@ -220,7 +219,7 @@ class TopBar extends UIBlock
 		}
 
 		// Add object arrays
-		$aSubBlocksNames = ['Actions'];
+		$aSubBlocksNames = ['QuickActions'];
 		foreach ($aSubBlocksNames as $sSubBlockName) {
 			$sHasMethodName = 'Has'.$sSubBlockName;
 			if (true === call_user_func_array([$this, $sHasMethodName], [])) {
@@ -234,25 +233,25 @@ class TopBar extends UIBlock
 		return $aSubBlocks;
 	}
 
-	public function HasActions(): bool
+	public function HasQuickActions(): bool
 	{
-		return count($this->GetActions()) > 0;
+		return count($this->GetQuickActions()) > 0;
 	}
 
-	public function GetActions(): array
+	public function GetQuickActions(): array
 	{
-		return $this->aActions;
+		return $this->aQuickActions;
 	}
 
-	public function SetActions(array $aActions)
+	public function SetQuickActions(array $aQuickActions): static
 	{
-		$this->aActions = $aActions;
+		$this->aQuickActions = $aQuickActions;
 		return $this;
 	}
 
-	public function AddAction(TopBarQuickAction $oAction)
+	public function AddQuickAction(TopBarQuickAction $oQuickAction): static
 	{
-		$this->aActions[] = $oAction;
+		$this->aQuickActions[] = $oQuickAction;
 		return $this;
 	}
 }

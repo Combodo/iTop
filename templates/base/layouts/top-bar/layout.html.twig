@@ -6,7 +6,7 @@
 		{% if oUIBlock.HasGlobalSearch() %}
 			{{ render_block(oUIBlock.GetGlobalSearch(), {aPage: aPage}) }}
 		{% endif %}
-        {% for oAction in oUIBlock.GetActions() %}
+        {% for oAction in oUIBlock.GetQuickActions() %}
             {{ render_block(oAction, {aPage: aPage}) }}
         {% endfor %}
 	</div>
