@@ -2,7 +2,7 @@
 
 class ModuleInstallationRepository
 {
-	private static ModuleInstallationRepository $oInstance;
+	private static ?ModuleInstallationRepository $oInstance;
 
 	protected function __construct()
 	{
@@ -60,6 +60,7 @@ class ModuleInstallationRepository
 		CMDBSource::InitFromConfig($oConfig);
 		//read db module installations
 		$tableWithPrefix = $this->GetTableWithPrefix($oConfig);
+
 		$iRootId = CMDBSource::QueryToScalar("SELECT max(parent_id) FROM $tableWithPrefix");
 		// Get the latest installed modules, without the "root" ones (iTop version and datamodel version)
 		$sSQL = <<<SQL
@@ -94,10 +95,7 @@ SQL;
 	public function GetApplicationVersion(Config $oConfig)
 	{
 		try {
-			CMDBSource::InitFromConfig($oConfig);
-			$tableWithPrefix = $this->GetTableWithPrefix($oConfig);
-			$sSQLQuery = "SELECT * FROM $tableWithPrefix";
-			$aSelectInstall = CMDBSource::QueryToArray($sSQLQuery);
+			$aSelectInstall = $this->ReadFromDB($oConfig);
 		} catch (MySQLException $e) {
 			// No database or erroneous information
 			SetupLog::Error(
@@ -105,8 +103,6 @@ SQL;
 				null,
 				[
 					'host'    => $oConfig->Get('db_host'),
-					'user'    => $oConfig->Get('db_user'),
-					'pwd:'    => $oConfig->Get('db_pwd'),
 					'db name' => $oConfig->Get('db_name'),
 					'msg'     => $e->getMessage(),
 				]
