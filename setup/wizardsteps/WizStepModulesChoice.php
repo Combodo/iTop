@@ -794,9 +794,6 @@ EOF
 			} elseif ($bInstalled && $bDoNotUninstall) {
 				// If the extension is not uninstallable, it must be unchecked using the "force-uninstall" option
 				$bDisabled = !$bDisableUninstallCheck;
-				if ($bDisabled) {
-					$bChecked = true;
-				}
 			}
 
 			if (isset($aChoice['sub_options'])) {
