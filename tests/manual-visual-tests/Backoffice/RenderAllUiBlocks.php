@@ -27,7 +27,9 @@ use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Badge\Badge;
 use Combodo\iTop\Application\UI\Base\Component\Badge\BadgeUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonSeparator;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\ButtonBar\ButtonBarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroup;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
@@ -35,6 +37,7 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Set\SetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Toggler;
@@ -70,6 +73,12 @@ $oPage->add_style(
 	<<<CSS
 hr {
 	background-color: var(--ibo-color-grey-950);
+}
+.btn-bar-600{
+	max-width: 600px;
+}
+.btn-bar-600{
+	max-width: 800px;
 }
 CSS
 );
@@ -215,6 +224,140 @@ $oPageContentLayout->AddMainBlock(new ButtonGroup(
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 
+//////////////
+// ButtonBar
+//////////////
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('ButtonBar example', 2, 'title-button-bar'));
+
+$oPage->AddUiBlock(HtmlFactory::MakeParagraph('The button bar is a horizontal list of buttons, with an overflow menu for the buttons that do not fit in the available space. The overflow menu is a popover menu that can be opened by clicking on the "..." button. The overflow menu can contain any number of buttons, and can be used to group related actions together.'));
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Full page', 3, 'title-button-bar1'));
+
+$oBtn1 = ButtonUIBlockFactory::MakeNeutral('Action 1');
+$oBtn1->SetIconClass('fas fa-thumbs-up');
+
+$oBtn5 = ButtonUIBlockFactory::MakeNeutral('Action 5');
+$oBtn5->SetIconClass('fas fa-thumbs-down');
+
+$oBtn11 = ButtonUIBlockFactory::MakeNeutral('Action 11');
+$oBtn11->SetIconClass('fas fa-bomb');
+
+$oButtonBar = ButtonBarUIBlockFactory::MakeStandard(
+	[
+		$oBtn1,
+		ButtonUIBlockFactory::MakeNeutral('Action 2'),
+		ButtonUIBlockFactory::MakeNeutral('Action 3'),
+		ButtonUIBlockFactory::MakeNeutral('Action 4'),
+		new ButtonSeparator(),
+		$oBtn5,
+		ButtonUIBlockFactory::MakeNeutral('Action 6'),
+		ButtonUIBlockFactory::MakeNeutral('Action 7'),
+		ButtonUIBlockFactory::MakeNeutral('Action 8'),
+		ButtonUIBlockFactory::MakeNeutral('Action 9'),
+		ButtonUIBlockFactory::MakeNeutral('Action 10'),
+		new ButtonSeparator(),
+		$oBtn11,
+		ButtonUIBlockFactory::MakeNeutral('Action 12'),
+		ButtonUIBlockFactory::MakeNeutral('Action 13'),
+		ButtonUIBlockFactory::MakeNeutral('Action 14'),
+		ButtonUIBlockFactory::MakeNeutral('Action 15'),
+		ButtonUIBlockFactory::MakeNeutral('Action 16'),
+	],
+	'See overflow actions',
+	'button-bar-test1'
+);
+$oPageContentLayout->AddMainBlock($oButtonBar);
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Max width 600px', 3, 'title-button-bar2'));
+
+$oBtn1 = ButtonUIBlockFactory::MakeNeutral('Action 1');
+$oBtn1->SetIconClass('fas fa-thumbs-up');
+
+$oBtn5 = ButtonUIBlockFactory::MakeNeutral('Action 5');
+$oBtn5->SetIconClass('fas fa-thumbs-down');
+
+$oBtn11 = ButtonUIBlockFactory::MakeNeutral('Action 11');
+$oBtn11->SetIconClass('fas fa-bomb');
+
+$oButtonBar = ButtonBarUIBlockFactory::MakeStandard(
+	[
+		$oBtn1,
+		ButtonUIBlockFactory::MakeNeutral('Action 2'),
+		ButtonUIBlockFactory::MakeNeutral('Action 3'),
+		ButtonUIBlockFactory::MakeNeutral('Action 4'),
+		new ButtonSeparator(),
+		$oBtn5,
+		ButtonUIBlockFactory::MakeNeutral('Action 6'),
+		ButtonUIBlockFactory::MakeNeutral('Action 7'),
+		ButtonUIBlockFactory::MakeNeutral('Action 8'),
+		ButtonUIBlockFactory::MakeNeutral('Action 9'),
+		ButtonUIBlockFactory::MakeNeutral('Action 10'),
+		new ButtonSeparator(),
+		$oBtn11,
+		ButtonUIBlockFactory::MakeNeutral('Action 12'),
+		ButtonUIBlockFactory::MakeNeutral('Action 13'),
+		ButtonUIBlockFactory::MakeNeutral('Action 14'),
+		ButtonUIBlockFactory::MakeNeutral('Action 15'),
+		ButtonUIBlockFactory::MakeNeutral('Action 16'),
+	],
+	null,
+	'button-bar-test2'
+);
+$oButtonBar->AddCSSClass('btn-bar-600');
+$oPageContentLayout->AddMainBlock($oButtonBar);
+
+//$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Max width 800px', 3, 'title-button-bar3'));
+//
+//$oBtn1 = ButtonUIBlockFactory::MakeNeutral('Action 1');
+//$oBtn1->SetIconClass('fas fa-thumbs-up');
+//
+//$oBtn5 = ButtonUIBlockFactory::MakeNeutral('Action 5');
+//$oBtn5->SetIconClass('fas fa-thumbs-down');
+//
+//$oBtn11 = ButtonUIBlockFactory::MakeNeutral('Action 11');
+//$oBtn11->SetIconClass('fas fa-bomb');
+//
+//$oButtonBar = ButtonBarUIBlockFactory::MakeStandard(
+//	[
+//		$oBtn1,
+//		ButtonUIBlockFactory::MakeNeutral('Action 2'),
+//		ButtonUIBlockFactory::MakeNeutral('Action 3'),
+//		ButtonUIBlockFactory::MakeNeutral('Action 4'),
+//		ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
+//			ButtonUIBlockFactory::MakeForPositiveAction('Validation with options'),
+//			new PopoverMenu()
+//		),
+//		new ButtonSeparator(),
+//		$oBtn5,
+//		ButtonUIBlockFactory::MakeNeutral('Action 6'),
+//		ButtonUIBlockFactory::MakeNeutral('Action 7'),
+//		ButtonUIBlockFactory::MakeNeutral('Action 8'),
+//		ButtonUIBlockFactory::MakeNeutral('Action 9'),
+//		ButtonUIBlockFactory::MakeNeutral('Action 10'),
+//		ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
+//			ButtonUIBlockFactory::MakeForPositiveAction('Validation with options'),
+//			new PopoverMenu()
+//		),
+//		new ButtonSeparator(),
+//		$oBtn11,
+//		ButtonUIBlockFactory::MakeNeutral('Action 12'),
+//		ButtonUIBlockFactory::MakeNeutral('Action 13'),
+//		ButtonUIBlockFactory::MakeNeutral('Action 14'),
+//		ButtonUIBlockFactory::MakeNeutral('Action 15'),
+//		ButtonUIBlockFactory::MakeNeutral('Action 16'),
+//		ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
+//			ButtonUIBlockFactory::MakeForPositiveAction('Validation with options'),
+//			new PopoverMenu()
+//		),
+//	],
+//	null,
+//	'button-bar-test3'
+//);
+$oButtonBar->AddCSSClass('btn-bar-800');
+$oPageContentLayout->AddMainBlock($oButtonBar);
+
+$oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 /////////
 // Panels
 /////////

@@ -1,0 +1,43 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-button-bar--gap: 2px !default;
+$ibo-button-bar--track--gap: 6px !default;
+
+/* button-bar.css */
+ibo-button-bar{
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  position: relative;
+  gap: $ibo-button-bar--gap;
+  overflow: hidden;
+}
+
+/* Keep content visible even if JS initialization is delayed. */
+
+ibo-button-bar .ibo-button-bar--track{
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  white-space: nowrap;
+  gap: $ibo-button-bar--track--gap;
+  align-items: center;
+}
+
+ibo-button-bar .ibo-button-bar--item{
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+ibo-button-bar .ibo-button-bar--item[hidden]{
+  display: none !important;
+}
+
+ibo-button-bar .ibo-button-bar--extra{
+  flex: 0 0 auto;
+  position: relative;
+}

@@ -21,6 +21,10 @@
 namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem;
 
 use ApplicationPopupMenuItem;
+use Combodo\iTop\Application\UI\Base\Component\Button\Button;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonJS;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonSeparator;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonURL;
 use JSPopupMenuItem;
 use SeparatorPopupMenuItem;
 use URLPopupMenuItem;
@@ -128,6 +132,35 @@ class PopoverMenuItemFactory
 		return $oPopoverMenuItem;
 	}
 
+	public static function MakeApplicationPopupMenuItemFromButton(Button|ButtonSeparator $oButton, string $sUid): PopoverMenuItem|SeparatorPopupMenuItem
+	{
+		if ($oButton instanceof ButtonSeparator) {
+			$oPopoverMenuItem = PopoverMenuItemFactory::MakeSeparator();
+		} elseif ($oButton instanceof ButtonURL) {
+			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+				new URLPopupMenuItem($sUid, $oButton->GetLabel(), $oButton->GetURL(), $oButton->GetTarget())
+			);
+		} elseif ($oButton instanceof ButtonJS) {
+			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+				new JSPopupMenuItem($sUid, $oButton->GetLabel(), $oButton->GetOnClickJsCode())
+			);
+		} else {
+			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+				new URLPopupMenuItem($sUid, $oButton->GetLabel(), '#')
+			);
+		}
+
+		if ($oButton instanceof Button) {
+			if ($oButton->GetIconClass() !== '') {
+				$oPopoverMenuItem->SetIconClass($oButton->GetIconClass());
+			}
+			if ($oButton->GetTooltip() !== '') {
+				$oPopoverMenuItem->SetTooltip($oButton->GetTooltip());
+			}
+		}
+
+		return $oPopoverMenuItem;
+	}
 	/**
 	 * Make a separator item for the popover menu
 	 *

@@ -61,6 +61,7 @@ $ibo-caselog-entry-form--lock-message--margin-left: 1rem !default;
   z-index: 1;
 }
 
-.ibo-caselog-entry-form--action-buttons--extra-actions .ibo-button-separator{
-  vertical-align: center  ;
+.ibo-caselog-entry-form--action-buttons--extra-actions{
+  overflow: hidden;
+  flex-grow: 1;
 }

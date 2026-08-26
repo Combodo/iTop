@@ -566,6 +566,8 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Badge\\Badge' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Badge/Badge.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Badge\\BadgeUIBlockFactory' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Badge/BadgeUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Breadcrumbs\\Breadcrumbs' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Breadcrumbs/Breadcrumbs.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\ButtonBar\\ButtonBar' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/ButtonBar/ButtonBar.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\ButtonBar\\ButtonBarUIBlockFactory' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/ButtonBar/ButtonBarUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\ButtonGroup\\ButtonGroup' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/ButtonGroup/ButtonGroup.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\ButtonGroup\\ButtonGroupUIBlockFactory' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/ButtonGroup/ButtonGroupUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Button\\Button' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Button/Button.php',
@@ -624,6 +626,8 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\tInputLabel' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Input/tInputLabel.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\MedallionIcon\\MedallionIcon' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/MedallionIcon/MedallionIcon.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Modal\\DoNotShowAgainOptionBlock' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Modal/DoNotShowAgainOptionBlock.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\OverflowLine\\OverflowLine' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/OverflowLine/OverflowLine.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\OverflowLine\\OverflowLineUIBlockFactory' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/OverflowLine/OverflowLineUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Panel\\Panel' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Panel/Panel.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Panel\\PanelUIBlockFactory' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Panel/PanelUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Pill\\Pill' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Component/Pill/Pill.php',
@@ -4425,7 +4429,7 @@ class ComposerStaticInitfc0e9e9dea11dcbb6272414776c30685
         'privUITransactionFile' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'privUITransactionSession' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'utils' => __DIR__ . '/../..' . '/application/utils.inc.php',
-        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
+        'ï¿½' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
