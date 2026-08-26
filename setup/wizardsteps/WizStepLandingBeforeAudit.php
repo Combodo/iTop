@@ -107,6 +107,16 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 			}
 			$sDisplayChoices .= '</ul>';
 			$this->oWizard->SetParameter('display_choices', $sDisplayChoices);
+		} else {
+			$this->GetWizardSteps();
+			$aSelectedComponents = $this->GetSelectedComponents($this->aSteps, $this->oWizard->GetParameter('selected_extensions', '[]'));
+			$aModules = [];
+			$i = 0;
+			foreach ($this->aSteps as $aStepInfo) {
+				$this->GetSelectedModules($aStepInfo, $aSelectedComponents[$i], $aModules, '', '', $aExtensions);
+				$i++;
+			}
+			$this->oWizard->SetParameter('selected_modules', json_encode(array_keys($aModules)));
 		}
 
 		return new WizardState(WizStepDataAudit::class);
