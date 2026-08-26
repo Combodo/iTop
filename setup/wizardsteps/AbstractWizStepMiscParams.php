@@ -70,7 +70,7 @@ $("[data-role=\"setup-collapsable-options--toggler\"").on('click', function() {
 $("#force-uninstall").on("click", function() {
 	let $this = $(this);
 	let bForceUninstall = $this.prop("checked");
-	if( bForceUninstall && !confirm('Beware, uninstalling extensions flagged as non uninstallable may result in data corruption and application crashes. Are you sure you want to continue ?')){
+	if( bForceUninstall && !confirm('Beware, uninstalling extensions flagged as non uninstallable may result in data corruption and application crashes. Are you sure you want to continue?')){
 		$this.prop("checked",false);
 	}
 });
