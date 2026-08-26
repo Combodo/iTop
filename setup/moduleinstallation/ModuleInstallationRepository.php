@@ -2,7 +2,7 @@
 
 class ModuleInstallationRepository
 {
-	private static ModuleInstallationRepository $oInstance;
+	private static ?ModuleInstallationRepository $oInstance;
 
 	protected function __construct()
 	{

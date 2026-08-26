@@ -158,13 +158,43 @@ HTML
 					</form>
 HTML
 				);
-				$oPage->add_ready_script(
-					<<<JS
+
+				if ($this->DisplaySetupShortcutButton()) {
+					$oPage->add_ready_script(
+						<<<JS
 $('.ibo-setup--wizard--buttons-container tr td:nth-child(1)').before('<td style="text-align:center;"><button class="ibo-button ibo-is-alternative ibo-is-neutral" form="fast_setup"><span class="ibo-button--label">Keep current choices</span></button></td>');
 JS
-				);
+					);
+				}
 			}
 		}
+	}
+
+	public function DisplaySetupShortcutButton(): bool
+	{
+		if ('install' === $this->oWizard->GetParameter('mode', 'install')) {
+			//fresh install
+			return false;
+		}
+
+		$oConfig = utils::GetConfig();
+		$res = ModuleInstallationRepository::GetInstance()->GetApplicationVersion($oConfig);
+		if (false === $res) {
+			return false;
+		}
+
+		$sProductName = $res['product_name'] ?? null;
+		$sProductVersion = $res['product_version'] ?? null;
+		if (is_null($sProductName) || is_null($sProductVersion)) {
+			\SetupLog::Error(__METHOD__.": cannot fetch itop version", null, $res);
+			return false;
+		}
+
+		if (ITOP_VERSION_FULL !== $sProductVersion) {
+			return false;
+		}
+
+		return (ITOP_APPLICATION === $sProductName);
 	}
 
 	public function CanMoveForward()
