@@ -944,7 +944,7 @@ EOF
 
 		$sMetadata = '';
 		if (isset($aChoice['version']) && isset($aChoice['source_label'])) {
-			$sMetadata = '<span>v'.$aChoice['version'].'</span><span>'.$aChoice['source_label'].'</span>';
+			$sMetadata = '<span>v'.$aChoice['version'].'</span><span>'.$aChoice['source_label'].'</span><span>'.$aChoice['extension_code'].'</span>';
 		}
 		$sChoiceDisabled = $aFlags['disabled'] && !$aFlags['checked'] ? 'choice-disabled' : '';
 
