@@ -42,7 +42,7 @@ css/backoffice/
 |– vendors/                 # Third-party libs, should be either:
 |                           # - Overload of the lib SCSS variables (BEST way, but possible only if the lib exposes them. e.g. Bulma)
 |                           # - Overload of the lib necessary CSS classes only (not great as it duplicates some rules in the browser, which add weight and computation. e.g. dataTables)
-|                           # - Duplicate the lib CSS completly to insert SCSS variables (not great as it will be outdated when updating the lib itself. e.g. jQuery UI)
+|                           # - Duplicate the lib CSS completely to insert SCSS variables (not great as it will be outdated when updating the lib itself. e.g. jQuery UI)
 |   |– _bulma-variables-overload.scss   # Bulma CSS framework
 |   |– _jquery-ui.scss                  # jQuery UI
 |   ...                                 # Etc…
