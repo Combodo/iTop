@@ -1276,14 +1276,14 @@ class RunTimeEnvironment
 	 *  - plus the list of modules present in the "extra" directory of the build environment: data/<build_environment>-modules/
 	 *
 	 * @param string $sSourceEnv The name of the source environment to 'imitate'
-	 * @param null $bUseSymLinks Whether to create symbolic links instead of copies
+	 * @param bool|null $bUseSymLinks Whether to create symbolic links instead of copies
 	 * @param array $aAddedExtensions List of additional extensions to add to the build environment
 	 *
 	 * @return string[]
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
-	public function CompileFrom($sSourceEnv, $bUseSymLinks = null, $aAddedExtensions = [])
+	public function CompileFrom($sSourceEnv, ?bool $bUseSymLinks = null, $aAddedExtensions = [])
 	{
 		$oConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
 		$this->InitExtensionMap($oConfig);
