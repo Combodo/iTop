@@ -792,8 +792,11 @@ EOF
 				// If the extension has a dependency issue, it cannot be checked and must be unchecked using the "force-uninstall" option
 				$bDisabled = !$bInstalled || !$bDisableUninstallCheck;
 			} elseif ($bInstalled && $bDoNotUninstall) {
-				// If the extension is uninstallable, it must be unchecked using the "force-uninstall" option
+				// If the extension is not uninstallable, it must be unchecked using the "force-uninstall" option
 				$bDisabled = !$bDisableUninstallCheck;
+				if ($bDisabled) {
+					$bChecked = true;
+				}
 			}
 
 			if (isset($aChoice['sub_options'])) {
@@ -987,7 +990,7 @@ EOF
 
 	public function CanMoveForward()
 	{
-		return true;
+		return $this->bCanMoveForward;
 	}
 
 	public function JSCanMoveForward()
