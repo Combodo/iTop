@@ -64,6 +64,9 @@ class CaseLogEntryFormFactory
 			// Create a button for each extra action, the UI will be responsible for displaying them in a dropdown if there are too many
 			foreach ($aPopupItems as $oAction) {
 				$oActionButton = ButtonUIBlockFactory::MakeButtonFromApplicationPopupMenuItem($oAction);
+				if ($oActionButton === null) {
+					continue;
+				}
 				$oActionButton->AddCSSClass('ibo-field--action');
 				$aActions[] = $oActionButton;
 			}
