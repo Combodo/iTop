@@ -33,5 +33,4 @@ class TopBarQuickActionURL extends TopBarQuickAction
 {
 	use tActionURL;
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/top-bar/top-bar-quick-action/top-bar-quick-action-url';
-	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/layouts/top-bar/top-bar-quick-action/top-bar-quick-action-url';
 }
