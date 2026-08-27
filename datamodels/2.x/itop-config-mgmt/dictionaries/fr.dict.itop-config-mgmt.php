@@ -521,7 +521,7 @@ Par exemple : disques durs externes, scanners, dispositifs d\'entrée (trackball
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Enclosure' => 'Châssis',
-	'Class:Enclosure+' => 'Un châssis montée à l\'intérieur d\'une Baie qui permet d\'installer des équipements informatiques, comme des Serveurs lames ou des équipements réseau.',
+	'Class:Enclosure+' => 'Un châssis monté à l\'intérieur d\'une Baie qui permet d\'installer des équipements informatiques, comme des Serveurs lames ou des équipements réseau.',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Enclosure/Attribute:rack_id' => 'Baie',
 	'Class:Enclosure/Attribute:rack_id+' => '',
