@@ -797,6 +797,10 @@ EOF
 				$bDisabled = !$bDisableUninstallCheck;
 			}
 
+			if ($bDisabled) {
+				$bChecked = $bInstalled;
+			}
+
 			if (isset($aChoice['sub_options'])) {
 				$aOptions = $aChoice['sub_options']['options'] ?? [];
 				foreach ($aOptions as $index => $aSubChoice) {
