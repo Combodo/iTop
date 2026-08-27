@@ -7,6 +7,11 @@
                     data-{{ sName }}="{{ sValue }}"
                 {% endfor %}
             {% endif %}
+            {% if oUIBlock.GetAriaAttributes() %}
+                {% for sName, sValue in oUIBlock.GetAriaAttributes() %}
+                    aria-{{ sName }}="{{ sValue }}"
+                {% endfor %}
+            {% endif %}
             {% if oUIBlock.GetTooltip() is not empty %}
                 data-tooltip-content="{{ oUIBlock.GetTooltip() }}"
             {% endif %}

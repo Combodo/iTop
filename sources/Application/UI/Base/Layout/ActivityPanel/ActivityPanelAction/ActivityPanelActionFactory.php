@@ -49,12 +49,12 @@ class ActivityPanelActionFactory
 		$aActionsByUid = [];
 
 		foreach ($aPopupItems as $sSectionId => $aSectionData) {
-			$sSectionLabel = (string) $sSectionId;
+			$sSectionLabel = (string)$sSectionId;
 			$aSectionPopupItems = $aSectionData;
 			if (is_array($aSectionData) && array_key_exists('items', $aSectionData)) {
 				$aSectionPopupItems = $aSectionData['items'];
 				if (array_key_exists('label', $aSectionData)) {
-					$sSectionLabel = (string) $aSectionData['label'];
+					$sSectionLabel = (string)$aSectionData['label'];
 				}
 			}
 
@@ -99,8 +99,8 @@ class ActivityPanelActionFactory
 				$oPopupItemForPopoverMenuItem->SetIconClass('');
 
 				$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oPopupItemForPopoverMenuItem);
-				$oPopoverMenuItem->AddDataAttribute('caselog-attribute-code', (string) $sSectionId);
-				$aActionsByUid[$sUid]->GetPopoverMenu()->AddItem((string) $sSectionId, $oPopoverMenuItem);
+				$oPopoverMenuItem->AddDataAttribute('caselog-attribute-code', (string)$sSectionId);
+				$aActionsByUid[$sUid]->GetPopoverMenu()->AddItem((string)$sSectionId, $oPopoverMenuItem);
 			}
 		}
 
@@ -119,6 +119,8 @@ class ActivityPanelActionFactory
 			$oAction->SetJsCode($oPopupItem->GetJsCode());
 			$oAction->SetUrl($oPopupItem->GetUrl());
 			$oAction->SetIncludeJSFiles($oPopupItem->GetLinkedScripts());
+			$oAction->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
+			$oAction->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
 
 			return $oAction;
 		} elseif ($oPopupItem instanceof URLPopupMenuItem) {
@@ -130,6 +132,8 @@ class ActivityPanelActionFactory
 			);
 			$oAction->SetUrl($oPopupItem->GetUrl());
 			$oAction->SetTarget($oPopupItem->GetTarget());
+			$oAction->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
+			$oAction->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
 
 			return $oAction;
 		} elseif ($oPopupItem instanceof SeparatorPopupMenuItem) {
@@ -140,13 +144,4 @@ class ActivityPanelActionFactory
 
 		return null;
 	}
-
-	protected static function ClonePopupItemWithLabel(ApplicationPopupMenuItem $oPopupItem, string $sLabel): ApplicationPopupMenuItem
-	{
-		$oClonedPopupItem = clone $oPopupItem;
-		$oClonedPopupItem->SetLabel($sLabel);
-
-		return $oClonedPopupItem;
-	}
-
 }

@@ -407,6 +407,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 			}
 			$oButton->SetActionType($sActionType);
 			$oButton->SetColor($sColor);
+			$oButton->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
+			$oButton->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
 
 			return $oButton;
 		} elseif ($oPopupItem instanceof URLPopupMenuItem) {
@@ -424,6 +426,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 
 			$oButton->SetActionType($sActionType);
 			$oButton->SetColor($sColor);
+			$oButton->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
+			$oButton->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
 
 			return $oButton;
 		} elseif ($oPopupItem instanceof SeparatorPopupMenuItem) {
@@ -460,6 +464,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 			if (utils::IsNotNullOrEmptyString($oPopupItem->GetTooltip())) {
 				$oButton->SetTooltip($oPopupItem->GetTooltip());
 			}
+			$oButton->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
+			$oButton->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
 
 			$oButton->SetOnClickJsCode($oPopupItem->GetJsCode());
 
@@ -486,6 +492,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 			if (utils::IsNotNullOrEmptyString($oPopupItem->GetTarget())) {
 				$oButton->SetTarget($oPopupItem->GetTarget());
 			}
+			$oButton->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
+			$oButton->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
 
 			return $oButton;
 		} elseif ($oPopupItem instanceof SeparatorPopupMenuItem) {

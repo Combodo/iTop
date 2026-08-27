@@ -23,6 +23,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanelAct
 use Combodo\iTop\Application\UI\Base\Common\Action\tActionCommon;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use utils;
 
 /**
  * Class ActivityPanelAction
@@ -91,6 +92,22 @@ abstract class ActivityPanelAction extends UIBlock
 	public function HasPopoverMenu(): bool
 	{
 		return $this->oPopoverMenu !== null;
+	}
+
+	public function GetAriaAttributes(): array
+	{
+		$aDefaultValues = [];
+		// Default value for aria-label is the tooltip
+		if (utils::IsNotNullOrEmptyString($this->sTooltip)) {
+			$aDefaultValues['label'] = $this->sTooltip;
+		}
+
+		return array_merge($aDefaultValues, parent::GetAriaAttributes());
+	}
+
+	public function HasAriaAttributes(): bool
+	{
+		return  !empty($this->GetAriaAttributes());
 	}
 
 	public function GetSubBlocks(): array

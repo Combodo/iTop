@@ -88,6 +88,8 @@ class PopoverMenuItemFactory
 			'label' => $aActionData['label'],
 			'icon_class' => isset($aActionData['icon_class']) ? $aActionData['icon_class'] : '',
 			'tooltip' => isset($aActionData['tooltip']) ? $aActionData['tooltip'] : '',
+			'data_attributes' => isset($aActionData['data_attributes']) && is_array($aActionData['data_attributes']) ? $aActionData['data_attributes'] : [],
+			'aria_attributes' => isset($aActionData['aria_attributes']) && is_array($aActionData['aria_attributes']) ? $aActionData['aria_attributes'] : [],
 		];
 
 		// Avoid meaningless tooltips which are identical to the label
@@ -127,6 +129,12 @@ class PopoverMenuItemFactory
 		}
 		if (!empty($aRefactoredItem['tooltip'])) {
 			$oPopoverMenuItem->SetTooltip($aRefactoredItem['tooltip']);
+		}
+		if (!empty($aRefactoredItem['data_attributes'])) {
+			$oPopoverMenuItem->SetDataAttributes($aRefactoredItem['data_attributes']);
+		}
+		if (!empty($aRefactoredItem['aria_attributes'])) {
+			$oPopoverMenuItem->SetAriaAttributes($aRefactoredItem['aria_attributes']);
 		}
 
 		return $oPopoverMenuItem;

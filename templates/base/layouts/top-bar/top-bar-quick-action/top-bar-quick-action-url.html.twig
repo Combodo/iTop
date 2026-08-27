@@ -3,7 +3,16 @@
     <div class="ibo-top-bar-quick-action--head" data-role="ibo-top-bar-quick-action--head">
         <a href="{{ oUIBlock.GetURL() }}" class="ibo-top-bar-quick-action--icon" data-role="ibo-top-bar-quick-action--icon"
            target="{{ oUIBlock.GetTarget() }}"
-           aria-label="{{ oUIBlock.GetTooltip() }}"
+           {% if oUIBlock.GetDataAttributes() %}
+               {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                   data-{{ sName }}="{{ sValue }}"
+               {% endfor %}
+           {% endif %}
+           {% if oUIBlock.GetAriaAttributes() %}
+               {% for sName, sValue in oUIBlock.GetAriaAttributes() %}
+                   aria-{{ sName }}="{{ sValue }}"
+               {% endfor %}
+           {% endif %}
            data-tooltip-content="{{ oUIBlock.GetTooltip() }}"
            data-tooltip-placement="bottom-start"
            data-tooltip-distance-offset="25"

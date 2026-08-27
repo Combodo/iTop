@@ -35,13 +35,15 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 	/** @ignore */
 	public function GetMenuItem()
 	{
-		return ['label' => $this->GetLabel(),
+		$aData = ['label' => $this->GetLabel(),
 			'url' => $this->GetUrl(),
 			'target' => $this->GetTarget(),
 			'css_classes' => $this->aCssClasses,
 			'icon_class' => $this->sIconClass,
 			'tooltip' => $this->sTooltip,
 		];
+
+		return array_merge($aData, $this->GetMenuItemAdditionalData());
 	}
 
 	/** @ignore */

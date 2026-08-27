@@ -24,6 +24,12 @@ class SeparatorPopupMenuItem extends ApplicationPopupMenuItem
 	/** @ignore */
 	public function GetMenuItem()
 	{
-		return ['label' => '<hr class="menu-separator">', 'url' => '', 'css_classes' => $this->aCssClasses];
+		$aData = [
+			'label' => '<hr class="menu-separator">',
+			'url' => '',
+			'css_classes' => $this->aCssClasses,
+		];
+
+		return array_merge($aData, $this->GetMenuItemAdditionalData());
 	}
 }

@@ -44,8 +44,9 @@ class TopBarQuickActionFactory
 			);
 			$oTopBarAction->SetJsCode($oApplicationPopupItem->GetJsCode());
 			$oTopBarAction->SetUrl($oApplicationPopupItem->GetUrl());
-
 			$oTopBarAction->SetIncludeJSFiles($oApplicationPopupItem->GetLinkedScripts());
+			$oTopBarAction->SetAriaAttributes($oApplicationPopupItem->GetAriaAttributes()->GetAttributes());
+			$oTopBarAction->SetDataAttributes($oApplicationPopupItem->GetDataAttributes()->GetAttributes());
 			return $oTopBarAction;
 		} elseif ($oApplicationPopupItem instanceof URLPopupMenuItem) {
 			$oTopBarAction = new TopBarQuickActionURL(
@@ -56,10 +57,14 @@ class TopBarQuickActionFactory
 			);
 			$oTopBarAction->SetUrl($oApplicationPopupItem->GetUrl());
 			$oTopBarAction->SetTarget($oApplicationPopupItem->GetTarget());
+			$oTopBarAction->SetAriaAttributes($oApplicationPopupItem->GetAriaAttributes()->GetAttributes());
+			$oTopBarAction->SetDataAttributes($oApplicationPopupItem->GetDataAttributes()->GetAttributes());
 			return $oTopBarAction;
 		} elseif ($oApplicationPopupItem instanceof SeparatorPopupMenuItem) {
 			$oTopBarAction = new TopBarQuickActionSeparator($oApplicationPopupItem->GetUID());
 			$oTopBarAction->SetCSSClasses($oApplicationPopupItem->GetCssClasses());
+			$oTopBarAction->SetAriaAttributes($oApplicationPopupItem->GetAriaAttributes()->GetAttributes());
+			$oTopBarAction->SetDataAttributes($oApplicationPopupItem->GetDataAttributes()->GetAttributes());
 			return $oTopBarAction;
 		}
 

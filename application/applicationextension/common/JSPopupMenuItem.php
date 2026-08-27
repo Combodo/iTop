@@ -40,7 +40,7 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	public function GetMenuItem()
 	{
 		// Note: the semicolumn is a must here!
-		return [
+		$aData = [
 			'label' => $this->GetLabel(),
 			'onclick' => $this->GetJsCode().'; return false;',
 			'url' => $this->GetUrl(),
@@ -48,6 +48,8 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 			'icon_class' => $this->sIconClass,
 			'tooltip' => $this->sTooltip,
 		];
+
+		return array_merge($aData, $this->GetMenuItemAdditionalData());
 	}
 
 	/** @ignore */

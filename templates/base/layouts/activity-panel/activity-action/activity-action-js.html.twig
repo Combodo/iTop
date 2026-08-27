@@ -2,9 +2,18 @@
    id="{{ oUIBlock.GetId() }}"
    class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-activity-panel--activity-action"
    data-role="ibo-activity-panel--activity-action"
+   {% if oUIBlock.GetDataAttributes() %}
+       {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+          data-{{ sName }}="{{ sValue }}"
+       {% endfor %}
+   {% endif %}
+       {% if oUIBlock.GetAriaAttributes() %}
+       {% for sName, sValue in oUIBlock.GetAriaAttributes() %}
+       aria-{{ sName }}="{{ sValue }}"
+       {% endfor %}
+   {% endif %}
    {% if oUIBlock.GetTooltip() is not empty %}
    data-tooltip-content="{{ oUIBlock.GetTooltip() }}"
-   aria-label="{{ oUIBlock.GetTooltip() }}"
    {% endif %}
 >
     {% if oUIBlock.GetIconClass() is not empty %}
