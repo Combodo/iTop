@@ -74,22 +74,23 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 		if (isset($aParams['actions'])) {
 			$iMaxActions = utils::GetConfig()->Get('attribute.max_actions_items');
 			$aActions = [];
-			// Create a button for a few action or a kebab button for multiple actions that a more than what's configured
+			// Create buttons for a few actions or a grouped-actions button for more actions than configured
 			if (count($aParams['actions']) > $iMaxActions) {
-				$oKebabButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', 'More actions', 'kebab');
-				$oKebabButton->AddCSSClass('ibo-field--action');
+				$oGroupedActionsButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', 'More actions', 'grouped-actions');
+				$oGroupedActionsButton->AddCSSClass('ibo-field--action');
 
-				$aKebabActions = [];
+				$aGroupedActions = [];
 				foreach ($aParams['actions'] as $oAction) {
-					$aKebabActions[] = $oAction->GetMenuItem();
+					$aGroupedActions[] = $oAction->GetMenuItem();
 				}
-				//TODO: Make a dict entry for the kebab menu label
-				$oKebabPopoverMenu = PopoverMenuFactory::MakeMenuForActions($oField->GetId().'--kebab-menu', $aKebabActions);
-				$oKebabPopoverMenu->SetTogglerFromBlock($oKebabButton);
-				$oKebabPopoverMenu->SetContainer(PopoverMenu::ENUM_CONTAINER_BODY);
+				//TODO: Make a dict entry for the grouped actions menu label
+				$oGroupedActionsPopoverMenu = PopoverMenuFactory::MakeMenuForActions($oField->GetId().'--grouped-actions-menu', $aGroupedActions);
+				$oGroupedActionsPopoverMenu->AddCSSClass('ibo-field--grouped-actions-popover');
+				$oGroupedActionsPopoverMenu->SetTogglerFromBlock($oGroupedActionsButton);
+				$oGroupedActionsPopoverMenu->SetContainer(PopoverMenu::ENUM_CONTAINER_BODY);
 
-				$aActions[] = $oKebabButton;
-				$aActions[] = $oKebabPopoverMenu;
+				$aActions[] = $oGroupedActionsButton;
+				$aActions[] = $oGroupedActionsPopoverMenu;
 			} else {
 				foreach ($aParams['actions'] as $oAction) {
 					$oActionButton = ButtonUIBlockFactory::MakeIconButtonFromApplicationPopupMenuItem($oAction);

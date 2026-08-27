@@ -294,3 +294,8 @@ $ibo-field--label--action--font-size: $ibo-font-size-50 !default;
     vertical-align: center;
   }
 }
+
+// Specific rule to ensure that the grouped actions popover of a field is visible in fullscreen mode
+body.ibo-has-fullscreen-descendant .ibo-popover-menu.ibo-field--grouped-actions-popover {
+  z-index: 1060 !important;
+}
