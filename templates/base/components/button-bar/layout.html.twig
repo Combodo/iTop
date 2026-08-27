@@ -1,0 +1,19 @@
+<ibo-button-bar id="{{ oUIBlock.GetId() }}" class="ibo-button-bar {{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" data-role="ibo-button-bar"
+	{% if oUIBlock.GetDataAttributes() %}
+		{% for sName, sValue in oUIBlock.GetDataAttributes() %}
+			data-{{ sName }}="{{ sValue }}"
+		{% endfor %}
+	{% endif %}
+>
+	<div class="ibo-button-bar--track" data-role="ibo-button-bar--track">
+		{% for oButton in oUIBlock.GetButtons() %}
+			<div class="ibo-button-bar--item" data-role="ibo-button-bar--item" data-overflow-item-id="{{ oUIBlock.GetOverflowItemIdFromBlockId(oButton.GetId()) }}" data-source-button-id="{{ oButton.GetId() }}"{% if oUIBlock.IsOverflowStartAfterButton(oButton.GetId()) %} data-overflow-start-after="1"{% endif %}>
+				{{ render_block(oButton, {aPage: aPage}) }}
+			</div>
+		{% endfor %}
+	</div>
+	<div class="ibo-button-bar--extra" data-role="ibo-button-bar--extra" >
+        {{ render_block(oUIBlock.GetPopoverMenu(), {aPage: aPage}) }}
+		{{ render_block(oUIBlock.GetOverflowTogglerButton(), {aPage: aPage}) }}
+	</div>
+</ibo-button-bar>

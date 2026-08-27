@@ -7,14 +7,12 @@
 
 namespace Combodo\iTop\OAuthClient\Service;
 
-use ApplicationContext;
 use Dict;
 use iPopupMenuExtension;
 use JSPopupMenuItem;
 use OAuthClient;
 use SeparatorPopupMenuItem;
 use URLPopupMenuItem;
-use utils;
 
 class PopupMenuExtension implements \iPopupMenuExtension
 {
@@ -29,45 +27,138 @@ class PopupMenuExtension implements \iPopupMenuExtension
 
 		switch ($iMenuId) {
 			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS:
-				$oObj = $param;
-				if ($oObj instanceof OAuthClient) {
-					$bHasToken = !empty($oObj->Get('token'));
-					$aResult[] = new SeparatorPopupMenuItem();
+				$oItem = new JSPopupMenuItem(
+					'OAuthConnectTopBar1',
+					Dict::S('Unlock'),
+					"console.log('OAuthConnectTopBar clicked');",
+					[]
+				);
+				$oItem->SetIconClass('fas fa-unlock');
+				$oItem->SetTooltip('Help please');
+				$aResult[] = $oItem;
 
-					$oAppContext = new ApplicationContext();
-					$sMenu = $bHasToken ? 'Menu:RegenerateTokens' : 'Menu:GenerateTokens';
-					$sObjClass = get_class($oObj);
-					$sClass = $sObjClass;
-					$sId = $oObj->GetKey();
-					$sAjaxUri = utils::GetAbsoluteUrlModulePage(static::MODULE_CODE, 'ajax.php');
-					// Add a new menu item that triggers a custom JS function defined in our own javascript file: js/sample.js
-					$sJSFileUrl = 'env-'.utils::GetCurrentEnvironment().'/'.static::MODULE_CODE.'/assets/js/oauth_connect.js';
-					$aResult[] = new JSPopupMenuItem(
-						$sMenu.' from '.$sObjClass,
-						Dict::S($sMenu),
-						"OAuthConnect('$sClass', $sId, '$sAjaxUri')",
-						[$sJSFileUrl]
+				$oUrlItem = new URLPopupMenuItem(
+					'OAuthConnectTopBarUrl2',
+					Dict::S('Access'),
+					'https://www.example.com',
+					'_blank'
+				);
+				$oUrlItem->SetIconClass('fas fa-universal-access');
+				$oUrlItem->SetTooltip('Help please');
+				$aResult[] = $oUrlItem;
+
+				break;
+			case iPopupMenuExtension::MENU_OBJDETAILS_FIELD_ACTIONS:
+				if ($param['att_code'] === 'title' || $param['att_code'] === 'description' || $param['att_code'] === 'caller' ||
+					$param['att_code'] === 'public_log' || $param['att_code'] === 'public_log2') {
+					$oItem = new JSPopupMenuItem(
+						'OAuthConnectTopBar'.uniqid(),
+						Dict::S('Vote down'),
+						"console.log('OAuthConnectTopBar clicked');",
+						[]
 					);
+					$oItem->SetIconClass('fas fa-thumbs-down');
+					$oItem->SetTooltip('Help please');
+					$aResult[] = $oItem;
+					$oSeparatorItem = new SeparatorPopupMenuItem();
+					$aResult[] = $oSeparatorItem;
 
-					if ($bHasToken) {
-						$aScopes = $oObj->Get('scope')->GetValues();
-						if (in_array('IMAP', $aScopes) && class_exists('MailInboxOAuth')) {
-							$aParams = $oAppContext->GetAsHash();
-							$sMenu = 'Menu:CreateMailbox';
-							$sObjClass = get_class($oObj);
-							$aParams['class'] = $sObjClass;
-							$aParams['id'] = $oObj->GetKey();
-							$aParams['operation'] = 'CreateMailbox';
-							$aResult[] = new URLPopupMenuItem(
-								$sMenu.' from '.$sObjClass,
-								Dict::S($sMenu),
-								utils::GetAbsoluteUrlModulePage(static::MODULE_CODE, 'index.php', $aParams)
-							);
-						}
-					}
+					$oItem2 = new JSPopupMenuItem(
+						'OAuthConnectTopBar2'.uniqid(),
+						Dict::S('Vote d2own'),
+						"console.log('OAuthConnectTopBar clicked');",
+						[]
+					);
+					$oItem2->SetIconClass('fas fa-thumbs-down');
+					$oItem2->SetTooltip('Help please');
+					$aResult[] = $oItem2;
+
+					$oUrlItem = new URLPopupMenuItem(
+						'OAuthConnectTopBarUrl'.uniqid(),
+						Dict::S('Translate'),
+						'https://www.example.com',
+						'_blank'
+					);
+					$oUrlItem->SetIconClass('fas fa-language');
+					$oUrlItem->SetTooltip('Help please');
+					$aResult[] = $oUrlItem;
+
+					$oSeparatorItem = new SeparatorPopupMenuItem();
+					$aResult[] = $oSeparatorItem;
+
+					$oUrlItem = new URLPopupMenuItem(
+						'OAuthConnectTopBarUrl'.uniqid(),
+						Dict::S('Translate'),
+						'https://www.example.com',
+						'_blank'
+					);
+					$oUrlItem->SetIconClass('fas fa-language');
+					$oUrlItem->SetTooltip('Help please');
+					$aResult[] = $oUrlItem;
 				}
 				break;
+			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIVITY_PANEL_ACTIONS:
+				if ($param['caselog_att_code'] === 'public_log' || $param['caselog_att_code'] === 'public_log2' || $param['caselog_att_code'] === 'activity') {
+					$oItem = new JSPopupMenuItem(
+						'OAuthConnectTopBar',
+						Dict::S('Trim content'),
+						"console.log('OAuthConnectTopBar clicked');",
+						[]
+					);
+					$oItem->SetIconClass('fas fa-cut');
+					$oItem->SetTooltip('Help please');
+					$aResult[] = $oItem;
+					$oSeparatorItem = new SeparatorPopupMenuItem();
+					$aResult[] = $oSeparatorItem;
 
+					$oUrlItem = new URLPopupMenuItem(
+						'OAuthConnectTopBarUrl',
+						Dict::S('Empty content'),
+						'https://www.example.com',
+						'_blank'
+					);
+					$oUrlItem->SetIconClass('fas fa-trash');
+					$oUrlItem->SetTooltip('Help please');
+					$aResult[] = $oUrlItem;
+
+					$oSeparatorItem = new SeparatorPopupMenuItem();
+					$aResult[] = $oSeparatorItem;
+
+					$oItem = new JSPopupMenuItem(
+						'OAuthConnectTopBar2',
+						Dict::S('Trim content'),
+						"console.log('OAuthConnectTopBar clicked');",
+						[]
+					);
+					$oItem->SetIconClass('fas fa-cut');
+					$oItem->SetTooltip('Help please');
+					$aResult[] = $oItem;
+				}
+				break;
+			case iPopupMenuExtension::MENU_TOPBAR_ACTIONS:
+				$oItem = new JSPopupMenuItem(
+					'OAuthConnectTopBar'.uniqid(),
+					Dict::S('Plug label'),
+					"console.log('OAuthConnectTopBar clicked');",
+					[]
+				);
+				$oItem->SetIconClass('fa fa-plug');
+				$oItem->SetTooltip('Help please');
+				$aResult[] = $oItem;
+
+				$oSeparatorItem = new SeparatorPopupMenuItem();
+				$aResult[] = $oSeparatorItem;
+
+				$oUrlItem = new URLPopupMenuItem(
+					'OAuthConnectTopBarUrl'.uniqid(),
+					Dict::S('Link label'),
+					'https://www.example.com',
+					'_blank'
+				);
+				$oUrlItem->SetIconClass('fa fa-link');
+				$oUrlItem->SetTooltip('Help please');
+				$aResult[] = $oUrlItem;
+				break;
 			default:
 				// Unknown type of menu, do nothing
 				break;

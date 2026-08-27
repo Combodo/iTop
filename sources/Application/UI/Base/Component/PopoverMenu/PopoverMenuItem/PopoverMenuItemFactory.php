@@ -134,19 +134,28 @@ class PopoverMenuItemFactory
 
 	public static function MakeApplicationPopupMenuItemFromButton(Button|ButtonSeparator $oButton, string $sUid): PopoverMenuItem|SeparatorPopupMenuItem
 	{
+		$sLabel = '';
+		if ($oButton instanceof Button) {
+			$sLabel = $oButton->GetLabel();
+			if ($sLabel === '' && $oButton->GetTooltip() !== '') {
+				// Fallback for icon-only buttons: show the tooltip text in the dropdown item.
+				$sLabel = $oButton->GetTooltip();
+			}
+		}
+
 		if ($oButton instanceof ButtonSeparator) {
 			$oPopoverMenuItem = PopoverMenuItemFactory::MakeSeparator();
 		} elseif ($oButton instanceof ButtonURL) {
 			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
-				new URLPopupMenuItem($sUid, $oButton->GetLabel(), $oButton->GetURL(), $oButton->GetTarget())
+				new URLPopupMenuItem($sUid, $sLabel, $oButton->GetURL(), $oButton->GetTarget())
 			);
 		} elseif ($oButton instanceof ButtonJS) {
 			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
-				new JSPopupMenuItem($sUid, $oButton->GetLabel(), $oButton->GetOnClickJsCode())
+				new JSPopupMenuItem($sUid, $sLabel, $oButton->GetOnClickJsCode())
 			);
 		} else {
 			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
-				new URLPopupMenuItem($sUid, $oButton->GetLabel(), '#')
+				new URLPopupMenuItem($sUid, $sLabel, '#')
 			);
 		}
 
@@ -154,7 +163,7 @@ class PopoverMenuItemFactory
 			if ($oButton->GetIconClass() !== '') {
 				$oPopoverMenuItem->SetIconClass($oButton->GetIconClass());
 			}
-			if ($oButton->GetTooltip() !== '') {
+			if ($oButton->GetTooltip() !== '' && $oButton->GetTooltip() !== $sLabel) {
 				$oPopoverMenuItem->SetTooltip($oButton->GetTooltip());
 			}
 		}

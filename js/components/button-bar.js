@@ -17,6 +17,17 @@
  */
 
 class ButtonBar extends HTMLElement {
+	static get observedAttributes() {
+		return [
+			"overflow-mode",
+			"overflow-count",
+			"overflow-start-after-button-id",
+			"data-overflow-mode",
+			"data-overflow-count",
+			"data-overflow-start-after-button-id",
+		];
+	}
+
 	constructor() {
 		super();
 		// Guard against duplicate setup if the node is re-attached.
@@ -25,6 +36,19 @@ class ButtonBar extends HTMLElement {
 		this._popoverInitAttempts = 0;
 		// Recompute distribution on resize.
 		this._onResize = this.refresh.bind(this);
+
+		this._overflowMode = "fit";
+		this._count = 3;
+		this._overflowStartAfterButtonId = null;
+		this._initialInlineDisplay = null;
+	}
+
+	attributeChangedCallback() {
+		this._updateOverflowConfigFromAttributes();
+		this._initialInlineDisplay = this.style.display;
+		if (this._initialized) {
+			this.refresh();
+		}
 	}
 
 	connectedCallback() {
@@ -34,9 +58,9 @@ class ButtonBar extends HTMLElement {
 		this._initialized = true;
 
 		// Core DOM references rendered by the Twig template.
-		this._track = this.querySelector('[data-role="ibo-button-bar--track"]') || this.querySelector('[data-role="ibo-overflow-line--track"]');
-		this._extra = this.querySelector('[data-role="ibo-button-bar--extra"]') || this.querySelector('[data-role="ibo-overflow-line--extra"]');
-		this._popover = this.querySelector('[data-role="ibo-popover-menu"]');
+		this._track = this.querySelector('[data-role="ibo-button-bar--track"]');
+		this._extra = this.querySelector('[data-role="ibo-button-bar--extra"]');
+		this._popover = this.querySelector('.ibo-button-bar--popover[data-role="ibo-popover-menu"]');
 		// Toggler id is deterministic: <overflow-id>--toggler.
 		const sTogglerId = `${this.id}--toggler`;
 		const oToggler = document.getElementById(sTogglerId);
@@ -45,6 +69,8 @@ class ButtonBar extends HTMLElement {
 		if (!this._track || !this._extra || !this._popover || !this._toggler) {
 			return;
 		}
+
+		this._updateOverflowConfigFromAttributes();
 
 		this._bindEvents();
 
@@ -62,6 +88,31 @@ class ButtonBar extends HTMLElement {
 		this._mutationObserver.observe(this._popover, { childList: true, subtree: true });
 
 		this.refresh();
+	}
+
+	_getAttributeValue(...aNames) {
+		for (const sName of aNames) {
+			const sValue = this.getAttribute(sName);
+			if (sValue !== null) {
+				return sValue;
+			}
+		}
+
+		return null;
+	}
+
+	_updateOverflowConfigFromAttributes() {
+		const sModeRaw = this._getAttributeValue("overflow-mode", "data-overflow-mode");
+		const sMode = (sModeRaw || "fit").trim().toLowerCase();
+		const aAllowedModes = ["fit", "count", "after-marker"];
+		this._overflowMode = aAllowedModes.includes(sMode) ? sMode : "fit";
+
+		const sCountRaw = this._getAttributeValue("overflow-count", "data-overflow-count");
+		const iParsedCount = Number.parseInt(sCountRaw ?? "3", 10);
+		this._count = Number.isFinite(iParsedCount) && iParsedCount >= 0 ? iParsedCount : 3;
+
+		const sStartAfterButtonId = this._getAttributeValue("overflow-start-after-button-id", "data-overflow-start-after-button-id");
+		this._overflowStartAfterButtonId = sStartAfterButtonId && sStartAfterButtonId.trim() !== "" ? sStartAfterButtonId : null;
 	}
 
 	disconnectedCallback() {
@@ -138,7 +189,18 @@ class ButtonBar extends HTMLElement {
 		this.layout();
 	}
 
+	_applyDisplayMode() {
+		if (this._overflowMode === "fit") {
+			this.style.display = this._initialInlineDisplay || "";
+			return;
+		}
+
+		this.style.display = "inline-flex";
+	}
+
 	layout() {
+		this._applyDisplayMode();
+
 		if (!this._items || this._items.length === 0) {
 			this._extra.hidden = true;
 			return;
@@ -159,31 +221,93 @@ class ButtonBar extends HTMLElement {
 			return;
 		}
 
+		const bHasHiddenItems = this._layoutByMode();
+		this._extra.hidden = !bHasHiddenItems;
+		if (!bHasHiddenItems) {
+			this._closePopoverIfOpen();
+		}
+	}
+
+	_layoutByMode() {
+		switch (this._overflowMode) {
+			case "count":
+				return this._layoutCountMode();
+			case "after-marker":
+				return this._layoutAfterMarkerMode();
+			case "fit":
+			default:
+				return this._layoutFitMode();
+		}
+	}
+
+	_setOverflowForItem(oItem, bOverflow) {
+		oItem.hidden = bOverflow;
+		const sItemId = oItem.dataset.overflowItemId;
+		const oMenuItem = sItemId ? this._menuItemsById[sItemId] : null;
+		if (oMenuItem) {
+			oMenuItem.hidden = !bOverflow;
+		}
+		return Boolean(oMenuItem) && bOverflow;
+	}
+
+	_layoutCountMode() {
+		let bHasHiddenItems = false;
+		for (let i = 0; i < this._items.length; i++) {
+			if (i < this._count) {
+				continue;
+			}
+			if (this._setOverflowForItem(this._items[i], true)) {
+				bHasHiddenItems = true;
+			}
+		}
+		return bHasHiddenItems;
+	}
+
+	_layoutAfterMarkerMode() {
+		let iMarkerIndex = -1;
+		if (this._overflowStartAfterButtonId) {
+			iMarkerIndex = this._items.findIndex((oItem) => oItem.dataset.sourceButtonId === this._overflowStartAfterButtonId);
+		}
+
+		if (iMarkerIndex < 0) {
+			iMarkerIndex = this._items.findIndex((oItem) => oItem.dataset.overflowStartAfter === "1");
+		}
+
+		if (iMarkerIndex < 0) {
+			return false;
+		}
+
+		let bHasHiddenItems = false;
+		for (let i = iMarkerIndex + 1; i < this._items.length; i++) {
+			if (this._setOverflowForItem(this._items[i], true)) {
+				bHasHiddenItems = true;
+			}
+		}
+
+		return bHasHiddenItems;
+	}
+
+	_layoutFitMode() {
 		const iHostWidth = this.clientWidth;
 		if (iHostWidth <= 0) {
-			return;
+			return false;
 		}
 
 		const aWidths = this._items.map((oItem) => this._outerWidth(oItem));
 		const iTrackGap = this._flexGap(this._track);
 		const iTotalWidth = aWidths.reduce((iSum, iWidth) => iSum + iWidth, 0) + Math.max(0, this._items.length - 1) * iTrackGap;
 
-		// 3) Everything fits: hide the overflow button.
 		if (iTotalWidth <= iHostWidth) {
-			this._extra.hidden = true;
-			this._closePopoverIfOpen();
-			return;
+			return false;
 		}
-		this._extra.hidden = false;
 
-		// 4) Keep items while there is space, move overflowing ones to popover.
 		const iHostGap = this._flexGap(this);
 		const iAvailableWidth = Math.max(0, iHostWidth - this._outerWidth(this._extra) - iHostGap);
 		let iUsedWidth = 0;
 		let bHasHiddenItems = false;
 		let bOverflowStarted = false;
+
 		for (let i = 0; i < this._items.length; i++) {
-			const oItem = this._items[i];
 			const iWidth = aWidths[i];
 			const iGapBeforeItem = i > 0 ? iTrackGap : 0;
 
@@ -193,22 +317,12 @@ class ButtonBar extends HTMLElement {
 			}
 
 			bOverflowStarted = true;
-			oItem.hidden = true;
-
-			const sItemId = oItem.dataset.overflowItemId;
-			const oMenuItem = sItemId ? this._menuItemsById[sItemId] : null;
-			if (!oMenuItem) {
-				continue;
+			if (this._setOverflowForItem(this._items[i], true)) {
+				bHasHiddenItems = true;
 			}
-
-			oMenuItem.hidden = false;
-			bHasHiddenItems = true;
 		}
 
-		this._extra.hidden = !bHasHiddenItems;
-		if (!bHasHiddenItems) {
-			this._closePopoverIfOpen();
-		}
+		return bHasHiddenItems;
 	}
 }
 
