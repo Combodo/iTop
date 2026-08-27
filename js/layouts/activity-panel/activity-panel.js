@@ -387,7 +387,7 @@ $(function()
                 oEvent.preventDefault();
                 const oActiveTabData = this._GetActiveTabData();
                 const oActionElement = $(oEvent.target).closest(this.js_selectors.activity_action);
-                const oActionElementMenu = $('#'+oActionElement.attr('id')+'-menu');
+                const oActionElementMenu = $(document.getElementById(oActionElement.attr('id')+'-menu'));
                 const oTabCode = oActiveTabData.type === 'caselog' ? oActiveTabData.att_code : oActiveTabData.type;
                 const oActionElementMenuItem = oActionElementMenu.find('[data-caselog-attribute-code="'+oTabCode+'"]');
 
