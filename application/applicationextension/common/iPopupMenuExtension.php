@@ -97,7 +97,7 @@ interface iPopupMenuExtension
 	public const PORTAL_MENU_ACTIONS = 10;
 	/**
 	 * Get the list of items to be added to the backoffice top-bar items
-	 * $param is [] for now, in a distant future we want to give a complete context
+	 * $param is an array: [] for now, in a distant future we want to give a complete context
 	 * @since 3.3.0
 	 */
 	public const MENU_TOPBAR_ACTIONS = 11;
@@ -109,7 +109,7 @@ interface iPopupMenuExtension
 	public const MENU_OBJDETAILS_FIELD_ACTIONS = 12;
 	/**
 	 * Get the list of items to be added to the actions in the activity panel (read-only mode)
-	 * $param = ['object' => DBObject, caselog_att_code =>  caselog attribute code or 'activity']
+	 * $param is an array: ['object' => DBObject, caselog_att_code =>  caselog attribute code or 'activity']
 	 * @since 3.3.0
 	 */
 	public const MENU_OBJDETAILS_ACTIVITY_PANEL_ACTIONS = 13;
