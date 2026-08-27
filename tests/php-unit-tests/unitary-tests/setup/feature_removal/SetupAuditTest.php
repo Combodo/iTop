@@ -8,7 +8,6 @@ use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use Combodo\iTop\Test\UnitTest\Service\UnitTestRunTimeEnvironment;
 use Config;
-use MetaModel;
 use RunTimeEnvironment;
 use SetupUtils;
 use utils;
@@ -69,7 +68,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		$oConfig = new Config(utils::GetConfigFilePath($this->GetTestEnvironment()));
 		$aRemovedExtensions = ['nominal_ext1', 'finalclass_ext2'];
 		$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, ['finalclass_ext1', 'finalclass_ext3'], $aRemovedExtensions);
-		$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
+		$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromSelectedExtensions($oConfig, $aSelectedExtensions);
 
 		$oRuntimeEnvironment->DoCompile($aSelectedExtensions, $aRemovedExtensions, $aSelectedModules);
 

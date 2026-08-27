@@ -34,7 +34,7 @@ class InstallationChoicesToModuleConverter
 	}
 
 	/**
-	 * @param array<string> $aInstallationChoices
+	 * @param array<string> $aSelectedExtensions
 	 * @param array<string> $aSearchDirs
 	 * @param string|null $sInstallationFilePath
 	 * @param array|null $aExtensionDirs : module/extension dirs to load if they are compliant with choices
@@ -42,7 +42,7 @@ class InstallationChoicesToModuleConverter
 	 * @return array<string>
 	 * @throws \ModuleInstallationException
 	 */
-	public function GetModules(array $aInstallationChoices, array $aSearchDirs, ?string $sInstallationFilePath = null, ?array $aExtensionDirs = null): array
+	public function GetModules(array $aSelectedExtensions, array $aSearchDirs, ?string $sInstallationFilePath = null, ?array $aExtensionDirs = null): array
 	{
 		$aPackageModules = $this->GetAllModules($aSearchDirs);
 
@@ -54,9 +54,9 @@ class InstallationChoicesToModuleConverter
 			if (!is_array($aSteps)) {
 				return [];
 			}
-			$aInstalledModuleNames = $this->FindInstalledPackageModules($aPackageModules, $aInstallationChoices, $aSteps);
+			$aInstalledModuleNames = $this->FindInstalledPackageModules($aPackageModules, $aSelectedExtensions, $aSteps);
 		} else {
-			$aInstalledModuleNames = $this->FindInstalledPackageModules($aPackageModules, $aInstallationChoices);
+			$aInstalledModuleNames = $this->FindInstalledPackageModules($aPackageModules, $aSelectedExtensions);
 		}
 
 		$aInstalledModules = [];
@@ -68,20 +68,39 @@ class InstallationChoicesToModuleConverter
 		}
 
 		if (!is_null($aExtensionDirs)) {
-			foreach (array_keys($this->GetAllModules($aExtensionDirs)) as $sModuleId) {
-				$oModule = new Module($sModuleId);
+			foreach ($this->GetAllModules($aExtensionDirs) as $sModuleId => $aModule) {
+				if (!isset($aModule['auto_select'])) {
+					$oModule = new Module($sModuleId);
 
-				$sPreviousModuleId = $aInstalledModules[$oModule->GetModuleName()] ?? null;
-				if (is_null($sPreviousModuleId)) {
-					$aInstalledModules[$oModule->GetModuleName()] = $sModuleId;
-					continue;
-				}
+					$sPreviousModuleId = $aInstalledModules[$oModule->GetModuleName()] ?? null;
+					if (is_null($sPreviousModuleId)) {
+						$aInstalledModules[$oModule->GetModuleName()] = $sModuleId;
+						continue;
+					}
 
-				$oPreviousModule = new Module($sPreviousModuleId);
-				if (version_compare($oModule->GetVersion(), $oPreviousModule->GetVersion(), '>')) {
-					$aInstalledModules[$oModule->GetModuleName()] = $sModuleId;
+					$oPreviousModule = new Module($sPreviousModuleId);
+					if (version_compare($oModule->GetVersion(), $oPreviousModule->GetVersion(), '>')) {
+						$aInstalledModules[$oModule->GetModuleName()] = $sModuleId;
+					}
 				}
 			}
+			foreach ($this->GetAllModules($aExtensionDirs) as $sModuleId => $aModule) {
+				if ($this->IsAutoSelectedModule($aInstalledModules, $sModuleId, $aModule)) {
+					$oModule = new Module($sModuleId);
+
+					$sPreviousModuleId = $aInstalledModules[$oModule->GetModuleName()] ?? null;
+					if (is_null($sPreviousModuleId)) {
+						$aInstalledModules[$oModule->GetModuleName()] = $sModuleId;
+						continue;
+					}
+
+					$oPreviousModule = new Module($sPreviousModuleId);
+					if (version_compare($oModule->GetVersion(), $oPreviousModule->GetVersion(), '>')) {
+						$aInstalledModules[$oModule->GetModuleName()] = $sModuleId;
+					}
+				}
+			}
+
 		}
 
 		return array_values($aInstalledModules);

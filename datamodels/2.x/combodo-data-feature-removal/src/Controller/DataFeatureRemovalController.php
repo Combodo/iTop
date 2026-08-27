@@ -205,7 +205,7 @@ class DataFeatureRemovalController extends Controller
 					$oExtensionsMap = \iTopExtensionsMap::GetExtensionsMap($oRuntimeEnvironment->GetBuildEnv());
 					// Removed modules are stored as static for FindModules()
 					$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensions);
-					$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
+					$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromSelectedExtensions($oConfig, $aSelectedExtensions);
 				}
 
 				DataFeatureRemovalLog::Debug(
@@ -217,7 +217,7 @@ class DataFeatureRemovalController extends Controller
 				Session::Unset('bForceCompilation');
 			} else {
 				if (count($aSelectedModules) === 0) {
-					$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
+					$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromSelectedExtensions($oConfig, $aSelectedExtensions);
 				}
 			}
 			DataFeatureRemovalLog::Debug(__METHOD__.": modules", null, ['selected_modules' => $aSelectedModules]);

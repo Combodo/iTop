@@ -229,14 +229,14 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 			$sExtensionCode = $aAlternativeInfo["extension_code"] ?? null;
 
 			if (in_array($sExtensionCode, $aExtensions)) {
-				$aStepRes = $this->ProcessSelectedOption($sCurrentIndex, $i, $aStepRes, $aAlternativeInfo, $aExtensions);
+				$aStepRes = $this->ProcessSelectedOption($sCurrentIndex, $i, $aStepRes, $aAlternativeInfo, $aExtensions, true);
 				break;
 			}
 		}
 	}
 
 	/**
-	 * @param string $sCurrentIndex
+	 * @param string $sCurrentId
 	 * @param int|string $i
 	 * @param array $aStepRes
 	 * @param mixed $aOptionsInfo
@@ -244,18 +244,19 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 	 *
 	 * @return array
 	 */
-	public function ProcessSelectedOption(string $sCurrentIndex, int|string $i, array $aStepRes, mixed $aOptionsInfo, array $aExtensions): array
+	public function ProcessSelectedOption(string $sCurrentId, int|string $i, array $aStepRes, mixed $aOptionsInfo, array $aExtensions, bool $bIsAlternative = false): array
 	{
-		$sNextIndex = "{$sCurrentIndex}_{$i}";
-		$aStepRes[$sNextIndex] = $sNextIndex;
+		$sNextId = "{$sCurrentId}_{$i}";
+		$sNextName = $bIsAlternative ? "{$sCurrentId}_0" : $sNextId;
+		$aStepRes[$sNextName] = $sNextId;
 
 		$aSubOptions = $aOptionsInfo['sub_options'] ?? null;
 		if (!is_null($aSubOptions) && is_array($aSubOptions)) {
-			$this->ProcessOptions($sNextIndex, $aSubOptions, $aExtensions, $aStepRes);
-			$this->ProcessAlternatives($sNextIndex, $aSubOptions, $aExtensions, $aStepRes);
+			$this->ProcessOptions($sNextId, $aSubOptions, $aExtensions, $aStepRes);
+			$this->ProcessAlternatives($sNextId, $aSubOptions, $aExtensions, $aStepRes);
 		}
 
-		$this->ProcessAlternatives($sNextIndex, $aOptionsInfo, $aExtensions, $aStepRes);
+		$this->ProcessAlternatives($sNextId, $aOptionsInfo, $aExtensions, $aStepRes);
 
 		return $aStepRes;
 	}

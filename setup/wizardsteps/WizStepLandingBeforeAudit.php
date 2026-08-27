@@ -97,27 +97,23 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 					}
 				}
 			}
-
-			// Save the choices for the summary step
-			$sDisplayChoices = '<ul>';
-			$i = 0;
-			foreach ($this->aSteps as $aStepInfo) {
-				$sDisplayChoices .= $this->GetSelectedModules($aStepInfo, $aSelectedComponents[$i], $aModules, '', '', $aExtensions);
-				$i++;
-			}
-			$sDisplayChoices .= '</ul>';
-			$this->oWizard->SetParameter('display_choices', $sDisplayChoices);
 		} else {
 			$this->GetWizardSteps();
 			$aSelectedComponents = $this->GetSelectedComponents($this->aSteps, $this->oWizard->GetParameter('selected_extensions', '[]'));
-			$aModules = [];
-			$i = 0;
-			foreach ($this->aSteps as $aStepInfo) {
-				$this->GetSelectedModules($aStepInfo, $aSelectedComponents[$i], $aModules, '', '', $aExtensions);
-				$i++;
-			}
-			$this->oWizard->SetParameter('selected_modules', json_encode(array_keys($aModules)));
 		}
+
+		// Save the choices for the summary step
+		$sDisplayChoices = '<ul>';
+		$aModules = [];
+		$aExtensions = [];
+		$i = 0;
+		foreach ($this->aSteps as $aStepInfo) {
+			$sDisplayChoices .= $this->GetSelectedModules($aStepInfo, $aSelectedComponents[$i], $aModules, '', '', $aExtensions);
+			$i++;
+		}
+		$sDisplayChoices .= '</ul>';
+		$this->oWizard->SetParameter('display_choices', $sDisplayChoices);
+		$this->oWizard->SetParameter('selected_modules', json_encode(array_keys($aModules)));
 
 		return new WizardState(WizStepDataAudit::class);
 	}
