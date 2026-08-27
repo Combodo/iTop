@@ -12,4 +12,5 @@
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Ismeretlen értékek',
+	'UI:Component:Field:GroupedActions:Tooltip' => 'More actions~~',
 ]);

@@ -16,6 +16,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\RichText\RichText;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use DBObject;
+use Dict;
 use MetaModel;
 use utils;
 
@@ -281,7 +282,7 @@ class CaseLogEntryForm extends UIContentBlock
 	 */
 	protected function InitExtraActionButtonBar(): void
 	{
-		$this->oExtraActionButtonBar = new ButtonBar();
+		$this->oExtraActionButtonBar = new ButtonBar([], Dict::S('UI:Component:Field:GroupedActions:Tooltip'));
 	}
 
 	/**

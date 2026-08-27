@@ -13,6 +13,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuFactory;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Dict;
 use utils;
 
 /**
@@ -76,14 +77,13 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 			$aActions = [];
 			// Create buttons for a few actions or a grouped-actions button for more actions than configured
 			if (count($aParams['actions']) > $iMaxActions) {
-				$oGroupedActionsButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', 'More actions', 'grouped-actions');
+				$oGroupedActionsButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S('UI:Component:Field:GroupedActions:Tooltip'), 'grouped-actions');
 				$oGroupedActionsButton->AddCSSClass('ibo-field--action');
 
 				$aGroupedActions = [];
 				foreach ($aParams['actions'] as $oAction) {
 					$aGroupedActions[] = $oAction->GetMenuItem();
 				}
-				//TODO: Make a dict entry for the grouped actions menu label
 				$oGroupedActionsPopoverMenu = PopoverMenuFactory::MakeMenuForActions($oField->GetId().'--grouped-actions-menu', $aGroupedActions);
 				$oGroupedActionsPopoverMenu->AddCSSClass('ibo-field--grouped-actions-popover');
 				$oGroupedActionsPopoverMenu->SetTogglerFromBlock($oGroupedActionsButton);

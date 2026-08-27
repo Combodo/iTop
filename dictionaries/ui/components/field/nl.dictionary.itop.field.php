@@ -12,4 +12,5 @@
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Onbekende waardes',
+	'UI:Component:Field:GroupedActions:Tooltip' => 'More actions~~',
 ]);

@@ -10,4 +10,5 @@
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Valores desconocidos',
+	'UI:Component:Field:GroupedActions:Tooltip' => 'More actions~~',
 ]);
