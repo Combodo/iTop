@@ -44,7 +44,7 @@ class TopBarQuickActionFactory
 			);
 			$oTopBarAction->SetJsCode($oApplicationPopupItem->GetJsCode());
 			$oTopBarAction->SetUrl($oApplicationPopupItem->GetUrl());
-			$oTopBarAction->SetIncludeJSFiles($oApplicationPopupItem->GetLinkedScripts());
+			$oTopBarAction->AddMultipleJsFilesRelPaths($oApplicationPopupItem->GetLinkedScripts());
 			$oTopBarAction->SetAriaAttributes($oApplicationPopupItem->GetAriaAttributes()->GetAttributes());
 			$oTopBarAction->SetDataAttributes($oApplicationPopupItem->GetDataAttributes()->GetAttributes());
 			return $oTopBarAction;

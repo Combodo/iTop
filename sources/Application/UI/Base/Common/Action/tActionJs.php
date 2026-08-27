@@ -33,7 +33,6 @@ trait tActionJs
 {
 	protected string $sJsCode;
 	protected string $sUrl = '#';
-	protected array $aIncludeJSFiles = [];
 
 	public function GetJsCode(): string
 	{
@@ -54,17 +53,6 @@ trait tActionJs
 	public function SetUrl(string $sUrl): static
 	{
 		$this->sUrl = $sUrl;
-		return $this;
-	}
-
-	public function GetIncludeJSFiles(): array
-	{
-		return $this->aIncludeJSFiles;
-	}
-
-	public function SetIncludeJSFiles(array $aIncludeJSFiles): static
-	{
-		$this->aIncludeJSFiles = $aIncludeJSFiles;
 		return $this;
 	}
 }

@@ -118,7 +118,7 @@ class ActivityPanelActionFactory
 			);
 			$oAction->SetJsCode($oPopupItem->GetJsCode());
 			$oAction->SetUrl($oPopupItem->GetUrl());
-			$oAction->SetIncludeJSFiles($oPopupItem->GetLinkedScripts());
+			$oAction->AddMultipleJsFilesRelPaths($oPopupItem->GetLinkedScripts());
 			$oAction->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
 			$oAction->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
 

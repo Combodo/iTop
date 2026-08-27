@@ -392,7 +392,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	{
 		if ($oPopupItem instanceof JSPopupMenuItem) {
 			$sTooltip = $oPopupItem->GetTooltip();
-			if (!utils::IsNotNullOrEmptyString($sTooltip)) {
+			if (utils::IsNullOrEmptyString($sTooltip)) {
 				$sTooltip = $oPopupItem->GetLabel();
 			}
 
@@ -402,9 +402,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 			);
 
 			$oButton->SetOnClickJsCode($oPopupItem->GetJsCode());
-			foreach ($oPopupItem->GetLinkedScripts() as $sLinkedScript) {
-				$oButton->AddJsFileRelPath($sLinkedScript);
-			}
+			$oButton->AddMultipleJsFilesRelPaths($oPopupItem->GetLinkedScripts());
 			$oButton->SetActionType($sActionType);
 			$oButton->SetColor($sColor);
 			$oButton->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
@@ -464,14 +462,10 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 			if (utils::IsNotNullOrEmptyString($oPopupItem->GetTooltip())) {
 				$oButton->SetTooltip($oPopupItem->GetTooltip());
 			}
+			$oButton->SetOnClickJsCode($oPopupItem->GetJsCode());
+			$oButton->AddMultipleJsFilesRelPaths($oPopupItem->GetLinkedScripts());
 			$oButton->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
 			$oButton->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
-
-			$oButton->SetOnClickJsCode($oPopupItem->GetJsCode());
-
-			foreach ($oPopupItem->GetLinkedScripts() as $sLinkedScript) {
-				$oButton->AddJsFileRelPath($sLinkedScript);
-			}
 
 			return $oButton;
 		} elseif ($oPopupItem instanceof URLPopupMenuItem) {
