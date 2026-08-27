@@ -718,6 +718,54 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'remote' => false,
 				],
 			],
+			'#node17 - An installed non uninstallable extension should be checked and disabled when the "disable uninstallation check" flag is not set, even if it is not selected' => [
+				'aExtensionsOnDiskOrDb' => [
+					'itop-ext1' => [
+						'installed' => true,
+					],
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'uninstallable' => false,
+				],
+				'aSelectedComponents' => [],
+				'bDisableUninstallChecks' => false,
+				'aExpectedFlags' => [
+					'uninstallable' => false,
+					'missing' => false,
+					'installed' => true,
+					'disabled' => true,
+					'checked' => true,
+					'dependency_issue' => false,
+					'mandatory' => false,
+				],
+			],
+			'#node18 - An installed but not selected extension with missing dependencies without force uninstall should be checked and disabled, even if it is not selected' => [
+				'aExtensionsOnDiskOrDb' => [
+					'itop-ext1' => [
+						'installed' => true,
+						'missing_dependencies' => [
+							'itop-ext1-1',
+						],
+					],
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'uninstallable' => true,
+					'missing_dependencies' => true,
+				],
+				'aSelectedComponents' => [],
+				'bDisableUninstallChecks' => false,
+				'aExpectedFlags' => [
+					'uninstallable' => true,
+					'missing' => false,
+					'installed' => true,
+					'disabled' => true,
+					'checked' => true,
+					'dependency_issue' => true,
+					'mandatory' => false,
+				],
+			],
 		];
 	}
 
