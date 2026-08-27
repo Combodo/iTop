@@ -44,7 +44,7 @@ class ActivityPanelActionFactory
 	 * @return ActivityPanelAction[]
 	 * @throws \Exception
 	 */
-	public static function MakeFromApplicationPopupItems(array $aPopupItems)
+	public static function MakeFromApplicationPopupItems(array $aPopupItems): array
 	{
 		$aActionsByUid = [];
 

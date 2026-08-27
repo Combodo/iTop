@@ -64,7 +64,11 @@ class TopBarFactory
 		/** @var \iPopupMenuExtension $oExtensionInstance */
 		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses('iPopupMenuExtension') as $oExtensionInstance) {
 			foreach ($oExtensionInstance::EnumItems(iPopupMenuExtension::MENU_TOPBAR_ACTIONS, []) as $oMenuItem) {
-				$oTopBar->AddQuickAction(TopBarQuickActionFactory::MakeFromApplicationPopupItem($oMenuItem));
+				$oNewQuickAction = TopBarQuickActionFactory::MakeFromApplicationPopupItem($oMenuItem);
+				if ($oNewQuickAction === null) {
+					continue;
+				}
+				$oTopBar->AddQuickAction($oNewQuickAction);
 			}
 		}
 

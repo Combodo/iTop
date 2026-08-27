@@ -94,6 +94,9 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 			} else {
 				foreach ($aParams['actions'] as $oAction) {
 					$oActionButton = ButtonUIBlockFactory::MakeIconButtonFromApplicationPopupMenuItem($oAction);
+					if ($oActionButton === null) {
+						continue;
+					}
 					$oActionButton->AddCSSClass('ibo-field--action');
 					$aActions[] = $oActionButton;
 				}
