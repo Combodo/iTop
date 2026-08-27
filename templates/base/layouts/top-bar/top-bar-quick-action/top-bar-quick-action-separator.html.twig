@@ -1,5 +1,5 @@
 <div id="{{ oUIBlock.GetId() }}"
-     class="ibo-top-bar-quick-action ibo-top-bar-quick-action-separator"
+     class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-top-bar-quick-action-separator"
      data-role="ibo-top-bar-quick-action-separator"
      {% if oUIBlock.GetDataAttributes() %}
          {% for sName, sValue in oUIBlock.GetDataAttributes() %}
