@@ -395,8 +395,14 @@ $(function()
                 if (oActionElementMenuItem.length > 0) {
                     // Note: Stop propagation to avoid the menu to be opened automatically by the popover handler
                     oEvent.stopImmediatePropagation();
-                    // TODO: Need fix for URL items as synthetic clicks doesn't open URLs
-                    oActionElementMenuItem.click();
+                    if (oActionElementMenuItem.is('[onclick]')) {
+                        oActionElementMenuItem.click();
+                    }
+                    else {
+                        // Navigate synchronously to preserve the user activation of the original click.
+                        const sTarget = oActionElementMenuItem.attr('target') || '_self';
+                        window.open(oActionElementMenuItem.attr('href'), sTarget);
+                    }
                 }
                 // Else let the popover menu open automatically, the user will have to choose a case log
             },
