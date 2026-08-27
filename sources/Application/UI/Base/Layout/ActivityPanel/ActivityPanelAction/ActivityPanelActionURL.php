@@ -35,7 +35,6 @@ class ActivityPanelActionURL extends ActivityPanelAction
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-activity-panel-action-url';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/activity-action/activity-action-url';
-	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/activity-action/activity-action-url';
 	public const DEFAULT_JS_FILES_REL_PATH = [
 	];
 	public const DEFAULT_CSS_FILES_REL_PATH = [
