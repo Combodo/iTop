@@ -277,8 +277,10 @@ class Button extends UIBlock
 	{
 		$aDefaultValues = [];
 
-		// Default aria-label is the tooltip
-		if (utils::IsNotNullOrEmptyString($this->sTooltip)) {
+		// Keep the visible label as the accessible name, falling back to the tooltip for icon-only buttons.
+		if (utils::IsNotNullOrEmptyString($this->sLabel)) {
+			$aDefaultValues['label'] = $this->sLabel;
+		} elseif (utils::IsNotNullOrEmptyString($this->sTooltip)) {
 			$aDefaultValues['label'] = $this->sTooltip;
 		}
 		return array_merge($aDefaultValues, parent::GetAriaAttributes());
