@@ -227,9 +227,12 @@ class DesignerForm
 						'raw-value' => $oField->GetRawValue(),
 					];
 					if (is_null($aRow['label'])) {
-						$sReturn .= $this->StartRow($sFieldId, $aPropertyFieldData).'<td class="prop_value" colspan="2">'.$aRow['value'];
+						$sReturn .= $this->StartRow($sFieldId, $aPropertyFieldData).
+							'<td class="prop_value" data-role="ibo-property-field-value" colspan="2">'.$aRow['value'];
 					} else {
-						$sReturn .= $this->StartRow($sFieldId, $aPropertyFieldData).'<td class="prop_label">'.$aRow['label'].'</td><td class="prop_value">'.$aRow['value'];
+						$sReturn .= $this->StartRow($sFieldId, $aPropertyFieldData).
+							'<td class="prop_label" data-role="ibo-property-field-label">'.$aRow['label'].
+							'</td><td class="prop_value" data-role="ibo-property-field-value">'.$aRow['value'];
 					}
 					if (!($oField instanceof DesignerFormSelectorField) && !($oField instanceof DesignerMultipleSubFormField)) {
 						$sReturn .= $sValidationFields;
