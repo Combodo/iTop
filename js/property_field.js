@@ -27,6 +27,7 @@ $(function()
 
 			this.element
 				.addClass( "itop-property-field ibo-field" )
+                .attr('data-role', 'ibo-property-field')
 				.on('apply_changes.itop-property-field', function(){me._do_apply();} );
 				
 			this.bModified = false;
