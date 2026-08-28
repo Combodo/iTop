@@ -20,6 +20,7 @@
 
 namespace Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBarAction;
 
+use Combodo\iTop\Application\UI\Base\Common\Action\tActionCommon;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use utils;
 
@@ -32,6 +33,8 @@ use utils;
  */
 abstract class TopBarQuickAction extends UIBlock
 {
+	use tActionCommon;
+
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-top-bar-quick-action';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/top-bar/top-bar-quick-action/layout';
@@ -41,60 +44,24 @@ abstract class TopBarQuickAction extends UIBlock
 	public const DEFAULT_CSS_FILES_REL_PATH = [
 	];
 
-	protected string $sLabel;
-	protected string $sIconClass;
-	protected ?string $sTooltip = null;
-
 	/**
 	 * TopBarAction constructor.
 	 *
 	 * @param string $sLabel
 	 * @param string $sIconClass
 	 * @param string|null $sTooltip
-	 * @param string|null $sId
+	 * @param string $sUid
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function __construct(string $sLabel, string $sIconClass, ?string $sTooltip = null, ?string $sId = null)
+	public function __construct(string $sLabel, string $sIconClass, ?string $sTooltip, string $sUid)
 	{
-		parent::__construct($sId);
+		parent::__construct(utils::GetSafeId($sUid));
+		$this->sUid = $sUid;
 		$this->sLabel = $sLabel;
 		$this->sIconClass = $sIconClass;
 		$this->sTooltip = $sTooltip;
-	}
-
-	public function GetLabel(): string
-	{
-		return $this->sLabel;
-	}
-
-	public function SetLabel(string $sLabel): static
-	{
-		$this->sLabel = $sLabel;
-		return $this;
-	}
-
-	public function GetIconClass(): string
-	{
-		return $this->sIconClass;
-	}
-
-	public function SetIconClass(string $sIconClass): TopBarQuickAction
-	{
-		$this->sIconClass = $sIconClass;
-		return $this;
-	}
-
-	public function GetTooltip(): ?string
-	{
-		return $this->sTooltip;
-	}
-
-	public function SetTooltip(?string $sTooltip): TopBarQuickAction
-	{
-		$this->sTooltip = $sTooltip;
-		return $this;
 	}
 
 	public function GetAriaAttributes(): array

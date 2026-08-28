@@ -38,8 +38,8 @@ class TopBarQuickActionSeparator extends TopBarQuickAction
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function __construct(?string $sId = null)
+	public function __construct(string $sUid)
 	{
-		parent::__construct('', '', null, $sId);
+		parent::__construct('', '', null, $sUid);
 	}
 }

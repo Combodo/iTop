@@ -48,10 +48,10 @@ abstract class ActivityPanelAction extends UIBlock
 	protected array $aPopupItems = [];
 	protected ?PopoverMenu $oPopoverMenu = null;
 
-	public function __construct(string $sLabel, string $sIconClass, ?string $sTooltip = null, ?string $sId = null)
+	public function __construct(string $sLabel, string $sIconClass, ?string $sTooltip, string $sUid)
 	{
-		parent::__construct($sId);
-		$this->sUid = $sId ?? $this->GetId();
+		parent::__construct(utils::GetSafeId($sUid));
+		$this->sUid = $sUid;
 		$this->sLabel = $sLabel;
 		$this->sIconClass = $sIconClass;
 		$this->sTooltip = $sTooltip;

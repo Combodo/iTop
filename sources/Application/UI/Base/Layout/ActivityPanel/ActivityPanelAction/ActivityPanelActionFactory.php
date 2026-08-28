@@ -110,11 +110,12 @@ class ActivityPanelActionFactory
 	public static function MakeFromApplicationPopupItem($oPopupItem): ?ActivityPanelAction
 	{
 		if ($oPopupItem instanceof JSPopupMenuItem) {
+			$sUid = $oPopupItem->GetUID();
 			$oAction = new ActivityPanelActionJS(
 				$oPopupItem->GetLabel(),
 				$oPopupItem->GetIconClass(),
 				$oPopupItem->GetTooltip(),
-				$oPopupItem->GetUID()
+				$sUid
 			);
 			$oAction->SetJsCode($oPopupItem->GetJsCode());
 			$oAction->SetUrl($oPopupItem->GetUrl());
@@ -124,11 +125,12 @@ class ActivityPanelActionFactory
 
 			return $oAction;
 		} elseif ($oPopupItem instanceof URLPopupMenuItem) {
+			$sUid = $oPopupItem->GetUID();
 			$oAction = new ActivityPanelActionURL(
 				$oPopupItem->GetLabel(),
 				$oPopupItem->GetIconClass(),
 				$oPopupItem->GetTooltip(),
-				$oPopupItem->GetUID()
+				$sUid
 			);
 			$oAction->SetUrl($oPopupItem->GetUrl());
 			$oAction->SetTarget($oPopupItem->GetTarget());

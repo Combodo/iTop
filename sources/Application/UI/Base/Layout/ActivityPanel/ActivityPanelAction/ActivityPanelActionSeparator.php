@@ -33,11 +33,10 @@ class ActivityPanelActionSeparator extends ActivityPanelAction
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = null;
 
 	/**
-	 * @param string|null $sId
+	 * @param string $sUid
 	 */
-	public function __construct(?string $sId = null)
+	public function __construct(string $sUid)
 	{
-		parent::__construct('', '', null, $sId);
+		parent::__construct('', '', null, $sUid);
 	}
 }
-
