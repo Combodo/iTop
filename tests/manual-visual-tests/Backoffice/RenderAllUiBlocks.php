@@ -73,7 +73,7 @@ hr {
 .btn-bar-600{
 	max-width: 600px;
 }
-.btn-bar-600{
+.btn-bar-800{
 	max-width: 800px;
 }
 CSS
