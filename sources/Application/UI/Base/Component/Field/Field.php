@@ -7,6 +7,7 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\Field;
 
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use utils;
@@ -426,6 +427,19 @@ class Field extends UIContentBlock
 		foreach ($this->aActions as $oAction) {
 			$aSubBlocks[$oAction->GetId()] = $oAction;
 		}
+		$aSubBlocks = array_merge($aSubBlocks, parent::GetSubBlocks());
 		return $aSubBlocks;
+	}
+
+	/**
+	 * Return array of sub-blocks without the value or the actions
+	 * Handle the ancient way to add sub-blocks to the field (via AddSubBlock)
+	 *
+	 * @since 3.3.0
+	 * @return array<\Combodo\iTop\Application\UI\Base\UIBlock>
+	 */
+	public function GetAdditionalSubBlocks(): array
+	{
+		return $this->aSubBlocks;
 	}
 }

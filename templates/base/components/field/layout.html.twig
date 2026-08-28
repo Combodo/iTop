@@ -43,6 +43,9 @@
         {% if oUIBlock.HasValue() %}
             {{ render_block(oUIBlock.GetValue(), {aPage: aPage}) }}
         {% endif %}
+        {% for oSubBlock in oUIBlock.GetAdditionalSubBlocks() %}
+            {{ render_block(oSubBlock, {aPage: aPage}) }}
+        {% endfor %}
     </div>
     {% if oUIBlock.GetLayout() != constant("Combodo\\iTop\\Application\\UI\\Base\\Component\\Field\\Field::ENUM_FIELD_LAYOUT_LARGE") %}
         {% if oUIBlock.GetComments() %}
