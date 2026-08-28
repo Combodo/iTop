@@ -2,6 +2,7 @@
    id="{{ oUIBlock.GetId() }}"
    class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-activity-panel--activity-action"
    data-role="ibo-activity-panel--activity-action"
+   data-uid="{{ oUIBlock.GetUID() }}"
    {% if oUIBlock.GetDataAttributes() %}
        {% for sName, sValue in oUIBlock.GetDataAttributes() %}
           data-{{ sName }}="{{ sValue }}"

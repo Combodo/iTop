@@ -56,11 +56,20 @@ abstract class TopBarQuickAction extends UIBlock
 	 */
 	public function __construct(string $sLabel, string $sIconClass, ?string $sTooltip, string $sUid)
 	{
-		parent::__construct(utils::GetSafeId($sUid, true));
+        // UID is necessary for parent ID generation, we set it first
 		$this->sUid = $sUid;
+		parent::__construct();
 		$this->sLabel = $sLabel;
 		$this->sIconClass = $sIconClass;
 		$this->sTooltip = $sTooltip;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function GenerateId(): string
+	{
+		return parent::GenerateId().'--'.utils::GetSafeId($this->sUid);
 	}
 
 	public function GetAriaAttributes(): array

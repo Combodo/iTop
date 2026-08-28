@@ -4,6 +4,7 @@
     <div class="ibo-top-bar-quick-action--head" data-role="ibo-top-bar-quick-action--head">
         <a href="{{ oUIBlock.GetURL() }}" class="ibo-top-bar-quick-action--icon" data-role="ibo-top-bar-quick-action--icon"
            target="{{ oUIBlock.GetTarget() }}"
+           data-uid="{{ oUIBlock.GetUID() }}"
            {% if oUIBlock.GetDataAttributes() %}
                {% for sName, sValue in oUIBlock.GetDataAttributes() %}
                    data-{{ sName }}="{{ sValue }}"

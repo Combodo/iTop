@@ -407,6 +407,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 			$oButton->SetColor($sColor);
 			$oButton->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
 			$oButton->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
+			$oButton->AddDataAttribute('uid', $oPopupItem->GetUID());
 
 			return $oButton;
 		} elseif ($oPopupItem instanceof URLPopupMenuItem) {
@@ -426,11 +427,13 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 			$oButton->SetColor($sColor);
 			$oButton->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
 			$oButton->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
+			$oButton->AddDataAttribute('uid', $oPopupItem->GetUID());
 
 			return $oButton;
 		} elseif ($oPopupItem instanceof SeparatorPopupMenuItem) {
-			$oSeparator = new ButtonSeparator(utils::GetSafeId($oPopupItem->GetUID(), true));
+			$oSeparator = new ButtonSeparator();
 			$oSeparator->SetCSSClasses($oPopupItem->GetCssClasses());
+			$oSeparator->AddDataAttribute('uid', $oPopupItem->GetUID());
 			return $oSeparator;
 		}
 
@@ -466,6 +469,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 			$oButton->AddMultipleJsFilesRelPaths($oPopupItem->GetLinkedScripts());
 			$oButton->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
 			$oButton->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
+			$oButton->AddDataAttribute('uid', $oPopupItem->GetUID());
 
 			return $oButton;
 		} elseif ($oPopupItem instanceof URLPopupMenuItem) {
@@ -488,11 +492,13 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 			}
 			$oButton->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
 			$oButton->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
+			$oButton->AddDataAttribute('uid', $oPopupItem->GetUID());
 
 			return $oButton;
 		} elseif ($oPopupItem instanceof SeparatorPopupMenuItem) {
-			$oSeparator = new ButtonSeparator(utils::GetSafeId($oPopupItem->GetUID(), true));
+			$oSeparator = new ButtonSeparator();
 			$oSeparator->SetCSSClasses($oPopupItem->GetCssClasses());
+			$oSeparator->AddDataAttribute('uid', $oPopupItem->GetUID());
 			return $oSeparator;
 		}
 

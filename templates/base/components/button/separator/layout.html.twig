@@ -5,7 +5,11 @@
           class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }}
              {% if oUIBlock.GetAdditionalCSSClassesAsString() %}{{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% endif %}
              {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}"
-          data-role="ibo-button-separator">
+          data-role="ibo-button-separator"
+          {% if oUIBlock.GetDataAttributes() %}
+              {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                  data-{{ sName }}="{{ sValue }}"
+              {% endfor %}
+          {% endif %}>
     </span>
 {% endapply %}
-
