@@ -97,7 +97,7 @@ class ButtonBar extends UIContentBlock
 
 		$this->RefreshOverflowDataAttributes();
 
-		$this->SetSubBlocks($aSubBlocks);
+		$this->SetButtons($aSubBlocks);
 	}
 
 	public function SetMoreButtonTooltipText(string $sMoreButtonTooltipText): self
