@@ -72,8 +72,6 @@ class ButtonBar extends HTMLElement {
 
 		this._updateOverflowConfigFromAttributes();
 
-		this._bindEvents();
-
 		if (window.ResizeObserver) {
 			this._resizeObserver = new ResizeObserver(this._onResize);
 			this._resizeObserver.observe(this);
@@ -124,29 +122,6 @@ class ButtonBar extends HTMLElement {
 		this._popover?.removeEventListener("click", this._onPopoverClick);
 		window.removeEventListener("resize", this._onResize);
 		this._initialized = false;
-	}
-
-	_bindEvents() {
-		this._onPopoverClick = (event) => {
-			// Popover entries map to source actions through data-overflow-item-id.
-			const oMenuItem = event.target.closest('[data-role="ibo-popover-menu--item"][data-overflow-item-id]');
-			if (!oMenuItem) {
-				return;
-			}
-
-			event.preventDefault();
-			const sItemId = oMenuItem.dataset.overflowItemId;
-			const oSource = this._itemsById[sItemId];
-			if (!oSource) {
-				return;
-			}
-
-			// Forward click to the original UI action.
-			const oClickable = oSource.querySelector('a[href], button, [role="tab"], [data-role="ibo-tab-container--tab-toggler"]');
-			(oClickable || oSource).click();
-		};
-
-		this._popover.addEventListener("click", this._onPopoverClick);
 	}
 
 	_refreshCollections() {
