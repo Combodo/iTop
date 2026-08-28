@@ -343,7 +343,7 @@ class InstallationFileService
 					$aUnselectableModules = [];
 					$bIsExtensionSelectable = true;
 					foreach ($oExtension->aModules as $sModuleId) {
-						if (array_key_exists($sModuleId, $this->aSelectedModules)) {
+						if (array_key_exists($sModuleId, $this->aSelectedModules) || array_key_exists($sModuleId, $this->aAutoSelectModules)) {
 							//already selected
 							continue;
 						}
