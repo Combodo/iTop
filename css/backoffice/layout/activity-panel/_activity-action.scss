@@ -31,10 +31,9 @@ $ibo-activity-panel--activity-action-separator--background-color: $ibo-color-gre
   &.ibo-is-hidden{
     display: none;
   }
-}
-
-.ibo-activity-panel--add-caselog-entry-button  ~ .ibo-activity-panel--activity-actions {
-  top: calc(#{$ibo-activity-panel--activity-actions--top} + #{$ibo-activity-panel--add-caselog-entry-button--diameter} + #{$ibo-activity-panel--activity-actions--gap});
+  &:has(+ .ibo-activity-panel--add-caselog-entry-button) {
+    top: calc(#{$ibo-activity-panel--activity-actions--top} + #{$ibo-activity-panel--activity-action--diameter} + #{$ibo-activity-panel--activity-actions--gap});
+  }
 }
 
 .ibo-activity-panel--activity-action {
