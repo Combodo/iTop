@@ -123,6 +123,7 @@ class ButtonBar extends HTMLElement {
 		}
 		this._popover?.removeEventListener("click", this._onPopoverClick);
 		window.removeEventListener("resize", this._onResize);
+		this._initialized = false;
 	}
 
 	_bindEvents() {
