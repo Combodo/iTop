@@ -429,7 +429,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 
 			return $oButton;
 		} elseif ($oPopupItem instanceof SeparatorPopupMenuItem) {
-			$oSeparator = new ButtonSeparator(utils::GetSafeId($oPopupItem->GetUID()));
+			$oSeparator = new ButtonSeparator(utils::GetSafeId($oPopupItem->GetUID(), true));
 			$oSeparator->SetCSSClasses($oPopupItem->GetCssClasses());
 			return $oSeparator;
 		}
@@ -491,7 +491,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 
 			return $oButton;
 		} elseif ($oPopupItem instanceof SeparatorPopupMenuItem) {
-			$oSeparator = new ButtonSeparator(utils::GetSafeId($oPopupItem->GetUID()));
+			$oSeparator = new ButtonSeparator(utils::GetSafeId($oPopupItem->GetUID(), true));
 			$oSeparator->SetCSSClasses($oPopupItem->GetCssClasses());
 			return $oSeparator;
 		}

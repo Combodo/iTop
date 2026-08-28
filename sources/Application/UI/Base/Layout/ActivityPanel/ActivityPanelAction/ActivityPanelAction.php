@@ -50,7 +50,7 @@ abstract class ActivityPanelAction extends UIBlock
 
 	public function __construct(string $sLabel, string $sIconClass, ?string $sTooltip, string $sUid)
 	{
-		parent::__construct(utils::GetSafeId($sUid));
+		parent::__construct(utils::GetSafeId($sUid, true));
 		$this->sUid = $sUid;
 		$this->sLabel = $sLabel;
 		$this->sIconClass = $sIconClass;

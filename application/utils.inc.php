@@ -1833,10 +1833,15 @@ SQL;
 	/**
 	 * Some characters cause troubles with jQuery when used inside DOM IDs, so let's replace them by the safe _ (underscore)
 	 * @param string $sId The ID to sanitize
+	 * @param bool $bForSelector Whether to apply strict CSS/jQuery selector-safe sanitization
 	 * @return string The sanitized ID
 	 */
-	public static function GetSafeId($sId)
+	public static function GetSafeId($sId, bool $bForSelector = false)
 	{
+		if ($bForSelector) {
+			return preg_replace('/[^a-zA-Z0-9_]/', '_', $sId);
+		}
+
 		return str_replace([':', '[', ']', '+', '-', ' '], '_', $sId);
 	}
 
