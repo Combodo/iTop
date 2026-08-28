@@ -696,8 +696,10 @@ class iTopExtensionsMap
 				$oChoice = $this->GetFromExtensionCode($oExtension->sCode);
 				if ($oChoice) {
 					$oChoice->bInstalled = true;
+					$oExtension->bRemovedFromDisk = $oChoice->bRemovedFromDisk;
 				} else {
 					$oExtension->bRemovedFromDisk = true;
+					$this->aExtensionsByCode[$oExtension->sCode] = $oExtension;
 				}
 
 				$this->aInstalledExtensions[$oExtension->sCode.'/'.$oExtension->sVersion] = $oExtension;

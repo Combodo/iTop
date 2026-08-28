@@ -821,6 +821,7 @@ EOF
 			'dependency_issue' => $bDependencyIssue,
 			'mandatory' => $bMandatory,
 			'missing' => $bMissingFromDisk,
+			'remote' => $bIsRemoteExtension,
 			'installed' => $bInstalled,
 			'disabled' => $bDisabled,
 			'checked' => $bChecked,
@@ -902,7 +903,7 @@ EOF
 			}
 		} elseif ($aFlags['installed']) {
 			// An extension cannot be uninstalled if it is not uninstallable
-			if (!$aFlags['uninstallable']) {
+			if (!$aFlags['uninstallable'] || $aFlags['remote']) {
 				return false;
 			}
 		}
