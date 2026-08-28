@@ -73,7 +73,7 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 			$oConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
 			$this->InitExtensionMap($oConfig);
 			$aSelectedExtensions = $this->GetExtensionMap()->GetSelectedExtensions($oConfig, $aAddedExtensions, []);
-			$aSelectedModules = $this->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
+			$aSelectedModules = $this->GetModulesToLoadFromSelectedExtensions($oConfig, $aSelectedExtensions);
 			return $this->DoCompile(array_keys($aSelectedExtensions), [], $aSelectedModules, $bUseSymLinks ?? false);
 		} catch (DOMFormatException $e) {
 			$sFileName = $sSourceEnv.'.delta.xml';

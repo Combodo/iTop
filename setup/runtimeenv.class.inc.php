@@ -1288,7 +1288,7 @@ class RunTimeEnvironment
 		$oConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
 		$this->InitExtensionMap($oConfig);
 		$aSelectedExtensions = $this->GetExtensionMap()->GetSelectedExtensions($oConfig, $aAddedExtensions, []);
-		$aSelectedModules = $this->GetModulesToLoadFromChoices($oConfig, $aSelectedExtensions);
+		$aSelectedModules = $this->GetModulesToLoadFromSelectedExtensions($oConfig, $aSelectedExtensions);
 		return $this->DoCompile($aSelectedExtensions, [], $aSelectedModules, $bUseSymLinks ?? false);
 	}
 
@@ -1494,14 +1494,14 @@ class RunTimeEnvironment
 	 * Return modules based on installation choices+package
 	 *
 	 * @param \Config $oConfig
-	 * @param array|bool $aChoices
+	 * @param array|bool $aSelectedExtensions
 	 *
 	 * @return array|null
 	 * @throws \ModuleInstallationException
 	 */
-	public function GetModulesToLoadFromChoices(Config $oConfig, array|bool $aChoices): ?array
+	public function GetModulesToLoadFromSelectedExtensions(Config $oConfig, array|bool $aSelectedExtensions): ?array
 	{
-		if (false === $aChoices) {
+		if (false === $aSelectedExtensions) {
 			return null;
 		}
 
@@ -1515,16 +1515,14 @@ class RunTimeEnvironment
 		}
 
 		$aExtensionDirs = [];
-		$aFromSelectedExtensionModules = [];
 		foreach ($this->GetExtensionMap()->GetAllExtensions() as $oExtension) {
-			if (in_array($oExtension->sCode, $aChoices) && is_dir($oExtension->sSourceDir)) {
+			if (in_array($oExtension->sCode, $aSelectedExtensions) && is_dir($oExtension->sSourceDir)) {
 				$aExtensionDirs [] = $oExtension->sSourceDir;
-				$aFromSelectedExtensionModules = array_merge($aFromSelectedExtensionModules, $oExtension->aModules);
 			}
 		}
 
 		SetupLog::Info(__METHOD__, null, ['ext_dirs' => $aExtensionDirs]);
-		$aModuleIdsToLoad = InstallationChoicesToModuleConverter::GetInstance()->GetModules($aChoices, $aSearchDirs, $sInstallFilePath, $aExtensionDirs);
+		$aModuleIdsToLoad = InstallationChoicesToModuleConverter::GetInstance()->GetModules($aSelectedExtensions, $aSearchDirs, $sInstallFilePath, $aExtensionDirs);
 		$aModulesToLoad = [];
 
 		foreach ($aModuleIdsToLoad as $sModuleId) {
