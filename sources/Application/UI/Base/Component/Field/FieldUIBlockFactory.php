@@ -76,7 +76,7 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 			$iMaxActions = utils::GetConfig()->Get('attribute.max_actions_items');
 			$aActions = [];
 			// Create buttons for a few actions or a grouped-actions button for more actions than configured
-			if (count($aParams['actions']) > $iMaxActions) {
+			if ($iMaxActions > 0 && count($aParams['actions']) > $iMaxActions) {
 				$oGroupedActionsButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S('UI:Component:Field:GroupedActions:Tooltip'), 'grouped-actions');
 				$oGroupedActionsButton->AddCSSClass('ibo-field--action');
 
