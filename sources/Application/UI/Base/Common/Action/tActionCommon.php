@@ -35,7 +35,6 @@ trait tActionCommon
 	protected string $sLabel;
 	protected string $sIconClass = '';
 	protected ?string $sTooltip = null;
-	protected array $aCssClasses = [];
 
 	public function GetUID(): string
 	{
@@ -78,23 +77,6 @@ trait tActionCommon
 	public function SetTooltip(?string $sTooltip): static
 	{
 		$this->sTooltip = $sTooltip;
-		return $this;
-	}
-
-	public function GetCssClasses(): array
-	{
-		return $this->aCssClasses;
-	}
-
-	public function SetCssClasses(array $aCssClasses): static
-	{
-		$this->aCssClasses = $aCssClasses;
-		return $this;
-	}
-
-	public function AddCssClass(string $sCssClass): static
-	{
-		$this->aCssClasses[] = $sCssClass;
 		return $this;
 	}
 }
