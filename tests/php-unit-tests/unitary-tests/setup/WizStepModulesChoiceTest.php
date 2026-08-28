@@ -731,6 +731,117 @@ class WizStepModulesChoiceTest extends ItopTestCase
 		$this->assertEquals($aExpectedFlags, $aFlags);
 	}
 
+	public function ProviderCanMoveForwardFromChoiceFlags(): array
+	{
+		return [
+			'force uninstall enabled should always allow move forward' => [
+				'aChoiceFlags' => [
+					'checked' => true,
+					'disabled' => true,
+					'dependency_issue' => true,
+					'installed' => true,
+					'uninstallable' => false,
+					'remote' => true,
+				],
+				'bDisableUninstallChecks' => true,
+				'bExpectedCanMoveForward' => true,
+			],
+			'checked disabled with dependency issue should block move forward' => [
+				'aChoiceFlags' => [
+					'checked' => true,
+					'disabled' => true,
+					'dependency_issue' => true,
+					'installed' => false,
+					'uninstallable' => true,
+					'remote' => false,
+				],
+				'bDisableUninstallChecks' => false,
+				'bExpectedCanMoveForward' => false,
+			],
+			'checked enabled with dependency issue should allow move forward' => [
+				'aChoiceFlags' => [
+					'checked' => true,
+					'disabled' => false,
+					'dependency_issue' => true,
+					'installed' => true,
+					'uninstallable' => true,
+					'remote' => false,
+				],
+				'bDisableUninstallChecks' => false,
+				'bExpectedCanMoveForward' => true,
+			],
+			'checked disabled without dependency issue should allow move forward' => [
+				'aChoiceFlags' => [
+					'checked' => true,
+					'disabled' => true,
+					'dependency_issue' => false,
+					'installed' => true,
+					'uninstallable' => false,
+					'remote' => false,
+				],
+				'bDisableUninstallChecks' => false,
+				'bExpectedCanMoveForward' => true,
+			],
+			'unchecked installed and not uninstallable should block move forward' => [
+				'aChoiceFlags' => [
+					'checked' => false,
+					'disabled' => true,
+					'dependency_issue' => false,
+					'installed' => true,
+					'uninstallable' => false,
+					'remote' => false,
+				],
+				'bDisableUninstallChecks' => false,
+				'bExpectedCanMoveForward' => false,
+			],
+			'unchecked installed and uninstallable should allow move forward' => [
+				'aChoiceFlags' => [
+					'checked' => false,
+					'disabled' => false,
+					'dependency_issue' => false,
+					'installed' => true,
+					'uninstallable' => true,
+					'remote' => false,
+				],
+				'bDisableUninstallChecks' => false,
+				'bExpectedCanMoveForward' => true,
+			],
+			'unchecked not installed should allow move forward' => [
+				'aChoiceFlags' => [
+					'checked' => false,
+					'disabled' => false,
+					'dependency_issue' => true,
+					'installed' => false,
+					'uninstallable' => false,
+					'remote' => false,
+				],
+				'bDisableUninstallChecks' => false,
+				'bExpectedCanMoveForward' => true,
+			],
+			'unchecked installed and remote should block move forward' => [
+				'aChoiceFlags' => [
+					'checked' => false,
+					'disabled' => true,
+					'dependency_issue' => false,
+					'installed' => true,
+					'uninstallable' => true,
+					'remote' => true,
+				],
+				'bDisableUninstallChecks' => false,
+				'bExpectedCanMoveForward' => false,
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider ProviderCanMoveForwardFromChoiceFlags
+	 */
+	public function testCanMoveForwardFromChoiceFlags(array $aChoiceFlags, bool $bDisableUninstallChecks, bool $bExpectedCanMoveForward): void
+	{
+		$bCanMoveForward = WizStepModulesChoiceFake::CanMoveForwardFromChoiceFlags($aChoiceFlags, $bDisableUninstallChecks);
+		$this->assertSame($bExpectedCanMoveForward, $bCanMoveForward);
+	}
+
 	public function ProviderGetAddedAndRemovedExtensions()
 	{
 		return [

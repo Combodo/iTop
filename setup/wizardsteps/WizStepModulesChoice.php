@@ -827,7 +827,7 @@ EOF
 			'checked' => $bChecked,
 		];
 
-		$this->bCanMoveForward = $this->bCanMoveForward && $this->CanMoveForwardFromChoiceFlags($aFlags, $bDisableUninstallCheck);
+		$this->bCanMoveForward = $this->bCanMoveForward && static::CanMoveForwardFromChoiceFlags($aFlags, $bDisableUninstallCheck);
 		$this->aFlagsByChoiceId[$sChoiceId] = $aFlags;
 
 		return $aFlags;
@@ -889,7 +889,7 @@ EOF
 		}
 	}
 
-	protected function CanMoveForwardFromChoiceFlags(array $aFlags, bool $bDisableUninstallCheck = false): bool
+	public static function CanMoveForwardFromChoiceFlags(array $aFlags, bool $bDisableUninstallCheck = false): bool
 	{
 		// The user can force to move forward with the "force-uninstall" option
 		if ($bDisableUninstallCheck) {

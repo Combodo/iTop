@@ -88,7 +88,7 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 					$sChoiceId = self::$SEP.$index;
 					$oLatestWizardState = $this->oWizard->GetLatestWizardStateFromStepClass(WizStepModulesChoice::class);
 					$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents[$oLatestWizardState->GetState()], false, false);
-					if (!$this->CanMoveForwardFromChoiceFlags($aFlags)) {
+					if (!static::CanMoveForwardFromChoiceFlags($aFlags)) {
 						// Pop the latest step from the stack, since we are going back to it
 						$this->oWizard->PopStep();
 
