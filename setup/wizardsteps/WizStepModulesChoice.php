@@ -822,12 +822,13 @@ EOF
 			'dependency_issue' => $bDependencyIssue,
 			'mandatory' => $bMandatory,
 			'missing' => $bMissingFromDisk,
+			'remote' => $bIsRemoteExtension,
 			'installed' => $bInstalled,
 			'disabled' => $bDisabled,
 			'checked' => $bChecked,
 		];
 
-		$this->bCanMoveForward = $this->bCanMoveForward && $this->CanMoveForwardFromChoiceFlags($aFlags, $bDisableUninstallCheck);
+		$this->bCanMoveForward = $this->bCanMoveForward && static::CanMoveForwardFromChoiceFlags($aFlags, $bDisableUninstallCheck);
 		$this->aFlagsByChoiceId[$sChoiceId] = $aFlags;
 
 		return $aFlags;
@@ -889,7 +890,7 @@ EOF
 		}
 	}
 
-	protected function CanMoveForwardFromChoiceFlags(array $aFlags, bool $bDisableUninstallCheck = false): bool
+	public static function CanMoveForwardFromChoiceFlags(array $aFlags, bool $bDisableUninstallCheck = false): bool
 	{
 		// The user can force to move forward with the "force-uninstall" option
 		if ($bDisableUninstallCheck) {
@@ -903,7 +904,7 @@ EOF
 			}
 		} elseif ($aFlags['installed']) {
 			// An extension cannot be uninstalled if it is not uninstallable
-			if (!$aFlags['uninstallable']) {
+			if (!$aFlags['uninstallable'] || $aFlags['remote']) {
 				return false;
 			}
 		}

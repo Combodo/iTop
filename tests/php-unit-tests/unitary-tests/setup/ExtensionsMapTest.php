@@ -6,6 +6,7 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use CoreException;
 use iTopExtension;
 use ItopExtensionsMap;
+use iTopExtensionsMapFake;
 use ModuleDiscovery;
 
 class ExtensionsMapTest extends ItopTestCase
@@ -117,6 +118,42 @@ class ExtensionsMapTest extends ItopTestCase
 		$this->assertEquals($expected, array_keys($aExtensions));
 	}
 
+	public function testAddExtensionAlwaysKeepsNewestVersion(): void
+	{
+		$oExtensionsMap = iTopExtensionsMapFake::createFromArray([]);
+
+		$oExtensionV1 = $this->GivenExtension('my-ext', '1.0.0');
+		$oExtensionsMap->AddExtension($oExtensionV1);
+		$this->assertSame($oExtensionV1, $oExtensionsMap->GetFromExtensionCode('my-ext'));
+		$this->assertEquals(['my-ext/1.0.0'], array_keys($oExtensionsMap->GetAllExtensions()));
+
+		$oExtensionV3 = $this->GivenExtension('my-ext', '3.0.0');
+		$oExtensionsMap->AddExtension($oExtensionV3);
+		$this->assertSame($oExtensionV3, $oExtensionsMap->GetFromExtensionCode('my-ext'));
+		$this->assertEquals(['my-ext/3.0.0'], array_keys($oExtensionsMap->GetAllExtensions()));
+
+		$oExtensionV2 = $this->GivenExtension('my-ext', '2.0.0');
+		$oExtensionsMap->AddExtension($oExtensionV2);
+		$this->assertSame($oExtensionV3, $oExtensionsMap->GetFromExtensionCode('my-ext'));
+		$this->assertEquals(['my-ext/3.0.0'], array_keys($oExtensionsMap->GetAllExtensions()));
+	}
+
+	public function testAddExtensionReplaceRemovedExtensions(): void
+	{
+		$oExtensionsMap = iTopExtensionsMapFake::createFromArray([]);
+
+		$oExtensionV3Removed = $this->GivenExtension('my-ext', '3.0.0');
+		$oExtensionV3Removed->bRemovedFromDisk = true;
+		$oExtensionsMap->AddExtension($oExtensionV3Removed);
+		$this->assertSame($oExtensionV3Removed, $oExtensionsMap->GetFromExtensionCode('my-ext'));
+		$this->assertEquals(['my-ext/3.0.0'], array_keys($oExtensionsMap->GetAllExtensions()));
+
+		$oExtensionV2 = $this->GivenExtension('my-ext', '2.0.0');
+		$oExtensionsMap->AddExtension($oExtensionV2);
+		$this->assertSame($oExtensionV2, $oExtensionsMap->GetFromExtensionCode('my-ext'));
+		$this->assertEquals(['my-ext/2.0.0'], array_keys($oExtensionsMap->GetAllExtensions()));
+	}
+
 	private function GiveExtensionMapWithAllTypeOfExtensions(): iTopExtensionsMap
 	{
 		$oExtensionsMap = iTopExtensionsMap::GetExtensionsMap();
@@ -167,7 +204,7 @@ class ExtensionsMapTest extends ItopTestCase
 		return $oExtensionsMap;
 	}
 
-	private function GivenExtension(string $sCode, string $sVersion, bool $bVisible, string $sSource, bool $bMandatory, array $aMissingDependencies = []): iTopExtension
+	private function GivenExtension(string $sCode, string $sVersion, bool $bVisible = true, string $sSource = iTopExtension::SOURCE_REMOTE, bool $bMandatory = false, array $aMissingDependencies = []): iTopExtension
 	{
 		$oExt = new iTopExtension();
 		$oExt->sCode = $sCode;

@@ -208,18 +208,15 @@ class iTopExtensionsMap
 	 */
 	protected function AddExtension(iTopExtension $oNewExtension)
 	{
-		foreach ($this->aExtensions as $key => $oExtension) {
-			if ($oExtension->sCode == $oNewExtension->sCode) {
-				if (version_compare($oNewExtension->sVersion, $oExtension->sVersion, '>')) {
-					// This "new" extension is "newer" than the previous one, let's replace the previous one
-					unset($this->aExtensions[$key]);
-					$this->aExtensions[$oNewExtension->sCode.'/'.$oNewExtension->sVersion] = $oNewExtension;
-					$this->aExtensionsByCode[$oNewExtension->sCode] = $oNewExtension;
-					return;
-				} else {
-					// This "new" extension is not "newer" than the previous one, let's ignore it
-					return;
-				}
+		$oExtension = $this->GetFromExtensionCode($oNewExtension->sCode);
+		if (!is_null($oExtension)) {
+			if (version_compare($oNewExtension->sVersion, $oExtension->sVersion, '>') || $oExtension->bRemovedFromDisk) {
+				// This "new" extension is "newer" than the previous one, let's replace the previous one
+				// We should also replace the previous extension if it has been removed from disk
+				unset($this->aExtensions[$oExtension->sCode.'/'.$oExtension->sVersion]);
+			} else {
+				// This "new" extension is not "newer" than the previous one, let's ignore it
+				return;
 			}
 		}
 		// Finally it's not a duplicate, let's add it to the list
@@ -696,8 +693,10 @@ class iTopExtensionsMap
 				$oChoice = $this->GetFromExtensionCode($oExtension->sCode);
 				if ($oChoice) {
 					$oChoice->bInstalled = true;
+					$oExtension->bRemovedFromDisk = $oChoice->bRemovedFromDisk;
 				} else {
 					$oExtension->bRemovedFromDisk = true;
+					$this->aExtensionsByCode[$oExtension->sCode] = $oExtension;
 				}
 
 				$this->aInstalledExtensions[$oExtension->sCode.'/'.$oExtension->sVersion] = $oExtension;
