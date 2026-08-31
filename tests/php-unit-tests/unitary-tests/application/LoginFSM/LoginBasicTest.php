@@ -75,11 +75,11 @@ class LoginBasicTest extends ItopDataTestCase
 		$this->assertEquals(LoginWebPage::LOGIN_FSM_CONTINUE, $sActualRes, 'No Login FSM error should have been detected');
 	}
 
-	public function testOnModeDetectionForBearerToken()
+	public function testOnModeDetectionForBearerTokenNotDetectedAsBasic()
 	{
 		// Given
 		$oLoginBasic = new LoginBasic();
-		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer '.base64_encode('LoginBasicTest');
+		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer '.base64_encode('Login:BasicTest');
 
 		// When
 		$_SESSION = [];
