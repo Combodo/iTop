@@ -23,7 +23,6 @@ namespace Combodo\iTop\Application\UI\Base\Component\ButtonBar;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonSeparator;
-use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroup;
 
 /**
  * Class ButtonBarUIBlockFactory
@@ -123,7 +122,7 @@ class ButtonBarUIBlockFactory extends AbstractUIBlockFactory
 			->SetOverflowStartAfterButtonId($sOverflowStartAfterButtonId);
 
 		foreach ($aItems as $oItem) {
-			if ($oItem instanceof Button || $oItem instanceof ButtonSeparator || $oItem instanceof ButtonGroup) {
+			if ($oItem instanceof Button || $oItem instanceof ButtonSeparator) {
 				$oButtonBar->AddButton($oItem);
 			}
 		}

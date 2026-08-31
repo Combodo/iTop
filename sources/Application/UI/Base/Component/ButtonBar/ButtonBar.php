@@ -24,7 +24,6 @@ use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonJS;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonSeparator;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroup;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
@@ -194,7 +193,7 @@ class ButtonBar extends UIContentBlock
 		return $this->sOverflowStartAfterButtonId !== null && $this->sOverflowStartAfterButtonId === $sButtonId;
 	}
 
-	public function AddButton(Button|ButtonSeparator|ButtonGroup $oButton): self
+	public function AddButton(Button|ButtonSeparator $oButton): self
 	{
 		$this->aButtons[$oButton->GetId()] = $oButton;
 
@@ -223,8 +222,8 @@ class ButtonBar extends UIContentBlock
 	{
 		$this->aButtons = [];
 		foreach ($aButtons as $oButton) {
-			if (!($oButton instanceof Button) && !($oButton instanceof ButtonSeparator) && !($oButton instanceof ButtonGroup)) {
-				throw new InvalidArgumentException('Button bar items must be a Button, ButtonSeparator, or ButtonGroup');
+			if (!($oButton instanceof Button) && !($oButton instanceof ButtonSeparator)) {
+				throw new InvalidArgumentException('Button bar items must be a Button or ButtonSeparator');
 			}
 			$this->aButtons[$oButton->GetId()] = $oButton;
 		}
@@ -257,14 +256,8 @@ class ButtonBar extends UIContentBlock
 			$sUid = $this->GetId().'--menu-item--'.utils::GetSafeId($sBlockId);
 
 			$oPopoverMenuItem = PopoverMenuItemFactory::MakeApplicationPopupMenuItemFromButton($oBlock, $sUid);
-
-			if ($oPopoverMenuItem !== null) {
-				$oPopoverMenuItem
-					->SetDataAttributes([
-						'overflow-item-id' => $this->GetOverflowItemIdFromBlockId($sBlockId),
-					]);
-				$this->oPopoverMenu->AddItem(static::OVERFLOW_SECTION_ID, $oPopoverMenuItem);
-			}
+			$oPopoverMenuItem->AddDataAttribute('overflow-item-id', $this->GetOverflowItemIdFromBlockId($sBlockId));
+			$this->oPopoverMenu->AddItem(static::OVERFLOW_SECTION_ID, $oPopoverMenuItem);
 		}
 	}
 

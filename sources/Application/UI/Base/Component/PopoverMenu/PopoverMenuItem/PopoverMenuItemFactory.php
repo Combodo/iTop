@@ -174,6 +174,12 @@ class PopoverMenuItemFactory
 			if ($oButton->GetTooltip() !== '' && $oButton->GetTooltip() !== $sLabel) {
 				$oPopoverMenuItem->SetTooltip($oButton->GetTooltip());
 			}
+			if ($oButton->HasDataAttributes()) {
+				$oPopoverMenuItem->SetDataAttributes($oButton->GetDataAttributes());
+			}
+			if ($oButton->HasAriaAttributes()) {
+				$oPopoverMenuItem->SetAriaAttributes($oButton->GetAriaAttributes());
+			}
 		}
 
 		return $oPopoverMenuItem;
