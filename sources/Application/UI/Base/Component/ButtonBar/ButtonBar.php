@@ -108,7 +108,7 @@ class ButtonBar extends UIContentBlock
 		return $this;
 	}
 
-	public function GetMoreButtonTooltipText(): string
+	public function GetMoreButtonTooltipText(): ?string
 	{
 		return $this->sMoreTooltipText;
 	}
