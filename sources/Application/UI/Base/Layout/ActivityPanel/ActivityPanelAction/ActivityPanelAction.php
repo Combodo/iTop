@@ -61,7 +61,7 @@ abstract class ActivityPanelAction extends UIBlock
 	 */
 	protected function GenerateId(): string
 	{
-		return parent::GenerateId().'--'.utils::GetSafeId($this->sUid);
+		return parent::GenerateId().'--'.utils::GetSafeId($this->sUid, true);
 	}
 
 	public function SetPopupItems(array $aPopupItems): static

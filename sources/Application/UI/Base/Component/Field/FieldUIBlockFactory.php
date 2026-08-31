@@ -82,7 +82,8 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 
 				$aGroupedActions = [];
 				foreach ($aParams['actions'] as $oAction) {
-					$aGroupedActions[] = $oAction->GetMenuItem();
+					$aGroupedActions[$oAction->GetUID()] = $oAction->GetMenuItem();
+					$oField->AddMultipleJsFilesRelPaths($oAction->GetLinkedScripts());
 				}
 				$oGroupedActionsPopoverMenu = PopoverMenuFactory::MakeMenuForActions($oField->GetId().'--grouped-actions-menu', $aGroupedActions);
 				$oGroupedActionsPopoverMenu->AddCSSClass('ibo-field--grouped-actions-popover');
