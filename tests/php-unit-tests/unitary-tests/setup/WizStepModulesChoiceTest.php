@@ -738,6 +738,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'checked' => true,
 					'dependency_issue' => false,
 					'mandatory' => false,
+					'remote' => false,
 				],
 			],
 			'#node18 - An installed but not selected extension with missing dependencies without force uninstall should be checked and disabled, even if it is not selected' => [
@@ -764,6 +765,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'checked' => true,
 					'dependency_issue' => true,
 					'mandatory' => false,
+					'remote' => false,
 				],
 			],
 		];
