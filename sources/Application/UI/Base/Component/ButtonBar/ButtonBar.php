@@ -221,7 +221,13 @@ class ButtonBar extends UIContentBlock
 
 	public function SetButtons(array $aButtons): self
 	{
-		$this->aButtons = $aButtons;
+		$this->aButtons = [];
+		foreach ($aButtons as $oButton) {
+			if (!($oButton instanceof Button) && !($oButton instanceof ButtonSeparator) && !($oButton instanceof ButtonGroup)) {
+				throw new InvalidArgumentException('Button bar items must be a Button, ButtonSeparator, or ButtonGroup');
+			}
+			$this->aButtons[$oButton->GetId()] = $oButton;
+		}
 
 		$this->RebuildPopoverItems();
 
