@@ -161,6 +161,10 @@ class PopoverMenuItemFactory
 			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
 				new JSPopupMenuItem($sUid, $sLabel, $oButton->GetOnClickJsCode())
 			);
+		} elseif ($oButton->GetOnClickJsCode() !== '') {
+			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+				new JSPopupMenuItem($sUid, $sLabel, $oButton->GetOnClickJsCode())
+			);
 		} else {
 			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
 				new URLPopupMenuItem($sUid, $sLabel, '#')
