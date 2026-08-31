@@ -135,7 +135,7 @@ class ButtonBar extends HTMLElement {
 		});
 
 		// Popover entries are generated server-side with the same mapping id.
-		this._menuItems = Array.from(this._popover.querySelectorAll('[data-role="ibo-popover-menu--item"][data-overflow-item-id]'));
+		this._menuItems = Array.from(this._popover.querySelectorAll('[data-role~="ibo-popover-menu--item"][data-overflow-item-id]'));
 		this._menuItemsById = {};
 		this._menuItems.forEach((oItem) => {
 			this._menuItemsById[oItem.dataset.overflowItemId] = oItem;
