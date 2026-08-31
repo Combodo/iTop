@@ -1,25 +1,5 @@
-<div id="{{ oUIBlock.GetId() }}"
-     class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}"
-     data-role="ibo-top-bar-quick-action">
-    <div class="ibo-top-bar-quick-action--head" data-role="ibo-top-bar-quick-action--head">
-        <a href="{{ oUIBlock.GetURL() }}" class="ibo-top-bar-quick-action--icon" data-role="ibo-top-bar-quick-action--icon"
-           target="{{ oUIBlock.GetTarget() }}"
-           data-uid="{{ oUIBlock.GetUID() }}"
-           {% if oUIBlock.GetDataAttributes() %}
-               {% for sName, sValue in oUIBlock.GetDataAttributes() %}
-                   data-{{ sName }}="{{ sValue }}"
-               {% endfor %}
-           {% endif %}
-           {% if oUIBlock.GetAriaAttributes() %}
-               {% for sName, sValue in oUIBlock.GetAriaAttributes() %}
-                   aria-{{ sName }}="{{ sValue }}"
-               {% endfor %}
-           {% endif %}
-           data-tooltip-content="{{ oUIBlock.GetTooltip() }}"
-           data-tooltip-placement="bottom-start"
-           data-tooltip-distance-offset="25"
-        >
-            <span class="{{ oUIBlock.GetIconClass() }}"></span>
-        </a>
-    </div>
-</div>
+{% extends 'base/layouts/top-bar/top-bar-quick-action/layout.html.twig' %}
+
+{% block iboTopBarQuickActionIconCustomAttributes %}
+    target="{{ oUIBlock.GetTarget() }}"
+{% endblock %}
