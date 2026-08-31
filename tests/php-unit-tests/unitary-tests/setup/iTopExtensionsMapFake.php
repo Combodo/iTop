@@ -9,7 +9,7 @@ class iTopExtensionsMapFake extends iTopExtensionsMap
 		$this->aScannedDirs = [];
 	}
 
-	public static function createFromArray($aExtensions)
+	public static function createFromArray($aExtensions): static
 	{
 		$oMap = new static();
 
@@ -27,5 +27,10 @@ class iTopExtensionsMapFake extends iTopExtensionsMap
 			$oMap->AddExtension($oExtension);
 		}
 		return $oMap;
+	}
+
+	public function AddExtension(iTopExtension $oNewExtension)
+	{
+		parent::AddExtension($oNewExtension);
 	}
 }
