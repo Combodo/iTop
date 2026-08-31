@@ -12,4 +12,5 @@
  */
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Неизвестные значения',
+	'UI:Component:Field:GroupedActions:Tooltip' => 'Больше действий',
 ]);

@@ -21,6 +21,7 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Button;
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use utils;
 
 /**
  * Class Button
@@ -270,5 +271,23 @@ class Button extends UIBlock
 		$this->bIsDisabled = $bIsDisabled;
 
 		return $this;
+	}
+
+	public function GetAriaAttributes(): array
+	{
+		$aDefaultValues = [];
+
+		// Keep the visible label as the accessible name, falling back to the tooltip for icon-only buttons.
+		if (utils::IsNotNullOrEmptyString($this->sLabel)) {
+			$aDefaultValues['label'] = $this->sLabel;
+		} elseif (utils::IsNotNullOrEmptyString($this->sTooltip)) {
+			$aDefaultValues['label'] = $this->sTooltip;
+		}
+		return array_merge($aDefaultValues, parent::GetAriaAttributes());
+	}
+
+	public function HasAriaAttributes(): bool
+	{
+		return  !empty($this->GetAriaAttributes());
 	}
 }

@@ -12,4 +12,5 @@
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Valores desconhecidos',
+	'UI:Component:Field:GroupedActions:Tooltip' => 'More actions~~',
 ]);

@@ -3,7 +3,7 @@
 /**
  * Class for adding an item into a popup menu that triggers some Javascript code
  *
- * Note: This works only in the backoffice, {@see \JSButtonItem} for the end-user portal
+ * Note: This works only in the backoffice, {@see \common\JSButtonItem} for the end-user portal
  *
  * @api
  * @package     UIExtensibilityAPI
@@ -40,7 +40,7 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	public function GetMenuItem()
 	{
 		// Note: the semicolumn is a must here!
-		return [
+		$aData = [
 			'label' => $this->GetLabel(),
 			'onclick' => $this->GetJsCode().'; return false;',
 			'url' => $this->GetUrl(),
@@ -48,6 +48,8 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 			'icon_class' => $this->sIconClass,
 			'tooltip' => $this->sTooltip,
 		];
+
+		return array_merge($aData, $this->GetMenuItemAdditionalData());
 	}
 
 	/** @ignore */

@@ -6,6 +6,9 @@
 		{% if oUIBlock.HasGlobalSearch() %}
 			{{ render_block(oUIBlock.GetGlobalSearch(), {aPage: aPage}) }}
 		{% endif %}
+        {% for oAction in oUIBlock.GetQuickActions() %}
+            {{ render_block(oAction, {aPage: aPage}) }}
+        {% endfor %}
 	</div>
 	{% if oUIBlock.HasBreadcrumbs() %}
 		{{ render_block(oUIBlock.GetBreadcrumbs(), {aPage: aPage}) }}

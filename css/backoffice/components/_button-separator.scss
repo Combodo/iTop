@@ -1,0 +1,20 @@
+/*
+ * @copyright   Copyright (C) 2010-2026 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-button-separator--width: 1px !default;
+$ibo-button-separator--height: 16px !default;
+$ibo-button-separator--margin-x: 0.75rem !default;
+$ibo-button-separator--margin-y: $ibo-spacing-0 !default;
+$ibo-button-separator--border-size: 1px !default;
+$ibo-button-separator--border-color: $ibo-color-grey-500 !default;
+
+.ibo-button-separator {
+	display: inline-flex;
+	border-right: $ibo-button-separator--border-size solid $ibo-button-separator--border-color;
+	width: $ibo-button-separator--width;
+	height: $ibo-button-separator--height;
+	margin: $ibo-button-separator--margin-y $ibo-button-separator--margin-x;
+}
+

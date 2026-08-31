@@ -1,0 +1,40 @@
+$ibo-top-bar-quick-action--head--background-color: $ibo-color-white-100 !default;
+
+$ibo-top-bar-quick-action--icon-padding-x: $ibo-spacing-500 !default;
+$ibo-top-bar-quick-action--icon-padding-y: $ibo-spacing-0 !default;
+$ibo-top-bar-quick-action--icon--color: $ibo-color-primary-600 !default;
+$ibo-top-bar-quick-action--icon--color--on-hover: $ibo-color-primary-700 !default;
+$ibo-top-bar-quick-action--icon--color--on-active: $ibo-color-primary-800 !default;
+$ibo-top-bar-quick-action-separator--width: 2px !default;
+$ibo-top-bar-quick-action-separator--background-color: $ibo-color-grey-300 !default;
+$ibo-top-bar-quick-action-separator--margin-y: $ibo-spacing-0 !default;
+$ibo-top-bar-quick-action-separator--margin-x: $ibo-spacing-300 !default;
+
+.ibo-top-bar-quick-action{
+  position: relative;
+  @extend %ibo-full-height-content;
+}
+.ibo-top-bar-quick-action--head{
+  @extend %ibo-full-height-content;
+  height: 100%;
+  background-color: $ibo-top-bar-quick-action--head--background-color;
+}
+.ibo-top-bar-quick-action--icon{
+  color: $ibo-top-bar-quick-action--icon--color;
+  align-self: center;
+  padding: $ibo-top-bar-quick-action--icon-padding-y $ibo-top-bar-quick-action--icon-padding-x;
+  @extend %ibo-font-ral-nor-400;
+
+  &:hover{
+    color: $ibo-top-bar-quick-action--icon--color--on-hover;
+  }
+  &:active{
+    color: $ibo-top-bar-quick-action--icon--color--on-active;
+  }
+}
+
+.ibo-top-bar-quick-action-separator {
+  width: $ibo-top-bar-quick-action-separator--width;
+  background-color: $ibo-top-bar-quick-action-separator--background-color;
+  margin: $ibo-top-bar-quick-action-separator--margin-y $ibo-top-bar-quick-action-separator--margin-x;
+}

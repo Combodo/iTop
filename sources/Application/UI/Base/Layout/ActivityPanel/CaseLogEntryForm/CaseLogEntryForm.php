@@ -9,10 +9,14 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm
 
 use AttributeCaseLog;
 use cmdbAbstractObject;
+use Combodo\iTop\Application\UI\Base\Component\Button\Button;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonSeparator;
+use Combodo\iTop\Application\UI\Base\Component\ButtonBar\ButtonBar;
 use Combodo\iTop\Application\UI\Base\Component\Input\RichText\RichText;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use DBObject;
+use Dict;
 use MetaModel;
 use utils;
 
@@ -53,8 +57,8 @@ class CaseLogEntryForm extends UIContentBlock
 	protected $oTextInput;
 	/** @var array $aMainActionButtons The form main actions (send, cancel, ...) */
 	protected $aMainActionButtons;
-	/** @var array $aExtraActionButtons The form extra actions, can be populated through a public API */
-	protected $aExtraActionButtons;
+	/** @var ButtonBar $oExtraActionButtonBar Extra actions button bar */
+	protected ButtonBar $oExtraActionButtonBar;
 
 	/**
 	 * CaseLogEntryForm constructor.
@@ -69,8 +73,8 @@ class CaseLogEntryForm extends UIContentBlock
 		$this->sAttCode = $sAttCode;
 		$this->sSubmitMode = static::DEFAULT_SUBMIT_MODE;
 		$this->aMainActionButtons = [];
-		$this->aExtraActionButtons = [];
 		$this->InitTextInput();
+		$this->InitExtraActionButtonBar();
 	}
 
 	/**
@@ -274,11 +278,26 @@ class CaseLogEntryForm extends UIContentBlock
 	}
 
 	/**
+	 * @return void
+	 */
+	protected function InitExtraActionButtonBar(): void
+	{
+		$this->oExtraActionButtonBar = new ButtonBar([], Dict::S('UI:Component:Field:GroupedActions:Tooltip'));
+	}
+
+	/**
+	 * @return ButtonBar
+	 */
+	public function GetExtraActionButtonBar(): ButtonBar
+	{
+		return $this->oExtraActionButtonBar;
+	}
+	/**
 	 * @return \Combodo\iTop\Application\UI\Base\UIBlock[]
 	 */
 	public function GetExtraActionButtons(): array
 	{
-		return $this->aExtraActionButtons;
+		return $this->oExtraActionButtonBar->GetButtons();
 	}
 
 	/**
@@ -291,7 +310,7 @@ class CaseLogEntryForm extends UIContentBlock
 	 */
 	public function SetExtraActionButtons(array $aExtraActionButtons)
 	{
-		$this->aExtraActionButtons = $aExtraActionButtons;
+		$this->oExtraActionButtonBar->SetButtons($aExtraActionButtons);
 		return $this;
 	}
 
@@ -302,9 +321,12 @@ class CaseLogEntryForm extends UIContentBlock
 	 * @see $aExtraActionButtons
 	 *
 	 */
-	public function AddExtraActionButtons(UIBlock $oExtraActionButton)
+	public function AddExtraActionButtons(UIBlock $oExtraActionButton): self
 	{
-		$this->aExtraActionButtons[] = $oExtraActionButton;
+		if (!($oExtraActionButton instanceof Button) && !($oExtraActionButton instanceof ButtonSeparator)) {
+			throw new \InvalidArgumentException('Extra action buttons must be either a Button or a ButtonSeparator');
+		}
+		$this->oExtraActionButtonBar->AddButton($oExtraActionButton);
 		return $this;
 	}
 
@@ -316,9 +338,7 @@ class CaseLogEntryForm extends UIContentBlock
 		$aSubBlocks = [];
 		$aSubBlocks[$this->GetTextInput()->GetId()] = $this->GetTextInput();
 
-		foreach ($this->GetExtraActionButtons() as $oExtraActionButton) {
-			$aSubBlocks[$oExtraActionButton->GetId()] = $oExtraActionButton;
-		}
+		$aSubBlocks[$this->GetExtraActionButtonBar()->GetId()] = $this->GetExtraActionButtonBar();
 
 		foreach ($this->GetMainActionButtons() as $oMainActionButton) {
 			$aSubBlocks[$oMainActionButton->GetId()] = $oMainActionButton;

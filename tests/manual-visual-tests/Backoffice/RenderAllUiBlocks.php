@@ -22,636 +22,1346 @@
 
 namespace Combodo\iTop\Test\VisualTest\Backoffice;
 
-use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Badge\Badge;
 use Combodo\iTop\Application\UI\Base\Component\Badge\BadgeUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Button\Button;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonSeparator;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\ButtonBar\ButtonBarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroup;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Set\SetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Toggler;
-use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Pill\PillFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\Extension\ExtensionDetails;
 use Combodo\iTop\Application\UI\Base\Layout\Extension\ExtensionDetailsUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockWithJSRefreshCallback;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
-use JSButtonItem;
 use LoginWebPage;
 use MetaModel;
+use URLPopupMenuItem;
 
 require_once '../../../approot.inc.php';
 require_once APPROOT.'application/startup.inc.php';
 
-LoginWebPage::DoLogin(); // Dependency for collapsible element with state saved, to get user pref
+class RenderAllUiBlocksPage extends iTopWebPage
+{
+	public function __construct()
+	{
+		parent::__construct('Blocks Components Library');
+		$this->InitLayout();
+		$this->InitAssets();
+		$this->BuildPageContent();
+	}
 
-$oPage = new iTopWebPage('Render all UI blocks');
-$oPageContentLayout = PageContentFactory::MakeStandardEmpty();
-$oPage->SetContentLayout($oPageContentLayout);
+	private function InitLayout(): void
+	{
+		$oPageMainLayout = PageContentFactory::MakeStandardEmpty();
+		$this->SetContentLayout($oPageMainLayout);
+	}
 
-$oPage->add_style(
-	<<<CSS
+	private function InitAssets(): void
+	{
+		$this->LinkStylesheetFromAppRoot('js/highlight/styles/github.min.css');
+		$this->LinkScriptFromAppRoot('js/highlight/highlight.min.js');
+		$this->add_ready_script(
+			<<<'JS'
+(function() {
+	if (!window.hljs) {
+		return;
+	}
+
+	const aCodeBlocks = document.querySelectorAll('.ibo-is-code pre, .ibo-is-code code');
+	aCodeBlocks.forEach((oBlock) => {
+		if (window.hljs.highlightElement) {
+			window.hljs.highlightElement(oBlock);
+			return;
+		}
+		if (window.hljs.highlightBlock) {
+			window.hljs.highlightBlock(oBlock);
+		}
+	});
+
+	const copyTextToClipboard = async (sText) => {
+		if (navigator.clipboard && window.isSecureContext) {
+			await navigator.clipboard.writeText(sText);
+			return;
+		}
+
+		const oTextArea = document.createElement('textarea');
+		oTextArea.value = sText;
+		oTextArea.style.position = 'fixed';
+		oTextArea.style.left = '-9999px';
+		document.body.appendChild(oTextArea);
+		oTextArea.focus();
+		oTextArea.select();
+		document.execCommand('copy');
+		document.body.removeChild(oTextArea);
+	};
+
+	aCodeBlocks.forEach((oBlock) => {
+		if (oBlock.dataset.copyButtonInjected === '1') {
+			return;
+		}
+
+		oBlock.dataset.copyButtonInjected = '1';
+		const oWrapper = document.createElement('div');
+		oWrapper.className = 'ibo-code-copy-wrapper';
+		oBlock.parentNode.insertBefore(oWrapper, oBlock);
+		oWrapper.appendChild(oBlock);
+
+		const oButton = document.createElement('button');
+		oButton.type = 'button';
+		oButton.className = 'ibo-code-copy-button ibo-button  ibo-block ibo-is-regular ';
+		oButton.textContent = 'Copier';
+		oButton.addEventListener('click', async () => {
+			try {
+				await copyTextToClipboard(oBlock.innerText || oBlock.textContent || '');
+				oButton.textContent = 'Copiee';
+			} catch (e) {
+				oButton.textContent = 'Echec';
+			}
+			setTimeout(() => {
+				oButton.textContent = 'Copier';
+			}, 1200);
+		});
+
+		oWrapper.appendChild(oButton);
+	});
+})();
+JS
+		);
+
+		$this->add_style(<<<CSS
+body{
+	color: var(--ibo-body-text-color);
+}
 hr {
 	background-color: var(--ibo-color-grey-950);
 }
-CSS
-);
+.ibo-code-copy-wrapper {
+	position: relative;
+}
+.ibo-code-copy-button {
+	position: absolute;
+	top: 0.4rem;
+	right: 0.4rem;
+	z-index: 1;
+}
+.ibo-code-copy-button:hover {
+	background: var(--ibo-color-grey-200);
+}
+.ibo-render-all--two-col-row {
+	margin-bottom: 1rem;
+}
+CSS);
+	}
 
-$oMainTitle = new Html('<h1>All UI blocks examples</h1>');
-$oPage->AddUiBlock($oMainTitle);
+	private function AddCreationCodeSnippet(iUIContentBlock $oBlock, string $sCode, string $sLanguage = 'language-php'): void
+	{
+		$oBlock->AddSubBlock(
+			UIContentBlockUIBlockFactory::MakeForPreformatted(trim($sCode))
+				->AddCSSClass($sLanguage)
+		);
+	}
 
-$oPageContentLayout->AddMainBlock(new Html('<hr/>'));
-$oPage->add('<a href="#page_bottom">Go to bottom of the page</a>');
-/////////
-// Alerts
-/////////
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Alerts examples', 2, 'title-alert'));
-$sContent = <<<HTML
+	private function AddElementWithSnippet(iUIContentBlock $oBlock, $oElement, string $sCode, string $sLanguage = 'language-php'): void
+	{
+		$oBlock->AddSubBlock($oElement);
+		$this->AddCreationCodeSnippet($oBlock, $sCode, $sLanguage);
+	}
+
+	private function BuildPageContent(): void
+	{
+		// panel
+		$oPanel = PanelUIBlockFactory::MakeForInformation($this->s_title, 'This page is a visual test for all the UI blocks available in iTop. It is not meant to be used in production.');
+		$this->AddSubBlock($oPanel);
+
+		// tabs host
+		$oTabsHost = UIContentBlockUIBlockFactory::MakeStandard('render-all-tabs-host');
+		$this->AddTabContainer('render-all-tabs', '', $oTabsHost);
+		$this->SetCurrentTabContainer('render-all-tabs');
+		$oPanel->AddSubBlock($oTabsHost);
+
+		// titles
+		$this->SetCurrentTab('tab-titles', 'Titles');
+		$this->RenderTitleSizeSection();
+		$this->RenderTitleAlternativeSection();
+
+		// pills
+		$this->SetCurrentTab('tab-pills', 'Pills');
+		$this->RenderPillSection();
+
+		// badges
+		$this->SetCurrentTab('tab-badges', 'Badges');
+		$this->RenderBadgesSection();
+
+		// buttons
+		$this->SetCurrentTab('tab-buttons', 'Buttons');
+		$this->RenderButtonsSection();
+		$this->RenderTogglerSection();
+		$this->RenderButtonGroupsSection();
+		$this->RenderButtonBarsSection();
+
+		// panels
+		$this->SetCurrentTab('tab-panels', 'Panels');
+		$this->RenderPanelsSection();
+		$this->RenderMultiColumns();
+		$this->RenderCollapsibleSection();
+		$this->RenderFieldsetSection();
+
+		// alerts
+		$this->SetCurrentTab('tab-alerts', 'Alerts');
+		$this->RenderAlertsBasicSection();
+		$this->RenderAlertsBrandingSection();
+		$this->RenderAlertsBehaviourSection();
+
+		// sets
+		$this->SetCurrentTab('tab-sets', 'Sets');
+		$this->RenderSetSection();
+
+		// tables
+		$this->SetCurrentTab('tab-tables', 'Tables');
+		$this->RenderDatatableSection();
+
+		// code
+		$this->SetCurrentTab('tab-codes', 'CodeBlocks');
+		$this->RenderCodeSection();
+
+		// functional
+		$this->SetCurrentTab('tab-functional', 'Functional');
+		$this->RenderObjectDetailsSection();
+		$this->RenderExtensionsSection();
+	}
+
+	private function RenderAlertsBasicSection(): void
+	{
+		$oFieldsSet = FieldSetUIBlockFactory::MakeStandard('Basic');
+
+		$sContent = <<<HTML
+<div>The content text is made of raw HTML, therefore it must be sanitized before being injected into the component.</div>
+<div>Here we put an hyperlink (<a href="#">link</a>) and a smiley (😻), just to see if it renders correctly</div>
+HTML;
+		$this->AddElementWithSnippet(
+			$oFieldsSet,
+			AlertUIBlockFactory::MakeNeutral(sTitle: 'Neutral alert', sContent: $sContent),
+			<<<'PHP'
+AlertUIBlockFactory::MakeNeutral(sTitle: 'Neutral alert', sContent: $sContent);
+PHP
+		);
+		$this->AddElementWithSnippet(
+			$oFieldsSet,
+			AlertUIBlockFactory::MakeForInformation(sTitle: 'Alert for information', sContent: $sContent),
+			<<<'PHP'
+AlertUIBlockFactory::MakeForInformation(sTitle: 'Alert for information', sContent: $sContent);
+PHP
+		);
+		$this->AddElementWithSnippet(
+			$oFieldsSet,
+			AlertUIBlockFactory::MakeForSuccess(sTitle: 'Alert for success', sContent: $sContent),
+			<<<'PHP'
+AlertUIBlockFactory::MakeForSuccess(sTitle: 'Alert for success', sContent: $sContent);
+PHP
+		);
+		$this->AddElementWithSnippet(
+			$oFieldsSet,
+			AlertUIBlockFactory::MakeForWarning(sTitle: 'Alert for warning', sContent: $sContent),
+			<<<'PHP'
+AlertUIBlockFactory::MakeForWarning(sTitle: 'Alert for warning', sContent: $sContent);
+PHP
+		);
+		$this->AddElementWithSnippet(
+			$oFieldsSet,
+			AlertUIBlockFactory::MakeForDanger(sTitle: 'Alert for danger', sContent: $sContent),
+			<<<'PHP'
+AlertUIBlockFactory::MakeForDanger(sTitle: 'Alert for danger', sContent: $sContent);
+PHP
+		);
+		$this->AddElementWithSnippet(
+			$oFieldsSet,
+			AlertUIBlockFactory::MakeForFailure(sTitle: 'Alert for failure', sContent: $sContent),
+			<<<'PHP'
+AlertUIBlockFactory::MakeForFailure(sTitle: 'Alert for failure', sContent: $sContent);
+PHP
+		);
+		$this->AddUiBlock($oFieldsSet);
+	}
+
+	private function RenderAlertsBrandingSection(): void
+	{
+		$oFieldsSet = FieldSetUIBlockFactory::MakeStandard('Basic');
+
+		$sContent = <<<HTML
 <div>The content text is made of raw HTML, therefore it must be sanitized before being injected into the component.</div>
 <div>Here we put an hyperlink (<a href="#">link</a>) and a smiley (😻), just to see if it renders correctly</div>
 HTML;
 
-$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeNeutral('Neutral alert', $sContent));
-$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeForInformation('Alert for information', $sContent));
-$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeForSuccess('Alert for success', $sContent));
-$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeForWarning('Alert for warning', $sContent));
-$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeForDanger('Alert for danger', $sContent));
-$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeForFailure('Alert for failure', $sContent));
-$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeWithBrandingPrimaryColor('Alert with branding primary color', $sContent));
-$oPageContentLayout->AddMainBlock(AlertUIBlockFactory::MakeWithBrandingSecondaryColor('Alert with branding secondary color', $sContent));
-$oAlertNonClosable = AlertUIBlockFactory::MakeNeutral('Alert not closable, not collapsable', $sContent)
-	->SetIsClosable(false)
-	->SetIsCollapsible(false);
-$oPageContentLayout->AddMainBlock($oAlertNonClosable);
-$oAlertCollapsibleNotClosable = AlertUIBlockFactory::MakeNeutral('Alert collapsible but nos closable', $sContent)
-	->SetIsClosable(false);
-$oPageContentLayout->AddMainBlock($oAlertCollapsibleNotClosable);
-$oAlertSaveCollapsibleState = AlertUIBlockFactory::MakeNeutral('Alert with collapsible state saving', $sContent)
-	->EnableSaveCollapsibleState('RenderAllUiBlocks-alert');
-$oPageContentLayout->AddMainBlock($oAlertSaveCollapsibleState);
+		$oFieldsSet = FieldSetUIBlockFactory::MakeStandard('Branding colors');
+		$this->AddElementWithSnippet(
+			$oFieldsSet,
+			AlertUIBlockFactory::MakeWithBrandingPrimaryColor(sTitle: 'Alert with branding primary color', sContent: $sContent),
+			<<<'PHP'
+AlertUIBlockFactory::MakeWithBrandingPrimaryColor(sTitle: 'Alert with branding primary color', sContent: $sContent);
+PHP
+		);
+		$this->AddElementWithSnippet(
+			$oFieldsSet,
+			AlertUIBlockFactory::MakeWithBrandingSecondaryColor(sTitle: 'Alert with branding secondary color', sContent: $sContent),
+			<<<'PHP'
+AlertUIBlockFactory::MakeWithBrandingSecondaryColor(sTitle: 'Alert with branding secondary color', sContent: $sContent);
+PHP
+		);
+		$this->AddUiBlock($oFieldsSet);
+	}
 
-$oPageContentLayout->AddMainBlock(new Html('<hr/>'));
+	private function RenderAlertsBehaviourSection(): void
+	{
+		$oFieldsSet = FieldSetUIBlockFactory::MakeStandard('Behaviors');
+		$this->AddUiBlock($oFieldsSet);
 
-//////////
-// Buttons
-//////////
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('ButtonsJS examples', 2, 'title-buttonsjs'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeNeutral('Neutral'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeNeutral('Neutral dis.', 'neutral')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForPrimaryAction('Primary'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForPrimaryAction('Primary dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForSecondaryAction('Secondary'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForSecondaryAction('Secondary dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForPositiveAction('Validation'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForPositiveAction('Validation dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForDestructiveAction('Destructive'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForDestructiveAction('Destructive dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeAlternativeNeutral('Alt. neutral'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeAlternativeNeutral('Alt. neutral dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Alt. primary'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Alt. primary dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeSecondaryAction('Alt. secondary'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeSecondaryAction('Alt. secondary dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeValidationAction('Alt. validation'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeValidationAction('Alt. validation dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeDestructiveAction('Alt. destructive'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeDestructiveAction('Alt. destructive dis.')->SetIsDisabled(true));
+		$sContent = <<<HTML
+<div>The content text is made of raw HTML, therefore it must be sanitized before being injected into the component.</div>
+<div>Here we put an hyperlink (<a href="#">link</a>) and a smiley (😻), just to see if it renders correctly</div>
+HTML;
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('ButtonsURL examples', 2, 'title-buttonsurl'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeLinkNeutral('#', 'Link neutral'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-thumbs-up', 'Icon link button', '#'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeLinkNeutral('#', 'Link primary')->SetColor(Button::ENUM_COLOR_SCHEME_PRIMARY));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-thumbs-up', 'Icon link button primary', '#')->SetColor(Button::ENUM_COLOR_SCHEME_PRIMARY));
+		$this->AddElementWithSnippet(
+			$oFieldsSet,
+			AlertUIBlockFactory::MakeNeutral(sTitle: 'Alert not closable, not collapsable', sContent: $sContent)->SetIsClosable(false)->SetIsCollapsible(false),
+			<<<'PHP'
+AlertUIBlockFactory::MakeNeutral(sTitle: 'Alert not closable, not collapsable', sContent: $sContent)
+		->SetIsClosable(false)
+		->SetIsCollapsible(false);
+PHP
+		);
+		$this->AddElementWithSnippet(
+			$oFieldsSet,
+			AlertUIBlockFactory::MakeNeutral(sTitle: 'Alert collapsible but nos closable', sContent: $sContent)->SetIsClosable(false),
+			<<<'PHP'
+AlertUIBlockFactory::MakeNeutral(sTitle: 'Alert collapsible but nos closable', sContent: $sContent)
+		->SetIsClosable(false);
+PHP
+		);
+		$this->AddElementWithSnippet(
+			$oFieldsSet,
+			AlertUIBlockFactory::MakeNeutral(sTitle: 'Alert with collapsible state saving', sContent: $sContent)->EnableSaveCollapsibleState('RenderAllUiBlocks-alert'),
+			<<<'PHP'
+	AlertUIBlockFactory::MakeNeutral(sTitle: 'Alert with collapsible state saving', sContent: $sContent)
+		->EnableSaveCollapsibleState('RenderAllUiBlocks-alert');
+PHP
+		);
+	}
 
-$oPageContentLayout->AddMainBlock(new Html('<hr/>'));
+	private function RenderButtonsSection(): void
+	{
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Basic');
 
-//////////////
-// ButtonGroup
-//////////////
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			ButtonUIBlockFactory::MakeNeutral(sLabel: 'Neutral'),
+			<<<'PHP'
+ButtonUIBlockFactory::MakeNeutral(sLabel: 'Neutral');
+PHP
+		);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			ButtonUIBlockFactory::MakeForPrimaryAction(sLabel: 'Primary'),
+			<<<'PHP'
+ButtonUIBlockFactory::MakeForPrimaryAction(sLabel: 'Primary');
+PHP
+		);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			ButtonUIBlockFactory::MakeForSecondaryAction(sLabel: 'Secondary'),
+			<<<'PHP'
+ButtonUIBlockFactory::MakeForSecondaryAction(sLabel: 'Secondary');
+PHP
+		);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			ButtonUIBlockFactory::MakeForPositiveAction(sLabel: 'Validation'),
+			<<<'PHP'
+ButtonUIBlockFactory::MakeForPositiveAction(sLabel: 'Validation');
+PHP
+		);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			ButtonUIBlockFactory::MakeForDestructiveAction(sLabel: 'Destructive'),
+			<<<'PHP'
+ButtonUIBlockFactory::MakeForDestructiveAction(sLabel: 'Destructive');
+PHP
+		);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			ButtonUIBlockFactory::MakeAlternativeNeutral(sLabel: 'Alt. neutral'),
+			<<<'PHP'
+ButtonUIBlockFactory::MakeAlternativeNeutral(sLabel: 'Alt. neutral');
+PHP
+		);
+		$this->AddUiBlock($oFieldSet);
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('ButtonGroups examples: button + menu', 2, 'title-button-groupsmenu'));
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Links');
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			ButtonUIBlockFactory::MakeLinkNeutral(sURL: '#', sLabel: 'Link neutral'),
+			<<<'PHP'
+ButtonUIBlockFactory::MakeLinkNeutral(sURL: '#', sLabel: 'Link neutral');
+PHP
+		);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			ButtonUIBlockFactory::MakeIconLink(sIconClasses: 'fas fa-thumbs-up', sTooltipText: 'Icon link button', sURL:'#'),
+			<<<'PHP'
+ButtonUIBlockFactory::MakeIconLink(sIconClasses:'fas fa-thumbs-up', sTooltipText: 'Icon link button', sURL: '#');
+PHP
+		);
+		$this->AddUiBlock($oFieldSet);
+	}
 
-$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
-	ButtonUIBlockFactory::MakeNeutral('Neutral with options'),
-	new PopoverMenu()
-));
-$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
-	ButtonUIBlockFactory::MakeForPrimaryAction('Primary with options'),
-	new PopoverMenu()
-));
-$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
-	ButtonUIBlockFactory::MakeForSecondaryAction('Secondary with options'),
-	new PopoverMenu()
-));
-$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
-	ButtonUIBlockFactory::MakeForPositiveAction('Validation with options'),
-	new PopoverMenu()
-));
-$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
-	ButtonUIBlockFactory::MakeForDestructiveAction('Destructive with options'),
-	new PopoverMenu()
-));
-$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
-	ButtonUIBlockFactory::MakeAlternativeNeutral('Alt. neutral with options'),
-	new PopoverMenu()
-));
-$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
-	ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Alt. primary with options'),
-	new PopoverMenu()
-));
-$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
-	ButtonUIBlockFactory::MakeForAlternativeSecondaryAction('Alt. secondary with options'),
-	new PopoverMenu()
-));
-$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
-	ButtonUIBlockFactory::MakeForAlternativeValidationAction('Alt. validation with options'),
-	new PopoverMenu()
-));
-$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
-	ButtonUIBlockFactory::MakeForAlternativeDestructiveAction('Alt. destructive with options'),
-	new PopoverMenu()
-));
+	private function RenderButtonGroupsSection(): void
+	{
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Popover Menu');
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('ButtonGroups examples: button + button + button', 2, 'title-button-groupsh'));
+		$oPopoverMenu = new PopoverMenu();
+		$oPopoverMenu->AddItems(sSectionId: 'Section', aItems: [
+			PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(new URLPopupMenuItem('option1', 'Option 1', '#')),
+			PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(new URLPopupMenuItem('option2', 'Option 2', '#')),
+			PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(new URLPopupMenuItem('option3', 'Option 3', '#')),
+		]);
 
-$oPageContentLayout->AddMainBlock(new ButtonGroup(
-	[
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
+				ButtonUIBlockFactory::MakeNeutral('Button With Options'),
+				$oPopoverMenu
+			),
+			<<<'PHP'
+$oPopoverMenu = new PopoverMenu();
+$oPopoverMenu->AddItems(sSectionId: 'Section 1', aItems: [
+	PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(new URLPopupMenuItem('option1', 'Option 1', '#')),
+	PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(new URLPopupMenuItem('option2', 'Option 2', '#')),
+	PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(new URLPopupMenuItem('option3', 'Option 3', '#')),
+]);
+ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(ButtonUIBlockFactory::MakeNeutral('Neutral with options'), new PopoverMenu());
+PHP
+		);
+		$this->AddUiBlock($oFieldSet);
+
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Button Group');
+
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			new ButtonGroup(
+				aButtons: [
+					ButtonUIBlockFactory::MakeNeutral('Three'),
+					ButtonUIBlockFactory::MakeNeutral('neutral'),
+					ButtonUIBlockFactory::MakeNeutral('button'),
+				]
+			),
+			<<<'PHP'
+new ButtonGroup(aButtons: [
 		ButtonUIBlockFactory::MakeNeutral('Three'),
 		ButtonUIBlockFactory::MakeNeutral('neutral'),
 		ButtonUIBlockFactory::MakeNeutral('button'),
 	]
-));
-$oPageContentLayout->AddMainBlock(new ButtonGroup(
-	[
-		ButtonUIBlockFactory::MakeForPrimaryAction('Three'),
-		ButtonUIBlockFactory::MakeForPrimaryAction('primary'),
-		ButtonUIBlockFactory::MakeForPrimaryAction('button'),
-	]
-));
-$oPageContentLayout->AddMainBlock(new ButtonGroup(
-	[
-		ButtonUIBlockFactory::MakeAlternativeNeutral('Three'),
-		ButtonUIBlockFactory::MakeAlternativeNeutral('primary'),
-		ButtonUIBlockFactory::MakeAlternativeNeutral('alt. button'),
-	]
-));
+);
+PHP
+		);
+		$this->AddUiBlock($oFieldSet);
+	}
 
-$oPageContentLayout->AddMainBlock(new Html('<hr/>'));
+	private function RenderButtonBarsSection(): void
+	{
+		$this->add_style(<<<CSS
+.btn-bar-710{
+	max-width: 710px;
+}
+CSS);
 
-/////////
-// Panels
-/////////
-///
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Panels examples', 2, 'title-panels'));
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Buttons Bar With Overflow (710px max)');
 
-$aSubBlocks = [
-	new Html('<div>Panel body, can contain anything from simple text to rich text, forms, images, <a href="#">links</a>, graphs or tables.</div>'),
-	new Html('<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>'),
-];
-$sClassIconUrl = MetaModel::GetClassIcon('Organization', false);
+		$oBtn1 = ButtonUIBlockFactory::MakeNeutral('Action 1');
+		$oBtn1->SetIconClass('fas fa-thumbs-up');
 
-$oPanel = PanelUIBlockFactory::MakeNeutral('Neutral panel');
-$oPanel->SetSubBlocks($aSubBlocks);
-$oPageContentLayout->AddMainBlock($oPanel);
+		$oBtn5 = ButtonUIBlockFactory::MakeNeutral('Action 5');
+		$oBtn5->SetIconClass('fas fa-thumbs-down');
 
-$oPanel = PanelUIBlockFactory::MakeForInformation('Panel for information');
-$oPanel->SetSubBlocks($aSubBlocks);
-$oPageContentLayout->AddMainBlock($oPanel);
+		$oBtn11 = ButtonUIBlockFactory::MakeNeutral('Action 11');
+		$oBtn11->SetIconClass('fas fa-bomb');
 
-$oPanel = PanelUIBlockFactory::MakeForSuccess('Panel for success');
-$oPanel->SetSubBlocks($aSubBlocks);
-$oPageContentLayout->AddMainBlock($oPanel);
+		$oBtnJS = ButtonUIBlockFactory::MakeNeutral('Action JS');
+		$oBtnJS->SetOnClickJsCode('alert("Hello World!");console.log(this);');
+		$oBtnJS->SetIconClass('fas fa-bolt');
 
-$oPanel = PanelUIBlockFactory::MakeForWarning('Panel for warning');
-$oPanel->SetSubBlocks($aSubBlocks);
-$oPageContentLayout->AddMainBlock($oPanel);
+		$oButtonBar = ButtonBarUIBlockFactory::MakeStandard(
+			aItems: [
+				$oBtn1,
+				ButtonUIBlockFactory::MakeNeutral('Action 2'),
+				ButtonUIBlockFactory::MakeNeutral('Action 3'),
+				ButtonUIBlockFactory::MakeNeutral('Action 4'),
+				new ButtonSeparator(),
+				$oBtn5,
+				ButtonUIBlockFactory::MakeNeutral('Action 6'),
+				ButtonUIBlockFactory::MakeNeutral('Action 7'),
+				ButtonUIBlockFactory::MakeNeutral('Action 8'),
+				ButtonUIBlockFactory::MakeNeutral('Action 9'),
+				ButtonUIBlockFactory::MakeNeutral('Action 10'),
+				new ButtonSeparator(),
+				$oBtnJS,
+				$oBtn11,
+				ButtonUIBlockFactory::MakeNeutral('Action 12'),
+				ButtonUIBlockFactory::MakeNeutral('Action 13'),
+				ButtonUIBlockFactory::MakeLinkNeutral('https://www.combodo.com', 'Combodo.com'),
+				ButtonUIBlockFactory::MakeNeutral('Action 15'),
+				ButtonUIBlockFactory::MakeNeutral('Action 16'),
+			],
+			sMoreButtonTooltipText: 'See overflow actions',
+			sId: 'button-bar-test1'
+		);
+		$oButtonBar->AddCSSClass('btn-bar-710');
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oButtonBar,
+			<<<'PHP'
+$oButtonBar = ButtonBarUIBlockFactory::MakeStandard(aItems: [
+		ButtonUIBlockFactory::MakeNeutral('Action 1'),
+		ButtonUIBlockFactory::MakeNeutral('Action 2'),
+		ButtonUIBlockFactory::MakeNeutral('Action 3'),
+		...
+	],
+	sMoreButtonTooltipText: 'tooltip text for overflow actions',
+	sId: 'button-bar-id'
+);
+PHP
+		);
+		$this->AddUiBlock($oFieldSet);
 
-$oPanel = PanelUIBlockFactory::MakeForDanger('Panel for danger');
-$oPanel->SetSubBlocks($aSubBlocks);
-$oPageContentLayout->AddMainBlock($oPanel);
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Buttons Bar With Fixed elements (3 items)');
 
-$oPanel = PanelUIBlockFactory::MakeForFailure('Panel for failure');
-$oPanel->SetSubBlocks($aSubBlocks);
-$oPageContentLayout->AddMainBlock($oPanel);
+		$oButtonBar = ButtonBarUIBlockFactory::MakeWithCountOverflow(
+			aItems: [
+				ButtonUIBlockFactory::MakeIconAction('fas fa-thumbs-up', sTooltipText: 'Promote this entry'),
+				ButtonUIBlockFactory::MakeIconAction('fas fa-thumbs-down', sTooltipText: 'Demote this entry'),
+				ButtonUIBlockFactory::MakeIconAction('fas fa-bomb', sTooltipText: 'Explode this entry'),
+				ButtonUIBlockFactory::MakeIconAction('fas fa-wrench', sTooltipText: 'Fix this entry'),
+			],
+			iOverflowCount: 3,
+			sMoreButtonTooltipText: 'See overflow actions',
+			sId: 'button-bar-test4'
+		);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oButtonBar,
+			<<<'PHP'
+$oButtonBar = ButtonBarUIBlockFactory::MakeWithCountOverflow(aItems: [
+		ButtonUIBlockFactory::MakeIconAction('fas fa-thumbs-up', sTooltipText: 'Promote this entry'),
+		ButtonUIBlockFactory::MakeIconAction('fas fa-thumbs-down', sTooltipText: 'Demote this entry'),
+		ButtonUIBlockFactory::MakeIconAction('fas fa-bomb', sTooltipText: 'Explode this entry'),
+		ButtonUIBlockFactory::MakeIconAction('fas fa-wrench', sTooltipText: 'Fix this entry'),
+	],
+	iOverflowCount: 3,
+	sMoreButtonTooltipText: 'See overflow actions',
+	sId: 'button-bar-test4'
+);
+PHP
+		);
+		$this->AddUiBlock($oFieldSet);
 
-$oPanel = PanelUIBlockFactory::MakeWithBrandingPrimaryColor('Panel with branding primary color');
-$oPanel->SetSubBlocks($aSubBlocks);
-$oPageContentLayout->AddMainBlock($oPanel);
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Buttons Bar With Marker');
+		$oButtonBar = ButtonBarUIBlockFactory::MakeWithAfterMarkerOverflow(
+			sOverflowStartAfterButtonId: 'pivot-button',
+			aItems: [
+				ButtonUIBlockFactory::MakeIconAction('fas fa-thumbs-up', sTooltipText: 'Promote this entry'),
+				ButtonUIBlockFactory::MakeIconAction('fas fa-thumbs-down', sTooltipText: 'Demote this entry'),
+				ButtonUIBlockFactory::MakeIconAction('fas fa-search', sTooltipText: 'Search this entry'),
+				ButtonUIBlockFactory::MakeIconAction('fas fa-tag', sTooltipText: 'Tag this entry', sId: 'pivot-button'),
+				ButtonUIBlockFactory::MakeIconAction('fas fa-tasks', sTooltipText: 'Assign this entry'),
+				ButtonUIBlockFactory::MakeIconAction('fas fa-bomb', sTooltipText: 'Explode this entry'),
+				new ButtonSeparator(),
+				ButtonUIBlockFactory::MakeIconAction('fas fa-trash-alt', sTooltipText: 'Delete this entry'),
+				ButtonUIBlockFactory::MakeIconAction('fas fa-swimming-pool', sTooltipText: 'Je ne peux pas j\'ai Piscine'),
+				ButtonUIBlockFactory::MakeIconAction('fas fa-wrench', sTooltipText: 'Fix this entry'),
+			],
+			sMoreButtonTooltipText:  'tooltip text for overflow actions',
+			sId:'button-bar-id'
+		);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oButtonBar,
+			<<<'PHP'
+$oButtonBar = ButtonBarUIBlockFactory::MakeWithAfterMarkerOverflow(sOverflowStartAfterButtonId: 'pivot-button',
+	aItems: [
+		ButtonUIBlockFactory::MakeIconAction('fas fa-thumbs-up', sTooltipText: 'Promote this entry'),
+		ButtonUIBlockFactory::MakeIconAction('fas fa-thumbs-down', sTooltipText: 'Demote this entry'),
+		ButtonUIBlockFactory::MakeIconAction('fas fa-search', sTooltipText: 'Search this entry'),
+		ButtonUIBlockFactory::MakeIconAction('fas fa-tag', sTooltipText: 'Tag this entry', sId: 'pivot-button'),
+		ButtonUIBlockFactory::MakeIconAction('fas fa-tasks', sTooltipText: 'Assign this entry'),
+		ButtonUIBlockFactory::MakeIconAction('fas fa-bomb', sTooltipText: 'Explode this entry'),
+		new ButtonSeparator(),
+		ButtonUIBlockFactory::MakeIconAction('fas fa-trash-alt', sTooltipText: 'Delete this entry'),
+		ButtonUIBlockFactory::MakeIconAction('fas fa-swimming-pool', sTooltipText: 'Je ne peux pas j\'ai Piscine'),
+		ButtonUIBlockFactory::MakeIconAction('fas fa-wrench', sTooltipText: 'Fix this entry'),
+	],
+	sMoreButtonTooltipText:  'tooltip text for overflow actions',
+	sId:'button-bar-id'
+);
+PHP
+		);
+		$this->AddUiBlock($oFieldSet);
+	}
 
-$oPanel = PanelUIBlockFactory::MakeWithBrandingSecondaryColor('Panel with branding secondary color');
-$oPanel->SetSubBlocks($aSubBlocks);
-$oPageContentLayout->AddMainBlock($oPanel);
+	private function RenderPanelsSection(): void
+	{
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Basic');
+		$this->AddUiBlock($oFieldSet);
 
-$oPanel = PanelUIBlockFactory::MakeNeutral('Panel with title only');
-$oPanel->SetSubBlocks($aSubBlocks);
-$oPageContentLayout->AddMainBlock($oPanel);
+		$aSubBlocks = [
+			new Html('<div>Panel body, can contain anything from simple text to rich text, forms, images, <a href="#">links</a>, graphs or tables.</div>'),
+			new Html('<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>'),
+		];
 
-$oPanel = PanelUIBlockFactory::MakeNeutral('')
-	->SetSubBlocks($aSubBlocks)
-	->SetSubTitle('Panel with subtitle only');
-$oPageContentLayout->AddMainBlock($oPanel);
+		$oPanel = PanelUIBlockFactory::MakeNeutral(sTitle: 'Neutral panel');
+		$oPanel->SetSubBlocks($aSubBlocks);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oPanel,
+			<<<'PHP'
+PanelUIBlockFactory::MakeNeutral(sTitle: 'Neutral Panel');
+PHP
+		);
 
-$oPanel = PanelUIBlockFactory::MakeNeutral('Panel with title and subtitle')
+		$oPanel = PanelUIBlockFactory::MakeForInformation('Panel for information');
+		$oPanel->SetSubBlocks($aSubBlocks);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oPanel,
+			<<<'PHP'
+PanelUIBlockFactory::MakeForInformation(sTitle: 'Panel for information');
+PHP
+		);
+
+		$oPanel = PanelUIBlockFactory::MakeForSuccess('Panel for success');
+		$oPanel->SetSubBlocks($aSubBlocks);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oPanel,
+			<<<'PHP'
+PanelUIBlockFactory::MakeForSuccess(sTitle: 'Panel for success');
+PHP
+		);
+
+		$oPanel = PanelUIBlockFactory::MakeForWarning('Panel for warning');
+		$oPanel->SetSubBlocks($aSubBlocks);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oPanel,
+			<<<'PHP'
+PanelUIBlockFactory::MakeForWarning(sTitle: 'Panel for warning');
+PHP
+		);
+
+		$oPanel = PanelUIBlockFactory::MakeForDanger('Panel for danger');
+		$oPanel->SetSubBlocks($aSubBlocks);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oPanel,
+			<<<'PHP'
+PanelUIBlockFactory::MakeForDanger(sTitle: 'Panel for danger');
+PHP
+		);
+
+		$oPanel = PanelUIBlockFactory::MakeForFailure('Panel for failure');
+		$oPanel->SetSubBlocks($aSubBlocks);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oPanel,
+			<<<'PHP'
+PanelUIBlockFactory::MakeForFailure(sTitle: 'Panel for failure');
+PHP
+		);
+
+		// title and subtitle
+		$oPanel = PanelUIBlockFactory::MakeNeutral('Panel with title and subtitle')
+			->SetSubBlocks($aSubBlocks)
+			->SetSubTitle('Subtitle');
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oPanel,
+			<<<'PHP'
+PanelUIBlockFactory::MakeNeutral('Panel with title and subtitle')
 	->SetSubBlocks($aSubBlocks)
 	->SetSubTitle('Subtitle');
-$oPageContentLayout->AddMainBlock($oPanel);
+PHP
+		);
 
-$oPanel = PanelUIBlockFactory::MakeNeutral('Panel with title and icon')
+		// title and icon
+		$sClassIconUrl = MetaModel::GetClassIcon('Person', false);
+		$oPanel = PanelUIBlockFactory::MakeNeutral('Panel with title and icon')
+			->SetSubBlocks($aSubBlocks)
+			->SetIcon($sClassIconUrl);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oPanel,
+			<<<'PHP'
+PanelUIBlockFactory::MakeNeutral('Panel with title and icon')
 	->SetSubBlocks($aSubBlocks)
 	->SetIcon($sClassIconUrl);
-$oPageContentLayout->AddMainBlock($oPanel);
+PHP
+		);
 
-$oPanel = PanelUIBlockFactory::MakeNeutral('')
-	->SetSubBlocks($aSubBlocks)
-	->SetSubTitle('Panel with subtitle and icon')
-	->SetIcon($sClassIconUrl);
-$oPageContentLayout->AddMainBlock($oPanel);
+		$oButtonBar = ButtonBarUIBlockFactory::MakeWithCountOverflow(
+			aItems: [
+			ButtonUIBlockFactory::MakeIconAction('fas fa-thumbs-up', sTooltipText: 'Promote this entry'),
+			ButtonUIBlockFactory::MakeIconAction('fas fa-thumbs-down', sTooltipText: 'Demote this entry'),
+			ButtonUIBlockFactory::MakeIconAction('fas fa-bomb', sTooltipText: 'Explode this entry'),
+			ButtonUIBlockFactory::MakeIconAction('fas fa-wrench', sTooltipText: 'Fix this entry'),
+		],
+			iOverflowCount: 3,
+			sMoreButtonTooltipText: 'See overflow actions',
+			sId: 'button-bar-test5'
+		);
 
-$oPanel = PanelUIBlockFactory::MakeNeutral('Panel with title, subtitle and icon')
-	->SetSubBlocks($aSubBlocks)
-	->SetSubTitle('Subtitle')
-	->SetIcon($sClassIconUrl);
-$oPageContentLayout->AddMainBlock($oPanel);
+		$oPanelButton = PanelUIBlockFactory::MakeNeutral(sTitle: 'Panel With Button Bar');
+		$oPanelButton->AddToolbarBlock($oButtonBar);
+		$oPanel->SetSubBlocks([HtmlFactory::MakeHtmlContent('<div>Panel body, can contain anything from simple text to rich text, forms, images, <a href="#">links</a>, graphs or tables.</div><div>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>')]);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oPanelButton,
+			<<<'PHP'
+$oButtonBar = ButtonBarUIBlockFactory::MakeWithCountOverflow(...);
+$oPanelButton = PanelUIBlockFactory::MakeNeutral(sTitle: 'Panel With Button Bar');
+$oPanelButton->AddToolbarBlock($oButtonBar);
+PHP
+		);
+	}
 
-$oPanel = PanelUIBlockFactory::MakeNeutral('Panel with title, subtitle and icon as a medallion')
-	->SetSubBlocks($aSubBlocks)
-	->SetSubTitle('Subtitle')
-	->SetIcon($sClassIconUrl, Panel::ENUM_ICON_COVER_METHOD_ZOOMOUT, true);
-$oPageContentLayout->AddMainBlock($oPanel);
+	private function RenderObjectDetailsSection(): void
+	{
+		$this->add_style(<<<CSS
+.ibo-object-details{
+  margin-bottom: 0!important;
+}
+CSS);
 
-$oPageContentLayout->AddMainBlock(new Html('<hr/>'));
-
-/////////
-// ObjectDetails
-/////////
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('ObjectDetails examples', 2, 'title-object-details'));
-
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Object Details');
+		$oOrgObject = MetaModel::NewObject('Organization');
+		$oOrgObject->Set('name', 'Object Container With Tabs');
+		$oOrgObject->Set('status', 'active');
+		$oObjectDetails = ObjectFactory::MakeDetails($oOrgObject);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oObjectDetails,
+			<<<'PHP'
 $oOrgObject = MetaModel::NewObject('Organization');
 $oOrgObject->Set('name', 'Stub, no tab container. Just to see how the header is displayed');
 $oOrgObject->Set('status', 'active');
-
 $oObjectDetails = ObjectFactory::MakeDetails($oOrgObject);
-$oPageContentLayout->AddMainBlock($oObjectDetails);
-$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, '', $oObjectDetails);
-$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
-$oPage->SetCurrentTab('First');
-$oPage->add('Extra tabs icon is normal as there is no JS widget instantiated here.');
-$oPage->SetCurrentTab('Second');
-$oPage->SetCurrentTab('Third');
-$oPage->SetCurrentTab('Fourth');
-$oPage->SetCurrentTab('Fifth');
-$oPage->SetCurrentTab('Sixth');
-$oPage->SetCurrentTab('Seventh');
-$oPage->SetCurrentTabContainer();
+PHP
+		);
+		$this->AddUiBlock($oFieldSet);
+		$this->AddTabContainer(OBJECT_PROPERTIES_TAB, '', $oObjectDetails);
+		$this->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
+		$this->SetCurrentTab('First');
+		$this->SetCurrentTab('Second');
+		$this->SetCurrentTab('Third');
+		$this->SetCurrentTabContainer('render-all-tabs');
+		$this->SetCurrentTab('tab-functional', 'Functional');
+	}
 
-$oPageContentLayout->AddMainBlock(new Html('<hr/>'));
+	private function RenderCollapsibleSection(): void
+	{
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Collapsible Sections');
+		$this->AddUiBlock($oFieldSet);
 
-/////////
-// Collapsible Section
-/////////
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Collapsible Sections examples', 2, 'title-collapsible'));
+		// collapsible section
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			new CollapsibleSection(sTitle: 'Section title', aSubBlocks: [
+				new Html('This is the section content !'),
+			]),
+			<<<'PHP'
+new CollapsibleSection(sTitle: 'Section title', aSubBlocks: [
+	new Html('This is the section content !'),
+]),
+PHP
+		);
+	}
 
-$sSectionContent = 'This is the section content !';
-$oCollapsibleSection = new CollapsibleSection('Section title', [new Html($sSectionContent)]);
-$oPage->AddUiBlock($oCollapsibleSection);
+	private function RenderFieldsetSection(): void
+	{
+		$this->add_style(<<<CSS
+fieldset{
+	min-inline-size: 0;
+}
+CSS);
 
-$oCollapsibleSectionSaveState = new CollapsibleSection('Section save state', [new Html($sSectionContent)]);
-$oCollapsibleSectionSaveState->EnableSaveCollapsibleState('RenderAllUiBlocks__section');
-$oPage->AddUiBlock($oCollapsibleSectionSaveState);
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Fieldsets');
+		$this->AddUiBlock($oFieldSet);
 
-/////////
-// Fieldset
-/////////
+		// field set
+		$oFieldset = new FieldSet(sLegend: 'Grouped fields');
+		$oFieldset->AddSubBlock(FieldUIBlockFactory::MakeStandard('Field A'));
+		$oFieldset->AddSubBlock(InputUIBlockFactory::MakeStandard('text', 'input1', 'Input 1'));
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oFieldset,
+			<<<'PHP'
+$oFieldset = FieldSetUIBlockFactory::MakeStandard(sLegend: 'Grouped fields');
+$oFieldset->AddSubBlock(FieldUIBlockFactory::MakeStandard('Field A'));
+$oFieldset->AddSubBlock(InputUIBlockFactory::MakeStandard('text', 'input1', 'Input 1'));
+$oFieldSet->AddSubBlock($oFieldset);
+PHP
+		);
+	}
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Fieldset/field examples', 2));
+	private function RenderCodeSection(): void
+	{
+		$this->add_style(<<<CSS
+.ibo-is-code{
+	padding: 12px 0 24px;
+	background-color: transparent;
+}
+CSS);
 
-$oDashletFieldset1 = new FieldSet('Fieldset 1');
-$oDashletField1 = FieldUIBlockFactory::MakeStandard('Field A');
-$oDashletInput1 = InputUIBlockFactory::MakeStandard('text', 'input1', 'Input 1');
-$oDashletField2 = FieldUIBlockFactory::MakeStandard('Field B (with a description in a tooltip)')
-	->SetDescription('Description for the field B');
-$oDashletInput2 = InputUIBlockFactory::MakeStandard('text', 'input2', 'Input 2');
-$oDashletField3 = FieldUIBlockFactory::MakeStandard('Field C');
-$oDashletInput3 = InputUIBlockFactory::MakeStandard('text', 'input3', 'Input 3');
-$oDashletFieldset2 = new FieldSet('Fieldset 2');
-$oDashletField4 = FieldUIBlockFactory::MakeStandard('Field D');
-$oDashletField5 = FieldUIBlockFactory::MakeStandard('Field E');
-$oDashletField6 = FieldUIBlockFactory::MakeStandard('Field F');
-$oPage->AddUiBlock($oDashletFieldset1);
-$oPage->AddUiBlock($oDashletFieldset2);
-$oDashletFieldset1->AddSubBlock($oDashletField1);
-$oDashletFieldset1->AddSubBlock($oDashletInput1);
-$oDashletFieldset1->AddSubBlock($oDashletField2);
-$oDashletFieldset1->AddSubBlock($oDashletInput2);
-$oDashletFieldset1->AddSubBlock($oDashletField3);
-$oDashletFieldset1->AddSubBlock($oDashletInput3);
-$oDashletFieldset2->AddSubBlock($oDashletField4);
-$oDashletFieldset2->AddSubBlock($oDashletField5);
-$oDashletFieldset2->AddSubBlock($oDashletField6);
+		$sCode = <<<'PHP'
+function mean(int $a, int $b)
+{
+	return ($a + $b)/2;
+}
+PHP;
 
-/////////
-// Code
-/////////
+		// basic
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Basic');
+		$this->AddUiBlock($oFieldSet);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			UIContentBlockUIBlockFactory::MakeForCode(sCode:$sCode)->AddCSSClass('language-php'),
+			<<<'PHP'
+UIContentBlockUIBlockFactory::MakeForCode(sCode: 'function mean(int $a, int $b) {\n\treturn ($a + $b)/2\n}')->AddCSSClass('language-php'));
+PHP
+		);
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Code examples (MakeForCode)', 2));
-$oCode1 = UIContentBlockUIBlockFactory::MakeForCode('function mean(int $a, int $b) {
-	return ($a + $b)/2
-}');
-$oPage->AddUiBlock($oCode1);
+		// code preformatted
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Preformatted');
+		$this->AddUiBlock($oFieldSet);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			UIContentBlockUIBlockFactory::MakeForPreformatted($sCode)->AddCSSClass('language-php'),
+			<<<'PHP'
+UIContentBlockUIBlockFactory::MakeForPreformatted('function mean(int $a, int $b) {\n\treturn ($a + $b)/2\n}')->AddCSSClass('language-php'));
+PHP
+		);
+	}
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Code examples (MakeForPreformatted)', 2));
-$oCode2 = UIContentBlockUIBlockFactory::MakeForPreformatted('function mean(int $a, int $b) {
-	return ($a + $b)/2
-}');
-$oPage->AddUiBlock($oCode2);
+	private function RenderPillSection(): void
+	{
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Basic');
+		$this->AddUiBlock($oFieldSet);
 
-/////////
-// Pill
-/////////
+		$sHtml = '<span class="ibo-dashlet-header-dynamic--count">8</span><span class="ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis">:state</span>';
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Pill examples', 2));
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			PillFactory::MakeForState(sClass: 'Person', sStateCode: 'active')->AddHtml(str_replace(':state', 'Active', $sHtml)),
+			<<<'PHP'
+PillFactory::MakeForState(sClass: 'Person', sStateCode: 'active')->AddHtml($sHtml);
+PHP
+		);
 
-$oBlock = new UIContentBlockWithJSRefreshCallback(null, ["ibo-dashlet-header-dynamic--container"]);
-$oPage->AddUiBlock($oBlock);
-$oPill1 = PillFactory::MakeForState('Person', 'active')->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">8</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">active</span>");
-$oPill2 = PillFactory::MakeForState('Person', 'inactive')->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">8</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">inactive</span>");
-$oPill3 = PillFactory::MakeForState('Person', 'closed')->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">8</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">closed</span>");
-$oPill4 = PillFactory::MakeForState('Person', 'new')->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">8</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">new</span>");
-$oPill5 = PillFactory::MakeForState('Person', 'waiting')->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">8</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">waiting</span>");
-$oPill6 = PillFactory::MakeForState('Person', 'escalated')->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">8</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">escalated</span>");
-$oBlock->AddSubBlock($oPill1);
-$oBlock->AddSubBlock($oPill2);
-$oBlock->AddSubBlock($oPill3);
-$oBlock->AddSubBlock($oPill4);
-$oBlock->AddSubBlock($oPill5);
-$oBlock->AddSubBlock($oPill6);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			PillFactory::MakeForState(sClass: 'Person', sStateCode: 'inactive')->AddHtml(str_replace(':state', 'Inactive', $sHtml)),
+			<<<'PHP'
+PillFactory::MakeForState(sClass: 'Person', sStateCode: 'inactive')->AddHtml($sHtml);
+PHP
+		);
 
-/////////
-// Title
-/////////
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			PillFactory::MakeForState(sClass: 'Person', sStateCode: 'new')->AddHtml(str_replace(':state', 'New', $sHtml)),
+			<<<'PHP'
+PillFactory::MakeForState(sClass: 'Person', sStateCode: 'new')->AddHtml($sHtml);
+PHP
+		);
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title examples', 2));
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 1', 1));
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 2', 2));
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 3', 3));
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 4', 4));
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPageWithIcon('Title example 5', MetaModel::GetClassIcon('Organization', false)));
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPageWithIcon('Title example 6', Branding::GetFullMainLogoAbsoluteUrl()));
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			HtmlFactory::MakeHtmlContent('<span>🧑‍💻 HTML Content</span>'),
+			<<<HTML
+<span class="ibo-dashlet-header-dynamic--count">:count</span>
+<span class="ibo-dashlet-header-dynamic--label">:state</span>
+HTML
+			,
+			'language-html'
+		);
+	}
 
-/////////
-// DataTable
-/////////
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Datatable examples', 2));
+	private function RenderTitleSizeSection(): void
+	{
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Sizes');
+		$this->AddUiBlock($oFieldSet);
 
-$oPage->AddUiBlock(DataTableUIBlockFactory::MakeForStaticData(
-	'Static datatable',
-	[
+		// title
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			TitleUIBlockFactory::MakeNeutral(sTitle: 'Title 1'),
+			<<<'PHP'
+TitleUIBlockFactory::MakeNeutral(sTitle: 'Title 1');
+PHP
+		);
+
+		// title 2
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			TitleUIBlockFactory::MakeNeutral(sTitle: 'Title 2', iLevel: 2),
+			<<<'PHP'
+TitleUIBlockFactory::MakeNeutral(sTitle: 'Title 2', iLevel: 2);
+PHP
+		);
+
+		// title 3
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			TitleUIBlockFactory::MakeNeutral(sTitle: 'Title ', iLevel: 3),
+			<<<'PHP'
+TitleUIBlockFactory::MakeNeutral(sTitle: 'Title 3', iLevel: 3);
+PHP
+		);
+
+		// title 4
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			TitleUIBlockFactory::MakeNeutral(sTitle: 'Title 4', iLevel: 4),
+			<<<'PHP'
+TitleUIBlockFactory::MakeNeutral(sTitle: 'Title 4', iLevel: 4);
+PHP
+		);
+
+		// title 5
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			TitleUIBlockFactory::MakeNeutral(sTitle: 'Title 5', iLevel: 5),
+			<<<'PHP'
+TitleUIBlockFactory::MakeNeutral(sTitle: 'Title 5', iLevel: 5);
+PHP
+		);
+
+		// title 6
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			TitleUIBlockFactory::MakeNeutral(sTitle: 'Title 6', iLevel: 6),
+			<<<'PHP'
+TitleUIBlockFactory::MakeNeutral(sTitle: 'Title 6', iLevel: 6);
+PHP
+		);
+
+	}
+
+	private function RenderTitleAlternativeSection(): void
+	{
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Alternatives');
+		$this->AddUiBlock($oFieldSet);
+
+		// title image
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			TitleUIBlockFactory::MakeForPageWithIcon(sTitle: 'Title with image', sIconUrl: MetaModel::GetClassIcon('Organization', false)),
+			<<<'PHP'
+TitleUIBlockFactory::MakeForPageWithIcon(sTitle: 'Title with image', sIconUrl: MetaModel::GetClassIcon('Organization', false));
+PHP
+		);
+
+	}
+
+	private function RenderDatatableSection(): void
+	{
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Static');
+		$this->AddUiBlock($oFieldSet);
+
+		// data table
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			DataTableUIBlockFactory::MakeForStaticData(
+				sTitle: 'Static datatable',
+				aColumns: [
+					'a' => ['label' => 'a'],
+					'b' => ['label' => 'b'],
+				],
+				aData: [
+					['a' => 'A1', 'b' => 'B1'],
+					['a' => 'A2', 'b' => 'B2'],
+				]
+			),
+			<<<'PHP'
+DataTableUIBlockFactory::MakeForStaticData(
+	sTitle: 'Static datatable',
+	aColumns: [
 		'a' => ['label' => 'a'],
 		'b' => ['label' => 'b'],
-		'c' => ['label' => 'c'],
-		'd' => ['label' => 'd'],
 	],
-	[
-		[
-	'a' => 'A1', 'b' => 'B1', 'c' => 'C1', 'd' => 'D1',
-	], [
-	'a' => 'A2', 'b' => 'B2', 'c' => 'C2', 'd' => 'D2',
-	], [
-	'a' => 'A3', 'b' => 'B3', 'c' => 'C3', 'd' => 'D3',
-	], [
-			'a' => 'A4',
-			'b' => 'B4',
-			'c' => 'C4',
-			'd' => 'D4',
-		],
-		[
-			'@class' => 'ibo-is-red',
-			'a'      => 'A5 (Red highlighting)',
-			'b'      => 'B5',
-			'c'      => 'C5',
-			'd'      => 'D5',
-		],
-		[
-			'@class' => 'ibo-is-danger',
-			'a'      => 'A6 (Danger highlighting)',
-			'b'      => 'B6',
-			'c'      => 'C6',
-			'd'      => 'D6',
-		],
-		[
-			'@class' => 'ibo-is-orange',
-			'a'      => 'A7 (Orange highlighting)',
-			'b'      => 'B7',
-			'c'      => 'C7',
-			'd'      => 'D7',
-		],
-		[
-			'@class' => 'ibo-is-warning',
-			'a'      => 'A8 (Warning highlighting)',
-			'b'      => 'B8',
-			'c'      => 'C8',
-			'd'      => 'D8',
-		],
-		[
-			'@class' => 'ibo-is-blue',
-			'a'      => 'A9 (Blue highlighting)',
-			'b'      => 'B9',
-			'c'      => 'C9',
-			'd'      => 'D9',
-		],
-		[
-			'@class' => 'ibo-is-info',
-			'a'      => 'A10 (Info highlighting)',
-			'b'      => 'B10',
-			'c'      => 'C10',
-			'd'      => 'D10',
-		],
-		[
-			'@class' => 'ibo-is-green',
-			'a'      => 'A11 (Green highlighting)',
-			'b'      => 'B11',
-			'c'      => 'C11',
-			'd'      => 'D11',
-		],
-		[
-			'@class' => 'ibo-is-success',
-			'a'      => 'A12 (Success highlighting)',
-			'b'      => 'B12',
-			'c'      => 'C12',
-			'd'      => 'D12',
-		],
+	aData: [
+		['a' => 'A1', 'b' => 'B1'],
+		['a' => 'A2', 'b' => 'B2'],
 	]
-));
+);
+PHP
+		);
+	}
 
-/////////
-// Set
-/////////
+	private function RenderSetSection(): void
+	{
+		$this->add_style(<<<CSS
+.demo_set{
+	color:red;
+}
+.simple-option-renderer--container{
+	display: flex;
+    gap: 5px;
+}
+CSS);
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Set examples', 2));
+		$aOptions = [
+			[
+				'label' => 'Chien',
+				'value' => 'dog',
+				'icon'  => 'fas fa-dog',
+				'group' => 'Domestique',
+			],
+			[
+				'label' => 'Chat',
+				'value' => 'cat',
+				'icon'  => 'fas fa-cat',
+				'group' => 'Domestique',
+			],
+			[
+				'label' => 'Cheval',
+				'value' => 'horse',
+				'icon'  => 'fas fa-horse',
+				'group' => 'Domestique',
+			],
+			[
+				'label' => 'Araignée',
+				'value' => 'spider',
+				'icon'  => 'fas fa-spider',
+				'class' => 'demo_set',
+				'group' => 'Sauvage',
+			],
+			[
+				'label' => 'Otarie',
+				'value' => 'otter',
+				'icon'  => 'fas fa-otter',
+				'group' => 'Sauvage',
+			],
+			[
+				'label' => 'Poisson',
+				'value' => 'fish',
+				'icon'  => 'fas fa-fish',
+				'group' => 'Domestique',
+			],
+			[
+				'label' => 'Grenouille',
+				'value' => 'frog',
+				'icon'  => 'fas fa-frog',
+				'group' => 'Sauvage',
+			],
+			[
+				'label' => 'Hippopotame',
+				'value' => 'hippo',
+				'icon'  => 'fas fa-hippo',
+				'group' => 'Sauvage',
+			],
+		];
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Simple', 4));
+		// simple set
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Basic');
+		$this->AddUiBlock($oFieldSet);
 
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			SetUIBlockFactory::MakeForSimple(sId: 'SetSimple', aOptions: $aOptions, sLabelFields: 'label', sValueField: 'value', aSearchFields: ['label'], sGroupField: null, sTooltipField: null, sName: 'SimpleSetBlock'),
+			<<<'PHP'
 $aOptions = [
-	[
-		'label' => 'Chien',
-		'value' => 'dog',
-		'icon'  => 'fas fa-dog',
-		'group' => 'Domestique',
-	],
-	[
-		'label' => 'Chat',
-		'value' => 'cat',
-		'icon'  => 'fas fa-cat',
-		'group' => 'Domestique',
-	],
-	[
-		'label' => 'Cheval',
-		'value' => 'horse',
-		'icon'  => 'fas fa-horse',
-		'group' => 'Domestique',
-	],
-	[
-		'label' => 'Araignée',
-		'value' => 'spider',
-		'icon'  => 'fas fa-spider',
-		'class' => 'demo_set',
-		'group' => 'Sauvage',
-	],
-	[
-		'label' => 'Otarie',
-		'value' => 'otter',
-		'icon'  => 'fas fa-otter',
-		'group' => 'Sauvage',
-	],
-	[
-		'label' => 'Poisson',
-		'value' => 'fish',
-		'icon'  => 'fas fa-fish',
-		'group' => 'Domestique',
-	],
-	[
-		'label' => 'Grenouille',
-		'value' => 'frog',
-		'icon'  => 'fas fa-frog',
-		'group' => 'Sauvage',
-	],
-	[
-		'label' => 'Hippopotame',
-		'value' => 'hippo',
-		'icon'  => 'fas fa-hippo',
-		'group' => 'Sauvage',
-	],
+	['label' => 'Chien', 'value' => 'dog'],
+	['label' => 'Chat', 'value' => 'cat'],
+	...
 ];
-$oPage->add_style('.demo_set{color:red;}');
+SetUIBlockFactory::MakeForSimple(sId: 'SetSimple', aOptions: $aOptions, sLabelFields: 'label', sValueField: 'value', aSearchFields: ['label'], sGroupField: null, sTooltipField: null, sName: 'SimpleSetBlock');
+PHP
+		);
 
-$oSimpleSetBlock = SetUIBlockFactory::MakeForSimple('SetSimple', $aOptions, 'label', 'value', ['label'], null, null, 'SimpleSetBlock');
-$oPage->AddUiBlock($oSimpleSetBlock);
+		// add option button
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Add Option Button');
+		$this->AddUiBlock($oFieldSet);
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Add Option Button', 3));
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			SetUIBlockFactory::MakeForSimple(sId: 'SetWithAddOption', aOptions: $aOptions, sLabelFields: 'label', sValueField: 'value', aSearchFields: ['label'], sGroupField: null, sTooltipField: null, sName: 'SetWithAddOption')
+				->SetHasAddOptionButton(true),
+			<<<'PHP'
+$aOptions = [
+	['label' => 'Chien', 'value' => 'dog'],
+	['label' => 'Chat', 'value' => 'cat'],
+	...
+];
+SetUIBlockFactory::MakeForSimple('SetWithAddOption', $aOptions, 'label', 'value', ['label'], null, null, 'SetWithAddOption')
+	->SetHasAddOptionButton(true);
+PHP
+		);
 
-$oSimpleAddSetBlock = SetUIBlockFactory::MakeForSimple('SetWithAddOption', $aOptions, 'label', 'value', ['label'], null, null, 'SetWithAddOption');
-$oSimpleAddSetBlock->SetHasAddOptionButton(true);
-$oPage->AddUiBlock($oSimpleAddSetBlock);
+		// renderer
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Renderer');
+		$this->AddUiBlock($oFieldSet);
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Renderer', 3));
+		$oSimpleSetBlockRenderer = SetUIBlockFactory::MakeForSimple(sId: 'SetRenderer', aOptions: $aOptions, sLabelFields: 'label', sValueField: 'value', aSearchFields: ['label'], sGroupField: null, sTooltipField: null, sName: 'SimpleSetBlockWithRenderer');
+		$oSimpleSetBlockRenderer->SetOptionsTemplate('base/components/input/set/simple_option_renderer.html.twig');
+		$oSimpleSetBlockRenderer->SetItemsTemplate('base/components/input/set/simple_option_renderer.html.twig');
 
-$oSimpleSetBlockRenderer = SetUIBlockFactory::MakeForSimple('SetRenderer', $aOptions, 'label', 'value', ['label'], null, null, 'SimpleSetBlockWithRenderer');
-$oSimpleSetBlockRenderer->SetOptionsTemplate('base/components/input/set/simple_option_renderer.html.twig');
-$oSimpleSetBlockRenderer->SetItemsTemplate('base/components/input/set/simple_option_renderer.html.twig');
-$oPage->AddUiBlock($oSimpleSetBlockRenderer);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oSimpleSetBlockRenderer,
+			<<<'PHP'
+$aOptions = [
+	['label' => 'Chien', 'value' => 'dog', 'icon' => 'fas fa-dog'],
+	['label' => 'Chat', 'value' => 'cat', 'icon' => 'fas fa-cat'],
+	...
+];
+	$oSet = SetUIBlockFactory::MakeForSimple(sId: 'SetRenderer', aOptions: $aOptions, sLabelFields: 'label', sValueField: 'value', aSearchFields: ['label'], sGroupField: null, sTooltipField: null, sName: 'SimpleSetBlockWithRenderer');
+	$oSet->SetOptionsTemplate('base/components/input/set/simple_option_renderer.html.twig');
+	$oSet->SetItemsTemplate('base/components/input/set/simple_option_renderer.html.twig');
+PHP
+		);
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Grouping', 3));
+		// group
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Group');
+		$this->AddUiBlock($oFieldSet);
 
-$oSimpleSetBlockGroup = SetUIBlockFactory::MakeForSimple('SetGroup', $aOptions, 'label', 'value', ['label'], 'group', null, 'SimpleSetBlockWithGroup');
-$oPage->AddUiBlock($oSimpleSetBlockGroup);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			SetUIBlockFactory::MakeForSimple(sId: 'group', aOptions: $aOptions, sLabelFields: 'label', sValueField: 'value', aSearchFields: ['label'], sGroupField: 'group', sTooltipField: null, sName: 'SimpleSetBlockWithRenderer'),
+			<<<'PHP'
+$aOptions = [
+	['label' => 'Chien', 'value' => 'dog', 'group' => 'Domestique'],
+	['label' => 'Chat', 'value' => 'cat', 'group' => 'Domestique'],
+	...
+];
+SetUIBlockFactory::MakeForSimple(sId: 'group', aOptions: $aOptions, sLabelFields: 'label', sValueField: 'value', aSearchFields: ['label'], sGroupField: 'group', sTooltipField: null, sName: 'SimpleSetBlockWithRenderer');
+PHP
+		);
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('OQL', 3));
+		// oql
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('OQL Persons');
+		$this->AddUiBlock($oFieldSet);
 
-$oSimpleSetBlockOql = SetUIBlockFactory::MakeForOQL('SetOql', 'Person', 'SELECT Person', null, [], null, 'OqlSet');
-$oPage->AddUiBlock($oSimpleSetBlockOql);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			SetUIBlockFactory::MakeForOQL(sId:  'SetOql', sObjectClass: 'Person', sOql: 'SELECT Person', sWizardHelperJsVarName: null, aFieldsToLoad: [], sGroupField: null, sName: 'OqlSet'),
+			<<<'PHP'
+SetUIBlockFactory::MakeForOQL(sId: 'SetOql', sObjectClass:'Person', sOql: 'SELECT Person', sWizardHelperJsVarName: null, aFieldsToLoad: [], sGroupField: null, sName: 'OqlSet');
+PHP
+		);
 
-$oSimpleSetBlockOql2 = SetUIBlockFactory::MakeForOQL('SetOql2', 'Location', 'SELECT Location', null, [], null, 'OqlSet2');
-$oPage->AddUiBlock($oSimpleSetBlockOql2);
+		// oql2
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('OQL Locations');
+		$this->AddUiBlock($oFieldSet);
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Toggler', 3));
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			SetUIBlockFactory::MakeForOQL(sId: 'SetOql2', sObjectClass: 'Location', sOql: 'SELECT Location', sWizardHelperJsVarName: null, aFieldsToLoad: [], sGroupField: null, sName: 'OqlSet2'),
+			<<<'PHP'
+SetUIBlockFactory::MakeForOQL(sId: 'SetOql2', sObjectClass: 'Location', sOql:'SELECT Location', sWizardHelperJsVarName: null, aFieldsToLoad: [], sGroupField: null, sName: 'OqlSet2');
+PHP
+		);
+	}
 
-$oToggler = new Toggler();
-$oToggler->SetName('SampleToggler');
-$oPage->AddUiBlock($oToggler);
+	private function RenderTogglerSection(): void
+	{
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Toggler');
+		$this->AddUiBlock($oFieldSet);
 
-$oTogglerActivated = new Toggler();
-$oTogglerActivated->SetName('SampleTogglerActivated');
-$oTogglerActivated->SetIsToggled(true);
-$oPage->AddUiBlock($oTogglerActivated);
+		// toggler
+		$oToggler = new Toggler(sId: 'SampleToggler', sTooltip: 'Sample toggler');
+		$oToggler->SetName(sName: 'SampleToggler');
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oToggler,
+			<<<'PHP'
+		$oToggler = new Toggler(sId: 'SampleToggler', sTooltip: 'Sample toggler');
+		$oToggler->SetName(sName: 'SampleToggler');
+PHP
+		);
 
-$oTogglerDisabled = new Toggler();
-$oTogglerDisabled->SetName('SampleTogglerDisabled');
-$oTogglerDisabled->SetIsDisabled(true);
-$oPage->AddUiBlock($oTogglerDisabled);
+	}
 
-$oTogglerActivatedDisabled = new Toggler();
-$oTogglerActivatedDisabled->SetName('SampleTogglerDisabled');
-$oTogglerActivatedDisabled->SetIsToggled(true);
-$oTogglerActivatedDisabled->SetIsDisabled(true);
-$oPage->AddUiBlock($oTogglerActivatedDisabled);
+	private function RenderBadgesSection(): void
+	{
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Basic');
+		$this->AddUiBlock($oFieldSet);
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Badges', 3));
+		// badge neutral
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			BadgeUIBlockFactory::MakeNeutral(sLabel: 'Badge Neutral', sTooltip: 'Tooltip'),
+			<<<'PHP'
+BadgeUIBlockFactory::MakeNeutral(sLabel: 'badge neutral', sTooltip: 'Tooltip');
+PHP
+		);
 
-$oSampleBadgeNeutral = BadgeUIBlockFactory::MakeNeutral('badge neutral', 'Tooltip');
-$oPage->AddUiBlock($oSampleBadgeNeutral);
-$oSampleBadgeCyan = BadgeUIBlockFactory::MakeCyan('badge cyan', 'Tooltip');
-$oPage->AddUiBlock($oSampleBadgeCyan);
-$oSampleBadgeGreen = BadgeUIBlockFactory::MakeGreen('badge green', 'Tooltip');
-$oPage->AddUiBlock($oSampleBadgeGreen);
-$oSampleBadgeGrey = BadgeUIBlockFactory::MakeGrey('badge grey', 'Tooltip');
-$oPage->AddUiBlock($oSampleBadgeGrey);
-$oSampleBadgeOrange = BadgeUIBlockFactory::MakeOrange('badge orange', 'Tooltip');
-$oPage->AddUiBlock($oSampleBadgeOrange);
-$oSampleBadgeRed = BadgeUIBlockFactory::MakeRed('badge red', 'Tooltip');
-$oPage->AddUiBlock($oSampleBadgeRed);
-$oSampleBadgePink = BadgeUIBlockFactory::MakePink('badge pink', 'Tooltip');
-$oPage->AddUiBlock($oSampleBadgePink);
-$oSampleBadgePurple = BadgeUIBlockFactory::MakePurple('badge purple', 'Tooltip');
-$oPage->AddUiBlock($oSampleBadgePurple);
-$oSampleBadgeBlue = BadgeUIBlockFactory::MakeBlue('badge blue', 'Tooltip');
-$oPage->AddUiBlock($oSampleBadgeBlue);
-$oSampleBadgeYellow = BadgeUIBlockFactory::MakeYellow('badge yellow', 'Tooltip');
-$oPage->AddUiBlock($oSampleBadgeYellow);
+		// badge cyan
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			BadgeUIBlockFactory::MakeCyan(sLabel: 'Badge Cyan', sTooltip: 'Tooltip'),
+			<<<'PHP'
+BadgeUIBlockFactory::MakeCyan(sLabel: 'badge Cyan', sTooltip: 'Tooltip');
+PHP
+		);
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Extensions details layout', 3));
+		// badge green
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			BadgeUIBlockFactory::MakeGreen(sLabel: 'Badge Green', sTooltip: 'Tooltip'),
+			<<<'PHP'
+BadgeUIBlockFactory::MakeGreen(sLabel: 'Badge Green', sTooltip: 'Tooltip');
+PHP
+		);
 
+		// badge grey
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			BadgeUIBlockFactory::MakeGrey(sLabel: 'Badge Grey', sTooltip: 'Tooltip'),
+			<<<'PHP'
+BadgeUIBlockFactory::MakeGrey(sLabel: 'Badge Grey', sTooltip: 'Tooltip');
+PHP
+		);
+
+		// badge orange
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			BadgeUIBlockFactory::MakeOrange(sLabel: 'Badge Orange', sTooltip: 'Tooltip'),
+			<<<'PHP'
+BadgeUIBlockFactory::MakeOrange(sLabel: 'Badge Orange', sTooltip: 'Tooltip');
+PHP
+		);
+
+		// badge red
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			BadgeUIBlockFactory::MakeRed(sLabel: 'Badge Red', sTooltip: 'Tooltip'),
+			<<<'PHP'
+BadgeUIBlockFactory::MakeRed(sLabel: 'Badge Red', sTooltip: 'Tooltip');
+PHP
+		);
+
+		// badge pink
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			BadgeUIBlockFactory::MakePink(sLabel: 'Badge Pink', sTooltip: 'Tooltip'),
+			<<<'PHP'
+BadgeUIBlockFactory::MakePink(sLabel: 'Badge Pink', sTooltip: 'Tooltip');
+PHP
+		);
+
+		// badge purple
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			BadgeUIBlockFactory::MakePurple(sLabel: 'Badge Purple', sTooltip: 'Tooltip'),
+			<<<'PHP'
+BadgeUIBlockFactory::MakePurple(sLabel: 'Badge Purple', sTooltip: 'Tooltip');
+PHP
+		);
+
+		// badge blue
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			BadgeUIBlockFactory::MakeBlue(sLabel: 'Badge Blue', sTooltip: 'Tooltip'),
+			<<<'PHP'
+BadgeUIBlockFactory::MakeBlue(sLabel: 'Badge Blue', sTooltip: 'Tooltip');
+PHP
+		);
+
+		// badge yellow
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			BadgeUIBlockFactory::MakeYellow(sLabel: 'Badge Yellow', sTooltip: 'Tooltip'),
+			<<<'PHP'
+BadgeUIBlockFactory::MakeYellow(sLabel: 'Badge Yellow', sTooltip: 'Tooltip');
+PHP
+		);
+	}
+
+	private function RenderMultiColumns(): void
+	{
+		$this->add_style(
+			<<<CSS
+.column-center{
+	background-color: #f6f6f6;
+}
+CSS
+		);
+
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Multi Columns');
+		$this->AddUiBlock($oFieldSet);
+
+		$oMultiCol = new MultiColumn();
+		$oColumnLeft = new Column('multi-column-left', ['column-left']);
+		$oColumnLeft->AddSubBlock(new Html('<div>Left column</div>'));
+		$oColumnCenter = new Column('multi-column-center', ['column-center']);
+		$oColumnCenter->AddSubBlock(new Html('<div>Center column</div>'));
+		$oColumnRight = new Column('multi-column-right', ['column-right']);
+		$oColumnRight->AddSubBlock(new Html('<div>Right column</div>'));
+		$oMultiCol->AddColumn($oColumnLeft);
+		$oMultiCol->AddColumn($oColumnCenter);
+		$oMultiCol->AddColumn($oColumnRight);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oMultiCol,
+			<<<'PHP'
 $oMultiCol = new MultiColumn();
-$oColumnLeft = new Column();
-$oColumnRight = new Column();
+$oColumnLeft = new Column('multi-column-left', ['column-left']);
+$oColumnLeft->AddSubBlock(new Html('<div>Left column</div>'));
+$oColumnCenter = new Column('multi-column-center', ['column-center']);
+$oColumnCenter->AddSubBlock(new Html('<div>Center column</div>'));
+$oColumnRight = new Column('multi-column-right', ['column-right']);
+$oColumnRight->AddSubBlock(new Html('<div>Right column</div>'));
 $oMultiCol->AddColumn($oColumnLeft);
+$oMultiCol->AddColumn($oColumnCenter);
 $oMultiCol->AddColumn($oColumnRight);
-$oPage->AddUiBlock($oMultiCol);
+PHP
+		);
+	}
 
-$oExtensionDetailInstalledFromFactory = ExtensionDetailsUIBlockFactory::MakeInstalled('itop-sample', 'My extension v2', 'This is for test only', ['v1.1.1', 'Designer', '12/12/2012'], ['uninstallable' => false,'missing' => true]);
-$oColumnLeft->AddSubBlock($oExtensionDetailInstalledFromFactory);
+	private function RenderExtensionsSection(): void
+	{
+		$oFieldSet = FieldSetUIBlockFactory::MakeStandard('Extensions details layout');
+		$this->AddUiBlock($oFieldSet);
 
-$oExtensionDetailInstalledFromFactory = ExtensionDetailsUIBlockFactory::MakeInstalled('itop-not-uninstallable', 'You cannot uninstall me', 'Click force uninstall to uninstall me', ['v9.9.9', 'Void', '12/12/2012'], ['uninstallable' => false,'missing' => false]);
-$oColumnLeft->AddSubBlock($oExtensionDetailInstalledFromFactory);
+		$oExtension = ExtensionDetailsUIBlockFactory::MakeInstalled('itop-sample', 'My extension v2', 'This is for test only', ['v1.1.1', 'Designer', '12/12/2012'], ['uninstallable' => false, 'missing' => true]);
+		$this->AddElementWithSnippet(
+			$oFieldSet,
+			$oExtension,
+			<<<'PHP'
+ExtensionDetailsUIBlockFactory::MakeInstalled('itop-sample', 'My extension v2', 'This is for test only', ['v1.1.1', 'Designer', '12/12/2012'], ['uninstallable' => false, 'missing' => true]);
+PHP
+		);
+	}
+}
 
-$oExtensionDetailInstalledWithLongTitle = ExtensionDetailsUIBlockFactory::MakeNotInstalled('itop-sample', 'My extension with a very long title', 'This is for test only', ['v1.1.1', 'Designer', '12/12/2012'], ['uninstallable' => false]);
-$oColumnRight->AddSubBlock($oExtensionDetailInstalledWithLongTitle);
-$oPage->add('<hr id="page_bottom"/>');
+LoginWebPage::DoLogin();
+$oPage = new RenderAllUiBlocksPage();
+$oPage->SetCurrentTab();
+$oPage->SetCurrentTabContainer();
 
 $oPage->output();

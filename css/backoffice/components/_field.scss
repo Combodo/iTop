@@ -37,6 +37,12 @@ $ibo-field--enable-bulk--border-radius: $ibo-border-radius-500 !default;
 
 $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
 
+$ibo-field--label--action--margin-y: $ibo-spacing-0 !default;
+$ibo-field--label--action--margin-x: $ibo-spacing-100 !default;
+$ibo-field--label--action--size: $ibo-field--fullscreen-toggler--size !default;
+$ibo-field--label--action--padding: $ibo-spacing-0 !default;
+$ibo-field--label--action--font-size: $ibo-font-size-50 !default;
+
 /* SCSS rules */
 .ibo-field {
   @extend %ibo-font-size-150;
@@ -264,4 +270,32 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
 
 .ibo-input-select--action-buttons a  {
   @extend %ibo-hyperlink-inherited-colors;
+}
+
+.ibo-field--label {
+  .ibo-field--action:not(.ibo-button-separator) {
+    display: inline-flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+
+    width: $ibo-field--label--action--size;
+    height: $ibo-field--label--action--size;
+    padding: $ibo-field--label--action--padding;
+    border-radius: $ibo-field--fullscreen-toggler--border-radius;
+    font-size: $ibo-field--label--action--font-size;
+    ~ .ibo-field--action {
+      margin-left: $ibo-field--label--action--margin-x;
+    }
+  }
+  .ibo-field--action.ibo-button-separator {
+    margin:  $ibo-field--label--action--margin-y $ibo-field--label--action--margin-x;
+    vertical-align: middle;
+  }
+}
+
+// Specific rule to ensure that the grouped actions popover of a field is visible in fullscreen mode
+body.ibo-has-fullscreen-descendant .ibo-popover-menu.ibo-field--grouped-actions-popover {
+  z-index: 1060 !important;
 }

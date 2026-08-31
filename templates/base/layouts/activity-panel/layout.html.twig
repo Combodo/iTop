@@ -71,6 +71,13 @@
             </div>
         </div>
     </div>
+    {% if oUIBlock.HasActivityActions() %}
+        <div class="ibo-activity-panel--activity-actions" data-role="ibo-activity-panel--activity-actions">
+            {% for oActivityAction in oUIBlock.GetActivityActions() %}
+                {{ render_block(oActivityAction) }}
+            {% endfor %}
+        </div>
+    {% endif %}
     {% if oUIBlock.IsComposeButtonEnabled() %}
         <a href="#"
            id="ibo-activity-panel--add-caselog-entry-button"

@@ -145,6 +145,8 @@ abstract class UIBlock implements iUIBlock
 	protected $aCssFilesRelPath = [];
 	/** @var array Array <KEY> => <VALUE> which will be output as HTML data-xxx attributes (eg. data-<KEY>="<VALUE>") */
 	protected $aDataAttributes = [];
+	/** @var array Array <KEY> => <VALUE> which will be output as HTML aria-xxx attributes (eg. aria-<KEY>="<VALUE>") */
+	protected $aAriaAttributes = [];
 	/** @var bool Whether the current block is shown or hidden */
 	protected $bIsHidden;
 	/** @var array Additional CSS classes to put on the block */
@@ -620,6 +622,67 @@ abstract class UIBlock implements iUIBlock
 	public function HasDataAttributes(): bool
 	{
 		return !empty($this->aDataAttributes);
+	}
+
+	/**
+	 * @return array
+	 * @see static::$aAriaAttributes
+	 * @since 3.3.0
+	 */
+	public function GetAriaAttributes(): array
+	{
+		return $this->aAriaAttributes;
+	}
+
+	/**
+	 * @param array $aAriaAttributes Array of aria attributes in the format ['name' => 'value']
+	 *
+	 * @return $this
+	 * @see static::$aAriaAttributes
+	 * @since 3.3.0
+	 */
+	public function SetAriaAttributes(array $aAriaAttributes)
+	{
+		$this->aAriaAttributes = $aAriaAttributes;
+
+		return $this;
+	}
+
+	/**
+	 * @param string $sName
+	 * @param string $sValue
+	 *
+	 * @return $this
+	 * @see static::$aAriaAttributes
+	 * @since 3.3.0
+	 */
+	public function AddAriaAttribute(string $sName, string $sValue)
+	{
+		$this->aAriaAttributes[$sName] = $sValue;
+
+		return $this;
+	}
+
+	/**
+	 * @param string $sName Name of the aria attribute
+	 *
+	 * @return bool True if $sName is already defined (even as a null value) in the UIBlock aria attributes, false otherwise
+	 * @see static::$aAriaAttributes
+	 * @since 3.3.0
+	 */
+	public function HasAriaAttribute(string $sName): bool
+	{
+		return array_key_exists($sName, $this->aAriaAttributes);
+	}
+
+	/**
+	 * @return bool
+	 * @see static::$aAriaAttributes
+	 * @since 3.3.0
+	 */
+	public function HasAriaAttributes(): bool
+	{
+		return !empty($this->aAriaAttributes);
 	}
 
 	/**

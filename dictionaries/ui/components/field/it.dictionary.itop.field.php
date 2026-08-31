@@ -12,4 +12,5 @@
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Valori sconosciuti',
+	'UI:Component:Field:GroupedActions:Tooltip' => 'More actions~~',
 ]);

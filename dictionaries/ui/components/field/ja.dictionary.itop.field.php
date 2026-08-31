@@ -12,4 +12,5 @@
  */
 Dict::Add('JA JP', 'Japanese', '日本語', [
 	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Unknown values~~',
+	'UI:Component:Field:GroupedActions:Tooltip' => 'More actions~~',
 ]);

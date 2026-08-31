@@ -1,0 +1,78 @@
+$ibo-activity-panel--activity-actions--right: $ibo-activity-panel--add-caselog-entry-button--right !default;
+$ibo-activity-panel--activity-actions--top: 76px + $ibo-activity-panel--activity-actions--right !default;
+$ibo-activity-panel--activity-actions--gap: $ibo-spacing-300 !default;
+
+$ibo-activity-panel--activity-action--diameter: $ibo-activity-panel--add-caselog-entry-button--diameter !default;
+$ibo-activity-panel--activity-action--background-color: $ibo-activity-panel--add-caselog-entry-button--background-color !default;
+$ibo-activity-panel--activity-action--background-color--on-hover: $ibo-activity-panel--add-caselog-entry-button--background-color--on-hover !default;
+$ibo-activity-panel--activity-action--background-color--is-active: $ibo-activity-panel--add-caselog-entry-button--background-color--is-active !default;
+$ibo-activity-panel--activity-action--color: $ibo-activity-panel--add-caselog-entry-button--color !default;
+$ibo-activity-panel--activity-action--border-radius: $ibo-border-radius-full !default;
+$ibo-activity-panel--activity-action--box-shadow: $ibo-activity-panel--add-caselog-entry-button--box-shadow !default;
+$ibo-activity-panel--activity-action--hover--box-shadow: $ibo-activity-panel--add-caselog-entry-button--hover--box-shadow !default;
+
+$ibo-activity-panel--activity-action--icon--height: $ibo-activity-panel--add-caselog-entry-button--icon--height !default;
+$ibo-activity-panel--activity-action--icon--width: $ibo-activity-panel--activity-action--icon--height !default;
+$ibo-activity-panel--activity-action--icon--font-size: $ibo-activity-panel--add-caselog-entry-button--icon--font-size !default;
+$ibo-activity-panel--activity-action--icon--line-height: $ibo-activity-panel--add-caselog-entry-button--icon--line-height !default;
+$ibo-activity-panel--activity-action-separator--width: calc(#{$ibo-activity-panel--activity-action--diameter} / 1.5) !default;
+$ibo-activity-panel--activity-action-separator--height: 2px !default;
+$ibo-activity-panel--activity-action-separator--background-color: $ibo-color-grey-500 !default;
+
+
+.ibo-activity-panel--activity-actions {
+  display: flex;
+  flex-direction: column;
+  gap: $ibo-activity-panel--activity-actions--gap;
+  position: absolute;
+  z-index: 1;
+  right: $ibo-activity-panel--activity-actions--right;
+  top: $ibo-activity-panel--activity-actions--top;
+  &.ibo-is-hidden{
+    display: none;
+  }
+  &:has(+ .ibo-activity-panel--add-caselog-entry-button) {
+    top: calc(#{$ibo-activity-panel--activity-actions--top} + #{$ibo-activity-panel--activity-action--diameter} + #{$ibo-activity-panel--activity-actions--gap});
+  }
+}
+
+.ibo-activity-panel--activity-action {
+  @extend %ibo-baseline-centered-content;
+
+  width: $ibo-activity-panel--activity-action--diameter;
+  height: $ibo-activity-panel--activity-action--diameter;
+
+  background-color: $ibo-activity-panel--activity-action--background-color;
+  color: $ibo-activity-panel--activity-action--color;
+
+  border-radius: $ibo-activity-panel--activity-action--border-radius;
+  box-shadow: $ibo-activity-panel--activity-action--box-shadow;
+
+  > i{
+    text-align: center;
+    height: $ibo-activity-panel--activity-action--icon--height;
+    width: $ibo-activity-panel--activity-action--icon--width;
+    font-size: $ibo-activity-panel--activity-action--icon--font-size;
+    line-height: $ibo-activity-panel--activity-action--icon--line-height;
+  }
+  &:hover {
+    color: $ibo-activity-panel--activity-action--color;
+    background-color: $ibo-activity-panel--activity-action--background-color--on-hover;
+    box-shadow: $ibo-activity-panel--activity-action--hover--box-shadow;
+  }
+  &:active {
+    color: $ibo-activity-panel--activity-action--color;
+    background-color: $ibo-activity-panel--activity-action--background-color--is-active;
+  }
+  &.ibo-is-hidden{
+    display: none;
+  }
+}
+
+.ibo-activity-panel--activity-action-separator {
+  display: block;
+  width: $ibo-activity-panel--activity-action-separator--width;
+  height: $ibo-activity-panel--activity-action-separator--height;
+  margin: auto;
+  background-color: $ibo-activity-panel--activity-action-separator--background-color;
+}

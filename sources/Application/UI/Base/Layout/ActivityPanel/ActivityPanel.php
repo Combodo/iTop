@@ -101,7 +101,7 @@ class ActivityPanel extends UIBlock
 	protected $bPrefilterStateChangesOnLogs;
 	/** @var bool */
 	protected $bPrefilterEditsOnLogs;
-
+	protected array $aActivityActions = [];
 	/**
 	 * ActivityPanel constructor.
 	 *
@@ -939,6 +939,10 @@ class ActivityPanel extends UIBlock
 
 		$aSubBlocks[$this->GetComposeMenu()->GetId()] = $this->GetComposeMenu();
 
+		foreach ($this->GetActivityActions() as $oActivityAction) {
+			$aSubBlocks[$oActivityAction->GetId()] = $oActivityAction;
+		}
+
 		return $aSubBlocks;
 	}
 
@@ -949,5 +953,27 @@ class ActivityPanel extends UIBlock
 	protected function HasUserModifyRights(): bool
 	{
 		return \UserRights::IsActionAllowed($this->GetObjectClass(), UR_ACTION_MODIFY);
+	}
+
+	public function HasActivityActions(): bool
+	{
+		return count($this->aActivityActions) > 0;
+	}
+
+	public function GetActivityActions(): array
+	{
+		return $this->aActivityActions;
+	}
+
+	public function SetActivityActions(array $aActivityActions)
+	{
+		$this->aActivityActions = $aActivityActions;
+		return $this;
+	}
+
+	public function AddActivityAction($oActivityAction)
+	{
+		$this->aActivityActions[] = $oActivityAction;
+		return $this;
 	}
 }

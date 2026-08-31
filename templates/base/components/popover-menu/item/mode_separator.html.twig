@@ -6,5 +6,10 @@
                     data-{{ sName }}="{{ sValue }}"
                 {% endfor %}
             {% endif %}
+            {% if oUIBlock.GetAriaAttributes() %}
+                {% for sName, sValue in oUIBlock.GetAriaAttributes() %}
+                    aria-{{ sName }}="{{ sValue }}"
+                {% endfor %}
+            {% endif %}
     >
 {% endblock %}

@@ -1,0 +1,16 @@
+<div id="{{ oUIBlock.GetId() }}"
+     class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-top-bar-quick-action-separator"
+     data-role="ibo-top-bar-quick-action-separator"
+     data-uid="{{ oUIBlock.GetUID() }}"
+     {% if oUIBlock.GetDataAttributes() %}
+         {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+             data-{{ sName }}="{{ sValue }}"
+         {% endfor %}
+     {% endif %}
+     {% if oUIBlock.GetAriaAttributes() %}
+         {% for sName, sValue in oUIBlock.GetAriaAttributes() %}
+             aria-{{ sName }}="{{ sValue }}"
+         {% endfor %}
+     {% endif %}
+>
+</div>

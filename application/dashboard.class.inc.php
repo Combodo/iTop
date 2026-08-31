@@ -586,7 +586,7 @@ JS
 			/** @var \Dashlet $oDashlet */
 			foreach ($aCell as $oDashlet) {
 				if ($oDashlet->IsVisible()) {
-					$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$oDashlet->GetID().'" style="display:none">');
+					$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$oDashlet->GetID().'" data-role="ibo-dashlet-properties" data-dashlet-class="'.$oDashlet->GetDashletType().'" style="display:none">');
 					$oForm = $oDashlet->GetForm();
 					$this->SetFormParams($oForm, $aExtraParams);
 					$oForm->RenderAsPropertySheet($oPage, false, '.itop-dashboard');
@@ -1203,7 +1203,7 @@ EOF
 		}
 		$aRenderParams['dashboard_div_id'] = $aExtraParams['dashboard_div_id'];
 		$sJSExtraParams = json_encode($aExtraParams);
-		$oPage->add('<div id="dashboard_editor" class="ibo-dashboard-editor" data-role="ibo-dashboard-editor">');
+		$oPage->add('<div id="dashboard_editor" class="ibo-dashboard-editor" data-role="ibo-dashboard-editor" data-dashboard-id="'.$this->sId.'">');
 		$oPage->add('<div class="ui-layout-center">');
 		$this->SetCustomFlag(true);
 		$this->Render($oPage, true, $aRenderParams);

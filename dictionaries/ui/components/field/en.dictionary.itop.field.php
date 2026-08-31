@@ -21,4 +21,5 @@
 // Global search
 Dict::Add('EN US', 'English', 'English', [
 	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Unknown values',
+	'UI:Component:Field:GroupedActions:Tooltip' => 'More actions',
 ]);

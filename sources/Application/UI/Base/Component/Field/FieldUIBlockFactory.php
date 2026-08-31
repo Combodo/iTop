@@ -8,8 +8,13 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Field;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuFactory;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Dict;
+use utils;
 
 /**
  * Class FieldUIBlockFactory
@@ -65,6 +70,39 @@ class FieldUIBlockFactory extends AbstractUIBlockFactory
 			foreach ($aParamsFlagsMapping as $sConstant => $sFieldMethod) {
 				self::UpdateFlagsFieldFromParams($oField, $sFieldMethod, $aParams['attflags'], $sConstant);
 			}
+		}
+
+		if (isset($aParams['actions'])) {
+			$iMaxActions = utils::GetConfig()->Get('attribute.max_actions_items');
+			$aActions = [];
+			// Create buttons for a few actions or a grouped-actions button for more actions than configured
+			if ($iMaxActions > 0 && count($aParams['actions']) > $iMaxActions) {
+				$oGroupedActionsButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S('UI:Component:Field:GroupedActions:Tooltip'), 'grouped-actions');
+				$oGroupedActionsButton->AddCSSClass('ibo-field--action');
+
+				$aGroupedActions = [];
+				foreach ($aParams['actions'] as $oAction) {
+					$aGroupedActions[$oAction->GetUID()] = $oAction->GetMenuItem();
+					$oField->AddMultipleJsFilesRelPaths($oAction->GetLinkedScripts());
+				}
+				$oGroupedActionsPopoverMenu = PopoverMenuFactory::MakeMenuForActions($oField->GetId().'--grouped-actions-menu', $aGroupedActions);
+				$oGroupedActionsPopoverMenu->AddCSSClass('ibo-field--grouped-actions-popover');
+				$oGroupedActionsPopoverMenu->SetTogglerFromBlock($oGroupedActionsButton);
+				$oGroupedActionsPopoverMenu->SetContainer(PopoverMenu::ENUM_CONTAINER_BODY);
+
+				$aActions[] = $oGroupedActionsButton;
+				$aActions[] = $oGroupedActionsPopoverMenu;
+			} else {
+				foreach ($aParams['actions'] as $oAction) {
+					$oActionButton = ButtonUIBlockFactory::MakeIconButtonFromApplicationPopupMenuItem($oAction);
+					if ($oActionButton === null) {
+						continue;
+					}
+					$oActionButton->AddCSSClass('ibo-field--action');
+					$aActions[] = $oActionButton;
+				}
+			}
+			$oField->SetActions($aActions);
 		}
 
 		return $oField;

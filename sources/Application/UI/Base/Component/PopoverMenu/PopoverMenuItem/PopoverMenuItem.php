@@ -159,4 +159,29 @@ class PopoverMenuItem extends UIBlock
 		return $this->oPopupMenuItem->GetUID();
 	}
 
+	public function GetDataAttributes(): array
+	{
+		// Merge attributes from the embedded popup item and from the UI block itself
+		return array_merge($this->oPopupMenuItem->GetDataAttributes()->GetAttributes(), parent::GetDataAttributes());
+	}
+
+	public function HasDataAttributes(): bool
+	{
+		return !empty($this->GetDataAttributes());
+	}
+
+	public function GetAriaAttributes(): array
+	{
+		return array_merge($this->oPopupMenuItem->GetAriaAttributes()->GetAttributes(), parent::GetAriaAttributes());
+	}
+
+	public function HasAriaAttribute(string $sName): bool
+	{
+		return array_key_exists($sName, $this->GetAriaAttributes());
+	}
+
+	public function HasAriaAttributes(): bool
+	{
+		return !empty($this->GetAriaAttributes());
+	}
 }

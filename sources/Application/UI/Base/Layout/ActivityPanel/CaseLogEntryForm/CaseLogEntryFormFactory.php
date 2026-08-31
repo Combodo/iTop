@@ -13,9 +13,11 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use DBObject;
 use DBObjectSet;
 use Dict;
+use iPopupMenuExtension;
 use JSPopupMenuItem;
 use MetaModel;
 use UserRights;
@@ -46,6 +48,33 @@ class CaseLogEntryFormFactory
 			$oCaseLogEntryForm->AddMainActionButtons($oButtonGroup);
 		} else {
 			$oCaseLogEntryForm->AddMainActionButtons($oSaveButton);
+		}
+
+		// Build extra actions
+		$aPopupItems = [];
+		/** @var \iPopupMenuExtension $oExtensionInstance */
+		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses('iPopupMenuExtension') as $oExtensionInstance) {
+			foreach ($oExtensionInstance::EnumItems(iPopupMenuExtension::MENU_OBJDETAILS_FIELD_ACTIONS, ['object' => $oObject, 'att_code' => $sCaseLogAttCode, 'mode' => $sObjectMode === cmdbAbstractObject::ENUM_DISPLAY_MODE_EDIT ? 'edit' : 'read']) as $oMenuItem) {
+				$aPopupItems[] = $oMenuItem;
+			}
+		}
+
+		if (!empty($aPopupItems)) {
+			$aActions = [];
+			// Create a button for each extra action, the UI will be responsible for displaying them in a dropdown if there are too many
+			foreach ($aPopupItems as $oAction) {
+				$oActionButton = ButtonUIBlockFactory::MakeButtonFromApplicationPopupMenuItem($oAction);
+				if ($oActionButton === null) {
+					continue;
+				}
+				$oActionButton->AddCSSClass('ibo-field--action');
+				$aActions[] = $oActionButton;
+			}
+
+			foreach ($aActions as $oAction) {
+				$oAction->AddCSSClass('ibo-caselog-entry-form--extra-action');
+				$oCaseLogEntryForm->AddExtraActionButtons($oAction);
+			}
 		}
 
 		return $oCaseLogEntryForm;

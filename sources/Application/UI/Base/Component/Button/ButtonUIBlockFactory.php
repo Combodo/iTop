@@ -20,8 +20,12 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\Button;
 
+use ApplicationPopupMenuItem;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Dict;
+use JSPopupMenuItem;
+use SeparatorPopupMenuItem;
+use URLPopupMenuItem;
 use utils;
 
 /**
@@ -376,6 +380,132 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		return $oButton;
 	}
 
+	/**
+	 * @param ApplicationPopupMenuItem $oPopupItem
+	 * @param string $sColor
+	 * @param string $sActionType
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button|\Combodo\iTop\Application\UI\Base\Component\Button\ButtonSeparator|null
+	 * @since 3.3.0
+	 */
+	public static function MakeIconButtonFromApplicationPopupMenuItem(ApplicationPopupMenuItem $oPopupItem, string $sColor = Button::ENUM_COLOR_SCHEME_NEUTRAL, string $sActionType = Button::ENUM_ACTION_TYPE_ALTERNATIVE): Button|ButtonSeparator|null
+	{
+		if ($oPopupItem instanceof JSPopupMenuItem) {
+			$sTooltip = $oPopupItem->GetTooltip();
+			if (utils::IsNullOrEmptyString($sTooltip)) {
+				$sTooltip = $oPopupItem->GetLabel();
+			}
+
+			$oButton = self::MakeIconAction(
+				$oPopupItem->GetIconClass(),
+				$sTooltip
+			);
+
+			$oButton->SetOnClickJsCode($oPopupItem->GetJsCode());
+			$oButton->AddMultipleJsFilesRelPaths($oPopupItem->GetLinkedScripts());
+			$oButton->SetActionType($sActionType);
+			$oButton->SetColor($sColor);
+			$oButton->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
+			$oButton->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
+			$oButton->AddDataAttribute('uid', $oPopupItem->GetUID());
+
+			return $oButton;
+		} elseif ($oPopupItem instanceof URLPopupMenuItem) {
+			$sTooltip = $oPopupItem->GetTooltip();
+			if (!utils::IsNotNullOrEmptyString($sTooltip)) {
+				$sTooltip = $oPopupItem->GetLabel();
+			}
+
+			$oButton = self::MakeIconLink(
+				$oPopupItem->GetIconClass(),
+				$sTooltip,
+				$oPopupItem->GetURL(),
+				$oPopupItem->GetTarget(),
+			);
+
+			$oButton->SetActionType($sActionType);
+			$oButton->SetColor($sColor);
+			$oButton->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
+			$oButton->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
+			$oButton->AddDataAttribute('uid', $oPopupItem->GetUID());
+
+			return $oButton;
+		} elseif ($oPopupItem instanceof SeparatorPopupMenuItem) {
+			$oSeparator = new ButtonSeparator();
+			$oSeparator->SetCSSClasses($oPopupItem->GetCssClasses());
+			$oSeparator->AddDataAttribute('uid', $oPopupItem->GetUID());
+			return $oSeparator;
+		}
+
+		// Should never happen, but just in case a new type is added, return null
+
+		return null;
+	}
+
+	/**
+	 * @param ApplicationPopupMenuItem $oPopupItem
+	 * @param string $sColor
+	 * @param string $sActionType
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button|\Combodo\iTop\Application\UI\Base\Component\Button\ButtonSeparator|null
+	 * @since 3.3.0
+	 */
+	public static function MakeButtonFromApplicationPopupMenuItem(ApplicationPopupMenuItem $oPopupItem, string $sColor = Button::ENUM_COLOR_SCHEME_NEUTRAL, string $sActionType = Button::ENUM_ACTION_TYPE_ALTERNATIVE): Button|ButtonSeparator|null
+	{
+		if ($oPopupItem instanceof JSPopupMenuItem) {
+			$oButton = self::MakeForAction(
+				$oPopupItem->GetLabel(),
+				$sColor,
+				$sActionType,
+			);
+
+			if (utils::IsNotNullOrEmptyString($oPopupItem->GetIconClass())) {
+				$oButton->SetIconClass($oPopupItem->GetIconClass());
+			}
+			if (utils::IsNotNullOrEmptyString($oPopupItem->GetTooltip())) {
+				$oButton->SetTooltip($oPopupItem->GetTooltip());
+			}
+			$oButton->SetOnClickJsCode($oPopupItem->GetJsCode());
+			$oButton->AddMultipleJsFilesRelPaths($oPopupItem->GetLinkedScripts());
+			$oButton->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
+			$oButton->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
+			$oButton->AddDataAttribute('uid', $oPopupItem->GetUID());
+
+			return $oButton;
+		} elseif ($oPopupItem instanceof URLPopupMenuItem) {
+			$oButton = self::MakeForLink(
+				$oPopupItem->GetLabel(),
+				$oPopupItem->GetURL(),
+				$sColor,
+				$sActionType,
+				$oPopupItem->GetTarget()
+			);
+
+			if (utils::IsNotNullOrEmptyString($oPopupItem->GetIconClass())) {
+				$oButton->SetIconClass($oPopupItem->GetIconClass());
+			}
+			if (utils::IsNotNullOrEmptyString($oPopupItem->GetTooltip())) {
+				$oButton->SetTooltip($oPopupItem->GetTooltip());
+			}
+			if (utils::IsNotNullOrEmptyString($oPopupItem->GetTarget())) {
+				$oButton->SetTarget($oPopupItem->GetTarget());
+			}
+			$oButton->SetAriaAttributes($oPopupItem->GetAriaAttributes()->GetAttributes());
+			$oButton->SetDataAttributes($oPopupItem->GetDataAttributes()->GetAttributes());
+			$oButton->AddDataAttribute('uid', $oPopupItem->GetUID());
+
+			return $oButton;
+		} elseif ($oPopupItem instanceof SeparatorPopupMenuItem) {
+			$oSeparator = new ButtonSeparator();
+			$oSeparator->SetCSSClasses($oPopupItem->GetCssClasses());
+			$oSeparator->AddDataAttribute('uid', $oPopupItem->GetUID());
+			return $oSeparator;
+		}
+
+		// Should never happen, but just in case a new type is added, return null
+
+		return null;
+	}
 	//----------------------------------------------------------------------------------------------
 	// Link buttons, mostly used outside forms, to redirect somewhere whilst keeping a button aspect
 	//----------------------------------------------------------------------------------------------

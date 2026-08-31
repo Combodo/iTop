@@ -30,6 +30,15 @@ require_once(APPROOT.'application/newsroomprovider.class.inc.php');
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @since       2.7.0
  */
+
+require_once(APPROOT.'application/applicationextension/common/ApplicationPopupMenuItem.php');
+require_once(APPROOT.'application/applicationextension/common/iPopupMenuExtension.php');
+require_once(APPROOT.'application/applicationextension/common/JSButtonItem.php');
+require_once(APPROOT.'application/applicationextension/common/JSPopupMenuItem.php');
+require_once(APPROOT.'application/applicationextension/common/SeparatorPopupMenuItem.php');
+require_once(APPROOT.'application/applicationextension/common/URLButtonItem.php');
+require_once(APPROOT.'application/applicationextension/common/URLPopupMenuItem.php');
+
 require_once(APPROOT.'application/applicationextension/backoffice/iApplicationUIExtension.php');
 require_once(APPROOT.'application/applicationextension/backoffice/iBackofficeDictEntriesExtension.php');
 require_once(APPROOT.'application/applicationextension/backoffice/iBackofficeDictEntriesPrefixesExtension.php');
@@ -43,19 +52,12 @@ require_once(APPROOT.'application/applicationextension/backoffice/iBackofficeScr
 require_once(APPROOT.'application/applicationextension/backoffice/iBackofficeStyleExtension.php');
 require_once(APPROOT.'application/applicationextension/backoffice/iFieldRendererMappingsExtension.php');
 require_once(APPROOT.'application/applicationextension/backoffice/iPageUIBlockExtension.php');
-require_once(APPROOT.'application/applicationextension/backoffice/iPopupMenuExtension.php');
 require_once(APPROOT.'application/applicationextension/backoffice/iPreferencesExtension.php');
 require_once(APPROOT.'application/applicationextension/backoffice/iWelcomePopupExtension.php');
 require_once(APPROOT.'application/applicationextension/backoffice/AbstractApplicationUIExtension.php');
 require_once(APPROOT.'application/applicationextension/backoffice/AbstractPageUIBlockExtension.php');
 require_once(APPROOT.'application/applicationextension/backoffice/AbstractPreferencesExtension.php');
 require_once(APPROOT.'application/applicationextension/backoffice/AbstractWelcomePopupExtension.php');
-require_once(APPROOT.'application/applicationextension/backoffice/ApplicationPopupMenuItem.php');
-require_once(APPROOT.'application/applicationextension/backoffice/JSButtonItem.php');
-require_once(APPROOT.'application/applicationextension/backoffice/JSPopupMenuItem.php');
-require_once(APPROOT.'application/applicationextension/backoffice/SeparatorPopupMenuItem.php');
-require_once(APPROOT.'application/applicationextension/backoffice/URLButtonItem.php');
-require_once(APPROOT.'application/applicationextension/backoffice/URLPopupMenuItem.php');
 
 require_once(APPROOT.'application/applicationextension/iBackupExtraFilesExtension.php');
 require_once(APPROOT.'application/applicationextension/iKPILoggerExtension.php');

@@ -14,9 +14,7 @@
     <div class="ibo-caselog-entry-form--actions">
         <div class="ibo-caselog-entry-form--action-buttons--extra-actions"
              data-role="ibo-caselog-entry-form--action-buttons--extra-actions">
-            {% for TextInputActionButton in oUIBlock.GetExtraActionButtons() %}
-                {{ render_block(TextInputActionButton, {aPage: aPage}) }}
-            {% endfor %}
+            {{ render_block(oUIBlock.GetExtraActionButtonBar(), {aPage: aPage}) }}
         </div>
         <div class="ibo-caselog-entry-form--action-buttons--main-actions" data-role="ibo-caselog-entry-form--action-buttons--main-actions">
             {% for FormActionButton in oUIBlock.GetMainActionButtons() %}

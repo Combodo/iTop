@@ -21,6 +21,10 @@
 namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem;
 
 use ApplicationPopupMenuItem;
+use Combodo\iTop\Application\UI\Base\Component\Button\Button;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonJS;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonSeparator;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonURL;
 use JSPopupMenuItem;
 use SeparatorPopupMenuItem;
 use URLPopupMenuItem;
@@ -84,6 +88,8 @@ class PopoverMenuItemFactory
 			'label' => $aActionData['label'],
 			'icon_class' => isset($aActionData['icon_class']) ? $aActionData['icon_class'] : '',
 			'tooltip' => isset($aActionData['tooltip']) ? $aActionData['tooltip'] : '',
+			'data_attributes' => isset($aActionData['data_attributes']) && is_array($aActionData['data_attributes']) ? $aActionData['data_attributes'] : [],
+			'aria_attributes' => isset($aActionData['aria_attributes']) && is_array($aActionData['aria_attributes']) ? $aActionData['aria_attributes'] : [],
 		];
 
 		// Avoid meaningless tooltips which are identical to the label
@@ -124,10 +130,64 @@ class PopoverMenuItemFactory
 		if (!empty($aRefactoredItem['tooltip'])) {
 			$oPopoverMenuItem->SetTooltip($aRefactoredItem['tooltip']);
 		}
+		if (!empty($aRefactoredItem['data_attributes'])) {
+			$oPopoverMenuItem->SetDataAttributes($aRefactoredItem['data_attributes']);
+		}
+		if (!empty($aRefactoredItem['aria_attributes'])) {
+			$oPopoverMenuItem->SetAriaAttributes($aRefactoredItem['aria_attributes']);
+		}
 
 		return $oPopoverMenuItem;
 	}
 
+	public static function MakeApplicationPopupMenuItemFromButton(Button|ButtonSeparator $oButton, string $sUid): PopoverMenuItem|SeparatorPopupMenuItem
+	{
+		$sLabel = '';
+		if ($oButton instanceof Button) {
+			$sLabel = $oButton->GetLabel();
+			if ($sLabel === '' && $oButton->GetTooltip() !== '') {
+				// Fallback for icon-only buttons: show the tooltip text in the dropdown item.
+				$sLabel = $oButton->GetTooltip();
+			}
+		}
+
+		if ($oButton instanceof ButtonSeparator) {
+			$oPopoverMenuItem = PopoverMenuItemFactory::MakeSeparator();
+		} elseif ($oButton instanceof ButtonURL) {
+			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+				new URLPopupMenuItem($sUid, $sLabel, $oButton->GetURL(), $oButton->GetTarget())
+			);
+		} elseif ($oButton instanceof ButtonJS) {
+			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+				new JSPopupMenuItem($sUid, $sLabel, $oButton->GetOnClickJsCode())
+			);
+		} elseif ($oButton->GetOnClickJsCode() !== '') {
+			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+				new JSPopupMenuItem($sUid, $sLabel, $oButton->GetOnClickJsCode())
+			);
+		} else {
+			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+				new URLPopupMenuItem($sUid, $sLabel, '#')
+			);
+		}
+
+		if ($oButton instanceof Button) {
+			if ($oButton->GetIconClass() !== '') {
+				$oPopoverMenuItem->SetIconClass($oButton->GetIconClass());
+			}
+			if ($oButton->GetTooltip() !== '' && $oButton->GetTooltip() !== $sLabel) {
+				$oPopoverMenuItem->SetTooltip($oButton->GetTooltip());
+			}
+			if ($oButton->HasDataAttributes()) {
+				$oPopoverMenuItem->SetDataAttributes($oButton->GetDataAttributes());
+			}
+			if ($oButton->HasAriaAttributes()) {
+				$oPopoverMenuItem->SetAriaAttributes($oButton->GetAriaAttributes());
+			}
+		}
+
+		return $oPopoverMenuItem;
+	}
 	/**
 	 * Make a separator item for the popover menu
 	 *

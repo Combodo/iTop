@@ -162,7 +162,7 @@ $(function()
 			//
 			var oDashlet = $('<div class="dashlet" id="dashlet_' + sFinalDashletId + '"/>');
 			oDashlet.appendTo(options.container);
-			var oDashletProperties = $('<div class="dashlet_properties" id="dashlet_properties_' + sFinalDashletId + '"/>');
+			var oDashletProperties = $('<div class="dashlet_properties" id="dashlet_properties_' + sFinalDashletId + '" data-role="ibo-dashlet-properties" data-dashlet-class="'+options.dashlet_class+'"/>');
 			oDashletProperties.appendTo($('#dashlet_properties'));
 
 			// 2) Ajax call to fill the divs with default values

@@ -60,3 +60,8 @@ $ibo-caselog-entry-form--lock-message--margin-left: 1rem !default;
 .ibo-caselog-entry-form--action-buttons--main-actions > .ibo-popover-menu {
   z-index: 1;
 }
+
+.ibo-caselog-entry-form--action-buttons--extra-actions{
+  overflow: hidden;
+  flex-grow: 1;
+}

@@ -26,6 +26,13 @@
         {% if oUIBlock.HasDescription() %}
             <span class="ibo-has-description" data-tooltip-content="{{ oUIBlock.GetDescription() }}" data-tooltip-max-width="600px" ></span>
         {% endif %}
+        {% if oUIBlock.HasActions() %}
+            <span class="ibo-field--actions">
+            {% for oAction in oUIBlock.GetActions() %}
+                {{ render_block(oAction, {aPage: aPage}) }}
+            {% endfor %}
+            </span>
+        {% endif %}
         {% if oUIBlock.GetLayout() == constant("Combodo\\iTop\\Application\\UI\\Base\\Component\\Field\\Field::ENUM_FIELD_LAYOUT_LARGE") %}
             {% if oUIBlock.GetComments() %}
                 <div class="ibo-field--comments">{{ oUIBlock.GetComments()|raw }}</div>
@@ -33,7 +40,10 @@
         {% endif %}
     </div>
     <div class="ibo-field--value" {% if oUIBlock.GetValueId() %}id="{{ oUIBlock.GetValueId() }}"{% endif %}>
-        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+        {% if oUIBlock.HasValue() %}
+            {{ render_block(oUIBlock.GetValue(), {aPage: aPage}) }}
+        {% endif %}
+        {% for oSubBlock in oUIBlock.GetAdditionalSubBlocks() %}
             {{ render_block(oSubBlock, {aPage: aPage}) }}
         {% endfor %}
     </div>

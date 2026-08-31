@@ -12,4 +12,5 @@
  */
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Unknown values~~',
+	'UI:Component:Field:GroupedActions:Tooltip' => 'More actions~~',
 ]);

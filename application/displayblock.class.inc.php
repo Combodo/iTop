@@ -2292,6 +2292,17 @@ class MenuBlock extends DisplayBlock
 				}
 				// ResourceId should not be sanitized
 				$oActionButton->AddDataAttribute('resource-id', $sActionId);
+				if (isset($aAction['data_attributes']) && is_array($aAction['data_attributes'])) {
+					foreach ($aAction['data_attributes'] as $sName => $sValue) {
+						$sDataAttributeName = $sName;
+						$oActionButton->AddDataAttribute($sDataAttributeName, (string) $sValue);
+					}
+				}
+				if (isset($aAction['aria_attributes']) && is_array($aAction['aria_attributes'])) {
+					foreach ($aAction['aria_attributes'] as $sName => $sValue) {
+						$oActionButton->AddAriaAttribute((string) $sName, (string) $sValue);
+					}
+				}
 				$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
 				if (empty($sLabel)) {
 					if (empty($aAction['tooltip'])) {

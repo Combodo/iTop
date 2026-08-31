@@ -220,10 +220,19 @@ class DesignerForm
 					$sValidationFields = '</td><td class="prop_icon prop_apply ibo-prop--apply" >'.$sValidation.'</td><td  class="prop_icon prop_cancel ibo-prop--cancel"><span><div class="ibo-button ibo-is-alternative ibo-is-neutral" data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revert').'"><i class="fas fa-undo"></i></div></span></td>'
 						.$this->EndRow();
 
+					$aPropertyFieldData = [
+						'code' => $oField->GetCode(),
+						'type' => $oField->GetInputType(),
+						'label' => $aRow['label'],
+						'raw-value' => $oField->GetRawValue(),
+					];
 					if (is_null($aRow['label'])) {
-						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_value" colspan="2">'.$aRow['value'];
+						$sReturn .= $this->StartRow($sFieldId, $aPropertyFieldData).
+							'<td class="prop_value" data-role="ibo-property-field-value" colspan="2">'.$aRow['value'];
 					} else {
-						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_label">'.$aRow['label'].'</td><td class="prop_value">'.$aRow['value'];
+						$sReturn .= $this->StartRow($sFieldId, $aPropertyFieldData).
+							'<td class="prop_label" data-role="ibo-property-field-label">'.$aRow['label'].
+							'</td><td class="prop_value" data-role="ibo-property-field-value">'.$aRow['value'];
 					}
 					if (!($oField instanceof DesignerFormSelectorField) && !($oField instanceof DesignerMultipleSubFormField)) {
 						$sReturn .= $sValidationFields;
@@ -294,12 +303,21 @@ EOF
 		}
 	}
 
-	public function StartRow($sFieldId = null)
+	public function StartRow($sFieldId = null, $aPropertyFieldData = [])
 	{
-		if ($sFieldId != null) {
-			return '<tr id="row_'.$sFieldId.'" data-path="'.$this->GetHierarchyPath().'" data-selector="'.$this->GetHierarchyParent().'">';
+		$sPropertyFieldAttributes = '';
+		foreach ($aPropertyFieldData as $sAttribute => $value) {
+			if (is_array($value)) {
+				$value = json_encode($value);
+			} elseif (is_null($value)) {
+				$value = '';
+			}
+			$sPropertyFieldAttributes .= ' data-property-field-'.$sAttribute.'="'.utils::EscapeHtml((string)$value).'"';
 		}
-		return '<tr data-path="'.$this->GetHierarchyPath().'" data-selector="'.$this->GetHierarchyParent().'">';
+		if ($sFieldId != null) {
+			return '<tr id="row_'.$sFieldId.'" data-path="'.$this->GetHierarchyPath().'" data-selector="'.$this->GetHierarchyParent().'"'.$sPropertyFieldAttributes.'>';
+		}
+		return '<tr data-path="'.$this->GetHierarchyPath().'" data-selector="'.$this->GetHierarchyParent().'"'.$sPropertyFieldAttributes.'>';
 	}
 
 	public function EndRow()
@@ -677,6 +695,14 @@ class DesignerFormField
 	public function GetCode()
 	{
 		return $this->sCode;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function GetRawValue()
+	{
+		return $this->defaultValue;
 	}
 
 	/**
@@ -1627,6 +1653,11 @@ class DesignerFormSelectorField extends DesignerFormField
 	public function GetWidgetClass()
 	{
 		return 'selector_property_field';
+	}
+
+	public function GetRawValue()
+	{
+		return $this->defaultRealValue;
 	}
 
 	public function AddSubForm($oSubForm, $sLabel, $sValue)

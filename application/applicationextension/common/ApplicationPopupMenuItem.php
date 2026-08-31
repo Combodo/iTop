@@ -1,5 +1,9 @@
 <?php
 
+use Combodo\iTop\Application\UI\Base\Common\Metadata\AriaAttributes;
+use Combodo\iTop\Application\UI\Base\Common\Metadata\DataAttributes;
+use Combodo\iTop\Application\UI\Base\Common\Metadata\Grouping;
+
 /**
  * Base class for the various types of custom menus
  *
@@ -7,7 +11,7 @@
  * @package     UIExtensibilityAPI
  * @since 2.0
  */
-abstract class ApplicationPopupMenuItem
+abstract class ApplicationPopupMenuItem implements iGroupingProvider, iDataAttributesProvider, iAriaAttributesProvider
 {
 	/** @ignore */
 	protected $sUID;
@@ -19,6 +23,12 @@ abstract class ApplicationPopupMenuItem
 	protected $sIconClass;
 	/** @ignore */
 	protected $aCssClasses;
+	/** @since 3.3.0 */
+	protected ?AriaAttributes $oAriaAttributes = null;
+	/** @since 3.3.0 */
+	protected ?DataAttributes $oDataAttributes = null;
+	/** @since 3.3.0 */
+	protected ?Grouping $oGrouping = null;
 
 	/**
 	 * Constructor
@@ -56,6 +66,17 @@ abstract class ApplicationPopupMenuItem
 	public function GetLabel()
 	{
 		return $this->sLabel;
+	}
+
+	/**
+	 * @param string $sLabel
+	 *
+	 * @api
+	 * @since 3.3.0
+	 */
+	public function SetLabel(string $sLabel): void
+	{
+		$this->sLabel = $sLabel;
 	}
 
 	/**
@@ -141,9 +162,76 @@ abstract class ApplicationPopupMenuItem
 	 */
 	abstract public function GetMenuItem();
 
+	/**
+	 * Get additional data, child classes can use this without having to worry about this class interfaces
+	 * @return array<string, mixed>
+	 * @since 3.3.0
+	 */
+	protected function GetMenuItemAdditionalData(): array
+	{
+		$aAdditionalData = [];
+
+		$aDataAttributes = $this->GetDataAttributes()->GetAttributes();
+		if (!empty($aDataAttributes)) {
+			$aAdditionalData['data_attributes'] = $aDataAttributes;
+		}
+
+		$aAriaAttributes = $this->GetAriaAttributes()->GetAttributes();
+		if (!empty($aAriaAttributes)) {
+			$aAdditionalData['aria_attributes'] = $aAriaAttributes;
+		}
+
+		$oGrouping = $this->GetGrouping();
+		if ($oGrouping !== null) {
+			$aAdditionalData['grouping_uid'] = $oGrouping->GetUID();
+		}
+
+		return $aAdditionalData;
+	}
+
 	/** @ignore */
 	public function GetLinkedScripts()
 	{
 		return [];
+	}
+
+	/**
+	 * @api
+	 * @since 3.3.0
+	 */
+	public function GetAriaAttributes(): AriaAttributes
+	{
+		return $this->oAriaAttributes ??= new AriaAttributes();
+	}
+
+	/**
+	 * @api
+	 * @since 3.3.0
+	 */
+	public function GetDataAttributes(): DataAttributes
+	{
+		return $this->oDataAttributes ??= new DataAttributes();
+	}
+
+	/**
+	 * @api
+	 * @since 3.3.0
+	 */
+	public function GetGrouping(): ?Grouping
+	{
+		return $this->oGrouping;
+	}
+
+	/**
+	 * @param Grouping|null $oGrouping
+	 * @return static
+	 * @api
+	 * @since 3.3.0
+	 */
+	public function SetGrouping(?Grouping $oGrouping): static
+	{
+		$this->oGrouping = $oGrouping;
+
+		return $this;
 	}
 }
