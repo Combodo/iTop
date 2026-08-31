@@ -42,8 +42,9 @@ class ButtonBarUIBlockFactory extends AbstractUIBlockFactory
 	 * Build a button bar from a list of items.
 	 *
 	 * Each item can be:
-	 * - an iUIBlock instance (label defaults to block id)
-	 * - an array ['block' => iUIBlock, 'label' => '...']
+	 * - Button
+	 * - ButtonSeparator
+	 * (ButtonGroup are not supported in this factory)
 	 *
 	 * @param array $aItems
 	 * @param string|null $sMoreButtonTooltipText
@@ -121,10 +122,12 @@ class ButtonBarUIBlockFactory extends AbstractUIBlockFactory
 			->SetOverflowCount($iOverflowCount)
 			->SetOverflowStartAfterButtonId($sOverflowStartAfterButtonId);
 
-		foreach ($aItems as $oItem) {
-			if ($oItem instanceof Button || $oItem instanceof ButtonSeparator) {
-				$oButtonBar->AddButton($oItem);
+		foreach ($aItems as $iIndex => $oItem) {
+			if (!($oItem instanceof Button) && !($oItem instanceof ButtonSeparator)) {
+				throw new \InvalidArgumentException(sprintf('Button bar items must be a Button or ButtonSeparator, "%s" given at index %d', is_object($oItem) ? get_class($oItem) : gettype($oItem), $iIndex));
 			}
+
+			$oButtonBar->AddButton($oItem);
 		}
 
 		return $oButtonBar;
