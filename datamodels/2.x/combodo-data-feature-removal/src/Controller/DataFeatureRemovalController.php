@@ -24,6 +24,7 @@ use ContextTag;
 use CoreException;
 use Dict;
 use Exception;
+use iTopExtension;
 use MetaModel;
 use MFCompiler;
 use RunTimeEnvironment;
@@ -464,13 +465,14 @@ class DataFeatureRemovalController extends Controller
 			'extensions_not_uninstallable' => [],
 		];
 		foreach ($aAvailableExtensions as $sCode => &$aExtensionData) {
-			if (!isset($aSelectedExtensionsFromUI[$sCode])) {
+			$sCodeFromUI =  $sCode !== '' ? $sCode : iTopExtension::CODE_NO_CODE;
+			if (!isset($aSelectedExtensionsFromUI[$sCodeFromUI])) {
 				continue;
 			}
 
-			if ($aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCode] !== 'on') {
+			if ($aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCodeFromUI] !== 'on') {
 				$aExtensionData['extra_flags']['selected'] = false;
-				$sLabel = $aAvailableExtensions[$sCode]['label'];
+				$sLabel = $aExtensionData['label'];
 				$this->aExtensionsToCheck['to_be_removed'][$sCode] = $sLabel;
 				if (! $this->bForcedUninstallation && $aExtensionData['extra_flags']['uninstallable']) {
 					$this->bForcedUninstallation = true;
@@ -478,9 +480,9 @@ class DataFeatureRemovalController extends Controller
 				if (false === $aExtensionData['extra_flags']['uninstallable'] || true === $aExtensionData['extra_flags']['remote']) {
 					$this->aExtensionsToCheck['extensions_not_uninstallable'][] = $sCode;
 				}
-			} elseif (!$aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCode] === 'on') {
+			} elseif (!$aExtensionData['installed'] && $aSelectedExtensionsFromUI[$sCodeFromUI] === 'on') {
 				$aExtensionData['extra_flags']['selected'] = true;
-				$sLabel = $aAvailableExtensions[$sCode]['label'];
+				$sLabel = $aExtensionData['label'];
 				$this->aExtensionsToCheck['to_be_installed'][$sCode] = $sLabel;
 			}
 		}

@@ -9,6 +9,7 @@ use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Dict;
+use iTopExtension;
 use JSButtonItem;
 
 class ExtensionDetails extends UIContentBlock
@@ -179,7 +180,8 @@ class ExtensionDetails extends UIContentBlock
 
 	protected function InitializeToggler()
 	{
-		$sName = 'aSelectedExtensions['.$this->GetCode().']';
+		$sCode = $this->GetCode() !== '' ? $this->GetCode() : iTopExtension::CODE_NO_CODE;
+		$sName = 'aSelectedExtensions['.$sCode.']';
 		$this->oToggler = new Toggler();
 		$this->oToggler->SetName($sName);
 		$this->oToggler->SetTooltip(Dict::Format('UI:Layout:ExtensionsDetails:TogglerTooltip', $this->GetLabel()));
