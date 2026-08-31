@@ -34,4 +34,3 @@ class ButtonSeparator extends UIBlock
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/button/separator/layout';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = null;
 }
-
