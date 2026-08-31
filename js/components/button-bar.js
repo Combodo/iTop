@@ -197,6 +197,7 @@ class ButtonBar extends HTMLElement {
 			return;
 		}
 
+		this._extra.hidden = false;
 		const bHasHiddenItems = this._layoutByMode();
 		this._extra.hidden = !bHasHiddenItems;
 		if (!bHasHiddenItems) {
