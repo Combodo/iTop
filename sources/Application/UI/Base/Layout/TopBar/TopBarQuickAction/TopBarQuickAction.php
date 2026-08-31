@@ -75,8 +75,10 @@ abstract class TopBarQuickAction extends UIBlock
 	public function GetAriaAttributes(): array
 	{
 		$aDefaultValues = [];
-		// Default value for aria-label is the tooltip
-		if (utils::IsNotNullOrEmptyString($this->sTooltip)) {
+		// Keep the label as the default accessible name, falling back to the tooltip
+		if (utils::IsNotNullOrEmptyString($this->sLabel)) {
+			$aDefaultValues['label'] = $this->sLabel;
+		} elseif (utils::IsNotNullOrEmptyString($this->sTooltip)) {
 			$aDefaultValues['label'] = $this->sTooltip;
 		}
 
