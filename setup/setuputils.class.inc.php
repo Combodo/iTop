@@ -1660,7 +1660,8 @@ JS
 		if (is_dir($oWizard->GetParameter('copy_extensions_from'))) {
 			$aDirsToScan[] = $oWizard->GetParameter('copy_extensions_from');
 		}
-		$sExtraDir = utils::GetDataPath().$oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV).'-modules/';
+		$sRemoteExtensionsEnv = $oWizard->GetParameter('remote_env', $oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV));
+		$sExtraDir = utils::GetDataPath().$sRemoteExtensionsEnv.'-modules/';
 		if (is_dir($sExtraDir)) {
 			$aDirsToScan[] = $sExtraDir;
 		}
