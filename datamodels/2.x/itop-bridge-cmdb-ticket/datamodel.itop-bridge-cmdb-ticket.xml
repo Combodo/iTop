@@ -155,6 +155,28 @@
         </field>
       </fields>
     </class>
+    <class id="UserRequest" _delta="if_exists">
+      <lifecycle>
+        <states>
+          <state id="closed">
+          <flags>
+            <attribute id="functionalcis_list" _delta="define">
+              <read_only/>
+            </attribute>
+          </flags>
+          </state>
+        </states>
+      </lifecycle>
+      <presentation>
+        <details>
+          <items>
+            <item id="functionalcis_list" _delta="define">
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
   </classes>
   <menus>
   </menus>
