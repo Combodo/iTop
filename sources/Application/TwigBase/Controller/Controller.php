@@ -650,6 +650,7 @@ abstract class Controller extends AbstractController
 		foreach ($aFiles as $sFile) {
 			$oArchive->addFile($sFile, basename($sFile));
 		}
+		$sFilename = $oArchive->filename;
 		$oArchive->close();
 
 		if ($bUnlinkFiles) {
@@ -658,7 +659,7 @@ abstract class Controller extends AbstractController
 			}
 		}
 
-		$this->SendFileContent($oArchive->filename, $sDownloadArchiveName.'.zip', true, true);
+		$this->SendFileContent($sFilename, $sDownloadArchiveName.'.zip', true, true);
 	}
 
 	final protected function SendFileContent($sFilePath, $sDownloadArchiveName = null, $bFileTransfer = true, $bRemoveFile = false, $aHeaders = []): void
