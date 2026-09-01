@@ -1254,9 +1254,6 @@
               <attribute id="public_log">
                 <read_only/>
               </attribute>
-              <attribute id="functionalcis_list">
-                <read_only/>
-              </attribute>
               <attribute id="contacts_list">
                 <read_only/>
               </attribute>
@@ -1538,9 +1535,6 @@
       <presentation>
         <details>
           <items>
-            <item id="functionalcis_list">
-              <rank>10</rank>
-            </item>
             <item id="contacts_list">
               <rank>20</rank>
             </item>
