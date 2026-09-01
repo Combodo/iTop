@@ -6866,10 +6866,24 @@ abstract class MetaModel
 		require_once(APPROOT.'/core/dict.class.inc.php');
 		Dict::ResetCache($sAppIdentity);
 
+		$iApcDeleteFailureCount = 0;
 		if (function_exists('apc_delete')) {
 			foreach (self::GetCacheEntries($sEnvironmentId) as $sKey => $aAPCInfo) {
 				$sAPCKey = $aAPCInfo['info'];
-				apc_delete($sAPCKey);
+				if (!apc_delete($sAPCKey)) {
+					$iApcDeleteFailureCount++;
+				}
+			}
+		}
+
+		if ($iApcDeleteFailureCount > 0) {
+			SetupLog::Warning("apc_delete failed for $iApcDeleteFailureCount entries for env $sEnvironment");
+		}
+
+		if (function_exists('apc_clear_cache')) {
+			// old style APC
+			if (!apc_clear_cache()) {
+				SetupLog::Warning("apc_clear_cache failed for env $sEnvironment");
 			}
 		}
 
@@ -6879,7 +6893,9 @@ abstract class MetaModel
 		// Reset the opcache since otherwise the PHP "model" files may still be cached !!
 		if (function_exists('opcache_reset')) {
 			// Zend opcode cache
-			opcache_reset();
+			if (!opcache_reset()) {
+				SetupLog::Warning("opcache_reset failed for env $sEnvironment");
+			}
 		}
 
 		require_once(APPROOT.'setup/setuputils.class.inc.php');
