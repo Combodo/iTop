@@ -526,7 +526,16 @@ class iTopExtensionsMap
 	public function GetAllExtensionsWithPreviouslyInstalled(): array
 	{
 		//Mind the order, local extensions data must overwrite installed extensions data since installed extensions does not have the associated modules.
-		return array_merge($this->aInstalledExtensions ?? [], $this->aExtensions);
+		$aResult = [];
+		foreach ($this->aInstalledExtensions ?? [] as $sKey => $oInstalledExtension) {
+			/** @var \iTopExtension $oInstalledExtension */
+			$aResult[$oInstalledExtension->sSource.'/'.$sKey] = $oInstalledExtension;
+		}
+		foreach ($this->aExtensions as $sKey => $oExtension) {
+			/** @var \iTopExtension $oExtension */
+			$aResult[$oExtension->sSource.'/'.$sKey] = $oExtension;
+		}
+		return $aResult;
 	}
 
 	/**
