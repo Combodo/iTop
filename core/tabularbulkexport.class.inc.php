@@ -373,6 +373,11 @@ EOF
 			}
 		}
 
+		if (count($aFields) === 0) {
+			IssueLog::Error("User is not allowed to see any field for exported OQL", null, ['search' => $this->oSearch->$this->oSearch->serialize()]);
+			throw new BulkExportMissingParameterException("fields");
+		}
+
 		return implode(',', $aFields);
 	}
 
