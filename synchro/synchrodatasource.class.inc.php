@@ -2930,7 +2930,10 @@ class SynchroReplica extends DBObject implements iDisplay
 				if ($bCanDisplayDestObjSections) {
 					$oPage->add('<fieldset class="ibo-fieldset">');
 					$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::Format('Core:SynchroReplica:TargetObject', $oDestObj->GetHyperlink()).'</legend>');
-					$oDestObj->DisplayBareProperties($oPage, false, $sPrefix, $aExtraParams);
+
+					if (method_exists(get_class($oDestObj), "DisplayBareProperties")) {
+						$oDestObj->DisplayBareProperties($oPage, false, $sPrefix, $aExtraParams);
+					}
 					$oPage->add('<fieldset>');
 				}
 			} else {
