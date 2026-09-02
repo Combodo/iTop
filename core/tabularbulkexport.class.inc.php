@@ -325,7 +325,7 @@ EOF
 		$sQueryId = utils::ReadParam('query', null, true);
 		$sFields = utils::ReadParam('fields', null, true, 'raw_data');
 		if ((($sFields === null) || ($sFields === '')) && ($sQueryId === null)) {
-			throw new BulkExportMissingParameterException('fields');
+			$sFields =  $this->GetFieldsFromQuery();
 		} else {
 			if (($sQueryId !== null) && ($sQueryId !== null)) {
 				$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', ['query_id' => $sQueryId]);
@@ -346,6 +346,34 @@ EOF
 		}
 
 		$this->SetFields($sFields);
+	}
+
+	public function GetFieldsFromQuery(): string
+	{
+		if (is_null($this->oSearch)){
+			throw new BulkExportMissingParameterException("fields");
+		}
+
+		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
+		$aAuthorizedClasses = [];
+		$aFields = [];
+		foreach ($aSelectedClasses as $sAlias => $sClassName) {
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ) == UR_ALLOWED_YES) {
+				$aAuthorizedClasses[$sAlias] = $sClassName;
+			}
+		}
+		foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
+			foreach (MetaModel::GetZListItems($sClassName, 'list') as $sAttCode) {
+				//$oAttDef = Metamodel::GetAttributeDef($sClassName, $sAttCode);
+				if (utils::IsNullOrEmptyString($sAlias)){
+					$aFields[]= "$sAttCode";
+				} else {
+					$aFields[]= "$sAlias.$sAttCode";
+				}
+			}
+		}
+
+		return implode(',', $aFields);
 	}
 
 	public function SetFields($sFields)
