@@ -359,6 +359,40 @@ XML;
 		$oExtensionMap->CheckExtensionsValidity();
 	}
 
+	public function testExtensionsFoundInDBShouldBeMarkedAsInstalled()
+	{
+		$oExtensionsMap = iTopExtensionsMapFake::createFromArray([
+			'itop-installed' => [
+				'installed' => false,
+			],
+			'itop-not-installed' => [
+				'installed' => false,
+			]
+		]);
+		$oExtensionsMap->AddInstalledExtensionInfo('itop-installed');
+		$oExtensionsMap->LoadInstalledExtensionsFromDatabase(new \Config());
+
+		$this->assertTrue($oExtensionsMap->GetFromExtensionCode('itop-installed')->bInstalled);
+		$this->assertFalse($oExtensionsMap->GetFromExtensionCode('itop-not-installed')->bInstalled);
+	}
+
+	public function testExtensionSourceMismatchShouldBeFlaggedAsRemoved()
+	{
+		$sExtensionCode = 'itop-problem-mgmt';
+		$oExtensionsMap = iTopExtensionsMapFake::createFromArray([
+			$sExtensionCode => [
+				'installed' => false,
+				'source' => iTopExtension::SOURCE_WIZARD,
+			]
+		]);
+		$oExtensionsMap->AddInstalledExtensionInfo($sExtensionCode, '6.4.0', iTopExtension::SOURCE_MANUAL);
+
+		$oExtensionsMap->LoadInstalledExtensionsFromDatabase(new \Config());
+
+		$oInstalledExtension = $oExtensionsMap->aInstalledExtensions[$sExtensionCode.'/6.4.0'];
+		$this->assertTrue($oInstalledExtension->bRemovedFromDisk);
+	}
+
 	private function CreateFixtureContext(string $sEnvPrefix): array
 	{
 		$sEnvironment = str_replace('.', '-', uniqid($sEnvPrefix, true));
