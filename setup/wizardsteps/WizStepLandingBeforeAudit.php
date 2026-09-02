@@ -89,6 +89,7 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 					$sChoiceId = self::$SEP.$index;
 					$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents[$oLatestWizardState->GetState()], false, false);
 					if (!static::CanMoveForwardFromChoiceFlags($aFlags) || $aFlags['missing']) {
+						// If an extension is missing, its uninstallation will be forced. We need to show it to the user
 						// Pop the latest step from the stack, since we are going back to it
 						$this->oWizard->PopStep();
 
