@@ -350,7 +350,7 @@ EOF
 
 	public function GetFieldsFromQuery(): string
 	{
-		if (is_null($this->oSearch)){
+		if (is_null($this->oSearch)) {
 			throw new BulkExportMissingParameterException("fields");
 		}
 
@@ -365,10 +365,10 @@ EOF
 		foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
 			foreach (MetaModel::GetZListItems($sClassName, 'list') as $sAttCode) {
 				//$oAttDef = Metamodel::GetAttributeDef($sClassName, $sAttCode);
-				if (utils::IsNullOrEmptyString($sAlias)){
-					$aFields[]= "$sAttCode";
+				if (utils::IsNullOrEmptyString($sAlias)) {
+					$aFields[] = "$sAttCode";
 				} else {
-					$aFields[]= "$sAlias.$sAttCode";
+					$aFields[] = "$sAlias.$sAttCode";
 				}
 			}
 		}
