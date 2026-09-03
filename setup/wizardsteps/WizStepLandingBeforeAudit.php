@@ -82,13 +82,14 @@ class WizStepLandingBeforeAudit extends WizStepModulesChoice
 
 			$bForceUninstall = (bool)$this->oWizard->GetParameter('force-uninstall', false);
 			if ($bSkipWizard && !$bForceUninstall) {
+				$oLatestWizardState = $this->oWizard->GetLatestWizardStateFromStepClass(WizStepModulesChoice::class);
 				// Check if the current choices allow going to the data audit step
 				$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo();
 				foreach ($aOptions as $index => $aChoice) {
 					$sChoiceId = self::$SEP.$index;
-					$oLatestWizardState = $this->oWizard->GetLatestWizardStateFromStepClass(WizStepModulesChoice::class);
 					$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents[$oLatestWizardState->GetState()], false, false);
-					if (!static::CanMoveForwardFromChoiceFlags($aFlags)) {
+					if (!static::CanMoveForwardFromChoiceFlags($aFlags) || $aFlags['missing']) {
+						// If an extension is missing, its uninstallation will be forced. We need to show it to the user
 						// Pop the latest step from the stack, since we are going back to it
 						$this->oWizard->PopStep();
 

@@ -2,6 +2,10 @@
 
 class iTopExtensionsMapFake extends iTopExtensionsMap
 {
+	public $aInstalledExtensionsInfo = false;
+	public array $aInstalledExtensions;
+	public $aExtensions;
+
 	public function __construct($sFromEnvironment = 'production', $aExtraDirs = [])
 	{
 		$this->aExtensions = [];
@@ -32,5 +36,25 @@ class iTopExtensionsMapFake extends iTopExtensionsMap
 	public function AddExtension(iTopExtension $oNewExtension)
 	{
 		parent::AddExtension($oNewExtension);
+	}
+
+	protected function FetchExtensionInfoFromDatabase(Config $oConfig): array|false
+	{
+
+		return $this->aInstalledExtensionsInfo;
+	}
+
+	public function AddInstalledExtensionInfo(string $sCode, string $sVersion = '1.0.0', string $sSource = iTopExtension::SOURCE_MANUAL, string $sUninstallable = 'yes'): void
+	{
+		if ($this->aInstalledExtensionsInfo === false) {
+			$this->aInstalledExtensionsInfo = [];
+		}
+		$this->aInstalledExtensionsInfo[] = [
+			'code' => $sCode,
+			'label' => $sCode,
+			'version' => $sVersion,
+			'source' => $sSource,
+			'uninstallable' => $sUninstallable,
+		];
 	}
 }
