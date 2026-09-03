@@ -336,11 +336,11 @@ EOF
 						// No 'fields' parameter supplied, take the fields from the query phrasebook definition
 						$sFields = trim($oQuery->Get('fields'));
 						if ($sFields === '') {
-							throw new BulkExportMissingParameterException('fields');
+							$sFields =  $this->GetFieldsFromQuery();
 						}
 					}
 				} else {
-					throw BulkExportException('Invalid value for the parameter: query. There is no Query Phrasebook with id = '.$sQueryId, Dict::Format('Core:BulkExport:InvalidParameter_Query', $sQueryId));
+					throw new BulkExportException('Invalid value for the parameter: query. There is no Query Phrasebook with id = '.$sQueryId, Dict::Format('Core:BulkExport:InvalidParameter_Query', $sQueryId));
 				}
 			}
 		}
@@ -363,7 +363,7 @@ EOF
 			}
 		}
 		foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
-			foreach (MetaModel::GetZListItems($sClassName, 'list') as $sAttCode) {
+			foreach (MetaModel::GetZListItems($sClassName, 'details') as $sAttCode) {
 				//$oAttDef = Metamodel::GetAttributeDef($sClassName, $sAttCode);
 				if (utils::IsNullOrEmptyString($sAlias)) {
 					$aFields[] = "$sAttCode";
@@ -374,7 +374,7 @@ EOF
 		}
 
 		if (count($aFields) === 0) {
-			IssueLog::Error("User is not allowed to see any field for exported OQL", null, ['search' => $this->oSearch->$this->oSearch->serialize()]);
+			IssueLog::Error("User is not allowed to see any field for exported OQL");
 			throw new BulkExportMissingParameterException("fields");
 		}
 
