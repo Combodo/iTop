@@ -367,7 +367,7 @@ XML;
 			],
 			'itop-not-installed' => [
 				'installed' => false,
-			]
+			],
 		]);
 		$oExtensionsMap->AddInstalledExtensionInfo('itop-installed');
 		$oExtensionsMap->LoadInstalledExtensionsFromDatabase(new \Config());
@@ -383,7 +383,7 @@ XML;
 			$sExtensionCode => [
 				'installed' => false,
 				'source' => iTopExtension::SOURCE_WIZARD,
-			]
+			],
 		]);
 		$oExtensionsMap->AddInstalledExtensionInfo($sExtensionCode, '6.4.0', iTopExtension::SOURCE_MANUAL);
 
