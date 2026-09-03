@@ -325,7 +325,7 @@ EOF
 		$sQueryId = utils::ReadParam('query', null, true);
 		$sFields = utils::ReadParam('fields', null, true, 'raw_data');
 		if ((($sFields === null) || ($sFields === '')) && ($sQueryId === null)) {
-			throw new BulkExportMissingParameterException('fields');
+			$sFields =  $this->GetFieldsFromQuery();
 		} else {
 			if (($sQueryId !== null) && ($sQueryId !== null)) {
 				$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', ['query_id' => $sQueryId]);
@@ -336,16 +336,49 @@ EOF
 						// No 'fields' parameter supplied, take the fields from the query phrasebook definition
 						$sFields = trim($oQuery->Get('fields'));
 						if ($sFields === '') {
-							throw new BulkExportMissingParameterException('fields');
+							$sFields =  $this->GetFieldsFromQuery();
 						}
 					}
 				} else {
-					throw BulkExportException('Invalid value for the parameter: query. There is no Query Phrasebook with id = '.$sQueryId, Dict::Format('Core:BulkExport:InvalidParameter_Query', $sQueryId));
+					throw new BulkExportException('Invalid value for the parameter: query. There is no Query Phrasebook with id = '.$sQueryId, Dict::Format('Core:BulkExport:InvalidParameter_Query', $sQueryId));
 				}
 			}
 		}
 
 		$this->SetFields($sFields);
+	}
+
+	public function GetFieldsFromQuery(): string
+	{
+		if (is_null($this->oSearch)) {
+			throw new BulkExportMissingParameterException("fields");
+		}
+
+		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
+		$aAuthorizedClasses = [];
+		$aFields = [];
+		foreach ($aSelectedClasses as $sAlias => $sClassName) {
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ) == UR_ALLOWED_YES) {
+				$aAuthorizedClasses[$sAlias] = $sClassName;
+			}
+		}
+		foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
+			foreach (MetaModel::GetZListItems($sClassName, 'details') as $sAttCode) {
+				//$oAttDef = Metamodel::GetAttributeDef($sClassName, $sAttCode);
+				if (utils::IsNullOrEmptyString($sAlias)) {
+					$aFields[] = "$sAttCode";
+				} else {
+					$aFields[] = "$sAlias.$sAttCode";
+				}
+			}
+		}
+
+		if (count($aFields) === 0) {
+			IssueLog::Error("User is not allowed to see any field for exported OQL");
+			throw new BulkExportMissingParameterException("fields");
+		}
+
+		return implode(',', $aFields);
 	}
 
 	public function SetFields($sFields)
