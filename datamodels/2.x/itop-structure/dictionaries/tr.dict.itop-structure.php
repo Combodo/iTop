@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
@@ -14,13 +13,13 @@
  */
 Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Organization' => 'Kurum',
-	'Class:Organization+' => '',
+	'Class:Organization+' => 'It can be a customer, a provider, your company or departments within your company. Organizations can be structured hierarchically. Users can be limited to objects belonging to some organizations only.~~',
 	'Class:Organization/Attribute:name' => 'Adı',
 	'Class:Organization/Attribute:name+' => 'Kullanılan adı',
 	'Class:Organization/Attribute:code' => 'Kodu',
 	'Class:Organization/Attribute:code+' => 'Kurumu kodu (Siret, DUNS,...)',
 	'Class:Organization/Attribute:status' => 'Durumu',
-	'Class:Organization/Attribute:status+' => '',
+	'Class:Organization/Attribute:status+' => '~~',
 	'Class:Organization/Attribute:status/Value:active' => 'Etkin',
 	'Class:Organization/Attribute:status/Value:active+' => 'Etkin',
 	'Class:Organization/Attribute:status/Value:inactive' => 'Etkin değil',
@@ -39,65 +38,51 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Users within this organization~~',
-]);
-
-//
-// Class: Location
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Location' => 'Yerleşke',
 	'Class:Location+' => 'Yerleşke : Bölge, Ülke, Şehir, Yerleşke, Bina, Kat, Oda, kabin,...',
 	'Class:Location/Attribute:name' => 'Adı',
-	'Class:Location/Attribute:name+' => '',
+	'Class:Location/Attribute:name+' => '~~',
 	'Class:Location/Attribute:status' => 'Durumu',
-	'Class:Location/Attribute:status+' => '',
+	'Class:Location/Attribute:status+' => '~~',
 	'Class:Location/Attribute:status/Value:active' => 'Etkin',
 	'Class:Location/Attribute:status/Value:active+' => 'Etkin',
 	'Class:Location/Attribute:status/Value:inactive' => 'Etkin değil',
 	'Class:Location/Attribute:status/Value:inactive+' => 'Etkin değil',
 	'Class:Location/Attribute:org_id' => 'Kurumun sahibi',
-	'Class:Location/Attribute:org_id+' => '',
+	'Class:Location/Attribute:org_id+' => '~~',
 	'Class:Location/Attribute:org_name' => 'Kurumun sahibinin adı',
-	'Class:Location/Attribute:org_name+' => '',
+	'Class:Location/Attribute:org_name+' => '~~',
 	'Class:Location/Attribute:address' => 'Adres',
 	'Class:Location/Attribute:address+' => 'Posta adresi',
 	'Class:Location/Attribute:postal_code' => 'Posta kodu',
 	'Class:Location/Attribute:postal_code+' => 'Posta kodu',
 	'Class:Location/Attribute:city' => 'Şehir',
-	'Class:Location/Attribute:city+' => '',
+	'Class:Location/Attribute:city+' => '~~',
 	'Class:Location/Attribute:country' => 'Ülke',
-	'Class:Location/Attribute:country+' => '',
+	'Class:Location/Attribute:country+' => '~~',
 	'Class:Location/Attribute:physicaldevice_list' => 'Cihazlar',
 	'Class:Location/Attribute:physicaldevice_list+' => 'Bu konumdaki tüm cihazlar',
 	'Class:Location/Attribute:person_list' => 'Kişiler',
 	'Class:Location/Attribute:person_list+' => 'Bu konumda bulunan tüm kişiler',
-]);
-
-//
-// Class: Contact
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Contact' => 'İrtibat',
-	'Class:Contact+' => '',
+	'Class:Contact+' => 'Abstract class. A Contact can be linked to Tickets and FunctionalCIs for different purposes, such as incident dispatching and notifications.~~',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => 'Adı',
-	'Class:Contact/Attribute:name+' => '',
+	'Class:Contact/Attribute:name+' => '~~',
 	'Class:Contact/Attribute:status' => 'Durumu',
-	'Class:Contact/Attribute:status+' => '',
+	'Class:Contact/Attribute:status+' => '~~',
 	'Class:Contact/Attribute:status/Value:active' => 'Etkin',
 	'Class:Contact/Attribute:status/Value:active+' => 'Etkin',
 	'Class:Contact/Attribute:status/Value:inactive' => 'Etkin değil',
 	'Class:Contact/Attribute:status/Value:inactive+' => 'Etkin değil',
 	'Class:Contact/Attribute:org_id' => 'Kurum',
-	'Class:Contact/Attribute:org_id+' => '',
+	'Class:Contact/Attribute:org_id+' => '~~',
 	'Class:Contact/Attribute:org_name' => 'Kurum',
-	'Class:Contact/Attribute:org_name+' => '',
+	'Class:Contact/Attribute:org_name+' => '~~',
 	'Class:Contact/Attribute:email' => 'E-posta',
-	'Class:Contact/Attribute:email+' => '',
+	'Class:Contact/Attribute:email+' => '~~',
 	'Class:Contact/Attribute:phone' => 'Telefon',
-	'Class:Contact/Attribute:phone+' => '',
+	'Class:Contact/Attribute:phone+' => '~~',
 	'Class:Contact/Attribute:notify' => 'Bildirim',
 	'Class:Contact/Attribute:notify+' => 'Flag which can be used by each notification~~',
 	'Class:Contact/Attribute:notify/Value:no' => 'hayır',
@@ -109,21 +94,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Contact/Attribute:cis_list' => 'Cls',
 	'Class:Contact/Attribute:cis_list+' => 'Bu kişiyle bağlantılı tüm yapılandırma öğeleri',
 	'Class:Contact/Attribute:finalclass' => 'Tip',
-	'Class:Contact/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: Person
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:Contact/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Person' => 'Kişi',
-	'Class:Person+' => '',
+	'Class:Person+' => 'A type of Contact used to describe physical persons. Persons can be grouped into Teams. Persons can be linked to other configuration items (eg. to describe who to contact in case of incident with an application).
+Other usage: the caller of a User request is a Person as well as the agent assigned to resolve it.~~',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => 'Soyad',
 	'Class:Person/Attribute:name+' => '~~',
 	'Class:Person/Attribute:first_name' => 'Adı',
-	'Class:Person/Attribute:first_name+' => '',
+	'Class:Person/Attribute:first_name+' => '~~',
 	'Class:Person/Attribute:employee_number' => 'Sicil numarası',
 	'Class:Person/Attribute:employee_number+' => '~~',
 	'Class:Person/Attribute:mobile_phone' => 'Cep telefonu',
@@ -140,6 +119,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Person/Attribute:team_list+' => 'Bu kişinin ait olduğu tüm ekipler',
 	'Class:Person/Attribute:tickets_list' => 'Çağrı kayıtları',
 	'Class:Person/Attribute:tickets_list+' => 'Bu kişinin oluşturduğu tüm çağrı kayıtları',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Create a %4$s for %2$s~~',
 	'Class:Person/Attribute:user_list' => 'Users~~',
 	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Yöneticinin kullandığı adı',
@@ -151,15 +131,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
 	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-]);
-
-//
-// Class: Team
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Team' => 'Ekip',
-	'Class:Team+' => '',
+	'Class:Team+' => 'A type of Contact. Often used to group Persons, but not only. Teams are expected to watch Tickets dispatched to them, and assign it to an agent, usually a member of that team.~~',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Üyeler',
 	'Class:Team/Attribute:persons_list+' => 'Bu ekibe ait tüm kişiler',
@@ -172,22 +145,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months~~',
 	'Class:Team/Attribute:tickets_list' => 'Çağrı Kayıtları',
 	'Class:Team/Attribute:tickets_list+' => 'Bu ekibe atanan tüm çağrı kayıtları',
-]);
-
-//
-// Class: Document
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Document' => 'Doküman',
-	'Class:Document+' => '',
+	'Class:Document+' => 'Abstract class. A document that can be shared across multiple objects, making it easy and quick to retrieve from all relevant locations.~~',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => 'Adı',
-	'Class:Document/Attribute:name+' => '',
+	'Class:Document/Attribute:name+' => '~~',
 	'Class:Document/Attribute:org_id' => 'Kurum',
 	'Class:Document/Attribute:org_id+' => '~~',
 	'Class:Document/Attribute:org_name' => 'Kurum Adı',
-	'Class:Document/Attribute:org_name+' => '',
+	'Class:Document/Attribute:org_name+' => '~~',
 	'Class:Document/Attribute:documenttype_id' => 'Belge Türü',
 	'Class:Document/Attribute:documenttype_id+' => '~~',
 	'Class:Document/Attribute:documenttype_name' => 'Belge türü adı',
@@ -195,92 +161,43 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Document/Attribute:version' => 'Sürüm',
 	'Class:Document/Attribute:version+' => '~~',
 	'Class:Document/Attribute:description' => 'Tanımlama',
-	'Class:Document/Attribute:description+' => '',
+	'Class:Document/Attribute:description+' => '~~',
 	'Class:Document/Attribute:status' => 'Durumu',
-	'Class:Document/Attribute:status+' => '',
+	'Class:Document/Attribute:status+' => '~~',
 	'Class:Document/Attribute:status/Value:draft' => 'Taslak',
-	'Class:Document/Attribute:status/Value:draft+' => '',
+	'Class:Document/Attribute:status/Value:draft+' => '~~',
 	'Class:Document/Attribute:status/Value:obsolete' => 'Geçersiz',
-	'Class:Document/Attribute:status/Value:obsolete+' => '',
+	'Class:Document/Attribute:status/Value:obsolete+' => '~~',
 	'Class:Document/Attribute:status/Value:published' => 'Yayınlanan',
-	'Class:Document/Attribute:status/Value:published+' => '',
+	'Class:Document/Attribute:status/Value:published+' => '~~',
 	'Class:Document/Attribute:cis_list' => 'CI\'lar',
 	'Class:Document/Attribute:cis_list+' => 'Bu belgeye bağlı tüm yapılandırma öğeleri',
 	'Class:Document/Attribute:finalclass' => 'Belge Türü',
 	'Class:Document/Attribute:finalclass+' => 'Name of the final class~~',
-]);
-
-//
-// Class: DocumentFile
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:DocumentFile' => 'Belge dosyası',
-	'Class:DocumentFile+' => '~~',
+	'Class:DocumentFile+' => 'It\'s a type of Document which includes an uploaded file (in any format: Word, PDF, Spreadsheet, etc.).~~',
 	'Class:DocumentFile/Attribute:file' => 'Dosya',
 	'Class:DocumentFile/Attribute:file+' => '~~',
-]);
-
-//
-// Class: DocumentNote
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:DocumentNote' => 'Belge Notu',
-	'Class:DocumentNote+' => '~~',
+	'Class:DocumentNote+' => 'Used to store a text document. HTML formatting is supported using the WYSIWYG editor. Search can be performed on its content.~~',
 	'Class:DocumentNote/Attribute:text' => 'Metin',
 	'Class:DocumentNote/Attribute:text+' => '~~',
-]);
-
-//
-// Class: DocumentWeb
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:DocumentWeb' => 'Belge Web',
-	'Class:DocumentWeb+' => '~~',
+	'Class:DocumentWeb+' => 'Hyperlinks to external applications or documents, acting as pointers to external resources. You cannot search in their content from '.ITOP_APPLICATION_SHORT.'~~',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '~~',
-]);
-
-//
-// Class: Typology
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Typology' => 'Tipoloji',
-	'Class:Typology+' => '~~',
+	'Class:Typology+' => 'Abstract class. ExternalKeyAttribute to a Typology subclass are used in place of an EnumAttribute, to have more dynamic values.~~',
 	'Class:Typology/Attribute:name' => 'İsim',
 	'Class:Typology/Attribute:name+' => '~~',
 	'Class:Typology/Attribute:finalclass' => 'Tip',
 	'Class:Typology/Attribute:finalclass+' => 'Name of the final class~~',
-]);
-
-//
-// Class: DocumentType
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:DocumentType' => 'Belge Türü',
-	'Class:DocumentType+' => '~~',
-]);
-
-//
-// Class: ContactType
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:DocumentType+' => 'Typology. A classification system used to organize and logically group documents~~',
 	'Class:ContactType' => 'İletişim Tipi',
-	'Class:ContactType+' => '~~',
-]);
-
-//
-// Class: lnkPersonToTeam
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:ContactType+' => 'Typology to organize your Contacts and group them logically for you.~~',
 	'Class:lnkPersonToTeam' => 'Bağlantılı Kişi / Ekip',
-	'Class:lnkPersonToTeam+' => '~~',
+	'Class:lnkPersonToTeam+' => 'This link indicates when a Person is a member of a Team.~~',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
 	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Ekip',
@@ -295,13 +212,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkPersonToTeam/Attribute:role_id+' => 'To select within a typology of possible roles~~',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Rol Adı',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '~~',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:DataAdministration' => 'Veri yönetimi',
 	'Menu:DataAdministration+' => 'Veri yönetimi',
 	'Menu:Catalogs' => 'Kataloglar',
@@ -339,20 +249,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:Typology+' => 'Tipoloji Yapılandırması',
 	'UI_WelcomeMenu_AllConfigItems' => 'Özet',
 	'Menu:ConfigManagement:Typology' => 'Tipoloji Yapılandırması',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Person:info' => 'Genel Bilgi',
 	'User:info' => 'Genel Bilgi',
 	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Bildirim',
-]);
-
-// Themes
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ]);

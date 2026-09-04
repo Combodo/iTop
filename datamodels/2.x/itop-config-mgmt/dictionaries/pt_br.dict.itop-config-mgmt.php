@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -22,88 +21,39 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Relation:impacts/LoadData' => 'Carregando dados',
 	'Relation:impacts/NoFilteredData' => 'Por favor, selecione os objetos na tag de visualização Gráfica',
 	'Relation:impacts/FilteredData' => 'Filtered data~~',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: lnkContactToFunctionalCI
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkContactToFunctionalCI' => 'Relação entre Contato / IC',
-	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI+' => 'Manages Contacts linked to Functional CIs. This can be a team responsible for the equipment, to assign related Tickets, or the person to whom an individual device such as a PC or phone is assigned, to manage the inventory.~~',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'ICs',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Nome do IC',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Contato',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Nome do contato',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
-]);
-
-//
-// Class: FunctionalCI
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '~~',
 	'Class:FunctionalCI' => 'Item de Configuração',
-	'Class:FunctionalCI+' => '',
+	'Class:FunctionalCI+' => 'Abstract class grouping most Configuration Items types used for CMDB.~~',
 	'Class:FunctionalCI/Attribute:name' => 'Nome',
-	'Class:FunctionalCI/Attribute:name+' => '',
+	'Class:FunctionalCI/Attribute:name+' => '~~',
 	'Class:FunctionalCI/Attribute:description' => 'Descrição',
-	'Class:FunctionalCI/Attribute:description+' => '',
+	'Class:FunctionalCI/Attribute:description+' => '~~',
 	'Class:FunctionalCI/Attribute:org_id' => 'Organização',
-	'Class:FunctionalCI/Attribute:org_id+' => '',
+	'Class:FunctionalCI/Attribute:org_id+' => '~~',
 	'Class:FunctionalCI/Attribute:organization_name' => 'Nome da organização',
-	'Class:FunctionalCI/Attribute:organization_name+' => '',
+	'Class:FunctionalCI/Attribute:organization_name+' => 'Common name~~',
 	'Class:FunctionalCI/Attribute:business_criticity' => 'Criticidade ao negócio',
-	'Class:FunctionalCI/Attribute:business_criticity+' => '',
+	'Class:FunctionalCI/Attribute:business_criticity+' => '~~',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:high' => 'Alta',
-	'Class:FunctionalCI/Attribute:business_criticity/Value:high+' => '',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:high+' => 'high~~',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:low' => 'Baixa',
-	'Class:FunctionalCI/Attribute:business_criticity/Value:low+' => '',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:low+' => 'low~~',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:medium' => 'Média',
-	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => '',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => 'medium~~',
 	'Class:FunctionalCI/Attribute:move2production' => 'Data de migração para produção',
-	'Class:FunctionalCI/Attribute:move2production+' => '',
+	'Class:FunctionalCI/Attribute:move2production+' => '~~',
+	'Class:FunctionalCI/Attribute:groups_list' => 'Groups~~',
+	'Class:FunctionalCI/Attribute:groups_list+' => 'Groups can be used as tags, to document environment, projects (migration, upgrade, security), etc…~~',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Contatos',
 	'Class:FunctionalCI/Attribute:contacts_list+' => 'Todos os Contatos associados à este Item de Configuração (IC)',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Documentos',
@@ -113,123 +63,69 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Softwares',
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'Todos os Softwares instalados neste Item de Configuração (IC)',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Tipo de IC',
-	'Class:FunctionalCI/Attribute:finalclass+' => '',
+	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Solicitações ativas',
 	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Active Tickets which are impacting this functional CI~~',
-]);
-
-//
-// Class: PhysicalDevice
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:PhysicalDevice' => 'Dispositivo físico',
 	'Class:PhysicalDevice+' => 'Lista de Dispositivos Físicos',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'Número serial',
-	'Class:PhysicalDevice/Attribute:serialnumber+' => '',
+	'Class:PhysicalDevice/Attribute:serialnumber+' => '~~',
 	'Class:PhysicalDevice/Attribute:location_id' => 'Localização',
-	'Class:PhysicalDevice/Attribute:location_id+' => '',
+	'Class:PhysicalDevice/Attribute:location_id+' => '~~',
 	'Class:PhysicalDevice/Attribute:location_name' => 'Nome da localização',
-	'Class:PhysicalDevice/Attribute:location_name+' => '',
+	'Class:PhysicalDevice/Attribute:location_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:status' => 'Status',
-	'Class:PhysicalDevice/Attribute:status+' => '',
+	'Class:PhysicalDevice/Attribute:status+' => '~~',
 	'Class:PhysicalDevice/Attribute:status/Value:implementation' => 'Em homologação',
-	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => '',
+	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => 'implementation~~',
 	'Class:PhysicalDevice/Attribute:status/Value:obsolete' => 'Obsoleto',
-	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => '',
+	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => 'obsolete~~',
 	'Class:PhysicalDevice/Attribute:status/Value:production' => 'Em produção',
-	'Class:PhysicalDevice/Attribute:status/Value:production+' => '',
+	'Class:PhysicalDevice/Attribute:status/Value:production+' => 'production~~',
 	'Class:PhysicalDevice/Attribute:status/Value:stock' => 'Suporte',
-	'Class:PhysicalDevice/Attribute:status/Value:stock+' => '',
+	'Class:PhysicalDevice/Attribute:status/Value:stock+' => 'stock~~',
 	'Class:PhysicalDevice/Attribute:brand_id' => 'Fabricante',
-	'Class:PhysicalDevice/Attribute:brand_id+' => '',
+	'Class:PhysicalDevice/Attribute:brand_id+' => '~~',
 	'Class:PhysicalDevice/Attribute:brand_name' => 'Nome do fabricante',
-	'Class:PhysicalDevice/Attribute:brand_name+' => '',
+	'Class:PhysicalDevice/Attribute:brand_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:model_id' => 'Modelo',
-	'Class:PhysicalDevice/Attribute:model_id+' => '',
+	'Class:PhysicalDevice/Attribute:model_id+' => '~~',
+	'Class:PhysicalDevice/Attribute:model_end_of_support' => 'Model end of support~~',
+	'Class:PhysicalDevice/Attribute:model_end_of_support+' => 'When the hardware model is no more supported by the manufacturer, if this information is documented on the Model.~~',
 	'Class:PhysicalDevice/Attribute:model_name' => 'Nome do modelo',
-	'Class:PhysicalDevice/Attribute:model_name+' => '',
+	'Class:PhysicalDevice/Attribute:model_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:asset_number' => 'Número do ativo',
-	'Class:PhysicalDevice/Attribute:asset_number+' => '',
+	'Class:PhysicalDevice/Attribute:asset_number+' => '~~',
 	'Class:PhysicalDevice/Attribute:purchase_date' => 'Data de compra',
-	'Class:PhysicalDevice/Attribute:purchase_date+' => '',
+	'Class:PhysicalDevice/Attribute:purchase_date+' => '~~',
 	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Fim da garantia',
-	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '',
-]);
-
-//
-// Class: Rack
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '~~',
 	'Class:Rack' => 'Rack',
-	'Class:Rack+' => '',
+	'Class:Rack+' => 'A physical cabinet for Datacenter Devices and Enclosures.~~',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Rack/Attribute:nb_u' => 'Unidades',
-	'Class:Rack/Attribute:nb_u+' => '',
+	'Class:Rack/Attribute:nb_u+' => '~~',
 	'Class:Rack/Attribute:device_list' => 'Dispositivos',
 	'Class:Rack/Attribute:device_list+' => 'Todos os Dispositivos físicos empilhados neste Rack',
 	'Class:Rack/Attribute:enclosure_list' => 'Gavetas',
 	'Class:Rack/Attribute:enclosure_list+' => 'Todas as Gavetas neste Rack',
-]);
-
-//
-// Class: TelephonyCI
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TelephonyCI' => 'Telefonia',
-	'Class:TelephonyCI+' => '',
+	'Class:TelephonyCI+' => 'Abstract class grouping telephony devices~~',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Número de telefone',
-	'Class:TelephonyCI/Attribute:phonenumber+' => '',
-]);
-
-//
-// Class: Phone
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:TelephonyCI/Attribute:phonenumber+' => '~~',
 	'Class:Phone' => 'Telefone',
-	'Class:Phone+' => '',
-]);
-
-//
-// Class: MobilePhone
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:Phone+' => 'End User device. Plain wired phone~~',
 	'Class:MobilePhone' => 'Telefone Celular',
-	'Class:MobilePhone+' => '',
+	'Class:MobilePhone+' => 'End User device. Wireless phone~~',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
-	'Class:MobilePhone/Attribute:imei+' => '',
+	'Class:MobilePhone/Attribute:imei+' => '~~',
 	'Class:MobilePhone/Attribute:hw_pin' => 'Hardware PIN',
-	'Class:MobilePhone/Attribute:hw_pin+' => '',
-]);
-
-//
-// Class: IPPhone
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:MobilePhone/Attribute:hw_pin+' => '~~',
 	'Class:IPPhone' => 'Telefone IP',
-	'Class:IPPhone+' => '',
-]);
-
-//
-// Class: Tablet
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:IPPhone+' => 'Physical device dedicated to phone calls, connected to a network~~',
 	'Class:Tablet' => 'Tablet',
-	'Class:Tablet+' => '',
-]);
-
-//
-// Class: ConnectableCI
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:Tablet+' => 'End User device. For example iPad, Galaxy Note/Tab Nexus, Kindle...~~',
 	'Class:ConnectableCI' => 'Conectividade',
 	'Class:ConnectableCI+' => 'Físico',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s~~',
@@ -237,36 +133,29 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Todos os Dispositivos de rede conectados neste dispositivo',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Interface de rede',
 	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'Todas as Interfaces de rede presentes neste dispositivo',
-]);
-
-//
-// Class: DatacenterDevice
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:DatacenterDevice' => 'Dispositivo de Datacenter',
-	'Class:DatacenterDevice+' => '',
+	'Class:DatacenterDevice+' => 'A physical equipment, connected to the network and installed in a data center, usually in a Rack or an Enclosure. This can include Servers, Network Devices, Storage Systems, SAN Switches, Tape Libraries, NAS Devices, etc.~~',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'Rack',
-	'Class:DatacenterDevice/Attribute:rack_id+' => '',
+	'Class:DatacenterDevice/Attribute:rack_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:rack_name' => 'Nome do rack',
-	'Class:DatacenterDevice/Attribute:rack_name+' => '',
+	'Class:DatacenterDevice/Attribute:rack_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:enclosure_id' => 'Gaveta',
-	'Class:DatacenterDevice/Attribute:enclosure_id+' => '',
+	'Class:DatacenterDevice/Attribute:enclosure_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:enclosure_name' => 'Nome da gaveta',
-	'Class:DatacenterDevice/Attribute:enclosure_name+' => '',
+	'Class:DatacenterDevice/Attribute:enclosure_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:nb_u' => 'Unidades',
-	'Class:DatacenterDevice/Attribute:nb_u+' => '',
+	'Class:DatacenterDevice/Attribute:nb_u+' => '~~',
 	'Class:DatacenterDevice/Attribute:managementip' => 'IP de gerenciamento',
-	'Class:DatacenterDevice/Attribute:managementip+' => '',
+	'Class:DatacenterDevice/Attribute:managementip+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerA_id' => 'Fonte de energia A',
-	'Class:DatacenterDevice/Attribute:powerA_id+' => '',
+	'Class:DatacenterDevice/Attribute:powerA_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerA_name' => 'Nome da fonte de energia A',
-	'Class:DatacenterDevice/Attribute:powerA_name+' => '',
+	'Class:DatacenterDevice/Attribute:powerA_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerB_id' => 'Fonte de energia B',
-	'Class:DatacenterDevice/Attribute:powerB_id+' => '',
+	'Class:DatacenterDevice/Attribute:powerB_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerB_name' => 'Nome da fonte energia B',
-	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
+	'Class:DatacenterDevice/Attribute:powerB_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'Portas FC',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'Todas as portas Fiber Channel (FC) para este Dispositivo de datacenter',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
@@ -275,219 +164,128 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'O dispositivo está ativo se pelo menos uma conexão de energia (A ou B) estiver ativa',
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'O dispositivo está ativo se todas as conexões de energia estiverem ativadas',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'O dispositivo está ativo se pelo menos %1$s %% de suas conexões de energia estiverem funcionando',
-]);
-
-//
-// Class: NetworkDevice
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:NetworkDevice' => 'Dispositivo de Rede',
-	'Class:NetworkDevice+' => '',
+	'Class:NetworkDevice+' => 'Any type of network device: router, switch, hub, load balancer, firewall…~~',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Tipo de dispositivo de rede',
-	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
+	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '~~',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Nome do tipo de dispositivo de rede',
-	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
+	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '~~',
 	'Class:NetworkDevice/Attribute:connectablecis_list' => 'ICs',
 	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'Todos os Itens de configuração (ICs) associados à este Dispositivo de rede',
 	'Class:NetworkDevice/Attribute:iosversion_id' => 'Versão do SO',
-	'Class:NetworkDevice/Attribute:iosversion_id+' => '',
+	'Class:NetworkDevice/Attribute:iosversion_id+' => '~~',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'Nome da versão do SO',
-	'Class:NetworkDevice/Attribute:iosversion_name+' => '',
+	'Class:NetworkDevice/Attribute:iosversion_name+' => '~~',
+	'Class:NetworkDevice/Attribute:ios_end_of_support' => 'IOS end of support~~',
+	'Class:NetworkDevice/Attribute:ios_end_of_support+' => 'The date after which the editor no longer provides fixes for this IOS version.~~',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
-	'Class:NetworkDevice/Attribute:ram+' => '',
-]);
-
-//
-// Class: Server
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:NetworkDevice/Attribute:ram+' => '~~',
 	'Class:Server' => 'Servidor',
-	'Class:Server+' => '',
+	'Class:Server+' => 'Datacenter Device managing access to centralized resources or services. It contains an OS Version executing Software Instances.~~',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Server/Attribute:osfamily_id' => 'Família do SO',
-	'Class:Server/Attribute:osfamily_id+' => '',
+	'Class:Server/Attribute:osfamily_id+' => '~~',
 	'Class:Server/Attribute:osfamily_name' => 'Nome da família do SO',
-	'Class:Server/Attribute:osfamily_name+' => '',
+	'Class:Server/Attribute:osfamily_name+' => '~~',
 	'Class:Server/Attribute:osversion_id' => 'Versão do OS',
-	'Class:Server/Attribute:osversion_id+' => '',
+	'Class:Server/Attribute:osversion_id+' => '~~',
 	'Class:Server/Attribute:osversion_name' => 'Nome da versão do SO',
-	'Class:Server/Attribute:osversion_name+' => '',
+	'Class:Server/Attribute:osversion_name+' => '~~',
+	'Class:Server/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:Server/Attribute:os_end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
 	'Class:Server/Attribute:oslicence_id' => 'Licença do SO',
-	'Class:Server/Attribute:oslicence_id+' => '',
+	'Class:Server/Attribute:oslicence_id+' => '~~',
 	'Class:Server/Attribute:oslicence_name' => 'Nome da licença do SO',
-	'Class:Server/Attribute:oslicence_name+' => '',
+	'Class:Server/Attribute:oslicence_name+' => '~~',
 	'Class:Server/Attribute:cpu' => 'CPU',
-	'Class:Server/Attribute:cpu+' => '',
+	'Class:Server/Attribute:cpu+' => '~~',
 	'Class:Server/Attribute:ram' => 'RAM',
-	'Class:Server/Attribute:ram+' => '',
+	'Class:Server/Attribute:ram+' => '~~',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Volumes lógicos',
 	'Class:Server/Attribute:logicalvolumes_list+' => 'Todos os Volumes lógicos associados à este Servidor',
-]);
-
-//
-// Class: StorageSystem
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:StorageSystem' => 'Sistema de Storage',
-	'Class:StorageSystem+' => '',
+	'Class:StorageSystem+' => 'Storage system that can be attached either to a SAN or to an Ethernet network. The logical unit of storage managed by a Storage System is a Logical Volume.~~',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Volumes lógicos',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Todos os Volumes lógicos neste Sistema de storage',
-]);
-
-//
-// Class: SANSwitch
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:SANSwitch' => 'Switch SAN',
-	'Class:SANSwitch+' => '',
+	'Class:SANSwitch+' => 'A SAN Switch is a network switch compatible with the Fibre Channel protocol used by storage networks. It is a Datacenter Device.~~',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Dispositivos',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Todos os Dispositivos associados à este Switch SAN',
-]);
-
-//
-// Class: TapeLibrary
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TapeLibrary' => 'Biblioteca de Fitas',
-	'Class:TapeLibrary+' => '',
+	'Class:TapeLibrary+' => 'Datacenter Device which hosts multiple magnetic Tapes (or cartridge). Tape Libraries are used for data backup or archiving.~~',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Fitas',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'Todas as Fitas associadas à esta Biblioteca de fitas',
-]);
-
-//
-// Class: NAS
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:NAS' => 'NAS',
-	'Class:NAS+' => '',
+	'Class:NAS+' => 'High-capacity storage device racked in a datacenter and connected to a network. In '.ITOP_APPLICATION_SHORT.' a NAS (Network-attached storage) is hosting NAS File Systems.~~',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Sistemas de arquivos',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'Todos os Sistemas de arquivos para este NAS',
-]);
-
-//
-// Class: PC
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:PC' => 'PC',
-	'Class:PC+' => '',
+	'Class:PC+' => 'Connectable CI. A Personal Computer (PC) is a Physical Device, Desktop or Laptop, running an operating system and designed to execute Software Instances.~~',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PC/Attribute:osfamily_id' => 'Família do SO',
-	'Class:PC/Attribute:osfamily_id+' => '',
+	'Class:PC/Attribute:osfamily_id+' => '~~',
 	'Class:PC/Attribute:osfamily_name' => 'Nome da família do SO',
-	'Class:PC/Attribute:osfamily_name+' => '',
+	'Class:PC/Attribute:osfamily_name+' => '~~',
 	'Class:PC/Attribute:osversion_id' => 'Versão do SO',
-	'Class:PC/Attribute:osversion_id+' => '',
+	'Class:PC/Attribute:osversion_id+' => '~~',
 	'Class:PC/Attribute:osversion_name' => 'Nome da versão do OS',
-	'Class:PC/Attribute:osversion_name+' => '',
+	'Class:PC/Attribute:osversion_name+' => '~~',
+	'Class:PC/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:PC/Attribute:os_end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
 	'Class:PC/Attribute:cpu' => 'CPU',
-	'Class:PC/Attribute:cpu+' => '',
+	'Class:PC/Attribute:cpu+' => '~~',
 	'Class:PC/Attribute:ram' => 'RAM',
-	'Class:PC/Attribute:ram+' => '',
+	'Class:PC/Attribute:ram+' => '~~',
 	'Class:PC/Attribute:type' => 'Tipo',
-	'Class:PC/Attribute:type+' => '',
+	'Class:PC/Attribute:type+' => '~~',
 	'Class:PC/Attribute:type/Value:desktop' => 'Desktop',
-	'Class:PC/Attribute:type/Value:desktop+' => '',
+	'Class:PC/Attribute:type/Value:desktop+' => 'desktop~~',
 	'Class:PC/Attribute:type/Value:laptop' => 'Laptop',
-	'Class:PC/Attribute:type/Value:laptop+' => '',
-]);
-
-//
-// Class: Printer
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:PC/Attribute:type/Value:laptop+' => 'laptop~~',
 	'Class:Printer' => 'Impressora',
-	'Class:Printer+' => '',
+	'Class:Printer+' => 'Connectable CI. Physical Device connected either to the network or to a PC.~~',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s~~',
-]);
-
-//
-// Class: PowerConnection
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:PowerConnection' => 'Conexão de Energia',
-	'Class:PowerConnection+' => '',
+	'Class:PowerConnection+' => 'Abstract class grouping physical devices used for electrical power supply.~~',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s~~',
-]);
-
-//
-// Class: PowerSource
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:PowerSource' => 'Fonte de Energia',
-	'Class:PowerSource+' => '',
+	'Class:PowerSource+' => 'Physical Power Connection. Used in a datacenter to document any kind of power source (main power inlet, breaker…) that is not a PDU.~~',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
 	'Class:PowerSource/Attribute:pdus_list+' => 'Todos os PDUs utilizando esta Fonte de energia',
-]);
-
-//
-// Class: PDU
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:PDU' => 'PDU',
-	'Class:PDU+' => '',
+	'Class:PDU+' => 'Power Connection. PDU (Power Distribution Unit) is a device fitted with multiple outputs designed to distribute electric power, especially to racks of computers and networking equipment located within a datacenter.~~',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s~~',
 	'Class:PDU/Attribute:rack_id' => 'Rack',
-	'Class:PDU/Attribute:rack_id+' => '',
+	'Class:PDU/Attribute:rack_id+' => '~~',
 	'Class:PDU/Attribute:rack_name' => 'Nome do rack',
-	'Class:PDU/Attribute:rack_name+' => '',
+	'Class:PDU/Attribute:rack_name+' => '~~',
 	'Class:PDU/Attribute:powerstart_id' => 'Fonte de energia',
-	'Class:PDU/Attribute:powerstart_id+' => '',
+	'Class:PDU/Attribute:powerstart_id+' => '~~',
 	'Class:PDU/Attribute:powerstart_name' => 'Nome da fonte de energia',
-	'Class:PDU/Attribute:powerstart_name+' => '',
-]);
-
-//
-// Class: Peripheral
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:PDU/Attribute:powerstart_name+' => '~~',
 	'Class:Peripheral' => 'Periférico',
-	'Class:Peripheral+' => '',
+	'Class:Peripheral+' => 'Physical device, used to document any kind of computer peripheral.
+For example: external hard drives, scanners, input devices (trackballs, bar code scanners), etc…~~',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s~~',
-]);
-
-//
-// Class: Enclosure
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Enclosure' => 'Gaveta',
-	'Class:Enclosure+' => '',
+	'Class:Enclosure+' => 'An open-frame chassis mounted inside a Rack, in which to mount IT equipment such as Blade Servers, Network Device...~~',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Enclosure/Attribute:rack_id' => 'Rack',
-	'Class:Enclosure/Attribute:rack_id+' => '',
+	'Class:Enclosure/Attribute:rack_id+' => '~~',
 	'Class:Enclosure/Attribute:rack_name' => 'Nome do rack',
-	'Class:Enclosure/Attribute:rack_name+' => '',
+	'Class:Enclosure/Attribute:rack_name+' => '~~',
 	'Class:Enclosure/Attribute:nb_u' => 'Unidades',
-	'Class:Enclosure/Attribute:nb_u+' => '',
+	'Class:Enclosure/Attribute:nb_u+' => '~~',
 	'Class:Enclosure/Attribute:device_list' => 'Dispositivos',
 	'Class:Enclosure/Attribute:device_list+' => 'Todos os Dispositivos presentes nesta Gaveta',
-]);
-
-//
-// Class: ApplicationSolution
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ApplicationSolution' => 'Solução de Aplicação',
-	'Class:ApplicationSolution+' => '',
+	'Class:ApplicationSolution+' => 'Application Solutions describe complex applications that are made of (or depend on) several basic components. The main information conveyed by an Application Solution is its list of relationships.~~',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'ICs',
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Todos os Itens de configuração (IC) que compõem esta Solução de aplicação',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Processos de negócio',
@@ -495,411 +293,44 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
 	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Status',
-	'Class:ApplicationSolution/Attribute:status+' => '',
+	'Class:ApplicationSolution/Attribute:status+' => '~~',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Ativo',
-	'Class:ApplicationSolution/Attribute:status/Value:active+' => '',
+	'Class:ApplicationSolution/Attribute:status/Value:active+' => 'active~~',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'Inativo',
-	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => '',
+	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => 'inactive~~',
 	'Class:ApplicationSolution/Attribute:redundancy' => 'Análise de impacto: configuração de redundância',
 	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'A Solução de aplicação está funcionando se todos os Itens de configuração (ICs) estiverem funcionando',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'A Solução de aplicação está funcionando se no mínimo %1$s Item(ns) de configuração (IC(s)) estiver(em) funcionando',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'A Solução de aplicação está funcionando se no mínimo %1$s %% dos Itens de configuração (ICs) estiverem funcionando',
-]);
-
-//
-// Class: BusinessProcess
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:BusinessProcess' => 'Processo de Negócio',
-	'Class:BusinessProcess+' => '',
+	'Class:BusinessProcess+' => 'A Business Process is used to document a high-level process or an important application for the operations. It is quite similar to an Application Solution but for describing higher level applications or whole processes in the organization.~~',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Soluções de aplicação',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Todas as soluções de aplicação que impactam este processo de negócio',
 	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
 	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:BusinessProcess/Attribute:status' => 'Status',
-	'Class:BusinessProcess/Attribute:status+' => '',
+	'Class:BusinessProcess/Attribute:status+' => '~~',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'Ativo',
-	'Class:BusinessProcess/Attribute:status/Value:active+' => '',
+	'Class:BusinessProcess/Attribute:status/Value:active+' => 'active~~',
 	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'Inativo',
-	'Class:BusinessProcess/Attribute:status/Value:inactive+' => '',
-]);
-
-//
-// Class: SoftwareInstance
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:SoftwareInstance' => 'Instância de Software',
-	'Class:SoftwareInstance+' => '',
-	'Class:SoftwareInstance/Attribute:system_id' => 'Sistema',
-	'Class:SoftwareInstance/Attribute:system_id+' => '',
-	'Class:SoftwareInstance/Attribute:system_name' => 'Nome do sistema',
-	'Class:SoftwareInstance/Attribute:system_name+' => '',
-	'Class:SoftwareInstance/Attribute:software_id' => 'Software',
-	'Class:SoftwareInstance/Attribute:software_id+' => '',
-	'Class:SoftwareInstance/Attribute:software_name' => 'Nome do software',
-	'Class:SoftwareInstance/Attribute:software_name+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Licença do software',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Nome da licença do software',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '',
-	'Class:SoftwareInstance/Attribute:path' => 'Caminho',
-	'Class:SoftwareInstance/Attribute:path+' => '',
-	'Class:SoftwareInstance/Attribute:status' => 'Status',
-	'Class:SoftwareInstance/Attribute:status+' => '',
-	'Class:SoftwareInstance/Attribute:status/Value:active' => 'Ativo',
-	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'Ativo',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Inativo',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'Inativo',
-]);
-
-//
-// Class: Middleware
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:Middleware' => 'Middleware',
-	'Class:Middleware+' => '',
-	'Class:Middleware/Attribute:middlewareinstance_list' => 'Instância Middleware',
-	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Todos as instância middleware fornecida por essa middleware',
-]);
-
-//
-// Class: DBServer
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:DBServer' => 'Servidor de DB',
-	'Class:DBServer+' => '',
-	'Class:DBServer/Attribute:dbschema_list' => 'Esquemas de BD',
-	'Class:DBServer/Attribute:dbschema_list+' => 'Todos os Esquemas de BD para este Servidor de Banco de Dados (BD)',
-]);
-
-//
-// Class: WebServer
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:WebServer' => 'Servidor Web',
-	'Class:WebServer+' => '',
-	'Class:WebServer/Attribute:webapp_list' => 'Aplicações Web',
-	'Class:WebServer/Attribute:webapp_list+' => 'Todas as Aplicações Web disponíveis para este Servidor Web',
-]);
-
-//
-// Class: PCSoftware
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:PCSoftware' => 'Software de PC',
-	'Class:PCSoftware+' => '',
-]);
-
-//
-// Class: OtherSoftware
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:OtherSoftware' => 'Outro Software',
-	'Class:OtherSoftware+' => '',
-]);
-
-//
-// Class: MiddlewareInstance
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:MiddlewareInstance' => 'Instância Middleware',
-	'Class:MiddlewareInstance+' => '',
-	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
-	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
-	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
-	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
-	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Nome do middleware',
-	'Class:MiddlewareInstance/Attribute:middleware_name+' => '',
-]);
-
-//
-// Class: DatabaseSchema
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:DatabaseSchema' => 'Esquema de Banco de Dados (BD)',
-	'Class:DatabaseSchema+' => '',
-	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:DatabaseSchema/Attribute:dbserver_id' => 'Servidor de DB',
-	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
-	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Nome do servidor de DB',
-	'Class:DatabaseSchema/Attribute:dbserver_name+' => '',
-]);
-
-//
-// Class: WebApplication
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:WebApplication' => 'Aplicação Web',
-	'Class:WebApplication+' => '',
-	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:WebApplication/Attribute:webserver_id' => 'Servidor Web',
-	'Class:WebApplication/Attribute:webserver_id+' => '',
-	'Class:WebApplication/Attribute:webserver_name' => 'Nome do servidor Web',
-	'Class:WebApplication/Attribute:webserver_name+' => '',
-	'Class:WebApplication/Attribute:logo' => 'Logo~~',
-	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
-	'Class:WebApplication/Attribute:url' => 'URL',
-	'Class:WebApplication/Attribute:url+' => '',
-]);
-
-//
-// Class: VirtualDevice
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:VirtualDevice' => 'Dispositivo Virtual',
-	'Class:VirtualDevice+' => '',
-	'Class:VirtualDevice/Attribute:status' => 'Status',
-	'Class:VirtualDevice/Attribute:status+' => '',
-	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Em homologação',
-	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'Em homologação',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Obsoleto',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'Obsoleto',
-	'Class:VirtualDevice/Attribute:status/Value:production' => 'Em produção',
-	'Class:VirtualDevice/Attribute:status/Value:production+' => 'Em produção',
-	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Suporte',
-	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'Suporte',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Volume lógico',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Todos os Volumes lógicos associados à este Dispositivo virtual',
-]);
-
-//
-// Class: VirtualHost
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:VirtualHost' => 'Host Virtual',
-	'Class:VirtualHost+' => '',
-	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Máquinas virtuais (VMs)',
-	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Todas as Máquinas virtuais (VMs) hospedadas neste Host virtual',
-]);
-
-//
-// Class: Hypervisor
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:Hypervisor' => 'Hypervisor',
-	'Class:Hypervisor+' => '',
-	'Class:Hypervisor/Attribute:farm_id' => 'Cluster/HA',
-	'Class:Hypervisor/Attribute:farm_id+' => '',
-	'Class:Hypervisor/Attribute:farm_name' => 'Nome do Cluster/HA',
-	'Class:Hypervisor/Attribute:farm_name+' => '',
-	'Class:Hypervisor/Attribute:server_id' => 'Servidor',
-	'Class:Hypervisor/Attribute:server_id+' => '',
-	'Class:Hypervisor/Attribute:server_name' => 'Nome do servidor',
-	'Class:Hypervisor/Attribute:server_name+' => '',
-]);
-
-//
-// Class: Farm
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:Farm' => 'Cluster/HA',
-	'Class:Farm+' => '',
-	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisors',
-	'Class:Farm/Attribute:hypervisor_list+' => 'Todos os Hypervisors que compõem este Cluster/HA',
-	'Class:Farm/Attribute:redundancy' => 'Alta disponibilidade',
-	'Class:Farm/Attribute:redundancy/disabled' => 'O farm está ativo se todos os hypervisors estiverem disponíveis',
-	'Class:Farm/Attribute:redundancy/count' => 'O farm está ativo se pelo menos %1$s hypervisor(s) estiver(em) disponíveis',
-	'Class:Farm/Attribute:redundancy/percent' => 'O farm está ativo se pelo menos %1$s %% dos hypervisors estiverem disponíveis',
-]);
-
-//
-// Class: VirtualMachine
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:VirtualMachine' => 'Máquina Virtual',
-	'Class:VirtualMachine+' => '',
-	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Host virtual',
-	'Class:VirtualMachine/Attribute:virtualhost_id+' => '',
-	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Nome do host virtual',
-	'Class:VirtualMachine/Attribute:virtualhost_name+' => '',
-	'Class:VirtualMachine/Attribute:osfamily_id' => 'Família do SO',
-	'Class:VirtualMachine/Attribute:osfamily_id+' => '',
-	'Class:VirtualMachine/Attribute:osfamily_name' => 'Nome da família do SO',
-	'Class:VirtualMachine/Attribute:osfamily_name+' => '',
-	'Class:VirtualMachine/Attribute:osversion_id' => 'Versão do SO',
-	'Class:VirtualMachine/Attribute:osversion_id+' => '',
-	'Class:VirtualMachine/Attribute:osversion_name' => 'Nome da versão do SO',
-	'Class:VirtualMachine/Attribute:osversion_name+' => '',
-	'Class:VirtualMachine/Attribute:oslicence_id' => 'Licença do SO',
-	'Class:VirtualMachine/Attribute:oslicence_id+' => '',
-	'Class:VirtualMachine/Attribute:oslicence_name' => 'Nome da licença do SO',
-	'Class:VirtualMachine/Attribute:oslicence_name+' => '',
-	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
-	'Class:VirtualMachine/Attribute:cpu+' => '',
-	'Class:VirtualMachine/Attribute:ram' => 'RAM',
-	'Class:VirtualMachine/Attribute:ram+' => '',
-	'Class:VirtualMachine/Attribute:managementip' => 'IP',
-	'Class:VirtualMachine/Attribute:managementip+' => '',
-	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Interfaces de rede',
-	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Todas as interfaces de rede',
-]);
-
-//
-// Class: LogicalVolume
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:LogicalVolume' => 'Volume Lógico',
-	'Class:LogicalVolume+' => '',
-	'Class:LogicalVolume/Attribute:name' => 'Nome',
-	'Class:LogicalVolume/Attribute:name+' => '',
-	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
-	'Class:LogicalVolume/Attribute:lun_id+' => '',
-	'Class:LogicalVolume/Attribute:description' => 'Descrição',
-	'Class:LogicalVolume/Attribute:description+' => '',
-	'Class:LogicalVolume/Attribute:raid_level' => 'Nível de RAID',
-	'Class:LogicalVolume/Attribute:raid_level+' => '',
-	'Class:LogicalVolume/Attribute:size' => 'Tamanho',
-	'Class:LogicalVolume/Attribute:size+' => '',
-	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Sistema de arquivos',
-	'Class:LogicalVolume/Attribute:storagesystem_id+' => '',
-	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Nome do sistema de arquivos',
-	'Class:LogicalVolume/Attribute:storagesystem_name+' => '',
-	'Class:LogicalVolume/Attribute:servers_list' => 'Servidores',
-	'Class:LogicalVolume/Attribute:servers_list+' => 'Todos os Servidores usando este Volume lógico',
-	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Dispositivos virtuais',
-	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Todos os Dispositivos virtuais usando este Volume lógico',
-]);
-
-//
-// Class: lnkServerToVolume
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:lnkServerToVolume' => 'Relação entre Servidor / Volume',
-	'Class:lnkServerToVolume+' => '',
-	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
-	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume',
-	'Class:lnkServerToVolume/Attribute:volume_id+' => '',
-	'Class:lnkServerToVolume/Attribute:volume_name' => 'Nome do volume',
-	'Class:lnkServerToVolume/Attribute:volume_name+' => '',
-	'Class:lnkServerToVolume/Attribute:server_id' => 'Servidor',
-	'Class:lnkServerToVolume/Attribute:server_id+' => '',
-	'Class:lnkServerToVolume/Attribute:server_name' => 'Nome do servidor',
-	'Class:lnkServerToVolume/Attribute:server_name+' => '',
-	'Class:lnkServerToVolume/Attribute:size_used' => 'Tamanho utilizado',
-	'Class:lnkServerToVolume/Attribute:size_used+' => '',
-]);
-
-//
-// Class: lnkVirtualDeviceToVolume
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:lnkVirtualDeviceToVolume' => 'Relação entre Dispositivo virtual / Volume',
-	'Class:lnkVirtualDeviceToVolume+' => '',
-	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Nome do volume',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Dispositivo virtual',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Nome do dispositivo virtual',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Tamanho utilizado',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '',
-]);
-
-//
-// Class: lnkSanToDatacenterDevice
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:lnkSanToDatacenterDevice' => 'Relação entre Switch SAN / Dispositivo de datacenter',
-	'Class:lnkSanToDatacenterDevice+' => '',
-	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'Switch SAN',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'Nome do switch SAN',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Dispositivo',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Nome do dispositivo',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'FC do SAN',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'FC do dispositivo',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '',
-]);
-
-//
-// Class: Tape
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:Tape' => 'Fita',
-	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
-	'Class:Tape/Attribute:name' => 'Nome',
-	'Class:Tape/Attribute:name+' => '',
-	'Class:Tape/Attribute:description' => 'Descrição',
-	'Class:Tape/Attribute:description+' => '',
-	'Class:Tape/Attribute:size' => 'Tamanho',
-	'Class:Tape/Attribute:size+' => '',
-	'Class:Tape/Attribute:tapelibrary_id' => 'Biblioteca de fitas',
-	'Class:Tape/Attribute:tapelibrary_id+' => '',
-	'Class:Tape/Attribute:tapelibrary_name' => 'Nome da biblioteca de fitas',
-	'Class:Tape/Attribute:tapelibrary_name+' => '',
-]);
-
-//
-// Class: NASFileSystem
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:NASFileSystem' => 'Sistema de arquivos NAS',
-	'Class:NASFileSystem+' => '',
-	'Class:NASFileSystem/Attribute:name' => 'Nome',
-	'Class:NASFileSystem/Attribute:name+' => '',
-	'Class:NASFileSystem/Attribute:description' => 'Descrição',
-	'Class:NASFileSystem/Attribute:description+' => '',
-	'Class:NASFileSystem/Attribute:raid_level' => 'Nível RAID',
-	'Class:NASFileSystem/Attribute:raid_level+' => '',
-	'Class:NASFileSystem/Attribute:size' => 'Tamanho',
-	'Class:NASFileSystem/Attribute:size+' => '',
-	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
-	'Class:NASFileSystem/Attribute:nas_id+' => '',
-	'Class:NASFileSystem/Attribute:nas_name' => 'Nome do NAS',
-	'Class:NASFileSystem/Attribute:nas_name+' => '',
-]);
-
-//
-// Class: Software
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:BusinessProcess/Attribute:status/Value:inactive+' => 'inactive~~',
 	'Class:Software' => 'Software',
-	'Class:Software+' => '',
+	'Class:Software+' => 'Software is a generic item in the software catalog. It has a particular version. In '.ITOP_APPLICATION_SHORT.' a Software has a category amongst: DB Server, Middleware, PC Software, Web Server and Other Software.~~',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Software/Attribute:name' => 'Nome',
-	'Class:Software/Attribute:name+' => '',
+	'Class:Software/Attribute:name+' => '~~',
 	'Class:Software/Attribute:vendor' => 'Fabricante',
-	'Class:Software/Attribute:vendor+' => '',
+	'Class:Software/Attribute:vendor+' => '~~',
 	'Class:Software/Attribute:version' => 'Versão',
-	'Class:Software/Attribute:version+' => '',
+	'Class:Software/Attribute:version+' => '~~',
+	'Class:Software/Attribute:end_of_support' => 'End of support~~',
+	'Class:Software/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this software version.~~',
 	'Class:Software/Attribute:documents_list' => 'Documentos',
 	'Class:Software/Attribute:documents_list+' => 'Todos os Documentos associados a este Software',
 	'Class:Software/Attribute:logo' => 'Logo~~',
 	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs~~',
 	'Class:Software/Attribute:type' => 'Tipo',
-	'Class:Software/Attribute:type+' => '',
+	'Class:Software/Attribute:type+' => '~~',
 	'Class:Software/Attribute:type/Value:DBServer' => 'Servidor de DB',
 	'Class:Software/Attribute:type/Value:DBServer+' => 'Servidor de DB',
 	'Class:Software/Attribute:type/Value:Middleware' => 'Middleware',
@@ -916,591 +347,620 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Software/Attribute:softwarepatch_list+' => 'Todas as Atualizações para este Software',
 	'Class:Software/Attribute:softwarelicence_list' => 'Licenças de software',
 	'Class:Software/Attribute:softwarelicence_list+' => 'Todas as Licenças de software para este Software',
-]);
-
-//
-// Class: Patch
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:SoftwareInstance' => 'Instância de Software',
+	'Class:SoftwareInstance+' => 'Abstract class representing the deployment of a Software on a device (Server, PC, VirtualMachine). In '.ITOP_APPLICATION_SHORT.' there are different types of Software Instance: DB Server, Middleware, PC Software, Web Server and Other Software~~',
+	'Class:SoftwareInstance/Attribute:system_id' => 'Sistema',
+	'Class:SoftwareInstance/Attribute:system_id+' => 'The system can be a Server, a Virtual Machine, a PC, ...~~',
+	'Class:SoftwareInstance/Attribute:system_name' => 'Nome do sistema',
+	'Class:SoftwareInstance/Attribute:system_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_id' => 'Software',
+	'Class:SoftwareInstance/Attribute:software_id+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_name' => 'Nome do software',
+	'Class:SoftwareInstance/Attribute:software_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_end_of_support' => 'Software end of support~~',
+	'Class:SoftwareInstance/Attribute:software_end_of_support+' => 'The date after which the editor ceases to provide patches for this software version.~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Licença do software',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Nome da licença do software',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:path' => 'Caminho',
+	'Class:SoftwareInstance/Attribute:path+' => '~~',
+	'Class:SoftwareInstance/Attribute:status' => 'Status',
+	'Class:SoftwareInstance/Attribute:status+' => '~~',
+	'Class:SoftwareInstance/Attribute:status/Value:active' => 'Ativo',
+	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'Ativo',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Inativo',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'Inativo',
+	'Class:Middleware' => 'Middleware',
+	'Class:Middleware+' => 'Software Instance offering services to other software (like: Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere or Lotus Domino) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:Middleware/Attribute:middlewareinstance_list' => 'Instância Middleware',
+	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Todos as instância middleware fornecida por essa middleware',
+	'Class:DBServer' => 'Servidor de DB',
+	'Class:DBServer+' => 'Software Instance offering database services (MySQL 8.0, Oracle, SQL Server, DB2…) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:DBServer/Attribute:dbschema_list' => 'Esquemas de BD',
+	'Class:DBServer/Attribute:dbschema_list+' => 'Todos os Esquemas de BD para este Servidor de Banco de Dados (BD)',
+	'Class:WebServer' => 'Servidor Web',
+	'Class:WebServer+' => 'It is a Software Instance, offering Web services (like Apache 2.4, Nginx 1.29.4, IIS 7.0) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:WebServer/Attribute:webapp_list' => 'Aplicações Web',
+	'Class:WebServer/Attribute:webapp_list+' => 'Todas as Aplicações Web disponíveis para este Servidor Web',
+	'Class:PCSoftware' => 'Software de PC',
+	'Class:PCSoftware+' => 'Software Instance for software (like MS Office, Adobe Photoshop or Filezilla) installed on a PC.~~',
+	'Class:OtherSoftware' => 'Outro Software',
+	'Class:OtherSoftware+' => 'Any type of Software Instance that do not fit in the other categories: PC Software, Middleware, DB server or Web Server.~~',
+	'Class:MiddlewareInstance' => 'Instância Middleware',
+	'Class:MiddlewareInstance+' => 'Functional CI representing a service delivered by a Middleware.~~',
+	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
+	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
+	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Nome do middleware',
+	'Class:MiddlewareInstance/Attribute:middleware_name+' => '~~',
+	'Class:DatabaseSchema' => 'Esquema de Banco de Dados (BD)',
+	'Class:DatabaseSchema+' => 'Dabatase instance running of a specific DB server.~~',
+	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:DatabaseSchema/Attribute:dbserver_id' => 'Servidor de DB',
+	'Class:DatabaseSchema/Attribute:dbserver_id+' => '~~',
+	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Nome do servidor de DB',
+	'Class:DatabaseSchema/Attribute:dbserver_name+' => '~~',
+	'Class:WebApplication' => 'Aplicação Web',
+	'Class:WebApplication+' => 'Instance of an application accessible using a web browser and that runs on a given Web Server instance. For eg. this iTop that you\'re looking at.~~',
+	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:WebApplication/Attribute:webserver_id' => 'Servidor Web',
+	'Class:WebApplication/Attribute:webserver_id+' => '~~',
+	'Class:WebApplication/Attribute:webserver_name' => 'Nome do servidor Web',
+	'Class:WebApplication/Attribute:webserver_name+' => '~~',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:WebApplication/Attribute:url' => 'URL',
+	'Class:WebApplication/Attribute:url+' => '~~',
+	'Class:VirtualDevice' => 'Dispositivo Virtual',
+	'Class:VirtualDevice+' => 'Abstract class used for server virtualization (Virtual Host and Virtual Machine).~~',
+	'Class:VirtualDevice/Attribute:status' => 'Status',
+	'Class:VirtualDevice/Attribute:status+' => '~~',
+	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Em homologação',
+	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'Em homologação',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Obsoleto',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'Obsoleto',
+	'Class:VirtualDevice/Attribute:status/Value:production' => 'Em produção',
+	'Class:VirtualDevice/Attribute:status/Value:production+' => 'Em produção',
+	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Suporte',
+	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'Suporte',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Volume lógico',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Todos os Volumes lógicos associados à este Dispositivo virtual',
+	'Class:VirtualHost' => 'Host Virtual',
+	'Class:VirtualHost+' => 'Abstract class used for Virtual Devices (Hypervisor, Farm,...) hosting Virtual Machines.~~',
+	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Máquinas virtuais (VMs)',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Todas as Máquinas virtuais (VMs) hospedadas neste Host virtual',
+	'Class:Hypervisor' => 'Hypervisor',
+	'Class:Hypervisor+' => 'Virtual Host. Virtualization software (MS Hyper-V, VMWare ESX, Xen, etc.), running on a physical Server and supporting the creation of Virtual Machines.~~',
+	'Class:Hypervisor/Attribute:farm_id' => 'Cluster/HA',
+	'Class:Hypervisor/Attribute:farm_id+' => '~~',
+	'Class:Hypervisor/Attribute:farm_name' => 'Nome do Cluster/HA',
+	'Class:Hypervisor/Attribute:farm_name+' => '~~',
+	'Class:Hypervisor/Attribute:server_id' => 'Servidor',
+	'Class:Hypervisor/Attribute:server_id+' => '~~',
+	'Class:Hypervisor/Attribute:server_name' => 'Nome do servidor',
+	'Class:Hypervisor/Attribute:server_name+' => '~~',
+	'Class:Farm' => 'Cluster/HA',
+	'Class:Farm+' => 'Virtual Host. A Farm (or cluster) is a group of Hypervisors pooled together and sharing storage resources to provide an overall fault tolerant system for hosting Virtual Machines.~~',
+	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisors',
+	'Class:Farm/Attribute:hypervisor_list+' => 'Todos os Hypervisors que compõem este Cluster/HA',
+	'Class:Farm/Attribute:redundancy' => 'Alta disponibilidade',
+	'Class:Farm/Attribute:redundancy/disabled' => 'O farm está ativo se todos os hypervisors estiverem disponíveis',
+	'Class:Farm/Attribute:redundancy/count' => 'O farm está ativo se pelo menos %1$s hypervisor(s) estiver(em) disponíveis',
+	'Class:Farm/Attribute:redundancy/percent' => 'O farm está ativo se pelo menos %1$s %% dos hypervisors estiverem disponíveis',
+	'Class:VirtualMachine' => 'Máquina Virtual',
+	'Class:VirtualMachine+' => 'Virtual Device equivalent to a Server, it is hosted either on an Hypervisor or on a Farm.~~',
+	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Host virtual',
+	'Class:VirtualMachine/Attribute:virtualhost_id+' => '~~',
+	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Nome do host virtual',
+	'Class:VirtualMachine/Attribute:virtualhost_name+' => '~~',
+	'Class:VirtualMachine/Attribute:osfamily_id' => 'Família do SO',
+	'Class:VirtualMachine/Attribute:osfamily_id+' => '~~',
+	'Class:VirtualMachine/Attribute:osfamily_name' => 'Nome da família do SO',
+	'Class:VirtualMachine/Attribute:osfamily_name+' => '~~',
+	'Class:VirtualMachine/Attribute:osversion_id' => 'Versão do SO',
+	'Class:VirtualMachine/Attribute:osversion_id+' => '~~',
+	'Class:VirtualMachine/Attribute:osversion_name' => 'Nome da versão do SO',
+	'Class:VirtualMachine/Attribute:osversion_name+' => '~~',
+	'Class:VirtualMachine/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:VirtualMachine/Attribute:os_end_of_support+' => 'When the OS version is no more supported by the vendor, if this information is documented on the OS Version.~~',
+	'Class:VirtualMachine/Attribute:oslicence_id' => 'Licença do SO',
+	'Class:VirtualMachine/Attribute:oslicence_id+' => '~~',
+	'Class:VirtualMachine/Attribute:oslicence_name' => 'Nome da licença do SO',
+	'Class:VirtualMachine/Attribute:oslicence_name+' => '~~',
+	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
+	'Class:VirtualMachine/Attribute:cpu+' => '~~',
+	'Class:VirtualMachine/Attribute:ram' => 'RAM',
+	'Class:VirtualMachine/Attribute:ram+' => '~~',
+	'Class:VirtualMachine/Attribute:managementip' => 'IP',
+	'Class:VirtualMachine/Attribute:managementip+' => '~~',
+	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Interfaces de rede',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Todas as interfaces de rede',
+	'Class:LogicalVolume' => 'Volume Lógico',
+	'Class:LogicalVolume+' => 'The unit of storage managed inside a Storage System. It can be accessed by multiple Servers and Virtual Devices.~~',
+	'Class:LogicalVolume/Attribute:name' => 'Nome',
+	'Class:LogicalVolume/Attribute:name+' => '~~',
+	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
+	'Class:LogicalVolume/Attribute:lun_id+' => '~~',
+	'Class:LogicalVolume/Attribute:description' => 'Descrição',
+	'Class:LogicalVolume/Attribute:description+' => '~~',
+	'Class:LogicalVolume/Attribute:raid_level' => 'Nível de RAID',
+	'Class:LogicalVolume/Attribute:raid_level+' => '~~',
+	'Class:LogicalVolume/Attribute:size' => 'Tamanho',
+	'Class:LogicalVolume/Attribute:size+' => '~~',
+	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Sistema de arquivos',
+	'Class:LogicalVolume/Attribute:storagesystem_id+' => '~~',
+	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Nome do sistema de arquivos',
+	'Class:LogicalVolume/Attribute:storagesystem_name+' => '~~',
+	'Class:LogicalVolume/Attribute:servers_list' => 'Servidores',
+	'Class:LogicalVolume/Attribute:servers_list+' => 'Todos os Servidores usando este Volume lógico',
+	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Dispositivos virtuais',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Todos os Dispositivos virtuais usando este Volume lógico',
+	'Class:lnkServerToVolume' => 'Relação entre Servidor / Volume',
+	'Class:lnkServerToVolume+' => 'This many-to-many link indicates that a Server uses a Logical Volume (a storage unit managed inside a Storage System). Several Servers can use the same Logical Volume.~~',
+	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
+	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume',
+	'Class:lnkServerToVolume/Attribute:volume_id+' => '~~',
+	'Class:lnkServerToVolume/Attribute:volume_name' => 'Nome do volume',
+	'Class:lnkServerToVolume/Attribute:volume_name+' => '~~',
+	'Class:lnkServerToVolume/Attribute:server_id' => 'Servidor',
+	'Class:lnkServerToVolume/Attribute:server_id+' => '~~',
+	'Class:lnkServerToVolume/Attribute:server_name' => 'Nome do servidor',
+	'Class:lnkServerToVolume/Attribute:server_name+' => '~~',
+	'Class:lnkServerToVolume/Attribute:size_used' => 'Tamanho utilizado',
+	'Class:lnkServerToVolume/Attribute:size_used+' => '~~',
+	'Class:lnkVirtualDeviceToVolume' => 'Relação entre Dispositivo virtual / Volume',
+	'Class:lnkVirtualDeviceToVolume+' => 'This many-to-many link indicates that a Virtual Device uses a Logical Volume (a storage unit managed inside a Storage System). Several Virtual Devices can use the same Logical Volume.~~',
+	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Nome do volume',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Dispositivo virtual',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Nome do dispositivo virtual',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Tamanho utilizado',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '~~',
+	'Class:lnkSanToDatacenterDevice' => 'Relação entre Switch SAN / Dispositivo de datacenter',
+	'Class:lnkSanToDatacenterDevice+' => 'This many-to-many link models the network connection between a SAN Switch and a Datacenter Device (a Server, a Network Device, etc.).~~',
+	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'Switch SAN',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'Nome do switch SAN',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Dispositivo',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Nome do dispositivo',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'FC do SAN',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'FC do dispositivo',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '~~',
+	'Class:Tape' => 'Fita',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
+	'Class:Tape/Attribute:name' => 'Nome',
+	'Class:Tape/Attribute:name+' => '~~',
+	'Class:Tape/Attribute:description' => 'Descrição',
+	'Class:Tape/Attribute:description+' => '~~',
+	'Class:Tape/Attribute:size' => 'Tamanho',
+	'Class:Tape/Attribute:size+' => '~~',
+	'Class:Tape/Attribute:tapelibrary_id' => 'Biblioteca de fitas',
+	'Class:Tape/Attribute:tapelibrary_id+' => '~~',
+	'Class:Tape/Attribute:tapelibrary_name' => 'Nome da biblioteca de fitas',
+	'Class:Tape/Attribute:tapelibrary_name+' => '~~',
+	'Class:NASFileSystem' => 'Sistema de arquivos NAS',
+	'Class:NASFileSystem+' => 'Represents a shared file system hosted inside a given NAS (Network Attached Storage).~~',
+	'Class:NASFileSystem/Attribute:name' => 'Nome',
+	'Class:NASFileSystem/Attribute:name+' => '~~',
+	'Class:NASFileSystem/Attribute:description' => 'Descrição',
+	'Class:NASFileSystem/Attribute:description+' => '~~',
+	'Class:NASFileSystem/Attribute:raid_level' => 'Nível RAID',
+	'Class:NASFileSystem/Attribute:raid_level+' => '~~',
+	'Class:NASFileSystem/Attribute:size' => 'Tamanho',
+	'Class:NASFileSystem/Attribute:size+' => '~~',
+	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
+	'Class:NASFileSystem/Attribute:nas_id+' => '~~',
+	'Class:NASFileSystem/Attribute:nas_name' => 'Nome do NAS',
+	'Class:NASFileSystem/Attribute:nas_name+' => '~~',
 	'Class:Patch' => 'Atualização',
-	'Class:Patch+' => '',
+	'Class:Patch+' => 'Abstract class, for patch, hotfix, security fix or service pack for an OS or a Software.~~',
 	'Class:Patch/Attribute:name' => 'Nome',
-	'Class:Patch/Attribute:name+' => '',
+	'Class:Patch/Attribute:name+' => '~~',
 	'Class:Patch/Attribute:documents_list' => 'Documentos',
 	'Class:Patch/Attribute:documents_list+' => 'Todos os Documentos associados à esta Atualização',
 	'Class:Patch/Attribute:description' => 'Descrição',
-	'Class:Patch/Attribute:description+' => '',
+	'Class:Patch/Attribute:description+' => '~~',
 	'Class:Patch/Attribute:finalclass' => 'Tipo',
-	'Class:Patch/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: OSPatch
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:Patch/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:OSPatch' => 'Atualização de SO',
-	'Class:OSPatch+' => '',
+	'Class:OSPatch+' => 'Patch, hotfix, security fix or service pack for a given operating system.~~',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Dispositivos',
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'Todos os sistemas onde essa Atualização de SO está instalada',
 	'Class:OSPatch/Attribute:osversion_id' => 'Versão do SO',
-	'Class:OSPatch/Attribute:osversion_id+' => '',
+	'Class:OSPatch/Attribute:osversion_id+' => '~~',
 	'Class:OSPatch/Attribute:osfamily_id' => 'OS Family~~',
-	'Class:OSPatch/Attribute:osfamily_id+' => '',
+	'Class:OSPatch/Attribute:osfamily_id+' => '~~',
 	'Class:OSPatch/Attribute:osversion_name' => 'Nome da versão do SO',
-	'Class:OSPatch/Attribute:osversion_name+' => '',
-]);
-
-//
-// Class: SoftwarePatch
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:OSPatch/Attribute:osversion_name+' => '~~',
 	'Class:SoftwarePatch' => 'Atualização de Software',
-	'Class:SoftwarePatch+' => '',
+	'Class:SoftwarePatch+' => 'Patch, hotfix, security fix or service pack for a given software.~~',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Software',
-	'Class:SoftwarePatch/Attribute:software_id+' => '',
+	'Class:SoftwarePatch/Attribute:software_id+' => '~~',
 	'Class:SoftwarePatch/Attribute:software_name' => 'Nome do software',
-	'Class:SoftwarePatch/Attribute:software_name+' => '',
+	'Class:SoftwarePatch/Attribute:software_name+' => '~~',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Instâncias de software',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Todos os sistemas onde essa Atualização de software está instalada',
-]);
-
-//
-// Class: Licence
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Licence' => 'Licença',
-	'Class:Licence+' => '',
+	'Class:Licence+' => 'Abstract class. A license contract for a particular OS version or Software~~',
 	'Class:Licence/Attribute:name' => 'Nome',
-	'Class:Licence/Attribute:name+' => '',
+	'Class:Licence/Attribute:name+' => '~~',
 	'Class:Licence/Attribute:documents_list' => 'Documentos',
 	'Class:Licence/Attribute:documents_list+' => 'Todos os Documentos associados à esta Licença',
 	'Class:Licence/Attribute:org_id' => 'Organização',
-	'Class:Licence/Attribute:org_id+' => '',
+	'Class:Licence/Attribute:org_id+' => '~~',
 	'Class:Licence/Attribute:organization_name' => 'Nome da organização',
-	'Class:Licence/Attribute:organization_name+' => '',
+	'Class:Licence/Attribute:organization_name+' => 'Common name~~',
 	'Class:Licence/Attribute:usage_limit' => 'Limite de utilização',
-	'Class:Licence/Attribute:usage_limit+' => '',
+	'Class:Licence/Attribute:usage_limit+' => '~~',
 	'Class:Licence/Attribute:description' => 'Descrição',
-	'Class:Licence/Attribute:description+' => '',
+	'Class:Licence/Attribute:description+' => '~~',
 	'Class:Licence/Attribute:start_date' => 'Data de início',
-	'Class:Licence/Attribute:start_date+' => '',
+	'Class:Licence/Attribute:start_date+' => '~~',
 	'Class:Licence/Attribute:end_date' => 'Data de expiração',
-	'Class:Licence/Attribute:end_date+' => '',
+	'Class:Licence/Attribute:end_date+' => '~~',
 	'Class:Licence/Attribute:licence_key' => 'Chave de licença',
-	'Class:Licence/Attribute:licence_key+' => '',
+	'Class:Licence/Attribute:licence_key+' => '~~',
 	'Class:Licence/Attribute:perpetual' => 'Permanente',
-	'Class:Licence/Attribute:perpetual+' => '',
+	'Class:Licence/Attribute:perpetual+' => '~~',
 	'Class:Licence/Attribute:perpetual/Value:no' => 'Não',
 	'Class:Licence/Attribute:perpetual/Value:no+' => 'Não',
 	'Class:Licence/Attribute:perpetual/Value:yes' => 'Sim',
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'Sim',
 	'Class:Licence/Attribute:finalclass' => 'Tipo',
-	'Class:Licence/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: OSLicence
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:Licence/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:OSLicence' => 'Licença de SO',
-	'Class:OSLicence+' => '',
+	'Class:OSLicence+' => 'A license contract for a particular operating system. The license is related to one operating system (for example Windows 2008 R2) and can be associated with several servers or virtual machines.~~',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:OSLicence/Attribute:osversion_id' => 'Versão do SO',
-	'Class:OSLicence/Attribute:osversion_id+' => '',
+	'Class:OSLicence/Attribute:osversion_id+' => '~~',
 	'Class:OSLicence/Attribute:osfamily_id' => 'OS Family~~',
 	'Class:OSLicence/Attribute:osfamily_id+' => '~~',
 	'Class:OSLicence/Attribute:osversion_name' => 'Nome da versão do SO',
-	'Class:OSLicence/Attribute:osversion_name+' => '',
+	'Class:OSLicence/Attribute:osversion_name+' => '~~',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Máquinas virtuais (VMs)',
 	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Todas as Máquinas virtuais (VMs) onde essa Licença é utilizada',
 	'Class:OSLicence/Attribute:servers_list' => 'Servidores',
 	'Class:OSLicence/Attribute:servers_list+' => 'Todos os Servidores onde essa Licença é utilizada',
-]);
-
-//
-// Class: SoftwareLicence
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:SoftwareLicence' => 'Licença de Software',
-	'Class:SoftwareLicence+' => '',
+	'Class:SoftwareLicence+' => 'A license contract for a particular software. The license is related to one software (for example MS Office 2010) and can be associated with several instances of this software.~~',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Software',
-	'Class:SoftwareLicence/Attribute:software_id+' => '',
+	'Class:SoftwareLicence/Attribute:software_id+' => '~~',
 	'Class:SoftwareLicence/Attribute:software_name' => 'Nome do software',
-	'Class:SoftwareLicence/Attribute:software_name+' => '',
+	'Class:SoftwareLicence/Attribute:software_name+' => '~~',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Instâncias de software',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Todos os sistemas onde esta Licença é utilizada',
-]);
-
-//
-// Class: lnkDocumentToLicence
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkDocumentToLicence' => 'Relação entre Documento / Licença',
-	'Class:lnkDocumentToLicence+' => '',
+	'Class:lnkDocumentToLicence+' => 'Link used when a Document is applicable to a License.~~',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licença',
-	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Nome da licença',
-	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Documento',
-	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Nome do documento',
-	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
-]);
-
-//
-// Class: OSVersion
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:lnkDocumentToLicence/Attribute:document_name+' => '~~',
 	'Class:OSVersion' => 'Versão do OS',
-	'Class:OSVersion+' => '',
+	'Class:OSVersion+' => 'Typology. List of the possible values for the "OS Version" of a computer (Server, Virtual Machine or PC). The OS Versions are organized per OS Family.~~',
 	'Class:OSVersion/Attribute:osfamily_id' => 'Família do SO',
-	'Class:OSVersion/Attribute:osfamily_id+' => '',
+	'Class:OSVersion/Attribute:osfamily_id+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Nome da família do SO',
-	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/Attribute:osfamily_name+' => '~~',
+	'Class:OSVersion/Attribute:end_of_support' => 'End of support~~',
+	'Class:OSVersion/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
+	'Class:OSVersion/Attribute:ospatches_list' => 'OS patches~~',
+	'Class:OSVersion/Attribute:ospatches_list+' => 'All the OS patches for this OS version~~',
 	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
 	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
-]);
-
-//
-// Class: OSFamily
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:OSFamily' => 'Família do OS',
-	'Class:OSFamily+' => '',
+	'Class:OSFamily+' => 'Typology. List of the possible values for the "OS Family" attribute of Servers, Virtual Machines and PCs.~~',
+	'Class:OSFamily/Attribute:osversions_list' => 'OS versions~~',
+	'Class:OSFamily/Attribute:osversions_list+' => 'All the OS versions for this OS family~~',
 	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
 	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
-]);
-
-//
-// Class: Brand
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Brand' => 'Fabricante',
-	'Class:Brand+' => '',
+	'Class:Brand+' => 'Typology. List of the possible values for the "Brand" attribute of Physical Device.~~',
+	'Class:Brand/Attribute:iosversions_list' => 'IOS versions~~',
+	'Class:Brand/Attribute:iosversions_list+' => 'All the IOS versions from this brand~~',
 	'Class:Brand/Attribute:logo' => 'Logo~~',
 	'Class:Brand/Attribute:logo+' => '~~',
+	'Class:Brand/Attribute:models_list' => 'Models~~',
+	'Class:Brand/Attribute:models_list+' => 'All models for this brand~~',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Dispositivos físicos',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Todos os Dispositivos físicos correspondentes a esse(a) Fabricante',
 	'Class:Brand/UniquenessRule:name+' => 'O nome do(a) fabricante deve ser único',
 	'Class:Brand/UniquenessRule:name' => 'Esse(a) fabricante já existe',
-]);
-
-//
-// Class: Model
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Model' => 'Modelo',
-	'Class:Model+' => '',
+	'Class:Model+' => 'Typology. List the possible values for the Model attribute of a Physical Device. Each Model belongs to a single Brand, and usually applies to a single type of Physical Device.~~',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Model/Attribute:brand_id' => 'Fabricante',
-	'Class:Model/Attribute:brand_id+' => '',
+	'Class:Model/Attribute:brand_id+' => '~~',
 	'Class:Model/Attribute:brand_name' => 'Nome do fabricante',
-	'Class:Model/Attribute:brand_name+' => '',
+	'Class:Model/Attribute:brand_name+' => '~~',
 	'Class:Model/Attribute:picture' => 'Picture~~',
 	'Class:Model/Attribute:picture+' => '~~',
 	'Class:Model/Attribute:type' => 'Tipo de dispositivo',
-	'Class:Model/Attribute:type+' => '',
+	'Class:Model/Attribute:type+' => '~~',
+	'Class:Model/Attribute:end_of_support' => 'End of support~~',
+	'Class:Model/Attribute:end_of_support+' => 'The date after which the manufacturer ceases to provide patches and support for this model.~~',
 	'Class:Model/Attribute:type/Value:PowerSource' => 'Fonte de energia',
-	'Class:Model/Attribute:type/Value:PowerSource+' => '',
+	'Class:Model/Attribute:type/Value:PowerSource+' => 'Power Source~~',
 	'Class:Model/Attribute:type/Value:DiskArray' => 'Array de disco',
-	'Class:Model/Attribute:type/Value:DiskArray+' => '',
+	'Class:Model/Attribute:type/Value:DiskArray+' => 'Disk Array~~',
 	'Class:Model/Attribute:type/Value:Enclosure' => 'Gaveta',
-	'Class:Model/Attribute:type/Value:Enclosure+' => '',
+	'Class:Model/Attribute:type/Value:Enclosure+' => 'Enclosure~~',
 	'Class:Model/Attribute:type/Value:IPPhone' => 'Telefone IP',
-	'Class:Model/Attribute:type/Value:IPPhone+' => '',
+	'Class:Model/Attribute:type/Value:IPPhone+' => 'IP Phone~~',
 	'Class:Model/Attribute:type/Value:MobilePhone' => 'Telefone celular',
-	'Class:Model/Attribute:type/Value:MobilePhone+' => '',
+	'Class:Model/Attribute:type/Value:MobilePhone+' => 'Mobile Phone~~',
 	'Class:Model/Attribute:type/Value:NAS' => 'NAS',
-	'Class:Model/Attribute:type/Value:NAS+' => '',
+	'Class:Model/Attribute:type/Value:NAS+' => 'NAS~~',
 	'Class:Model/Attribute:type/Value:NetworkDevice' => 'Dispositivo de rede',
-	'Class:Model/Attribute:type/Value:NetworkDevice+' => '',
+	'Class:Model/Attribute:type/Value:NetworkDevice+' => 'Network Device~~',
 	'Class:Model/Attribute:type/Value:PC' => 'PC',
-	'Class:Model/Attribute:type/Value:PC+' => '',
+	'Class:Model/Attribute:type/Value:PC+' => 'PC~~',
 	'Class:Model/Attribute:type/Value:PDU' => 'PDU',
-	'Class:Model/Attribute:type/Value:PDU+' => '',
+	'Class:Model/Attribute:type/Value:PDU+' => 'PDU~~',
 	'Class:Model/Attribute:type/Value:Peripheral' => 'Periférico',
-	'Class:Model/Attribute:type/Value:Peripheral+' => '',
+	'Class:Model/Attribute:type/Value:Peripheral+' => 'Peripheral~~',
 	'Class:Model/Attribute:type/Value:Printer' => 'Impressora',
-	'Class:Model/Attribute:type/Value:Printer+' => '',
+	'Class:Model/Attribute:type/Value:Printer+' => 'Printer~~',
 	'Class:Model/Attribute:type/Value:Rack' => 'Rack',
-	'Class:Model/Attribute:type/Value:Rack+' => '',
+	'Class:Model/Attribute:type/Value:Rack+' => 'Rack~~',
 	'Class:Model/Attribute:type/Value:SANSwitch' => 'Switch SAN',
-	'Class:Model/Attribute:type/Value:SANSwitch+' => '',
+	'Class:Model/Attribute:type/Value:SANSwitch+' => 'SAN switch~~',
 	'Class:Model/Attribute:type/Value:Server' => 'Servidor',
-	'Class:Model/Attribute:type/Value:Server+' => '',
+	'Class:Model/Attribute:type/Value:Server+' => 'Server~~',
 	'Class:Model/Attribute:type/Value:StorageSystem' => 'Sistema de Storage',
-	'Class:Model/Attribute:type/Value:StorageSystem+' => '',
+	'Class:Model/Attribute:type/Value:StorageSystem+' => 'Storage System~~',
 	'Class:Model/Attribute:type/Value:Tablet' => 'Tablet',
-	'Class:Model/Attribute:type/Value:Tablet+' => '',
+	'Class:Model/Attribute:type/Value:Tablet+' => 'Tablet~~',
 	'Class:Model/Attribute:type/Value:TapeLibrary' => 'Biblioteca de fitas',
-	'Class:Model/Attribute:type/Value:TapeLibrary+' => '',
+	'Class:Model/Attribute:type/Value:TapeLibrary+' => 'Tape Library~~',
 	'Class:Model/Attribute:type/Value:Phone' => 'Telefone',
-	'Class:Model/Attribute:type/Value:Phone+' => '',
+	'Class:Model/Attribute:type/Value:Phone+' => 'Telephone~~',
 	'Class:Model/Attribute:physicaldevices_list' => 'Dispositivo físico',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Todos os Dispositivos físicos correspondentes à este Modelo',
 	'Class:Model/UniquenessRule:name_brand+' => 'O nome do modelo deve ser único',
 	'Class:Model/UniquenessRule:name_brand' => 'Este modelo já existe',
-]);
-
-//
-// Class: NetworkDeviceType
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:NetworkDeviceType' => 'Tipo de dispositivo de rede',
-	'Class:NetworkDeviceType+' => '',
+	'Class:NetworkDeviceType+' => 'Typology. The possible values for the "Type" of a Network Device (e.g. Router, Switch, Firewall, etc.).~~',
 	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
 	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Dispositivos de rede',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Todos os Dispositivos de rede correspondentes a este Tipo',
-]);
-
-//
-// Class: IOSVersion
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:IOSVersion' => 'Versão do SO',
-	'Class:IOSVersion+' => '',
+	'Class:IOSVersion+' => 'Typology. Possible values for the versions of operating system for network devices (IOS from Cisco\'s Internetwork Operating System).~~',
 	'Class:IOSVersion/Attribute:brand_id' => 'Fabricante',
-	'Class:IOSVersion/Attribute:brand_id+' => '',
+	'Class:IOSVersion/Attribute:brand_id+' => '~~',
 	'Class:IOSVersion/Attribute:brand_name' => 'Nome do fabricante',
-	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/Attribute:brand_name+' => '~~',
+	'Class:IOSVersion/Attribute:end_of_support' => 'End of support~~',
+	'Class:IOSVersion/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this IOS version.~~',
+	'Class:IOSVersion/Attribute:networkdevices_list' => 'Network devices~~',
+	'Class:IOSVersion/Attribute:networkdevices_list+' => 'All the network devices running this IOS version~~',
 	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
 	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
-]);
-
-//
-// Class: lnkDocumentToPatch
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkDocumentToPatch' => 'Relação entre Documento / Atualização',
-	'Class:lnkDocumentToPatch+' => '',
+	'Class:lnkDocumentToPatch+' => 'Link used when a Document is applicable to a Patch.~~',
 	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Atualização',
-	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Nome da atualização',
-	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:document_id' => 'Documento',
-	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Nome do documento',
-	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
-]);
-
-//
-// Class: lnkSoftwareInstanceToSoftwarePatch
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:lnkDocumentToPatch/Attribute:document_name+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Relação entre Instância de software / Atualização de software',
-	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch+' => 'This link indicates that a software patch has been applied to a software instance.~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Atualização de software',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => 'Nome da atualização de software',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id' => 'Instância de software',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Nome da instância de software',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '',
-]);
-
-//
-// Class: lnkFunctionalCIToOSPatch
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch' => 'Relação entre IC / Atualização de SO',
-	'Class:lnkFunctionalCIToOSPatch+' => '',
+	'Class:lnkFunctionalCIToOSPatch+' => 'Models the deployment of an OS Patch on a device.~~',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'Atualização de SO',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => 'Nome da atualização de SO',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id' => 'ICs',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'Nome do IC',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '',
-]);
-
-//
-// Class: lnkDocumentToSoftware
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '~~',
 	'Class:lnkDocumentToSoftware' => 'Relação entre Documento / Software',
-	'Class:lnkDocumentToSoftware+' => '',
+	'Class:lnkDocumentToSoftware+' => 'Link used when a Document is applicable to Software.~~',
 	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Software',
-	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Nome do software',
-	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:document_id' => 'Documento',
-	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Nome do documento',
-	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
-]);
-
-//
-// Class: Subnet
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '~~',
 	'Class:Subnet' => 'Sub-rede',
-	'Class:Subnet+' => '',
+	'Class:Subnet+' => 'Segment of an IP network, defined by an IP address and a mask~~',
 	'Class:Subnet/Name' => '%1$s/%2$s~~',
 	'Class:Subnet/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Subnet/Attribute:description' => 'Descrição',
-	'Class:Subnet/Attribute:description+' => '',
+	'Class:Subnet/Attribute:description+' => '~~',
 	'Class:Subnet/Attribute:subnet_name' => 'Nome da sub-rede',
-	'Class:Subnet/Attribute:subnet_name+' => '',
+	'Class:Subnet/Attribute:subnet_name+' => '~~',
 	'Class:Subnet/Attribute:org_id' => 'Organização',
-	'Class:Subnet/Attribute:org_id+' => '',
+	'Class:Subnet/Attribute:org_id+' => '~~',
 	'Class:Subnet/Attribute:org_name' => 'Nome',
 	'Class:Subnet/Attribute:org_name+' => 'Nome comum',
 	'Class:Subnet/Attribute:ip' => 'IP',
-	'Class:Subnet/Attribute:ip+' => '',
+	'Class:Subnet/Attribute:ip+' => '~~',
 	'Class:Subnet/Attribute:ip_mask' => 'Máscara de rede',
-	'Class:Subnet/Attribute:ip_mask+' => '',
+	'Class:Subnet/Attribute:ip_mask+' => '~~',
 	'Class:Subnet/Attribute:vlans_list' => 'VLANs',
-	'Class:Subnet/Attribute:vlans_list+' => '',
-]);
-
-//
-// Class: VLAN
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:Subnet/Attribute:vlans_list+' => '~~',
 	'Class:VLAN' => 'VLAN',
-	'Class:VLAN+' => '',
+	'Class:VLAN+' => 'A Virtual LAN is used to group together in a logical way networks Subnets and Physical Interfaces that participate in the same VLAN.~~',
 	'Class:VLAN/Attribute:vlan_tag' => 'Nome da VLAN',
-	'Class:VLAN/Attribute:vlan_tag+' => '',
+	'Class:VLAN/Attribute:vlan_tag+' => '~~',
 	'Class:VLAN/Attribute:description' => 'Descrição',
-	'Class:VLAN/Attribute:description+' => '',
+	'Class:VLAN/Attribute:description+' => '~~',
 	'Class:VLAN/Attribute:org_id' => 'Organização',
-	'Class:VLAN/Attribute:org_id+' => '',
+	'Class:VLAN/Attribute:org_id+' => '~~',
 	'Class:VLAN/Attribute:org_name' => 'Nome da organização',
 	'Class:VLAN/Attribute:org_name+' => 'Nome comum',
 	'Class:VLAN/Attribute:subnets_list' => 'Sub-redes',
-	'Class:VLAN/Attribute:subnets_list+' => '',
+	'Class:VLAN/Attribute:subnets_list+' => '~~',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Interfaces de rede física',
-	'Class:VLAN/Attribute:physicalinterfaces_list+' => '',
-]);
-
-//
-// Class: lnkSubnetToVLAN
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:VLAN/Attribute:physicalinterfaces_list+' => '~~',
 	'Class:lnkSubnetToVLAN' => 'Relação entre Sub-rede / VLAN',
-	'Class:lnkSubnetToVLAN+' => '',
+	'Class:lnkSubnetToVLAN+' => 'This many-to-many link indicates that a VLAN is present on a Subnet. Several VLANs can be present on the same Subnet and a VLAN can span several Subnets.~~',
 	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Sub-rede',
-	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_ip' => 'IP da sub-rede',
-	'Class:lnkSubnetToVLAN/Attribute:subnet_ip+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_ip+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_name' => 'Nome da sub-rede',
-	'Class:lnkSubnetToVLAN/Attribute:subnet_name+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_name+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id' => 'VLAN',
-	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'Nome da VLAN',
-	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '',
-]);
-
-//
-// Class: NetworkInterface
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '~~',
 	'Class:NetworkInterface' => 'Adaptador de Rede',
-	'Class:NetworkInterface+' => '',
+	'Class:NetworkInterface+' => 'Abstract class for all types of network interfaces.~~',
 	'Class:NetworkInterface/Attribute:name' => 'Nome',
-	'Class:NetworkInterface/Attribute:name+' => '',
+	'Class:NetworkInterface/Attribute:name+' => '~~',
 	'Class:NetworkInterface/Attribute:finalclass' => 'Tipo',
-	'Class:NetworkInterface/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: IPInterface
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:NetworkInterface/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:IPInterface' => 'Endereço IP',
-	'Class:IPInterface+' => '',
+	'Class:IPInterface+' => 'Abstract class. A type of Network Interface with an IP address~~',
 	'Class:IPInterface/Attribute:ipaddress' => 'Endereço IP',
-	'Class:IPInterface/Attribute:ipaddress+' => '',
+	'Class:IPInterface/Attribute:ipaddress+' => '~~',
 	'Class:IPInterface/Attribute:macaddress' => 'Endereço MAC',
-	'Class:IPInterface/Attribute:macaddress+' => '',
+	'Class:IPInterface/Attribute:macaddress+' => '~~',
 	'Class:IPInterface/Attribute:comment' => 'Comentário',
-	'Class:IPInterface/Attribute:coment+' => '',
+	'Class:IPInterface/Attribute:coment+' => '~~',
 	'Class:IPInterface/Attribute:ipgateway' => 'Gateway',
-	'Class:IPInterface/Attribute:ipgateway+' => '',
+	'Class:IPInterface/Attribute:ipgateway+' => '~~',
 	'Class:IPInterface/Attribute:ipmask' => 'Máscara de rede',
-	'Class:IPInterface/Attribute:ipmask+' => '',
+	'Class:IPInterface/Attribute:ipmask+' => '~~',
 	'Class:IPInterface/Attribute:speed' => 'Velocidade',
-	'Class:IPInterface/Attribute:speed+' => '',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:IPInterface/Attribute:speed+' => '~~',
 	'Class:PhysicalInterface' => 'Placa física',
-	'Class:PhysicalInterface+' => '',
+	'Class:PhysicalInterface+' => 'A type of IP Interface that represents a physical network interface (e.g. an Ethernet card).~~',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s~~',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Dispositivo',
-	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
+	'Class:PhysicalInterface/Attribute:connectableci_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Nome do dispositivo',
-	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
+	'Class:PhysicalInterface/Attribute:connectableci_name+' => '~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
+	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
+	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLANs',
-	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
-]);
-
-//
-// Class: lnkPhysicalInterfaceToVLAN
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:PhysicalInterface/Attribute:vlans_list+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Relação entre Interface física / VLAN',
-	'Class:lnkPhysicalInterfaceToVLAN+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN+' => 'This link indicates when a network interface is part of a VLAN (Virtual Local Area Network).~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Interface física',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name' => 'Nome da interface física',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id' => 'Dispositivo',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name' => 'Nome do dispositivo',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id' => 'VLAN',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'Nome da VLAN',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '',
-]);
-
-//
-// Class: LogicalInterface
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '~~',
 	'Class:LogicalInterface' => 'Placa lógica',
-	'Class:LogicalInterface+' => '',
+	'Class:LogicalInterface+' => 'IP Interface which is not associated permanently with a particular physical port, the association is dynamic. It can be used for Virtual Machine.~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Máquina virtual',
-	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '',
+	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Nome da máquina virtual',
-	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '',
-]);
-
-//
-// Class: FiberChannelInterface
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '~~',
 	'Class:FiberChannelInterface' => 'Placa Fiber Channel',
-	'Class:FiberChannelInterface+' => '',
+	'Class:FiberChannelInterface+' => 'Network Interface to a high-speed network technology primarily used for connecting Storage Systems.~~',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Velocidade',
-	'Class:FiberChannelInterface/Attribute:speed+' => '',
+	'Class:FiberChannelInterface/Attribute:speed+' => '~~',
 	'Class:FiberChannelInterface/Attribute:topology' => 'Topologia',
-	'Class:FiberChannelInterface/Attribute:topology+' => '',
+	'Class:FiberChannelInterface/Attribute:topology+' => '~~',
 	'Class:FiberChannelInterface/Attribute:wwn' => 'WWN',
-	'Class:FiberChannelInterface/Attribute:wwn+' => '',
+	'Class:FiberChannelInterface/Attribute:wwn+' => '~~',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id' => 'Dispositivo',
-	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '',
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '~~',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Nome do dispositivo',
-	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '',
-]);
-
-//
-// Class: lnkConnectableCIToNetworkDevice
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice' => 'Relação entre Dispositivo conectado / Dispositivo de rede',
-	'Class:lnkConnectableCIToNetworkDevice+' => '',
+	'Class:lnkConnectableCIToNetworkDevice+' => 'Defines on which network equipment a device is connected.~~',
 	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Dispositivo de rede',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => 'Nome do dispositivo rede',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id' => 'Dispositivo conectado',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name' => 'Nome do dispositivo conectado',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port' => 'Porta de rede',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port' => 'Porta do dispositivo',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type' => 'Tipo de conexão',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink' => 'Link down',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'Link down',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'Link up',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'Link up',
-]);
-
-//
-// Class: lnkApplicationSolutionToFunctionalCI
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Relação entre Solução de aplicação / IC',
-	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI+' => 'Models the membership of a device to an Application Solution. The meaning of this relationship varies depending on the types of Application Solution.~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Solução de aplicação',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'Nome da solução de aplicação',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id' => 'ICs',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'Nome do IC',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '',
-]);
-
-//
-// Class: lnkApplicationSolutionToBusinessProcess
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Relação entre Solução de aplicação / Processo de negócio',
-	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess+' => 'Models the relationship between an Application Solution and a Business Process.~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Processo de negócio',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => 'Nome do processo de negócio',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id' => 'Solução de aplicação',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Nome da solução de aplicação',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '',
-]);
-
-//
-// Class: Group
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '~~',
 	'Class:Group' => 'Grupo',
-	'Class:Group+' => '',
+	'Class:Group+' => 'Group is designed to define explicit sets of configurations items for any project purpose. In contrast to Application Solution, a Group is not impacted by any of its component and does not impact them. For example when doing an OS migration, Group can be convenient to gather “Servers to be migrated”. Migrated servers being removed from the group as the migration progresses.~~',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Group/Attribute:name' => 'Nome',
-	'Class:Group/Attribute:name+' => '',
+	'Class:Group/Attribute:name+' => '~~',
 	'Class:Group/Attribute:status' => 'Status',
-	'Class:Group/Attribute:status+' => '',
+	'Class:Group/Attribute:status+' => '~~',
 	'Class:Group/Attribute:status/Value:implementation' => 'Em homologação',
 	'Class:Group/Attribute:status/Value:implementation+' => 'Em homologação',
 	'Class:Group/Attribute:status/Value:obsolete' => 'Obsoleto',
@@ -1508,56 +968,55 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Group/Attribute:status/Value:production' => 'Em produção',
 	'Class:Group/Attribute:status/Value:production+' => 'Em produção',
 	'Class:Group/Attribute:org_id' => 'Organização',
-	'Class:Group/Attribute:org_id+' => '',
+	'Class:Group/Attribute:org_id+' => '~~',
 	'Class:Group/Attribute:owner_name' => 'Nome',
 	'Class:Group/Attribute:owner_name+' => 'Nome comum',
 	'Class:Group/Attribute:description' => 'Descrição',
-	'Class:Group/Attribute:description+' => '',
+	'Class:Group/Attribute:description+' => '~~',
 	'Class:Group/Attribute:type' => 'Tipo',
-	'Class:Group/Attribute:type+' => '',
+	'Class:Group/Attribute:type+' => '~~',
 	'Class:Group/Attribute:parent_id' => 'Grupo pai',
-	'Class:Group/Attribute:parent_id+' => '',
+	'Class:Group/Attribute:parent_id+' => '~~',
 	'Class:Group/Attribute:parent_name' => 'Nome',
-	'Class:Group/Attribute:parent_name+' => '',
+	'Class:Group/Attribute:parent_name+' => '~~',
 	'Class:Group/Attribute:ci_list' => 'ICs relacionados',
 	'Class:Group/Attribute:ci_list+' => 'Todos os Itens de configuração (IC) associados à este Grupo',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Grupo pai',
-	'Class:Group/Attribute:parent_id_friendlyname+' => '',
-]);
-
-//
-// Class: lnkGroupToCI
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:Group/Attribute:parent_id_friendlyname+' => '~~',
 	'Class:lnkGroupToCI' => 'Relação entre Grupo / IC',
-	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI+' => 'This link indicates when a Functional CI is part of a Group.~~',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'Grupo',
-	'Class:lnkGroupToCI/Attribute:group_id+' => '',
+	'Class:lnkGroupToCI/Attribute:group_id+' => '~~',
 	'Class:lnkGroupToCI/Attribute:group_name' => 'Nome do grupo',
-	'Class:lnkGroupToCI/Attribute:group_name+' => '',
+	'Class:lnkGroupToCI/Attribute:group_name+' => '~~',
 	'Class:lnkGroupToCI/Attribute:ci_id' => 'IC',
-	'Class:lnkGroupToCI/Attribute:ci_id+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_id+' => '~~',
 	'Class:lnkGroupToCI/Attribute:ci_name' => 'Nome do IC',
-	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_name+' => '~~',
 	'Class:lnkGroupToCI/Attribute:reason' => 'Motivo do link',
-	'Class:lnkGroupToCI/Attribute:reason+' => '',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:lnkGroupToCI/Attribute:reason+' => '~~',
+	'Class:lnkDocumentToFunctionalCI' => 'Relação entre Documento / IC',
+	'Class:lnkDocumentToFunctionalCI+' => 'Link used when a Document is applicable to a Functional CI.~~',
+	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'IC',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Nome do IC',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Documento',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Nome do documento',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
 	'ConfigMgmt:baseinfo' => 'General~~',
 	'ConfigMgmt:moreinfo' => 'CI specifics~~',
-	'Storage:moreinfo' => 'Storage specifics~~',
 	'ConfigMgmt:otherinfo' => 'Description~~',
 	'ConfigMgmt:dates' => 'Dates~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
 	'Software:moreinfo' => 'Software specifics~~',
 	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Informações gerais',
-	'Server:Date' => 'Data',
 	'Server:moreinfo' => 'Mais informações',
+	'Server:Date' => 'Data',
 	'Server:otherinfo' => 'Outras informações',
 	'Server:power' => 'Fonte de alimentação',
 	'Class:Subnet/Tab:IPUsage' => 'IP usado',
@@ -1567,31 +1026,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Subnet/Tab:FreeIPs-count' => 'IPs livres: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Aqui uma faixa de 10 endereços IPs livres',
 	'Class:Document:PreviewTab' => 'Visualização',
-]);
-
-//
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:lnkDocumentToFunctionalCI' => 'Relação entre Documento / IC',
-	'Class:lnkDocumentToFunctionalCI+' => '',
-	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'IC',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Nome do IC',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Documento',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Nome do documento',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:Application' => 'Aplicações',
 	'Menu:Application+' => 'Lista de Aplicações',
 	'Menu:DBServer' => 'Servidores de Banco de Dados',
@@ -1635,16 +1069,5 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:OSVersion' => 'Versão do SO',
 	'Menu:OSVersion+' => 'Lista de Versões do SO',
 	'Menu:Software' => 'Catálogo de Software',
-	'Menu:Software+' => '',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
-	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
-	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
+	'Menu:Software+' => 'Software catalog~~',
 ]);

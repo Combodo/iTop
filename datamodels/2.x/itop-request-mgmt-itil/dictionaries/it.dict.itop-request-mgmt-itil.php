@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -42,25 +41,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Richieste aperte dal cliente',
 	'Class:UserRequest:KnownErrorList' => 'Errori conosciuti',
 	'Class:UserRequest:KnownErrorList+' => 'Errori conosciuti relativi al CI funzionale collegato al ticket corrente',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: UserRequest
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:UserRequest/Method:UpdateChildTicketWith:public_log' => '<i><u>Public log automatic copy from parent User Request %2$s:</u></i><br><br>~~',
+	'Class:UserRequest/Method:UpdateChildTicketWith:private_log' => '<i>Private log automatic copy from parent User Request [[UserRequest:%1$s]]:</i><br><br>~~',
 	'Class:UserRequest' => 'Richiesta utente',
-	'Class:UserRequest+' => '~~',
+	'Class:UserRequest+' => 'Ticket type to handle only service requests and not Incidents.~~',
 	'Class:UserRequest/Attribute:status' => 'Stato',
 	'Class:UserRequest/Attribute:status+' => '~~',
 	'Class:UserRequest/Attribute:status/Value:new' => 'Nuovo',
@@ -142,7 +126,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:UserRequest/Attribute:servicesubcategory_name' => 'Nome della sottocategoria servizio',
 	'Class:UserRequest/Attribute:servicesubcategory_name+' => '~~',
 	'Class:UserRequest/Attribute:escalation_flag' => 'Spunta importante',
-	'Class:UserRequest/Attribute:escalation_flag+' => '~~',
+	'Class:UserRequest/Attribute:escalation_flag+' => 'When set, the Ticket is added to the "Under escalation" menu~~',
 	'Class:UserRequest/Attribute:escalation_flag/Value:no' => 'No',
 	'Class:UserRequest/Attribute:escalation_flag/Value:no+' => 'No',
 	'Class:UserRequest/Attribute:escalation_flag/Value:yes' => 'Sì',
@@ -262,9 +246,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Non si può assegnare una richiesta padre a se stesso',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Risoluzione richieste figlie',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Risoluzione a cascata delle richieste figlie (ev_autoresolve), e allineare le seguenti caratteristiche: servizio, team, agente e risoluzione',
-]);
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Organization:Overview:UserRequests' => 'Richieste utente per questa organizzazione',
 	'Organization:Overview:MyUserRequests' => 'Le mie richieste per questa organizzazione',
 	'Organization:Overview:Tickets' => 'Ticket per questa organizzazione',

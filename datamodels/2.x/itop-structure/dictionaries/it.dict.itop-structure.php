@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
@@ -13,13 +12,13 @@
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Organization' => 'Organizzazione',
-	'Class:Organization+' => '',
+	'Class:Organization+' => 'It can be a customer, a provider, your company or departments within your company. Organizations can be structured hierarchically. Users can be limited to objects belonging to some organizations only.~~',
 	'Class:Organization/Attribute:name' => 'Cognome',
 	'Class:Organization/Attribute:name+' => 'Nome',
 	'Class:Organization/Attribute:code' => 'Codice',
 	'Class:Organization/Attribute:code+' => 'Codice dell\'organizzazione (Siret, DUNS,...)',
 	'Class:Organization/Attribute:status' => 'Stato',
-	'Class:Organization/Attribute:status+' => '',
+	'Class:Organization/Attribute:status+' => '~~',
 	'Class:Organization/Attribute:status/Value:active' => 'Attivo',
 	'Class:Organization/Attribute:status/Value:active+' => 'Attivo',
 	'Class:Organization/Attribute:status/Value:inactive' => 'Inattivo',
@@ -38,65 +37,51 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Users within this organization~~',
-]);
-
-//
-// Class: Location
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Location' => 'Localizzazione',
 	'Class:Location+' => 'Qualsiasi tipo di localizzazione: Regione, Paese, Città, Sito, Edificio, Piano, Stanza, Rack,,...',
 	'Class:Location/Attribute:name' => 'Nome',
-	'Class:Location/Attribute:name+' => '',
+	'Class:Location/Attribute:name+' => '~~',
 	'Class:Location/Attribute:status' => 'Stato',
-	'Class:Location/Attribute:status+' => '',
+	'Class:Location/Attribute:status+' => '~~',
 	'Class:Location/Attribute:status/Value:active' => 'Attivo',
 	'Class:Location/Attribute:status/Value:active+' => 'Attivo',
 	'Class:Location/Attribute:status/Value:inactive' => 'Inattivo',
 	'Class:Location/Attribute:status/Value:inactive+' => 'Inattivo',
 	'Class:Location/Attribute:org_id' => 'Organizzazione proprietaria',
-	'Class:Location/Attribute:org_id+' => '',
+	'Class:Location/Attribute:org_id+' => '~~',
 	'Class:Location/Attribute:org_name' => 'Nome dell\'organizzazione',
-	'Class:Location/Attribute:org_name+' => '',
+	'Class:Location/Attribute:org_name+' => '~~',
 	'Class:Location/Attribute:address' => 'Indirizzo',
 	'Class:Location/Attribute:address+' => 'Indirizzo postale',
 	'Class:Location/Attribute:postal_code' => 'Codice avviamento postale',
 	'Class:Location/Attribute:postal_code+' => 'CAP/codice avviamento postale',
 	'Class:Location/Attribute:city' => 'Città',
-	'Class:Location/Attribute:city+' => '',
+	'Class:Location/Attribute:city+' => '~~',
 	'Class:Location/Attribute:country' => 'Paese',
-	'Class:Location/Attribute:country+' => '',
+	'Class:Location/Attribute:country+' => '~~',
 	'Class:Location/Attribute:physicaldevice_list' => 'Devices~~',
 	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location~~',
 	'Class:Location/Attribute:person_list' => 'Contacts~~',
 	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location~~',
-]);
-
-//
-// Class: Contact
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Contact' => 'Contatto',
-	'Class:Contact+' => '',
+	'Class:Contact+' => 'Abstract class. A Contact can be linked to Tickets and FunctionalCIs for different purposes, such as incident dispatching and notifications.~~',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => 'Nome',
-	'Class:Contact/Attribute:name+' => '',
+	'Class:Contact/Attribute:name+' => '~~',
 	'Class:Contact/Attribute:status' => 'Stato',
-	'Class:Contact/Attribute:status+' => '',
+	'Class:Contact/Attribute:status+' => '~~',
 	'Class:Contact/Attribute:status/Value:active' => 'Attivo',
 	'Class:Contact/Attribute:status/Value:active+' => 'Attivo',
 	'Class:Contact/Attribute:status/Value:inactive' => 'Inattivo',
 	'Class:Contact/Attribute:status/Value:inactive+' => 'Inattivo',
 	'Class:Contact/Attribute:org_id' => 'Organizzazione',
-	'Class:Contact/Attribute:org_id+' => '',
+	'Class:Contact/Attribute:org_id+' => '~~',
 	'Class:Contact/Attribute:org_name' => 'Organizzazione',
-	'Class:Contact/Attribute:org_name+' => '',
+	'Class:Contact/Attribute:org_name+' => '~~',
 	'Class:Contact/Attribute:email' => 'Email',
-	'Class:Contact/Attribute:email+' => '',
+	'Class:Contact/Attribute:email+' => '~~',
 	'Class:Contact/Attribute:phone' => 'Telefono',
-	'Class:Contact/Attribute:phone+' => '',
+	'Class:Contact/Attribute:phone+' => '~~',
 	'Class:Contact/Attribute:notify' => 'Notification~~',
 	'Class:Contact/Attribute:notify+' => 'Flag which can be used by each notification~~',
 	'Class:Contact/Attribute:notify/Value:no' => 'no~~',
@@ -108,21 +93,15 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Contact/Attribute:cis_list' => 'CIs~~',
 	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact~~',
 	'Class:Contact/Attribute:finalclass' => 'Tipo',
-	'Class:Contact/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: Person
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:Contact/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Person' => 'Persona',
-	'Class:Person+' => '',
+	'Class:Person+' => 'A type of Contact used to describe physical persons. Persons can be grouped into Teams. Persons can be linked to other configuration items (eg. to describe who to contact in case of incident with an application).
+Other usage: the caller of a User request is a Person as well as the agent assigned to resolve it.~~',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => 'Last Name~~',
 	'Class:Person/Attribute:name+' => '~~',
 	'Class:Person/Attribute:first_name' => 'Nome',
-	'Class:Person/Attribute:first_name+' => '',
+	'Class:Person/Attribute:first_name+' => '~~',
 	'Class:Person/Attribute:employee_number' => 'Employee number~~',
 	'Class:Person/Attribute:employee_number+' => '~~',
 	'Class:Person/Attribute:mobile_phone' => 'Mobile phone~~',
@@ -139,6 +118,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to~~',
 	'Class:Person/Attribute:tickets_list' => 'Tickets~~',
 	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller~~',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Create a %4$s for %2$s~~',
 	'Class:Person/Attribute:user_list' => 'Users~~',
 	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager friendly name~~',
@@ -150,15 +130,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
 	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-]);
-
-//
-// Class: Team
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Team' => 'Squadra',
-	'Class:Team+' => '',
+	'Class:Team+' => 'A type of Contact. Often used to group Persons, but not only. Teams are expected to watch Tickets dispatched to them, and assign it to an agent, usually a member of that team.~~',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Members~~',
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
@@ -171,22 +144,15 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months~~',
 	'Class:Team/Attribute:tickets_list' => 'Tickets~~',
 	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
-]);
-
-//
-// Class: Document
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Document' => 'Documento',
-	'Class:Document+' => '',
+	'Class:Document+' => 'Abstract class. A document that can be shared across multiple objects, making it easy and quick to retrieve from all relevant locations.~~',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => 'Nome',
-	'Class:Document/Attribute:name+' => '',
+	'Class:Document/Attribute:name+' => '~~',
 	'Class:Document/Attribute:org_id' => 'Organizzazione',
 	'Class:Document/Attribute:org_id+' => '~~',
 	'Class:Document/Attribute:org_name' => 'Nome dell\'organizzazione',
-	'Class:Document/Attribute:org_name+' => '',
+	'Class:Document/Attribute:org_name+' => '~~',
 	'Class:Document/Attribute:documenttype_id' => 'Document type~~',
 	'Class:Document/Attribute:documenttype_id+' => '~~',
 	'Class:Document/Attribute:documenttype_name' => 'Document type name~~',
@@ -194,92 +160,43 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Document/Attribute:version' => 'Version~~',
 	'Class:Document/Attribute:version+' => '~~',
 	'Class:Document/Attribute:description' => 'Descrizione',
-	'Class:Document/Attribute:description+' => '',
+	'Class:Document/Attribute:description+' => '~~',
 	'Class:Document/Attribute:status' => 'Stato',
-	'Class:Document/Attribute:status+' => '',
+	'Class:Document/Attribute:status+' => '~~',
 	'Class:Document/Attribute:status/Value:draft' => 'Draft',
-	'Class:Document/Attribute:status/Value:draft+' => '',
+	'Class:Document/Attribute:status/Value:draft+' => '~~',
 	'Class:Document/Attribute:status/Value:obsolete' => 'Obsoleto',
-	'Class:Document/Attribute:status/Value:obsolete+' => '',
+	'Class:Document/Attribute:status/Value:obsolete+' => '~~',
 	'Class:Document/Attribute:status/Value:published' => 'Pubblicato',
-	'Class:Document/Attribute:status/Value:published+' => '',
+	'Class:Document/Attribute:status/Value:published+' => '~~',
 	'Class:Document/Attribute:cis_list' => 'CIs~~',
 	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
 	'Class:Document/Attribute:finalclass' => 'Document sub-class~~',
 	'Class:Document/Attribute:finalclass+' => 'Name of the final class~~',
-]);
-
-//
-// Class: DocumentFile
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DocumentFile' => 'Document File~~',
-	'Class:DocumentFile+' => '~~',
+	'Class:DocumentFile+' => 'It\'s a type of Document which includes an uploaded file (in any format: Word, PDF, Spreadsheet, etc.).~~',
 	'Class:DocumentFile/Attribute:file' => 'File~~',
 	'Class:DocumentFile/Attribute:file+' => '~~',
-]);
-
-//
-// Class: DocumentNote
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DocumentNote' => 'Document Note~~',
-	'Class:DocumentNote+' => '~~',
+	'Class:DocumentNote+' => 'Used to store a text document. HTML formatting is supported using the WYSIWYG editor. Search can be performed on its content.~~',
 	'Class:DocumentNote/Attribute:text' => 'Text~~',
 	'Class:DocumentNote/Attribute:text+' => '~~',
-]);
-
-//
-// Class: DocumentWeb
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DocumentWeb' => 'Document Web~~',
-	'Class:DocumentWeb+' => '~~',
+	'Class:DocumentWeb+' => 'Hyperlinks to external applications or documents, acting as pointers to external resources. You cannot search in their content from '.ITOP_APPLICATION_SHORT.'~~',
 	'Class:DocumentWeb/Attribute:url' => 'URL~~',
 	'Class:DocumentWeb/Attribute:url+' => '~~',
-]);
-
-//
-// Class: Typology
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Typology' => 'Typology~~',
-	'Class:Typology+' => '~~',
+	'Class:Typology+' => 'Abstract class. ExternalKeyAttribute to a Typology subclass are used in place of an EnumAttribute, to have more dynamic values.~~',
 	'Class:Typology/Attribute:name' => 'Name~~',
 	'Class:Typology/Attribute:name+' => '~~',
 	'Class:Typology/Attribute:finalclass' => 'Typology sub-class~~',
 	'Class:Typology/Attribute:finalclass+' => 'Name of the final class~~',
-]);
-
-//
-// Class: DocumentType
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DocumentType' => 'Document Type~~',
-	'Class:DocumentType+' => '~~',
-]);
-
-//
-// Class: ContactType
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:DocumentType+' => 'Typology. A classification system used to organize and logically group documents~~',
 	'Class:ContactType' => 'Contact Type~~',
-	'Class:ContactType+' => '~~',
-]);
-
-//
-// Class: lnkPersonToTeam
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:ContactType+' => 'Typology to organize your Contacts and group them logically for you.~~',
 	'Class:lnkPersonToTeam' => 'Link Person / Team~~',
-	'Class:lnkPersonToTeam+' => '~~',
+	'Class:lnkPersonToTeam+' => 'This link indicates when a Person is a member of a Team.~~',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
 	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Team~~',
@@ -294,21 +211,14 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkPersonToTeam/Attribute:role_id+' => 'To select within a typology of possible roles~~',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Role name~~',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '~~',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:DataAdministration' => 'Dati di amministrazione',
-	'Menu:DataAdministration+' => '',
+	'Menu:DataAdministration+' => 'Data administration~~',
 	'Menu:Catalogs' => 'Cataloghi',
 	'Menu:Catalogs+' => 'Tipi di dato',
 	'Menu:Audit' => 'Audit',
 	'Menu:Audit+' => 'Audit',
 	'Menu:CSVImport' => 'Importazione CSV',
-	'Menu:CSVImport+' => '',
+	'Menu:CSVImport+' => 'Bulk creation or update~~',
 	'Menu:Organization' => 'Organizzazioni',
 	'Menu:Organization+' => 'Tutte le organizzazioni',
 	'Menu:ConfigManagement' => 'Gestione delle configurazioni',
@@ -338,20 +248,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:Typology+' => 'Typology configuration~~',
 	'UI_WelcomeMenu_AllConfigItems' => 'Summary~~',
 	'Menu:ConfigManagement:Typology' => 'Typology configuration~~',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Person:info' => 'General information~~',
 	'User:info' => 'General information~~',
 	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Notification~~',
-]);
-
-// Themes
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ]);

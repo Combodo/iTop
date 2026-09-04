@@ -1,32 +1,17 @@
 <?php
-
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2024 Combodo SAS
- * @license    http://opensource.org/licenses/AGPL-3.0
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-
+/**
+ *
+ */
 Dict::Add('EN GB', 'British English', 'British English', [
-
 	'bkp-backup-running' => 'A backup is running. Please wait...',
 	'bkp-restore-running' => 'A restore is running. Please wait...',
-
 	'Menu:BackupStatus' => 'Backups',
 	'bkp-status-title' => 'Backups',
 	'bkp-status-checks' => 'Settings and checks',
@@ -44,9 +29,9 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'bkp-table-file' => 'File',
 	'bkp-table-file+' => 'Only files having the extension .zip are considered as being backup files',
 	'bkp-table-size' => 'Size',
-	'bkp-table-size+' => '',
+	'bkp-table-size+' => '~~',
 	'bkp-table-actions' => 'Actions',
-	'bkp-table-actions+' => '',
+	'bkp-table-actions+' => '~~',
 	'bkp-status-backups-auto' => 'Scheduled backups',
 	'bkp-status-backups-manual' => 'Manual backups',
 	'bkp-status-backups-none' => 'No backup yet',

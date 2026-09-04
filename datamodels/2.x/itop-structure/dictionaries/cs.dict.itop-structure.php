@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
@@ -15,136 +14,117 @@
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Organization' => 'Organizace',
-	'Class:Organization+' => '',
+	'Class:Organization+' => 'It can be a customer, a provider, your company or departments within your company. Organizations can be structured hierarchically. Users can be limited to objects belonging to some organizations only.~~',
 	'Class:Organization/Attribute:name' => 'Název',
-	'Class:Organization/Attribute:name+' => '',
+	'Class:Organization/Attribute:name+' => 'Common name~~',
 	'Class:Organization/Attribute:code' => 'Kód',
 	'Class:Organization/Attribute:code+' => 'Kód organizace (IČO, DIČ,...)',
 	'Class:Organization/Attribute:status' => 'Stav',
-	'Class:Organization/Attribute:status+' => '',
+	'Class:Organization/Attribute:status+' => '~~',
 	'Class:Organization/Attribute:status/Value:active' => 'Aktivní',
-	'Class:Organization/Attribute:status/Value:active+' => '',
+	'Class:Organization/Attribute:status/Value:active+' => 'Active~~',
 	'Class:Organization/Attribute:status/Value:inactive' => 'Neaktivní',
-	'Class:Organization/Attribute:status/Value:inactive+' => '',
+	'Class:Organization/Attribute:status/Value:inactive+' => 'Inactive~~',
 	'Class:Organization/Attribute:parent_id' => 'Mateřská organizace',
-	'Class:Organization/Attribute:parent_id+' => '',
+	'Class:Organization/Attribute:parent_id+' => 'Parent organization~~',
 	'Class:Organization/Attribute:parent_name' => 'Název mateřské organizace',
-	'Class:Organization/Attribute:parent_name+' => '',
+	'Class:Organization/Attribute:parent_name+' => 'Name of the parent organization~~',
 	'Class:Organization/Attribute:deliverymodel_id' => 'Model poskytování služeb',
-	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Název modelu poskytování služeb',
-	'Class:Organization/Attribute:deliverymodel_name+' => '',
+	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Mateřská organizace',
-	'Class:Organization/Attribute:parent_id_friendlyname+' => '',
+	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Parent organization~~',
 	'Class:Organization/Attribute:overview' => 'Přehled',
 	'Organization:Overview:FunctionalCIs' => 'Konfigurační položky této organizace',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'podle typu',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Uživatelé v rámci této organizace',
-]);
-
-//
-// Class: Location
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Location' => 'Umístění',
 	'Class:Location+' => 'Jakékoli umístění: země, okres, město, čtvrť, budova, patro, místnost, rack,...',
 	'Class:Location/Attribute:name' => 'Název',
-	'Class:Location/Attribute:name+' => '',
+	'Class:Location/Attribute:name+' => '~~',
 	'Class:Location/Attribute:status' => 'Stav',
-	'Class:Location/Attribute:status+' => '',
+	'Class:Location/Attribute:status+' => '~~',
 	'Class:Location/Attribute:status/Value:active' => 'Aktivní',
-	'Class:Location/Attribute:status/Value:active+' => '',
+	'Class:Location/Attribute:status/Value:active+' => 'Active~~',
 	'Class:Location/Attribute:status/Value:inactive' => 'Neaktivní',
-	'Class:Location/Attribute:status/Value:inactive+' => '',
+	'Class:Location/Attribute:status/Value:inactive+' => 'Inactive~~',
 	'Class:Location/Attribute:org_id' => 'Vlastník (Organizace)',
-	'Class:Location/Attribute:org_id+' => '',
+	'Class:Location/Attribute:org_id+' => '~~',
 	'Class:Location/Attribute:org_name' => 'Vlastník (Organizace)',
-	'Class:Location/Attribute:org_name+' => '',
+	'Class:Location/Attribute:org_name+' => '~~',
 	'Class:Location/Attribute:address' => 'Adresa',
-	'Class:Location/Attribute:address+' => '',
+	'Class:Location/Attribute:address+' => 'Postal address~~',
 	'Class:Location/Attribute:postal_code' => 'PSČ',
 	'Class:Location/Attribute:postal_code+' => 'Poštovní směrovací číslo',
 	'Class:Location/Attribute:city' => 'Město',
-	'Class:Location/Attribute:city+' => '',
+	'Class:Location/Attribute:city+' => '~~',
 	'Class:Location/Attribute:country' => 'Země',
-	'Class:Location/Attribute:country+' => '',
+	'Class:Location/Attribute:country+' => '~~',
 	'Class:Location/Attribute:physicaldevice_list' => 'Zařízení',
 	'Class:Location/Attribute:physicaldevice_list+' => 'Všechna zařízení v tomto umístění',
 	'Class:Location/Attribute:person_list' => 'Kontakty',
 	'Class:Location/Attribute:person_list+' => 'Všechny kontakty v tomto umístění',
-]);
-
-//
-// Class: Contact
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Contact' => 'Kontakt',
-	'Class:Contact+' => '',
+	'Class:Contact+' => 'Abstract class. A Contact can be linked to Tickets and FunctionalCIs for different purposes, such as incident dispatching and notifications.~~',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => 'Název',
-	'Class:Contact/Attribute:name+' => '',
+	'Class:Contact/Attribute:name+' => '~~',
 	'Class:Contact/Attribute:status' => 'Stav',
-	'Class:Contact/Attribute:status+' => '',
+	'Class:Contact/Attribute:status+' => '~~',
 	'Class:Contact/Attribute:status/Value:active' => 'Aktivní',
-	'Class:Contact/Attribute:status/Value:active+' => '',
+	'Class:Contact/Attribute:status/Value:active+' => 'Active~~',
 	'Class:Contact/Attribute:status/Value:inactive' => 'Neaktivní',
-	'Class:Contact/Attribute:status/Value:inactive+' => '',
+	'Class:Contact/Attribute:status/Value:inactive+' => 'Inactive~~',
 	'Class:Contact/Attribute:org_id' => 'Organizace',
-	'Class:Contact/Attribute:org_id+' => '',
+	'Class:Contact/Attribute:org_id+' => '~~',
 	'Class:Contact/Attribute:org_name' => 'Název organizace',
-	'Class:Contact/Attribute:org_name+' => '',
+	'Class:Contact/Attribute:org_name+' => '~~',
 	'Class:Contact/Attribute:email' => 'Email',
-	'Class:Contact/Attribute:email+' => '',
+	'Class:Contact/Attribute:email+' => '~~',
 	'Class:Contact/Attribute:phone' => 'Telefon',
-	'Class:Contact/Attribute:phone+' => '',
+	'Class:Contact/Attribute:phone+' => '~~',
 	'Class:Contact/Attribute:notify' => 'Upozornění',
-	'Class:Contact/Attribute:notify+' => '',
+	'Class:Contact/Attribute:notify+' => 'Flag which can be used by each notification~~',
 	'Class:Contact/Attribute:notify/Value:no' => 'ne',
-	'Class:Contact/Attribute:notify/Value:no+' => '',
+	'Class:Contact/Attribute:notify/Value:no+' => 'no~~',
 	'Class:Contact/Attribute:notify/Value:yes' => 'ano',
-	'Class:Contact/Attribute:notify/Value:yes+' => '',
+	'Class:Contact/Attribute:notify/Value:yes+' => 'yes~~',
 	'Class:Contact/Attribute:function' => 'Funkce',
-	'Class:Contact/Attribute:function+' => '',
+	'Class:Contact/Attribute:function+' => '~~',
 	'Class:Contact/Attribute:cis_list' => 'Konfigurační položky',
 	'Class:Contact/Attribute:cis_list+' => 'Všechny konfigurační položky spojené s tímto kontaktem',
 	'Class:Contact/Attribute:finalclass' => 'Typ kontaktu',
-	'Class:Contact/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: Person
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+	'Class:Contact/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Person' => 'Osoba',
-	'Class:Person+' => '',
+	'Class:Person+' => 'A type of Contact used to describe physical persons. Persons can be grouped into Teams. Persons can be linked to other configuration items (eg. to describe who to contact in case of incident with an application).
+Other usage: the caller of a User request is a Person as well as the agent assigned to resolve it.~~',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => 'Příjmení',
-	'Class:Person/Attribute:name+' => '',
+	'Class:Person/Attribute:name+' => '~~',
 	'Class:Person/Attribute:first_name' => 'Jméno',
-	'Class:Person/Attribute:first_name+' => '',
+	'Class:Person/Attribute:first_name+' => '~~',
 	'Class:Person/Attribute:employee_number' => 'Osobní číslo',
-	'Class:Person/Attribute:employee_number+' => '',
+	'Class:Person/Attribute:employee_number+' => '~~',
 	'Class:Person/Attribute:mobile_phone' => 'Mobilní telefon',
-	'Class:Person/Attribute:mobile_phone+' => '',
+	'Class:Person/Attribute:mobile_phone+' => '~~',
 	'Class:Person/Attribute:location_id' => 'Umístění',
-	'Class:Person/Attribute:location_id+' => '',
+	'Class:Person/Attribute:location_id+' => '~~',
 	'Class:Person/Attribute:location_name' => 'Název umístění',
-	'Class:Person/Attribute:location_name+' => '',
+	'Class:Person/Attribute:location_name+' => '~~',
 	'Class:Person/Attribute:manager_id' => 'Vedoucí',
-	'Class:Person/Attribute:manager_id+' => '',
+	'Class:Person/Attribute:manager_id+' => '~~',
 	'Class:Person/Attribute:manager_name' => 'Vedoucí',
-	'Class:Person/Attribute:manager_name+' => '',
+	'Class:Person/Attribute:manager_name+' => '~~',
 	'Class:Person/Attribute:team_list' => 'Týmy',
 	'Class:Person/Attribute:team_list+' => 'Všechny týmy, kterých je tato osoba členem',
 	'Class:Person/Attribute:tickets_list' => 'Tikety',
 	'Class:Person/Attribute:tickets_list+' => 'Všechny tikety, které tato osoba zadala',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Create a %4$s for %2$s~~',
 	'Class:Person/Attribute:user_list' => 'Uživatelé',
 	'Class:Person/Attribute:user_list+' => 'Všichni uživatelé přiřazení k této osobě',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Popisný název vedoucího',
-	'Class:Person/Attribute:manager_id_friendlyname+' => '',
+	'Class:Person/Attribute:manager_id_friendlyname+' => '~~',
 	'Class:Person/Attribute:picture' => 'Obrázek',
 	'Class:Person/Attribute:picture+' => '~~',
 	'Class:Person/UniquenessRule:employee_number+' => 'Osobní číslo musí být jedinečné v organizaci',
@@ -152,15 +132,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Person/UniquenessRule:name+' => 'Jméno zaměstnance by mělo být v rámci organizace jedinečné',
 	'Class:Person/UniquenessRule:name' => 'V organizaci \'$this->org_name$\' již existuje osoba se stejným jménem',
 	'Class:Person/Error:ChangingOrgDenied' => 'Tuto osobu nelze přesunout do organizace \'%1$s\' protože její přiřazený uživatel nemá oprávnění k této organizaci a přerušil by se tím přístup osoby k standardnímu portálu',
-]);
-
-//
-// Class: Team
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Team' => 'Tým',
-	'Class:Team+' => '',
+	'Class:Team+' => 'A type of Contact. Often used to group Persons, but not only. Teams are expected to watch Tickets dispatched to them, and assign it to an agent, usually a member of that team.~~',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Členové',
 	'Class:Team/Attribute:persons_list+' => 'Všichni členové týmu',
@@ -173,136 +146,73 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months~~',
 	'Class:Team/Attribute:tickets_list' => 'Tikety',
 	'Class:Team/Attribute:tickets_list+' => 'Všechny tikety přidělené tomuto týmu',
-]);
-
-//
-// Class: Document
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Document' => 'Dokument',
-	'Class:Document+' => '',
+	'Class:Document+' => 'Abstract class. A document that can be shared across multiple objects, making it easy and quick to retrieve from all relevant locations.~~',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => 'Název',
-	'Class:Document/Attribute:name+' => '',
+	'Class:Document/Attribute:name+' => '~~',
 	'Class:Document/Attribute:org_id' => 'Organizace',
-	'Class:Document/Attribute:org_id+' => '',
+	'Class:Document/Attribute:org_id+' => '~~',
 	'Class:Document/Attribute:org_name' => 'Název organizace',
-	'Class:Document/Attribute:org_name+' => '',
+	'Class:Document/Attribute:org_name+' => '~~',
 	'Class:Document/Attribute:documenttype_id' => 'Typ dokumentu',
-	'Class:Document/Attribute:documenttype_id+' => '',
+	'Class:Document/Attribute:documenttype_id+' => '~~',
 	'Class:Document/Attribute:documenttype_name' => 'Název typu dokumentu',
-	'Class:Document/Attribute:documenttype_name+' => '',
+	'Class:Document/Attribute:documenttype_name+' => '~~',
 	'Class:Document/Attribute:version' => 'Verze',
-	'Class:Document/Attribute:version+' => '',
+	'Class:Document/Attribute:version+' => '~~',
 	'Class:Document/Attribute:description' => 'Popis',
-	'Class:Document/Attribute:description+' => '',
+	'Class:Document/Attribute:description+' => '~~',
 	'Class:Document/Attribute:status' => 'Stav',
-	'Class:Document/Attribute:status+' => '',
+	'Class:Document/Attribute:status+' => '~~',
 	'Class:Document/Attribute:status/Value:draft' => 'Návrh',
-	'Class:Document/Attribute:status/Value:draft+' => '',
+	'Class:Document/Attribute:status/Value:draft+' => '~~',
 	'Class:Document/Attribute:status/Value:obsolete' => 'Zastaralý',
-	'Class:Document/Attribute:status/Value:obsolete+' => '',
+	'Class:Document/Attribute:status/Value:obsolete+' => '~~',
 	'Class:Document/Attribute:status/Value:published' => 'Publikovaný',
-	'Class:Document/Attribute:status/Value:published+' => '',
+	'Class:Document/Attribute:status/Value:published+' => '~~',
 	'Class:Document/Attribute:cis_list' => 'Konfigurační položky',
 	'Class:Document/Attribute:cis_list+' => 'Všechny konfigurační položky spojené s tímto dokumentem',
 	'Class:Document/Attribute:finalclass' => 'Typ dokumentu',
-	'Class:Document/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: DocumentFile
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+	'Class:Document/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:DocumentFile' => 'Dokument (soubor)',
-	'Class:DocumentFile+' => '',
+	'Class:DocumentFile+' => 'It\'s a type of Document which includes an uploaded file (in any format: Word, PDF, Spreadsheet, etc.).~~',
 	'Class:DocumentFile/Attribute:file' => 'Soubor',
-	'Class:DocumentFile/Attribute:file+' => '',
-]);
-
-//
-// Class: DocumentNote
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+	'Class:DocumentFile/Attribute:file+' => '~~',
 	'Class:DocumentNote' => 'Dokument (poznámka)',
-	'Class:DocumentNote+' => '',
+	'Class:DocumentNote+' => 'Used to store a text document. HTML formatting is supported using the WYSIWYG editor. Search can be performed on its content.~~',
 	'Class:DocumentNote/Attribute:text' => 'Poznámka',
-	'Class:DocumentNote/Attribute:text+' => '',
-]);
-
-//
-// Class: DocumentWeb
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+	'Class:DocumentNote/Attribute:text+' => '~~',
 	'Class:DocumentWeb' => 'Dokument (web)',
-	'Class:DocumentWeb+' => '',
+	'Class:DocumentWeb+' => 'Hyperlinks to external applications or documents, acting as pointers to external resources. You cannot search in their content from '.ITOP_APPLICATION_SHORT.'~~',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
-	'Class:DocumentWeb/Attribute:url+' => '',
-]);
-
-//
-// Class: Typology
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+	'Class:DocumentWeb/Attribute:url+' => '~~',
 	'Class:Typology' => 'Typologie',
-	'Class:Typology+' => '',
+	'Class:Typology+' => 'Abstract class. ExternalKeyAttribute to a Typology subclass are used in place of an EnumAttribute, to have more dynamic values.~~',
 	'Class:Typology/Attribute:name' => 'Název',
-	'Class:Typology/Attribute:name+' => '',
+	'Class:Typology/Attribute:name+' => '~~',
 	'Class:Typology/Attribute:finalclass' => 'Typ',
-	'Class:Typology/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: DocumentType
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+	'Class:Typology/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:DocumentType' => 'Typ dokumentu',
-	'Class:DocumentType+' => '',
-]);
-
-//
-// Class: ContactType
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+	'Class:DocumentType+' => 'Typology. A classification system used to organize and logically group documents~~',
 	'Class:ContactType' => 'Typ kontaktu',
-	'Class:ContactType+' => '',
-]);
-
-//
-// Class: lnkPersonToTeam
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+	'Class:ContactType+' => 'Typology to organize your Contacts and group them logically for you.~~',
 	'Class:lnkPersonToTeam' => 'Spojení (Osoba / Tým)',
-	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam+' => 'This link indicates when a Person is a member of a Team.~~',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
 	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Tým',
-	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_id+' => 'A team to which the person belongs~~',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Název týmu',
-	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:person_id' => 'Osoba',
-	'Class:lnkPersonToTeam/Attribute:person_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_id+' => 'A member of the team~~',
 	'Class:lnkPersonToTeam/Attribute:person_name' => 'Název osoby',
-	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:role_id' => 'Role',
-	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:role_id+' => 'To select within a typology of possible roles~~',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Název role',
-	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+	'Class:lnkPersonToTeam/Attribute:role_name+' => '~~',
 	'Menu:DataAdministration' => 'Správa dat',
 	'Menu:DataAdministration+' => 'Správa dat',
 	'Menu:Catalogs' => 'Katalogy',
@@ -340,20 +250,11 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:Typology+' => 'Konfigurace typologie',
 	'UI_WelcomeMenu_AllConfigItems' => 'Souhrn',
 	'Menu:ConfigManagement:Typology' => 'Konfigurace typologie',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Person:info' => 'Obecné informace',
 	'User:info' => 'Obecné informace',
 	'User:profiles' => 'Profily (minimálně jeden)',
 	'Person:personal_info' => 'Osobní informace',
 	'Person:notifiy' => 'Upozornění',
-]);
-
-// Themes
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'theme:fullmoon' => 'Úplněk',
 	'theme:test-red' => 'Testovací instance (červená)',
 ]);

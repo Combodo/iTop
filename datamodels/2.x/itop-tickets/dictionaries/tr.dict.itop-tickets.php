@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Izzet Sirin <izzet.sirin@htr.com.tr>
@@ -13,9 +12,9 @@
  */
 Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Ticket' => 'Kayıt',
-	'Class:Ticket+' => '',
+	'Class:Ticket+' => 'Abstract class~~',
 	'Class:Ticket/Attribute:ref' => 'Referans',
-	'Class:Ticket/Attribute:ref+' => '',
+	'Class:Ticket/Attribute:ref+' => '~~',
 	'Class:Ticket/Attribute:org_id' => 'Organizasyon',
 	'Class:Ticket/Attribute:org_id+' => '~~',
 	'Class:Ticket/Attribute:org_name' => 'Organizasyon Adı',
@@ -33,11 +32,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Ticket/Attribute:agent_name' => 'Temsilci adı',
 	'Class:Ticket/Attribute:agent_name+' => '~~',
 	'Class:Ticket/Attribute:title' => 'Başlık',
-	'Class:Ticket/Attribute:title+' => '',
+	'Class:Ticket/Attribute:title+' => '~~',
 	'Class:Ticket/Attribute:description' => 'Tanımlama',
-	'Class:Ticket/Attribute:description+' => '',
+	'Class:Ticket/Attribute:description+' => '~~',
 	'Class:Ticket/Attribute:start_date' => 'Açılış tarihi',
-	'Class:Ticket/Attribute:start_date+' => '',
+	'Class:Ticket/Attribute:start_date+' => '~~',
 	'Class:Ticket/Attribute:end_date' => 'Son Tarihi',
 	'Class:Ticket/Attribute:end_date+' => '~~',
 	'Class:Ticket/Attribute:last_update' => 'Son güncelleme',
@@ -53,7 +52,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Ticket/Attribute:workorders_list' => 'İş emirleri',
 	'Class:Ticket/Attribute:workorders_list+' => 'Bu çağrı kaydı için tüm iş emirleri',
 	'Class:Ticket/Attribute:finalclass' => 'Tip',
-	'Class:Ticket/Attribute:finalclass+' => '',
+	'Class:Ticket/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Ticket/Attribute:operational_status' => 'Operational status~~',
 	'Class:Ticket/Attribute:operational_status+' => 'Computed after the detailed status~~',
 	'Class:Ticket/Attribute:operational_status/Value:ongoing' => 'Ongoing~~',
@@ -63,15 +62,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Closed~~',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '~~',
 	'Ticket:ImpactAnalysis' => 'Etki Analizi',
-]);
-
-//
-// Class: lnkContactToTicket
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContactToTicket' => 'Kişi / Çağrı kaydı bağla',
-	'Class:lnkContactToTicket+' => '~~',
+	'Class:lnkContactToTicket+' => 'Allows linking several Contacts to notify them about the progress of Tickets, in addition to the requester and the agent.~~',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Çağrı Kaydı',
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => '~~',
@@ -89,15 +81,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Elle eklendi',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Hesaplandı',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Bildirme',
-]);
-
-//
-// Class: WorkOrder
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:WorkOrder' => 'İş emri',
-	'Class:WorkOrder+' => '~~',
+	'Class:WorkOrder+' => 'A task required for the resolution of a Ticket, assigned to a Team or even an agent.~~',
 	'Class:WorkOrder/Attribute:name' => 'İsim',
 	'Class:WorkOrder/Attribute:name+' => '~~',
 	'Class:WorkOrder/Attribute:status' => 'Durum',
@@ -128,10 +113,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:WorkOrder/Attribute:log+' => '~~',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Kapat',
 	'Class:WorkOrder/Stimulus:ev_close+' => '~~',
-]);
-
-// Fieldset translation
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Ticket:baseinfo' => 'Genel Bilgi',
 	'Ticket:date' => 'Tarihler',
 	'Ticket:contact' => 'Kişiler',
@@ -221,13 +202,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'TTO tipi bir SLT\'ye dayalı hedef',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Çözme zamanı',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'TTR tipi  bir SLT\'ye dayalı hedef',
-]);
-
-//
-// Class: Ticket
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
 ]);

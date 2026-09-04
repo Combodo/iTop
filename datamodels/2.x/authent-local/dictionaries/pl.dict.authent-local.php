@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -18,11 +17,11 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:UserLocal/Attribute:expiration' => 'Wygaśnięcie hasła',
 	'Class:UserLocal/Attribute:expiration+' => 'Stan wygaśnięcia hasła (wymaga rozszerzenia, aby zadziałało)',
 	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'Może wygasnąć',
-	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '~~',
 	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'Nigdy nie wygasa',
-	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '~~',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Wygasło',
-	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '~~',
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'Jednorazowe hasło',
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Hasło nie może być zmienione przez użytkownika.',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Odnowienie hasła',

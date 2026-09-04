@@ -1,32 +1,17 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ * 
  */
-
+/**
+ *
+ */
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-
 	'bkp-backup-running' => '备份正在进行, 请稍候...',
 	'bkp-restore-running' => '还原正在进行, 请稍等...',
-
 	'Menu:BackupStatus' => '备份',
 	'bkp-status-title' => '备份',
 	'bkp-status-checks' => '设置与检查',
@@ -44,9 +29,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'bkp-table-file' => '文件',
 	'bkp-table-file+' => '只有扩展名是.zip的文件才被认为是有效的备份文件',
 	'bkp-table-size' => '大小',
-	'bkp-table-size+' => '',
+	'bkp-table-size+' => '~~',
 	'bkp-table-actions' => '操作',
-	'bkp-table-actions+' => '',
+	'bkp-table-actions+' => '~~',
 	'bkp-status-backups-auto' => '定时备份',
 	'bkp-status-backups-manual' => '手动备份',
 	'bkp-status-backups-none' => '尚未开始备份',

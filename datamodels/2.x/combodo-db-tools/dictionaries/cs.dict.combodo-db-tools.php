@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -44,17 +43,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted~~',
 	'DBAnalyzer-Integrity-FinalClass' => 'Field `%2$s`.`%1$s` must have the same value as `%3$s`.`%1$s`~~',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contain a valid class~~',
-]);
-
-// Database Info
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'DBTools:DatabaseInfo' => 'Database Information~~',
 	'DBTools:Base' => 'Base~~',
 	'DBTools:Size' => 'Velikost',
-]);
-
-// Lost attachments
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'DBTools:LostAttachments' => 'Lost attachments~~',
 	'DBTools:LostAttachments:Disclaimer' => 'Here you can search your database for lost or misplaced attachments. This is NOT a data recovery tool, it does not retrieve deleted data.~~',
 	'DBTools:LostAttachments:Button:Analyze' => 'Analyze~~',

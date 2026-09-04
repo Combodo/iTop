@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -46,5 +45,4 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Votre avatar a été mis à jour avec succès',
 	'UI:Preferences:Notifications' => 'Notifications',
 	'UI:Preferences:Notifications+' => 'Désabonnez-vous des notifications qui vous importunent (emails et news) en suivant <a href="%1$s">ce lien</a>.',
-
 ]);

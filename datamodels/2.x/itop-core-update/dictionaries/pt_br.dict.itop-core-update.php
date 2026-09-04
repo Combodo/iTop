@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -17,7 +16,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'itop-core-update:UI:UpdateCoreFiles' => 'Atualização do '.ITOP_APPLICATION_SHORT,
 	'iTopUpdate:UI:MaintenanceModeActive' => 'O '.ITOP_APPLICATION_SHORT.' encontra-se em manutenção, nenhum usuário pode acessar a aplicação. Você precisa rodar o Setup ou restaurar os arquivos da aplicação para voltar ao modo normal',
 	'itop-core-update:UI:UpdateDone' => 'Atualização do '.ITOP_APPLICATION_SHORT,
-
 	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Atualização do '.ITOP_APPLICATION_SHORT,
 	'itop-core-update/Operation:ConfirmUpdate/Title' => 'Confirmar Atualização do '.ITOP_APPLICATION_SHORT,
 	'itop-core-update/Operation:UpdateCoreFiles/Title' => 'Aplicação em Atualização',
@@ -30,7 +28,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'iTopUpdate:UI:NewVersion' => 'Nova versão',
 	'iTopUpdate:UI:Back' => 'Voltar',
 	'iTopUpdate:UI:Cancel' => 'Cancelar',
-	'iTopUpdate:UI:CannotUpdateNewModules' => '<b>Alguns módulos novos foram detectados</b>, uma atualização parcial não pode ser executada.</br>Siga o <a target="_blank" href="%2$s"> procedimento</a> para atualizar manualmente seu iTop. Você deve usar o <a href="%1$s">Setup</a> para atualizar a aplicação.',
 	'iTopUpdate:UI:Continue' => 'Continuar',
 	'iTopUpdate:UI:RunSetup' => 'Executar Setup',
 	'iTopUpdate:UI:WithDBBackup' => 'Backup do banco de dados',

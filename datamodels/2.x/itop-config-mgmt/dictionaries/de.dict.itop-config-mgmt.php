@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
@@ -23,80 +22,29 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Relation:impacts/LoadData' => 'Daten laden',
 	'Relation:impacts/NoFilteredData' => 'Bitte wählen Sie Objekte',
 	'Relation:impacts/FilteredData' => 'Daten sind über den Tab "Grafische Ansicht" gefiltert',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: lnkContactToFunctionalCI
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkContactToFunctionalCI' => 'Verknüpfung Kontakt/FunctionalCI',
 	'Class:lnkContactToFunctionalCI+' => 'Verwaltet Kontakte, die mit funktionalen CIs verknüpft sind. Das kann ein Team sein, das für das Gerät verantwortlich ist und dem zugehörige Tickets zugewiesen werden, oder die Person, der ein einzelnes Gerät wie ein PC oder ein Telefon zugeordnet ist, um die Inventarisierung zu pflegen.',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'FunctionalCI-Name',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Kontakt-Name',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
-]);
-
-//
-// Class: FunctionalCI
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '~~',
 	'Class:FunctionalCI' => 'Funktionales CI',
 	'Class:FunctionalCI+' => 'Abstrakte Klasse, die die meisten für die CMDB verwendeten Arten von Konfigurationselementen zusammenfasst.',
 	'Class:FunctionalCI/Attribute:name' => 'Name',
-	'Class:FunctionalCI/Attribute:name+' => '',
+	'Class:FunctionalCI/Attribute:name+' => '~~',
 	'Class:FunctionalCI/Attribute:description' => 'Beschreibung',
-	'Class:FunctionalCI/Attribute:description+' => '',
+	'Class:FunctionalCI/Attribute:description+' => '~~',
 	'Class:FunctionalCI/Attribute:org_id' => 'Organisation',
-	'Class:FunctionalCI/Attribute:org_id+' => '',
+	'Class:FunctionalCI/Attribute:org_id+' => '~~',
 	'Class:FunctionalCI/Attribute:organization_name' => 'Organisationsname',
-	'Class:FunctionalCI/Attribute:organization_name+' => '',
+	'Class:FunctionalCI/Attribute:organization_name+' => 'Common name~~',
 	'Class:FunctionalCI/Attribute:business_criticity' => 'Business-Kritikalität',
-	'Class:FunctionalCI/Attribute:business_criticity+' => '',
+	'Class:FunctionalCI/Attribute:business_criticity+' => '~~',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:high' => 'hoch',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:high+' => 'hoch',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:low' => 'niedrig',
@@ -105,6 +53,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => 'mittel',
 	'Class:FunctionalCI/Attribute:move2production' => 'Go-Live-Datum',
 	'Class:FunctionalCI/Attribute:move2production+' => 'Datum, an dem in Produktivbetrieb gegangen wird/wurde',
+	'Class:FunctionalCI/Attribute:groups_list' => 'Gruppen',
+	'Class:FunctionalCI/Attribute:groups_list+' => 'Gruppen können wie Schlagworte verwendet werden, um Umgebungen, Projekte (Migration, Upgrade, Sicherheit) usw. zu dokumentieren.',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Kontakte',
 	'Class:FunctionalCI/Attribute:contacts_list+' => 'Alle Kontakte zu diesem Konfigurationselement',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Dokumente',
@@ -117,120 +67,66 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Offene Tickets',
 	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Offene Tickets, die sich auf dieses CI auswirken',
-]);
-
-//
-// Class: PhysicalDevice
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:PhysicalDevice' => 'Physisches Gerät',
 	'Class:PhysicalDevice+' => 'Abstrakte Klasse, die die physischen Arten von Konfigurationselementen zusammenfasst. Ein physisches Gerät kann einem Standort zugeordnet werden und hat üblicherweise eine Marke und ein Modell.',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'Seriennummer',
-	'Class:PhysicalDevice/Attribute:serialnumber+' => '',
+	'Class:PhysicalDevice/Attribute:serialnumber+' => '~~',
 	'Class:PhysicalDevice/Attribute:location_id' => 'Standort',
-	'Class:PhysicalDevice/Attribute:location_id+' => '',
+	'Class:PhysicalDevice/Attribute:location_id+' => '~~',
 	'Class:PhysicalDevice/Attribute:location_name' => 'Standortname',
-	'Class:PhysicalDevice/Attribute:location_name+' => '',
+	'Class:PhysicalDevice/Attribute:location_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:status' => 'Status',
-	'Class:PhysicalDevice/Attribute:status+' => '',
+	'Class:PhysicalDevice/Attribute:status+' => '~~',
 	'Class:PhysicalDevice/Attribute:status/Value:implementation' => 'Implementierung',
 	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => 'Implementierung',
 	'Class:PhysicalDevice/Attribute:status/Value:obsolete' => 'Obsolet',
-	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => '',
+	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => 'obsolete~~',
 	'Class:PhysicalDevice/Attribute:status/Value:production' => 'Produktiv',
-	'Class:PhysicalDevice/Attribute:status/Value:production+' => '',
+	'Class:PhysicalDevice/Attribute:status/Value:production+' => 'production~~',
 	'Class:PhysicalDevice/Attribute:status/Value:stock' => 'Lager',
-	'Class:PhysicalDevice/Attribute:status/Value:stock+' => '',
+	'Class:PhysicalDevice/Attribute:status/Value:stock+' => 'stock~~',
 	'Class:PhysicalDevice/Attribute:brand_id' => 'Marke',
-	'Class:PhysicalDevice/Attribute:brand_id+' => '',
+	'Class:PhysicalDevice/Attribute:brand_id+' => '~~',
 	'Class:PhysicalDevice/Attribute:brand_name' => 'Markenname',
-	'Class:PhysicalDevice/Attribute:brand_name+' => '',
+	'Class:PhysicalDevice/Attribute:brand_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:model_id' => 'Modell',
-	'Class:PhysicalDevice/Attribute:model_id+' => '',
+	'Class:PhysicalDevice/Attribute:model_id+' => '~~',
+	'Class:PhysicalDevice/Attribute:model_end_of_support' => 'Supportende des Modells',
+	'Class:PhysicalDevice/Attribute:model_end_of_support+' => 'Zeitpunkt, ab dem das Hardwaremodell vom Hersteller nicht mehr unterstützt wird, sofern diese Information am Modell hinterlegt ist.',
 	'Class:PhysicalDevice/Attribute:model_name' => 'Modellname',
-	'Class:PhysicalDevice/Attribute:model_name+' => '',
+	'Class:PhysicalDevice/Attribute:model_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:asset_number' => 'Asset-Nummer',
-	'Class:PhysicalDevice/Attribute:asset_number+' => '',
+	'Class:PhysicalDevice/Attribute:asset_number+' => '~~',
 	'Class:PhysicalDevice/Attribute:purchase_date' => 'Kaufdatum',
-	'Class:PhysicalDevice/Attribute:purchase_date+' => '',
+	'Class:PhysicalDevice/Attribute:purchase_date+' => '~~',
 	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Garantieende',
-	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '',
-]);
-
-//
-// Class: Rack
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '~~',
 	'Class:Rack' => 'Rack',
 	'Class:Rack+' => 'Ein physischer Schrank für Datacenter-Geräte und Enclosures.',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s',
 	'Class:Rack/Attribute:nb_u' => 'Höheneinheiten',
-	'Class:Rack/Attribute:nb_u+' => '',
+	'Class:Rack/Attribute:nb_u+' => '~~',
 	'Class:Rack/Attribute:device_list' => 'Devices',
 	'Class:Rack/Attribute:device_list+' => 'Alle physischen Geräte, die in dieses Rack eingebaut sind',
 	'Class:Rack/Attribute:enclosure_list' => 'Enclosures',
 	'Class:Rack/Attribute:enclosure_list+' => 'Alle Enclosures in diesem Rack',
-]);
-
-//
-// Class: TelephonyCI
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TelephonyCI' => 'Telefonie-CI',
 	'Class:TelephonyCI+' => 'Abstrakte Klasse, die Telefoniegeräte zusammenfasst',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Telefonnummer',
-	'Class:TelephonyCI/Attribute:phonenumber+' => '',
-]);
-
-//
-// Class: Phone
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:TelephonyCI/Attribute:phonenumber+' => '~~',
 	'Class:Phone' => 'Telefon',
 	'Class:Phone+' => 'Endanwendergerät. Kabelgebundenes Telefon',
-]);
-
-//
-// Class: MobilePhone
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:MobilePhone' => 'Mobiltelefon',
 	'Class:MobilePhone+' => 'Endanwendergerät. Schnurloses Telefon',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
-	'Class:MobilePhone/Attribute:imei+' => '',
+	'Class:MobilePhone/Attribute:imei+' => '~~',
 	'Class:MobilePhone/Attribute:hw_pin' => 'Hardware-PIN',
-	'Class:MobilePhone/Attribute:hw_pin+' => '',
-]);
-
-//
-// Class: IPPhone
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:MobilePhone/Attribute:hw_pin+' => '~~',
 	'Class:IPPhone' => 'IP-Telefon',
 	'Class:IPPhone+' => 'Physisches Gerät für Telefonie, an ein Netzwerk angeschlossen',
-]);
-
-//
-// Class: Tablet
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Tablet' => 'Tablet',
 	'Class:Tablet+' => 'Endanwendergerät. Zum Beispiel iPad, Galaxy Note/Tab, Nexus, Kindle ...',
-]);
-
-//
-// Class: ConnectableCI
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ConnectableCI' => 'Verknüpfbares CI',
 	'Class:ConnectableCI+' => 'Physisches Gerät, das an ein Netzwerk angeschlossen werden kann.',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s',
@@ -238,36 +134,29 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Alle Netzwerkgeräte, die mit diesem Gerät verbunden sind',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Netzwerkinterfaces',
 	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'Alle physischen Netzwerkinterfaces des Geräts',
-]);
-
-//
-// Class: DatacenterDevice
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:DatacenterDevice' => 'Datacenter-Gerät',
 	'Class:DatacenterDevice+' => 'Ein physisches Gerät, das an das Netzwerk angeschlossen und in einem Rechenzentrum installiert ist, üblicherweise in einem Rack oder einem Enclosure. Dazu zählen Server, Netzwerk-Geräte, Storage-Systeme, SAN-Switches, Tape-Libraries, NAS-Geräte und Ähnliches.',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'Rack',
-	'Class:DatacenterDevice/Attribute:rack_id+' => '',
+	'Class:DatacenterDevice/Attribute:rack_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:rack_name' => 'Rack-Name',
-	'Class:DatacenterDevice/Attribute:rack_name+' => '',
+	'Class:DatacenterDevice/Attribute:rack_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:enclosure_id' => 'Enclosure',
-	'Class:DatacenterDevice/Attribute:enclosure_id+' => '',
+	'Class:DatacenterDevice/Attribute:enclosure_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:enclosure_name' => 'Enclosure-Name',
-	'Class:DatacenterDevice/Attribute:enclosure_name+' => '',
+	'Class:DatacenterDevice/Attribute:enclosure_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:nb_u' => 'Höheneinheiten',
-	'Class:DatacenterDevice/Attribute:nb_u+' => '',
+	'Class:DatacenterDevice/Attribute:nb_u+' => '~~',
 	'Class:DatacenterDevice/Attribute:managementip' => 'Management-IP',
-	'Class:DatacenterDevice/Attribute:managementip+' => '',
+	'Class:DatacenterDevice/Attribute:managementip+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerA_id' => 'Strom-A-Quelle',
-	'Class:DatacenterDevice/Attribute:powerA_id+' => '',
+	'Class:DatacenterDevice/Attribute:powerA_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerA_name' => 'Strom-A-Quellenname',
-	'Class:DatacenterDevice/Attribute:powerA_name+' => '',
+	'Class:DatacenterDevice/Attribute:powerA_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerB_id' => 'Strom-B-Quelle',
-	'Class:DatacenterDevice/Attribute:powerB_id+' => '',
+	'Class:DatacenterDevice/Attribute:powerB_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerB_name' => 'Strom-B-Quellenname',
-	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
+	'Class:DatacenterDevice/Attribute:powerB_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'FC-Ports',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'Alle Fibre-Channel-Schnittstellen für dieses Gerät',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
@@ -276,218 +165,126 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'Das Gerät %2$s läuft, wenn mindestens eine der Stromversorgungen (A oder B) läuft.',
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'Das Gerät %2$s läuft, wenn alle seine Stromversorgungen laufen.',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'Das Gerät %2$s läuft, wenn mindestens %1$s %% seiner Stromversorgungen laufen.',
-]);
-
-//
-// Class: NetworkDevice
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:NetworkDevice' => 'Netzwerk-Gerät',
 	'Class:NetworkDevice+' => 'Jede Art von Netzwerk-Gerät: Router, Switch, Hub, Load Balancer, Firewall ...',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Netzwerktyp',
-	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
+	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '~~',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Netzwerk-Typname',
-	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
+	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '~~',
 	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Geräte',
 	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'Alle Geräte, die mit diesem Netzwerkgerät verbunden sind',
 	'Class:NetworkDevice/Attribute:iosversion_id' => 'IOS Version',
-	'Class:NetworkDevice/Attribute:iosversion_id+' => '',
+	'Class:NetworkDevice/Attribute:iosversion_id+' => '~~',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'IOS-Versionsname',
-	'Class:NetworkDevice/Attribute:iosversion_name+' => '',
+	'Class:NetworkDevice/Attribute:iosversion_name+' => '~~',
+	'Class:NetworkDevice/Attribute:ios_end_of_support' => 'Supportende der IOS-Version',
+	'Class:NetworkDevice/Attribute:ios_end_of_support+' => 'Datum, ab dem der Hersteller keine Fehlerbehebungen mehr für diese IOS-Version bereitstellt.',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
-	'Class:NetworkDevice/Attribute:ram+' => '',
-]);
-
-//
-// Class: Server
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:NetworkDevice/Attribute:ram+' => '~~',
 	'Class:Server' => 'Server',
 	'Class:Server+' => 'Datacenter-Gerät, das den Zugriff auf zentrale Ressourcen oder Services steuert. Es enthält eine OS-Version, unter der Software-Instanzen laufen.',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s',
 	'Class:Server/Attribute:osfamily_id' => 'OS Familie',
-	'Class:Server/Attribute:osfamily_id+' => '',
+	'Class:Server/Attribute:osfamily_id+' => '~~',
 	'Class:Server/Attribute:osfamily_name' => 'OS-Familienname',
-	'Class:Server/Attribute:osfamily_name+' => '',
+	'Class:Server/Attribute:osfamily_name+' => '~~',
 	'Class:Server/Attribute:osversion_id' => 'OS Version',
-	'Class:Server/Attribute:osversion_id+' => '',
+	'Class:Server/Attribute:osversion_id+' => '~~',
 	'Class:Server/Attribute:osversion_name' => 'OS-Versionsname',
-	'Class:Server/Attribute:osversion_name+' => '',
+	'Class:Server/Attribute:osversion_name+' => '~~',
+	'Class:Server/Attribute:os_end_of_support' => 'Supportende des Betriebssystems',
+	'Class:Server/Attribute:os_end_of_support+' => 'Datum, ab dem der Hersteller keine Patches mehr für diese OS-Version bereitstellt.',
 	'Class:Server/Attribute:oslicence_id' => 'OS Lizenz',
-	'Class:Server/Attribute:oslicence_id+' => '',
+	'Class:Server/Attribute:oslicence_id+' => '~~',
 	'Class:Server/Attribute:oslicence_name' => 'OS-Lizenzname',
-	'Class:Server/Attribute:oslicence_name+' => '',
+	'Class:Server/Attribute:oslicence_name+' => '~~',
 	'Class:Server/Attribute:cpu' => 'CPU',
-	'Class:Server/Attribute:cpu+' => '',
+	'Class:Server/Attribute:cpu+' => '~~',
 	'Class:Server/Attribute:ram' => 'RAM',
-	'Class:Server/Attribute:ram+' => '',
+	'Class:Server/Attribute:ram+' => '~~',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Logische Volumes',
 	'Class:Server/Attribute:logicalvolumes_list+' => 'Alle mit diesem Server verbundenen logischen Volumes',
-]);
-
-//
-// Class: StorageSystem
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:StorageSystem' => 'Storage-System',
 	'Class:StorageSystem+' => 'Storage-System, das entweder an ein SAN oder an ein Ethernet-Netzwerk angebunden werden kann. Die logische Speichereinheit, die ein Storage-System verwaltet, ist ein logisches Volume.',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logische Volumes',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Alle logischen Volumes in diesem Storage-System',
-]);
-
-//
-// Class: SANSwitch
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:SANSwitch' => 'SAN-Switch',
 	'Class:SANSwitch+' => 'Ein SAN-Switch ist ein Netzwerk-Switch, der das in Speichernetzwerken verwendete Fibre-Channel-Protokoll unterstützt. Er ist ein Datacenter-Gerät.',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Geräte',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Alle Geräte, die mit diesem SAN-Switche verbundenen sind',
-]);
-
-//
-// Class: TapeLibrary
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TapeLibrary' => 'Tape-Library',
 	'Class:TapeLibrary+' => 'Datacenter-Gerät, das mehrere Magnetbänder (Tapes oder Kassetten) aufnimmt. Tape-Libraries werden zur Datensicherung oder Archivierung eingesetzt.',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Tapes',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'Alle Tapes in der Tape-Library',
-]);
-
-//
-// Class: NAS
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => 'Speichergerät mit hoher Kapazität, das in einem Rechenzentrum eingebaut und an ein Netzwerk angeschlossen ist. Ein NAS (Network Attached Storage) beherbergt NAS-Dateisysteme.',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Dateisysteme',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'Alle Dateisysteme in diesem NAS',
-]);
-
-//
-// Class: PC
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:PC' => 'PC',
 	'Class:PC+' => 'Verknüpfbares CI. Ein PC ist ein physisches Gerät – Desktop oder Laptop –, auf dem ein Betriebssystem läuft und das zur Ausführung von Software-Instanzen vorgesehen ist.',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s',
 	'Class:PC/Attribute:osfamily_id' => 'OS-Familie',
-	'Class:PC/Attribute:osfamily_id+' => '',
+	'Class:PC/Attribute:osfamily_id+' => '~~',
 	'Class:PC/Attribute:osfamily_name' => 'OS-Familienname',
-	'Class:PC/Attribute:osfamily_name+' => '',
+	'Class:PC/Attribute:osfamily_name+' => '~~',
 	'Class:PC/Attribute:osversion_id' => 'OS-Version',
-	'Class:PC/Attribute:osversion_id+' => '',
+	'Class:PC/Attribute:osversion_id+' => '~~',
 	'Class:PC/Attribute:osversion_name' => 'OS-Versionsname',
-	'Class:PC/Attribute:osversion_name+' => '',
+	'Class:PC/Attribute:osversion_name+' => '~~',
+	'Class:PC/Attribute:os_end_of_support' => 'Supportende des Betriebssystems',
+	'Class:PC/Attribute:os_end_of_support+' => 'Datum, ab dem der Hersteller keine Patches mehr für diese OS-Version bereitstellt.',
 	'Class:PC/Attribute:cpu' => 'CPU',
-	'Class:PC/Attribute:cpu+' => '',
+	'Class:PC/Attribute:cpu+' => '~~',
 	'Class:PC/Attribute:ram' => 'RAM',
-	'Class:PC/Attribute:ram+' => '',
+	'Class:PC/Attribute:ram+' => '~~',
 	'Class:PC/Attribute:type' => 'Typ',
-	'Class:PC/Attribute:type+' => '',
+	'Class:PC/Attribute:type+' => '~~',
 	'Class:PC/Attribute:type/Value:desktop' => 'Desktop',
 	'Class:PC/Attribute:type/Value:desktop+' => 'Desktop',
 	'Class:PC/Attribute:type/Value:laptop' => 'Laptop',
 	'Class:PC/Attribute:type/Value:laptop+' => 'Laptop',
-]);
-
-//
-// Class: Printer
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Printer' => 'Drucker',
 	'Class:Printer+' => 'Verknüpfbares CI. Physisches Gerät, das entweder an das Netzwerk oder an einen PC angeschlossen ist.',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s',
-]);
-
-//
-// Class: PowerConnection
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:PowerConnection' => 'Stromverbindung',
 	'Class:PowerConnection+' => 'Abstrakte Klasse, die physische Geräte zur Stromversorgung zusammenfasst.',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s',
-]);
-
-//
-// Class: PowerSource
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:PowerSource' => 'Stromquelle',
 	'Class:PowerSource+' => 'Physische Stromverbindung. Wird im Rechenzentrum verwendet, um jede Art von Stromquelle zu dokumentieren (Haupteinspeisung, Sicherung ...), die keine PDU ist.',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
 	'Class:PowerSource/Attribute:pdus_list+' => 'Alle PDUs, die diese Stromquelle nutzen',
-]);
-
-//
-// Class: PDU
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => 'Stromverbindung. Eine PDU (Power Distribution Unit) ist ein Gerät mit mehreren Ausgängen zur Verteilung elektrischer Energie, insbesondere an Racks mit Rechnern und Netzwerktechnik in einem Rechenzentrum.',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s',
 	'Class:PDU/Attribute:rack_id' => 'Rack',
-	'Class:PDU/Attribute:rack_id+' => '',
+	'Class:PDU/Attribute:rack_id+' => '~~',
 	'Class:PDU/Attribute:rack_name' => 'Rack-Name',
-	'Class:PDU/Attribute:rack_name+' => '',
+	'Class:PDU/Attribute:rack_name+' => '~~',
 	'Class:PDU/Attribute:powerstart_id' => 'Eingangs-Stromverbindung',
-	'Class:PDU/Attribute:powerstart_id+' => '',
+	'Class:PDU/Attribute:powerstart_id+' => '~~',
 	'Class:PDU/Attribute:powerstart_name' => 'Eingangs-Stromverbindung',
-	'Class:PDU/Attribute:powerstart_name+' => '',
-]);
-
-//
-// Class: Peripheral
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:PDU/Attribute:powerstart_name+' => '~~',
 	'Class:Peripheral' => 'Peripheriegerät',
 	'Class:Peripheral+' => 'Physisches Gerät zur Dokumentation beliebiger Computer-Peripherie.
 Zum Beispiel: externe Festplatten, Scanner, Eingabegeräte (Trackballs, Barcode-Scanner) und Ähnliches ...',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s',
-]);
-
-//
-// Class: Enclosure
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Enclosure' => 'Enclosure',
 	'Class:Enclosure+' => 'Ein offenes Chassis, das in ein Rack eingebaut wird und IT-Technik wie Blade-Server oder Netzwerk-Geräte aufnimmt.',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Enclosure/Attribute:rack_id' => 'Rack',
-	'Class:Enclosure/Attribute:rack_id+' => '',
+	'Class:Enclosure/Attribute:rack_id+' => '~~',
 	'Class:Enclosure/Attribute:rack_name' => 'Rack-Name',
-	'Class:Enclosure/Attribute:rack_name+' => '',
+	'Class:Enclosure/Attribute:rack_name+' => '~~',
 	'Class:Enclosure/Attribute:nb_u' => 'Höheneinheiten',
-	'Class:Enclosure/Attribute:nb_u+' => '',
+	'Class:Enclosure/Attribute:nb_u+' => '~~',
 	'Class:Enclosure/Attribute:device_list' => 'Geräte',
 	'Class:Enclosure/Attribute:device_list+' => 'Alle Geräte in diesem Enclosure',
-]);
-
-//
-// Class: ApplicationSolution
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ApplicationSolution' => 'Anwendungslösung',
 	'Class:ApplicationSolution+' => 'Anwendungslösungen beschreiben komplexe Anwendungen, die aus mehreren Basiskomponenten bestehen oder von ihnen abhängen. Die wesentliche Information einer Anwendungslösung ist die Liste ihrer Beziehungen.',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
@@ -497,22 +294,15 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ApplicationSolution/Attribute:logo' => 'Logo',
 	'Class:ApplicationSolution/Attribute:logo+' => 'Wird als Objektsymbol verwendet, wenn das Objekt in Impact-Analyse-Graphen dargestellt wird',
 	'Class:ApplicationSolution/Attribute:status' => 'Status',
-	'Class:ApplicationSolution/Attribute:status+' => '',
+	'Class:ApplicationSolution/Attribute:status+' => '~~',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'aktiv',
-	'Class:ApplicationSolution/Attribute:status/Value:active+' => '',
+	'Class:ApplicationSolution/Attribute:status/Value:active+' => 'active~~',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'inaktiv',
-	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => '',
+	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => 'inactive~~',
 	'Class:ApplicationSolution/Attribute:redundancy' => 'Auswirkungsanalyse: Redundanz-Einstellungen',
 	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'Die Lösung läuft, wenn alle ihre CIs laufen.',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'Die Lösung läuft, wenn mindestens %1$s CI(s) laufen.',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'Die Lösung läuft, wenn mindestens %1$s %% der CIs laufen.',
-]);
-
-//
-// Class: BusinessProcess
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:BusinessProcess' => 'Business-Prozess',
 	'Class:BusinessProcess+' => 'Ein Business-Prozess dokumentiert einen übergeordneten Prozess oder eine für den Betrieb wichtige Anwendung. Er ist einer Anwendungslösung sehr ähnlich, beschreibt jedoch Anwendungen höherer Ebene oder ganze Prozesse der Organisation.',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Anwendungslösungen',
@@ -520,195 +310,139 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:BusinessProcess/Attribute:logo' => 'Logo',
 	'Class:BusinessProcess/Attribute:logo+' => 'Wird als Objektsymbol verwendet, wenn das Objekt in Impact-Analyse-Graphen dargestellt wird',
 	'Class:BusinessProcess/Attribute:status' => 'Status',
-	'Class:BusinessProcess/Attribute:status+' => '',
+	'Class:BusinessProcess/Attribute:status+' => '~~',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'aktiv',
-	'Class:BusinessProcess/Attribute:status/Value:active+' => '',
+	'Class:BusinessProcess/Attribute:status/Value:active+' => 'active~~',
 	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'inaktiv',
-	'Class:BusinessProcess/Attribute:status/Value:inactive+' => '',
-]);
-
-//
-// Class: SoftwareInstance
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:BusinessProcess/Attribute:status/Value:inactive+' => 'inactive~~',
+	'Class:Software' => 'Software',
+	'Class:Software+' => 'Software ist ein generischer Eintrag im Softwarekatalog. Sie hat eine bestimmte Version und gehört einer Kategorie an: DB Server, Middleware, PC-Software, Web Server oder Andere Software.',
+	'Class:Software/ComplementaryName' => '%1$s - %2$s',
+	'Class:Software/Attribute:name' => 'Name',
+	'Class:Software/Attribute:name+' => '~~',
+	'Class:Software/Attribute:vendor' => 'Hersteller',
+	'Class:Software/Attribute:vendor+' => '~~',
+	'Class:Software/Attribute:version' => 'Version',
+	'Class:Software/Attribute:version+' => '~~',
+	'Class:Software/Attribute:end_of_support' => 'Supportende',
+	'Class:Software/Attribute:end_of_support+' => 'Datum, ab dem der Hersteller keine Patches mehr für diese Softwareversion bereitstellt.',
+	'Class:Software/Attribute:documents_list' => 'Dokumente',
+	'Class:Software/Attribute:documents_list+' => 'Alle mit dieser Software verknüpften Dokumente',
+	'Class:Software/Attribute:logo' => 'Logo',
+	'Class:Software/Attribute:logo+' => 'Wird als Symbol für alle Software-Instanzen dieser Software verwendet, wenn sie in Impact-Analyse-Graphen dargestellt werden',
+	'Class:Software/Attribute:type' => 'Typ',
+	'Class:Software/Attribute:type+' => '~~',
+	'Class:Software/Attribute:type/Value:DBServer' => 'DB-Server',
+	'Class:Software/Attribute:type/Value:DBServer+' => 'DB Server~~',
+	'Class:Software/Attribute:type/Value:Middleware' => 'Middleware',
+	'Class:Software/Attribute:type/Value:Middleware+' => 'Middleware~~',
+	'Class:Software/Attribute:type/Value:OtherSoftware' => 'Andere Software',
+	'Class:Software/Attribute:type/Value:OtherSoftware+' => 'Andere Software',
+	'Class:Software/Attribute:type/Value:PCSoftware' => 'PC-Software',
+	'Class:Software/Attribute:type/Value:PCSoftware+' => 'PC Software~~',
+	'Class:Software/Attribute:type/Value:WebServer' => 'Webserver',
+	'Class:Software/Attribute:type/Value:WebServer+' => 'Web Server~~',
+	'Class:Software/Attribute:softwareinstance_list' => 'Software-Instanzen',
+	'Class:Software/Attribute:softwareinstance_list+' => 'Alle Software-Instanzen für diese Software',
+	'Class:Software/Attribute:softwarepatch_list' => 'Software-Patches',
+	'Class:Software/Attribute:softwarepatch_list+' => 'Alle Software-Patches für diese Software',
+	'Class:Software/Attribute:softwarelicence_list' => 'Softwarelizenzen',
+	'Class:Software/Attribute:softwarelicence_list+' => 'Alle Lizenzen für diese Software',
 	'Class:SoftwareInstance' => 'Software-Instanz',
 	'Class:SoftwareInstance+' => 'Abstrakte Klasse, die das Deployment einer Software auf einem Gerät abbildet (Server, PC, virtuelle Maschine). Es gibt verschiedene Arten von Software-Instanzen: DB Server, Middleware, PC-Software, Web Server und Andere Software',
 	'Class:SoftwareInstance/Attribute:system_id' => 'System',
 	'Class:SoftwareInstance/Attribute:system_id+' => 'Das System kann ein Server, eine virtuelle Maschine, ein PC usw. sein',
 	'Class:SoftwareInstance/Attribute:system_name' => 'Systemname',
-	'Class:SoftwareInstance/Attribute:system_name+' => '',
+	'Class:SoftwareInstance/Attribute:system_name+' => '~~',
 	'Class:SoftwareInstance/Attribute:software_id' => 'Software',
-	'Class:SoftwareInstance/Attribute:software_id+' => '',
+	'Class:SoftwareInstance/Attribute:software_id+' => '~~',
 	'Class:SoftwareInstance/Attribute:software_name' => 'Software',
-	'Class:SoftwareInstance/Attribute:software_name+' => '',
+	'Class:SoftwareInstance/Attribute:software_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_end_of_support' => 'Supportende der Software',
+	'Class:SoftwareInstance/Attribute:software_end_of_support+' => 'Datum, ab dem der Hersteller keine Patches mehr für diese Softwareversion bereitstellt.',
 	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Software-Lizenz',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '~~',
 	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Software-Lizenzname',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '~~',
 	'Class:SoftwareInstance/Attribute:path' => 'Pfad',
-	'Class:SoftwareInstance/Attribute:path+' => '',
+	'Class:SoftwareInstance/Attribute:path+' => '~~',
 	'Class:SoftwareInstance/Attribute:status' => 'Status',
-	'Class:SoftwareInstance/Attribute:status+' => '',
+	'Class:SoftwareInstance/Attribute:status+' => '~~',
 	'Class:SoftwareInstance/Attribute:status/Value:active' => 'Aktiv',
-	'Class:SoftwareInstance/Attribute:status/Value:active+' => '',
+	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'active~~',
 	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Inaktiv',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => '',
-]);
-
-//
-// Class: Middleware
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'inactive~~',
 	'Class:Middleware' => 'Middleware',
 	'Class:Middleware+' => 'Software-Instanz, die anderer Software Dienste bereitstellt (etwa Tomcat, JBoss, Talend, Microsoft BizTalk, IBM WebSphere oder Lotus Domino) und auf einem bestimmten System installiert ist (PC, Server oder virtuelle Maschine).',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware-Instanzen',
 	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Alle Middleware-Instanzen, die von dieser Middleware bereitgestellt werden',
-]);
-
-//
-// Class: DBServer
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:DBServer' => 'DB Server',
 	'Class:DBServer+' => 'Software-Instanz, die Datenbankdienste bereitstellt (MySQL 8.0, Oracle, SQL Server, DB2 ...) und auf einem bestimmten System installiert ist (PC, Server oder virtuelle Maschine).',
 	'Class:DBServer/Attribute:dbschema_list' => 'DB Schemata',
 	'Class:DBServer/Attribute:dbschema_list+' => 'Alle Datenbankschemata für diesen DB-Server',
-]);
-
-//
-// Class: WebServer
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:WebServer' => 'Web Server',
 	'Class:WebServer+' => 'Software-Instanz, die Web-Dienste bereitstellt (etwa Apache 2.4, Nginx 1.29.4, IIS 7.0) und auf einem bestimmten System installiert ist (PC, Server oder virtuelle Maschine).',
 	'Class:WebServer/Attribute:webapp_list' => 'Webapplikationen',
 	'Class:WebServer/Attribute:webapp_list+' => 'Alle auf diesem Webserver verfügbaren Webanwendungen',
-]);
-
-//
-// Class: PCSoftware
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:PCSoftware' => 'PC-Software',
 	'Class:PCSoftware+' => 'Software-Instanz für Software (etwa MS Office, Adobe Photoshop oder FileZilla), die auf einem PC installiert ist.',
-]);
-
-//
-// Class: OtherSoftware
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:OtherSoftware' => 'Andere Software',
 	'Class:OtherSoftware+' => 'Jede Art von Software-Instanz, die in keine der anderen Kategorien passt: PC-Software, Middleware, DB Server oder Web Server.',
-]);
-
-//
-// Class: MiddlewareInstance
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:MiddlewareInstance' => 'Middleware-Instanz',
 	'Class:MiddlewareInstance+' => 'Funktionales CI, das einen von einer Middleware bereitgestellten Dienst abbildet.',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
 	'Class:MiddlewareInstance/Attribute:logo' => 'Logo',
 	'Class:MiddlewareInstance/Attribute:logo+' => 'Wird als Objektsymbol verwendet, wenn das Objekt in Impact-Analyse-Graphen dargestellt wird',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
-	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
+	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Middleware-Name',
-	'Class:MiddlewareInstance/Attribute:middleware_name+' => '',
-]);
-
-//
-// Class: DatabaseSchema
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:MiddlewareInstance/Attribute:middleware_name+' => '~~',
 	'Class:DatabaseSchema' => 'Datenbank-Schema',
 	'Class:DatabaseSchema+' => 'Datenbank-Instanz, die auf einem bestimmten DB Server läuft.',
 	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s',
 	'Class:DatabaseSchema/Attribute:dbserver_id' => 'DB-Server',
-	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
+	'Class:DatabaseSchema/Attribute:dbserver_id+' => '~~',
 	'Class:DatabaseSchema/Attribute:dbserver_name' => 'DB-Servername',
-	'Class:DatabaseSchema/Attribute:dbserver_name+' => '',
-]);
-
-//
-// Class: WebApplication
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:DatabaseSchema/Attribute:dbserver_name+' => '~~',
 	'Class:WebApplication' => 'Webapplikation',
 	'Class:WebApplication+' => 'Instanz einer Anwendung, die über einen Webbrowser erreichbar ist und auf einer bestimmten Web-Server-Instanz läuft. Zum Beispiel dieses iTop, das Sie gerade vor sich haben.',
 	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
 	'Class:WebApplication/Attribute:webserver_id' => 'Webserver',
-	'Class:WebApplication/Attribute:webserver_id+' => '',
+	'Class:WebApplication/Attribute:webserver_id+' => '~~',
 	'Class:WebApplication/Attribute:webserver_name' => 'Webservername',
-	'Class:WebApplication/Attribute:webserver_name+' => '',
+	'Class:WebApplication/Attribute:webserver_name+' => '~~',
 	'Class:WebApplication/Attribute:logo' => 'Logo',
 	'Class:WebApplication/Attribute:logo+' => 'Wird als Objektsymbol verwendet, wenn das Objekt in Impact-Analyse-Graphen dargestellt wird',
 	'Class:WebApplication/Attribute:url' => 'URL',
-	'Class:WebApplication/Attribute:url+' => '',
-]);
-
-//
-// Class: VirtualDevice
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:WebApplication/Attribute:url+' => '~~',
 	'Class:VirtualDevice' => 'Virtuelles Gerät',
 	'Class:VirtualDevice+' => 'Abstrakte Klasse für die Servervirtualisierung (virtueller Host und virtuelle Maschine).',
 	'Class:VirtualDevice/Attribute:status' => 'Status',
-	'Class:VirtualDevice/Attribute:status+' => '',
+	'Class:VirtualDevice/Attribute:status+' => '~~',
 	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Implementierung',
 	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'Implementierung',
 	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Obsolet',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => '',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'obsolete~~',
 	'Class:VirtualDevice/Attribute:status/Value:production' => 'Produktiv',
-	'Class:VirtualDevice/Attribute:status/Value:production+' => '',
+	'Class:VirtualDevice/Attribute:status/Value:production+' => 'production~~',
 	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Lager',
-	'Class:VirtualDevice/Attribute:status/Value:stock+' => '',
+	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'stock~~',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Logische Volumes',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Alle von diesem Gerät verwendeten logischen Volumes',
-]);
-
-//
-// Class: VirtualHost
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:VirtualHost' => 'Virtueller Host',
 	'Class:VirtualHost+' => 'Abstrakte Klasse für virtuelle Geräte (Hypervisor, Farm ...), die virtuelle Maschinen beherbergen.',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtuelle Maschinen',
 	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Alle virtuellen Maschinen, die von diesem Host gehostet werden',
-]);
-
-//
-// Class: Hypervisor
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Hypervisor' => 'Hypervisor',
 	'Class:Hypervisor+' => 'Virtueller Host. Virtualisierungssoftware (MS Hyper-V, VMware ESX, Xen usw.), die auf einem physischen Server läuft und das Anlegen virtueller Maschinen ermöglicht.',
 	'Class:Hypervisor/Attribute:farm_id' => 'Farm',
-	'Class:Hypervisor/Attribute:farm_id+' => '',
+	'Class:Hypervisor/Attribute:farm_id+' => '~~',
 	'Class:Hypervisor/Attribute:farm_name' => 'Farmname',
-	'Class:Hypervisor/Attribute:farm_name+' => '',
+	'Class:Hypervisor/Attribute:farm_name+' => '~~',
 	'Class:Hypervisor/Attribute:server_id' => 'Server',
-	'Class:Hypervisor/Attribute:server_id+' => '',
+	'Class:Hypervisor/Attribute:server_id+' => '~~',
 	'Class:Hypervisor/Attribute:server_name' => 'Servername',
-	'Class:Hypervisor/Attribute:server_name+' => '',
-]);
-
-//
-// Class: Farm
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:Hypervisor/Attribute:server_name+' => '~~',
 	'Class:Farm' => 'Farm',
 	'Class:Farm+' => 'Virtueller Host. Eine Farm (oder ein Cluster) ist eine Gruppe von Hypervisoren, die zusammengefasst sind und Speicherressourcen gemeinsam nutzen, um insgesamt ein ausfalltolerantes System für den Betrieb virtueller Maschinen zu bilden.',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisoren',
@@ -717,404 +451,254 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Farm/Attribute:redundancy/disabled' => 'Die Farm läuft, wenn alle Hypervisoren laufen.',
 	'Class:Farm/Attribute:redundancy/count' => 'Die Farm läuft, wenn mindestens %1$s Hypervisor(en) läuft/laufen.',
 	'Class:Farm/Attribute:redundancy/percent' => 'Die Farm läuft, wenn mindestens %1$s %% der Hypervisoren laufen.',
-]);
-
-//
-// Class: VirtualMachine
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:VirtualMachine' => 'Virtuelle Maschine',
 	'Class:VirtualMachine+' => 'Virtuelles Gerät, das einem Server entspricht und entweder auf einem Hypervisor oder auf einer Farm betrieben wird.',
 	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s',
 	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Virtueller Host',
-	'Class:VirtualMachine/Attribute:virtualhost_id+' => '',
+	'Class:VirtualMachine/Attribute:virtualhost_id+' => '~~',
 	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Name des virtuellen Hosts',
-	'Class:VirtualMachine/Attribute:virtualhost_name+' => '',
+	'Class:VirtualMachine/Attribute:virtualhost_name+' => '~~',
 	'Class:VirtualMachine/Attribute:osfamily_id' => 'OS-Familie',
-	'Class:VirtualMachine/Attribute:osfamily_id+' => '',
+	'Class:VirtualMachine/Attribute:osfamily_id+' => '~~',
 	'Class:VirtualMachine/Attribute:osfamily_name' => 'OS-Familienname',
-	'Class:VirtualMachine/Attribute:osfamily_name+' => '',
+	'Class:VirtualMachine/Attribute:osfamily_name+' => '~~',
 	'Class:VirtualMachine/Attribute:osversion_id' => 'OS-Version',
-	'Class:VirtualMachine/Attribute:osversion_id+' => '',
+	'Class:VirtualMachine/Attribute:osversion_id+' => '~~',
 	'Class:VirtualMachine/Attribute:osversion_name' => 'OS-Versionsname',
-	'Class:VirtualMachine/Attribute:osversion_name+' => '',
+	'Class:VirtualMachine/Attribute:osversion_name+' => '~~',
+	'Class:VirtualMachine/Attribute:os_end_of_support' => 'Supportende des Betriebssystems',
+	'Class:VirtualMachine/Attribute:os_end_of_support+' => 'Zeitpunkt, ab dem die OS-Version vom Hersteller nicht mehr unterstützt wird, sofern diese Information an der OS-Version hinterlegt ist.',
 	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS-Lizenz',
-	'Class:VirtualMachine/Attribute:oslicence_id+' => '',
+	'Class:VirtualMachine/Attribute:oslicence_id+' => '~~',
 	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS-Lizenzname',
-	'Class:VirtualMachine/Attribute:oslicence_name+' => '',
+	'Class:VirtualMachine/Attribute:oslicence_name+' => '~~',
 	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
-	'Class:VirtualMachine/Attribute:cpu+' => '',
+	'Class:VirtualMachine/Attribute:cpu+' => '~~',
 	'Class:VirtualMachine/Attribute:ram' => 'RAM',
-	'Class:VirtualMachine/Attribute:ram+' => '',
+	'Class:VirtualMachine/Attribute:ram+' => '~~',
 	'Class:VirtualMachine/Attribute:managementip' => 'Management-IP',
-	'Class:VirtualMachine/Attribute:managementip+' => '',
+	'Class:VirtualMachine/Attribute:managementip+' => '~~',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Netzwerk-Interfaces',
 	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Alle logischen Netzwerk-Interfaces',
-]);
-
-//
-// Class: LogicalVolume
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:LogicalVolume' => 'Logisches Volume',
 	'Class:LogicalVolume+' => 'Die Speichereinheit, die innerhalb eines Storage-Systems verwaltet wird. Sie kann von mehreren Servern und virtuellen Geräten genutzt werden.',
 	'Class:LogicalVolume/Attribute:name' => 'Name',
-	'Class:LogicalVolume/Attribute:name+' => '',
+	'Class:LogicalVolume/Attribute:name+' => '~~',
 	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
-	'Class:LogicalVolume/Attribute:lun_id+' => '',
+	'Class:LogicalVolume/Attribute:lun_id+' => '~~',
 	'Class:LogicalVolume/Attribute:description' => 'Beschreibung',
-	'Class:LogicalVolume/Attribute:description+' => '',
+	'Class:LogicalVolume/Attribute:description+' => '~~',
 	'Class:LogicalVolume/Attribute:raid_level' => 'Raid-Level',
-	'Class:LogicalVolume/Attribute:raid_level+' => '',
+	'Class:LogicalVolume/Attribute:raid_level+' => '~~',
 	'Class:LogicalVolume/Attribute:size' => 'Größe',
-	'Class:LogicalVolume/Attribute:size+' => '',
+	'Class:LogicalVolume/Attribute:size+' => '~~',
 	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Storage-System',
-	'Class:LogicalVolume/Attribute:storagesystem_id+' => '',
+	'Class:LogicalVolume/Attribute:storagesystem_id+' => '~~',
 	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Storage-Systemname',
-	'Class:LogicalVolume/Attribute:storagesystem_name+' => '',
+	'Class:LogicalVolume/Attribute:storagesystem_name+' => '~~',
 	'Class:LogicalVolume/Attribute:servers_list' => 'Server',
 	'Class:LogicalVolume/Attribute:servers_list+' => 'Alle Server, die dieses Volume verwenden',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtuelle Geräte',
 	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Alle virtuellen Maschinen, die dieses Volume verwenden',
-]);
-
-//
-// Class: lnkServerToVolume
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkServerToVolume' => 'Verknüpfung Server/Volume',
 	'Class:lnkServerToVolume+' => 'Diese n:m-Verknüpfung gibt an, dass ein Server ein logisches Volume nutzt (eine innerhalb eines Storage-Systems verwaltete Speichereinheit). Mehrere Server können dasselbe logische Volume nutzen.',
 	'Class:lnkServerToVolume/Name' => '%1$s / %2$s',
 	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume',
-	'Class:lnkServerToVolume/Attribute:volume_id+' => '',
+	'Class:lnkServerToVolume/Attribute:volume_id+' => '~~',
 	'Class:lnkServerToVolume/Attribute:volume_name' => 'Volume-Name',
-	'Class:lnkServerToVolume/Attribute:volume_name+' => '',
+	'Class:lnkServerToVolume/Attribute:volume_name+' => '~~',
 	'Class:lnkServerToVolume/Attribute:server_id' => 'Server',
-	'Class:lnkServerToVolume/Attribute:server_id+' => '',
+	'Class:lnkServerToVolume/Attribute:server_id+' => '~~',
 	'Class:lnkServerToVolume/Attribute:server_name' => 'Server-Name',
-	'Class:lnkServerToVolume/Attribute:server_name+' => '',
+	'Class:lnkServerToVolume/Attribute:server_name+' => '~~',
 	'Class:lnkServerToVolume/Attribute:size_used' => 'Größe verwendet',
-	'Class:lnkServerToVolume/Attribute:size_used+' => '',
-]);
-
-//
-// Class: lnkVirtualDeviceToVolume
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkServerToVolume/Attribute:size_used+' => '~~',
 	'Class:lnkVirtualDeviceToVolume' => 'Verknüpfung Virtuelles Gerät/Volume',
 	'Class:lnkVirtualDeviceToVolume+' => 'Diese n:m-Verknüpfung gibt an, dass ein virtuelles Gerät ein logisches Volume nutzt (eine innerhalb eines Storage-Systems verwaltete Speichereinheit). Mehrere virtuelle Geräte können dasselbe logische Volume nutzen.',
 	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '~~',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Volume-Name',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '~~',
 	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Virtuelles Gerät',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '~~',
 	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Virtuelles Gerät-Name',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '~~',
 	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Größe verwendet',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '',
-]);
-
-//
-// Class: lnkSanToDatacenterDevice
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '~~',
 	'Class:lnkSanToDatacenterDevice' => 'Verknüpfung SAN/Datacenter-Gerät',
 	'Class:lnkSanToDatacenterDevice+' => 'Diese n:m-Verknüpfung bildet die Netzwerkverbindung zwischen einem SAN-Switch und einem Datacenter-Gerät ab (einem Server, einem Netzwerk-Gerät usw.).',
 	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN-Switch',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '~~',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'SAN-Switch-Name',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '~~',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Gerät',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '~~',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Gerät-Name',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '~~',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'SAN FC',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '~~',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Gerät FC',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '',
-]);
-
-//
-// Class: Tape
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '~~',
 	'Class:Tape' => 'Tape',
 	'Class:Tape+' => 'Ein Tape (oder eine Kassette) ist in '.ITOP_APPLICATION_SHORT.' ein Wechselspeichermedium, das zu einer Tape-Library gehört',
 	'Class:Tape/Attribute:name' => 'Name',
-	'Class:Tape/Attribute:name+' => '',
+	'Class:Tape/Attribute:name+' => '~~',
 	'Class:Tape/Attribute:description' => 'Beschreibung',
-	'Class:Tape/Attribute:description+' => '',
+	'Class:Tape/Attribute:description+' => '~~',
 	'Class:Tape/Attribute:size' => 'Größe',
-	'Class:Tape/Attribute:size+' => '',
+	'Class:Tape/Attribute:size+' => '~~',
 	'Class:Tape/Attribute:tapelibrary_id' => 'Tape-Library',
-	'Class:Tape/Attribute:tapelibrary_id+' => '',
+	'Class:Tape/Attribute:tapelibrary_id+' => '~~',
 	'Class:Tape/Attribute:tapelibrary_name' => 'Tape-Library-Name',
-	'Class:Tape/Attribute:tapelibrary_name+' => '',
-]);
-
-//
-// Class: NASFileSystem
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:Tape/Attribute:tapelibrary_name+' => '~~',
 	'Class:NASFileSystem' => 'NAS-Dateisystem',
 	'Class:NASFileSystem+' => 'Bildet ein freigegebenes Dateisystem ab, das in einem bestimmten NAS (Network Attached Storage) liegt.',
 	'Class:NASFileSystem/Attribute:name' => 'Name',
-	'Class:NASFileSystem/Attribute:name+' => '',
+	'Class:NASFileSystem/Attribute:name+' => '~~',
 	'Class:NASFileSystem/Attribute:description' => 'Beschreibung',
-	'Class:NASFileSystem/Attribute:description+' => '',
+	'Class:NASFileSystem/Attribute:description+' => '~~',
 	'Class:NASFileSystem/Attribute:raid_level' => 'Raid-Level',
-	'Class:NASFileSystem/Attribute:raid_level+' => '',
+	'Class:NASFileSystem/Attribute:raid_level+' => '~~',
 	'Class:NASFileSystem/Attribute:size' => 'Größe',
-	'Class:NASFileSystem/Attribute:size+' => '',
+	'Class:NASFileSystem/Attribute:size+' => '~~',
 	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
-	'Class:NASFileSystem/Attribute:nas_id+' => '',
+	'Class:NASFileSystem/Attribute:nas_id+' => '~~',
 	'Class:NASFileSystem/Attribute:nas_name' => 'NAS-Name',
-	'Class:NASFileSystem/Attribute:nas_name+' => '',
-]);
-
-//
-// Class: Software
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
-	'Class:Software' => 'Software',
-	'Class:Software+' => 'Software ist ein generischer Eintrag im Softwarekatalog. Sie hat eine bestimmte Version und gehört einer Kategorie an: DB Server, Middleware, PC-Software, Web Server oder Andere Software.',
-	'Class:Software/ComplementaryName' => '%1$s - %2$s',
-	'Class:Software/Attribute:name' => 'Name',
-	'Class:Software/Attribute:name+' => '',
-	'Class:Software/Attribute:vendor' => 'Hersteller',
-	'Class:Software/Attribute:vendor+' => '',
-	'Class:Software/Attribute:version' => 'Version',
-	'Class:Software/Attribute:version+' => '',
-	'Class:Software/Attribute:documents_list' => 'Dokumente',
-	'Class:Software/Attribute:documents_list+' => 'Alle mit dieser Software verknüpften Dokumente',
-	'Class:Software/Attribute:logo' => 'Logo',
-	'Class:Software/Attribute:logo+' => 'Wird als Symbol für alle Software-Instanzen dieser Software verwendet, wenn sie in Impact-Analyse-Graphen dargestellt werden',
-	'Class:Software/Attribute:type' => 'Typ',
-	'Class:Software/Attribute:type+' => '',
-	'Class:Software/Attribute:type/Value:DBServer' => 'DB-Server',
-	'Class:Software/Attribute:type/Value:DBServer+' => '',
-	'Class:Software/Attribute:type/Value:Middleware' => 'Middleware',
-	'Class:Software/Attribute:type/Value:Middleware+' => '',
-	'Class:Software/Attribute:type/Value:OtherSoftware' => 'Andere Software',
-	'Class:Software/Attribute:type/Value:OtherSoftware+' => 'Andere Software',
-	'Class:Software/Attribute:type/Value:PCSoftware' => 'PC-Software',
-	'Class:Software/Attribute:type/Value:PCSoftware+' => '',
-	'Class:Software/Attribute:type/Value:WebServer' => 'Webserver',
-	'Class:Software/Attribute:type/Value:WebServer+' => '',
-	'Class:Software/Attribute:softwareinstance_list' => 'Software-Instanzen',
-	'Class:Software/Attribute:softwareinstance_list+' => 'Alle Software-Instanzen für diese Software',
-	'Class:Software/Attribute:softwarepatch_list' => 'Software-Patches',
-	'Class:Software/Attribute:softwarepatch_list+' => 'Alle Software-Patches für diese Software',
-	'Class:Software/Attribute:softwarelicence_list' => 'Softwarelizenzen',
-	'Class:Software/Attribute:softwarelicence_list+' => 'Alle Lizenzen für diese Software',
-]);
-
-//
-// Class: Patch
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:NASFileSystem/Attribute:nas_name+' => '~~',
 	'Class:Patch' => 'Patch',
 	'Class:Patch+' => 'Abstrakte Klasse für Patches, Hotfixes, Sicherheitskorrekturen oder Service Packs für ein Betriebssystem oder eine Software.',
 	'Class:Patch/Attribute:name' => 'Name',
-	'Class:Patch/Attribute:name+' => '',
+	'Class:Patch/Attribute:name+' => '~~',
 	'Class:Patch/Attribute:documents_list' => 'Dokumente',
 	'Class:Patch/Attribute:documents_list+' => 'Alle Dokumente, die mit diesem Patch verknüpft sind',
 	'Class:Patch/Attribute:description' => 'Beschreibung',
-	'Class:Patch/Attribute:description+' => '',
+	'Class:Patch/Attribute:description+' => '~~',
 	'Class:Patch/Attribute:finalclass' => 'Typ',
 	'Class:Patch/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
-]);
-
-//
-// Class: OSPatch
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:OSPatch' => 'OS-Patch',
 	'Class:OSPatch+' => 'Patch, Hotfix, Sicherheitskorrektur oder Service Pack für ein bestimmtes Betriebssystem.',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Geräte',
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'Alle Systeme, auf denen dieser Patch installiert ist',
 	'Class:OSPatch/Attribute:osversion_id' => 'OS Version',
-	'Class:OSPatch/Attribute:osversion_id+' => '',
+	'Class:OSPatch/Attribute:osversion_id+' => '~~',
 	'Class:OSPatch/Attribute:osfamily_id' => 'OS-Familie',
-	'Class:OSPatch/Attribute:osfamily_id+' => '',
+	'Class:OSPatch/Attribute:osfamily_id+' => '~~',
 	'Class:OSPatch/Attribute:osversion_name' => 'OS-Versionsname',
-	'Class:OSPatch/Attribute:osversion_name+' => '',
-]);
-
-//
-// Class: SoftwarePatch
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:OSPatch/Attribute:osversion_name+' => '~~',
 	'Class:SoftwarePatch' => 'Software-Patch',
 	'Class:SoftwarePatch+' => 'Patch, Hotfix, Sicherheitskorrektur oder Service Pack für eine bestimmte Software.',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Software',
-	'Class:SoftwarePatch/Attribute:software_id+' => '',
+	'Class:SoftwarePatch/Attribute:software_id+' => '~~',
 	'Class:SoftwarePatch/Attribute:software_name' => 'Software-Name',
-	'Class:SoftwarePatch/Attribute:software_name+' => '',
+	'Class:SoftwarePatch/Attribute:software_name+' => '~~',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Software-Instanzen',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Alle Systeme, auf denen dieser Software-Patch installiert ist',
-]);
-
-//
-// Class: Licence
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Licence' => 'Lizenz',
 	'Class:Licence+' => 'Abstrakte Klasse. Ein Lizenzvertrag für eine bestimmte OS-Version oder Software',
 	'Class:Licence/Attribute:name' => 'Name',
-	'Class:Licence/Attribute:name+' => '',
+	'Class:Licence/Attribute:name+' => '~~',
 	'Class:Licence/Attribute:documents_list' => 'Dokumente',
 	'Class:Licence/Attribute:documents_list+' => 'Alle mit dieser Lizenz verknüpften Dokumente',
 	'Class:Licence/Attribute:org_id' => 'Besitzer',
-	'Class:Licence/Attribute:org_id+' => '',
+	'Class:Licence/Attribute:org_id+' => '~~',
 	'Class:Licence/Attribute:organization_name' => 'Organisationsname',
-	'Class:Licence/Attribute:organization_name+' => '',
+	'Class:Licence/Attribute:organization_name+' => 'Common name~~',
 	'Class:Licence/Attribute:usage_limit' => 'Nutzungseinschränkungen',
-	'Class:Licence/Attribute:usage_limit+' => '',
+	'Class:Licence/Attribute:usage_limit+' => '~~',
 	'Class:Licence/Attribute:description' => 'Beschreibung',
-	'Class:Licence/Attribute:description+' => '',
+	'Class:Licence/Attribute:description+' => '~~',
 	'Class:Licence/Attribute:start_date' => 'Startdatum',
-	'Class:Licence/Attribute:start_date+' => '',
+	'Class:Licence/Attribute:start_date+' => '~~',
 	'Class:Licence/Attribute:end_date' => 'Enddatum',
-	'Class:Licence/Attribute:end_date+' => '',
+	'Class:Licence/Attribute:end_date+' => '~~',
 	'Class:Licence/Attribute:licence_key' => 'Schlüssel',
-	'Class:Licence/Attribute:licence_key+' => '',
+	'Class:Licence/Attribute:licence_key+' => '~~',
 	'Class:Licence/Attribute:perpetual' => 'unbefristet',
-	'Class:Licence/Attribute:perpetual+' => '',
+	'Class:Licence/Attribute:perpetual+' => '~~',
 	'Class:Licence/Attribute:perpetual/Value:no' => 'nein',
 	'Class:Licence/Attribute:perpetual/Value:no+' => 'nein',
 	'Class:Licence/Attribute:perpetual/Value:yes' => 'ja',
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'ja',
 	'Class:Licence/Attribute:finalclass' => 'Typ',
 	'Class:Licence/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
-]);
-
-//
-// Class: OSLicence
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:OSLicence' => 'OS-Lizenz',
 	'Class:OSLicence+' => 'Ein Lizenzvertrag für ein bestimmtes Betriebssystem. Die Lizenz bezieht sich auf ein Betriebssystem (zum Beispiel Windows 2008 R2) und kann mehreren Servern oder virtuellen Maschinen zugeordnet werden.',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:OSLicence/Attribute:osversion_id' => 'OS-Version',
-	'Class:OSLicence/Attribute:osversion_id+' => '',
+	'Class:OSLicence/Attribute:osversion_id+' => '~~',
 	'Class:OSLicence/Attribute:osfamily_id' => 'OS-Familie',
-	'Class:OSLicence/Attribute:osfamily_id+' => '',
+	'Class:OSLicence/Attribute:osfamily_id+' => '~~',
 	'Class:OSLicence/Attribute:osversion_name' => 'OS-Versionsname',
-	'Class:OSLicence/Attribute:osversion_name+' => '',
+	'Class:OSLicence/Attribute:osversion_name+' => '~~',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtuelle Maschinen',
 	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Alle virtuellen Maschinen, auf denen diese Lizenz verwendet wird',
 	'Class:OSLicence/Attribute:servers_list' => 'Server',
 	'Class:OSLicence/Attribute:servers_list+' => 'Alle Server, auf denen diese Lizenz verwendet wird',
-]);
-
-//
-// Class: SoftwareLicence
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:SoftwareLicence' => 'Software-Lizenz',
 	'Class:SoftwareLicence+' => 'Ein Lizenzvertrag für eine bestimmte Software. Die Lizenz bezieht sich auf eine Software (zum Beispiel MS Office 2010) und kann mehreren Instanzen dieser Software zugeordnet werden.',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Software',
-	'Class:SoftwareLicence/Attribute:software_id+' => '',
+	'Class:SoftwareLicence/Attribute:software_id+' => '~~',
 	'Class:SoftwareLicence/Attribute:software_name' => 'Software-Name',
-	'Class:SoftwareLicence/Attribute:software_name+' => '',
+	'Class:SoftwareLicence/Attribute:software_name+' => '~~',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Software-Instanzen',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Alle Systeme, in denen diese Lizenz verwendet wird',
-]);
-
-//
-// Class: lnkDocumentToLicence
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkDocumentToLicence' => 'Verknüpfung Dokument/Lizenz',
 	'Class:lnkDocumentToLicence+' => 'Verknüpfung, die verwendet wird, wenn ein Dokument für eine Lizenz relevant ist.',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Lizenz',
-	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Lizenz-Name',
-	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Dokument',
-	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Dokumenten-Name',
-	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
-]);
-
-//
-// Class: OSVersion
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkDocumentToLicence/Attribute:document_name+' => '~~',
 	'Class:OSVersion' => 'OS-Version',
 	'Class:OSVersion+' => 'Typologie. Liste der möglichen Werte für die OS-Version eines Rechners (Server, virtuelle Maschine oder PC). Die OS-Versionen sind nach OS-Familie gegliedert.',
 	'Class:OSVersion/Attribute:osfamily_id' => 'OS-Familie',
-	'Class:OSVersion/Attribute:osfamily_id+' => '',
+	'Class:OSVersion/Attribute:osfamily_id+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_name' => 'OS-Familienname',
-	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/Attribute:osfamily_name+' => '~~',
+	'Class:OSVersion/Attribute:end_of_support' => 'Supportende',
+	'Class:OSVersion/Attribute:end_of_support+' => 'Datum, ab dem der Hersteller keine Patches mehr für diese OS-Version bereitstellt.',
+	'Class:OSVersion/Attribute:ospatches_list' => 'OS-Patches',
+	'Class:OSVersion/Attribute:ospatches_list+' => 'Alle OS-Patches für diese OS-Version',
 	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Der Name muss innerhalb der OS-Familie eindeutig sein',
 	'Class:OSVersion/UniquenessRule:name_osfamily' => 'Diese OS-Version existiert bereits innerhalb der OS-Familie',
-]);
-
-//
-// Class: OSFamily
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:OSFamily' => 'OS-Familie',
 	'Class:OSFamily+' => 'Typologie. Liste der möglichen Werte für das Attribut OS-Familie von Servern, virtuellen Maschinen und PCs.',
+	'Class:OSFamily/Attribute:osversions_list' => 'OS-Versionen',
+	'Class:OSFamily/Attribute:osversions_list+' => 'Alle OS-Versionen dieser OS-Familie',
 	'Class:OSFamily/UniquenessRule:name+' => 'Der Name muss eindeutig sein',
 	'Class:OSFamily/UniquenessRule:name' => 'Diese OS-Familie existiert bereits',
-]);
-
-//
-// Class: Brand
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Brand' => 'Marke',
 	'Class:Brand+' => 'Typologie. Liste der möglichen Werte für das Attribut Marke eines physischen Geräts.',
+	'Class:Brand/Attribute:iosversions_list' => 'IOS-Versionen',
+	'Class:Brand/Attribute:iosversions_list+' => 'Alle IOS-Versionen dieser Marke',
 	'Class:Brand/Attribute:logo' => 'Logo',
-	'Class:Brand/Attribute:logo+' => '',
+	'Class:Brand/Attribute:logo+' => '~~',
+	'Class:Brand/Attribute:models_list' => 'Modelle',
+	'Class:Brand/Attribute:models_list+' => 'Alle Modelle dieser Marke',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Physische Geräte',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Alle physischen Geräte dieser Marke',
 	'Class:Brand/UniquenessRule:name+' => 'Der Name muss eindeutig sein',
 	'Class:Brand/UniquenessRule:name' => 'Diese Marke existiert bereits',
-]);
-
-//
-// Class: Model
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Model' => 'Modell',
 	'Class:Model+' => 'Typologie. Listet die möglichen Werte für das Attribut Modell eines physischen Geräts auf. Jedes Modell gehört zu genau einer Marke und gilt üblicherweise für eine Art von physischem Gerät.',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s',
 	'Class:Model/Attribute:brand_id' => 'Marke',
-	'Class:Model/Attribute:brand_id+' => '',
+	'Class:Model/Attribute:brand_id+' => '~~',
 	'Class:Model/Attribute:brand_name' => 'Markenname',
-	'Class:Model/Attribute:brand_name+' => '',
+	'Class:Model/Attribute:brand_name+' => '~~',
 	'Class:Model/Attribute:picture' => 'Bild',
-	'Class:Model/Attribute:picture+' => '',
+	'Class:Model/Attribute:picture+' => '~~',
 	'Class:Model/Attribute:type' => 'Gerätetyp',
-	'Class:Model/Attribute:type+' => '',
+	'Class:Model/Attribute:type+' => '~~',
+	'Class:Model/Attribute:end_of_support' => 'Supportende',
+	'Class:Model/Attribute:end_of_support+' => 'Datum, ab dem der Hersteller keine Patches und keinen Support mehr für dieses Modell bereitstellt.',
 	'Class:Model/Attribute:type/Value:PowerSource' => 'Stromquelle',
 	'Class:Model/Attribute:type/Value:PowerSource+' => 'Stromquelle',
 	'Class:Model/Attribute:type/Value:DiskArray' => 'Plattenarray',
@@ -1155,354 +739,229 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Model/Attribute:physicaldevices_list+' => 'Alle physischen Geräte, die diesem Modell entsprechen',
 	'Class:Model/UniquenessRule:name_brand+' => 'Der Modellname für eine Marke muss eindeutig sein',
 	'Class:Model/UniquenessRule:name_brand' => 'Es existiert bereits ein Modell mit diesem Namen für diese Marke',
-]);
-
-//
-// Class: NetworkDeviceType
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:NetworkDeviceType' => 'Netzwerkgerätetyp',
 	'Class:NetworkDeviceType+' => 'Typologie. Die möglichen Werte für den Typ eines Netzwerk-Geräts (etwa Router, Switch, Firewall).',
 	'Class:NetworkDeviceType/Attribute:logo' => 'Logo',
 	'Class:NetworkDeviceType/Attribute:logo+' => 'Wird als Symbol für alle Netzwerkgeräte dieses Typs verwendet, wenn sie in der Konsole dargestellt werden (Details, Übersichtskarte und Impact-Analyse-Graphen)',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Netzwerkgeräte',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Alle Netzwerkgeräte, die diesem Typ entsprechen',
-]);
-
-//
-// Class: IOSVersion
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:IOSVersion' => 'IOS-Version',
 	'Class:IOSVersion+' => 'Typologie. Mögliche Werte für die Betriebssystemversionen von Netzwerk-Geräten (IOS von Ciscos Internetwork Operating System).',
 	'Class:IOSVersion/Attribute:brand_id' => 'Marke',
-	'Class:IOSVersion/Attribute:brand_id+' => '',
+	'Class:IOSVersion/Attribute:brand_id+' => '~~',
 	'Class:IOSVersion/Attribute:brand_name' => 'Markenname',
-	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/Attribute:brand_name+' => '~~',
+	'Class:IOSVersion/Attribute:end_of_support' => 'Supportende',
+	'Class:IOSVersion/Attribute:end_of_support+' => 'Datum, ab dem der Hersteller keine Patches mehr für diese IOS-Version bereitstellt.',
+	'Class:IOSVersion/Attribute:networkdevices_list' => 'Netzwerkgeräte',
+	'Class:IOSVersion/Attribute:networkdevices_list+' => 'Alle Netzwerkgeräte, auf denen diese IOS-Version läuft',
 	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Der Name muss innerhalb der Marke eindeutig sein',
 	'Class:IOSVersion/UniquenessRule:name_brand' => 'Diese IOS-Version existiert bereits für diese Marke',
-]);
-
-//
-// Class: lnkDocumentToPatch
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkDocumentToPatch' => 'Verknüpfung Dokument/Patch',
 	'Class:lnkDocumentToPatch+' => 'Verknüpfung, die verwendet wird, wenn ein Dokument für einen Patch relevant ist.',
 	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch',
-	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Patch-Name',
-	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:document_id' => 'Dokument',
-	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Dokument-Name',
-	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
-]);
-
-//
-// Class: lnkSoftwareInstanceToSoftwarePatch
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkDocumentToPatch/Attribute:document_name+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Verknüpfung Software-Instanz/Softeware-Patch',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => 'Diese Verknüpfung gibt an, dass ein Software-Patch auf eine Software-Instanz angewendet wurde.',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Software-Patch',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => 'Software-Patch-Name',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id' => 'Software-Instanz',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Software-Instanz-Name',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '',
-]);
-
-//
-// Class: lnkFunctionalCIToOSPatch
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch' => 'Verknüpfung FunctionalCI/OS-Patch',
 	'Class:lnkFunctionalCIToOSPatch+' => 'Bildet das Einspielen eines OS-Patches auf einem Gerät ab.',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'OS-Patch',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => 'OS-Patch-Name',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id' => 'FunctionalCI',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'FunctionalCI-Name',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '',
-]);
-
-//
-// Class: lnkDocumentToSoftware
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '~~',
 	'Class:lnkDocumentToSoftware' => 'Verknüpfung Dokument/Software',
 	'Class:lnkDocumentToSoftware+' => 'Verknüpfung, die verwendet wird, wenn ein Dokument für eine Software relevant ist.',
 	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Software',
-	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Software-Name',
-	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:document_id' => 'Dokument',
-	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Dokument-Name',
-	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
-]);
-
-//
-// Class: Subnet
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '~~',
 	'Class:Subnet' => 'Subnetz',
 	'Class:Subnet+' => 'Abschnitt eines IP-Netzwerks, definiert durch eine IP-Adresse und eine Maske',
 	'Class:Subnet/Name' => '%1$s/%2$s',
 	'Class:Subnet/ComplementaryName' => '%1$s - %2$s',
 	'Class:Subnet/Attribute:description' => 'Beschreibung',
-	'Class:Subnet/Attribute:description+' => '',
+	'Class:Subnet/Attribute:description+' => '~~',
 	'Class:Subnet/Attribute:subnet_name' => 'Subnetzname',
-	'Class:Subnet/Attribute:subnet_name+' => '',
+	'Class:Subnet/Attribute:subnet_name+' => '~~',
 	'Class:Subnet/Attribute:org_id' => 'Organisation',
-	'Class:Subnet/Attribute:org_id+' => '',
+	'Class:Subnet/Attribute:org_id+' => '~~',
 	'Class:Subnet/Attribute:org_name' => 'Name der Organisation',
-	'Class:Subnet/Attribute:org_name+' => '',
+	'Class:Subnet/Attribute:org_name+' => '~~',
 	'Class:Subnet/Attribute:ip' => 'IP',
-	'Class:Subnet/Attribute:ip+' => '',
+	'Class:Subnet/Attribute:ip+' => '~~',
 	'Class:Subnet/Attribute:ip_mask' => 'Subnetz-Maske',
-	'Class:Subnet/Attribute:ip_mask+' => '',
+	'Class:Subnet/Attribute:ip_mask+' => '~~',
 	'Class:Subnet/Attribute:vlans_list' => 'VLANs',
-	'Class:Subnet/Attribute:vlans_list+' => '',
-]);
-
-//
-// Class: VLAN
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:Subnet/Attribute:vlans_list+' => '~~',
 	'Class:VLAN' => 'VLAN',
 	'Class:VLAN+' => 'Ein virtuelles LAN fasst Subnetze und physische Interfaces, die zum selben VLAN gehören, logisch zusammen.',
 	'Class:VLAN/Attribute:vlan_tag' => 'VLAN-Tag',
-	'Class:VLAN/Attribute:vlan_tag+' => '',
+	'Class:VLAN/Attribute:vlan_tag+' => '~~',
 	'Class:VLAN/Attribute:description' => 'Beschreibung',
-	'Class:VLAN/Attribute:description+' => '',
+	'Class:VLAN/Attribute:description+' => '~~',
 	'Class:VLAN/Attribute:org_id' => 'Organisation',
-	'Class:VLAN/Attribute:org_id+' => '',
+	'Class:VLAN/Attribute:org_id+' => '~~',
 	'Class:VLAN/Attribute:org_name' => 'Organisationsname',
 	'Class:VLAN/Attribute:org_name+' => 'Allgemeiner Name (Common name)',
 	'Class:VLAN/Attribute:subnets_list' => 'Subnetze',
-	'Class:VLAN/Attribute:subnets_list+' => '',
+	'Class:VLAN/Attribute:subnets_list+' => '~~',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Physische Interfaces',
-	'Class:VLAN/Attribute:physicalinterfaces_list+' => '',
-]);
-
-//
-// Class: lnkSubnetToVLAN
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:VLAN/Attribute:physicalinterfaces_list+' => '~~',
 	'Class:lnkSubnetToVLAN' => 'Verknüpfung Subnetz/VLAN',
 	'Class:lnkSubnetToVLAN+' => 'Diese n:m-Verknüpfung gibt an, dass ein VLAN in einem Subnetz vorhanden ist. In einem Subnetz können mehrere VLANs vorhanden sein, und ein VLAN kann sich über mehrere Subnetze erstrecken.',
 	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Subnetz',
-	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_ip' => 'Subnetz-IP',
-	'Class:lnkSubnetToVLAN/Attribute:subnet_ip+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_ip+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_name' => 'Subnetz-Name',
-	'Class:lnkSubnetToVLAN/Attribute:subnet_name+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_name+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id' => 'VLAN',
-	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
-	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '',
-]);
-
-//
-// Class: NetworkInterface
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '~~',
 	'Class:NetworkInterface' => 'Netzwerk-Interface',
 	'Class:NetworkInterface+' => 'Abstrakte Klasse für alle Arten von Netzwerk-Interfaces.',
 	'Class:NetworkInterface/Attribute:name' => 'Name',
-	'Class:NetworkInterface/Attribute:name+' => '',
+	'Class:NetworkInterface/Attribute:name+' => '~~',
 	'Class:NetworkInterface/Attribute:finalclass' => 'Typ',
 	'Class:NetworkInterface/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
-]);
-
-//
-// Class: IPInterface
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:IPInterface' => 'IP-Interface',
 	'Class:IPInterface+' => 'Abstrakte Klasse. Eine Art von Netzwerk-Interface mit einer IP-Adresse',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP-Adresse',
-	'Class:IPInterface/Attribute:ipaddress+' => '',
+	'Class:IPInterface/Attribute:ipaddress+' => '~~',
 	'Class:IPInterface/Attribute:macaddress' => 'MAC-Adresse',
-	'Class:IPInterface/Attribute:macaddress+' => '',
+	'Class:IPInterface/Attribute:macaddress+' => '~~',
 	'Class:IPInterface/Attribute:comment' => 'Kommentar',
-	'Class:IPInterface/Attribute:coment+' => '',
+	'Class:IPInterface/Attribute:coment+' => '~~',
 	'Class:IPInterface/Attribute:ipgateway' => 'IP-Gateway',
-	'Class:IPInterface/Attribute:ipgateway+' => '',
+	'Class:IPInterface/Attribute:ipgateway+' => '~~',
 	'Class:IPInterface/Attribute:ipmask' => 'IP-Maske',
-	'Class:IPInterface/Attribute:ipmask+' => '',
+	'Class:IPInterface/Attribute:ipmask+' => '~~',
 	'Class:IPInterface/Attribute:speed' => 'Geschwindigkeit',
-	'Class:IPInterface/Attribute:speed+' => '',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:IPInterface/Attribute:speed+' => '~~',
 	'Class:PhysicalInterface' => 'Physisches Interface',
 	'Class:PhysicalInterface+' => 'Eine Art von IP-Interface, die ein physisches Netzwerk-Interface abbildet (etwa eine Ethernet-Karte).',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Gerät',
-	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
+	'Class:PhysicalInterface/Attribute:connectableci_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Gerätename',
-	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
+	'Class:PhysicalInterface/Attribute:connectableci_name+' => '~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
+	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Standort',
+	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLANs',
-	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
-]);
-
-//
-// Class: lnkPhysicalInterfaceToVLAN
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:PhysicalInterface/Attribute:vlans_list+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Verknüpfung Physisches Interface / VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN+' => 'Diese Verknüpfung gibt an, dass ein Netzwerk-Interface zu einem VLAN (Virtual Local Area Network) gehört.',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Physisches Interface',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name' => 'Physisches Interface Name',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id' => 'Gerät',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name' => 'Gerätename',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id' => 'VLAN',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '',
-]);
-
-//
-// Class: LogicalInterface
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '~~',
 	'Class:LogicalInterface' => 'Logisches Interface',
 	'Class:LogicalInterface+' => 'IP-Interface, das nicht dauerhaft einem bestimmten physischen Port zugeordnet ist; die Zuordnung erfolgt dynamisch. Kann für virtuelle Maschinen verwendet werden.',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Virtuelle Maschine',
-	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '',
+	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Virtuelle Maschine-Name',
-	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '',
-]);
-
-//
-// Class: FiberChannelInterface
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '~~',
 	'Class:FiberChannelInterface' => 'Fiber Channel Interface',
 	'Class:FiberChannelInterface+' => 'Netzwerk-Interface für eine Hochgeschwindigkeits-Netzwerktechnik, die vor allem zur Anbindung von Storage-Systemen eingesetzt wird.',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Geschwindigkeit',
-	'Class:FiberChannelInterface/Attribute:speed+' => '',
+	'Class:FiberChannelInterface/Attribute:speed+' => '~~',
 	'Class:FiberChannelInterface/Attribute:topology' => 'Topologie',
-	'Class:FiberChannelInterface/Attribute:topology+' => '',
+	'Class:FiberChannelInterface/Attribute:topology+' => '~~',
 	'Class:FiberChannelInterface/Attribute:wwn' => 'WWN',
-	'Class:FiberChannelInterface/Attribute:wwn+' => '',
+	'Class:FiberChannelInterface/Attribute:wwn+' => '~~',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id' => 'Gerät',
-	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '',
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '~~',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Gerätename',
-	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '',
-]);
-
-//
-// Class: lnkConnectableCIToNetworkDevice
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice' => 'Verknüpfung ConnectableCI/NetworkDevice',
 	'Class:lnkConnectableCIToNetworkDevice+' => 'Legt fest, an welchem Netzwerkgerät ein Gerät angeschlossen ist.',
 	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Netzwerkgerät',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => 'Netzwerkgerät-Name',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id' => 'Verbundenes Gerät',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name' => 'Verbundenes Gerät-Name',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port' => 'Netzwerkport',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port' => 'Geräteport',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type' => 'Verbindungstyp',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink' => 'Downlink',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'down link~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'Uplink',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => '',
-]);
-
-//
-// Class: lnkApplicationSolutionToFunctionalCI
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'up link~~',
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Verknüpfung Anwendungslösung/FunctionalCI',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => 'Bildet die Zugehörigkeit eines Geräts zu einer Anwendungslösung ab. Die Bedeutung dieser Beziehung hängt von der Art der Anwendungslösung ab.',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Anwendungslösung',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'Anwendungslösungs-Name',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'FunctionalCI-Name',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '',
-]);
-
-//
-// Class: lnkApplicationSolutionToBusinessProcess
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Verknüpfung Anwendungslösung/Business-Prozess',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => 'Bildet die Beziehung zwischen einer Anwendungslösung und einem Business-Prozess ab.',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Business-Prozess',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => 'Business-Prozess-Name',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id' => 'Anwendungslösung',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Anwendungslösung-Name',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '',
-]);
-
-//
-// Class: Group
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '~~',
 	'Class:Group' => 'Gruppe',
 	'Class:Group+' => 'Eine Gruppe dient dazu, für einen beliebigen Projektzweck explizite Mengen von Konfigurationselementen zu bilden. Anders als eine Anwendungslösung wird eine Gruppe von keiner ihrer Komponenten beeinflusst und beeinflusst diese auch nicht. Bei einer OS-Migration kann eine Gruppe zum Beispiel praktisch sein, um die "zu migrierenden Server" zusammenzufassen; migrierte Server werden im Laufe der Migration aus der Gruppe entfernt.',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s',
 	'Class:Group/Attribute:name' => 'Name',
-	'Class:Group/Attribute:name+' => '',
+	'Class:Group/Attribute:name+' => '~~',
 	'Class:Group/Attribute:status' => 'Status',
-	'Class:Group/Attribute:status+' => '',
+	'Class:Group/Attribute:status+' => '~~',
 	'Class:Group/Attribute:status/Value:implementation' => 'Implementation',
 	'Class:Group/Attribute:status/Value:implementation+' => 'Implementation',
 	'Class:Group/Attribute:status/Value:obsolete' => 'Obsolet (Veraltet)',
@@ -1510,56 +969,55 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Group/Attribute:status/Value:production' => 'Produktion',
 	'Class:Group/Attribute:status/Value:production+' => 'Produktion',
 	'Class:Group/Attribute:org_id' => 'Organisation',
-	'Class:Group/Attribute:org_id+' => '',
+	'Class:Group/Attribute:org_id+' => '~~',
 	'Class:Group/Attribute:owner_name' => 'Name',
 	'Class:Group/Attribute:owner_name+' => 'Allgemeiner Name',
 	'Class:Group/Attribute:description' => 'Beschreibung',
-	'Class:Group/Attribute:description+' => '',
+	'Class:Group/Attribute:description+' => '~~',
 	'Class:Group/Attribute:type' => 'Typ',
-	'Class:Group/Attribute:type+' => '',
+	'Class:Group/Attribute:type+' => '~~',
 	'Class:Group/Attribute:parent_id' => 'Muttergruppe',
-	'Class:Group/Attribute:parent_id+' => '',
+	'Class:Group/Attribute:parent_id+' => '~~',
 	'Class:Group/Attribute:parent_name' => 'Name',
-	'Class:Group/Attribute:parent_name+' => '',
+	'Class:Group/Attribute:parent_name+' => '~~',
 	'Class:Group/Attribute:ci_list' => 'Verbundene CIs',
 	'Class:Group/Attribute:ci_list+' => 'Alle mit dieser Gruppe verknüpften CIs',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Parent-Gruppe',
-	'Class:Group/Attribute:parent_id_friendlyname+' => '',
-]);
-
-//
-// Class: lnkGroupToCI
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:Group/Attribute:parent_id_friendlyname+' => '~~',
 	'Class:lnkGroupToCI' => 'Verknüpfung Gruppe/CI',
 	'Class:lnkGroupToCI+' => 'Diese Verknüpfung gibt an, dass ein funktionales CI zu einer Gruppe gehört.',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'Gruppe',
-	'Class:lnkGroupToCI/Attribute:group_id+' => '',
+	'Class:lnkGroupToCI/Attribute:group_id+' => '~~',
 	'Class:lnkGroupToCI/Attribute:group_name' => 'Name',
-	'Class:lnkGroupToCI/Attribute:group_name+' => '',
+	'Class:lnkGroupToCI/Attribute:group_name+' => '~~',
 	'Class:lnkGroupToCI/Attribute:ci_id' => 'CI',
-	'Class:lnkGroupToCI/Attribute:ci_id+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_id+' => '~~',
 	'Class:lnkGroupToCI/Attribute:ci_name' => 'Name',
-	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_name+' => '~~',
 	'Class:lnkGroupToCI/Attribute:reason' => 'Grund',
-	'Class:lnkGroupToCI/Attribute:reason+' => '',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkGroupToCI/Attribute:reason+' => '~~',
+	'Class:lnkDocumentToFunctionalCI' => 'Verknüpfung Dokument/FunctionalCI',
+	'Class:lnkDocumentToFunctionalCI+' => 'Verknüpfung, die verwendet wird, wenn ein Dokument für ein funktionales CI relevant ist.',
+	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'FunctionalCI-Name',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Dokument',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Dokument-Name',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
 	'ConfigMgmt:baseinfo' => 'Allgemein',
 	'ConfigMgmt:moreinfo' => 'CI-spezifische Angaben',
-	'Storage:moreinfo' => 'Speicherspezifische Angaben',
 	'ConfigMgmt:otherinfo' => 'Beschreibung',
 	'ConfigMgmt:dates' => 'Daten',
+	'Storage:moreinfo' => 'Speicherspezifische Angaben',
 	'Software:moreinfo' => 'Softwarespezifische Angaben',
 	'Phone:moreinfo' => 'Telefonspezifische Angaben',
 	'Server:baseinfo' => 'Allgemeine Informationen',
-	'Server:Date' => 'Datum',
 	'Server:moreinfo' => 'Weitere Informationen',
+	'Server:Date' => 'Datum',
 	'Server:otherinfo' => 'Sonstige Informationen',
 	'Server:power' => 'Stromversorgung',
 	'Class:Subnet/Tab:IPUsage' => 'IP-Nutzung',
@@ -1569,31 +1027,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Subnet/Tab:FreeIPs-count' => 'Freie IPs: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Hier ist eine Auflistung von 10 freien IP Adressen',
 	'Class:Document:PreviewTab' => 'Vorschau',
-]);
-
-//
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
-	'Class:lnkDocumentToFunctionalCI' => 'Verknüpfung Dokument/FunctionalCI',
-	'Class:lnkDocumentToFunctionalCI+' => 'Verknüpfung, die verwendet wird, wenn ein Dokument für ein funktionales CI relevant ist.',
-	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'FunctionalCI-Name',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Dokument',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Dokument-Name',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:Application' => 'Anwendungen',
 	'Menu:Application+' => 'Alle Anwendungen',
 	'Menu:DBServer' => 'Datenbank-Server',
@@ -1635,50 +1068,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:Group' => 'Gruppen von CIs',
 	'Menu:Group+' => 'Gruppen von CIs',
 	'Menu:OSVersion' => 'OS-Versionen',
-	'Menu:OSVersion+' => '',
+	'Menu:OSVersion+' => '~~',
 	'Menu:Software' => 'Software-Katalog',
 	'Menu:Software+' => 'Softwarekatalog',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
-	'Class:PhysicalInterface/Attribute:org_id+' => '',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Standort',
-	'Class:PhysicalInterface/Attribute:location_id+' => '',
-	'Class:FunctionalCI/Attribute:groups_list' => 'Gruppen',
-	'Class:FunctionalCI/Attribute:groups_list+' => 'Gruppen können wie Schlagworte verwendet werden, um Umgebungen, Projekte (Migration, Upgrade, Sicherheit) usw. zu dokumentieren.',
-	'Class:PhysicalDevice/Attribute:model_end_of_support' => 'Supportende des Modells',
-	'Class:PhysicalDevice/Attribute:model_end_of_support+' => 'Zeitpunkt, ab dem das Hardwaremodell vom Hersteller nicht mehr unterstützt wird, sofern diese Information am Modell hinterlegt ist.',
-	'Class:NetworkDevice/Attribute:ios_end_of_support' => 'Supportende der IOS-Version',
-	'Class:NetworkDevice/Attribute:ios_end_of_support+' => 'Datum, ab dem der Hersteller keine Fehlerbehebungen mehr für diese IOS-Version bereitstellt.',
-	'Class:Server/Attribute:os_end_of_support' => 'Supportende des Betriebssystems',
-	'Class:Server/Attribute:os_end_of_support+' => 'Datum, ab dem der Hersteller keine Patches mehr für diese OS-Version bereitstellt.',
-	'Class:PC/Attribute:os_end_of_support' => 'Supportende des Betriebssystems',
-	'Class:PC/Attribute:os_end_of_support+' => 'Datum, ab dem der Hersteller keine Patches mehr für diese OS-Version bereitstellt.',
-	'Class:Software/Attribute:end_of_support' => 'Supportende',
-	'Class:Software/Attribute:end_of_support+' => 'Datum, ab dem der Hersteller keine Patches mehr für diese Softwareversion bereitstellt.',
-	'Class:SoftwareInstance/Attribute:software_end_of_support' => 'Supportende der Software',
-	'Class:SoftwareInstance/Attribute:software_end_of_support+' => 'Datum, ab dem der Hersteller keine Patches mehr für diese Softwareversion bereitstellt.',
-	'Class:VirtualMachine/Attribute:os_end_of_support' => 'Supportende des Betriebssystems',
-	'Class:VirtualMachine/Attribute:os_end_of_support+' => 'Zeitpunkt, ab dem die OS-Version vom Hersteller nicht mehr unterstützt wird, sofern diese Information an der OS-Version hinterlegt ist.',
-	'Class:OSVersion/Attribute:end_of_support' => 'Supportende',
-	'Class:OSVersion/Attribute:end_of_support+' => 'Datum, ab dem der Hersteller keine Patches mehr für diese OS-Version bereitstellt.',
-	'Class:OSVersion/Attribute:ospatches_list' => 'OS-Patches',
-	'Class:OSVersion/Attribute:ospatches_list+' => 'Alle OS-Patches für diese OS-Version',
-	'Class:OSFamily/Attribute:osversions_list' => 'OS-Versionen',
-	'Class:OSFamily/Attribute:osversions_list+' => 'Alle OS-Versionen dieser OS-Familie',
-	'Class:Brand/Attribute:iosversions_list' => 'IOS-Versionen',
-	'Class:Brand/Attribute:iosversions_list+' => 'Alle IOS-Versionen dieser Marke',
-	'Class:Brand/Attribute:models_list' => 'Modelle',
-	'Class:Brand/Attribute:models_list+' => 'Alle Modelle dieser Marke',
-	'Class:Model/Attribute:end_of_support' => 'Supportende',
-	'Class:Model/Attribute:end_of_support+' => 'Datum, ab dem der Hersteller keine Patches und keinen Support mehr für dieses Modell bereitstellt.',
-	'Class:IOSVersion/Attribute:end_of_support' => 'Supportende',
-	'Class:IOSVersion/Attribute:end_of_support+' => 'Datum, ab dem der Hersteller keine Patches mehr für diese IOS-Version bereitstellt.',
-	'Class:IOSVersion/Attribute:networkdevices_list' => 'Netzwerkgeräte',
-	'Class:IOSVersion/Attribute:networkdevices_list+' => 'Alle Netzwerkgeräte, auf denen diese IOS-Version läuft',
 ]);

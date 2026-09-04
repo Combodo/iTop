@@ -1,19 +1,18 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
  */
 Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Menu:ConfigFileEditor' => 'Plain text editor~~',
 	'itop-config/Operation:Edit/Title' => 'Modifica file di configurazione',
 	'config-edit-intro' => 'Prestare molta attenzione durante la modifica del file di configurazione.',
-	'Menu:ConfigEditor' => 'Configurazione',
 	'config-apply' => 'Applica',
 	'config-apply-title' => 'Applica (Ctrl+S)',
 	'config-cancel' => 'Reset',

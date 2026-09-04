@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -30,9 +29,9 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'bkp-table-file' => 'Fichier',
 	'bkp-table-file+' => 'Seuls les fichiers ayant l\'extension .zip sont considérés comme étant des fichiers de sauvegarde',
 	'bkp-table-size' => 'Taille',
-	'bkp-table-size+' => '',
+	'bkp-table-size+' => '~~',
 	'bkp-table-actions' => 'Actions',
-	'bkp-table-actions+' => '',
+	'bkp-table-actions+' => '~~',
 	'bkp-status-backups-auto' => 'Sauvegardes automatiques',
 	'bkp-status-backups-manual' => 'Sauvegardes manuelles',
 	'bkp-status-backups-none' => 'Aucune sauvegarde n\'a été faite jusqu\' à présent.',

@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -44,39 +43,17 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
 	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
 	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
-
 	'Contract:baseinfo' => 'General information~~',
 	'Contract:moreinfo' => 'Contractual information~~',
 	'Contract:cost' => 'Cost information~~',
-]);
-
-//
-// Class: Organization
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Model dodávky',
 	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Názov modelu dodávky',
 	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
-]);
-
-//
-// Class: ContractType
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ContractType' => 'Typ zmluvy',
-	'Class:ContractType+' => '~~',
-]);
-
-//
-// Class: Contract
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'Class:ContractType+' => 'Typology for categorizing Customer and Provider Contracts.~~',
 	'Class:Contract' => 'zmluva',
-	'Class:Contract+' => '~~',
+	'Class:Contract+' => 'Abstract class to handle fields common to the different contract types.~~',
 	'Class:Contract/Attribute:name' => 'Názov',
 	'Class:Contract/Attribute:name+' => '~~',
 	'Class:Contract/Attribute:org_id' => 'Zákazník',
@@ -110,11 +87,11 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Contract/Attribute:cost_unit' => 'Cenová jednotka',
 	'Class:Contract/Attribute:cost_unit+' => '~~',
 	'Class:Contract/Attribute:provider_id' => 'Poskytovateľ',
-	'Class:Contract/Attribute:provider_id+' => '~~',
+	'Class:Contract/Attribute:provider_id+' => 'Provider organization for this contract. Can be different from the provider of the associated services.~~',
 	'Class:Contract/Attribute:provider_name' => 'Meno poskytovateľa',
 	'Class:Contract/Attribute:provider_name+' => '~~',
 	'Class:Contract/Attribute:status' => 'Stav',
-	'Class:Contract/Attribute:status+' => '~~',
+	'Class:Contract/Attribute:status+' => 'The status is not computed based on start and end dates. It must be set manually.~~',
 	'Class:Contract/Attribute:status/Value:implementation' => 'Implementácia',
 	'Class:Contract/Attribute:status/Value:implementation+' => 'implementation~~',
 	'Class:Contract/Attribute:status/Value:obsolete' => 'Vyradený',
@@ -123,45 +100,24 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Contract/Attribute:status/Value:production+' => 'production~~',
 	'Class:Contract/Attribute:finalclass' => 'Typ',
 	'Class:Contract/Attribute:finalclass+' => 'Name of the final class~~',
-]);
-
-//
-// Class: CustomerContract
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:CustomerContract' => 'Zákaznícka zmluva',
-	'Class:CustomerContract+' => '~~',
+	'Class:CustomerContract+' => 'Agreement between a client and a provider for the delivery of services with an optional level of commitment (SLA, Coverage Window).~~',
 	'Class:CustomerContract/Attribute:services_list' => 'Služby',
 	'Class:CustomerContract/Attribute:services_list+' => 'All the services purchased for this contract~~',
 	'Class:CustomerContract/Attribute:functionalcis_list' => 'CIs~~',
 	'Class:CustomerContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this contract~~',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Provider contracts~~',
 	'Class:CustomerContract/Attribute:providercontracts_list+' => 'All the provider contracts to deliver the services for this contract (underpinning contract)~~',
-]);
-
-//
-// Class: ProviderContract
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ProviderContract' => 'Poskytovateľská zmluva',
-	'Class:ProviderContract+' => '~~',
+	'Class:ProviderContract+' => 'Agreement between an external provider and an internal organization.~~',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'Zariadenia',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Service Level Agreement~~',
 	'Class:ProviderContract/Attribute:coverage' => 'Časy pokrytia',
-	'Class:ProviderContract/Attribute:coverage+' => '~~',
-]);
-
-//
-// Class: lnkContactToContract
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'Class:ProviderContract/Attribute:coverage+' => 'Temporal coverage of the contract, e.g. 24x7, 9x5, etc.~~',
 	'Class:lnkContactToContract' => 'väzba - Kontakt / zmluva',
-	'Class:lnkContactToContract+' => '~~',
+	'Class:lnkContactToContract+' => 'Manages key contacts on each Customer or Provider Contract.~~',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'zmluva',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '~~',
@@ -171,15 +127,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkContactToContract/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Názov kontaktu',
 	'Class:lnkContactToContract/Attribute:contact_name+' => '~~',
-]);
-
-//
-// Class: lnkContractToDocument
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkContractToDocument' => 'väzba - zmluva / Dokument',
-	'Class:lnkContractToDocument+' => '~~',
+	'Class:lnkContractToDocument+' => 'Link used when a Document is applicable to a Contract.~~',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'zmluva',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '~~',
@@ -189,15 +138,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkContractToDocument/Attribute:document_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Názov dokumentu',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkFunctionalCIToProviderContract' => 'väzba - Komponent / Poskytovateľská zmluva',
-	'Class:lnkFunctionalCIToProviderContract+' => '~~',
+	'Class:lnkFunctionalCIToProviderContract+' => 'This link models the Functional CIs that are supported by an external company through a Provider Contract.~~',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Poskytovateľská zmluva',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '~~',
@@ -207,30 +149,16 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Názov CI',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '~~',
-]);
-
-//
-// Class: ServiceFamily
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ServiceFamily' => 'Kategória služieb',
-	'Class:ServiceFamily+' => '~~',
+	'Class:ServiceFamily+' => 'Top level of Service hierarchy. Required for Services to be proposed in User Portal~~',
 	'Class:ServiceFamily/Attribute:name' => 'Názov',
 	'Class:ServiceFamily/Attribute:name+' => '~~',
 	'Class:ServiceFamily/Attribute:icon' => 'Icon~~',
 	'Class:ServiceFamily/Attribute:icon+' => '~~',
 	'Class:ServiceFamily/Attribute:services_list' => 'Služby',
 	'Class:ServiceFamily/Attribute:services_list+' => 'All the services in this category~~',
-]);
-
-//
-// Class: Service
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Service' => 'Služby',
-	'Class:Service+' => '~~',
+	'Class:Service+' => 'A Service is delivered by an organization and subscribed to through a Contract Client. It must contain at least one Service Subcategory.~~',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Service/Attribute:name' => 'Názov',
 	'Class:Service/Attribute:name+' => '~~',
@@ -249,7 +177,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Service/Attribute:contacts_list' => 'Kontakty',
 	'Class:Service/Attribute:contacts_list+' => 'All the contacts for this service~~',
 	'Class:Service/Attribute:status' => 'Stav',
-	'Class:Service/Attribute:status+' => '~~',
+	'Class:Service/Attribute:status+' => 'By default only Service in production are visible by Portal users~~',
 	'Class:Service/Attribute:status/Value:implementation' => 'Implementácia',
 	'Class:Service/Attribute:status/Value:implementation+' => 'implementation~~',
 	'Class:Service/Attribute:status/Value:obsolete' => 'Vyradená',
@@ -262,15 +190,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Service/Attribute:customercontracts_list+' => 'All the customer contracts that have purchased this service~~',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Podkategórie služieb',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'All the sub categories for this service~~',
-]);
-
-//
-// Class: lnkDocumentToService
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkDocumentToService' => 'väzba - Dokument / Služba',
-	'Class:lnkDocumentToService+' => '~~',
+	'Class:lnkDocumentToService+' => 'Link used when a Document is applicable to a Service.~~',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Služba',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '~~',
@@ -280,15 +201,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkDocumentToService/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Názov dokumentu',
 	'Class:lnkDocumentToService/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: lnkContactToService
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkContactToService' => 'väzba - Kontakt / Služba',
-	'Class:lnkContactToService+' => '~~',
+	'Class:lnkContactToService+' => 'Ideal for defining the Team to which Tickets created on the related Service will be assigned (automatically or manually).~~',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToService/Attribute:service_id' => 'Služba',
 	'Class:lnkContactToService/Attribute:service_id+' => '~~',
@@ -298,15 +212,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkContactToService/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Názov kontaktu',
 	'Class:lnkContactToService/Attribute:contact_name+' => '~~',
-]);
-
-//
-// Class: ServiceSubcategory
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ServiceSubcategory' => 'Podkategória služieb',
-	'Class:ServiceSubcategory+' => '~~',
+	'Class:ServiceSubcategory+' => 'Lowest level in Service hierarchy. User Request are usually associated to one Service Subcategory.~~',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ServiceSubcategory/Attribute:name' => 'Názov',
 	'Class:ServiceSubcategory/Attribute:name+' => '~~',
@@ -317,7 +224,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ServiceSubcategory/Attribute:service_name' => 'Názov služby',
 	'Class:ServiceSubcategory/Attribute:service_name+' => '~~',
 	'Class:ServiceSubcategory/Attribute:status' => 'Stav',
-	'Class:ServiceSubcategory/Attribute:status+' => '~~',
+	'Class:ServiceSubcategory/Attribute:status+' => 'Service subcategory status has usually an impact on User Portal visibility.~~',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation' => 'Implementácia',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation+' => 'implementation~~',
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete' => 'Vyradená',
@@ -332,15 +239,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'service request~~',
 	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider Name~~',
 	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider~~',
-]);
-
-//
-// Class: SLA
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:SLA' => 'SLA',
-	'Class:SLA+' => '~~',
+	'Class:SLA+' => 'Service Level Agreement (SLA) applicable to a Service subscribed by a customer and measured using SLTs.~~',
 	'Class:SLA/Attribute:name' => 'Názov',
 	'Class:SLA/Attribute:name+' => '~~',
 	'Class:SLA/Attribute:description' => 'Popis',
@@ -354,19 +254,12 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:SLA/Attribute:customercontracts_list' => 'Zákaznícke zmluvy',
 	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracts using this SLA~~',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
-]);
-
-//
-// Class: SLT
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:SLT' => 'SLT',
-	'Class:SLT+' => '~~',
+	'Class:SLT+' => 'Service Level Target under a Service Level Agreement (SLA). Defines a maximum time for a metric (TTO or TTR), a request type (Incident or Request) and a priority.~~',
 	'Class:SLT/Attribute:name' => 'Názov',
 	'Class:SLT/Attribute:name+' => '~~',
 	'Class:SLT/Attribute:priority' => 'Priorita',
-	'Class:SLT/Attribute:priority+' => '~~',
+	'Class:SLT/Attribute:priority+' => 'Ticket priority to which this SLT applies. Only tickets with this priority must comply with this SLT.~~',
 	'Class:SLT/Attribute:priority/Value:1' => 'Kritická',
 	'Class:SLT/Attribute:priority/Value:1+' => 'critical~~',
 	'Class:SLT/Attribute:priority/Value:2' => 'Vysoká',
@@ -376,34 +269,27 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:SLT/Attribute:priority/Value:4' => 'Nízka',
 	'Class:SLT/Attribute:priority/Value:4+' => 'low~~',
 	'Class:SLT/Attribute:request_type' => 'Typ požiadavky',
-	'Class:SLT/Attribute:request_type+' => '~~',
+	'Class:SLT/Attribute:request_type+' => 'Request type to which this SLT applies. Only tickets with this request type must comply with this SLT.~~',
 	'Class:SLT/Attribute:request_type/Value:incident' => 'Incident',
 	'Class:SLT/Attribute:request_type/Value:incident+' => 'incident~~',
 	'Class:SLT/Attribute:request_type/Value:service_request' => 'Požiadavka',
 	'Class:SLT/Attribute:request_type/Value:service_request+' => 'service request~~',
 	'Class:SLT/Attribute:metric' => 'Metrika',
-	'Class:SLT/Attribute:metric+' => '~~',
+	'Class:SLT/Attribute:metric+' => 'Delay type to which this SLT applies. TTO (Time To Own) or TTR (Time To Resolve).~~',
 	'Class:SLT/Attribute:metric/Value:tto' => 'TTO',
 	'Class:SLT/Attribute:metric/Value:tto+' => 'TTO~~',
 	'Class:SLT/Attribute:metric/Value:ttr' => 'TTR',
 	'Class:SLT/Attribute:metric/Value:ttr+' => 'TTR~~',
 	'Class:SLT/Attribute:value' => 'Hodnota',
-	'Class:SLT/Attribute:value+' => '~~',
+	'Class:SLT/Attribute:value+' => 'Delay value which must not be exceeded to be compliant with the target. The unit is defined in the "unit" attribute.~~',
 	'Class:SLT/Attribute:unit' => 'Jednotka',
-	'Class:SLT/Attribute:unit+' => '~~',
+	'Class:SLT/Attribute:unit+' => 'Unit for the delay value.~~',
 	'Class:SLT/Attribute:unit/Value:hours' => 'Hodiny',
 	'Class:SLT/Attribute:unit/Value:hours+' => 'hours~~',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'Minúty',
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'minutes~~',
-]);
-
-//
-// Class: lnkSLAToSLT
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkSLAToSLT' => 'väzba - SLA / SLT',
-	'Class:lnkSLAToSLT+' => '~~',
+	'Class:lnkSLAToSLT+' => 'This link indicates that an SLT is included in the Service Level Agreement (SLA). An SLA usually contains several SLTs. An SLT can be reused as is by several SLAs (seldom).~~',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '~~',
@@ -423,39 +309,25 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'SLT value unit~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkCustomerContractToService' => 'väzba - Zákaznícka zmluva / Služba',
-	'Class:lnkCustomerContractToService+' => '~~',
+	'Class:lnkCustomerContractToService+' => 'A single line of a Customer Contract, specifying the Service provided and, for this service, the subscribed commitment levels (Service Level Agreement and Coverage Window).~~',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Zákaznícka zmluva',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Názov zákazníckeho zmluvy',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:service_id' => 'Služba',
-	'Class:lnkCustomerContractToService/Attribute:service_id+' => '~~',
+	'Class:lnkCustomerContractToService/Attribute:service_id+' => 'All service subcategories linked to this service are also included by the contract.~~',
 	'Class:lnkCustomerContractToService/Attribute:service_name' => 'Názov služby',
 	'Class:lnkCustomerContractToService/Attribute:service_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_id' => 'SLA',
-	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '~~',
+	'Class:lnkCustomerContractToService/Attribute:sla_id+' => 'Service Level Agreement applicable to this service for this customer contract.~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA Názov',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
 	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToProviderContract
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkCustomerContractToProviderContract' => 'Link Customer Contract / Provider Contract~~',
-	'Class:lnkCustomerContractToProviderContract+' => '~~',
+	'Class:lnkCustomerContractToProviderContract+' => 'This link models when a Provider Contract contributes to the delivery of a Customer Contract.~~',
 	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id' => 'Customer contract~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => '~~',
@@ -465,15 +337,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => '~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name' => 'Provider contract Name~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToFunctionalCI
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkCustomerContractToFunctionalCI' => 'Link Customer Contract / FunctionalCI~~',
-	'Class:lnkCustomerContractToFunctionalCI+' => '~~',
+	'Class:lnkCustomerContractToFunctionalCI+' => 'This link models the equipment (Functional CI) covered by a Customer Contract.~~',
 	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id' => 'Customer contract~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => '~~',
@@ -483,15 +348,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name' => 'CI Name~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => '~~',
-]);
-
-//
-// Class: DeliveryModel
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DeliveryModel' => 'Model dodávky',
-	'Class:DeliveryModel+' => '~~',
+	'Class:DeliveryModel+' => 'The Delivery Model specifies the Teams that can be assigned to Tickets; it must contain at least one Team in the Contacts tab.
+Each client Organization must have a defined Delivery Model.~~',
 	'Class:DeliveryModel/Attribute:name' => 'Názov',
 	'Class:DeliveryModel/Attribute:name+' => '~~',
 	'Class:DeliveryModel/Attribute:org_id' => 'Organizácia',
@@ -504,15 +363,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'There must be at least one team to enable Ticket assignment~~',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Zákazníci',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
-]);
-
-//
-// Class: lnkDeliveryModelToContact
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkDeliveryModelToContact' => 'väzba - Model dodávky / Kontakt',
-	'Class:lnkDeliveryModelToContact+' => '~~',
+	'Class:lnkDeliveryModelToContact+' => 'This link specifies the role of a Team (more rarely a Person) within a Delivery Model.~~',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Model dodávky',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '~~',
@@ -526,24 +378,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Názov role',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '~~',
-]);
-
-//
-// Class: lnkContactToContract
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkContractToDocument
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',

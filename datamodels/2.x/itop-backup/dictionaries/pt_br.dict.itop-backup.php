@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -30,9 +29,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'bkp-table-file' => 'Arquivo',
 	'bkp-table-file+' => 'Apenas arquivos com a extensão .zip são considerados arquivos de backup',
 	'bkp-table-size' => 'Tamanho',
-	'bkp-table-size+' => '',
+	'bkp-table-size+' => '~~',
 	'bkp-table-actions' => 'Ações',
-	'bkp-table-actions+' => '',
+	'bkp-table-actions+' => '~~',
 	'bkp-status-backups-auto' => 'Backups agendados',
 	'bkp-status-backups-manual' => 'Backups manuais',
 	'bkp-status-backups-none' => 'Nenhum backup ainda',

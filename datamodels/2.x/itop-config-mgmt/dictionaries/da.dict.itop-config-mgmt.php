@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
@@ -23,88 +22,39 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Relation:impacts/LoadData' => 'Load data~~',
 	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
 	'Relation:impacts/FilteredData' => 'Filtered data~~',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: lnkContactToFunctionalCI
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkContactToFunctionalCI' => 'Sammenhæng Kontakt/FunctionalCI',
-	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI+' => 'Manages Contacts linked to Functional CIs. This can be a team responsible for the equipment, to assign related Tickets, or the person to whom an individual device such as a PC or phone is assigned, to manage the inventory.~~',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'FunctionalCI navn',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Kontakt navn',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
-]);
-
-//
-// Class: FunctionalCI
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '~~',
 	'Class:FunctionalCI' => 'Funktionelle CI',
-	'Class:FunctionalCI+' => '',
+	'Class:FunctionalCI+' => 'Abstract class grouping most Configuration Items types used for CMDB.~~',
 	'Class:FunctionalCI/Attribute:name' => 'Navn',
-	'Class:FunctionalCI/Attribute:name+' => '',
+	'Class:FunctionalCI/Attribute:name+' => '~~',
 	'Class:FunctionalCI/Attribute:description' => 'Beskrivelse',
-	'Class:FunctionalCI/Attribute:description+' => '',
+	'Class:FunctionalCI/Attribute:description+' => '~~',
 	'Class:FunctionalCI/Attribute:org_id' => 'Organisation',
-	'Class:FunctionalCI/Attribute:org_id+' => '',
+	'Class:FunctionalCI/Attribute:org_id+' => '~~',
 	'Class:FunctionalCI/Attribute:organization_name' => 'Organisationsnavn',
-	'Class:FunctionalCI/Attribute:organization_name+' => '',
+	'Class:FunctionalCI/Attribute:organization_name+' => 'Common name~~',
 	'Class:FunctionalCI/Attribute:business_criticity' => 'Forretnings kritikalitet',
-	'Class:FunctionalCI/Attribute:business_criticity+' => '',
+	'Class:FunctionalCI/Attribute:business_criticity+' => '~~',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:high' => 'Høj',
-	'Class:FunctionalCI/Attribute:business_criticity/Value:high+' => '',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:high+' => 'high~~',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:low' => 'Lav',
-	'Class:FunctionalCI/Attribute:business_criticity/Value:low+' => '',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:low+' => 'low~~',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:medium' => 'Middel',
-	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => '',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => 'medium~~',
 	'Class:FunctionalCI/Attribute:move2production' => 'Overgået til produktions dato',
 	'Class:FunctionalCI/Attribute:move2production+' => 'Dato for overgang til produktion',
+	'Class:FunctionalCI/Attribute:groups_list' => 'Groups~~',
+	'Class:FunctionalCI/Attribute:groups_list+' => 'Groups can be used as tags, to document environment, projects (migration, upgrade, security), etc…~~',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Kontakter',
 	'Class:FunctionalCI/Attribute:contacts_list+' => 'All the contacts for this configuration item~~',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Dokumenter',
@@ -114,123 +64,69 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Software',
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'All the software installed on this configuration item~~',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Type',
-	'Class:FunctionalCI/Attribute:finalclass+' => '',
+	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets~~',
 	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Active Tickets which are impacting this functional CI~~',
-]);
-
-//
-// Class: PhysicalDevice
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:PhysicalDevice' => 'Fysiske enheder',
-	'Class:PhysicalDevice+' => '',
+	'Class:PhysicalDevice+' => 'Abstract class grouping physical types of Configuration Items. A Physical Device can be located. It has usually a Brand and Model.~~',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'Seriennummer',
-	'Class:PhysicalDevice/Attribute:serialnumber+' => '',
+	'Class:PhysicalDevice/Attribute:serialnumber+' => '~~',
 	'Class:PhysicalDevice/Attribute:location_id' => 'Placering',
-	'Class:PhysicalDevice/Attribute:location_id+' => '',
+	'Class:PhysicalDevice/Attribute:location_id+' => '~~',
 	'Class:PhysicalDevice/Attribute:location_name' => 'Placeringsnavn',
-	'Class:PhysicalDevice/Attribute:location_name+' => '',
+	'Class:PhysicalDevice/Attribute:location_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:status' => 'Status',
-	'Class:PhysicalDevice/Attribute:status+' => '',
+	'Class:PhysicalDevice/Attribute:status+' => '~~',
 	'Class:PhysicalDevice/Attribute:status/Value:implementation' => 'Implementering',
-	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => '',
+	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => 'implementation~~',
 	'Class:PhysicalDevice/Attribute:status/Value:obsolete' => 'Forældet',
-	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => '',
+	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => 'obsolete~~',
 	'Class:PhysicalDevice/Attribute:status/Value:production' => 'Produktion',
-	'Class:PhysicalDevice/Attribute:status/Value:production+' => '',
+	'Class:PhysicalDevice/Attribute:status/Value:production+' => 'production~~',
 	'Class:PhysicalDevice/Attribute:status/Value:stock' => 'Lager',
-	'Class:PhysicalDevice/Attribute:status/Value:stock+' => '',
+	'Class:PhysicalDevice/Attribute:status/Value:stock+' => 'stock~~',
 	'Class:PhysicalDevice/Attribute:brand_id' => 'Mærke',
-	'Class:PhysicalDevice/Attribute:brand_id+' => '',
+	'Class:PhysicalDevice/Attribute:brand_id+' => '~~',
 	'Class:PhysicalDevice/Attribute:brand_name' => 'Mærkennavn',
-	'Class:PhysicalDevice/Attribute:brand_name+' => '',
+	'Class:PhysicalDevice/Attribute:brand_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:model_id' => 'Model',
-	'Class:PhysicalDevice/Attribute:model_id+' => '',
+	'Class:PhysicalDevice/Attribute:model_id+' => '~~',
+	'Class:PhysicalDevice/Attribute:model_end_of_support' => 'Model end of support~~',
+	'Class:PhysicalDevice/Attribute:model_end_of_support+' => 'When the hardware model is no more supported by the manufacturer, if this information is documented on the Model.~~',
 	'Class:PhysicalDevice/Attribute:model_name' => 'Modelnavn',
-	'Class:PhysicalDevice/Attribute:model_name+' => '',
+	'Class:PhysicalDevice/Attribute:model_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:asset_number' => 'Asset nummer',
-	'Class:PhysicalDevice/Attribute:asset_number+' => '',
+	'Class:PhysicalDevice/Attribute:asset_number+' => '~~',
 	'Class:PhysicalDevice/Attribute:purchase_date' => 'Indkøbsdato',
-	'Class:PhysicalDevice/Attribute:purchase_date+' => '',
+	'Class:PhysicalDevice/Attribute:purchase_date+' => '~~',
 	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Udløb garanti',
-	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '',
-]);
-
-//
-// Class: Rack
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '~~',
 	'Class:Rack' => 'Rack',
-	'Class:Rack+' => '',
+	'Class:Rack+' => 'A physical cabinet for Datacenter Devices and Enclosures.~~',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Rack/Attribute:nb_u' => 'NB U',
-	'Class:Rack/Attribute:nb_u+' => '',
+	'Class:Rack/Attribute:nb_u+' => '~~',
 	'Class:Rack/Attribute:device_list' => 'Enheder',
 	'Class:Rack/Attribute:device_list+' => 'All the physical devices racked into this rack~~',
 	'Class:Rack/Attribute:enclosure_list' => 'Enclosures',
 	'Class:Rack/Attribute:enclosure_list+' => 'All the enclosures in this rack~~',
-]);
-
-//
-// Class: TelephonyCI
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TelephonyCI' => 'Telefoni CI',
-	'Class:TelephonyCI+' => '',
+	'Class:TelephonyCI+' => 'Abstract class grouping telephony devices~~',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Telefonnummer',
-	'Class:TelephonyCI/Attribute:phonenumber+' => '',
-]);
-
-//
-// Class: Phone
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:TelephonyCI/Attribute:phonenumber+' => '~~',
 	'Class:Phone' => 'Telefon',
-	'Class:Phone+' => '',
-]);
-
-//
-// Class: MobilePhone
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:Phone+' => 'End User device. Plain wired phone~~',
 	'Class:MobilePhone' => 'Mobiltelefon',
-	'Class:MobilePhone+' => '',
+	'Class:MobilePhone+' => 'End User device. Wireless phone~~',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
-	'Class:MobilePhone/Attribute:imei+' => '',
+	'Class:MobilePhone/Attribute:imei+' => '~~',
 	'Class:MobilePhone/Attribute:hw_pin' => 'Hardware PIN',
-	'Class:MobilePhone/Attribute:hw_pin+' => '',
-]);
-
-//
-// Class: IPPhone
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:MobilePhone/Attribute:hw_pin+' => '~~',
 	'Class:IPPhone' => 'IP-Telefon',
-	'Class:IPPhone+' => '',
-]);
-
-//
-// Class: Tablet
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:IPPhone+' => 'Physical device dedicated to phone calls, connected to a network~~',
 	'Class:Tablet' => 'Tablet',
-	'Class:Tablet+' => '',
-]);
-
-//
-// Class: ConnectableCI
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:Tablet+' => 'End User device. For example iPad, Galaxy Note/Tab Nexus, Kindle...~~',
 	'Class:ConnectableCI' => 'Forbindbare CI',
 	'Class:ConnectableCI+' => 'Fysiske CI',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s~~',
@@ -238,36 +134,29 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'All network devices connected to this device~~',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Netværks interfaces',
 	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'All the physical network interfaces~~',
-]);
-
-//
-// Class: DatacenterDevice
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:DatacenterDevice' => 'Datacenterenhed',
-	'Class:DatacenterDevice+' => '',
+	'Class:DatacenterDevice+' => 'A physical equipment, connected to the network and installed in a data center, usually in a Rack or an Enclosure. This can include Servers, Network Devices, Storage Systems, SAN Switches, Tape Libraries, NAS Devices, etc.~~',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'Rack',
-	'Class:DatacenterDevice/Attribute:rack_id+' => '',
+	'Class:DatacenterDevice/Attribute:rack_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:rack_name' => 'Racknavn',
-	'Class:DatacenterDevice/Attribute:rack_name+' => '',
+	'Class:DatacenterDevice/Attribute:rack_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:enclosure_id' => 'Enclosure',
-	'Class:DatacenterDevice/Attribute:enclosure_id+' => '',
+	'Class:DatacenterDevice/Attribute:enclosure_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:enclosure_name' => 'Enclosure navn',
-	'Class:DatacenterDevice/Attribute:enclosure_name+' => '',
+	'Class:DatacenterDevice/Attribute:enclosure_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:nb_u' => 'NB U',
-	'Class:DatacenterDevice/Attribute:nb_u+' => '',
+	'Class:DatacenterDevice/Attribute:nb_u+' => '~~',
 	'Class:DatacenterDevice/Attribute:managementip' => 'Management IP',
-	'Class:DatacenterDevice/Attribute:managementip+' => '',
+	'Class:DatacenterDevice/Attribute:managementip+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerA_id' => 'PowerA kilde',
-	'Class:DatacenterDevice/Attribute:powerA_id+' => '',
+	'Class:DatacenterDevice/Attribute:powerA_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerA_name' => 'PowerA kildenavn',
-	'Class:DatacenterDevice/Attribute:powerA_name+' => '',
+	'Class:DatacenterDevice/Attribute:powerA_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerB_id' => 'PowerB kilde',
-	'Class:DatacenterDevice/Attribute:powerB_id+' => '',
+	'Class:DatacenterDevice/Attribute:powerB_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerB_name' => 'PowerB kildenavn',
-	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
+	'Class:DatacenterDevice/Attribute:powerB_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'FC Porte',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'All the fiber channel interfaces for this device~~',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
@@ -276,217 +165,126 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'The device %2$s is up if at least one power connection (A or B) is up~~',
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'The device %2$s is up if all its power connections are up~~',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'The device %2$s is up if at least %1$s %% of its power connections are up~~',
-]);
-
-//
-// Class: NetworkDevice
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:NetworkDevice' => 'Netværks enhed',
-	'Class:NetworkDevice+' => '',
+	'Class:NetworkDevice+' => 'Any type of network device: router, switch, hub, load balancer, firewall…~~',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Netværks type',
-	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
+	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '~~',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Netværktypenavn',
-	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
+	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '~~',
 	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Enhed',
 	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'All the devices connected to this network device~~',
 	'Class:NetworkDevice/Attribute:iosversion_id' => 'IOS Version',
-	'Class:NetworkDevice/Attribute:iosversion_id+' => '',
+	'Class:NetworkDevice/Attribute:iosversion_id+' => '~~',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'IOS versionsnavn',
-	'Class:NetworkDevice/Attribute:iosversion_name+' => '',
+	'Class:NetworkDevice/Attribute:iosversion_name+' => '~~',
+	'Class:NetworkDevice/Attribute:ios_end_of_support' => 'IOS end of support~~',
+	'Class:NetworkDevice/Attribute:ios_end_of_support+' => 'The date after which the editor no longer provides fixes for this IOS version.~~',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
-	'Class:NetworkDevice/Attribute:ram+' => '',
-]);
-
-//
-// Class: Server
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:NetworkDevice/Attribute:ram+' => '~~',
 	'Class:Server' => 'Server',
-	'Class:Server+' => '',
+	'Class:Server+' => 'Datacenter Device managing access to centralized resources or services. It contains an OS Version executing Software Instances.~~',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Server/Attribute:osfamily_id' => 'OS Familie',
-	'Class:Server/Attribute:osfamily_id+' => '',
+	'Class:Server/Attribute:osfamily_id+' => '~~',
 	'Class:Server/Attribute:osfamily_name' => 'OS familienavn',
-	'Class:Server/Attribute:osfamily_name+' => '',
+	'Class:Server/Attribute:osfamily_name+' => '~~',
 	'Class:Server/Attribute:osversion_id' => 'OS Version',
-	'Class:Server/Attribute:osversion_id+' => '',
+	'Class:Server/Attribute:osversion_id+' => '~~',
 	'Class:Server/Attribute:osversion_name' => 'OS versionsnavn',
-	'Class:Server/Attribute:osversion_name+' => '',
+	'Class:Server/Attribute:osversion_name+' => '~~',
+	'Class:Server/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:Server/Attribute:os_end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
 	'Class:Server/Attribute:oslicence_id' => 'OS Licens',
-	'Class:Server/Attribute:oslicence_id+' => '',
+	'Class:Server/Attribute:oslicence_id+' => '~~',
 	'Class:Server/Attribute:oslicence_name' => 'OS licensnavn',
-	'Class:Server/Attribute:oslicence_name+' => '',
+	'Class:Server/Attribute:oslicence_name+' => '~~',
 	'Class:Server/Attribute:cpu' => 'CPU',
-	'Class:Server/Attribute:cpu+' => '',
+	'Class:Server/Attribute:cpu+' => '~~',
 	'Class:Server/Attribute:ram' => 'RAM',
-	'Class:Server/Attribute:ram+' => '',
+	'Class:Server/Attribute:ram+' => '~~',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Logical Volumes',
 	'Class:Server/Attribute:logicalvolumes_list+' => 'All the logical volumes connected to this server~~',
-]);
-
-//
-// Class: StorageSystem
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:StorageSystem' => 'Storage-System',
-	'Class:StorageSystem+' => '',
+	'Class:StorageSystem+' => 'Storage system that can be attached either to a SAN or to an Ethernet network. The logical unit of storage managed by a Storage System is a Logical Volume.~~',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logical Volumes',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'All the logical volumes in this storage system~~',
-]);
-
-//
-// Class: SANSwitch
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:SANSwitch' => 'SAN-Switch',
-	'Class:SANSwitch+' => '',
+	'Class:SANSwitch+' => 'A SAN Switch is a network switch compatible with the Fibre Channel protocol used by storage networks. It is a Datacenter Device.~~',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Enhed',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'All the devices connected to this SAN switch~~',
-]);
-
-//
-// Class: TapeLibrary
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TapeLibrary' => 'Tape-Library',
-	'Class:TapeLibrary+' => '',
+	'Class:TapeLibrary+' => 'Datacenter Device which hosts multiple magnetic Tapes (or cartridge). Tape Libraries are used for data backup or archiving.~~',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Bånd',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'All the tapes in the tape library~~',
-]);
-
-//
-// Class: NAS
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:NAS' => 'NAS',
-	'Class:NAS+' => '',
+	'Class:NAS+' => 'High-capacity storage device racked in a datacenter and connected to a network. In '.ITOP_APPLICATION_SHORT.' a NAS (Network-attached storage) is hosting NAS File Systems.~~',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'NAS filsystem liste',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'All the file systems in this NAS~~',
-]);
-
-//
-// Class: PC
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:PC' => 'PC',
-	'Class:PC+' => '',
+	'Class:PC+' => 'Connectable CI. A Personal Computer (PC) is a Physical Device, Desktop or Laptop, running an operating system and designed to execute Software Instances.~~',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PC/Attribute:osfamily_id' => 'OS-Familie',
-	'Class:PC/Attribute:osfamily_id+' => '',
+	'Class:PC/Attribute:osfamily_id+' => '~~',
 	'Class:PC/Attribute:osfamily_name' => 'OS familienavn',
-	'Class:PC/Attribute:osfamily_name+' => '',
+	'Class:PC/Attribute:osfamily_name+' => '~~',
 	'Class:PC/Attribute:osversion_id' => 'OS-Version',
-	'Class:PC/Attribute:osversion_id+' => '',
+	'Class:PC/Attribute:osversion_id+' => '~~',
 	'Class:PC/Attribute:osversion_name' => 'OS versionsnavn',
-	'Class:PC/Attribute:osversion_name+' => '',
+	'Class:PC/Attribute:osversion_name+' => '~~',
+	'Class:PC/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:PC/Attribute:os_end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
 	'Class:PC/Attribute:cpu' => 'CPU',
-	'Class:PC/Attribute:cpu+' => '',
+	'Class:PC/Attribute:cpu+' => '~~',
 	'Class:PC/Attribute:ram' => 'RAM',
-	'Class:PC/Attribute:ram+' => '',
+	'Class:PC/Attribute:ram+' => '~~',
 	'Class:PC/Attribute:type' => 'Type',
-	'Class:PC/Attribute:type+' => '',
+	'Class:PC/Attribute:type+' => '~~',
 	'Class:PC/Attribute:type/Value:desktop' => 'Desktop',
-	'Class:PC/Attribute:type/Value:desktop+' => '',
+	'Class:PC/Attribute:type/Value:desktop+' => 'desktop~~',
 	'Class:PC/Attribute:type/Value:laptop' => 'Bærbar',
-	'Class:PC/Attribute:type/Value:laptop+' => '',
-]);
-
-//
-// Class: Printer
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:PC/Attribute:type/Value:laptop+' => 'laptop~~',
 	'Class:Printer' => 'Printer',
-	'Class:Printer+' => '',
+	'Class:Printer+' => 'Connectable CI. Physical Device connected either to the network or to a PC.~~',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s~~',
-]);
-
-//
-// Class: PowerConnection
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:PowerConnection' => 'Strømtilslutning',
-	'Class:PowerConnection+' => '',
+	'Class:PowerConnection+' => 'Abstract class grouping physical devices used for electrical power supply.~~',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s~~',
-]);
-
-//
-// Class: PowerSource
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:PowerSource' => 'Strømkilde',
-	'Class:PowerSource+' => '',
+	'Class:PowerSource+' => 'Physical Power Connection. Used in a datacenter to document any kind of power source (main power inlet, breaker…) that is not a PDU.~~',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
 	'Class:PowerSource/Attribute:pdus_list+' => 'All the PDUs using this power source~~',
-]);
-
-//
-// Class: PDU
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:PDU' => 'PDU',
-	'Class:PDU+' => '',
+	'Class:PDU+' => 'Power Connection. PDU (Power Distribution Unit) is a device fitted with multiple outputs designed to distribute electric power, especially to racks of computers and networking equipment located within a datacenter.~~',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s~~',
 	'Class:PDU/Attribute:rack_id' => 'Rack',
-	'Class:PDU/Attribute:rack_id+' => '',
+	'Class:PDU/Attribute:rack_id+' => '~~',
 	'Class:PDU/Attribute:rack_name' => 'Racknavn',
-	'Class:PDU/Attribute:rack_name+' => '',
+	'Class:PDU/Attribute:rack_name+' => '~~',
 	'Class:PDU/Attribute:powerstart_id' => 'Power start',
-	'Class:PDU/Attribute:powerstart_id+' => '',
+	'Class:PDU/Attribute:powerstart_id+' => '~~',
 	'Class:PDU/Attribute:powerstart_name' => 'Power start navn',
-	'Class:PDU/Attribute:powerstart_name+' => '',
-]);
-
-//
-// Class: Peripheral
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:PDU/Attribute:powerstart_name+' => '~~',
 	'Class:Peripheral' => 'Perifer enhed',
-	'Class:Peripheral+' => '',
+	'Class:Peripheral+' => 'Physical device, used to document any kind of computer peripheral.
+For example: external hard drives, scanners, input devices (trackballs, bar code scanners), etc…~~',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s~~',
-]);
-
-//
-// Class: Enclosure
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Enclosure' => 'Enclosure',
-	'Class:Enclosure+' => '',
+	'Class:Enclosure+' => 'An open-frame chassis mounted inside a Rack, in which to mount IT equipment such as Blade Servers, Network Device...~~',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Enclosure/Attribute:rack_id' => 'Rack',
-	'Class:Enclosure/Attribute:rack_id+' => '',
+	'Class:Enclosure/Attribute:rack_id+' => '~~',
 	'Class:Enclosure/Attribute:rack_name' => 'Racknavn',
-	'Class:Enclosure/Attribute:rack_name+' => '',
+	'Class:Enclosure/Attribute:rack_name+' => '~~',
 	'Class:Enclosure/Attribute:nb_u' => 'NB U',
-	'Class:Enclosure/Attribute:nb_u+' => '',
+	'Class:Enclosure/Attribute:nb_u+' => '~~',
 	'Class:Enclosure/Attribute:device_list' => 'Enhed',
 	'Class:Enclosure/Attribute:device_list+' => 'All the devices in this enclosure~~',
-]);
-
-//
-// Class: ApplicationSolution
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ApplicationSolution' => 'Anvendelsområde',
 	'Class:ApplicationSolution+' => 'Hvilken applikations løsning anvendes den i?',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
@@ -496,798 +294,533 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
 	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Status',
-	'Class:ApplicationSolution/Attribute:status+' => '',
+	'Class:ApplicationSolution/Attribute:status+' => '~~',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Aktiv',
-	'Class:ApplicationSolution/Attribute:status/Value:active+' => '',
+	'Class:ApplicationSolution/Attribute:status/Value:active+' => 'active~~',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'Inaktiv',
-	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => '',
+	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => 'inactive~~',
 	'Class:ApplicationSolution/Attribute:redundancy' => 'Impact analysis: configuration of the redundancy~~',
 	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'The solution is up if all CIs are up~~',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'The solution is up if at least %1$s CI(s) is(are) up~~',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'The solution is up if at least %1$s %% of the CIs are up~~',
-]);
-
-//
-// Class: BusinessProcess
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:BusinessProcess' => 'Forretningsproces',
-	'Class:BusinessProcess+' => '',
+	'Class:BusinessProcess+' => 'A Business Process is used to document a high-level process or an important application for the operations. It is quite similar to an Application Solution but for describing higher level applications or whole processes in the organization.~~',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Anvendelsområder',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Liste over applikations løsninger',
 	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
 	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:BusinessProcess/Attribute:status' => 'Status',
-	'Class:BusinessProcess/Attribute:status+' => '',
+	'Class:BusinessProcess/Attribute:status+' => '~~',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'Aktiv',
-	'Class:BusinessProcess/Attribute:status/Value:active+' => '',
+	'Class:BusinessProcess/Attribute:status/Value:active+' => 'active~~',
 	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'Inaktiv',
-	'Class:BusinessProcess/Attribute:status/Value:inactive+' => '',
-]);
-
-//
-// Class: SoftwareInstance
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:SoftwareInstance' => 'Software instans',
-	'Class:SoftwareInstance+' => '',
-	'Class:SoftwareInstance/Attribute:system_id' => 'System',
-	'Class:SoftwareInstance/Attribute:system_id+' => '',
-	'Class:SoftwareInstance/Attribute:system_name' => 'Systemnavn',
-	'Class:SoftwareInstance/Attribute:system_name+' => '',
-	'Class:SoftwareInstance/Attribute:software_id' => 'Software',
-	'Class:SoftwareInstance/Attribute:software_id+' => '',
-	'Class:SoftwareInstance/Attribute:software_name' => 'Software',
-	'Class:SoftwareInstance/Attribute:software_name+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Software-Licens',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Software-Licensnavn',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '',
-	'Class:SoftwareInstance/Attribute:path' => 'Path',
-	'Class:SoftwareInstance/Attribute:path+' => '',
-	'Class:SoftwareInstance/Attribute:status' => 'Status',
-	'Class:SoftwareInstance/Attribute:status+' => '',
-	'Class:SoftwareInstance/Attribute:status/Value:active' => 'Aktiv',
-	'Class:SoftwareInstance/Attribute:status/Value:active+' => '',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Inaktiv',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => '',
-]);
-
-//
-// Class: Middleware
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:Middleware' => 'Middleware',
-	'Class:Middleware+' => '',
-	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware-Instans(er)',
-	'Class:Middleware/Attribute:middlewareinstance_list+' => 'All the middleware instances provided by this middleware~~',
-]);
-
-//
-// Class: DBServer
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:DBServer' => 'DB Server',
-	'Class:DBServer+' => '',
-	'Class:DBServer/Attribute:dbschema_list' => 'DB Schema',
-	'Class:DBServer/Attribute:dbschema_list+' => 'All the database schemas for this DB server~~',
-]);
-
-//
-// Class: WebServer
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:WebServer' => 'Web Server',
-	'Class:WebServer+' => '',
-	'Class:WebServer/Attribute:webapp_list' => 'Web Applikationer',
-	'Class:WebServer/Attribute:webapp_list+' => 'All the web applications available on this web server~~',
-]);
-
-//
-// Class: PCSoftware
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:PCSoftware' => 'PC-Software',
-	'Class:PCSoftware+' => '',
-]);
-
-//
-// Class: OtherSoftware
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:OtherSoftware' => 'Andet Software',
-	'Class:OtherSoftware+' => '',
-]);
-
-//
-// Class: MiddlewareInstance
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:MiddlewareInstance' => 'Middleware instans',
-	'Class:MiddlewareInstance+' => '',
-	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
-	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
-	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
-	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
-	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Middleware navn',
-	'Class:MiddlewareInstance/Attribute:middleware_name+' => '',
-]);
-
-//
-// Class: DatabaseSchema
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:DatabaseSchema' => 'Datenbase schema',
-	'Class:DatabaseSchema+' => '',
-	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:DatabaseSchema/Attribute:dbserver_id' => 'DB-Server',
-	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
-	'Class:DatabaseSchema/Attribute:dbserver_name' => 'DB servernavn',
-	'Class:DatabaseSchema/Attribute:dbserver_name+' => '',
-]);
-
-//
-// Class: WebApplication
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:WebApplication' => 'Webapplikation',
-	'Class:WebApplication+' => '',
-	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:WebApplication/Attribute:webserver_id' => 'Web server',
-	'Class:WebApplication/Attribute:webserver_id+' => '',
-	'Class:WebApplication/Attribute:webserver_name' => 'Web servernavn',
-	'Class:WebApplication/Attribute:webserver_name+' => '',
-	'Class:WebApplication/Attribute:logo' => 'Logo~~',
-	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
-	'Class:WebApplication/Attribute:url' => 'URL',
-	'Class:WebApplication/Attribute:url+' => '',
-]);
-
-//
-// Class: VirtualDevice
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:VirtualDevice' => 'Virtuel enhed',
-	'Class:VirtualDevice+' => '',
-	'Class:VirtualDevice/Attribute:status' => 'Status',
-	'Class:VirtualDevice/Attribute:status+' => '',
-	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Implementering',
-	'Class:VirtualDevice/Attribute:status/Value:implementation+' => '',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Obsolet',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => '',
-	'Class:VirtualDevice/Attribute:status/Value:production' => 'Produktiv',
-	'Class:VirtualDevice/Attribute:status/Value:production+' => '',
-	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Lager',
-	'Class:VirtualDevice/Attribute:status/Value:stock+' => '',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Logiske Volumes',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'All the logical volumes used by this device~~',
-]);
-
-//
-// Class: VirtualHost
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:VirtualHost' => 'Host',
-	'Class:VirtualHost+' => '',
-	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtuelle Maskiner',
-	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'All the virtual machines hosted by this host~~',
-]);
-
-//
-// Class: Hypervisor
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:Hypervisor' => 'Hypervisor',
-	'Class:Hypervisor+' => '',
-	'Class:Hypervisor/Attribute:farm_id' => 'Farm',
-	'Class:Hypervisor/Attribute:farm_id+' => '',
-	'Class:Hypervisor/Attribute:farm_name' => 'Farmnavn',
-	'Class:Hypervisor/Attribute:farm_name+' => '',
-	'Class:Hypervisor/Attribute:server_id' => 'Server',
-	'Class:Hypervisor/Attribute:server_id+' => '',
-	'Class:Hypervisor/Attribute:server_name' => 'Servernavn',
-	'Class:Hypervisor/Attribute:server_name+' => '',
-]);
-
-//
-// Class: Farm
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:Farm' => 'Farm',
-	'Class:Farm+' => '',
-	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisorer',
-	'Class:Farm/Attribute:hypervisor_list+' => 'All the hypervisors that compose this farm~~',
-	'Class:Farm/Attribute:redundancy' => 'High availability~~',
-	'Class:Farm/Attribute:redundancy/disabled' => 'The farm is up if all the hypervisors are up~~',
-	'Class:Farm/Attribute:redundancy/count' => 'The farm is up if at least %1$s hypervisor(s) is(are) up~~',
-	'Class:Farm/Attribute:redundancy/percent' => 'The farm is up if at least %1$s %% of the hypervisors are up~~',
-]);
-
-//
-// Class: VirtualMachine
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:VirtualMachine' => 'Virtuel Maskine',
-	'Class:VirtualMachine+' => '',
-	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Host',
-	'Class:VirtualMachine/Attribute:virtualhost_id+' => '',
-	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Hostnavn',
-	'Class:VirtualMachine/Attribute:virtualhost_name+' => '',
-	'Class:VirtualMachine/Attribute:osfamily_id' => 'OS Familie',
-	'Class:VirtualMachine/Attribute:osfamily_id+' => '',
-	'Class:VirtualMachine/Attribute:osfamily_name' => 'OS familiennavn',
-	'Class:VirtualMachine/Attribute:osfamily_name+' => '',
-	'Class:VirtualMachine/Attribute:osversion_id' => 'OS Version',
-	'Class:VirtualMachine/Attribute:osversion_id+' => '',
-	'Class:VirtualMachine/Attribute:osversion_name' => 'OS versionsnavn',
-	'Class:VirtualMachine/Attribute:osversion_name+' => '',
-	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS Licens',
-	'Class:VirtualMachine/Attribute:oslicence_id+' => '',
-	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS licensnavn',
-	'Class:VirtualMachine/Attribute:oslicence_name+' => '',
-	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
-	'Class:VirtualMachine/Attribute:cpu+' => '',
-	'Class:VirtualMachine/Attribute:ram' => 'RAM',
-	'Class:VirtualMachine/Attribute:ram+' => '',
-	'Class:VirtualMachine/Attribute:managementip' => 'IP~~',
-	'Class:VirtualMachine/Attribute:managementip+' => '~~',
-	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Netværks interface',
-	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'All the logical network interfaces~~',
-]);
-
-//
-// Class: LogicalVolume
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:LogicalVolume' => 'Logical Volume',
-	'Class:LogicalVolume+' => '',
-	'Class:LogicalVolume/Attribute:name' => 'Navn',
-	'Class:LogicalVolume/Attribute:name+' => '',
-	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
-	'Class:LogicalVolume/Attribute:lun_id+' => '',
-	'Class:LogicalVolume/Attribute:description' => 'Beskrivelse',
-	'Class:LogicalVolume/Attribute:description+' => '',
-	'Class:LogicalVolume/Attribute:raid_level' => 'Raid Level',
-	'Class:LogicalVolume/Attribute:raid_level+' => '',
-	'Class:LogicalVolume/Attribute:size' => 'Størrelse',
-	'Class:LogicalVolume/Attribute:size+' => '',
-	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Storage System',
-	'Class:LogicalVolume/Attribute:storagesystem_id+' => '',
-	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Storage systemnavn',
-	'Class:LogicalVolume/Attribute:storagesystem_name+' => '',
-	'Class:LogicalVolume/Attribute:servers_list' => 'Server',
-	'Class:LogicalVolume/Attribute:servers_list+' => 'All the servers using this volume~~',
-	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtuelle enheder',
-	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'All the virtual devices using this volume~~',
-]);
-
-//
-// Class: lnkServerToVolume
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:lnkServerToVolume' => 'Sammenhæng Server/Volume',
-	'Class:lnkServerToVolume+' => '',
-	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
-	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume',
-	'Class:lnkServerToVolume/Attribute:volume_id+' => '',
-	'Class:lnkServerToVolume/Attribute:volume_name' => 'Volume navn',
-	'Class:lnkServerToVolume/Attribute:volume_name+' => '',
-	'Class:lnkServerToVolume/Attribute:server_id' => 'Server',
-	'Class:lnkServerToVolume/Attribute:server_id+' => '',
-	'Class:lnkServerToVolume/Attribute:server_name' => 'Server navn',
-	'Class:lnkServerToVolume/Attribute:server_name+' => '',
-	'Class:lnkServerToVolume/Attribute:size_used' => 'Størrelse anvendt',
-	'Class:lnkServerToVolume/Attribute:size_used+' => '',
-]);
-
-//
-// Class: lnkVirtualDeviceToVolume
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:lnkVirtualDeviceToVolume' => 'Sammenhæng virtuel enhed/volume',
-	'Class:lnkVirtualDeviceToVolume+' => '',
-	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Volume navn',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Virtuel enhed',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Virtuel enhedsnavn',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Størrelse anvendt',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '',
-]);
-
-//
-// Class: lnkSanToDatacenterDevice
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:lnkSanToDatacenterDevice' => 'Sammenhæng SAN/Datacenterenhed',
-	'Class:lnkSanToDatacenterDevice+' => '',
-	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN Switch',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'SAN Switchnavn',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Enhed',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Enhedsnavn',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'SAN FC',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Enhed FC',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '',
-]);
-
-//
-// Class: Tape
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:Tape' => 'Bånd',
-	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
-	'Class:Tape/Attribute:name' => 'Navn',
-	'Class:Tape/Attribute:name+' => '',
-	'Class:Tape/Attribute:description' => 'Beskrivelse',
-	'Class:Tape/Attribute:description+' => '',
-	'Class:Tape/Attribute:size' => 'Størrelse',
-	'Class:Tape/Attribute:size+' => '',
-	'Class:Tape/Attribute:tapelibrary_id' => 'Tape Library',
-	'Class:Tape/Attribute:tapelibrary_id+' => '',
-	'Class:Tape/Attribute:tapelibrary_name' => 'Tape Library navn',
-	'Class:Tape/Attribute:tapelibrary_name+' => '',
-]);
-
-//
-// Class: NASFileSystem
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:NASFileSystem' => 'NAS filsystem',
-	'Class:NASFileSystem+' => '',
-	'Class:NASFileSystem/Attribute:name' => 'Navn',
-	'Class:NASFileSystem/Attribute:name+' => '',
-	'Class:NASFileSystem/Attribute:description' => 'Beskrivelse',
-	'Class:NASFileSystem/Attribute:description+' => '',
-	'Class:NASFileSystem/Attribute:raid_level' => 'Raid Level',
-	'Class:NASFileSystem/Attribute:raid_level+' => '',
-	'Class:NASFileSystem/Attribute:size' => 'Størrelse',
-	'Class:NASFileSystem/Attribute:size+' => '',
-	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
-	'Class:NASFileSystem/Attribute:nas_id+' => '',
-	'Class:NASFileSystem/Attribute:nas_name' => 'NAS navn',
-	'Class:NASFileSystem/Attribute:nas_name+' => '',
-]);
-
-//
-// Class: Software
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:BusinessProcess/Attribute:status/Value:inactive+' => 'inactive~~',
 	'Class:Software' => 'Software',
-	'Class:Software+' => '',
+	'Class:Software+' => 'Software is a generic item in the software catalog. It has a particular version. In '.ITOP_APPLICATION_SHORT.' a Software has a category amongst: DB Server, Middleware, PC Software, Web Server and Other Software.~~',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Software/Attribute:name' => 'Navn',
-	'Class:Software/Attribute:name+' => '',
+	'Class:Software/Attribute:name+' => '~~',
 	'Class:Software/Attribute:vendor' => 'Producent',
-	'Class:Software/Attribute:vendor+' => '',
+	'Class:Software/Attribute:vendor+' => '~~',
 	'Class:Software/Attribute:version' => 'Version',
-	'Class:Software/Attribute:version+' => '',
+	'Class:Software/Attribute:version+' => '~~',
+	'Class:Software/Attribute:end_of_support' => 'End of support~~',
+	'Class:Software/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this software version.~~',
 	'Class:Software/Attribute:documents_list' => 'Dokument',
 	'Class:Software/Attribute:documents_list+' => 'All the documents linked to this software~~',
 	'Class:Software/Attribute:logo' => 'Logo~~',
 	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs~~',
 	'Class:Software/Attribute:type' => 'Type',
-	'Class:Software/Attribute:type+' => '',
+	'Class:Software/Attribute:type+' => '~~',
 	'Class:Software/Attribute:type/Value:DBServer' => 'DB Server',
-	'Class:Software/Attribute:type/Value:DBServer+' => '',
+	'Class:Software/Attribute:type/Value:DBServer+' => 'DB Server~~',
 	'Class:Software/Attribute:type/Value:Middleware' => 'Middleware',
-	'Class:Software/Attribute:type/Value:Middleware+' => '',
+	'Class:Software/Attribute:type/Value:Middleware+' => 'Middleware~~',
 	'Class:Software/Attribute:type/Value:OtherSoftware' => 'Andet Software',
-	'Class:Software/Attribute:type/Value:OtherSoftware+' => '',
+	'Class:Software/Attribute:type/Value:OtherSoftware+' => 'Other Software~~',
 	'Class:Software/Attribute:type/Value:PCSoftware' => 'PC Software',
-	'Class:Software/Attribute:type/Value:PCSoftware+' => '',
+	'Class:Software/Attribute:type/Value:PCSoftware+' => 'PC Software~~',
 	'Class:Software/Attribute:type/Value:WebServer' => 'Web server',
-	'Class:Software/Attribute:type/Value:WebServer+' => '',
+	'Class:Software/Attribute:type/Value:WebServer+' => 'Web Server~~',
 	'Class:Software/Attribute:softwareinstance_list' => 'Software Instanser',
 	'Class:Software/Attribute:softwareinstance_list+' => 'All the software instances for this software~~',
 	'Class:Software/Attribute:softwarepatch_list' => 'Software Patches',
 	'Class:Software/Attribute:softwarepatch_list+' => 'All the patchs for this software~~',
 	'Class:Software/Attribute:softwarelicence_list' => 'Software Licenser',
 	'Class:Software/Attribute:softwarelicence_list+' => 'All the licenses for this software~~',
-]);
-
-//
-// Class: Patch
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:SoftwareInstance' => 'Software instans',
+	'Class:SoftwareInstance+' => 'Abstract class representing the deployment of a Software on a device (Server, PC, VirtualMachine). In '.ITOP_APPLICATION_SHORT.' there are different types of Software Instance: DB Server, Middleware, PC Software, Web Server and Other Software~~',
+	'Class:SoftwareInstance/Attribute:system_id' => 'System',
+	'Class:SoftwareInstance/Attribute:system_id+' => 'The system can be a Server, a Virtual Machine, a PC, ...~~',
+	'Class:SoftwareInstance/Attribute:system_name' => 'Systemnavn',
+	'Class:SoftwareInstance/Attribute:system_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_id' => 'Software',
+	'Class:SoftwareInstance/Attribute:software_id+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_name' => 'Software',
+	'Class:SoftwareInstance/Attribute:software_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_end_of_support' => 'Software end of support~~',
+	'Class:SoftwareInstance/Attribute:software_end_of_support+' => 'The date after which the editor ceases to provide patches for this software version.~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Software-Licens',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Software-Licensnavn',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:path' => 'Path',
+	'Class:SoftwareInstance/Attribute:path+' => '~~',
+	'Class:SoftwareInstance/Attribute:status' => 'Status',
+	'Class:SoftwareInstance/Attribute:status+' => '~~',
+	'Class:SoftwareInstance/Attribute:status/Value:active' => 'Aktiv',
+	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'active~~',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Inaktiv',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'inactive~~',
+	'Class:Middleware' => 'Middleware',
+	'Class:Middleware+' => 'Software Instance offering services to other software (like: Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere or Lotus Domino) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware-Instans(er)',
+	'Class:Middleware/Attribute:middlewareinstance_list+' => 'All the middleware instances provided by this middleware~~',
+	'Class:DBServer' => 'DB Server',
+	'Class:DBServer+' => 'Software Instance offering database services (MySQL 8.0, Oracle, SQL Server, DB2…) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:DBServer/Attribute:dbschema_list' => 'DB Schema',
+	'Class:DBServer/Attribute:dbschema_list+' => 'All the database schemas for this DB server~~',
+	'Class:WebServer' => 'Web Server',
+	'Class:WebServer+' => 'It is a Software Instance, offering Web services (like Apache 2.4, Nginx 1.29.4, IIS 7.0) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:WebServer/Attribute:webapp_list' => 'Web Applikationer',
+	'Class:WebServer/Attribute:webapp_list+' => 'All the web applications available on this web server~~',
+	'Class:PCSoftware' => 'PC-Software',
+	'Class:PCSoftware+' => 'Software Instance for software (like MS Office, Adobe Photoshop or Filezilla) installed on a PC.~~',
+	'Class:OtherSoftware' => 'Andet Software',
+	'Class:OtherSoftware+' => 'Any type of Software Instance that do not fit in the other categories: PC Software, Middleware, DB server or Web Server.~~',
+	'Class:MiddlewareInstance' => 'Middleware instans',
+	'Class:MiddlewareInstance+' => 'Functional CI representing a service delivered by a Middleware.~~',
+	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
+	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
+	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Middleware navn',
+	'Class:MiddlewareInstance/Attribute:middleware_name+' => '~~',
+	'Class:DatabaseSchema' => 'Datenbase schema',
+	'Class:DatabaseSchema+' => 'Dabatase instance running of a specific DB server.~~',
+	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:DatabaseSchema/Attribute:dbserver_id' => 'DB-Server',
+	'Class:DatabaseSchema/Attribute:dbserver_id+' => '~~',
+	'Class:DatabaseSchema/Attribute:dbserver_name' => 'DB servernavn',
+	'Class:DatabaseSchema/Attribute:dbserver_name+' => '~~',
+	'Class:WebApplication' => 'Webapplikation',
+	'Class:WebApplication+' => 'Instance of an application accessible using a web browser and that runs on a given Web Server instance. For eg. this iTop that you\'re looking at.~~',
+	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:WebApplication/Attribute:webserver_id' => 'Web server',
+	'Class:WebApplication/Attribute:webserver_id+' => '~~',
+	'Class:WebApplication/Attribute:webserver_name' => 'Web servernavn',
+	'Class:WebApplication/Attribute:webserver_name+' => '~~',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:WebApplication/Attribute:url' => 'URL',
+	'Class:WebApplication/Attribute:url+' => '~~',
+	'Class:VirtualDevice' => 'Virtuel enhed',
+	'Class:VirtualDevice+' => 'Abstract class used for server virtualization (Virtual Host and Virtual Machine).~~',
+	'Class:VirtualDevice/Attribute:status' => 'Status',
+	'Class:VirtualDevice/Attribute:status+' => '~~',
+	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Implementering',
+	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'implementation~~',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Obsolet',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'obsolete~~',
+	'Class:VirtualDevice/Attribute:status/Value:production' => 'Produktiv',
+	'Class:VirtualDevice/Attribute:status/Value:production+' => 'production~~',
+	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Lager',
+	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'stock~~',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Logiske Volumes',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'All the logical volumes used by this device~~',
+	'Class:VirtualHost' => 'Host',
+	'Class:VirtualHost+' => 'Abstract class used for Virtual Devices (Hypervisor, Farm,...) hosting Virtual Machines.~~',
+	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtuelle Maskiner',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'All the virtual machines hosted by this host~~',
+	'Class:Hypervisor' => 'Hypervisor',
+	'Class:Hypervisor+' => 'Virtual Host. Virtualization software (MS Hyper-V, VMWare ESX, Xen, etc.), running on a physical Server and supporting the creation of Virtual Machines.~~',
+	'Class:Hypervisor/Attribute:farm_id' => 'Farm',
+	'Class:Hypervisor/Attribute:farm_id+' => '~~',
+	'Class:Hypervisor/Attribute:farm_name' => 'Farmnavn',
+	'Class:Hypervisor/Attribute:farm_name+' => '~~',
+	'Class:Hypervisor/Attribute:server_id' => 'Server',
+	'Class:Hypervisor/Attribute:server_id+' => '~~',
+	'Class:Hypervisor/Attribute:server_name' => 'Servernavn',
+	'Class:Hypervisor/Attribute:server_name+' => '~~',
+	'Class:Farm' => 'Farm',
+	'Class:Farm+' => 'Virtual Host. A Farm (or cluster) is a group of Hypervisors pooled together and sharing storage resources to provide an overall fault tolerant system for hosting Virtual Machines.~~',
+	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisorer',
+	'Class:Farm/Attribute:hypervisor_list+' => 'All the hypervisors that compose this farm~~',
+	'Class:Farm/Attribute:redundancy' => 'High availability~~',
+	'Class:Farm/Attribute:redundancy/disabled' => 'The farm is up if all the hypervisors are up~~',
+	'Class:Farm/Attribute:redundancy/count' => 'The farm is up if at least %1$s hypervisor(s) is(are) up~~',
+	'Class:Farm/Attribute:redundancy/percent' => 'The farm is up if at least %1$s %% of the hypervisors are up~~',
+	'Class:VirtualMachine' => 'Virtuel Maskine',
+	'Class:VirtualMachine+' => 'Virtual Device equivalent to a Server, it is hosted either on an Hypervisor or on a Farm.~~',
+	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Host',
+	'Class:VirtualMachine/Attribute:virtualhost_id+' => '~~',
+	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Hostnavn',
+	'Class:VirtualMachine/Attribute:virtualhost_name+' => '~~',
+	'Class:VirtualMachine/Attribute:osfamily_id' => 'OS Familie',
+	'Class:VirtualMachine/Attribute:osfamily_id+' => '~~',
+	'Class:VirtualMachine/Attribute:osfamily_name' => 'OS familiennavn',
+	'Class:VirtualMachine/Attribute:osfamily_name+' => '~~',
+	'Class:VirtualMachine/Attribute:osversion_id' => 'OS Version',
+	'Class:VirtualMachine/Attribute:osversion_id+' => '~~',
+	'Class:VirtualMachine/Attribute:osversion_name' => 'OS versionsnavn',
+	'Class:VirtualMachine/Attribute:osversion_name+' => '~~',
+	'Class:VirtualMachine/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:VirtualMachine/Attribute:os_end_of_support+' => 'When the OS version is no more supported by the vendor, if this information is documented on the OS Version.~~',
+	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS Licens',
+	'Class:VirtualMachine/Attribute:oslicence_id+' => '~~',
+	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS licensnavn',
+	'Class:VirtualMachine/Attribute:oslicence_name+' => '~~',
+	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
+	'Class:VirtualMachine/Attribute:cpu+' => '~~',
+	'Class:VirtualMachine/Attribute:ram' => 'RAM',
+	'Class:VirtualMachine/Attribute:ram+' => '~~',
+	'Class:VirtualMachine/Attribute:managementip' => 'IP~~',
+	'Class:VirtualMachine/Attribute:managementip+' => '~~',
+	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Netværks interface',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'All the logical network interfaces~~',
+	'Class:LogicalVolume' => 'Logical Volume',
+	'Class:LogicalVolume+' => 'The unit of storage managed inside a Storage System. It can be accessed by multiple Servers and Virtual Devices.~~',
+	'Class:LogicalVolume/Attribute:name' => 'Navn',
+	'Class:LogicalVolume/Attribute:name+' => '~~',
+	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
+	'Class:LogicalVolume/Attribute:lun_id+' => '~~',
+	'Class:LogicalVolume/Attribute:description' => 'Beskrivelse',
+	'Class:LogicalVolume/Attribute:description+' => '~~',
+	'Class:LogicalVolume/Attribute:raid_level' => 'Raid Level',
+	'Class:LogicalVolume/Attribute:raid_level+' => '~~',
+	'Class:LogicalVolume/Attribute:size' => 'Størrelse',
+	'Class:LogicalVolume/Attribute:size+' => '~~',
+	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Storage System',
+	'Class:LogicalVolume/Attribute:storagesystem_id+' => '~~',
+	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Storage systemnavn',
+	'Class:LogicalVolume/Attribute:storagesystem_name+' => '~~',
+	'Class:LogicalVolume/Attribute:servers_list' => 'Server',
+	'Class:LogicalVolume/Attribute:servers_list+' => 'All the servers using this volume~~',
+	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtuelle enheder',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'All the virtual devices using this volume~~',
+	'Class:lnkServerToVolume' => 'Sammenhæng Server/Volume',
+	'Class:lnkServerToVolume+' => 'This many-to-many link indicates that a Server uses a Logical Volume (a storage unit managed inside a Storage System). Several Servers can use the same Logical Volume.~~',
+	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
+	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume',
+	'Class:lnkServerToVolume/Attribute:volume_id+' => '~~',
+	'Class:lnkServerToVolume/Attribute:volume_name' => 'Volume navn',
+	'Class:lnkServerToVolume/Attribute:volume_name+' => '~~',
+	'Class:lnkServerToVolume/Attribute:server_id' => 'Server',
+	'Class:lnkServerToVolume/Attribute:server_id+' => '~~',
+	'Class:lnkServerToVolume/Attribute:server_name' => 'Server navn',
+	'Class:lnkServerToVolume/Attribute:server_name+' => '~~',
+	'Class:lnkServerToVolume/Attribute:size_used' => 'Størrelse anvendt',
+	'Class:lnkServerToVolume/Attribute:size_used+' => '~~',
+	'Class:lnkVirtualDeviceToVolume' => 'Sammenhæng virtuel enhed/volume',
+	'Class:lnkVirtualDeviceToVolume+' => 'This many-to-many link indicates that a Virtual Device uses a Logical Volume (a storage unit managed inside a Storage System). Several Virtual Devices can use the same Logical Volume.~~',
+	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Volume navn',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Virtuel enhed',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Virtuel enhedsnavn',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Størrelse anvendt',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '~~',
+	'Class:lnkSanToDatacenterDevice' => 'Sammenhæng SAN/Datacenterenhed',
+	'Class:lnkSanToDatacenterDevice+' => 'This many-to-many link models the network connection between a SAN Switch and a Datacenter Device (a Server, a Network Device, etc.).~~',
+	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN Switch',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'SAN Switchnavn',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Enhed',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Enhedsnavn',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'SAN FC',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Enhed FC',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '~~',
+	'Class:Tape' => 'Bånd',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
+	'Class:Tape/Attribute:name' => 'Navn',
+	'Class:Tape/Attribute:name+' => '~~',
+	'Class:Tape/Attribute:description' => 'Beskrivelse',
+	'Class:Tape/Attribute:description+' => '~~',
+	'Class:Tape/Attribute:size' => 'Størrelse',
+	'Class:Tape/Attribute:size+' => '~~',
+	'Class:Tape/Attribute:tapelibrary_id' => 'Tape Library',
+	'Class:Tape/Attribute:tapelibrary_id+' => '~~',
+	'Class:Tape/Attribute:tapelibrary_name' => 'Tape Library navn',
+	'Class:Tape/Attribute:tapelibrary_name+' => '~~',
+	'Class:NASFileSystem' => 'NAS filsystem',
+	'Class:NASFileSystem+' => 'Represents a shared file system hosted inside a given NAS (Network Attached Storage).~~',
+	'Class:NASFileSystem/Attribute:name' => 'Navn',
+	'Class:NASFileSystem/Attribute:name+' => '~~',
+	'Class:NASFileSystem/Attribute:description' => 'Beskrivelse',
+	'Class:NASFileSystem/Attribute:description+' => '~~',
+	'Class:NASFileSystem/Attribute:raid_level' => 'Raid Level',
+	'Class:NASFileSystem/Attribute:raid_level+' => '~~',
+	'Class:NASFileSystem/Attribute:size' => 'Størrelse',
+	'Class:NASFileSystem/Attribute:size+' => '~~',
+	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
+	'Class:NASFileSystem/Attribute:nas_id+' => '~~',
+	'Class:NASFileSystem/Attribute:nas_name' => 'NAS navn',
+	'Class:NASFileSystem/Attribute:nas_name+' => '~~',
 	'Class:Patch' => 'Patch',
-	'Class:Patch+' => '',
+	'Class:Patch+' => 'Abstract class, for patch, hotfix, security fix or service pack for an OS or a Software.~~',
 	'Class:Patch/Attribute:name' => 'Navn',
-	'Class:Patch/Attribute:name+' => '',
+	'Class:Patch/Attribute:name+' => '~~',
 	'Class:Patch/Attribute:documents_list' => 'Dokumenter',
 	'Class:Patch/Attribute:documents_list+' => 'All the documents linked to this patch~~',
 	'Class:Patch/Attribute:description' => 'Beskrivelse',
-	'Class:Patch/Attribute:description+' => '',
+	'Class:Patch/Attribute:description+' => '~~',
 	'Class:Patch/Attribute:finalclass' => 'Type',
-	'Class:Patch/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: OSPatch
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:Patch/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:OSPatch' => 'OS-Patch',
-	'Class:OSPatch+' => '',
+	'Class:OSPatch+' => 'Patch, hotfix, security fix or service pack for a given operating system.~~',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Enhed',
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'All the systems where this patch is installed~~',
 	'Class:OSPatch/Attribute:osversion_id' => 'OS Version',
-	'Class:OSPatch/Attribute:osversion_id+' => '',
+	'Class:OSPatch/Attribute:osversion_id+' => '~~',
 	'Class:OSPatch/Attribute:osfamily_id' => 'OS Family~~',
-	'Class:OSPatch/Attribute:osfamily_id+' => '',
+	'Class:OSPatch/Attribute:osfamily_id+' => '~~',
 	'Class:OSPatch/Attribute:osversion_name' => 'OS versionsnavn',
-	'Class:OSPatch/Attribute:osversion_name+' => '',
-]);
-
-//
-// Class: SoftwarePatch
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:OSPatch/Attribute:osversion_name+' => '~~',
 	'Class:SoftwarePatch' => 'Software-Patch',
-	'Class:SoftwarePatch+' => '',
+	'Class:SoftwarePatch+' => 'Patch, hotfix, security fix or service pack for a given software.~~',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Software',
-	'Class:SoftwarePatch/Attribute:software_id+' => '',
+	'Class:SoftwarePatch/Attribute:software_id+' => '~~',
 	'Class:SoftwarePatch/Attribute:software_name' => 'Software navn',
-	'Class:SoftwarePatch/Attribute:software_name+' => '',
+	'Class:SoftwarePatch/Attribute:software_name+' => '~~',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Software Instanser',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'All the systems where this software patch is installed~~',
-]);
-
-//
-// Class: Licence
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Licence' => 'Licens',
-	'Class:Licence+' => '',
+	'Class:Licence+' => 'Abstract class. A license contract for a particular OS version or Software~~',
 	'Class:Licence/Attribute:name' => 'Navn',
-	'Class:Licence/Attribute:name+' => '',
+	'Class:Licence/Attribute:name+' => '~~',
 	'Class:Licence/Attribute:documents_list' => 'Dokumenter',
 	'Class:Licence/Attribute:documents_list+' => 'All the documents linked to this license~~',
 	'Class:Licence/Attribute:org_id' => 'Ejer',
-	'Class:Licence/Attribute:org_id+' => '',
+	'Class:Licence/Attribute:org_id+' => '~~',
 	'Class:Licence/Attribute:organization_name' => 'Organisationsnavn',
-	'Class:Licence/Attribute:organization_name+' => '',
+	'Class:Licence/Attribute:organization_name+' => 'Common name~~',
 	'Class:Licence/Attribute:usage_limit' => 'Anvendelses indskrænkninger',
-	'Class:Licence/Attribute:usage_limit+' => '',
+	'Class:Licence/Attribute:usage_limit+' => '~~',
 	'Class:Licence/Attribute:description' => 'Beskrivelse',
-	'Class:Licence/Attribute:description+' => '',
+	'Class:Licence/Attribute:description+' => '~~',
 	'Class:Licence/Attribute:start_date' => 'Startdato',
-	'Class:Licence/Attribute:start_date+' => '',
+	'Class:Licence/Attribute:start_date+' => '~~',
 	'Class:Licence/Attribute:end_date' => 'Slutdato',
-	'Class:Licence/Attribute:end_date+' => '',
+	'Class:Licence/Attribute:end_date+' => '~~',
 	'Class:Licence/Attribute:licence_key' => 'Licensnøgle',
-	'Class:Licence/Attribute:licence_key+' => '',
+	'Class:Licence/Attribute:licence_key+' => '~~',
 	'Class:Licence/Attribute:perpetual' => 'Fortløbende',
 	'Class:Licence/Attribute:perpetual+' => '~~',
 	'Class:Licence/Attribute:perpetual/Value:no' => 'nej',
-	'Class:Licence/Attribute:perpetual/Value:no+' => '',
+	'Class:Licence/Attribute:perpetual/Value:no+' => 'no~~',
 	'Class:Licence/Attribute:perpetual/Value:yes' => 'ja',
-	'Class:Licence/Attribute:perpetual/Value:yes+' => '',
+	'Class:Licence/Attribute:perpetual/Value:yes+' => 'yes~~',
 	'Class:Licence/Attribute:finalclass' => 'Type',
-	'Class:Licence/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: OSLicence
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:Licence/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:OSLicence' => 'OS-Licens',
-	'Class:OSLicence+' => '',
+	'Class:OSLicence+' => 'A license contract for a particular operating system. The license is related to one operating system (for example Windows 2008 R2) and can be associated with several servers or virtual machines.~~',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:OSLicence/Attribute:osversion_id' => 'OS-Version',
-	'Class:OSLicence/Attribute:osversion_id+' => '',
+	'Class:OSLicence/Attribute:osversion_id+' => '~~',
 	'Class:OSLicence/Attribute:osfamily_id' => 'OS Family~~',
-	'Class:OSLicence/Attribute:osfamily_id+' => '',
+	'Class:OSLicence/Attribute:osfamily_id+' => '~~',
 	'Class:OSLicence/Attribute:osversion_name' => 'OS versionsnavn',
-	'Class:OSLicence/Attribute:osversion_name+' => '',
+	'Class:OSLicence/Attribute:osversion_name+' => '~~',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtuelle Maskiner',
 	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this license is used~~',
 	'Class:OSLicence/Attribute:servers_list' => 'Server',
 	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this license is used~~',
-]);
-
-//
-// Class: SoftwareLicence
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:SoftwareLicence' => 'Software-Licens',
-	'Class:SoftwareLicence+' => '',
+	'Class:SoftwareLicence+' => 'A license contract for a particular software. The license is related to one software (for example MS Office 2010) and can be associated with several instances of this software.~~',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Software',
-	'Class:SoftwareLicence/Attribute:software_id+' => '',
+	'Class:SoftwareLicence/Attribute:software_id+' => '~~',
 	'Class:SoftwareLicence/Attribute:software_name' => 'Software navn',
-	'Class:SoftwareLicence/Attribute:software_name+' => '',
+	'Class:SoftwareLicence/Attribute:software_name+' => '~~',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Software Instanser',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this license is used~~',
-]);
-
-//
-// Class: lnkDocumentToLicence
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkDocumentToLicence' => 'Sammenhæng Dokument/Licens',
-	'Class:lnkDocumentToLicence+' => '',
+	'Class:lnkDocumentToLicence+' => 'Link used when a Document is applicable to a License.~~',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licens',
-	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Licensnavn',
-	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Dokument',
-	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Dokumentnavn',
-	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
-]);
-
-//
-// Class: OSVersion
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkDocumentToLicence/Attribute:document_name+' => '~~',
 	'Class:OSVersion' => 'OS-Version',
-	'Class:OSVersion+' => '',
+	'Class:OSVersion+' => 'Typology. List of the possible values for the "OS Version" of a computer (Server, Virtual Machine or PC). The OS Versions are organized per OS Family.~~',
 	'Class:OSVersion/Attribute:osfamily_id' => 'OS-Familie',
-	'Class:OSVersion/Attribute:osfamily_id+' => '',
+	'Class:OSVersion/Attribute:osfamily_id+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_name' => 'OS familienavn',
-	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/Attribute:osfamily_name+' => '~~',
+	'Class:OSVersion/Attribute:end_of_support' => 'End of support~~',
+	'Class:OSVersion/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
+	'Class:OSVersion/Attribute:ospatches_list' => 'OS patches~~',
+	'Class:OSVersion/Attribute:ospatches_list+' => 'All the OS patches for this OS version~~',
 	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
 	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
-]);
-
-//
-// Class: OSFamily
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:OSFamily' => 'OS-Familie',
-	'Class:OSFamily+' => '',
+	'Class:OSFamily+' => 'Typology. List of the possible values for the "OS Family" attribute of Servers, Virtual Machines and PCs.~~',
+	'Class:OSFamily/Attribute:osversions_list' => 'OS versions~~',
+	'Class:OSFamily/Attribute:osversions_list+' => 'All the OS versions for this OS family~~',
 	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
 	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
-]);
-
-//
-// Class: Brand
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Brand' => 'Mærke',
-	'Class:Brand+' => '',
+	'Class:Brand+' => 'Typology. List of the possible values for the "Brand" attribute of Physical Device.~~',
+	'Class:Brand/Attribute:iosversions_list' => 'IOS versions~~',
+	'Class:Brand/Attribute:iosversions_list+' => 'All the IOS versions from this brand~~',
 	'Class:Brand/Attribute:logo' => 'Logo~~',
 	'Class:Brand/Attribute:logo+' => '~~',
+	'Class:Brand/Attribute:models_list' => 'Models~~',
+	'Class:Brand/Attribute:models_list+' => 'All models for this brand~~',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Fysisk enhed',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this brand~~',
 	'Class:Brand/UniquenessRule:name+' => 'The name must be unique~~',
 	'Class:Brand/UniquenessRule:name' => 'This brand already exists~~',
-]);
-
-//
-// Class: Model
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Model' => 'Model',
-	'Class:Model+' => '',
+	'Class:Model+' => 'Typology. List the possible values for the Model attribute of a Physical Device. Each Model belongs to a single Brand, and usually applies to a single type of Physical Device.~~',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Model/Attribute:brand_id' => 'Mærke',
-	'Class:Model/Attribute:brand_id+' => '',
+	'Class:Model/Attribute:brand_id+' => '~~',
 	'Class:Model/Attribute:brand_name' => 'Mærkenavn',
-	'Class:Model/Attribute:brand_name+' => '',
+	'Class:Model/Attribute:brand_name+' => '~~',
 	'Class:Model/Attribute:picture' => 'Picture~~',
 	'Class:Model/Attribute:picture+' => '~~',
 	'Class:Model/Attribute:type' => 'Enhedstype',
-	'Class:Model/Attribute:type+' => '',
+	'Class:Model/Attribute:type+' => '~~',
+	'Class:Model/Attribute:end_of_support' => 'End of support~~',
+	'Class:Model/Attribute:end_of_support+' => 'The date after which the manufacturer ceases to provide patches and support for this model.~~',
 	'Class:Model/Attribute:type/Value:PowerSource' => 'Strømforsyning',
-	'Class:Model/Attribute:type/Value:PowerSource+' => '',
+	'Class:Model/Attribute:type/Value:PowerSource+' => 'Power Source~~',
 	'Class:Model/Attribute:type/Value:DiskArray' => 'Diskarray',
-	'Class:Model/Attribute:type/Value:DiskArray+' => '',
+	'Class:Model/Attribute:type/Value:DiskArray+' => 'Disk Array~~',
 	'Class:Model/Attribute:type/Value:Enclosure' => 'Enclosure',
-	'Class:Model/Attribute:type/Value:Enclosure+' => '',
+	'Class:Model/Attribute:type/Value:Enclosure+' => 'Enclosure~~',
 	'Class:Model/Attribute:type/Value:IPPhone' => 'IP Telefon',
-	'Class:Model/Attribute:type/Value:IPPhone+' => '',
+	'Class:Model/Attribute:type/Value:IPPhone+' => 'IP Phone~~',
 	'Class:Model/Attribute:type/Value:MobilePhone' => 'Mobiltelefon',
-	'Class:Model/Attribute:type/Value:MobilePhone+' => '',
+	'Class:Model/Attribute:type/Value:MobilePhone+' => 'Mobile Phone~~',
 	'Class:Model/Attribute:type/Value:NAS' => 'NAS',
-	'Class:Model/Attribute:type/Value:NAS+' => '',
+	'Class:Model/Attribute:type/Value:NAS+' => 'NAS~~',
 	'Class:Model/Attribute:type/Value:NetworkDevice' => 'Netværks enhed',
-	'Class:Model/Attribute:type/Value:NetworkDevice+' => '',
+	'Class:Model/Attribute:type/Value:NetworkDevice+' => 'Network Device~~',
 	'Class:Model/Attribute:type/Value:PC' => 'PC',
-	'Class:Model/Attribute:type/Value:PC+' => '',
+	'Class:Model/Attribute:type/Value:PC+' => 'PC~~',
 	'Class:Model/Attribute:type/Value:PDU' => 'PDU',
-	'Class:Model/Attribute:type/Value:PDU+' => '',
+	'Class:Model/Attribute:type/Value:PDU+' => 'PDU~~',
 	'Class:Model/Attribute:type/Value:Peripheral' => 'Peripher enhed',
-	'Class:Model/Attribute:type/Value:Peripheral+' => '',
+	'Class:Model/Attribute:type/Value:Peripheral+' => 'Peripheral~~',
 	'Class:Model/Attribute:type/Value:Printer' => 'Printer',
-	'Class:Model/Attribute:type/Value:Printer+' => '',
+	'Class:Model/Attribute:type/Value:Printer+' => 'Printer~~',
 	'Class:Model/Attribute:type/Value:Rack' => 'Rack',
-	'Class:Model/Attribute:type/Value:Rack+' => '',
+	'Class:Model/Attribute:type/Value:Rack+' => 'Rack~~',
 	'Class:Model/Attribute:type/Value:SANSwitch' => 'SAN Switch',
-	'Class:Model/Attribute:type/Value:SANSwitch+' => '',
+	'Class:Model/Attribute:type/Value:SANSwitch+' => 'SAN switch~~',
 	'Class:Model/Attribute:type/Value:Server' => 'Server',
-	'Class:Model/Attribute:type/Value:Server+' => '',
+	'Class:Model/Attribute:type/Value:Server+' => 'Server~~',
 	'Class:Model/Attribute:type/Value:StorageSystem' => 'Storage System',
-	'Class:Model/Attribute:type/Value:StorageSystem+' => '',
+	'Class:Model/Attribute:type/Value:StorageSystem+' => 'Storage System~~',
 	'Class:Model/Attribute:type/Value:Tablet' => 'Tablet',
-	'Class:Model/Attribute:type/Value:Tablet+' => '',
+	'Class:Model/Attribute:type/Value:Tablet+' => 'Tablet~~',
 	'Class:Model/Attribute:type/Value:TapeLibrary' => 'Tape Library',
-	'Class:Model/Attribute:type/Value:TapeLibrary+' => '',
+	'Class:Model/Attribute:type/Value:TapeLibrary+' => 'Tape Library~~',
 	'Class:Model/Attribute:type/Value:Phone' => 'Telephone~~',
 	'Class:Model/Attribute:type/Value:Phone+' => 'Telephone~~',
 	'Class:Model/Attribute:physicaldevices_list' => 'Fyisk enhed',
 	'Class:Model/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this model~~',
 	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
 	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand~~',
-]);
-
-//
-// Class: NetworkDeviceType
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:NetworkDeviceType' => 'Netværksenhed type',
-	'Class:NetworkDeviceType+' => '',
+	'Class:NetworkDeviceType+' => 'Typology. The possible values for the "Type" of a Network Device (e.g. Router, Switch, Firewall, etc.).~~',
 	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
 	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Netværks enheder',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'All the network devices corresponding to this type~~',
-]);
-
-//
-// Class: IOSVersion
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:IOSVersion' => 'IOS-Version',
-	'Class:IOSVersion+' => '',
+	'Class:IOSVersion+' => 'Typology. Possible values for the versions of operating system for network devices (IOS from Cisco\'s Internetwork Operating System).~~',
 	'Class:IOSVersion/Attribute:brand_id' => 'Mærke',
-	'Class:IOSVersion/Attribute:brand_id+' => '',
+	'Class:IOSVersion/Attribute:brand_id+' => '~~',
 	'Class:IOSVersion/Attribute:brand_name' => 'Mærkenavn',
-	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/Attribute:brand_name+' => '~~',
+	'Class:IOSVersion/Attribute:end_of_support' => 'End of support~~',
+	'Class:IOSVersion/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this IOS version.~~',
+	'Class:IOSVersion/Attribute:networkdevices_list' => 'Network devices~~',
+	'Class:IOSVersion/Attribute:networkdevices_list+' => 'All the network devices running this IOS version~~',
 	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
 	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
-]);
-
-//
-// Class: lnkDocumentToPatch
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkDocumentToPatch' => 'Sammenhæng Dokument/Patch',
-	'Class:lnkDocumentToPatch+' => '',
+	'Class:lnkDocumentToPatch+' => 'Link used when a Document is applicable to a Patch.~~',
 	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch',
-	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Patch navn',
-	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:document_id' => 'Dokument',
-	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Dokumentnavn',
-	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
-]);
-
-//
-// Class: lnkSoftwareInstanceToSoftwarePatch
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkDocumentToPatch/Attribute:document_name+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Sammenhæng Software-Instans/Softeware-Patch',
-	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch+' => 'This link indicates that a software patch has been applied to a software instance.~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Software Patch',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => 'Software Patch navn',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id' => 'Software Instans',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Software Instans navn',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '',
-]);
-
-//
-// Class: lnkFunctionalCIToOSPatch
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch' => 'Sammenhæng FunctionalCI/OS-Patch',
-	'Class:lnkFunctionalCIToOSPatch+' => '',
+	'Class:lnkFunctionalCIToOSPatch+' => 'Models the deployment of an OS Patch on a device.~~',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'OS Patch',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => 'OS-Patch-Navn',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id' => 'FunctionalCI',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'FunctionalCI navn',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '',
-]);
-
-//
-// Class: lnkDocumentToSoftware
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '~~',
 	'Class:lnkDocumentToSoftware' => 'Sammenhæng Dokument/Software',
-	'Class:lnkDocumentToSoftware+' => '',
+	'Class:lnkDocumentToSoftware+' => 'Link used when a Document is applicable to Software.~~',
 	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Software',
-	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Software navn',
-	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:document_id' => 'Dokument',
-	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Dokumentnavn',
-	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
-]);
-
-//
-// Class: Subnet
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '~~',
 	'Class:Subnet' => 'Subnet',
-	'Class:Subnet+' => '',
+	'Class:Subnet+' => 'Segment of an IP network, defined by an IP address and a mask~~',
 	'Class:Subnet/Name' => '%1$s/%2$s~~',
 	'Class:Subnet/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Subnet/Attribute:description' => 'Beskrivelse',
-	'Class:Subnet/Attribute:description+' => '',
+	'Class:Subnet/Attribute:description+' => '~~',
 	'Class:Subnet/Attribute:subnet_name' => 'Subnet name~~',
 	'Class:Subnet/Attribute:subnet_name+' => '~~',
 	'Class:Subnet/Attribute:org_id' => 'Organisation',
-	'Class:Subnet/Attribute:org_id+' => '',
+	'Class:Subnet/Attribute:org_id+' => '~~',
 	'Class:Subnet/Attribute:org_name' => 'Navn',
-	'Class:Subnet/Attribute:org_name+' => '',
+	'Class:Subnet/Attribute:org_name+' => '~~',
 	'Class:Subnet/Attribute:ip' => 'IP',
-	'Class:Subnet/Attribute:ip+' => '',
+	'Class:Subnet/Attribute:ip+' => '~~',
 	'Class:Subnet/Attribute:ip_mask' => 'Subnetmaske',
-	'Class:Subnet/Attribute:ip_mask+' => '',
+	'Class:Subnet/Attribute:ip_mask+' => '~~',
 	'Class:Subnet/Attribute:vlans_list' => 'VLANs~~',
 	'Class:Subnet/Attribute:vlans_list+' => '~~',
-]);
-
-//
-// Class: VLAN
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:VLAN' => 'VLAN~~',
-	'Class:VLAN+' => '~~',
+	'Class:VLAN+' => 'A Virtual LAN is used to group together in a logical way networks Subnets and Physical Interfaces that participate in the same VLAN.~~',
 	'Class:VLAN/Attribute:vlan_tag' => 'VLAN Tag~~',
 	'Class:VLAN/Attribute:vlan_tag+' => '~~',
 	'Class:VLAN/Attribute:description' => 'Description~~',
@@ -1295,20 +828,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:VLAN/Attribute:org_id' => 'Organization~~',
 	'Class:VLAN/Attribute:org_id+' => '~~',
 	'Class:VLAN/Attribute:org_name' => 'Organization name~~',
-	'Class:VLAN/Attribute:org_name+' => '',
+	'Class:VLAN/Attribute:org_name+' => '~~',
 	'Class:VLAN/Attribute:subnets_list' => 'Subnets~~',
 	'Class:VLAN/Attribute:subnets_list+' => '~~',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Physical network interfaces~~',
 	'Class:VLAN/Attribute:physicalinterfaces_list+' => '~~',
-]);
-
-//
-// Class: lnkSubnetToVLAN
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkSubnetToVLAN' => 'Link Subnet / VLAN~~',
-	'Class:lnkSubnetToVLAN+' => '~~',
+	'Class:lnkSubnetToVLAN+' => 'This many-to-many link indicates that a VLAN is present on a Subnet. Several VLANs can be present on the same Subnet and a VLAN can span several Subnets.~~',
 	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Subnet~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '~~',
@@ -1320,65 +846,41 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN Tag~~',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '~~',
-]);
-
-//
-// Class: NetworkInterface
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:NetworkInterface' => 'Netværks interface',
-	'Class:NetworkInterface+' => '',
+	'Class:NetworkInterface+' => 'Abstract class for all types of network interfaces.~~',
 	'Class:NetworkInterface/Attribute:name' => 'Navn',
-	'Class:NetworkInterface/Attribute:name+' => '',
+	'Class:NetworkInterface/Attribute:name+' => '~~',
 	'Class:NetworkInterface/Attribute:finalclass' => 'Type',
-	'Class:NetworkInterface/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: IPInterface
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:NetworkInterface/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:IPInterface' => 'IP-Interface',
-	'Class:IPInterface+' => '',
+	'Class:IPInterface+' => 'Abstract class. A type of Network Interface with an IP address~~',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP Adresse',
-	'Class:IPInterface/Attribute:ipaddress+' => '',
+	'Class:IPInterface/Attribute:ipaddress+' => '~~',
 	'Class:IPInterface/Attribute:macaddress' => 'MAC Adresse',
-	'Class:IPInterface/Attribute:macaddress+' => '',
+	'Class:IPInterface/Attribute:macaddress+' => '~~',
 	'Class:IPInterface/Attribute:comment' => 'Kommentar',
-	'Class:IPInterface/Attribute:coment+' => '',
+	'Class:IPInterface/Attribute:coment+' => '~~',
 	'Class:IPInterface/Attribute:ipgateway' => 'IP Gateway',
-	'Class:IPInterface/Attribute:ipgateway+' => '',
+	'Class:IPInterface/Attribute:ipgateway+' => '~~',
 	'Class:IPInterface/Attribute:ipmask' => 'IP Maske',
-	'Class:IPInterface/Attribute:ipmask+' => '',
+	'Class:IPInterface/Attribute:ipmask+' => '~~',
 	'Class:IPInterface/Attribute:speed' => 'Hastighed',
-	'Class:IPInterface/Attribute:speed+' => '',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:IPInterface/Attribute:speed+' => '~~',
 	'Class:PhysicalInterface' => 'Fysiske interface',
-	'Class:PhysicalInterface+' => '',
+	'Class:PhysicalInterface+' => 'A type of IP Interface that represents a physical network interface (e.g. an Ethernet card).~~',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s~~',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Enhed',
-	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
+	'Class:PhysicalInterface/Attribute:connectableci_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Enhedsnavn',
-	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
+	'Class:PhysicalInterface/Attribute:connectableci_name+' => '~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
+	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
+	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLANs~~',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '~~',
-]);
-
-//
-// Class: lnkPhysicalInterfaceToVLAN
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Link PhysicalInterface / VLAN~~',
-	'Class:lnkPhysicalInterfaceToVLAN+' => '~~',
+	'Class:lnkPhysicalInterfaceToVLAN+' => 'This link indicates when a network interface is part of a VLAN (Virtual Local Area Network).~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Physical Interface~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '~~',
@@ -1392,116 +894,74 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN Tag~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '~~',
-]);
-
-//
-// Class: LogicalInterface
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:LogicalInterface' => 'Logiske interface',
-	'Class:LogicalInterface+' => '',
+	'Class:LogicalInterface+' => 'IP Interface which is not associated permanently with a particular physical port, the association is dynamic. It can be used for Virtual Machine.~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Virtuel maskine',
-	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '',
+	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Virtuel maskinnavn',
-	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '',
-]);
-
-//
-// Class: FiberChannelInterface
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '~~',
 	'Class:FiberChannelInterface' => 'Fiber Channel Interface',
-	'Class:FiberChannelInterface+' => '',
+	'Class:FiberChannelInterface+' => 'Network Interface to a high-speed network technology primarily used for connecting Storage Systems.~~',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Hastighed',
-	'Class:FiberChannelInterface/Attribute:speed+' => '',
+	'Class:FiberChannelInterface/Attribute:speed+' => '~~',
 	'Class:FiberChannelInterface/Attribute:topology' => 'Topologi',
-	'Class:FiberChannelInterface/Attribute:topology+' => '',
+	'Class:FiberChannelInterface/Attribute:topology+' => '~~',
 	'Class:FiberChannelInterface/Attribute:wwn' => 'WWN',
-	'Class:FiberChannelInterface/Attribute:wwn+' => '',
+	'Class:FiberChannelInterface/Attribute:wwn+' => '~~',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id' => 'Enhed',
-	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '',
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '~~',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Enhedsnavn',
-	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '',
-]);
-
-//
-// Class: lnkConnectableCIToNetworkDevice
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice' => 'Sammenhæng ConnectableCI/NetworkDevice',
-	'Class:lnkConnectableCIToNetworkDevice+' => '',
+	'Class:lnkConnectableCIToNetworkDevice+' => 'Defines on which network equipment a device is connected.~~',
 	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Netværks enhed',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => 'Netværksenhed navn',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id' => 'Forbunden enhed',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name' => 'Forbundne enheder navn',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port' => 'Netværksport',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port' => 'Enhedsport',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type' => 'Forbindelsestype',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink' => 'Downlink',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'down link~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'Uplink',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => '',
-]);
-
-//
-// Class: lnkApplicationSolutionToFunctionalCI
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'up link~~',
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Sammenhæng Applikationssuite/FunctionalCI',
-	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI+' => 'Models the membership of a device to an Application Solution. The meaning of this relationship varies depending on the types of Application Solution.~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Applikations løsning',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'Applikations løsning navn',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'FunctionalCI navn',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '',
-]);
-
-//
-// Class: lnkApplicationSolutionToBusinessProcess
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Sammenhæng Applikationssuite/Forretningsproces',
-	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess+' => 'Models the relationship between an Application Solution and a Business Process.~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Forretningsproces',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => 'Forretningsproces navn',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id' => 'Applikations løsning',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Applikations løsning navn',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '',
-]);
-
-//
-// Class: Group
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '~~',
 	'Class:Group' => 'Gruppe',
-	'Class:Group+' => '',
+	'Class:Group+' => 'Group is designed to define explicit sets of configurations items for any project purpose. In contrast to Application Solution, a Group is not impacted by any of its component and does not impact them. For example when doing an OS migration, Group can be convenient to gather “Servers to be migrated”. Migrated servers being removed from the group as the migration progresses.~~',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Group/Attribute:name' => 'Navn',
-	'Class:Group/Attribute:name+' => '',
+	'Class:Group/Attribute:name+' => '~~',
 	'Class:Group/Attribute:status' => 'Status',
-	'Class:Group/Attribute:status+' => '',
+	'Class:Group/Attribute:status+' => '~~',
 	'Class:Group/Attribute:status/Value:implementation' => 'Implementering',
 	'Class:Group/Attribute:status/Value:implementation+' => 'Implementering',
 	'Class:Group/Attribute:status/Value:obsolete' => 'Forældet',
@@ -1509,56 +969,55 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Group/Attribute:status/Value:production' => 'Produktion',
 	'Class:Group/Attribute:status/Value:production+' => 'Produktion',
 	'Class:Group/Attribute:org_id' => 'Organisation',
-	'Class:Group/Attribute:org_id+' => '',
+	'Class:Group/Attribute:org_id+' => '~~',
 	'Class:Group/Attribute:owner_name' => 'Navn',
 	'Class:Group/Attribute:owner_name+' => 'Ejer navn',
 	'Class:Group/Attribute:description' => 'Beskrivelse',
-	'Class:Group/Attribute:description+' => '',
+	'Class:Group/Attribute:description+' => '~~',
 	'Class:Group/Attribute:type' => 'Typ',
-	'Class:Group/Attribute:type+' => '',
+	'Class:Group/Attribute:type+' => '~~',
 	'Class:Group/Attribute:parent_id' => 'Parent id',
-	'Class:Group/Attribute:parent_id+' => '',
+	'Class:Group/Attribute:parent_id+' => '~~',
 	'Class:Group/Attribute:parent_name' => 'Navn',
-	'Class:Group/Attribute:parent_name+' => '',
+	'Class:Group/Attribute:parent_name+' => '~~',
 	'Class:Group/Attribute:ci_list' => 'Forbundne CIs',
 	'Class:Group/Attribute:ci_list+' => 'All the configuration items linked to this group~~',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Parent Gruppe',
-	'Class:Group/Attribute:parent_id_friendlyname+' => '',
-]);
-
-//
-// Class: lnkGroupToCI
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:Group/Attribute:parent_id_friendlyname+' => '~~',
 	'Class:lnkGroupToCI' => 'Gruppe/CI',
-	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI+' => 'This link indicates when a Functional CI is part of a Group.~~',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'Gruppe',
-	'Class:lnkGroupToCI/Attribute:group_id+' => '',
+	'Class:lnkGroupToCI/Attribute:group_id+' => '~~',
 	'Class:lnkGroupToCI/Attribute:group_name' => 'Navn',
-	'Class:lnkGroupToCI/Attribute:group_name+' => '',
+	'Class:lnkGroupToCI/Attribute:group_name+' => '~~',
 	'Class:lnkGroupToCI/Attribute:ci_id' => 'CI',
-	'Class:lnkGroupToCI/Attribute:ci_id+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_id+' => '~~',
 	'Class:lnkGroupToCI/Attribute:ci_name' => 'Navn',
-	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_name+' => '~~',
 	'Class:lnkGroupToCI/Attribute:reason' => 'Årsag',
-	'Class:lnkGroupToCI/Attribute:reason+' => '',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkGroupToCI/Attribute:reason+' => '~~',
+	'Class:lnkDocumentToFunctionalCI' => 'Sammenhæng Dokument/FunctionalCI',
+	'Class:lnkDocumentToFunctionalCI+' => 'Link used when a Document is applicable to a Functional CI.~~',
+	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'FunctionalCI navn',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Dokument',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Dokument navn',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
 	'ConfigMgmt:baseinfo' => 'General~~',
 	'ConfigMgmt:moreinfo' => 'CI specifics~~',
-	'Storage:moreinfo' => 'Storage specifics~~',
 	'ConfigMgmt:otherinfo' => 'Description~~',
 	'ConfigMgmt:dates' => 'Dates~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
 	'Software:moreinfo' => 'Software specifics~~',
 	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Almindelig Informationen',
-	'Server:Date' => 'Dato',
 	'Server:moreinfo' => 'Yderligere Information',
+	'Server:Date' => 'Dato',
 	'Server:otherinfo' => 'Øvrig Information',
 	'Server:power' => 'Power supply~~',
 	'Class:Subnet/Tab:IPUsage' => 'IP Brug',
@@ -1568,31 +1027,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Subnet/Tab:FreeIPs-count' => 'Ledige IP: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Her er et udtræk af 10 ledige IP adresser',
 	'Class:Document:PreviewTab' => 'Preview~~',
-]);
-
-//
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:lnkDocumentToFunctionalCI' => 'Sammenhæng Dokument/FunctionalCI',
-	'Class:lnkDocumentToFunctionalCI+' => '',
-	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'FunctionalCI navn',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Dokument',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Dokument navn',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:Application' => 'Anvendelse',
 	'Menu:Application+' => 'Alle Anvendelser',
 	'Menu:DBServer' => 'Database server',
@@ -1636,16 +1070,5 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:OSVersion' => 'OS versioner',
 	'Menu:OSVersion+' => '~~',
 	'Menu:Software' => 'Software Katalog',
-	'Menu:Software+' => '',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
-	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
-	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
+	'Menu:Software+' => 'Software catalog~~',
 ]);

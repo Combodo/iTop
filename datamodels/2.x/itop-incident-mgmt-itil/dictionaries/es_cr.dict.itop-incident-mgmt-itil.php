@@ -1,12 +1,14 @@
 <?php
-
 /**
- * Spanish Localized data
+ * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
+ *
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:IncidentManagement' => 'Administración de Incidentes',
@@ -32,23 +34,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Incidentes Abiertos por Estatus',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Incidentes Abiertos por Analista',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Incidentes Abiertos por Cliente',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Incident
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+	'Class:Incident/Method:UpdateChildTicketWith:public_log' => '<i><u>Public log entry from parent Incident %2$s:</u></i><br><br>~~',
+	'Class:Incident/Method:UpdateChildTicketWith:private_log' => '<i>Private log entry from parent Incident [[Incident:%1$s]]:</i><br><br>~~',
 	'Class:Incident' => 'Incidente',
 	'Class:Incident+' => 'Incidente',
 	'Class:Incident/Attribute:status' => 'Estatus',
@@ -181,6 +168,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Incident/Attribute:parent_incident_id+' => 'Incidente Padre',
 	'Class:Incident/Attribute:parent_incident_ref' => 'Ref. Incidente Padre',
 	'Class:Incident/Attribute:parent_incident_ref+' => 'Ref. Incidente Padre',
+	'Class:Incident/Attribute:parent_request_id' => 'Parent request~~',
+	'Class:Incident/Attribute:parent_request_id+' => '~~',
+	'Class:Incident/Attribute:parent_request_ref' => 'Parent request ref~~',
+	'Class:Incident/Attribute:parent_request_ref+' => '~~',
 	'Class:Incident/Attribute:parent_change_id' => 'Cambio Padre',
 	'Class:Incident/Attribute:parent_change_id+' => 'Cambio Padre',
 	'Class:Incident/Attribute:parent_change_ref' => 'Ref. Cambio Padre',

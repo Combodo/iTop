@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -46,5 +45,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Изображение-заполнитель успешно обновлено',
 	'UI:Preferences:Notifications' => 'Уведомления',
 	'UI:Preferences:Notifications+' => 'Настройте уведомления, которые хотите получать, <a href="%1$s">на этой странице</a>.',
-
 ]);

@@ -1,19 +1,18 @@
 <?php
-
-/*
- * @copyright   Copyright (C) 2010-2024 Combodo SAS
- * @license     http://opensource.org/licenses/AGPL-3.0
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-// UI elements
+/**
+ *
+ */
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:WelcomePopup:Button:RemindLater' => 'Später erinnern',
-	'UI:WelcomePopup:Button:Acknowledge' => 'Verstanden',
 	'UI:WelcomePopup:Button:AcknowledgeAndNext' => 'Weiter',
 	'UI:WelcomePopup:Button:AcknowledgeAndClose' => 'Schließen',
-]);
-
-// Message
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:WelcomePopup:Message:330_01_Welcome:Title' => 'Willkommen bei '.ITOP_APPLICATION_SHORT.' 3.3',
 	'UI:WelcomePopup:Message:330_01_Welcome:Description' => '<div>Wir freuen uns, Ihnen dieses neue Release vorzustellen, das zahlreiche Neuerungen und Verbesserungen mitbringt!</div>
 <br>

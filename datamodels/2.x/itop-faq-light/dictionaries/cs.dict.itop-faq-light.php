@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
@@ -16,35 +15,26 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Často kladené dotazy',
 	'Class:FAQ/Attribute:title' => 'Název',
-	'Class:FAQ/Attribute:title+' => '',
+	'Class:FAQ/Attribute:title+' => '~~',
 	'Class:FAQ/Attribute:summary' => 'Shrnutí',
-	'Class:FAQ/Attribute:summary+' => '',
+	'Class:FAQ/Attribute:summary+' => '~~',
 	'Class:FAQ/Attribute:description' => 'Popis',
-	'Class:FAQ/Attribute:description+' => '',
+	'Class:FAQ/Attribute:description+' => '~~',
 	'Class:FAQ/Attribute:category_id' => 'Kategorie',
-	'Class:FAQ/Attribute:category_id+' => '',
+	'Class:FAQ/Attribute:category_id+' => '~~',
 	'Class:FAQ/Attribute:category_name' => 'Název kategorie',
-	'Class:FAQ/Attribute:category_name+' => '',
+	'Class:FAQ/Attribute:category_name+' => '~~',
 	'Class:FAQ/Attribute:error_code' => 'Kód chyby',
-	'Class:FAQ/Attribute:error_code+' => '',
+	'Class:FAQ/Attribute:error_code+' => '~~',
 	'Class:FAQ/Attribute:key_words' => 'Klíčová slova',
-	'Class:FAQ/Attribute:key_words+' => '',
+	'Class:FAQ/Attribute:key_words+' => '~~',
 	'Class:FAQ/Attribute:domains' => 'Domény',
-]);
-
-//
-// Class: FAQCategory
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:FAQCategory' => 'Kategorie FAQ',
 	'Class:FAQCategory+' => 'Kategorie pro FAQ',
 	'Class:FAQCategory/Attribute:name' => 'Název',
-	'Class:FAQCategory/Attribute:name+' => '',
+	'Class:FAQCategory/Attribute:name+' => '~~',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Všechny často kladené dotazy v této kategorii',
-]);
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:ProblemManagement' => 'Správa problémů',
 	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Odkazy',

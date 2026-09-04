@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -22,35 +21,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Relation:impacts/LoadData' => 'Adat betöltés',
 	'Relation:impacts/NoFilteredData' => 'kérjük, válassza ki az objektumokat a grafikus nézetben',
 	'Relation:impacts/FilteredData' => 'Filtered data~~',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: lnkContactToFunctionalCI
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkContactToFunctionalCI' => 'Kapcsolattartó / Funkcionális CI',
-	'Class:lnkContactToFunctionalCI+' => '~~',
+	'Class:lnkContactToFunctionalCI+' => 'Manages Contacts linked to Functional CIs. This can be a team responsible for the equipment, to assign related Tickets, or the person to whom an individual device such as a PC or phone is assigned, to manage the inventory.~~',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'Funkcionális CI',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '~~',
@@ -60,25 +32,18 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Kapcsolattartó név',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '~~',
-]);
-
-//
-// Class: FunctionalCI
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:FunctionalCI' => 'Funkcionális CI',
-	'Class:FunctionalCI+' => '',
+	'Class:FunctionalCI+' => 'Abstract class grouping most Configuration Items types used for CMDB.~~',
 	'Class:FunctionalCI/Attribute:name' => 'CI Név',
-	'Class:FunctionalCI/Attribute:name+' => '',
+	'Class:FunctionalCI/Attribute:name+' => '~~',
 	'Class:FunctionalCI/Attribute:description' => 'Leírás',
-	'Class:FunctionalCI/Attribute:description+' => '',
+	'Class:FunctionalCI/Attribute:description+' => '~~',
 	'Class:FunctionalCI/Attribute:org_id' => 'Tulajdonos szervezeti egység',
-	'Class:FunctionalCI/Attribute:org_id+' => '',
+	'Class:FunctionalCI/Attribute:org_id+' => '~~',
 	'Class:FunctionalCI/Attribute:organization_name' => 'Szervezeti egység név',
 	'Class:FunctionalCI/Attribute:organization_name+' => 'Általános név',
 	'Class:FunctionalCI/Attribute:business_criticity' => 'Üzlet kritikusság',
-	'Class:FunctionalCI/Attribute:business_criticity+' => '',
+	'Class:FunctionalCI/Attribute:business_criticity+' => '~~',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:high' => 'magas',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:high+' => 'high~~',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:low' => 'alacsony',
@@ -86,7 +51,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:FunctionalCI/Attribute:business_criticity/Value:medium' => 'közepes',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => 'medium~~',
 	'Class:FunctionalCI/Attribute:move2production' => 'Használatba vétel dátuma',
-	'Class:FunctionalCI/Attribute:move2production+' => '',
+	'Class:FunctionalCI/Attribute:move2production+' => '~~',
+	'Class:FunctionalCI/Attribute:groups_list' => 'Groups~~',
+	'Class:FunctionalCI/Attribute:groups_list+' => 'Groups can be used as tags, to document environment, projects (migration, upgrade, security), etc…~~',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Kapcsolattartók',
 	'Class:FunctionalCI/Attribute:contacts_list+' => 'Kapcsolattartók ehhez a konfigurációs elemhez',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Dokumentumok',
@@ -96,18 +63,11 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Szoftverek',
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'Szoftverek, melyek erre a konfigurációs elemre vannak telepítve',
 	'Class:FunctionalCI/Attribute:finalclass' => 'CI típus',
-	'Class:FunctionalCI/Attribute:finalclass+' => '',
+	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Nyitott hibajegyek',
 	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Active Tickets which are impacting this functional CI~~',
-]);
-
-//
-// Class: PhysicalDevice
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PhysicalDevice' => 'Fizikai eszköz',
-	'Class:PhysicalDevice+' => '~~',
+	'Class:PhysicalDevice+' => 'Abstract class grouping physical types of Configuration Items. A Physical Device can be located. It has usually a Brand and Model.~~',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'Sorozatszám',
 	'Class:PhysicalDevice/Attribute:serialnumber+' => '~~',
@@ -131,6 +91,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PhysicalDevice/Attribute:brand_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:model_id' => 'Modell',
 	'Class:PhysicalDevice/Attribute:model_id+' => '~~',
+	'Class:PhysicalDevice/Attribute:model_end_of_support' => 'Model end of support~~',
+	'Class:PhysicalDevice/Attribute:model_end_of_support+' => 'When the hardware model is no more supported by the manufacturer, if this information is documented on the Model.~~',
 	'Class:PhysicalDevice/Attribute:model_name' => 'Modell név',
 	'Class:PhysicalDevice/Attribute:model_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:asset_number' => 'Leltári szám',
@@ -139,15 +101,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PhysicalDevice/Attribute:purchase_date+' => '~~',
 	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Garanciaidő vége',
 	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '~~',
-]);
-
-//
-// Class: Rack
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Rack' => 'Rack',
-	'Class:Rack+' => '~~',
+	'Class:Rack+' => 'A physical cabinet for Datacenter Devices and Enclosures.~~',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Rack/Attribute:nb_u' => 'Unit magasság',
 	'Class:Rack/Attribute:nb_u+' => '~~',
@@ -155,80 +110,31 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Rack/Attribute:device_list+' => 'Minden fizikai eszköz amely ebbe a rack-be lett beszerelve',
 	'Class:Rack/Attribute:enclosure_list' => 'Beépítőkeretek',
 	'Class:Rack/Attribute:enclosure_list+' => 'Minden beépítőkeret ebben a rack-ben',
-]);
-
-//
-// Class: TelephonyCI
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:TelephonyCI' => 'Telefónia CI',
-	'Class:TelephonyCI+' => '~~',
+	'Class:TelephonyCI+' => 'Abstract class grouping telephony devices~~',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Telefonszám',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '~~',
-]);
-
-//
-// Class: Phone
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Phone' => 'Telefon',
-	'Class:Phone+' => '~~',
-]);
-
-//
-// Class: MobilePhone
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:Phone+' => 'End User device. Plain wired phone~~',
 	'Class:MobilePhone' => 'Mobiltelefon',
-	'Class:MobilePhone+' => '',
+	'Class:MobilePhone+' => 'End User device. Wireless phone~~',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
-	'Class:MobilePhone/Attribute:imei+' => '',
+	'Class:MobilePhone/Attribute:imei+' => '~~',
 	'Class:MobilePhone/Attribute:hw_pin' => 'PIN',
-	'Class:MobilePhone/Attribute:hw_pin+' => '',
-]);
-
-//
-// Class: IPPhone
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:MobilePhone/Attribute:hw_pin+' => '~~',
 	'Class:IPPhone' => 'Egyéb eszköz',
-	'Class:IPPhone+' => '~~',
-]);
-
-//
-// Class: Tablet
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:IPPhone+' => 'Physical device dedicated to phone calls, connected to a network~~',
 	'Class:Tablet' => 'Táblagép',
-	'Class:Tablet+' => '~~',
-]);
-
-//
-// Class: ConnectableCI
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:Tablet+' => 'End User device. For example iPad, Galaxy Note/Tab Nexus, Kindle...~~',
 	'Class:ConnectableCI' => 'Kapcsolható CI',
-	'Class:ConnectableCI+' => '',
+	'Class:ConnectableCI+' => 'Physical Device which can be connected to a network.~~',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Hálózati eszközök',
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Hálózati eszközök, melyek ehhez a konfigurációs elemhez kapcsolódnak',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Hálózati csatolók',
 	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'A konfigurációs elem fizikai hálózati csatolói',
-]);
-
-//
-// Class: DatacenterDevice
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:DatacenterDevice' => 'Adatközpont eszköz',
-	'Class:DatacenterDevice+' => '~~',
+	'Class:DatacenterDevice+' => 'A physical equipment, connected to the network and installed in a data center, usually in a Rack or an Enclosure. This can include Servers, Network Devices, Storage Systems, SAN Switches, Tape Libraries, NAS Devices, etc.~~',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'Rack',
 	'Class:DatacenterDevice/Attribute:rack_id+' => '~~',
@@ -258,15 +164,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'A készülék akkor működik, ha legalább az egyik tápcsatlakozás (A vagy B) működik.',
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'A készülék akkor működik, ha az összes tápcsatlakozása működik.',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'Az eszköz akkor működik, ha legalább %1$s a %%-ből tápcsatlakozása működik.',
-]);
-
-//
-// Class: NetworkDevice
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:NetworkDevice' => 'Hálózati eszköz',
-	'Class:NetworkDevice+' => '',
+	'Class:NetworkDevice+' => 'Any type of network device: router, switch, hub, load balancer, firewall…~~',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Hálózati eszköz típus',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '~~',
@@ -277,152 +176,88 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:NetworkDevice/Attribute:iosversion_id' => 'IOS verzió',
 	'Class:NetworkDevice/Attribute:iosversion_id+' => 'A hálózati eszköz firmware-je',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'IOS verzió név',
-	'Class:NetworkDevice/Attribute:iosversion_name+' => '',
+	'Class:NetworkDevice/Attribute:iosversion_name+' => '~~',
+	'Class:NetworkDevice/Attribute:ios_end_of_support' => 'IOS end of support~~',
+	'Class:NetworkDevice/Attribute:ios_end_of_support+' => 'The date after which the editor no longer provides fixes for this IOS version.~~',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
 	'Class:NetworkDevice/Attribute:ram+' => 'Műveleti memória',
-]);
-
-//
-// Class: Server
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Server' => 'Szerver',
-	'Class:Server+' => '',
+	'Class:Server+' => 'Datacenter Device managing access to centralized resources or services. It contains an OS Version executing Software Instances.~~',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Server/Attribute:osfamily_id' => 'OS család',
-	'Class:Server/Attribute:osfamily_id+' => '',
+	'Class:Server/Attribute:osfamily_id+' => '~~',
 	'Class:Server/Attribute:osfamily_name' => 'OS család név',
-	'Class:Server/Attribute:osfamily_name+' => '',
+	'Class:Server/Attribute:osfamily_name+' => '~~',
 	'Class:Server/Attribute:osversion_id' => 'OS verzió',
-	'Class:Server/Attribute:osversion_id+' => '',
+	'Class:Server/Attribute:osversion_id+' => '~~',
 	'Class:Server/Attribute:osversion_name' => 'OS verzió név',
-	'Class:Server/Attribute:osversion_name+' => '',
+	'Class:Server/Attribute:osversion_name+' => '~~',
+	'Class:Server/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:Server/Attribute:os_end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
 	'Class:Server/Attribute:oslicence_id' => 'OS licenc',
-	'Class:Server/Attribute:oslicence_id+' => '',
+	'Class:Server/Attribute:oslicence_id+' => '~~',
 	'Class:Server/Attribute:oslicence_name' => 'OS licenc név',
-	'Class:Server/Attribute:oslicence_name+' => '',
+	'Class:Server/Attribute:oslicence_name+' => '~~',
 	'Class:Server/Attribute:cpu' => 'CPU',
 	'Class:Server/Attribute:cpu+' => 'Processzor típus',
 	'Class:Server/Attribute:ram' => 'RAM',
 	'Class:Server/Attribute:ram+' => 'Műveleti memória',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Logikai kötetek',
 	'Class:Server/Attribute:logicalvolumes_list+' => 'Logikai kötetek, melyek ehhez a szerverhez kapcsolódnak',
-]);
-
-//
-// Class: StorageSystem
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:StorageSystem' => 'Tárolórendszer',
-	'Class:StorageSystem+' => '',
+	'Class:StorageSystem+' => 'Storage system that can be attached either to a SAN or to an Ethernet network. The logical unit of storage managed by a Storage System is a Logical Volume.~~',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logikai kötetek',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Logikai kötetek ebben a tárolórendszerben',
-]);
-
-//
-// Class: SANSwitch
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:SANSwitch' => 'SAN Switch',
 	'Class:SANSwitch+' => 'Tárolórendszer switch',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Kapcsolódó eszközök',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Ehhez a SAN-switch-hez csatlakozó konfigurációs elemek',
-]);
-
-//
-// Class: TapeLibrary
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:TapeLibrary' => 'Szalagos tároló',
 	'Class:TapeLibrary+' => 'Mágnesszalagos tároló',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Szalagok',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'Szalagok (kazetták) a szalagos tárolóhoz',
-]);
-
-//
-// Class: NAS
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => 'Hálózati adattároló',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Fájlrendszerek',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'A NAS fájlrendszerei',
-]);
-
-//
-// Class: PC
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PC' => 'PC',
 	'Class:PC+' => 'Személyi számítógép',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PC/Attribute:osfamily_id' => 'OS család',
-	'Class:PC/Attribute:osfamily_id+' => '',
+	'Class:PC/Attribute:osfamily_id+' => '~~',
 	'Class:PC/Attribute:osfamily_name' => 'OS család név',
-	'Class:PC/Attribute:osfamily_name+' => '',
+	'Class:PC/Attribute:osfamily_name+' => '~~',
 	'Class:PC/Attribute:osversion_id' => 'OS verzió',
-	'Class:PC/Attribute:osversion_id+' => '',
+	'Class:PC/Attribute:osversion_id+' => '~~',
 	'Class:PC/Attribute:osversion_name' => 'OS verzió név',
-	'Class:PC/Attribute:osversion_name+' => '',
+	'Class:PC/Attribute:osversion_name+' => '~~',
+	'Class:PC/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:PC/Attribute:os_end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
 	'Class:PC/Attribute:cpu' => 'CPU',
-	'Class:PC/Attribute:cpu+' => '',
+	'Class:PC/Attribute:cpu+' => '~~',
 	'Class:PC/Attribute:ram' => 'RAM',
-	'Class:PC/Attribute:ram+' => '',
+	'Class:PC/Attribute:ram+' => '~~',
 	'Class:PC/Attribute:type' => 'Típus',
-	'Class:PC/Attribute:type+' => '',
+	'Class:PC/Attribute:type+' => '~~',
 	'Class:PC/Attribute:type/Value:desktop' => 'Desktop',
 	'Class:PC/Attribute:type/Value:desktop+' => 'desktop~~',
 	'Class:PC/Attribute:type/Value:laptop' => 'Laptop',
 	'Class:PC/Attribute:type/Value:laptop+' => 'laptop~~',
-]);
-
-//
-// Class: Printer
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Printer' => 'Nyomtató',
-	'Class:Printer+' => '',
+	'Class:Printer+' => 'Connectable CI. Physical Device connected either to the network or to a PC.~~',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s~~',
-]);
-
-//
-// Class: PowerConnection
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PowerConnection' => 'Tápellátás',
-	'Class:PowerConnection+' => '~~',
+	'Class:PowerConnection+' => 'Abstract class grouping physical devices used for electrical power supply.~~',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s~~',
-]);
-
-//
-// Class: PowerSource
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PowerSource' => 'Áramforrás',
 	'Class:PowerSource+' => 'UPS, generátor, akkumulátor stb.',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDU-k',
 	'Class:PowerSource/Attribute:pdus_list+' => 'Tápelosztók amik ezt az áramforrást használják',
-]);
-
-//
-// Class: PDU
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => 'Tápelosztó a rack-ben',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s~~',
@@ -434,23 +269,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PDU/Attribute:powerstart_id+' => '~~',
 	'Class:PDU/Attribute:powerstart_name' => 'Áramforrás név',
 	'Class:PDU/Attribute:powerstart_name+' => '~~',
-]);
-
-//
-// Class: Peripheral
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Peripheral' => 'Periféria',
-	'Class:Peripheral+' => '~~',
+	'Class:Peripheral+' => 'Physical device, used to document any kind of computer peripheral.
+For example: external hard drives, scanners, input devices (trackballs, bar code scanners), etc…~~',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s~~',
-]);
-
-//
-// Class: Enclosure
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Enclosure' => 'Beépítőkeret',
 	'Class:Enclosure+' => 'Rack-be szerelhető készülékszerelvény',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s~~',
@@ -461,14 +283,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Enclosure/Attribute:nb_u' => 'Unit magasság',
 	'Class:Enclosure/Attribute:nb_u+' => '~~',
 	'Class:Enclosure/Attribute:device_list' => 'Eszközök',
-	'Class:Enclosure/Attribute:device_list+' => '',
-]);
-
-//
-// Class: ApplicationSolution
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:Enclosure/Attribute:device_list+' => 'All the devices in this enclosure~~',
 	'Class:ApplicationSolution' => 'Alkalmazásmegoldás',
 	'Class:ApplicationSolution+' => 'Több alkalmazás és CI kombinációja egy adott feladatra',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CI-k',
@@ -478,7 +293,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
 	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Állapot',
-	'Class:ApplicationSolution/Attribute:status+' => '',
+	'Class:ApplicationSolution/Attribute:status+' => '~~',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Aktív',
 	'Class:ApplicationSolution/Attribute:status/Value:active+' => 'active~~',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'Inaktív',
@@ -487,13 +302,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'A megoldás akkor működik, ha minden CI működik.',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'A megoldás akkor működik, ha legalább %1$s CI működik',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'A megoldás akkor működik, ha legalább %1$s a %%-ből CI működik',
-]);
-
-//
-// Class: BusinessProcess
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:BusinessProcess' => 'Üzleti folyamat',
 	'Class:BusinessProcess+' => 'Személyek, szolgáltatások és CI-k értékteremtő kombinációja',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Alkalmazásmegoldások',
@@ -501,382 +309,22 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
 	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:BusinessProcess/Attribute:status' => 'Állapot',
-	'Class:BusinessProcess/Attribute:status+' => '',
+	'Class:BusinessProcess/Attribute:status+' => '~~',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'Aktív',
 	'Class:BusinessProcess/Attribute:status/Value:active+' => 'active~~',
 	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'Inaktív',
 	'Class:BusinessProcess/Attribute:status/Value:inactive+' => 'inactive~~',
-]);
-
-//
-// Class: SoftwareInstance
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:SoftwareInstance' => 'Szoftverpéldány',
-	'Class:SoftwareInstance+' => 'A szoftver telepített példányai',
-	'Class:SoftwareInstance/Attribute:system_id' => 'Rendszer',
-	'Class:SoftwareInstance/Attribute:system_id+' => '',
-	'Class:SoftwareInstance/Attribute:system_name' => 'Rendszer név',
-	'Class:SoftwareInstance/Attribute:system_name+' => '',
-	'Class:SoftwareInstance/Attribute:software_id' => 'Szoftver',
-	'Class:SoftwareInstance/Attribute:software_id+' => '',
-	'Class:SoftwareInstance/Attribute:software_name' => 'Szoftvernév',
-	'Class:SoftwareInstance/Attribute:software_name+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Szoftver licenc',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Szoftver licenc név',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '',
-	'Class:SoftwareInstance/Attribute:path' => 'Elérési út',
-	'Class:SoftwareInstance/Attribute:path+' => '',
-	'Class:SoftwareInstance/Attribute:status' => 'Állapot',
-	'Class:SoftwareInstance/Attribute:status+' => '',
-	'Class:SoftwareInstance/Attribute:status/Value:active' => 'Aktív',
-	'Class:SoftwareInstance/Attribute:status/Value:active+' => '',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Inaktív',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => '',
-]);
-
-//
-// Class: Middleware
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:Middleware' => 'Middleware',
-	'Class:Middleware+' => 'Köztes szoftver rendszerek összekötéséhez',
-	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware példányok',
-	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Middleware példányok melyeket ez a middleware biztosít',
-]);
-
-//
-// Class: DBServer
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:DBServer' => 'Adatbázis szerver',
-	'Class:DBServer+' => 'Adatbázis kiszolgáló',
-	'Class:DBServer/Attribute:dbschema_list' => 'DB sémák',
-	'Class:DBServer/Attribute:dbschema_list+' => 'A DB szerver adatbázis sémái',
-]);
-
-//
-// Class: WebServer
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:WebServer' => 'Webszerver',
-	'Class:WebServer+' => 'Webkiszolgáló',
-	'Class:WebServer/Attribute:webapp_list' => 'Webalkalmazások',
-	'Class:WebServer/Attribute:webapp_list+' => 'Webalkalmazások, melyek elérhetőek ezen a webszerveren',
-]);
-
-//
-// Class: PCSoftware
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:PCSoftware' => 'PC Szoftver',
-	'Class:PCSoftware+' => 'Személyi számítógép szoftverei',
-]);
-
-//
-// Class: OtherSoftware
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:OtherSoftware' => 'Egyéb szoftver',
-	'Class:OtherSoftware+' => '~~',
-]);
-
-//
-// Class: MiddlewareInstance
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:MiddlewareInstance' => 'Middleware Példány',
-	'Class:MiddlewareInstance+' => '~~',
-	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
-	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
-	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
-	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
-	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Middleware név',
-	'Class:MiddlewareInstance/Attribute:middleware_name+' => '~~',
-]);
-
-//
-// Class: DatabaseSchema
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:DatabaseSchema' => 'Adatbázis séma',
-	'Class:DatabaseSchema+' => '~~',
-	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:DatabaseSchema/Attribute:dbserver_id' => 'DB szerver',
-	'Class:DatabaseSchema/Attribute:dbserver_id+' => '~~',
-	'Class:DatabaseSchema/Attribute:dbserver_name' => 'DB szerver név',
-	'Class:DatabaseSchema/Attribute:dbserver_name+' => '~~',
-]);
-
-//
-// Class: WebApplication
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:WebApplication' => 'Webalkalmazás',
-	'Class:WebApplication+' => '~~',
-	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:WebApplication/Attribute:webserver_id' => 'Webszerver',
-	'Class:WebApplication/Attribute:webserver_id+' => '~~',
-	'Class:WebApplication/Attribute:webserver_name' => 'Webszerver név',
-	'Class:WebApplication/Attribute:webserver_name+' => '~~',
-	'Class:WebApplication/Attribute:logo' => 'Logo~~',
-	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
-	'Class:WebApplication/Attribute:url' => 'URL~~',
-	'Class:WebApplication/Attribute:url+' => '~~',
-]);
-
-//
-// Class: VirtualDevice
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:VirtualDevice' => 'Virtuális eszköz',
-	'Class:VirtualDevice+' => '~~',
-	'Class:VirtualDevice/Attribute:status' => 'Állapot',
-	'Class:VirtualDevice/Attribute:status+' => '~~',
-	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Megvalósítás alatt',
-	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'implementation~~',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Elavult',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'obsolete~~',
-	'Class:VirtualDevice/Attribute:status/Value:production' => 'Bevezetve',
-	'Class:VirtualDevice/Attribute:status/Value:production+' => 'production~~',
-	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Készleten',
-	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'stock~~',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Logikai kötetek',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Logikai kötetek, amiket ez az eszköz használ',
-]);
-
-//
-// Class: VirtualHost
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:VirtualHost' => 'Virtuális gazdagép',
-	'Class:VirtualHost+' => '~~',
-	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtuális gépek',
-	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Virtuális gépek, amelyeket ez a gazdagép futtat',
-]);
-
-//
-// Class: Hypervisor
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:Hypervisor' => 'Hypervisor',
-	'Class:Hypervisor+' => 'Virtuális gépeket futtató szoftver',
-	'Class:Hypervisor/Attribute:farm_id' => 'Szerverfarm',
-	'Class:Hypervisor/Attribute:farm_id+' => '~~',
-	'Class:Hypervisor/Attribute:farm_name' => 'Szerverfarm név',
-	'Class:Hypervisor/Attribute:farm_name+' => '~~',
-	'Class:Hypervisor/Attribute:server_id' => 'Szerver',
-	'Class:Hypervisor/Attribute:server_id+' => '~~',
-	'Class:Hypervisor/Attribute:server_name' => 'Szerver név',
-	'Class:Hypervisor/Attribute:server_name+' => '~~',
-]);
-
-//
-// Class: Farm
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:Farm' => 'Szerverfarm',
-	'Class:Farm+' => 'Szerverek egy klaszterben',
-	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisor-ok',
-	'Class:Farm/Attribute:hypervisor_list+' => 'Hypervisor-ok amelyek a farmot alkotják',
-	'Class:Farm/Attribute:redundancy' => 'Magas rendelkezésre állás',
-	'Class:Farm/Attribute:redundancy/disabled' => 'A farm működik, ha az összes hypervisor működik.',
-	'Class:Farm/Attribute:redundancy/count' => 'A farm működik, ha legalább %1$s hypervisor működik',
-	'Class:Farm/Attribute:redundancy/percent' => 'A farm működik, ha legalább %1$s a %%-ből hypervisor működik.',
-]);
-
-//
-// Class: VirtualMachine
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:VirtualMachine' => 'Virtuális gép',
-	'Class:VirtualMachine+' => '~~',
-	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Virtuális gazdagép',
-	'Class:VirtualMachine/Attribute:virtualhost_id+' => '~~',
-	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Virtuális gazdagép név',
-	'Class:VirtualMachine/Attribute:virtualhost_name+' => '~~',
-	'Class:VirtualMachine/Attribute:osfamily_id' => 'OS család',
-	'Class:VirtualMachine/Attribute:osfamily_id+' => '~~',
-	'Class:VirtualMachine/Attribute:osfamily_name' => 'OS család név',
-	'Class:VirtualMachine/Attribute:osfamily_name+' => '~~',
-	'Class:VirtualMachine/Attribute:osversion_id' => 'OS verzió',
-	'Class:VirtualMachine/Attribute:osversion_id+' => '~~',
-	'Class:VirtualMachine/Attribute:osversion_name' => 'OS verzió név',
-	'Class:VirtualMachine/Attribute:osversion_name+' => '~~',
-	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS licenc',
-	'Class:VirtualMachine/Attribute:oslicence_id+' => '~~',
-	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS licenc név',
-	'Class:VirtualMachine/Attribute:oslicence_name+' => '~~',
-	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
-	'Class:VirtualMachine/Attribute:cpu+' => '~~',
-	'Class:VirtualMachine/Attribute:ram' => 'RAM',
-	'Class:VirtualMachine/Attribute:ram+' => '~~',
-	'Class:VirtualMachine/Attribute:managementip' => 'IP cím',
-	'Class:VirtualMachine/Attribute:managementip+' => '~~',
-	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Hálózati csatolók',
-	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Logikai hálózati csatolók',
-]);
-
-//
-// Class: LogicalVolume
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:LogicalVolume' => 'Logikai kötet',
-	'Class:LogicalVolume+' => '~~',
-	'Class:LogicalVolume/Attribute:name' => 'Név',
-	'Class:LogicalVolume/Attribute:name+' => '~~',
-	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
-	'Class:LogicalVolume/Attribute:lun_id+' => '~~',
-	'Class:LogicalVolume/Attribute:description' => 'Leírás',
-	'Class:LogicalVolume/Attribute:description+' => '~~',
-	'Class:LogicalVolume/Attribute:raid_level' => 'Raid szint',
-	'Class:LogicalVolume/Attribute:raid_level+' => '~~',
-	'Class:LogicalVolume/Attribute:size' => 'Tárhely',
-	'Class:LogicalVolume/Attribute:size+' => '~~',
-	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Tárolórendszer',
-	'Class:LogicalVolume/Attribute:storagesystem_id+' => '~~',
-	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Tárolórendszer név',
-	'Class:LogicalVolume/Attribute:storagesystem_name+' => '~~',
-	'Class:LogicalVolume/Attribute:servers_list' => 'Szerverek',
-	'Class:LogicalVolume/Attribute:servers_list+' => 'Szerverek, melyek ezt a kötetet használják',
-	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtuális eszközök',
-	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Virtuális eszközök, melyek ezt a kötetet használják',
-]);
-
-//
-// Class: lnkServerToVolume
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:lnkServerToVolume' => 'Szerver / Kötet',
-	'Class:lnkServerToVolume+' => '~~',
-	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
-	'Class:lnkServerToVolume/Attribute:volume_id' => 'Kötet',
-	'Class:lnkServerToVolume/Attribute:volume_id+' => '~~',
-	'Class:lnkServerToVolume/Attribute:volume_name' => 'Kötet név',
-	'Class:lnkServerToVolume/Attribute:volume_name+' => '~~',
-	'Class:lnkServerToVolume/Attribute:server_id' => 'Szerver',
-	'Class:lnkServerToVolume/Attribute:server_id+' => '~~',
-	'Class:lnkServerToVolume/Attribute:server_name' => 'Szerver név',
-	'Class:lnkServerToVolume/Attribute:server_name+' => '~~',
-	'Class:lnkServerToVolume/Attribute:size_used' => 'Felhasznált tárhely',
-	'Class:lnkServerToVolume/Attribute:size_used+' => '~~',
-]);
-
-//
-// Class: lnkVirtualDeviceToVolume
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:lnkVirtualDeviceToVolume' => 'Virtuális eszköz / Kötet',
-	'Class:lnkVirtualDeviceToVolume+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Kötet',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Kötet név',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Virtuális eszköz',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Virtuális eszköz név',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Felhasznált tárhely',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '~~',
-]);
-
-//
-// Class: lnkSanToDatacenterDevice
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:lnkSanToDatacenterDevice' => 'SAN / Adatközpont eszköz',
-	'Class:lnkSanToDatacenterDevice+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN switch',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'SAN switch név',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Eszköz',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Eszköz név',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'SAN FC port',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Eszköz FC port',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '~~',
-]);
-
-//
-// Class: Tape
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:Tape' => 'Szalag',
-	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
-	'Class:Tape/Attribute:name' => 'Szalag név',
-	'Class:Tape/Attribute:name+' => '~~',
-	'Class:Tape/Attribute:description' => 'Leírás',
-	'Class:Tape/Attribute:description+' => '~~',
-	'Class:Tape/Attribute:size' => 'Tárhely',
-	'Class:Tape/Attribute:size+' => '~~',
-	'Class:Tape/Attribute:tapelibrary_id' => 'Szalagos tároló',
-	'Class:Tape/Attribute:tapelibrary_id+' => '~~',
-	'Class:Tape/Attribute:tapelibrary_name' => 'Szalagos tároló név',
-	'Class:Tape/Attribute:tapelibrary_name+' => '~~',
-]);
-
-//
-// Class: NASFileSystem
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:NASFileSystem' => 'NAS Fájlrendszer',
-	'Class:NASFileSystem+' => '~~',
-	'Class:NASFileSystem/Attribute:name' => 'Fájlrendszer név',
-	'Class:NASFileSystem/Attribute:name+' => '~~',
-	'Class:NASFileSystem/Attribute:description' => 'Leírás',
-	'Class:NASFileSystem/Attribute:description+' => '~~',
-	'Class:NASFileSystem/Attribute:raid_level' => 'Raid szint',
-	'Class:NASFileSystem/Attribute:raid_level+' => '~~',
-	'Class:NASFileSystem/Attribute:size' => 'Tárhely',
-	'Class:NASFileSystem/Attribute:size+' => '~~',
-	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
-	'Class:NASFileSystem/Attribute:nas_id+' => '~~',
-	'Class:NASFileSystem/Attribute:nas_name' => 'NAS név',
-	'Class:NASFileSystem/Attribute:nas_name+' => '~~',
-]);
-
-//
-// Class: Software
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Software' => 'Szoftver',
-	'Class:Software+' => '',
+	'Class:Software+' => 'Software is a generic item in the software catalog. It has a particular version. In '.ITOP_APPLICATION_SHORT.' a Software has a category amongst: DB Server, Middleware, PC Software, Web Server and Other Software.~~',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Software/Attribute:name' => 'Név',
-	'Class:Software/Attribute:name+' => '',
+	'Class:Software/Attribute:name+' => '~~',
 	'Class:Software/Attribute:vendor' => 'gyártó',
 	'Class:Software/Attribute:vendor+' => '~~',
 	'Class:Software/Attribute:version' => 'Verzió',
 	'Class:Software/Attribute:version+' => '~~',
+	'Class:Software/Attribute:end_of_support' => 'End of support~~',
+	'Class:Software/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this software version.~~',
 	'Class:Software/Attribute:documents_list' => 'Dokumentumok',
 	'Class:Software/Attribute:documents_list+' => 'A szoftver dokumentumai',
 	'Class:Software/Attribute:logo' => 'Logo~~',
@@ -899,30 +347,235 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Software/Attribute:softwarepatch_list+' => 'A szoftver javítócsomagjai',
 	'Class:Software/Attribute:softwarelicence_list' => 'Szoftver licencek',
 	'Class:Software/Attribute:softwarelicence_list+' => 'A szoftver licencei',
-]);
-
-//
-// Class: Patch
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:SoftwareInstance' => 'Szoftverpéldány',
+	'Class:SoftwareInstance+' => 'A szoftver telepített példányai',
+	'Class:SoftwareInstance/Attribute:system_id' => 'Rendszer',
+	'Class:SoftwareInstance/Attribute:system_id+' => 'The system can be a Server, a Virtual Machine, a PC, ...~~',
+	'Class:SoftwareInstance/Attribute:system_name' => 'Rendszer név',
+	'Class:SoftwareInstance/Attribute:system_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_id' => 'Szoftver',
+	'Class:SoftwareInstance/Attribute:software_id+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_name' => 'Szoftvernév',
+	'Class:SoftwareInstance/Attribute:software_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_end_of_support' => 'Software end of support~~',
+	'Class:SoftwareInstance/Attribute:software_end_of_support+' => 'The date after which the editor ceases to provide patches for this software version.~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Szoftver licenc',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Szoftver licenc név',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:path' => 'Elérési út',
+	'Class:SoftwareInstance/Attribute:path+' => '~~',
+	'Class:SoftwareInstance/Attribute:status' => 'Állapot',
+	'Class:SoftwareInstance/Attribute:status+' => '~~',
+	'Class:SoftwareInstance/Attribute:status/Value:active' => 'Aktív',
+	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'active~~',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Inaktív',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'inactive~~',
+	'Class:Middleware' => 'Middleware',
+	'Class:Middleware+' => 'Köztes szoftver rendszerek összekötéséhez',
+	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware példányok',
+	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Middleware példányok melyeket ez a middleware biztosít',
+	'Class:DBServer' => 'Adatbázis szerver',
+	'Class:DBServer+' => 'Adatbázis kiszolgáló',
+	'Class:DBServer/Attribute:dbschema_list' => 'DB sémák',
+	'Class:DBServer/Attribute:dbschema_list+' => 'A DB szerver adatbázis sémái',
+	'Class:WebServer' => 'Webszerver',
+	'Class:WebServer+' => 'Webkiszolgáló',
+	'Class:WebServer/Attribute:webapp_list' => 'Webalkalmazások',
+	'Class:WebServer/Attribute:webapp_list+' => 'Webalkalmazások, melyek elérhetőek ezen a webszerveren',
+	'Class:PCSoftware' => 'PC Szoftver',
+	'Class:PCSoftware+' => 'Személyi számítógép szoftverei',
+	'Class:OtherSoftware' => 'Egyéb szoftver',
+	'Class:OtherSoftware+' => 'Any type of Software Instance that do not fit in the other categories: PC Software, Middleware, DB server or Web Server.~~',
+	'Class:MiddlewareInstance' => 'Middleware Példány',
+	'Class:MiddlewareInstance+' => 'Functional CI representing a service delivered by a Middleware.~~',
+	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
+	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
+	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Middleware név',
+	'Class:MiddlewareInstance/Attribute:middleware_name+' => '~~',
+	'Class:DatabaseSchema' => 'Adatbázis séma',
+	'Class:DatabaseSchema+' => 'Dabatase instance running of a specific DB server.~~',
+	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:DatabaseSchema/Attribute:dbserver_id' => 'DB szerver',
+	'Class:DatabaseSchema/Attribute:dbserver_id+' => '~~',
+	'Class:DatabaseSchema/Attribute:dbserver_name' => 'DB szerver név',
+	'Class:DatabaseSchema/Attribute:dbserver_name+' => '~~',
+	'Class:WebApplication' => 'Webalkalmazás',
+	'Class:WebApplication+' => 'Instance of an application accessible using a web browser and that runs on a given Web Server instance. For eg. this iTop that you\'re looking at.~~',
+	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:WebApplication/Attribute:webserver_id' => 'Webszerver',
+	'Class:WebApplication/Attribute:webserver_id+' => '~~',
+	'Class:WebApplication/Attribute:webserver_name' => 'Webszerver név',
+	'Class:WebApplication/Attribute:webserver_name+' => '~~',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:WebApplication/Attribute:url' => 'URL~~',
+	'Class:WebApplication/Attribute:url+' => '~~',
+	'Class:VirtualDevice' => 'Virtuális eszköz',
+	'Class:VirtualDevice+' => 'Abstract class used for server virtualization (Virtual Host and Virtual Machine).~~',
+	'Class:VirtualDevice/Attribute:status' => 'Állapot',
+	'Class:VirtualDevice/Attribute:status+' => '~~',
+	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Megvalósítás alatt',
+	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'implementation~~',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Elavult',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'obsolete~~',
+	'Class:VirtualDevice/Attribute:status/Value:production' => 'Bevezetve',
+	'Class:VirtualDevice/Attribute:status/Value:production+' => 'production~~',
+	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Készleten',
+	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'stock~~',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Logikai kötetek',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Logikai kötetek, amiket ez az eszköz használ',
+	'Class:VirtualHost' => 'Virtuális gazdagép',
+	'Class:VirtualHost+' => 'Abstract class used for Virtual Devices (Hypervisor, Farm,...) hosting Virtual Machines.~~',
+	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtuális gépek',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Virtuális gépek, amelyeket ez a gazdagép futtat',
+	'Class:Hypervisor' => 'Hypervisor',
+	'Class:Hypervisor+' => 'Virtuális gépeket futtató szoftver',
+	'Class:Hypervisor/Attribute:farm_id' => 'Szerverfarm',
+	'Class:Hypervisor/Attribute:farm_id+' => '~~',
+	'Class:Hypervisor/Attribute:farm_name' => 'Szerverfarm név',
+	'Class:Hypervisor/Attribute:farm_name+' => '~~',
+	'Class:Hypervisor/Attribute:server_id' => 'Szerver',
+	'Class:Hypervisor/Attribute:server_id+' => '~~',
+	'Class:Hypervisor/Attribute:server_name' => 'Szerver név',
+	'Class:Hypervisor/Attribute:server_name+' => '~~',
+	'Class:Farm' => 'Szerverfarm',
+	'Class:Farm+' => 'Szerverek egy klaszterben',
+	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisor-ok',
+	'Class:Farm/Attribute:hypervisor_list+' => 'Hypervisor-ok amelyek a farmot alkotják',
+	'Class:Farm/Attribute:redundancy' => 'Magas rendelkezésre állás',
+	'Class:Farm/Attribute:redundancy/disabled' => 'A farm működik, ha az összes hypervisor működik.',
+	'Class:Farm/Attribute:redundancy/count' => 'A farm működik, ha legalább %1$s hypervisor működik',
+	'Class:Farm/Attribute:redundancy/percent' => 'A farm működik, ha legalább %1$s a %%-ből hypervisor működik.',
+	'Class:VirtualMachine' => 'Virtuális gép',
+	'Class:VirtualMachine+' => 'Virtual Device equivalent to a Server, it is hosted either on an Hypervisor or on a Farm.~~',
+	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Virtuális gazdagép',
+	'Class:VirtualMachine/Attribute:virtualhost_id+' => '~~',
+	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Virtuális gazdagép név',
+	'Class:VirtualMachine/Attribute:virtualhost_name+' => '~~',
+	'Class:VirtualMachine/Attribute:osfamily_id' => 'OS család',
+	'Class:VirtualMachine/Attribute:osfamily_id+' => '~~',
+	'Class:VirtualMachine/Attribute:osfamily_name' => 'OS család név',
+	'Class:VirtualMachine/Attribute:osfamily_name+' => '~~',
+	'Class:VirtualMachine/Attribute:osversion_id' => 'OS verzió',
+	'Class:VirtualMachine/Attribute:osversion_id+' => '~~',
+	'Class:VirtualMachine/Attribute:osversion_name' => 'OS verzió név',
+	'Class:VirtualMachine/Attribute:osversion_name+' => '~~',
+	'Class:VirtualMachine/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:VirtualMachine/Attribute:os_end_of_support+' => 'When the OS version is no more supported by the vendor, if this information is documented on the OS Version.~~',
+	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS licenc',
+	'Class:VirtualMachine/Attribute:oslicence_id+' => '~~',
+	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS licenc név',
+	'Class:VirtualMachine/Attribute:oslicence_name+' => '~~',
+	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
+	'Class:VirtualMachine/Attribute:cpu+' => '~~',
+	'Class:VirtualMachine/Attribute:ram' => 'RAM',
+	'Class:VirtualMachine/Attribute:ram+' => '~~',
+	'Class:VirtualMachine/Attribute:managementip' => 'IP cím',
+	'Class:VirtualMachine/Attribute:managementip+' => '~~',
+	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Hálózati csatolók',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Logikai hálózati csatolók',
+	'Class:LogicalVolume' => 'Logikai kötet',
+	'Class:LogicalVolume+' => 'The unit of storage managed inside a Storage System. It can be accessed by multiple Servers and Virtual Devices.~~',
+	'Class:LogicalVolume/Attribute:name' => 'Név',
+	'Class:LogicalVolume/Attribute:name+' => '~~',
+	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
+	'Class:LogicalVolume/Attribute:lun_id+' => '~~',
+	'Class:LogicalVolume/Attribute:description' => 'Leírás',
+	'Class:LogicalVolume/Attribute:description+' => '~~',
+	'Class:LogicalVolume/Attribute:raid_level' => 'Raid szint',
+	'Class:LogicalVolume/Attribute:raid_level+' => '~~',
+	'Class:LogicalVolume/Attribute:size' => 'Tárhely',
+	'Class:LogicalVolume/Attribute:size+' => '~~',
+	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Tárolórendszer',
+	'Class:LogicalVolume/Attribute:storagesystem_id+' => '~~',
+	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Tárolórendszer név',
+	'Class:LogicalVolume/Attribute:storagesystem_name+' => '~~',
+	'Class:LogicalVolume/Attribute:servers_list' => 'Szerverek',
+	'Class:LogicalVolume/Attribute:servers_list+' => 'Szerverek, melyek ezt a kötetet használják',
+	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtuális eszközök',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Virtuális eszközök, melyek ezt a kötetet használják',
+	'Class:lnkServerToVolume' => 'Szerver / Kötet',
+	'Class:lnkServerToVolume+' => 'This many-to-many link indicates that a Server uses a Logical Volume (a storage unit managed inside a Storage System). Several Servers can use the same Logical Volume.~~',
+	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
+	'Class:lnkServerToVolume/Attribute:volume_id' => 'Kötet',
+	'Class:lnkServerToVolume/Attribute:volume_id+' => '~~',
+	'Class:lnkServerToVolume/Attribute:volume_name' => 'Kötet név',
+	'Class:lnkServerToVolume/Attribute:volume_name+' => '~~',
+	'Class:lnkServerToVolume/Attribute:server_id' => 'Szerver',
+	'Class:lnkServerToVolume/Attribute:server_id+' => '~~',
+	'Class:lnkServerToVolume/Attribute:server_name' => 'Szerver név',
+	'Class:lnkServerToVolume/Attribute:server_name+' => '~~',
+	'Class:lnkServerToVolume/Attribute:size_used' => 'Felhasznált tárhely',
+	'Class:lnkServerToVolume/Attribute:size_used+' => '~~',
+	'Class:lnkVirtualDeviceToVolume' => 'Virtuális eszköz / Kötet',
+	'Class:lnkVirtualDeviceToVolume+' => 'This many-to-many link indicates that a Virtual Device uses a Logical Volume (a storage unit managed inside a Storage System). Several Virtual Devices can use the same Logical Volume.~~',
+	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Kötet',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Kötet név',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Virtuális eszköz',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Virtuális eszköz név',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Felhasznált tárhely',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '~~',
+	'Class:lnkSanToDatacenterDevice' => 'SAN / Adatközpont eszköz',
+	'Class:lnkSanToDatacenterDevice+' => 'This many-to-many link models the network connection between a SAN Switch and a Datacenter Device (a Server, a Network Device, etc.).~~',
+	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN switch',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'SAN switch név',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Eszköz',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Eszköz név',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'SAN FC port',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Eszköz FC port',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '~~',
+	'Class:Tape' => 'Szalag',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
+	'Class:Tape/Attribute:name' => 'Szalag név',
+	'Class:Tape/Attribute:name+' => '~~',
+	'Class:Tape/Attribute:description' => 'Leírás',
+	'Class:Tape/Attribute:description+' => '~~',
+	'Class:Tape/Attribute:size' => 'Tárhely',
+	'Class:Tape/Attribute:size+' => '~~',
+	'Class:Tape/Attribute:tapelibrary_id' => 'Szalagos tároló',
+	'Class:Tape/Attribute:tapelibrary_id+' => '~~',
+	'Class:Tape/Attribute:tapelibrary_name' => 'Szalagos tároló név',
+	'Class:Tape/Attribute:tapelibrary_name+' => '~~',
+	'Class:NASFileSystem' => 'NAS Fájlrendszer',
+	'Class:NASFileSystem+' => 'Represents a shared file system hosted inside a given NAS (Network Attached Storage).~~',
+	'Class:NASFileSystem/Attribute:name' => 'Fájlrendszer név',
+	'Class:NASFileSystem/Attribute:name+' => '~~',
+	'Class:NASFileSystem/Attribute:description' => 'Leírás',
+	'Class:NASFileSystem/Attribute:description+' => '~~',
+	'Class:NASFileSystem/Attribute:raid_level' => 'Raid szint',
+	'Class:NASFileSystem/Attribute:raid_level+' => '~~',
+	'Class:NASFileSystem/Attribute:size' => 'Tárhely',
+	'Class:NASFileSystem/Attribute:size+' => '~~',
+	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
+	'Class:NASFileSystem/Attribute:nas_id+' => '~~',
+	'Class:NASFileSystem/Attribute:nas_name' => 'NAS név',
+	'Class:NASFileSystem/Attribute:nas_name+' => '~~',
 	'Class:Patch' => 'Szervizcsomag',
 	'Class:Patch+' => 'Szoftver patch',
 	'Class:Patch/Attribute:name' => 'Szervizcsomag név',
-	'Class:Patch/Attribute:name+' => '',
+	'Class:Patch/Attribute:name+' => '~~',
 	'Class:Patch/Attribute:documents_list' => 'Dokumentumok',
 	'Class:Patch/Attribute:documents_list+' => 'A szervizcsomag dokumentumai',
 	'Class:Patch/Attribute:description' => 'Leírás',
-	'Class:Patch/Attribute:description+' => '',
+	'Class:Patch/Attribute:description+' => '~~',
 	'Class:Patch/Attribute:finalclass' => 'Szervizcsomag típus',
 	'Class:Patch/Attribute:finalclass+' => 'A végső osztály neve',
-]);
-
-//
-// Class: OSPatch
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OSPatch' => 'OS javítócsomag',
 	'Class:OSPatch+' => 'Operációs rendszer szervizcsomag',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Eszközök',
@@ -933,65 +586,44 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OSPatch/Attribute:osfamily_id+' => '~~',
 	'Class:OSPatch/Attribute:osversion_name' => 'OS verzió név',
 	'Class:OSPatch/Attribute:osversion_name+' => '~~',
-]);
-
-//
-// Class: SoftwarePatch
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:SoftwarePatch' => 'Szoftver szervizcsomag',
-	'Class:SoftwarePatch+' => '~~',
+	'Class:SoftwarePatch+' => 'Patch, hotfix, security fix or service pack for a given software.~~',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Szoftver',
 	'Class:SoftwarePatch/Attribute:software_id+' => '~~',
 	'Class:SoftwarePatch/Attribute:software_name' => 'Szoftver név',
 	'Class:SoftwarePatch/Attribute:software_name+' => '~~',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Szoftverpéldányok',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Rendszerek, amelyekre telepítve van ez a szoftverjavítás',
-]);
-
-//
-// Class: Licence
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Licence' => 'Licenc',
-	'Class:Licence+' => '',
+	'Class:Licence+' => 'Abstract class. A license contract for a particular OS version or Software~~',
 	'Class:Licence/Attribute:name' => 'Licenc név',
-	'Class:Licence/Attribute:name+' => '',
+	'Class:Licence/Attribute:name+' => '~~',
 	'Class:Licence/Attribute:documents_list' => 'Dokumentumok',
 	'Class:Licence/Attribute:documents_list+' => 'A licenc dokumentumai',
 	'Class:Licence/Attribute:org_id' => 'Tulajdonos szervezeti egység',
-	'Class:Licence/Attribute:org_id+' => '',
+	'Class:Licence/Attribute:org_id+' => '~~',
 	'Class:Licence/Attribute:organization_name' => 'Szervezeti egység név',
 	'Class:Licence/Attribute:organization_name+' => 'Általános név',
 	'Class:Licence/Attribute:usage_limit' => 'Felhasználási korlátok',
-	'Class:Licence/Attribute:usage_limit+' => '',
+	'Class:Licence/Attribute:usage_limit+' => '~~',
 	'Class:Licence/Attribute:description' => 'Leírás',
-	'Class:Licence/Attribute:description+' => '',
+	'Class:Licence/Attribute:description+' => '~~',
 	'Class:Licence/Attribute:start_date' => 'Érvényesség kezdete',
-	'Class:Licence/Attribute:start_date+' => '',
+	'Class:Licence/Attribute:start_date+' => '~~',
 	'Class:Licence/Attribute:end_date' => 'Érvényesség vége',
-	'Class:Licence/Attribute:end_date+' => '',
+	'Class:Licence/Attribute:end_date+' => '~~',
 	'Class:Licence/Attribute:licence_key' => 'Licenckulcs',
-	'Class:Licence/Attribute:licence_key+' => '',
+	'Class:Licence/Attribute:licence_key+' => '~~',
 	'Class:Licence/Attribute:perpetual' => 'Öröklicenc',
-	'Class:Licence/Attribute:perpetual+' => '',
+	'Class:Licence/Attribute:perpetual+' => '~~',
 	'Class:Licence/Attribute:perpetual/Value:no' => 'nem',
 	'Class:Licence/Attribute:perpetual/Value:no+' => 'no~~',
 	'Class:Licence/Attribute:perpetual/Value:yes' => 'igen',
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'yes~~',
 	'Class:Licence/Attribute:finalclass' => 'Licenc típus',
 	'Class:Licence/Attribute:finalclass+' => 'A végső osztály neve',
-]);
-
-//
-// Class: OSLicence
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OSLicence' => 'OS Licenc',
-	'Class:OSLicence+' => '~~',
+	'Class:OSLicence+' => 'A license contract for a particular operating system. The license is related to one operating system (for example Windows 2008 R2) and can be associated with several servers or virtual machines.~~',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:OSLicence/Attribute:osversion_id' => 'OS verzió',
 	'Class:OSLicence/Attribute:osversion_id+' => '~~',
@@ -1003,15 +635,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Virtuális gépek, melyek ezt a licencet használják',
 	'Class:OSLicence/Attribute:servers_list' => 'Szerverek',
 	'Class:OSLicence/Attribute:servers_list+' => 'Szerverek, melyek ezt a licencet használják',
-]);
-
-//
-// Class: SoftwareLicence
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:SoftwareLicence' => 'Szoftver licenc',
-	'Class:SoftwareLicence+' => '~~',
+	'Class:SoftwareLicence+' => 'A license contract for a particular software. The license is related to one software (for example MS Office 2010) and can be associated with several instances of this software.~~',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Szoftver',
 	'Class:SoftwareLicence/Attribute:software_id+' => '~~',
@@ -1019,15 +644,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:SoftwareLicence/Attribute:software_name+' => '~~',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Szoftverpéldányok',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Rendszerek, melyek ezt a licencet használják',
-]);
-
-//
-// Class: lnkDocumentToLicence
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkDocumentToLicence' => 'Dokumentum / Licenc',
-	'Class:lnkDocumentToLicence+' => '~~',
+	'Class:lnkDocumentToLicence+' => 'Link used when a Document is applicable to a License.~~',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licenc',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '~~',
@@ -1037,56 +655,38 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Dokumentum név',
 	'Class:lnkDocumentToLicence/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: OSVersion
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OSVersion' => 'OS Verzió',
-	'Class:OSVersion+' => '~~',
+	'Class:OSVersion+' => 'Typology. List of the possible values for the "OS Version" of a computer (Server, Virtual Machine or PC). The OS Versions are organized per OS Family.~~',
 	'Class:OSVersion/Attribute:osfamily_id' => 'OS család',
 	'Class:OSVersion/Attribute:osfamily_id+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_name' => 'OS család név',
-	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/Attribute:osfamily_name+' => '~~',
+	'Class:OSVersion/Attribute:end_of_support' => 'End of support~~',
+	'Class:OSVersion/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
+	'Class:OSVersion/Attribute:ospatches_list' => 'OS patches~~',
+	'Class:OSVersion/Attribute:ospatches_list+' => 'All the OS patches for this OS version~~',
 	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
 	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
-]);
-
-//
-// Class: OSFamily
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OSFamily' => 'OS család',
-	'Class:OSFamily+' => '',
+	'Class:OSFamily+' => 'Typology. List of the possible values for the "OS Family" attribute of Servers, Virtual Machines and PCs.~~',
+	'Class:OSFamily/Attribute:osversions_list' => 'OS versions~~',
+	'Class:OSFamily/Attribute:osversions_list+' => 'All the OS versions for this OS family~~',
 	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
 	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
-]);
-
-//
-// Class: Brand
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Brand' => 'Gyártó',
-	'Class:Brand+' => '~~',
+	'Class:Brand+' => 'Typology. List of the possible values for the "Brand" attribute of Physical Device.~~',
+	'Class:Brand/Attribute:iosversions_list' => 'IOS versions~~',
+	'Class:Brand/Attribute:iosversions_list+' => 'All the IOS versions from this brand~~',
 	'Class:Brand/Attribute:logo' => 'Logo~~',
 	'Class:Brand/Attribute:logo+' => '~~',
+	'Class:Brand/Attribute:models_list' => 'Models~~',
+	'Class:Brand/Attribute:models_list+' => 'All models for this brand~~',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Fizikai eszközök',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Ennek a gyártónak a fizikai eszközei',
-	'Class:Brand/UniquenessRule:name+' => '',
+	'Class:Brand/UniquenessRule:name+' => 'The name must be unique~~',
 	'Class:Brand/UniquenessRule:name' => 'Ez a gyártó már létezik',
-]);
-
-//
-// Class: Model
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Model' => 'Modell',
-	'Class:Model+' => '~~',
+	'Class:Model+' => 'Typology. List the possible values for the Model attribute of a Physical Device. Each Model belongs to a single Brand, and usually applies to a single type of Physical Device.~~',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Model/Attribute:brand_id' => 'Gyártó',
 	'Class:Model/Attribute:brand_id+' => '~~',
@@ -1096,16 +696,18 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Model/Attribute:picture+' => '~~',
 	'Class:Model/Attribute:type' => 'Eszköz típus',
 	'Class:Model/Attribute:type+' => '~~',
+	'Class:Model/Attribute:end_of_support' => 'End of support~~',
+	'Class:Model/Attribute:end_of_support+' => 'The date after which the manufacturer ceases to provide patches and support for this model.~~',
 	'Class:Model/Attribute:type/Value:PowerSource' => 'Áramforrás',
 	'Class:Model/Attribute:type/Value:PowerSource+' => 'Áramforrás',
 	'Class:Model/Attribute:type/Value:DiskArray' => 'Lemez tömb',
-	'Class:Model/Attribute:type/Value:DiskArray+' => '',
+	'Class:Model/Attribute:type/Value:DiskArray+' => 'Disk Array~~',
 	'Class:Model/Attribute:type/Value:Enclosure' => 'Beépítőkeret',
-	'Class:Model/Attribute:type/Value:Enclosure+' => '',
+	'Class:Model/Attribute:type/Value:Enclosure+' => 'Enclosure~~',
 	'Class:Model/Attribute:type/Value:IPPhone' => 'Egyéb eszköz',
 	'Class:Model/Attribute:type/Value:IPPhone+' => 'pl.IP telefon',
 	'Class:Model/Attribute:type/Value:MobilePhone' => 'Mobiltelefon',
-	'Class:Model/Attribute:type/Value:MobilePhone+' => '',
+	'Class:Model/Attribute:type/Value:MobilePhone+' => 'Mobile Phone~~',
 	'Class:Model/Attribute:type/Value:NAS' => 'NAS',
 	'Class:Model/Attribute:type/Value:NAS+' => 'NAS~~',
 	'Class:Model/Attribute:type/Value:NetworkDevice' => 'Hálózati eszköz',
@@ -1136,43 +738,26 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Model/Attribute:physicaldevices_list+' => 'Fizikai eszközök melyek ehhez a modellszámhoz tartoznak',
 	'Class:Model/UniquenessRule:name_brand+' => 'A névnek egyedinek kell lennie a gyártón belül',
 	'Class:Model/UniquenessRule:name_brand' => 'A gyártó ezen modellje már létezik',
-]);
-
-//
-// Class: NetworkDeviceType
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:NetworkDeviceType' => 'Hálózati eszköz típus',
-	'Class:NetworkDeviceType+' => '~~',
+	'Class:NetworkDeviceType+' => 'Typology. The possible values for the "Type" of a Network Device (e.g. Router, Switch, Firewall, etc.).~~',
 	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
 	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Hálózati eszközök',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Ilyen típusú hálózati eszközök',
-]);
-
-//
-// Class: IOSVersion
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:IOSVersion' => 'IOS Verzió',
 	'Class:IOSVersion+' => 'A hálózati eszköz firmware-je',
 	'Class:IOSVersion/Attribute:brand_id' => 'Gyártó',
 	'Class:IOSVersion/Attribute:brand_id+' => '~~',
 	'Class:IOSVersion/Attribute:brand_name' => 'Gyártó név',
 	'Class:IOSVersion/Attribute:brand_name+' => '~~',
+	'Class:IOSVersion/Attribute:end_of_support' => 'End of support~~',
+	'Class:IOSVersion/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this IOS version.~~',
+	'Class:IOSVersion/Attribute:networkdevices_list' => 'Network devices~~',
+	'Class:IOSVersion/Attribute:networkdevices_list+' => 'All the network devices running this IOS version~~',
 	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
 	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
-]);
-
-//
-// Class: lnkDocumentToPatch
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkDocumentToPatch' => 'Dokumentum / Szervizcsomag',
-	'Class:lnkDocumentToPatch+' => '~~',
+	'Class:lnkDocumentToPatch+' => 'Link used when a Document is applicable to a Patch.~~',
 	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Szervízcsomag',
 	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '~~',
@@ -1182,15 +767,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkDocumentToPatch/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Dokumentum név',
 	'Class:lnkDocumentToPatch/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: lnkSoftwareInstanceToSoftwarePatch
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Szoftverpéldány / Szoftver szervizcsomag',
-	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '~~',
+	'Class:lnkSoftwareInstanceToSoftwarePatch+' => 'This link indicates that a software patch has been applied to a software instance.~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Szoftver szervizcsomag',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '~~',
@@ -1200,15 +778,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Szoftverpéldány név',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '~~',
-]);
-
-//
-// Class: lnkFunctionalCIToOSPatch
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkFunctionalCIToOSPatch' => 'Funkcionális CI / OS szervizcsomag',
-	'Class:lnkFunctionalCIToOSPatch+' => '~~',
+	'Class:lnkFunctionalCIToOSPatch+' => 'Models the deployment of an OS Patch on a device.~~',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'OS szervizcsomag',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '~~',
@@ -1218,15 +789,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'Funkcionális CI név',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '~~',
-]);
-
-//
-// Class: lnkDocumentToSoftware
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkDocumentToSoftware' => 'Dokumentum / Szoftver',
-	'Class:lnkDocumentToSoftware+' => '~~',
+	'Class:lnkDocumentToSoftware+' => 'Link used when a Document is applicable to Software.~~',
 	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Szoftver',
 	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '~~',
@@ -1236,40 +800,26 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Dokumentum név',
 	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: Subnet
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Subnet' => 'Alhálózat',
-	'Class:Subnet+' => '',
+	'Class:Subnet+' => 'Segment of an IP network, defined by an IP address and a mask~~',
 	'Class:Subnet/Name' => '%1$s/%2$s~~',
 	'Class:Subnet/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Subnet/Attribute:description' => 'Leírás',
-	'Class:Subnet/Attribute:description+' => '',
+	'Class:Subnet/Attribute:description+' => '~~',
 	'Class:Subnet/Attribute:subnet_name' => 'Alhálózat név',
-	'Class:Subnet/Attribute:subnet_name+' => '',
+	'Class:Subnet/Attribute:subnet_name+' => '~~',
 	'Class:Subnet/Attribute:org_id' => 'Tulajdonos szervezeti egység',
-	'Class:Subnet/Attribute:org_id+' => '',
+	'Class:Subnet/Attribute:org_id+' => '~~',
 	'Class:Subnet/Attribute:org_name' => 'Szervezeti egység név',
 	'Class:Subnet/Attribute:org_name+' => 'Általános név',
 	'Class:Subnet/Attribute:ip' => 'IP cím',
-	'Class:Subnet/Attribute:ip+' => '',
+	'Class:Subnet/Attribute:ip+' => '~~',
 	'Class:Subnet/Attribute:ip_mask' => 'IP netmaszk',
-	'Class:Subnet/Attribute:ip_mask+' => '',
+	'Class:Subnet/Attribute:ip_mask+' => '~~',
 	'Class:Subnet/Attribute:vlans_list' => 'VLAN-ok',
-	'Class:Subnet/Attribute:vlans_list+' => '',
-]);
-
-//
-// Class: VLAN
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:Subnet/Attribute:vlans_list+' => '~~',
 	'Class:VLAN' => 'VLAN',
-	'Class:VLAN+' => '~~',
+	'Class:VLAN+' => 'A Virtual LAN is used to group together in a logical way networks Subnets and Physical Interfaces that participate in the same VLAN.~~',
 	'Class:VLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:VLAN/Attribute:vlan_tag+' => '~~',
 	'Class:VLAN/Attribute:description' => 'Leírás',
@@ -1282,15 +832,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:VLAN/Attribute:subnets_list+' => '~~',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Fizikai hálózati csatolók',
 	'Class:VLAN/Attribute:physicalinterfaces_list+' => '~~',
-]);
-
-//
-// Class: lnkSubnetToVLAN
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkSubnetToVLAN' => 'Alhálózat / VLAN',
-	'Class:lnkSubnetToVLAN+' => '~~',
+	'Class:lnkSubnetToVLAN+' => 'This many-to-many link indicates that a VLAN is present on a Subnet. Several VLANs can be present on the same Subnet and a VLAN can span several Subnets.~~',
 	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Alhálózat',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '~~',
@@ -1302,28 +845,14 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '~~',
-]);
-
-//
-// Class: NetworkInterface
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:NetworkInterface' => 'Hálózati csatoló',
-	'Class:NetworkInterface+' => '',
+	'Class:NetworkInterface+' => 'Abstract class for all types of network interfaces.~~',
 	'Class:NetworkInterface/Attribute:name' => 'Név',
 	'Class:NetworkInterface/Attribute:name+' => '~~',
 	'Class:NetworkInterface/Attribute:finalclass' => 'Hálózati csatoló típus',
 	'Class:NetworkInterface/Attribute:finalclass+' => 'A végső osztály neve',
-]);
-
-//
-// Class: IPInterface
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:IPInterface' => 'IP csatoló',
-	'Class:IPInterface+' => '~~',
+	'Class:IPInterface+' => 'Abstract class. A type of Network Interface with an IP address~~',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP cím',
 	'Class:IPInterface/Attribute:ipaddress+' => '~~',
 	'Class:IPInterface/Attribute:macaddress' => 'MAC cím',
@@ -1336,31 +865,21 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:IPInterface/Attribute:ipmask+' => '~~',
 	'Class:IPInterface/Attribute:speed' => 'Sebesség',
 	'Class:IPInterface/Attribute:speed+' => '~~',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PhysicalInterface' => 'Fizikai csatoló',
-	'Class:PhysicalInterface+' => '~~',
+	'Class:PhysicalInterface+' => 'A type of IP Interface that represents a physical network interface (e.g. an Ethernet card).~~',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s~~',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Eszköz',
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Eszköz név',
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
+	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
+	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLAN-ok',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '~~',
-]);
-
-//
-// Class: lnkPhysicalInterfaceToVLAN
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Fizikai csatoló / VLAN',
-	'Class:lnkPhysicalInterfaceToVLAN+' => '~~',
+	'Class:lnkPhysicalInterfaceToVLAN+' => 'This link indicates when a network interface is part of a VLAN (Virtual Local Area Network).~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Fizikai csatoló',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '~~',
@@ -1374,28 +893,14 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '~~',
-]);
-
-//
-// Class: LogicalInterface
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:LogicalInterface' => 'Logikai csatoló',
-	'Class:LogicalInterface+' => '~~',
+	'Class:LogicalInterface+' => 'IP Interface which is not associated permanently with a particular physical port, the association is dynamic. It can be used for Virtual Machine.~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Virtuális gép',
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Virtuális gép név',
 	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '~~',
-]);
-
-//
-// Class: FiberChannelInterface
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:FiberChannelInterface' => 'FC csatoló',
-	'Class:FiberChannelInterface+' => '~~',
+	'Class:FiberChannelInterface+' => 'Network Interface to a high-speed network technology primarily used for connecting Storage Systems.~~',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Sebesség',
 	'Class:FiberChannelInterface/Attribute:speed+' => '~~',
 	'Class:FiberChannelInterface/Attribute:topology' => 'Topológia',
@@ -1406,13 +911,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '~~',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Eszköz név',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '~~',
-]);
-
-//
-// Class: lnkConnectableCIToNetworkDevice
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkConnectableCIToNetworkDevice' => 'Kapcsolható CI / Hálózati eszköz',
 	'Class:lnkConnectableCIToNetworkDevice+' => 'Hálózati csatlakozással rendelkező eszközök',
 	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s~~',
@@ -1434,15 +932,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'bejövő link',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'Kimenő',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'kimenő link',
-]);
-
-//
-// Class: lnkApplicationSolutionToFunctionalCI
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Alkalmazásmegoldás / Funkcionális CI',
-	'Class:lnkApplicationSolutionToFunctionalCI+' => '~~',
+	'Class:lnkApplicationSolutionToFunctionalCI+' => 'Models the membership of a device to an Application Solution. The meaning of this relationship varies depending on the types of Application Solution.~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Alkalmazásmegoldás',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '~~',
@@ -1452,15 +943,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'Funkcionális CI név',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '~~',
-]);
-
-//
-// Class: lnkApplicationSolutionToBusinessProcess
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Alkalmazásmegoldás / Üzleti folyamat',
-	'Class:lnkApplicationSolutionToBusinessProcess+' => '~~',
+	'Class:lnkApplicationSolutionToBusinessProcess+' => 'Models the relationship between an Application Solution and a Business Process.~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Üzleti folyamat',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '~~',
@@ -1470,95 +954,50 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Alkalmazásmegoldás név',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '~~',
-]);
-
-//
-// Class: Group
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Group' => 'Csoport',
-	'Class:Group+' => '',
+	'Class:Group+' => 'Group is designed to define explicit sets of configurations items for any project purpose. In contrast to Application Solution, a Group is not impacted by any of its component and does not impact them. For example when doing an OS migration, Group can be convenient to gather “Servers to be migrated”. Migrated servers being removed from the group as the migration progresses.~~',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Group/Attribute:name' => 'CI csoport név',
-	'Class:Group/Attribute:name+' => '',
+	'Class:Group/Attribute:name+' => '~~',
 	'Class:Group/Attribute:status' => 'Állapot',
-	'Class:Group/Attribute:status+' => '',
+	'Class:Group/Attribute:status+' => '~~',
 	'Class:Group/Attribute:status/Value:implementation' => 'Megvalósítás alatt',
-	'Class:Group/Attribute:status/Value:implementation+' => '',
+	'Class:Group/Attribute:status/Value:implementation+' => 'Implementation~~',
 	'Class:Group/Attribute:status/Value:obsolete' => 'Elavult',
-	'Class:Group/Attribute:status/Value:obsolete+' => '',
+	'Class:Group/Attribute:status/Value:obsolete+' => 'Obsolete~~',
 	'Class:Group/Attribute:status/Value:production' => 'Bevezetve',
-	'Class:Group/Attribute:status/Value:production+' => '',
+	'Class:Group/Attribute:status/Value:production+' => 'Production~~',
 	'Class:Group/Attribute:org_id' => 'Tulajdonos szervezeti egység',
-	'Class:Group/Attribute:org_id+' => '',
+	'Class:Group/Attribute:org_id+' => '~~',
 	'Class:Group/Attribute:owner_name' => 'Tulajdonos név',
-	'Class:Group/Attribute:owner_name+' => '',
+	'Class:Group/Attribute:owner_name+' => 'Common name~~',
 	'Class:Group/Attribute:description' => 'Leírás',
-	'Class:Group/Attribute:description+' => '',
+	'Class:Group/Attribute:description+' => '~~',
 	'Class:Group/Attribute:type' => 'Típus',
-	'Class:Group/Attribute:type+' => '',
+	'Class:Group/Attribute:type+' => '~~',
 	'Class:Group/Attribute:parent_id' => 'Fölérendelt csoport',
-	'Class:Group/Attribute:parent_id+' => '',
+	'Class:Group/Attribute:parent_id+' => '~~',
 	'Class:Group/Attribute:parent_name' => 'Fölérendelt csoport név',
-	'Class:Group/Attribute:parent_name+' => '',
+	'Class:Group/Attribute:parent_name+' => '~~',
 	'Class:Group/Attribute:ci_list' => 'Kapcsolódó CI-k',
-	'Class:Group/Attribute:ci_list+' => '',
+	'Class:Group/Attribute:ci_list+' => 'All the configuration items linked to this group~~',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Fölérendelt csoport név',
-	'Class:Group/Attribute:parent_id_friendlyname+' => '',
-]);
-
-//
-// Class: lnkGroupToCI
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:Group/Attribute:parent_id_friendlyname+' => '~~',
 	'Class:lnkGroupToCI' => 'CI csoport / CI',
-	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI+' => 'This link indicates when a Functional CI is part of a Group.~~',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'CI csoport',
-	'Class:lnkGroupToCI/Attribute:group_id+' => '',
+	'Class:lnkGroupToCI/Attribute:group_id+' => '~~',
 	'Class:lnkGroupToCI/Attribute:group_name' => 'CI csoport név',
-	'Class:lnkGroupToCI/Attribute:group_name+' => '',
+	'Class:lnkGroupToCI/Attribute:group_name+' => '~~',
 	'Class:lnkGroupToCI/Attribute:ci_id' => 'CI',
-	'Class:lnkGroupToCI/Attribute:ci_id+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_id+' => '~~',
 	'Class:lnkGroupToCI/Attribute:ci_name' => 'CI név',
-	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_name+' => '~~',
 	'Class:lnkGroupToCI/Attribute:reason' => 'Indoklás',
-	'Class:lnkGroupToCI/Attribute:reason+' => '',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'ConfigMgmt:baseinfo' => 'General~~',
-	'ConfigMgmt:moreinfo' => 'CI specifics~~',
-	'Storage:moreinfo' => 'Storage specifics~~',
-	'ConfigMgmt:otherinfo' => 'Description~~',
-	'ConfigMgmt:dates' => 'Dates~~',
-	'Software:moreinfo' => 'Software specifics~~',
-	'Phone:moreinfo' => 'Phone specifics~~',
-	'Server:baseinfo' => 'Általános információ',
-	'Server:Date' => 'Dátumok',
-	'Server:moreinfo' => 'További információ',
-	'Server:otherinfo' => 'Description~~',
-	'Server:power' => 'Áramforrás',
-	'Class:Subnet/Tab:IPUsage' => 'IP felhasználás',
-	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not~~',
-	'Class:Subnet/Tab:IPUsage-explain' => 'A hálózati csatolók a következő tartományba esnek: <em>%1$s</em> - <em>%2$s</em>',
-	'Class:Subnet/Tab:FreeIPs' => 'Szabad IP címek',
-	'Class:Subnet/Tab:FreeIPs-count' => 'Szabad IP címek: %1$s',
-	'Class:Subnet/Tab:FreeIPs-explain' => '10 szabad IP cím kivonata',
-	'Class:Document:PreviewTab' => 'Előnézet',
-]);
-
-//
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:lnkGroupToCI/Attribute:reason+' => '~~',
 	'Class:lnkDocumentToFunctionalCI' => 'Dokumentum / Funkcionális CI',
-	'Class:lnkDocumentToFunctionalCI+' => '~~',
+	'Class:lnkDocumentToFunctionalCI+' => 'Link used when a Document is applicable to a Functional CI.~~',
 	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Funkcionális CI',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '~~',
@@ -1568,45 +1007,57 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Dokumentum név',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'ConfigMgmt:otherinfo' => 'Description~~',
+	'ConfigMgmt:dates' => 'Dates~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
+	'Server:baseinfo' => 'Általános információ',
+	'Server:moreinfo' => 'További információ',
+	'Server:Date' => 'Dátumok',
+	'Server:otherinfo' => 'Description~~',
+	'Server:power' => 'Áramforrás',
+	'Class:Subnet/Tab:IPUsage' => 'IP felhasználás',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not~~',
+	'Class:Subnet/Tab:IPUsage-explain' => 'A hálózati csatolók a következő tartományba esnek: <em>%1$s</em> - <em>%2$s</em>',
+	'Class:Subnet/Tab:FreeIPs' => 'Szabad IP címek',
+	'Class:Subnet/Tab:FreeIPs-count' => 'Szabad IP címek: %1$s',
+	'Class:Subnet/Tab:FreeIPs-explain' => '10 szabad IP cím kivonata',
+	'Class:Document:PreviewTab' => 'Előnézet',
 	'Menu:Application' => 'Alkalmazások',
-	'Menu:Application+' => '',
+	'Menu:Application+' => 'All applications~~',
 	'Menu:DBServer' => 'Adatbázis szerverek',
-	'Menu:DBServer+' => '',
+	'Menu:DBServer+' => 'Database servers~~',
 	'Menu:BusinessProcess' => 'Üzleti folyamatok',
-	'Menu:BusinessProcess+' => '',
+	'Menu:BusinessProcess+' => 'All business processes~~',
 	'Menu:ApplicationSolution' => 'Alkalmazásmegoldások',
-	'Menu:ApplicationSolution+' => '',
+	'Menu:ApplicationSolution+' => 'All application solutions~~',
 	'Menu:ConfigManagementSoftware' => 'Alkalmazás kezelés',
 	'Menu:Licence' => 'Licencek',
-	'Menu:Licence+' => '',
+	'Menu:Licence+' => 'All licenses~~',
 	'Menu:Patch' => 'Szervizcsomagok',
-	'Menu:Patch+' => '',
+	'Menu:Patch+' => 'All patches~~',
 	'Menu:ApplicationInstance' => 'Telepített szoftverek',
-	'Menu:ApplicationInstance+' => '',
+	'Menu:ApplicationInstance+' => 'Applications and database servers~~',
 	'Menu:ConfigManagementHardware' => 'Infrastruktúra kezelés',
 	'Menu:Subnet' => 'Alhálózatok',
-	'Menu:Subnet+' => '',
+	'Menu:Subnet+' => 'All subnets~~',
 	'Menu:NetworkDevice' => 'Hálózati eszközök',
-	'Menu:NetworkDevice+' => '',
+	'Menu:NetworkDevice+' => 'All network devices~~',
 	'Menu:Server' => 'Szerverek',
-	'Menu:Server+' => '',
+	'Menu:Server+' => 'All servers~~',
 	'Menu:Printer' => 'Nyomtatók',
-	'Menu:Printer+' => '',
+	'Menu:Printer+' => 'All printers~~',
 	'Menu:MobilePhone' => 'Mobiltelefonok',
-	'Menu:MobilePhone+' => '',
+	'Menu:MobilePhone+' => 'All mobile phones~~',
 	'Menu:PC' => 'PC-k',
-	'Menu:PC+' => '',
+	'Menu:PC+' => 'All Personal computers~~',
 	'Menu:NewCI' => 'Új konfigurációs elem (CI)',
 	'Menu:NewCI+' => 'Eszköz, szoftver, licenc, stb.',
 	'Menu:SearchCIs' => 'CI keresés',
-	'Menu:SearchCIs+' => '',
+	'Menu:SearchCIs+' => 'Search for CIs~~',
 	'Menu:ConfigManagement:Devices' => 'Eszközök',
 	'Menu:ConfigManagement:AllDevices' => 'Infrastruktúra',
 	'Menu:ConfigManagement:virtualization' => 'Virtualizáció',
@@ -1614,20 +1065,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:ConfigManagement:SWAndApps' => 'Szoftverek és alkalmazások',
 	'Menu:ConfigManagement:Misc' => 'Egyéb',
 	'Menu:Group' => 'CI csoportok',
-	'Menu:Group+' => '',
+	'Menu:Group+' => 'Groups of CIs~~',
 	'Menu:OSVersion' => 'OS verziók',
-	'Menu:OSVersion+' => '',
+	'Menu:OSVersion+' => '~~',
 	'Menu:Software' => 'Szoftverkatalógus',
 	'Menu:Software+' => 'Szoftverek',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
-	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
-	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 ]);

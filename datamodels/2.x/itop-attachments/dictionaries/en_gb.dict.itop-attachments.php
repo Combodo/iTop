@@ -1,10 +1,14 @@
 <?php
-
 /**
- * @copyright Copyright (C) 2024 Combodo SAS
- * @license https://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-
+/**
+ *
+ */
 Dict::Add('EN GB', 'British English', 'British English', [
 	'Attachments:TabTitle_Count' => 'Attachments (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Attachments',
@@ -26,30 +30,20 @@ or ask your '.ITOP_APPLICATION_SHORT.' administrator if the '.ITOP_APPLICATION_S
 	'Attachments:Render:Icons' => 'Display as icons',
 	'Attachments:Render:Table' => 'Display as list',
 	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area',
-]);
-
-//
-// Class: Attachment
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Attachment' => 'Attachment',
-	'Class:Attachment+' => '',
+	'Class:Attachment+' => 'File: text or image, linked to a single object. It can\'t be modified, only deleted. Attachment can\'t be created outside of its object edition.~~',
 	'Class:Attachment/Attribute:expire' => 'Expire',
-	'Class:Attachment/Attribute:expire+' => '',
+	'Class:Attachment/Attribute:expire+' => '~~',
 	'Class:Attachment/Attribute:temp_id' => 'Temporary id',
-	'Class:Attachment/Attribute:temp_id+' => '',
+	'Class:Attachment/Attribute:temp_id+' => '~~',
 	'Class:Attachment/Attribute:item_class' => 'Item class',
-	'Class:Attachment/Attribute:item_class+' => '',
+	'Class:Attachment/Attribute:item_class+' => '~~',
 	'Class:Attachment/Attribute:item_id' => 'Item',
-	'Class:Attachment/Attribute:item_id+' => '',
+	'Class:Attachment/Attribute:item_id+' => '~~',
 	'Class:Attachment/Attribute:item_org_id' => 'Item organisation',
-	'Class:Attachment/Attribute:item_org_id+' => '',
+	'Class:Attachment/Attribute:item_org_id+' => '~~',
 	'Class:Attachment/Attribute:contents' => 'Contents',
-	'Class:Attachment/Attribute:contents+' => '',
-]);
-
-Dict::Add('EN GB', 'British English', 'British English', [
+	'Class:Attachment/Attribute:contents+' => '~~',
 	'Attachments:File:Thumbnail' => 'Icon',
 	'Attachments:File:Name' => 'File name',
 	'Attachments:File:Date' => 'Upload date',
@@ -57,25 +51,21 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Attachments:File:Size' => 'Size',
 	'Attachments:File:MimeType' => 'Type',
 	'Attachments:File:DownloadsCount' => 'Downloads',
-]);
-//
-// Class: Attachment
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Attachment/Attribute:creation_date' => 'Creation date',
-	'Class:Attachment/Attribute:creation_date+' => '',
+	'Class:Attachment/Attribute:creation_date+' => '~~',
 	'Class:Attachment/Attribute:user_id' => 'User id',
-	'Class:Attachment/Attribute:user_id+' => '',
+	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => 'Contact id',
-	'Class:Attachment/Attribute:contact_id+' => '',
-]);
-
-//
-// Class: TriggerOnAttachmentDownload
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
+	'Class:Attachment/Attribute:contact_id+' => '~~',
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class',
+	'Class:TriggerOnAttachmentCreate' => 'Trigger (on object\'s attachment creation)~~',
+	'Class:TriggerOnAttachmentCreate+' => 'Trigger on object\'s attachment creation~~',
+	'Class:TriggerOnAttachmentDelete' => 'Trigger (on object\'s attachment deletion)~~',
+	'Class:TriggerOnAttachmentDelete+' => 'Trigger on object\'s attachment deletion~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
+	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email' => 'Add deleted file in email~~',
+	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email+' => 'If checked, the deleted file will be automatically attached to the email when an email action is triggered~~',
+	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',
 ]);

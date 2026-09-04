@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -23,5 +22,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s profielfoto',
 	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Open gebruikersmenu',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu\'s',
-
 ]);

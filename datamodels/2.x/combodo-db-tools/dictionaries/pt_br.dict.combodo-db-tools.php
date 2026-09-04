@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -44,17 +43,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'DBAnalyzer-Fetch-Count-Error' => 'Erro na busca em `%1$s`, %2$d registros buscados / %3$d contados',
 	'DBAnalyzer-Integrity-FinalClass' => 'Campo `%2$s`.`%1$s` precisa ter o mesmo valor que `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Campo `%2$s`.`%1$s` precisa conter uma classe válida',
-]);
-
-// Database Info
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'DBTools:DatabaseInfo' => 'Informação do banco de dados',
 	'DBTools:Base' => 'Banco',
 	'DBTools:Size' => 'Tamanho',
-]);
-
-// Lost attachments
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'DBTools:LostAttachments' => 'Anexos perdidos',
 	'DBTools:LostAttachments:Disclaimer' => 'Aqui você procurará no seu banco de dados por anexos perdidos. Isto NÃO é uma ferramenta de recuperação de dados, pois não busca dados apagados',
 	'DBTools:LostAttachments:Button:Analyze' => 'Analisar',

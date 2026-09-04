@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -27,13 +26,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Erlaubter prozentualer Anteil ungültiger Objekte, bei dem das Ergebnis noch als Warnung (orange) dargestellt wird.',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domänen',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domänen, die dieser Kategorie zugeordnet sind',
-]);
-
-//
-// Class: AuditRule
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:AuditRule' => 'Audit-Regel',
 	'Class:AuditRule+' => 'Eine Audit-Regel entspricht einer einzelnen Prüfung innerhalb einer Audit-Kategorie. Sie wird auf den Objektbereich angewendet, den die Audit-Kategorie definiert',
 	'Class:AuditRule/Attribute:name' => 'Regelname',
@@ -56,33 +48,19 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:AuditRule/Attribute:category_name+' => 'Kategoriename für diese Regel',
 	'Class:AuditRule/Attribute:contact_id' => 'Verantwortlich',
 	'Class:AuditRule/Attribute:contact_id+' => 'Team oder Person, die für die Behebung der von dieser Regel erkannten Fehler zuständig ist',
-]);
-
-//
-// Class: AuditDomain
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:AuditDomain' => 'Audit-Domäne',
 	'Class:AuditDomain+' => 'Audit-Domänen fassen Audit-Kategorien zusammen.
 Eine Domäne entspricht üblicherweise der Zuständigkeit dafür, Fehler zu prüfen und zu beheben',
 	'Class:AuditDomain/Attribute:name' => 'Name',
 	'Class:AuditDomain/Attribute:name+' => 'Eine Aufteilung des Audits danach, wer für die Behebung zuständig oder daran interessiert ist',
 	'Class:AuditDomain/Attribute:description' => 'Beschreibung',
-	'Class:AuditDomain/Attribute:description+' => '',
+	'Class:AuditDomain/Attribute:description+' => '~~',
 	'Class:AuditDomain/Attribute:icon' => 'Icon',
-	'Class:AuditDomain/Attribute:icon+' => '',
+	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Audit-Kategorien',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Zugeordnete Audit-Kategorien. Beim Audit einer Domäne werden genau diese zugeordneten Audit-Kategorien geprüft und keine weiteren.',
-]);
-
-//
-// Class: lnkAuditCategoryToAuditDomain
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Verknüpfung Audit-Kategorie / Audit-Domäne',
-	'Class:lnkAuditCategoryToAuditDomain+' => '',
+	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Audit-Kategorie',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id+' => 'Audit-Kategorie',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name' => 'Audit-Kategorienname',
@@ -91,13 +69,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit-Domäne',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Audit-Domänenname',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Name der Audit-Domäne',
-]);
-
-//
-// Class: QueryOQL
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Query' => 'Query',
 	'Class:Query+' => 'Eine Query ist eine Datenmenge, die dynamisch definiert wird',
 	'Class:Query/Attribute:name' => 'Name',
@@ -117,7 +88,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Query/Attribute:export_last_user_contact' => 'Kontakt',
 	'Class:Query/Attribute:export_last_user_contact+' => 'Der Kontakt, der den letzten Export durchgeführt hat',
 	'Class:Query/Attribute:usages' => 'Verwendungszwecke',
-		'Class:Query/Attribute:usages+' => 'Legen Sie die möglichen Verwendungszwecke dieser Query fest.
+	'Class:Query/Attribute:usages+' => 'Legen Sie die möglichen Verwendungszwecke dieser Query fest.
  - Die Kennzeichnung "Referenz für KI" setzt voraus, dass die Beschreibung sehr eindeutig und OQL-konform ist. Sie kann als Beispiel für das Erstellen von OQL-Abfragen durch eine KI dienen.
  - Die Kennzeichnung "Benachrichtigung" setzt voraus, dass die Klasse der zurückgegebenen Objekte genau ein Feld vom Typ E-Mail besitzt.
  - Die Kennzeichnung "Dashlet" setzt voraus, dass die OQL-Abfrage Objekte einer einzigen Klasse zurückgibt.',
@@ -136,18 +107,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:QueryOQL+' => 'Eine in der "Object Query Language" geschriebene Abfrage',
 	'Class:QueryOQL/Attribute:oql' => 'Ausdruck',
 	'Class:QueryOQL/Attribute:oql+' => 'OQL-Abfrage',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'addon/userrights'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: User
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:User' => 'Benutzer',
 	'Class:User+' => 'Benutzer-Login',
 	'Class:User/Attribute:finalclass' => 'Typ des Benutzerkontos',
@@ -195,13 +154,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:User/Warning:NoContactHasImpact' => 'Vorsicht: Für diesen Benutzer ist keine Person definiert. Dadurch wird der Zugriff auf Portale, Benachrichtigungen und andere Auswirkungen im Back-Office verhindert',
 	'Class:UserInternal' => 'Interner Benutzer',
 	'Class:UserInternal+' => 'Benutzer, der innerhalb von '.ITOP_APPLICATION_SHORT.' definiert wird',
-]);
-
-//
-// Class: URP_Profiles
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_Profiles' => 'Profile',
 	'Class:URP_Profiles+' => 'Benutzerprofile',
 	'Class:URP_Profiles/Attribute:name' => 'Name',
@@ -210,13 +162,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_Profiles/Attribute:description+' => 'Kurze Beschreibung',
 	'Class:URP_Profiles/Attribute:user_list' => 'Benutzer',
 	'Class:URP_Profiles/Attribute:user_list+' => 'Personen, die diese Rolle haben',
-]);
-
-//
-// Class: URP_Dimensions
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_Dimensions' => 'Dimension',
 	'Class:URP_Dimensions+' => 'Anwendungsdimension (Festlegen von Silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Name',
@@ -225,13 +170,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_Dimensions/Attribute:description+' => 'Kurzbeschreibung',
 	'Class:URP_Dimensions/Attribute:type' => 'Typ',
 	'Class:URP_Dimensions/Attribute:type+' => 'Klassenname oder Datentyp (Abbildungseinheit)',
-]);
-
-//
-// Class: URP_UserProfile
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_UserProfile' => 'Benutzerprofil',
 	'Class:URP_UserProfile+' => 'Benutzerprofil',
 	'Class:URP_UserProfile/Name' => 'Verbindung zwischen %1$s und %2$s',
@@ -245,13 +183,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_UserProfile/Attribute:profile+' => 'Profil-Name',
 	'Class:URP_UserProfile/Attribute:reason' => 'Begründung',
 	'Class:URP_UserProfile/Attribute:reason+' => 'Erklären Sie, warum diese Person diese Rolle haben soll',
-]);
-
-//
-// Class: URP_UserOrg
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_UserOrg' => 'Benutzerorganisationen',
 	'Class:URP_UserOrg+' => 'Zulässige Organisationen',
 	'Class:URP_UserOrg/Name' => 'Verbindung zwischen %1$s und %2$s',
@@ -265,13 +196,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Zugelassene Organisation',
 	'Class:URP_UserOrg/Attribute:reason' => 'Begründung',
 	'Class:URP_UserOrg/Attribute:reason+' => 'Begründet die Berechtigung, die Daten dieser Organisation zu sehen',
-]);
-
-//
-// Class: URP_ProfileProjection
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_ProfileProjection' => 'Profilabbildung',
 	'Class:URP_ProfileProjection+' => 'Profilabbildungen',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimension',
@@ -286,13 +210,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL-Ausdruck (Benutzung von $user) | konstant | | + Attribut-Code',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Ziel des Attribut-Codes (optional)',
-]);
-
-//
-// Class: URP_ClassProjection
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_ClassProjection' => 'Klassenabbildung',
 	'Class:URP_ClassProjection+' => 'Klassenabbildungen',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimension',
@@ -305,13 +222,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL-Audsdruck (Benutzung von $this) | konstant | | + Attribut-Code',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Ziel des Attribut-Codes (optional)',
-]);
-
-//
-// Class: URP_ActionGrant
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_ActionGrant' => 'Autorisierungen von Aktionen',
 	'Class:URP_ActionGrant+' => 'Autorisierungen auf Klassen',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profil',
@@ -328,13 +238,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'Nein',
 	'Class:URP_ActionGrant/Attribute:action' => 'Aktion',
 	'Class:URP_ActionGrant/Attribute:action+' => 'Operationen, die auf die gegebene Klasse ausgeführt werden sollen',
-]);
-
-//
-// Class: URP_StimulusGrant
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_StimulusGrant' => 'Autorisierung des Stimulus',
 	'Class:URP_StimulusGrant+' => 'Autorisierungen auf den Stimulus des Lebenszyklus des Objektes',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profil',
@@ -351,39 +254,20 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'Nein',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'Stimulus-Code',
-]);
-
-//
-// Class: URP_AttributeGrant
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:URP_AttributeGrant' => 'Autorisierung des Attribute',
 	'Class:URP_AttributeGrant+' => 'Autorisierungen auf Attributebene',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Aktion gewähren',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'Aktion gewähren',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribut',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Attribut-Code',
-]);
-
-//
-// Class: UserDashboard
-//
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:UserDashboard' => 'Benutzer Dashboard',
-	'Class:UserDashboard+' => '',
+	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'Benutzer',
-	'Class:UserDashboard/Attribute:user_id+' => '',
+	'Class:UserDashboard/Attribute:user_id+' => '~~',
 	'Class:UserDashboard/Attribute:menu_code' => 'Menü-Code',
-	'Class:UserDashboard/Attribute:menu_code+' => '',
+	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Inhalt',
-	'Class:UserDashboard/Attribute:contents+' => '',
-]);
-
-//
-// Duplicated into itop-welcome-itil ( will be removed from here...)
-//
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:UserDashboard/Attribute:contents+' => '~~',
 	'Menu:WelcomeMenu' => 'Willkommen',
 	'Menu:WelcomeMenu+' => 'Willkommen bei '.ITOP_APPLICATION_SHORT,
 	'Menu:WelcomeMenuPage' => 'Willkommen',
@@ -400,16 +284,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:NotificationsMenu' => 'Benachrichtigungen',
 	'Menu:NotificationsMenu+' => 'Einstellungen der Benachrichtigungen',
 	'Menu:MyShortcuts' => 'Meine Shortcuts',
-	'Menu:Notifications:Title' => 'Audit-Kategorien',
 	'Menu:DataAdministration' => 'Data Management',
 	'Menu:DataAdministration+' => 'Data Management',
-]);
-
-//
-// String from the User Interface: menu, messages, buttons, etc...
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'BooleanLabel:yes' => 'Ja',
 	'BooleanLabel:no' => 'Nein',
 	'UI:WelcomeMenu:Title' => 'Willkommen bei '.ITOP_APPLICATION_SHORT,
@@ -507,6 +383,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Error:MaintenanceMode' => 'Die Anwendung befindet sich derzeit im Wartungsmodus.',
 	'UI:Error:MaintenanceTitle' => 'Wartung',
 	'UI:Error:InvalidToken' => 'Die aktuelle Sitzung ist ungültig. Bitte aktualisieren Sie die Seite und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, melden Sie sich bitte ab und wieder an.',
+	'UI:Error:TwigController' => 'Interner Fehler im Formular-Controller',
 	'UI:Error:SMTP:UnknownVendor' => 'Der oAuth-SMTP-Provider %1$s existiert nicht (email_transport_smtp.oauth.provider)',
 	'UI:GroupBy:Count' => 'Anzahl',
 	'UI:GroupBy:Count+' => 'Anzahl der Elemente',
@@ -668,6 +545,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:CSVReport-Row-Issue-Reconciliation' => 'Abgleich fehlgeschlagen',
 	'UI:CSVReport-Row-Issue-Ambiguous' => 'Doppeldeutiger Abgleich (Reconcilation)',
 	'UI:CSVReport-Row-Issue-Internal' => 'Interner Fehler: %1$s, %2$s',
+	'UI:CSVReport-Value-Issue-NoValue' => 'Kein Wert',
+	'UI:CSVReport-Row-Issue-NbField' => 'Unerwartete Anzahl an Spalten (gefunden: %1$s, erwartet: %2$s)',
 	'UI:CSVReport-Icon-Unchanged' => 'Unverändert',
 	'UI:CSVReport-Icon-Modified' => 'Modifiziert',
 	'UI:CSVReport-Icon-Missing' => 'Fehlend',
@@ -700,7 +579,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Audit:Interactive:Domain:BreadCrumb' => '%1$s',
 	'UI:Audit:Interactive:Domain:BreadCrumb+' => 'Audit für Domäne: %1$s',
 	'UI:Audit:Interactive:Selection:Title' => 'Auswahl eines Audits',
-	'UI:Audit:InteractiveAudit' => 'Interaktives Audit',
 	'UI:Audit:Interactive:Selection:SubTitle' => 'Wählen Sie eine Domäne, um die Ergebnisse auf diese Domäne zu beschränken, oder wählen Sie "Alle Kategorien", um einen vollständigen Audit zu erhalten (kann einige Zeit dauern oder sogar fehlschlagen, wenn zu viele Daten zu prüfen sind)',
 	'UI:Audit:Interactive:Selection:BreadCrumb' => 'Auswahl',
 	'UI:Audit:Interactive:Selection:BreadCrumb+' => 'Auswahl eines Audits zur Durchführung',
@@ -871,7 +749,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Bitte bestätigen Sie, dass Sie die folgenden %1$d Objekte der Klasse %2$s löschen möchten.',
 	'UI:Delete:Confirm_Object' => 'Bitte bestätigen Sie, dass Sie %1$s löschen möchten.',
 	'UI:Delete:Confirm_Count_ObjectsOf_Class' => 'Bitte bestätigen Sie, dass Sie die folgenden %1$d Objekte der Klasse %2$s löschen möchten.',
-	'UI:WelcomeToITop' => 'Willkommen bei '.ITOP_APPLICATION_SHORT, 'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s Details',
+	'UI:WelcomeToITop' => 'Willkommen bei '.ITOP_APPLICATION_SHORT,
 	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - Details zu %2$s',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Fehler',
 	'UI:ObjectDoesNotExist' => 'Leider existiert dieses Objekt nicht oder Sie sind nicht berechtigt es einzusehen.',
@@ -906,8 +784,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:BulkDeleteTitle' => 'Wählen Sie die Objekte aus, die Sie löschen möchten:',
 	'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.'-Objekt wurde erstellt.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s erstellt.',
-	'UI:Toggle:CustomDashboard' => 'Angepasst',
-	'UI:Toggle:StandardDashboard' => 'Standard',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Anwenden von %1$s auf Objekt: %2$s in Status %3$s zu Zielstatus: %4$s.',
 	'UI:ObjectCouldNotBeWritten' => 'Das Objekt konnte nicht geschrieben werden: %1$s',
 	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - Fataler Fehler',
@@ -1175,7 +1051,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:ColumnsAndSortOrder' => 'Spalten und Sortierreihenfolge:',
 	'UI:UseDefaultSettings' => 'Verwende Default-Einstellungen',
 	'UI:UseSpecificSettings' => 'Verwende folgende Einstellungen:',
-	'UI:Display_X_ItemsPerPage_prefix' => '',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Display~~',
 	'UI:Display_X_ItemsPerPage_suffix' => 'Elemente pro Seite anzeigen',
 	'UI:UseSavetheSettings' => 'Einstellungen speichern',
 	'UI:OnlyForThisList' => 'Nur für diese Liste',
@@ -1190,7 +1066,6 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Dashboard:EditCustom' => 'Custom-Version anpassen',
 	'UI:Dashboard:CreateCustom' => 'Custom-Version anlegen',
 	'UI:Dashboard:DeleteCustom' => 'Custom-Version löschen',
-	'UI:Dashboard:Edit' => 'Diese Seite bearbeiten...',
 	'UI:Dashboard:RevertConfirm' => 'Alle gemachten Änderungen gehen verloren. Bitte bestätigen Sie, dass Sie dies so wünschen.',
 	'UI:ExportDashBoard' => 'In Datei exportieren',
 	'UI:ImportDashBoard' => 'Aus Datei importieren...',
@@ -1198,7 +1073,6 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:ImportDashboardText' => 'Wählen Sie eine Dashboard-Datei zum Import:',
 	'UI:Dashboard:Actions' => 'Dashboard-Aktionen',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'Dieses Dashboard zeigt Informationen an, die nicht die gerade stattfindenden Changes inkludieren.',
-	'UI:Dashboard:Revert' => 'Auf Originalversion zurücksetzen...',
 	'UI:DashletCreation:Title' => 'Neues Dashlet erzeugen',
 	'UI:DashletCreation:Dashboard' => 'Dashboard',
 	'UI:DashletCreation:DashletType' => 'Dashlet-Typ',
@@ -1245,6 +1119,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth' => 'Tag im Monat für %1$s',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (Stunde)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (Monat)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-Year' => '%1$s (Jahr)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (Wochentag)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (Wochentag)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Bitte wählen Sie das Feld, nach dem die Objekte gruppiert werden',
@@ -1343,9 +1218,6 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Class:ShortcutOQL+' => 'Short für eine OQL-Abfrage',
 	'Class:ShortcutOQL/Attribute:oql' => 'Query',
 	'Class:ShortcutOQL/Attribute:oql+' => 'OQL-Query, der die zu Suchenden Objekte beschreibt',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag Klasse',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Feld-Code',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Objektklasse',
 	'Class:ShortcutOQL/Attribute:auto_reload' => 'Automatischer Reload',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Deaktiviert',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Eigene Einstellung',
@@ -1517,12 +1389,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Search:Criteria:Raw:Filtered' => 'Gefiltert',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Gefiltert über %1$s',
 	'UI:StateChanged' => 'Status geändert',
-]);
-
-//
-// Expression to Natural language
-//
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'UI:AddSubTree' => 'Eintrag hinzufügen',
 	'Expression:Operator:AND' => ' UND ',
 	'Expression:Operator:OR' => ' ODER ',
 	'Expression:Operator:=' => ': ',
@@ -1535,12 +1402,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Expression:Unit:Long:MINUTE' => 'Minute(n)',
 	'Expression:Verb:NOW' => 'jetzt',
 	'Expression:Verb:ISNULL' => ': nicht definiert',
-]);
-
-//
-// iTop Newsroom menu
-//
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Newsroom:NoNewMessage' => 'Keine neue Nachricht',
 	'UI:Newsroom:XNewMessage' => '%1$s neue Nachrichten',
 	'UI:Newsroom:MarkAllAsRead' => 'Alle Nachrichten als gelesen markieren',
@@ -1555,9 +1416,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Newsroom:Priority:2:Tooltip' => 'Dringend',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Wichtig',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normal',
-]);
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:DataSources' => 'Datenquellen für die Synchronisation',
 	'Menu:DataSources+' => 'Alle Datenquellen für die Synchronisation',
 	'Menu:AuditCategories' => 'Audit-Kategorien',
@@ -1583,11 +1441,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:ConfigEditor' => 'Konfiguration',
 	'Menu:ConfigEditor+' => 'Konfigurationsdatei-Editor',
 	'Menu:Integrations' => 'Integrationen',
-	'Menu:Integrations+' => '',
-
-	'UI:Error:TwigController' => 'Interner Fehler im Formular-Controller',
-	'UI:CSVReport-Value-Issue-NoValue' => 'Kein Wert',
-	'UI:CSVReport-Row-Issue-NbField' => 'Unerwartete Anzahl an Spalten (gefunden: %1$s, erwartet: %2$s)',
-	'UI:DashletGroupBy:Prop-GroupBy:Select-Year' => '%1$s (Jahr)',
-	'UI:AddSubTree' => 'Eintrag hinzufügen',
+	'Menu:Integrations+' => '~~',
 ]);

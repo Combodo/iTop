@@ -1,27 +1,14 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ * 
  */
-
+/**
+ *
+ */
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:IncidentManagement' => '事件管理',
 	'Menu:IncidentManagement+' => '事件管理',
@@ -32,15 +19,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:SearchIncidents' => '搜索事件',
 	'Menu:SearchIncidents+' => '搜索事件',
 	'Menu:Incident:Shortcuts' => '快捷方式',
-	'Menu:Incident:Shortcuts+' => '',
+	'Menu:Incident:Shortcuts+' => '~~',
 	'Menu:Incident:MyIncidents' => '分配给我的事件',
 	'Menu:Incident:MyIncidents+' => '分配给我的事件',
 	'Menu:Incident:MySupportIncidents' => '由我报告的事件',
 	'Menu:Incident:MySupportIncidents+' => '由我发起且尚未关闭的的事件',
 	'Menu:Incident:EscalatedIncidents' => '已升级的事件',
-	'Menu:Incident:EscalatedIncidents+' => '',
+	'Menu:Incident:EscalatedIncidents+' => 'Incident which are under escalation, by status or hot flag~~',
 	'Menu:Incident:OpenIncidents' => '所有待处理的事件',
-	'Menu:Incident:OpenIncidents+' => '',
+	'Menu:Incident:OpenIncidents+' => 'All incidents that are not closed~~',
 	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => '最近两周的事件 (按优先级)',
 	'UI-IncidentManagementOverview-Last-14-days' => '最近两周的事件 (按数量)',
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => '待处理的事件 (按状态)',
@@ -48,51 +35,34 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => '待处理的事件 (按客户)',
 	'Class:Incident/Method:UpdateChildTicketWith:public_log' => '<i><u>来自父级事件的公共日志 %2$s:</u></i><br><br>',
 	'Class:Incident/Method:UpdateChildTicketWith:private_log' => '<i>来自父级事件的私有日志 [[Incident:%1$s]]:</i><br><br>',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Incident
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Incident' => '事件',
-	'Class:Incident+' => '',
+	'Class:Incident+' => 'Ticket type for managing malfunctions of a service or configuration elements~~',
 	'Class:Incident/Attribute:status' => '状态',
-	'Class:Incident/Attribute:status+' => '',
+	'Class:Incident/Attribute:status+' => '~~',
 	'Class:Incident/Attribute:status/Value:new' => '新建',
-	'Class:Incident/Attribute:status/Value:new+' => '',
+	'Class:Incident/Attribute:status/Value:new+' => '~~',
 	'Class:Incident/Attribute:status/Value:escalated_tto' => '已升级TTO',
-	'Class:Incident/Attribute:status/Value:escalated_tto+' => '',
+	'Class:Incident/Attribute:status/Value:escalated_tto+' => '~~',
 	'Class:Incident/Attribute:status/Value:assigned' => '已分配',
-	'Class:Incident/Attribute:status/Value:assigned+' => '',
+	'Class:Incident/Attribute:status/Value:assigned+' => '~~',
 	'Class:Incident/Attribute:status/Value:escalated_ttr' => '已升级TTR',
-	'Class:Incident/Attribute:status/Value:escalated_ttr+' => '',
+	'Class:Incident/Attribute:status/Value:escalated_ttr+' => '~~',
 	'Class:Incident/Attribute:status/Value:waiting_for_approval' => '等待批准',
-	'Class:Incident/Attribute:status/Value:waiting_for_approval+' => '',
+	'Class:Incident/Attribute:status/Value:waiting_for_approval+' => '~~',
 	'Class:Incident/Attribute:status/Value:pending' => '待定',
-	'Class:Incident/Attribute:status/Value:pending+' => '',
+	'Class:Incident/Attribute:status/Value:pending+' => '~~',
 	'Class:Incident/Attribute:status/Value:resolved' => '已解决',
-	'Class:Incident/Attribute:status/Value:resolved+' => '',
+	'Class:Incident/Attribute:status/Value:resolved+' => '~~',
 	'Class:Incident/Attribute:status/Value:closed' => '已关闭',
-	'Class:Incident/Attribute:status/Value:closed+' => '',
+	'Class:Incident/Attribute:status/Value:closed+' => '~~',
 	'Class:Incident/Attribute:impact' => '影响范围',
 	'Class:Incident/Attribute:impact+' => '事件的影响范围，多少用户受影响',
 	'Class:Incident/Attribute:impact/Value:1' => '部门',
-	'Class:Incident/Attribute:impact/Value:1+' => '',
+	'Class:Incident/Attribute:impact/Value:1+' => '~~',
 	'Class:Incident/Attribute:impact/Value:2' => '服务',
-	'Class:Incident/Attribute:impact/Value:2+' => '',
+	'Class:Incident/Attribute:impact/Value:2+' => '~~',
 	'Class:Incident/Attribute:impact/Value:3' => '个体',
-	'Class:Incident/Attribute:impact/Value:3+' => '',
+	'Class:Incident/Attribute:impact/Value:3+' => '~~',
 	'Class:Incident/Attribute:priority' => '优先级',
 	'Class:Incident/Attribute:priority+' => '哪个工单应该优先处理',
 	'Class:Incident/Attribute:priority/Value:1' => '紧急',
@@ -128,29 +98,29 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Incident/Attribute:origin/Value:portal' => '门户',
 	'Class:Incident/Attribute:origin/Value:portal+' => '门户',
 	'Class:Incident/Attribute:service_id' => '服务',
-	'Class:Incident/Attribute:service_id+' => '',
+	'Class:Incident/Attribute:service_id+' => '~~',
 	'Class:Incident/Attribute:service_name' => '服务名称',
-	'Class:Incident/Attribute:service_name+' => '',
+	'Class:Incident/Attribute:service_name+' => '~~',
 	'Class:Incident/Attribute:servicesubcategory_id' => '子服务',
-	'Class:Incident/Attribute:servicesubcategory_id+' => '',
+	'Class:Incident/Attribute:servicesubcategory_id+' => '~~',
 	'Class:Incident/Attribute:servicesubcategory_name' => '子服务名称',
-	'Class:Incident/Attribute:servicesubcategory_name+' => '',
+	'Class:Incident/Attribute:servicesubcategory_name+' => '~~',
 	'Class:Incident/Attribute:escalation_flag' => '升级标识',
-	'Class:Incident/Attribute:escalation_flag+' => '',
+	'Class:Incident/Attribute:escalation_flag+' => 'When set, the Ticket is added to the "Under escalation" menu~~',
 	'Class:Incident/Attribute:escalation_flag/Value:no' => '否',
 	'Class:Incident/Attribute:escalation_flag/Value:no+' => '否',
 	'Class:Incident/Attribute:escalation_flag/Value:yes' => '是',
 	'Class:Incident/Attribute:escalation_flag/Value:yes+' => '是',
 	'Class:Incident/Attribute:escalation_reason' => '升级原因',
-	'Class:Incident/Attribute:escalation_reason+' => '',
+	'Class:Incident/Attribute:escalation_reason+' => '~~',
 	'Class:Incident/Attribute:assignment_date' => '分配日期',
-	'Class:Incident/Attribute:assignment_date+' => '',
+	'Class:Incident/Attribute:assignment_date+' => '~~',
 	'Class:Incident/Attribute:resolution_date' => '解决日期',
-	'Class:Incident/Attribute:resolution_date+' => '',
+	'Class:Incident/Attribute:resolution_date+' => '~~',
 	'Class:Incident/Attribute:last_pending_date' => '最近待定日期',
-	'Class:Incident/Attribute:last_pending_date+' => '',
+	'Class:Incident/Attribute:last_pending_date+' => '~~',
 	'Class:Incident/Attribute:cumulatedpending' => '累计待定',
-	'Class:Incident/Attribute:cumulatedpending+' => '',
+	'Class:Incident/Attribute:cumulatedpending+' => '~~',
 	'Class:Incident/Attribute:tto' => 'TTO',
 	'Class:Incident/Attribute:tto+' => '响应时间',
 	'Class:Incident/Attribute:ttr' => 'TTR',
@@ -160,19 +130,19 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Incident/Attribute:ttr_time_spent' => 'TTR 耗时',
 	'Class:Incident/Attribute:ttr_time_spent+' => 'TTR 耗时',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'TTO截止日期',
-	'Class:Incident/Attribute:tto_escalation_deadline+' => '',
+	'Class:Incident/Attribute:tto_escalation_deadline+' => '~~',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA TTO合格',
-	'Class:Incident/Attribute:sla_tto_passed+' => '',
+	'Class:Incident/Attribute:sla_tto_passed+' => '~~',
 	'Class:Incident/Attribute:sla_tto_over' => 'SLA TTO超时',
-	'Class:Incident/Attribute:sla_tto_over+' => '',
+	'Class:Incident/Attribute:sla_tto_over+' => '~~',
 	'Class:Incident/Attribute:ttr_escalation_deadline' => 'TTR截止日期',
-	'Class:Incident/Attribute:ttr_escalation_deadline+' => '',
+	'Class:Incident/Attribute:ttr_escalation_deadline+' => '~~',
 	'Class:Incident/Attribute:sla_ttr_passed' => 'SLA TTR合格',
-	'Class:Incident/Attribute:sla_ttr_passed+' => '',
+	'Class:Incident/Attribute:sla_ttr_passed+' => '~~',
 	'Class:Incident/Attribute:sla_ttr_over' => 'SLA TTR超时',
-	'Class:Incident/Attribute:sla_ttr_over+' => '',
+	'Class:Incident/Attribute:sla_ttr_over+' => '~~',
 	'Class:Incident/Attribute:time_spent' => '耗时',
-	'Class:Incident/Attribute:time_spent+' => '',
+	'Class:Incident/Attribute:time_spent+' => '~~',
 	'Class:Incident/Attribute:resolution_code' => '解决方式',
 	'Class:Incident/Attribute:resolution_code+' => '为解决这个事件而做了什么?',
 	'Class:Incident/Attribute:resolution_code/Value:assistance' => '外部支持',
@@ -190,17 +160,21 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Incident/Attribute:resolution_code/Value:training' => '培训',
 	'Class:Incident/Attribute:resolution_code/Value:training+' => '培训',
 	'Class:Incident/Attribute:solution' => '解决方案',
-	'Class:Incident/Attribute:solution+' => '',
+	'Class:Incident/Attribute:solution+' => '~~',
 	'Class:Incident/Attribute:pending_reason' => '待定原因',
-	'Class:Incident/Attribute:pending_reason+' => '',
+	'Class:Incident/Attribute:pending_reason+' => '~~',
 	'Class:Incident/Attribute:parent_incident_id' => '父级事件',
-	'Class:Incident/Attribute:parent_incident_id+' => '',
+	'Class:Incident/Attribute:parent_incident_id+' => '~~',
 	'Class:Incident/Attribute:parent_incident_ref' => '事件编号',
-	'Class:Incident/Attribute:parent_incident_ref+' => '',
+	'Class:Incident/Attribute:parent_incident_ref+' => '~~',
+	'Class:Incident/Attribute:parent_request_id' => 'Parent request~~',
+	'Class:Incident/Attribute:parent_request_id+' => '~~',
+	'Class:Incident/Attribute:parent_request_ref' => 'Parent request ref~~',
+	'Class:Incident/Attribute:parent_request_ref+' => '~~',
 	'Class:Incident/Attribute:parent_change_id' => '父级变更',
-	'Class:Incident/Attribute:parent_change_id+' => '',
+	'Class:Incident/Attribute:parent_change_id+' => '~~',
 	'Class:Incident/Attribute:parent_change_ref' => '变更编号',
-	'Class:Incident/Attribute:parent_change_ref+' => '',
+	'Class:Incident/Attribute:parent_change_ref+' => '~~',
 	'Class:Incident/Attribute:parent_problem_id' => '父级问题',
 	'Class:Incident/Attribute:parent_problem_id+' => '~~',
 	'Class:Incident/Attribute:parent_problem_ref' => '父级问题编号',
@@ -210,9 +184,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Incident/Attribute:child_incidents_list' => '子事件',
 	'Class:Incident/Attribute:child_incidents_list+' => '此事件相关的所有衍生事件',
 	'Class:Incident/Attribute:public_log' => '公共日志',
-	'Class:Incident/Attribute:public_log+' => '',
+	'Class:Incident/Attribute:public_log+' => '~~',
 	'Class:Incident/Attribute:user_satisfaction' => '用户满意度',
-	'Class:Incident/Attribute:user_satisfaction+' => '',
+	'Class:Incident/Attribute:user_satisfaction+' => '~~',
 	'Class:Incident/Attribute:user_satisfaction/Value:1' => '非常满意',
 	'Class:Incident/Attribute:user_satisfaction/Value:1+' => '非常满意',
 	'Class:Incident/Attribute:user_satisfaction/Value:2' => '基本满意',
@@ -222,29 +196,28 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Incident/Attribute:user_satisfaction/Value:4' => '非常不满意',
 	'Class:Incident/Attribute:user_satisfaction/Value:4+' => '非常不满意',
 	'Class:Incident/Attribute:user_comment' => '用户评论',
-	'Class:Incident/Attribute:user_comment+' => '',
+	'Class:Incident/Attribute:user_comment+' => '~~',
 	'Class:Incident/Attribute:parent_incident_id_friendlyname' => '父级事件昵称',
-	'Class:Incident/Attribute:parent_incident_id_friendlyname+' => '',
+	'Class:Incident/Attribute:parent_incident_id_friendlyname+' => '~~',
 	'Class:Incident/Stimulus:ev_assign' => '分配',
-	'Class:Incident/Stimulus:ev_assign+' => '',
+	'Class:Incident/Stimulus:ev_assign+' => '~~',
 	'Class:Incident/Stimulus:ev_reassign' => '重新分配',
-	'Class:Incident/Stimulus:ev_reassign+' => '',
+	'Class:Incident/Stimulus:ev_reassign+' => '~~',
 	'Class:Incident/Stimulus:ev_pending' => '待定',
-	'Class:Incident/Stimulus:ev_pending+' => '',
+	'Class:Incident/Stimulus:ev_pending+' => '~~',
 	'Class:Incident/Stimulus:ev_timeout' => '超时',
-	'Class:Incident/Stimulus:ev_timeout+' => '',
+	'Class:Incident/Stimulus:ev_timeout+' => '~~',
 	'Class:Incident/Stimulus:ev_autoresolve' => '自动解决',
-	'Class:Incident/Stimulus:ev_autoresolve+' => '',
+	'Class:Incident/Stimulus:ev_autoresolve+' => '~~',
 	'Class:Incident/Stimulus:ev_autoclose' => '自动关闭',
-	'Class:Incident/Stimulus:ev_autoclose+' => '',
+	'Class:Incident/Stimulus:ev_autoclose+' => '~~',
 	'Class:Incident/Stimulus:ev_resolve' => '标记为已解决',
-	'Class:Incident/Stimulus:ev_resolve+' => '',
+	'Class:Incident/Stimulus:ev_resolve+' => '~~',
 	'Class:Incident/Stimulus:ev_close' => '关闭',
-	'Class:Incident/Stimulus:ev_close+' => '',
+	'Class:Incident/Stimulus:ev_close+' => '~~',
 	'Class:Incident/Stimulus:ev_reopen' => '重新打开',
-	'Class:Incident/Stimulus:ev_reopen+' => '',
+	'Class:Incident/Stimulus:ev_reopen+' => '~~',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => '无法分配父级事件给自己',
-
 	'Class:Incident/Method:ResolveChildTickets' => '解决子工单',
 	'Class:Incident/Method:ResolveChildTickets+' => '递归解决子工单 (自动解决), 并调整相关字段与父级工单保持一致: 服务, 团队, 办理人, 解决方案',
 	'Tickets:Related:OpenIncidents' => '待处理的事件',

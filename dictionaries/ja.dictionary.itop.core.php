@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -46,7 +45,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Core:AttributeDecimal+' => 'Decimal値 (負数あり)',
 	'Core:AttributeBoolean' => 'ブール型',
 	'Core:AttributeBoolean+' => 'Bool値',
-	'Core:AttributeBoolean/Value:null' => '',
+	'Core:AttributeBoolean/Value:null' => '~~',
 	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
 	'Core:AttributeBoolean/Value:no' => 'No~~',
 	'Core:AttributeArchiveFlag' => 'Archive flag~~',
@@ -54,9 +53,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
 	'Core:AttributeArchiveFlag/Value:no' => 'No~~',
 	'Core:AttributeArchiveFlag/Label' => 'Archived~~',
-	'Core:AttributeArchiveFlag/Label+' => '',
+	'Core:AttributeArchiveFlag/Label+' => '~~',
 	'Core:AttributeArchiveDate/Label' => 'Archive date~~',
-	'Core:AttributeArchiveDate/Label+' => '',
+	'Core:AttributeArchiveDate/Label+' => '~~',
 	'Core:AttributeObsolescenceFlag' => 'Obsolescence flag~~',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Yes~~',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'This object is excluded from the impact analysis, and hidden from search results~~',
@@ -133,7 +132,7 @@ Operators:<br/>
 	'Core:AttributeExternalKey' => '外部キー',
 	'Core:AttributeExternalKey+' => '外部(あるいはフォーリン)キー',
 	'Core:AttributeHierarchicalKey' => '階層的なキー',
-	'Core:AttributeHierarchicalKey+' => '',
+	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent~~',
 	'Core:AttributeExternalField' => '外部フィールド',
 	'Core:AttributeExternalField+' => '外部キーにマッピングされたフィールド',
 	'Core:AttributeURL' => 'URL',
@@ -151,25 +150,13 @@ Operators:<br/>
 	'Core:FriendlyName-Label' => 'Name',
 	'Core:FriendlyName-Description' => 'Friendly name',
 	'Core:AttributeTag' => 'Tags~~',
-	'Core:AttributeTag+' => '',
+	'Core:AttributeTag+' => '~~',
 	'Core:Context=REST/JSON' => 'REST~~',
 	'Core:Context=Synchro' => 'Synchro~~',
 	'Core:Context=Setup' => 'Setup~~',
 	'Core:Context=GUI:Console' => 'Console~~',
 	'Core:Context=CRON' => 'cron~~',
 	'Core:Context=GUI:Portal' => 'Portal~~',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'core/cmdb'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: CMDBChange
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChange' => '変更',
 	'Class:CMDBChange+' => '変更履歴',
 	'Class:CMDBChange/Attribute:date' => '日付',
@@ -184,13 +171,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
-]);
-
-//
-// Class: CMDBChangeOp
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChangeOp' => '変更操作',
 	'Class:CMDBChangeOp+' => '変更操作履歴',
 	'Class:CMDBChangeOp/Attribute:change' => '変更',
@@ -204,52 +184,21 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChangeOp/Attribute:objkey' => 'オブジェクトID',
 	'Class:CMDBChangeOp/Attribute:objkey+' => 'オブジェクトID',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'タイプ',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: CMDBChangeOpCreate
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:CMDBChangeOp/Attribute:finalclass+' => 'type of change which was performed~~',
 	'Class:CMDBChangeOpCreate' => 'オブジェクト作成',
 	'Class:CMDBChangeOpCreate+' => 'オブジェクト作成履歴',
-]);
-
-//
-// Class: CMDBChangeOpDelete
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChangeOpDelete' => 'オブジェクト削除',
 	'Class:CMDBChangeOpDelete+' => 'オブジェクト削除履歴',
-]);
-
-//
-// Class: CMDBChangeOpSetAttribute
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChangeOpSetAttribute' => 'オブジェクト更新',
 	'Class:CMDBChangeOpSetAttribute+' => 'オブジェクトプロパティの更新履歴',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => '属性',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => '更新プロパティのコード',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeScalar
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'プロパティ更新',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'オブジェクトのスカラープロパティの更新履歴',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => '変更前の値',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '属性の変更前の値',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => '新規の値',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => '属性の新規の値',
-]);
-// Used by CMDBChangeOp... & derived classes
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Change:ObjectCreated' => 'オブジェクトを生成しました',
 	'Change:ObjectDeleted' => 'オブジェクトを削除しました',
 	'Change:ObjectModified' => 'オブジェクトを修正しました',
@@ -266,35 +215,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Change:LinkSet:Added' => '追加されました %1$s',
 	'Change:LinkSet:Removed' => '削除されました %1$s',
 	'Change:LinkSet:Modified' => '修正されました %1$s',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeBlob
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'データ変更',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'データ変更履歴',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => '以前のデータ',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'この属性の以前の内容',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeText
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChangeOpSetAttributeText' => 'テキストの変更',
 	'Class:CMDBChangeOpSetAttributeText+' => 'テキストの変更履歴',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => '以前の内容',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'この属性の以前の内容',
-]);
-
-//
-// Class: Event
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Event' => 'ログイベント',
 	'Class:Event+' => 'アプリケーション内部イベント',
 	'Class:Event/Attribute:message' => 'メッセージ',
@@ -304,14 +232,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Event/Attribute:userinfo' => 'ユーザ情報',
 	'Class:Event/Attribute:userinfo+' => 'このイベントをトリガーしたアクションを行ったユーザ',
 	'Class:Event/Attribute:finalclass' => 'タイプ',
-	'Class:Event/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: EventNotification
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:Event/Attribute:finalclass+' => 'Name of the final class: specifies the sort of event which occurred~~',
 	'Class:EventNotification' => '通知イベント',
 	'Class:EventNotification+' => '送信された通知のトレース',
 	'Class:EventNotification/Attribute:trigger_id' => 'トリガー',
@@ -320,13 +241,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventNotification/Attribute:action_id+' => 'ユーザアカウント',
 	'Class:EventNotification/Attribute:object_id' => 'オブジェクトID',
 	'Class:EventNotification/Attribute:object_id+' => 'オブジェクトID(トリガーでクラスが定義済み?)',
-]);
-
-//
-// Class: EventNotificationEmail
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'メール送出イベント',
 	'Class:EventNotificationEmail+' => '送出されたメールのトレース',
 	'Class:EventNotificationEmail/Attribute:to' => 'TO',
@@ -342,14 +258,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventNotificationEmail/Attribute:body' => 'Body',
 	'Class:EventNotificationEmail/Attribute:body+' => '本文',
 	'Class:EventNotificationEmail/Attribute:attachments' => '添付',
-	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-]);
-
-//
-// Class: EventIssue
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:EventNotificationEmail/Attribute:attachments+' => '~~',
 	'Class:EventIssue' => '課題',
 	'Class:EventIssue+' => '課題(警告、エラー、etc)のトレース',
 	'Class:EventIssue/Attribute:issue' => '課題',
@@ -366,13 +275,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventIssue/Attribute:callstack+' => 'スタックをコールする',
 	'Class:EventIssue/Attribute:data' => 'データ',
 	'Class:EventIssue/Attribute:data+' => '追加情報',
-]);
-
-//
-// Class: EventWebService
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventWebService' => 'ウェブサービスイベント',
 	'Class:EventWebService+' => 'ウェブサービス呼出のトレース',
 	'Class:EventWebService/Attribute:verb' => '動作',
@@ -387,9 +289,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventWebService/Attribute:log_error+' => 'エラーログ結果',
 	'Class:EventWebService/Attribute:data' => 'データ',
 	'Class:EventWebService/Attribute:data+' => '結果データ',
-]);
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventRestService' => 'REST/JSON call~~',
 	'Class:EventRestService+' => 'Trace of a REST/JSON service call~~',
 	'Class:EventRestService/Attribute:operation' => 'Operation~~',
@@ -404,13 +303,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP response (json)~~',
 	'Class:EventRestService/Attribute:provider' => 'Provider~~',
 	'Class:EventRestService/Attribute:provider+' => 'PHP class implementing the expected operation~~',
-]);
-
-//
-// Class: EventLoginUsage
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventLoginUsage' => 'ログイン方法',
 	'Class:EventLoginUsage+' => 'アプリケーションへ接続します。',
 	'Class:EventLoginUsage/Attribute:user_id' => 'ログイン',
@@ -419,13 +311,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventLoginUsage/Attribute:contact_name+' => 'ユーザ名',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'ユーザのEmail',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'ユーザの電子メールアドレス',
-]);
-
-//
-// Class: EventNotificationNewsroom
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventNotificationNewsroom' => 'News sent~~',
 	'Class:EventNotificationNewsroom+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:title' => 'Title~~',
@@ -454,20 +339,15 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventNotificationNewsroom/Attribute:read_date+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contact~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '~~',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Class:Action' => 'カスタムアクション',
 	'Class:Action+' => 'ユーザ定義アクション',
 	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
 	'Class:Action/Attribute:name' => '名前',
-	'Class:Action/Attribute:name+' => '',
+	'Class:Action/Attribute:name+' => 'Any value that is meaningful to distinguish this action from the others~~',
 	'Class:Action/Attribute:description' => '説明',
-	'Class:Action/Attribute:description+' => '',
+	'Class:Action/Attribute:description+' => 'A longer explanation about the purpose of this action. For information only.~~',
 	'Class:Action/Attribute:status' => '状態',
 	'Class:Action/Attribute:status+' => '稼働中、あるいは?',
 	'Class:Action/Attribute:status/Value:test' => 'テスト中',
@@ -490,24 +370,22 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Action:last_executions_tab_panel_title' => 'Executions of this action (%1$s)~~',
 	'Action:last_executions_tab_limit_days' => 'past %1$s days~~',
 	'Action:last_executions_tab_limit_none' => 'no limit~~',
-]);
-
-//
-// Class: ActionNotification
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ActionNotification' => '通知',
 	'Class:ActionNotification+' => '通知(要約)',
-]);
-
-//
-// Class: ActionEmail
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:ActionNotification/Attribute:language' => 'Language~~',
+	'Class:ActionNotification/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:lnkActionNotificationToContact' => 'Link ActionNotification / Contact~~',
+	'Class:lnkActionNotificationToContact+' => 'Contact subscription to Notification Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Contact~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Contact who subscribed (or not) to the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'The notification that the contact received at least once, and to which he can subscribe or unsubscribe~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Trigger~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'The trigger that fired the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Subscribed~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification~~',
 	'Class:ActionEmail' => 'メール通知',
-	'Class:ActionEmail+' => '',
+	'Class:ActionEmail+' => '~~',
 	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: 
 - Being tested: just the Test recipient, 
 - In production: all (To, cc and Bcc) 
@@ -560,13 +438,6 @@ If omitted the From (label) is used.~~',
 	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
 	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
 	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
-]);
-
-//
-// Class: ActionNewsroom
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'ActionNewsroom:trigger' => 'Trigger~~',
 	'ActionNewsroom:content' => 'Message~~',
 	'ActionNewsroom:settings' => 'Settings~~',
@@ -601,13 +472,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ActionNewsroom/Attribute:recipients+' => 'An OQL query returning Contact objects~~',
 	'Class:ActionNewsroom/Attribute:url' => 'URL~~',
 	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.~~',
-]);
-
-//
-// Class: Trigger
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Trigger' => 'トリガー',
 	'Class:Trigger+' => 'カスタムイベントハンドラー',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
@@ -626,149 +490,59 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow complete unsubscription~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel (News or Email)~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Deny unsubscription~~',
-]);
-
-//
-// Class: TriggerOnObject
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnObject' => 'トリガー(クラス依存)',
 	'Class:TriggerOnObject+' => 'オブジェクトの指定されたクラスのトリガー',
 	'Class:TriggerOnObject/Attribute:target_class' => 'ターゲットクラス',
-	'Class:TriggerOnObject/Attribute:target_class+' => '',
+	'Class:TriggerOnObject/Attribute:target_class+' => 'Objects in this class will activate the trigger~~',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
 	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
 	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class "%1$s"~~',
-]);
-
-//
-// Class: TriggerOnPortalUpdate
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnPortalUpdate' => 'トリガー（ポータルから更新された時）',
 	'Class:TriggerOnPortalUpdate+' => 'エンドユーザがポータルから更新した場合のトリガー',
-]);
-
-//
-// Class: TriggerOnStateChange
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnStateChange' => '(状態変化の)トリガー',
 	'Class:TriggerOnStateChange+' => 'オブジェクトの状態変化のトリガー',
 	'Class:TriggerOnStateChange/Attribute:state' => '状態',
 	'Class:TriggerOnStateChange/Attribute:state+' => '状態',
-]);
-
-//
-// Class: TriggerOnStateEnter
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnStateEnter' => '入状態トリガー',
 	'Class:TriggerOnStateEnter+' => 'オブジェクトの状態へ入る変化（エンター,on entering a state）時のトリガー',
-]);
-
-//
-// Class: TriggerOnStateLeave
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnStateLeave' => '出状態トリガー',
 	'Class:TriggerOnStateLeave+' => 'オブジェクトの状態から出る変化（リーブ,on leaving a state）時のトリガー',
-]);
-
-//
-// Class: TriggerOnObjectCreate
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnObjectCreate' => 'オブジェクト作成トリガー',
 	'Class:TriggerOnObjectCreate+' => '指定されたクラスの(子クラスの)オブジェクト作成時のトリガ',
-]);
-
-//
-// Class: TriggerOnObjectDelete
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)~~',
 	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
-]);
-
-//
-// Class: TriggerOnObjectUpdate
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'This filter is computed after the object update in database. It restricts the objects which can trigger the actions~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
-]);
-
-//
-// Class: TriggerOnObjectMention
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
 	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
-]);
-
-//
-// Class: TriggerOnAttributeBlobDownload
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
-]);
-
-//
-// Class: TriggerOnThresholdReached
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnThresholdReached' => 'トリガー (on threshold)',
 	'Class:TriggerOnThresholdReached+' => 'トリガー (on Stop-Watch threshold reached)',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'ストップウオッチ',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '~~',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'しきい値',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-]);
-
-//
-// Class: lnkTriggerAction
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '~~',
 	'Class:lnkTriggerAction' => 'トリガ/アクション',
 	'Class:lnkTriggerAction+' => 'トリガとアクション間のリンク',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'アクション',
 	'Class:lnkTriggerAction/Attribute:action_id+' => '実行されるアクション',
 	'Class:lnkTriggerAction/Attribute:action_name' => 'アクション',
-	'Class:lnkTriggerAction/Attribute:action_name+' => '',
+	'Class:lnkTriggerAction/Attribute:action_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_id' => 'トリガ',
-	'Class:lnkTriggerAction/Attribute:trigger_id+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_id+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_name' => 'トリガ',
-	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:order' => '順序',
 	'Class:lnkTriggerAction/Attribute:order+' => 'アクション実行順序',
-]);
-
-//
-// Synchro Data Source
-//
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:SynchroDataSource' => '同期データソース',
 	'Class:SynchroDataSource/Attribute:name' => '名前',
 	'Class:SynchroDataSource/Attribute:name+' => '名前',
@@ -974,38 +748,37 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:SynchroReplica/Attribute:status_last_warning' => '警告',
 	'Class:SynchroReplica/Attribute:info_creation_date' => '作成日',
 	'Class:SynchroReplica/Attribute:info_last_modified' => '最終修正日',
-	'Class:SynchroReplica/Action:delete+'        => 'Delete the replica but not the destination object. If the raw data corresponding to this replica is still part of the source, it will be recreated during the next synchronization import.~~',
-	'Class:SynchroReplica/Action:unlink'         => 'Unlink~~',
-	'Class:SynchroReplica/Action:unlink+'        => 'Unlink replica from destination object. It will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
-	'Class:SynchroReplica/Action:unlinksynchro'  => 'Unlink & Synchronize~~',
+	'Class:SynchroReplica/Action:delete+' => 'Delete the replica but not the destination object. If the raw data corresponding to this replica is still part of the source, it will be recreated during the next synchronization import.~~',
+	'Class:SynchroReplica/Action:unlink' => 'Unlink~~',
+	'Class:SynchroReplica/Action:unlink+' => 'Unlink replica from destination object. It will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
+	'Class:SynchroReplica/Action:unlinksynchro' => 'Unlink & Synchronize~~',
 	'Class:SynchroReplica/Action:unlinksynchro+' => 'Force immediate resynchronization of the replica. This can change the destination id. Required after a Data Synchro change on attribute reconciliation flag or if reconciliation attributes were not locked, and you wish to retain the iTop objects modified since then, while recovering or recreating objects aligned with the source.~~',
-	'Class:SynchroReplica/Action:synchro'       => 'Synchronize~~',
-	'Class:SynchroReplica/Action:synchro+'      => 'Force immediate synchronization of the replica. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
-	'Class:SynchroReplica/Action:allowdelete'   => 'Allow deletion of destination~~',
-	'Class:SynchroReplica/Action:allowdelete+'  => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:denydelete'    => 'Deny deletion of destination~~',
-	'Class:SynchroReplica/Action:denydelete+'   => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:unlink_all'    => 'Unlink Replicas~~',
-	'Class:SynchroReplica/Action:unlink_all+'   => 'Unlink Replicas from their destination object. They will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
+	'Class:SynchroReplica/Action:synchro' => 'Synchronize~~',
+	'Class:SynchroReplica/Action:synchro+' => 'Force immediate synchronization of the replica. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
+	'Class:SynchroReplica/Action:allowdelete' => 'Allow deletion of destination~~',
+	'Class:SynchroReplica/Action:allowdelete+' => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
+	'Class:SynchroReplica/Action:denydelete' => 'Deny deletion of destination~~',
+	'Class:SynchroReplica/Action:denydelete+' => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
+	'Class:SynchroReplica/Action:unlink_all' => 'Unlink Replicas~~',
+	'Class:SynchroReplica/Action:unlink_all+' => 'Unlink Replicas from their destination object. They will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
 	'Class:SynchroReplica/Action:unlinksynchro_all' => 'Unlink & Synchronize Replicas~~',
 	'Class:SynchroReplica/Action:unlinksynchro_all+' => 'Force immediate resynchronization of the replicas. This can change their destination id. Required after a Data Synchro change on attribute reconciliation flag or if reconciliation attributes were not locked, and you wish to retain the iTop objects modified since then, while recovering or recreating objects aligned with the source.~~',
-	'Class:SynchroReplica/Action:synchro_all'      => 'Synchronize Replicas~~',
-	'Class:SynchroReplica/Action:synchro_all+'     => 'Force immediate synchronization of the replicas. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
-	'Class:SynchroReplica/Action:allowdelete_all'  => 'Allow deletion of destination objects~~',
+	'Class:SynchroReplica/Action:synchro_all' => 'Synchronize Replicas~~',
+	'Class:SynchroReplica/Action:synchro_all+' => 'Force immediate synchronization of the replicas. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
+	'Class:SynchroReplica/Action:allowdelete_all' => 'Allow deletion of destination objects~~',
 	'Class:SynchroReplica/Action:allowdelete_all+' => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:denydelete_all'   => 'Deny deletion of destination objects~~',
-	'Class:SynchroReplica/Action:denydelete_all+'  => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
-
-	'UI:UnlinkAllTabTitle'         => 'Unlink Replicas~~',
-	'UI:UnlinkAllPageTitle'        => 'Unlink Replicas from their destination object~~',
-	'UI:UnlinkSynchroAllTabTitle'  => 'Unlink & Synchronize Replicas~~',
+	'Class:SynchroReplica/Action:denydelete_all' => 'Deny deletion of destination objects~~',
+	'Class:SynchroReplica/Action:denydelete_all+' => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
+	'UI:UnlinkAllTabTitle' => 'Unlink Replicas~~',
+	'UI:UnlinkAllPageTitle' => 'Unlink Replicas from their destination object~~',
+	'UI:UnlinkSynchroAllTabTitle' => 'Unlink & Synchronize Replicas~~',
 	'UI:UnlinkSynchroAllPageTitle' => 'Unlink Replicas from their destination object & Synchronize them again~~',
-	'UI:SynchroAllTabTitle'        => 'Synchronize Replicas~~',
-	'UI:SynchroAllPageTitle'       => 'Synchronize Replicas: leading to a destination object creation, mapping or an error~~',
-	'UI:AllowDeleteAllTabTitle'    => 'Allow deletion of synchronized object~~',
-	'UI:AllowDeleteAllPageTitle'   => 'Allow propagation of Replica deletion to their destination object~~',
-	'UI:DenyDeleteAllTabTitle'     => 'Deny deletion of synchronized object~~',
-	'UI:DenyDeleteAllPageTitle'    => 'Deny propagation of Replica deletion to their destination object~~',
+	'UI:SynchroAllTabTitle' => 'Synchronize Replicas~~',
+	'UI:SynchroAllPageTitle' => 'Synchronize Replicas: leading to a destination object creation, mapping or an error~~',
+	'UI:AllowDeleteAllTabTitle' => 'Allow deletion of synchronized object~~',
+	'UI:AllowDeleteAllPageTitle' => 'Allow propagation of Replica deletion to their destination object~~',
+	'UI:DenyDeleteAllTabTitle' => 'Deny deletion of synchronized object~~',
+	'UI:DenyDeleteAllPageTitle' => 'Deny propagation of Replica deletion to their destination object~~',
 	'Class:appUserPreferences' => 'ユーザプリファレンス',
 	'Class:appUserPreferences/Attribute:userid' => 'ユーザ',
 	'Class:appUserPreferences/Attribute:preferences' => 'プリファレンス',
@@ -1087,14 +860,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Core:Validator:Mandatory' => 'Please, fill this field~~',
 	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
 	'Core:Validator:MustSelectOne' => 'Please, select one~~',
-	'Menu:DataSources' => '同期データソース',
-	'Menu:DataSources+' => '全ての同期データソース',
-]);
-
-//
-// Class: TagSetFieldData
-//
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
 	'Class:TagSetFieldData+' => '~~',
 	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
@@ -1102,7 +867,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
 	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
 	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
-	'Class:TagSetFieldData/Attribute:description+' => '',
+	'Class:TagSetFieldData/Attribute:description+' => '~~',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
@@ -1116,12 +881,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
 	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
-]);
-
-//
-// Class: DBProperty
-//
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:DBProperty' => 'DB property~~',
 	'Class:DBProperty+' => '~~',
 	'Class:DBProperty/Attribute:name' => 'Name~~',
@@ -1134,12 +893,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:DBProperty/Attribute:change_date+' => '~~',
 	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
 	'Class:DBProperty/Attribute:change_comment+' => '~~',
-]);
-
-//
-// Class: BackgroundTask
-//
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:BackgroundTask' => 'Background task~~',
 	'Class:BackgroundTask+' => '~~',
 	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
@@ -1164,12 +917,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:BackgroundTask/Attribute:running+' => '~~',
 	'Class:BackgroundTask/Attribute:status' => 'Status~~',
 	'Class:BackgroundTask/Attribute:status+' => '~~',
-]);
-
-//
-// Class: AsyncTask
-//
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AsyncTask' => 'Async. task~~',
 	'Class:AsyncTask+' => '~~',
 	'Class:AsyncTask/Attribute:created' => 'Created~~',
@@ -1194,44 +941,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
-]);
-
-//
-// Class: AbstractResource
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AbstractResource' => 'Abstract Resource~~',
 	'Class:AbstractResource+' => '~~',
-]);
-
-//
-// Class: ResourceAdminMenu
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
 	'Class:ResourceAdminMenu+' => '~~',
-]);
-
-//
-// Class: ResourceRunQueriesMenu
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '~~',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
 	'Class:ResourceSystemMenu+' => '~~',
-	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
-	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
-	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
-	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 ]);

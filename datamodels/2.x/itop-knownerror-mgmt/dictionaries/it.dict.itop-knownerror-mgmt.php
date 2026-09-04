@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -18,11 +17,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:KnownError/Attribute:org_id' => 'Cliente ',
 	'Class:KnownError/Attribute:org_id+' => 'Link the known error to the service provider in charge of handling them, or maybe to a customer organization if the error is specific to them~~',
 	'Class:KnownError/Attribute:cust_name' => 'Nome del cliente',
-	'Class:KnownError/Attribute:cust_name+' => '',
+	'Class:KnownError/Attribute:cust_name+' => '~~',
 	'Class:KnownError/Attribute:problem_id' => 'Problema correlato',
 	'Class:KnownError/Attribute:problem_id+' => 'The problem which couldn\'t be solved immediately and has led to the creation of this known error~~',
 	'Class:KnownError/Attribute:problem_ref' => 'Ref',
-	'Class:KnownError/Attribute:problem_ref+' => '',
+	'Class:KnownError/Attribute:problem_ref+' => '~~',
 	'Class:KnownError/Attribute:symptom' => 'Sintomo',
 	'Class:KnownError/Attribute:symptom+' => 'What are the observable effects of this error?~~',
 	'Class:KnownError/Attribute:root_cause' => 'Causa principale',
@@ -36,13 +35,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:KnownError/Attribute:domain' => 'Dominio',
 	'Class:KnownError/Attribute:domain+' => 'Choose the technical domain related to this known error?~~',
 	'Class:KnownError/Attribute:domain/Value:Application' => 'Applicazione',
-	'Class:KnownError/Attribute:domain/Value:Application+' => '',
+	'Class:KnownError/Attribute:domain/Value:Application+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Desktop' => 'Desktop',
-	'Class:KnownError/Attribute:domain/Value:Desktop+' => '',
+	'Class:KnownError/Attribute:domain/Value:Desktop+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Network' => 'Network',
-	'Class:KnownError/Attribute:domain/Value:Network+' => '',
+	'Class:KnownError/Attribute:domain/Value:Network+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Server' => 'Server',
-	'Class:KnownError/Attribute:domain/Value:Server+' => '',
+	'Class:KnownError/Attribute:domain/Value:Server+' => '~~',
 	'Class:KnownError/Attribute:vendor' => 'Venditore',
 	'Class:KnownError/Attribute:vendor+' => 'A free text field to identify the vendor of the CI(s) concerned by this known error~~',
 	'Class:KnownError/Attribute:model' => 'Modello',
@@ -53,13 +52,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:KnownError/Attribute:ci_list+' => 'The configuration items that are potentially impacted by this known error~~',
 	'Class:KnownError/Attribute:document_list' => 'Documenti',
 	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
-]);
-
-//
-// Class: lnkErrorToFunctionalCI
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkErrorToFunctionalCI' => 'Link Errore /CIFunzionale',
 	'Class:lnkErrorToFunctionalCI+' => 'Infra impattata dall\'errore conosciuto',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -73,13 +65,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Ragione',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '~~',
-]);
-
-//
-// Class: lnkDocumentToError
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToError' => 'Link Documento / Errore',
 	'Class:lnkDocumentToError+' => 'Link tra il documento e l\'errore conosciuto',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
@@ -93,9 +78,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToError/Attribute:error_name+' => '~~',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '~~',
-]);
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:ProblemManagement' => 'Gestione dei problemi',
 	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Scorciatoia',

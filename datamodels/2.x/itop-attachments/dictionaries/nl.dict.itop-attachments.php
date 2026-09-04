@@ -1,16 +1,16 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author LinProfs <info@linprofs.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
+ *
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Attachments:TabTitle_Count' => 'Bijlagen (%1$d)',
@@ -33,30 +33,20 @@ of vraag de iTop administrator om de opslagruimte van de iTop-server na te kijke
 	'Attachments:Render:Icons' => 'Toon als pictogram',
 	'Attachments:Render:Table' => 'Toon als lijst',
 	'UI:Attachments:DropYourFileHint' => 'Sleep bestanden in dit gebied',
-]);
-
-//
-// Class: Attachment
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Attachment' => 'Bijlage',
-	'Class:Attachment+' => '',
+	'Class:Attachment+' => 'File: text or image, linked to a single object. It can\'t be modified, only deleted. Attachment can\'t be created outside of its object edition.~~',
 	'Class:Attachment/Attribute:expire' => 'Vervalt',
-	'Class:Attachment/Attribute:expire+' => '',
+	'Class:Attachment/Attribute:expire+' => '~~',
 	'Class:Attachment/Attribute:temp_id' => 'Tijdelijke ID',
-	'Class:Attachment/Attribute:temp_id+' => '',
+	'Class:Attachment/Attribute:temp_id+' => '~~',
 	'Class:Attachment/Attribute:item_class' => 'Klasse item',
-	'Class:Attachment/Attribute:item_class+' => '',
+	'Class:Attachment/Attribute:item_class+' => '~~',
 	'Class:Attachment/Attribute:item_id' => 'Item',
-	'Class:Attachment/Attribute:item_id+' => '',
+	'Class:Attachment/Attribute:item_id+' => '~~',
 	'Class:Attachment/Attribute:item_org_id' => 'Organisatie item',
-	'Class:Attachment/Attribute:item_org_id+' => '',
+	'Class:Attachment/Attribute:item_org_id+' => '~~',
 	'Class:Attachment/Attribute:contents' => 'Inhoud',
-	'Class:Attachment/Attribute:contents+' => '',
-]);
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:Attachment/Attribute:contents+' => '~~',
 	'Attachments:File:Thumbnail' => 'Pictogram',
 	'Attachments:File:Name' => 'Bestandsnaam',
 	'Attachments:File:Date' => 'Geüpload op',
@@ -64,33 +54,20 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Attachments:File:Size' => 'Grootte',
 	'Attachments:File:MimeType' => 'Type',
 	'Attachments:File:DownloadsCount' => 'Downloads',
-]);
-//
-// Class: Attachment
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Attachment/Attribute:creation_date' => 'Datum creatie',
-	'Class:Attachment/Attribute:creation_date+' => '',
+	'Class:Attachment/Attribute:creation_date+' => '~~',
 	'Class:Attachment/Attribute:user_id' => 'ID Gebruiker',
-	'Class:Attachment/Attribute:user_id+' => '',
+	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => 'ID Contact',
-	'Class:Attachment/Attribute:contact_id+' => '',
-]);
-
-//
-// Class: TriggerOnAttachmentDownload
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:Attachment/Attribute:contact_id+' => '~~',
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (Bij het downloaden van een bijlage)',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger bij het downloaden van een bijlage van een object van de opgegeven klasse (of subklasse ervan)',
-	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (Bij het toevoegen van een bijlage)',
-	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger bij het toevoegen van een bijlage aan een object van de opgegeven klasse (of subklasse ervan)',
+	'Class:TriggerOnAttachmentCreate' => 'Trigger (Bij het toevoegen van een bijlage)',
+	'Class:TriggerOnAttachmentCreate+' => 'Trigger bij het toevoegen van een bijlage aan een object van de opgegeven klasse (of subklasse ervan)',
+	'Class:TriggerOnAttachmentDelete' => 'Trigger (Bij het verwijderen van een bijlage)',
+	'Class:TriggerOnAttachmentDelete+' => 'Trigger bij het verwijderen van een bijlage van een object van de opgegeven klasse (of subklasse ervan)',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Bestand toevoegen in e-mail',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
-	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (Bij het verwijderen van een bijlage)',
-	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger bij het verwijderen van een bijlage van een object van de opgegeven klasse (of subklasse ervan)',
 	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email' => 'Bestand toevoegen in e-mail',
 	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email+' => 'If checked, the deleted file will be automatically attached to the email when an email action is triggered~~',
 	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',

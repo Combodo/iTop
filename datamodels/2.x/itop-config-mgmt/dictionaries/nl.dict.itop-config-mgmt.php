@@ -1,16 +1,16 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author LinProfs <info@linprofs.com>
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
+ *
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Relation:impacts/Description' => 'Elementen met impact van',
@@ -24,80 +24,29 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Relation:impacts/LoadData' => 'Laad data',
 	'Relation:impacts/NoFilteredData' => 'Gelieve objecten te selecteren en data te laden',
 	'Relation:impacts/FilteredData' => 'Gefilterde data',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: lnkContactToFunctionalCI
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkContactToFunctionalCI' => 'Link Contact / Functioneel CI',
-	'Class:lnkContactToFunctionalCI+' => '',
+	'Class:lnkContactToFunctionalCI+' => 'Manages Contacts linked to Functional CIs. This can be a team responsible for the equipment, to assign related Tickets, or the person to whom an individual device such as a PC or phone is assigned, to manage the inventory.~~',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'Functioneel CI',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Naam functioneel CI',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Contact',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Naam contact',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
-]);
-
-//
-// Class: FunctionalCI
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '~~',
 	'Class:FunctionalCI' => 'Functioneel CI',
-	'Class:FunctionalCI+' => '',
+	'Class:FunctionalCI+' => 'Abstract class grouping most Configuration Items types used for CMDB.~~',
 	'Class:FunctionalCI/Attribute:name' => 'Naam',
-	'Class:FunctionalCI/Attribute:name+' => '',
+	'Class:FunctionalCI/Attribute:name+' => '~~',
 	'Class:FunctionalCI/Attribute:description' => 'Omschrijving',
-	'Class:FunctionalCI/Attribute:description+' => '',
+	'Class:FunctionalCI/Attribute:description+' => '~~',
 	'Class:FunctionalCI/Attribute:org_id' => 'Organisatie',
-	'Class:FunctionalCI/Attribute:org_id+' => '',
+	'Class:FunctionalCI/Attribute:org_id+' => '~~',
 	'Class:FunctionalCI/Attribute:organization_name' => 'Naam organisatie',
 	'Class:FunctionalCI/Attribute:organization_name+' => 'Naam organisatie',
 	'Class:FunctionalCI/Attribute:business_criticity' => 'Bedrijfskritisch',
-	'Class:FunctionalCI/Attribute:business_criticity+' => '',
+	'Class:FunctionalCI/Attribute:business_criticity+' => '~~',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:high' => 'Hoog',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:high+' => 'Hoog',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:low' => 'Laag',
@@ -105,7 +54,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:FunctionalCI/Attribute:business_criticity/Value:medium' => 'Normaal',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => 'Normaal',
 	'Class:FunctionalCI/Attribute:move2production' => 'Datum ingebruikname',
-	'Class:FunctionalCI/Attribute:move2production+' => '',
+	'Class:FunctionalCI/Attribute:move2production+' => '~~',
+	'Class:FunctionalCI/Attribute:groups_list' => 'Groups~~',
+	'Class:FunctionalCI/Attribute:groups_list+' => 'Groups can be used as tags, to document environment, projects (migration, upgrade, security), etc…~~',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Contacten',
 	'Class:FunctionalCI/Attribute:contacts_list+' => 'Alle contacten gelinkt aan dit configuratie-item',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Documenten',
@@ -115,27 +66,20 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Software',
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'Alle software geïnstalleerd op dit configuratie-item',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Subklasse CI',
-	'Class:FunctionalCI/Attribute:finalclass+' => '',
+	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Actieve tickets',
 	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Actieve tickets die dit configuratie-item impacteren',
-]);
-
-//
-// Class: PhysicalDevice
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:PhysicalDevice' => 'Fysieke Apparaat',
-	'Class:PhysicalDevice+' => '',
+	'Class:PhysicalDevice+' => 'Abstract class grouping physical types of Configuration Items. A Physical Device can be located. It has usually a Brand and Model.~~',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'Serienummer',
-	'Class:PhysicalDevice/Attribute:serialnumber+' => '',
+	'Class:PhysicalDevice/Attribute:serialnumber+' => '~~',
 	'Class:PhysicalDevice/Attribute:location_id' => 'Locatie',
-	'Class:PhysicalDevice/Attribute:location_id+' => '',
+	'Class:PhysicalDevice/Attribute:location_id+' => '~~',
 	'Class:PhysicalDevice/Attribute:location_name' => 'Naam locatie',
-	'Class:PhysicalDevice/Attribute:location_name+' => '',
+	'Class:PhysicalDevice/Attribute:location_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:status' => 'Status',
-	'Class:PhysicalDevice/Attribute:status+' => '',
+	'Class:PhysicalDevice/Attribute:status+' => '~~',
 	'Class:PhysicalDevice/Attribute:status/Value:implementation' => 'Implementatie',
 	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => 'Implementatie',
 	'Class:PhysicalDevice/Attribute:status/Value:obsolete' => 'Buiten dienst',
@@ -145,93 +89,46 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:PhysicalDevice/Attribute:status/Value:stock' => 'Voorraad',
 	'Class:PhysicalDevice/Attribute:status/Value:stock+' => 'Voorraad',
 	'Class:PhysicalDevice/Attribute:brand_id' => 'Merk',
-	'Class:PhysicalDevice/Attribute:brand_id+' => '',
+	'Class:PhysicalDevice/Attribute:brand_id+' => '~~',
 	'Class:PhysicalDevice/Attribute:brand_name' => 'Naam merk',
-	'Class:PhysicalDevice/Attribute:brand_name+' => '',
+	'Class:PhysicalDevice/Attribute:brand_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:model_id' => 'Model',
-	'Class:PhysicalDevice/Attribute:model_id+' => '',
+	'Class:PhysicalDevice/Attribute:model_id+' => '~~',
+	'Class:PhysicalDevice/Attribute:model_end_of_support' => 'Model end of support~~',
+	'Class:PhysicalDevice/Attribute:model_end_of_support+' => 'When the hardware model is no more supported by the manufacturer, if this information is documented on the Model.~~',
 	'Class:PhysicalDevice/Attribute:model_name' => 'Naam model',
-	'Class:PhysicalDevice/Attribute:model_name+' => '',
+	'Class:PhysicalDevice/Attribute:model_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:asset_number' => 'Assetnummer',
-	'Class:PhysicalDevice/Attribute:asset_number+' => '',
+	'Class:PhysicalDevice/Attribute:asset_number+' => '~~',
 	'Class:PhysicalDevice/Attribute:purchase_date' => 'Aankoopdatum',
-	'Class:PhysicalDevice/Attribute:purchase_date+' => '',
+	'Class:PhysicalDevice/Attribute:purchase_date+' => '~~',
 	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Einde garantieperiode',
-	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '',
-]);
-
-//
-// Class: Rack
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '~~',
 	'Class:Rack' => 'Rack',
-	'Class:Rack+' => '',
+	'Class:Rack+' => 'A physical cabinet for Datacenter Devices and Enclosures.~~',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s',
 	'Class:Rack/Attribute:nb_u' => 'Rackeenheden',
-	'Class:Rack/Attribute:nb_u+' => '',
+	'Class:Rack/Attribute:nb_u+' => '~~',
 	'Class:Rack/Attribute:device_list' => 'Apparaten',
 	'Class:Rack/Attribute:device_list+' => 'Alle fysieke apparaten die zich bevinden in dit rack',
 	'Class:Rack/Attribute:enclosure_list' => 'Enclosures',
 	'Class:Rack/Attribute:enclosure_list+' => 'Alle enclosures in dit rack',
-]);
-
-//
-// Class: TelephonyCI
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TelephonyCI' => 'Telefonie CI',
-	'Class:TelephonyCI+' => '',
+	'Class:TelephonyCI+' => 'Abstract class grouping telephony devices~~',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Telefoonnummer',
-	'Class:TelephonyCI/Attribute:phonenumber+' => '',
-]);
-
-//
-// Class: Phone
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:TelephonyCI/Attribute:phonenumber+' => '~~',
 	'Class:Phone' => 'Telefoon',
-	'Class:Phone+' => '',
-]);
-
-//
-// Class: MobilePhone
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:Phone+' => 'End User device. Plain wired phone~~',
 	'Class:MobilePhone' => 'Mobiele telefoon',
-	'Class:MobilePhone+' => '',
+	'Class:MobilePhone+' => 'End User device. Wireless phone~~',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
-	'Class:MobilePhone/Attribute:imei+' => '',
+	'Class:MobilePhone/Attribute:imei+' => '~~',
 	'Class:MobilePhone/Attribute:hw_pin' => 'PIN-code',
-	'Class:MobilePhone/Attribute:hw_pin+' => '',
-]);
-
-//
-// Class: IPPhone
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:MobilePhone/Attribute:hw_pin+' => '~~',
 	'Class:IPPhone' => 'IP-telefoon',
-	'Class:IPPhone+' => '',
-]);
-
-//
-// Class: Tablet
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:IPPhone+' => 'Physical device dedicated to phone calls, connected to a network~~',
 	'Class:Tablet' => 'Tablet',
-	'Class:Tablet+' => '',
-]);
-
-//
-// Class: ConnectableCI
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:Tablet+' => 'End User device. For example iPad, Galaxy Note/Tab Nexus, Kindle...~~',
 	'Class:ConnectableCI' => 'Aansluitbaar CI',
 	'Class:ConnectableCI+' => 'Fysiek CI',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s',
@@ -239,36 +136,29 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Alle netwerkapparaten die verbonden zijn met dit apparaat',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Netwerkinterfaces',
 	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'Alle fysieke netwerkinterfaces',
-]);
-
-//
-// Class: DatacenterDevice
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:DatacenterDevice' => 'Datacenterapparaat',
-	'Class:DatacenterDevice+' => '',
+	'Class:DatacenterDevice+' => 'A physical equipment, connected to the network and installed in a data center, usually in a Rack or an Enclosure. This can include Servers, Network Devices, Storage Systems, SAN Switches, Tape Libraries, NAS Devices, etc.~~',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'Rack',
-	'Class:DatacenterDevice/Attribute:rack_id+' => '',
+	'Class:DatacenterDevice/Attribute:rack_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:rack_name' => 'Naam rack',
-	'Class:DatacenterDevice/Attribute:rack_name+' => '',
+	'Class:DatacenterDevice/Attribute:rack_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:enclosure_id' => 'Enclosure',
-	'Class:DatacenterDevice/Attribute:enclosure_id+' => '',
+	'Class:DatacenterDevice/Attribute:enclosure_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:enclosure_name' => 'Naam enclosure',
-	'Class:DatacenterDevice/Attribute:enclosure_name+' => '',
+	'Class:DatacenterDevice/Attribute:enclosure_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:nb_u' => 'Rackeenheden',
-	'Class:DatacenterDevice/Attribute:nb_u+' => '',
+	'Class:DatacenterDevice/Attribute:nb_u+' => '~~',
 	'Class:DatacenterDevice/Attribute:managementip' => 'Management IP',
-	'Class:DatacenterDevice/Attribute:managementip+' => '',
+	'Class:DatacenterDevice/Attribute:managementip+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerA_id' => 'Stroombron A',
-	'Class:DatacenterDevice/Attribute:powerA_id+' => '',
+	'Class:DatacenterDevice/Attribute:powerA_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerA_name' => 'Naam stroombron A',
-	'Class:DatacenterDevice/Attribute:powerA_name+' => '',
+	'Class:DatacenterDevice/Attribute:powerA_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerB_id' => 'Stroombron B',
-	'Class:DatacenterDevice/Attribute:powerB_id+' => '',
+	'Class:DatacenterDevice/Attribute:powerB_id+' => '~~',
 	'Class:DatacenterDevice/Attribute:powerB_name' => 'Naam stroombron B',
-	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
+	'Class:DatacenterDevice/Attribute:powerB_name+' => '~~',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'FC-poorten',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'Alle fiber channel-interfaces voor dit apparaat',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
@@ -277,219 +167,128 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'Het toestel werkt zodra stroombron A of B beschikbaar is',
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'Het toestel werkt zodra alle stroomverbindingen beschikbaar zijn',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'Het toestel werkt zodra minstens %1$s %% van de stroomverbindingen beschikbaar is',
-]);
-
-//
-// Class: NetworkDevice
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:NetworkDevice' => 'Netwerkapparaat',
-	'Class:NetworkDevice+' => '',
+	'Class:NetworkDevice+' => 'Any type of network device: router, switch, hub, load balancer, firewall…~~',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Soort netwerkapparaat',
-	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
+	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '~~',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Soort van dit netwerkapparaat',
-	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
+	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '~~',
 	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Apparaten',
 	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'Alle apparaten die verbonden zijn met dit netwerkapparaat',
 	'Class:NetworkDevice/Attribute:iosversion_id' => 'Versie IOS',
-	'Class:NetworkDevice/Attribute:iosversion_id+' => '',
+	'Class:NetworkDevice/Attribute:iosversion_id+' => '~~',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'Naam versie IOS',
-	'Class:NetworkDevice/Attribute:iosversion_name+' => '',
+	'Class:NetworkDevice/Attribute:iosversion_name+' => '~~',
+	'Class:NetworkDevice/Attribute:ios_end_of_support' => 'IOS end of support~~',
+	'Class:NetworkDevice/Attribute:ios_end_of_support+' => 'The date after which the editor no longer provides fixes for this IOS version.~~',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
-	'Class:NetworkDevice/Attribute:ram+' => '',
-]);
-
-//
-// Class: Server
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:NetworkDevice/Attribute:ram+' => '~~',
 	'Class:Server' => 'Server',
-	'Class:Server+' => '',
+	'Class:Server+' => 'Datacenter Device managing access to centralized resources or services. It contains an OS Version executing Software Instances.~~',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s',
 	'Class:Server/Attribute:osfamily_id' => 'Soort besturingssysteem',
-	'Class:Server/Attribute:osfamily_id+' => '',
+	'Class:Server/Attribute:osfamily_id+' => '~~',
 	'Class:Server/Attribute:osfamily_name' => 'Naam soort besturingssysteem',
-	'Class:Server/Attribute:osfamily_name+' => '',
+	'Class:Server/Attribute:osfamily_name+' => '~~',
 	'Class:Server/Attribute:osversion_id' => 'Versie besturingssysteem',
-	'Class:Server/Attribute:osversion_id+' => '',
+	'Class:Server/Attribute:osversion_id+' => '~~',
 	'Class:Server/Attribute:osversion_name' => 'Naam versie besturingssysteem',
-	'Class:Server/Attribute:osversion_name+' => '',
+	'Class:Server/Attribute:osversion_name+' => '~~',
+	'Class:Server/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:Server/Attribute:os_end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
 	'Class:Server/Attribute:oslicence_id' => 'Licentie besturingssysteem',
-	'Class:Server/Attribute:oslicence_id+' => '',
+	'Class:Server/Attribute:oslicence_id+' => '~~',
 	'Class:Server/Attribute:oslicence_name' => 'Naam licentie besturingssysteem',
-	'Class:Server/Attribute:oslicence_name+' => '',
+	'Class:Server/Attribute:oslicence_name+' => '~~',
 	'Class:Server/Attribute:cpu' => 'CPU',
-	'Class:Server/Attribute:cpu+' => '',
+	'Class:Server/Attribute:cpu+' => '~~',
 	'Class:Server/Attribute:ram' => 'RAM',
-	'Class:Server/Attribute:ram+' => '',
+	'Class:Server/Attribute:ram+' => '~~',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Logische volumes',
 	'Class:Server/Attribute:logicalvolumes_list+' => 'Alle logische volumes die verbonden zijn met deze server',
-]);
-
-//
-// Class: StorageSystem
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:StorageSystem' => 'Opslagsysteem',
-	'Class:StorageSystem+' => '',
+	'Class:StorageSystem+' => 'Storage system that can be attached either to a SAN or to an Ethernet network. The logical unit of storage managed by a Storage System is a Logical Volume.~~',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logische volumes',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Alle logische volumes in dit opslagsysteem',
-]);
-
-//
-// Class: SANSwitch
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:SANSwitch' => 'SAN-switch',
-	'Class:SANSwitch+' => '',
+	'Class:SANSwitch+' => 'A SAN Switch is a network switch compatible with the Fibre Channel protocol used by storage networks. It is a Datacenter Device.~~',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Apparaten',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Alle apparaten verbonden met deze SAN-switch',
-]);
-
-//
-// Class: TapeLibrary
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TapeLibrary' => 'Tapebibliotheek',
-	'Class:TapeLibrary+' => '',
+	'Class:TapeLibrary+' => 'Datacenter Device which hosts multiple magnetic Tapes (or cartridge). Tape Libraries are used for data backup or archiving.~~',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Tapes',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'Alle tapes in de tapebibliotheek',
-]);
-
-//
-// Class: NAS
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:NAS' => 'NAS',
-	'Class:NAS+' => '',
+	'Class:NAS+' => 'High-capacity storage device racked in a datacenter and connected to a network. In '.ITOP_APPLICATION_SHORT.' a NAS (Network-attached storage) is hosting NAS File Systems.~~',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Bestandssysteem',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'Alle bestandsystemen in deze NAS',
-]);
-
-//
-// Class: PC
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:PC' => 'PC',
-	'Class:PC+' => '',
+	'Class:PC+' => 'Connectable CI. A Personal Computer (PC) is a Physical Device, Desktop or Laptop, running an operating system and designed to execute Software Instances.~~',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s',
 	'Class:PC/Attribute:osfamily_id' => 'Soort besturingssysteem',
-	'Class:PC/Attribute:osfamily_id+' => '',
+	'Class:PC/Attribute:osfamily_id+' => '~~',
 	'Class:PC/Attribute:osfamily_name' => 'Naam soort besturingssysteem',
-	'Class:PC/Attribute:osfamily_name+' => '',
+	'Class:PC/Attribute:osfamily_name+' => '~~',
 	'Class:PC/Attribute:osversion_id' => 'Versie besturingssysteem',
-	'Class:PC/Attribute:osversion_id+' => '',
+	'Class:PC/Attribute:osversion_id+' => '~~',
 	'Class:PC/Attribute:osversion_name' => 'Naam versie besturingssysteem',
-	'Class:PC/Attribute:osversion_name+' => '',
+	'Class:PC/Attribute:osversion_name+' => '~~',
+	'Class:PC/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:PC/Attribute:os_end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
 	'Class:PC/Attribute:cpu' => 'CPU',
-	'Class:PC/Attribute:cpu+' => '',
+	'Class:PC/Attribute:cpu+' => '~~',
 	'Class:PC/Attribute:ram' => 'RAM',
-	'Class:PC/Attribute:ram+' => '',
+	'Class:PC/Attribute:ram+' => '~~',
 	'Class:PC/Attribute:type' => 'Type',
-	'Class:PC/Attribute:type+' => '',
+	'Class:PC/Attribute:type+' => '~~',
 	'Class:PC/Attribute:type/Value:desktop' => 'Desktop',
 	'Class:PC/Attribute:type/Value:desktop+' => 'Desktop',
 	'Class:PC/Attribute:type/Value:laptop' => 'Laptop',
 	'Class:PC/Attribute:type/Value:laptop+' => 'Laptop',
-]);
-
-//
-// Class: Printer
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Printer' => 'Printer',
-	'Class:Printer+' => '',
+	'Class:Printer+' => 'Connectable CI. Physical Device connected either to the network or to a PC.~~',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s',
-]);
-
-//
-// Class: PowerConnection
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:PowerConnection' => 'Stroomverbinding',
-	'Class:PowerConnection+' => '',
+	'Class:PowerConnection+' => 'Abstract class grouping physical devices used for electrical power supply.~~',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s',
-]);
-
-//
-// Class: PowerSource
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:PowerSource' => 'Stroombron',
-	'Class:PowerSource+' => '',
+	'Class:PowerSource+' => 'Physical Power Connection. Used in a datacenter to document any kind of power source (main power inlet, breaker…) that is not a PDU.~~',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDU\'s',
 	'Class:PowerSource/Attribute:pdus_list+' => 'Alle PDU\'s die gebruik maken van deze stroombron',
-]);
-
-//
-// Class: PDU
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:PDU' => 'PDU',
-	'Class:PDU+' => '',
+	'Class:PDU+' => 'Power Connection. PDU (Power Distribution Unit) is a device fitted with multiple outputs designed to distribute electric power, especially to racks of computers and networking equipment located within a datacenter.~~',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s',
 	'Class:PDU/Attribute:rack_id' => 'Rack',
-	'Class:PDU/Attribute:rack_id+' => '',
+	'Class:PDU/Attribute:rack_id+' => '~~',
 	'Class:PDU/Attribute:rack_name' => 'Naam rack',
-	'Class:PDU/Attribute:rack_name+' => '',
+	'Class:PDU/Attribute:rack_name+' => '~~',
 	'Class:PDU/Attribute:powerstart_id' => 'Power start',
-	'Class:PDU/Attribute:powerstart_id+' => '',
+	'Class:PDU/Attribute:powerstart_id+' => '~~',
 	'Class:PDU/Attribute:powerstart_name' => 'Naam Power start',
-	'Class:PDU/Attribute:powerstart_name+' => '',
-]);
-
-//
-// Class: Peripheral
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:PDU/Attribute:powerstart_name+' => '~~',
 	'Class:Peripheral' => 'Randapparatuur',
-	'Class:Peripheral+' => '',
+	'Class:Peripheral+' => 'Physical device, used to document any kind of computer peripheral.
+For example: external hard drives, scanners, input devices (trackballs, bar code scanners), etc…~~',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s',
-]);
-
-//
-// Class: Enclosure
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Enclosure' => 'Enclosure',
-	'Class:Enclosure+' => '',
+	'Class:Enclosure+' => 'An open-frame chassis mounted inside a Rack, in which to mount IT equipment such as Blade Servers, Network Device...~~',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Enclosure/Attribute:rack_id' => 'Rack',
-	'Class:Enclosure/Attribute:rack_id+' => '',
+	'Class:Enclosure/Attribute:rack_id+' => '~~',
 	'Class:Enclosure/Attribute:rack_name' => 'Naam rack',
-	'Class:Enclosure/Attribute:rack_name+' => '',
+	'Class:Enclosure/Attribute:rack_name+' => '~~',
 	'Class:Enclosure/Attribute:nb_u' => 'Rackeenheden',
-	'Class:Enclosure/Attribute:nb_u+' => '',
+	'Class:Enclosure/Attribute:nb_u+' => '~~',
 	'Class:Enclosure/Attribute:device_list' => 'Apparaten',
 	'Class:Enclosure/Attribute:device_list+' => 'Alle apparaten in deze enclosure',
-]);
-
-//
-// Class: ApplicationSolution
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ApplicationSolution' => 'Applicatie-oplossing',
-	'Class:ApplicationSolution+' => '',
+	'Class:ApplicationSolution+' => 'Application Solutions describe complex applications that are made of (or depend on) several basic components. The main information conveyed by an Application Solution is its list of relationships.~~',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CI\'s',
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Alle configuratie-items die deze applicatie-oplossing tot stand brengen',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Bedrijfsprocessen',
@@ -497,7 +296,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ApplicationSolution/Attribute:logo' => 'Logo',
 	'Class:ApplicationSolution/Attribute:logo+' => 'Wordt gebruikt als objectpictogram bij weergave in impactanalyse.',
 	'Class:ApplicationSolution/Attribute:status' => 'Status',
-	'Class:ApplicationSolution/Attribute:status+' => '',
+	'Class:ApplicationSolution/Attribute:status+' => '~~',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Actief',
 	'Class:ApplicationSolution/Attribute:status/Value:active+' => 'Actief',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'Inactief',
@@ -506,402 +305,35 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'De oplossing werkt als alle configuratie-items actief zijn',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'De oplossing werkt als minstens %1$s configuratie-item(s) actief is/zijn',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'De oplossing werkt als minstens %1$s %% van de configuratie-items actief zijn',
-]);
-
-//
-// Class: BusinessProcess
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:BusinessProcess' => 'Bedrijfsproces',
-	'Class:BusinessProcess+' => '',
+	'Class:BusinessProcess+' => 'A Business Process is used to document a high-level process or an important application for the operations. It is quite similar to an Application Solution but for describing higher level applications or whole processes in the organization.~~',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Applicatie-oplossing',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Alle applicatie-oplossingen die impact hebben op dit bedrijfsproces',
 	'Class:BusinessProcess/Attribute:logo' => 'Logo',
 	'Class:BusinessProcess/Attribute:logo+' => 'Wordt gebruikt als objectpictogram bij weergave in impactanalyse.',
 	'Class:BusinessProcess/Attribute:status' => 'Status',
-	'Class:BusinessProcess/Attribute:status+' => '',
+	'Class:BusinessProcess/Attribute:status+' => '~~',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'Actief',
 	'Class:BusinessProcess/Attribute:status/Value:active+' => 'Actief',
 	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'Inactief',
 	'Class:BusinessProcess/Attribute:status/Value:inactive+' => 'Inactief',
-]);
-
-//
-// Class: SoftwareInstance
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:SoftwareInstance' => 'Software-instantie',
-	'Class:SoftwareInstance+' => '',
-	'Class:SoftwareInstance/Attribute:system_id' => 'Systeem',
-	'Class:SoftwareInstance/Attribute:system_id+' => '',
-	'Class:SoftwareInstance/Attribute:system_name' => 'Naam systeem',
-	'Class:SoftwareInstance/Attribute:system_name+' => '',
-	'Class:SoftwareInstance/Attribute:software_id' => 'Software',
-	'Class:SoftwareInstance/Attribute:software_id+' => '',
-	'Class:SoftwareInstance/Attribute:software_name' => 'Naam software',
-	'Class:SoftwareInstance/Attribute:software_name+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Licentie software',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Naam licentie software',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '',
-	'Class:SoftwareInstance/Attribute:path' => 'Pad',
-	'Class:SoftwareInstance/Attribute:path+' => '',
-	'Class:SoftwareInstance/Attribute:status' => 'Status',
-	'Class:SoftwareInstance/Attribute:status+' => '',
-	'Class:SoftwareInstance/Attribute:status/Value:active' => 'Actief',
-	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'Actief',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Inactief',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'Inactief',
-]);
-
-//
-// Class: Middleware
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:Middleware' => 'Middleware',
-	'Class:Middleware+' => '',
-	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware-instanties',
-	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Alle middleware-instanties die geleverd worden door deze middleware',
-]);
-
-//
-// Class: DBServer
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:DBServer' => 'Databaseserver',
-	'Class:DBServer+' => '',
-	'Class:DBServer/Attribute:dbschema_list' => 'Databaseschema\'s',
-	'Class:DBServer/Attribute:dbschema_list+' => 'Alle databaseschema\'s voor deze databaseserver',
-]);
-
-//
-// Class: WebServer
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:WebServer' => 'Webserver',
-	'Class:WebServer+' => '',
-	'Class:WebServer/Attribute:webapp_list' => 'Webapplicaties',
-	'Class:WebServer/Attribute:webapp_list+' => 'Alle webapplicaties die beschikbaar zijn voor deze webserver',
-]);
-
-//
-// Class: PCSoftware
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:PCSoftware' => 'PC-software',
-	'Class:PCSoftware+' => '',
-]);
-
-//
-// Class: OtherSoftware
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:OtherSoftware' => 'Overige software',
-	'Class:OtherSoftware+' => '',
-]);
-
-//
-// Class: MiddlewareInstance
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:MiddlewareInstance' => 'Middleware-instantie',
-	'Class:MiddlewareInstance+' => '',
-	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
-	'Class:MiddlewareInstance/Attribute:logo' => 'Logo',
-	'Class:MiddlewareInstance/Attribute:logo+' => 'Wordt gebruikt als objectpictogram bij weergave in impactanalyse.',
-	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
-	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
-	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Naam middleware',
-	'Class:MiddlewareInstance/Attribute:middleware_name+' => '',
-]);
-
-//
-// Class: DatabaseSchema
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:DatabaseSchema' => 'Databaseschema',
-	'Class:DatabaseSchema+' => '',
-	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s',
-	'Class:DatabaseSchema/Attribute:dbserver_id' => 'Databaseserver',
-	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
-	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Naam databaseserver',
-	'Class:DatabaseSchema/Attribute:dbserver_name+' => '',
-]);
-
-//
-// Class: WebApplication
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:WebApplication' => 'Webapplicatie',
-	'Class:WebApplication+' => '',
-	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
-	'Class:WebApplication/Attribute:webserver_id' => 'Webserver',
-	'Class:WebApplication/Attribute:webserver_id+' => '',
-	'Class:WebApplication/Attribute:webserver_name' => 'Naam webserver',
-	'Class:WebApplication/Attribute:webserver_name+' => '',
-	'Class:WebApplication/Attribute:logo' => 'Logo',
-	'Class:WebApplication/Attribute:logo+' => 'Wordt gebruikt als objectpictogram bij weergave in impactanalyse.',
-	'Class:WebApplication/Attribute:url' => 'Link (URL)',
-	'Class:WebApplication/Attribute:url+' => '',
-]);
-
-//
-// Class: VirtualDevice
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:VirtualDevice' => 'Virtueel apparaat',
-	'Class:VirtualDevice+' => '',
-	'Class:VirtualDevice/Attribute:status' => 'Status',
-	'Class:VirtualDevice/Attribute:status+' => '',
-	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Implementatie',
-	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'Implementatie',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Buiten gebruik',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'Buiten gebruik',
-	'Class:VirtualDevice/Attribute:status/Value:production' => 'Productie',
-	'Class:VirtualDevice/Attribute:status/Value:production+' => 'Productie',
-	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Voorraad',
-	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'Voorraad',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Logical volumes',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Alle logische volumes die door dit apparaat gebruikt worden',
-]);
-
-//
-// Class: VirtualHost
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:VirtualHost' => 'Virtuele host',
-	'Class:VirtualHost+' => '',
-	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtuele machines',
-	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Alle virtuele machines die op deze host draaien',
-]);
-
-//
-// Class: Hypervisor
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:Hypervisor' => 'Hypervisor',
-	'Class:Hypervisor+' => '',
-	'Class:Hypervisor/Attribute:farm_id' => 'Farm',
-	'Class:Hypervisor/Attribute:farm_id+' => '',
-	'Class:Hypervisor/Attribute:farm_name' => 'Naam farm',
-	'Class:Hypervisor/Attribute:farm_name+' => '',
-	'Class:Hypervisor/Attribute:server_id' => 'Server',
-	'Class:Hypervisor/Attribute:server_id+' => '',
-	'Class:Hypervisor/Attribute:server_name' => 'Naam server',
-	'Class:Hypervisor/Attribute:server_name+' => '',
-]);
-
-//
-// Class: Farm
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:Farm' => 'Farm',
-	'Class:Farm+' => '',
-	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisors',
-	'Class:Farm/Attribute:hypervisor_list+' => 'Alle hypervisors die samen deze farm vormen',
-	'Class:Farm/Attribute:redundancy' => 'Hoge beschikbaarheid',
-	'Class:Farm/Attribute:redundancy/disabled' => 'De farm is beschikbaar als alle hypervisors beschikbaar zijn.',
-	'Class:Farm/Attribute:redundancy/count' => 'De farm is beschikbaar als minstens %1$s hypervisor(s) actief is/zijn',
-	'Class:Farm/Attribute:redundancy/percent' => 'De farm is beschikbaar als minstens %1$s %% hypervisors beschikbaar zijn',
-]);
-
-//
-// Class: VirtualMachine
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:VirtualMachine' => 'Virtuele machine',
-	'Class:VirtualMachine+' => '',
-	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s',
-	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Virtuele host',
-	'Class:VirtualMachine/Attribute:virtualhost_id+' => '',
-	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Naam virtuele host',
-	'Class:VirtualMachine/Attribute:virtualhost_name+' => '',
-	'Class:VirtualMachine/Attribute:osfamily_id' => 'Besturingssysteem',
-	'Class:VirtualMachine/Attribute:osfamily_id+' => '',
-	'Class:VirtualMachine/Attribute:osfamily_name' => 'Naam besturingssysteem',
-	'Class:VirtualMachine/Attribute:osfamily_name+' => '',
-	'Class:VirtualMachine/Attribute:osversion_id' => 'Versie besturingssysteem',
-	'Class:VirtualMachine/Attribute:osversion_id+' => '',
-	'Class:VirtualMachine/Attribute:osversion_name' => 'Naam versie besturingssysteem',
-	'Class:VirtualMachine/Attribute:osversion_name+' => '',
-	'Class:VirtualMachine/Attribute:oslicence_id' => 'Licentie besturingssysteem',
-	'Class:VirtualMachine/Attribute:oslicence_id+' => '',
-	'Class:VirtualMachine/Attribute:oslicence_name' => 'Naam licentie besturingssysteem',
-	'Class:VirtualMachine/Attribute:oslicence_name+' => '',
-	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
-	'Class:VirtualMachine/Attribute:cpu+' => '',
-	'Class:VirtualMachine/Attribute:ram' => 'RAM',
-	'Class:VirtualMachine/Attribute:ram+' => '',
-	'Class:VirtualMachine/Attribute:managementip' => 'IP',
-	'Class:VirtualMachine/Attribute:managementip+' => '',
-	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Netwerkinterfaces',
-	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Alle logische netwerkinterfaces',
-]);
-
-//
-// Class: LogicalVolume
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:LogicalVolume' => 'Logisch volume',
-	'Class:LogicalVolume+' => '',
-	'Class:LogicalVolume/Attribute:name' => 'Naam',
-	'Class:LogicalVolume/Attribute:name+' => '',
-	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
-	'Class:LogicalVolume/Attribute:lun_id+' => '',
-	'Class:LogicalVolume/Attribute:description' => 'Omschrijving',
-	'Class:LogicalVolume/Attribute:description+' => '',
-	'Class:LogicalVolume/Attribute:raid_level' => 'RAID-niveau',
-	'Class:LogicalVolume/Attribute:raid_level+' => '',
-	'Class:LogicalVolume/Attribute:size' => 'Grootte',
-	'Class:LogicalVolume/Attribute:size+' => '',
-	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Opslagsysteem',
-	'Class:LogicalVolume/Attribute:storagesystem_id+' => '',
-	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Naam opslagsysteem',
-	'Class:LogicalVolume/Attribute:storagesystem_name+' => '',
-	'Class:LogicalVolume/Attribute:servers_list' => 'Servers',
-	'Class:LogicalVolume/Attribute:servers_list+' => 'Alle servers die dit volume gebruiken',
-	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtuele apparaten',
-	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Alle virtuele apparaten die dit volume gebruiken',
-]);
-
-//
-// Class: lnkServerToVolume
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:lnkServerToVolume' => 'Link Server / Volume',
-	'Class:lnkServerToVolume+' => '',
-	'Class:lnkServerToVolume/Name' => '%1$s / %2$s',
-	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume',
-	'Class:lnkServerToVolume/Attribute:volume_id+' => '',
-	'Class:lnkServerToVolume/Attribute:volume_name' => 'Naam volume',
-	'Class:lnkServerToVolume/Attribute:volume_name+' => '',
-	'Class:lnkServerToVolume/Attribute:server_id' => 'Server',
-	'Class:lnkServerToVolume/Attribute:server_id+' => '',
-	'Class:lnkServerToVolume/Attribute:server_name' => 'Naam server',
-	'Class:lnkServerToVolume/Attribute:server_name+' => '',
-	'Class:lnkServerToVolume/Attribute:size_used' => 'Gebruikte grootte',
-	'Class:lnkServerToVolume/Attribute:size_used+' => '',
-]);
-
-//
-// Class: lnkVirtualDeviceToVolume
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:lnkVirtualDeviceToVolume' => 'Link Virtueel apparaat / Volume',
-	'Class:lnkVirtualDeviceToVolume+' => '',
-	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Naam volume',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Virtueel apparaat',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Naam van het virtueel apparaat',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Gebruikte grootte',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '',
-]);
-
-//
-// Class: lnkSanToDatacenterDevice
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:lnkSanToDatacenterDevice' => 'Link SAN / Datacenterapparaat',
-	'Class:lnkSanToDatacenterDevice+' => '',
-	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN-switch',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'Naam SAN-switch',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Apparaat',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Naam apparaat',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'FC-poort SAN',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'FC-poort apparaat',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '',
-]);
-
-//
-// Class: Tape
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:Tape' => 'Tape',
-	'Class:Tape+' => 'Een Tape (of cartridge) binnen '.ITOP_APPLICATION_SHORT.' is een verwijderbaar opslagonderdeel van een tapebibliotheek.',
-	'Class:Tape/Attribute:name' => 'Naam',
-	'Class:Tape/Attribute:name+' => '',
-	'Class:Tape/Attribute:description' => 'Omschrijving',
-	'Class:Tape/Attribute:description+' => '',
-	'Class:Tape/Attribute:size' => 'Grootte',
-	'Class:Tape/Attribute:size+' => '',
-	'Class:Tape/Attribute:tapelibrary_id' => 'Tapebibliotheek',
-	'Class:Tape/Attribute:tapelibrary_id+' => '',
-	'Class:Tape/Attribute:tapelibrary_name' => 'Tapebibliotheek naam',
-	'Class:Tape/Attribute:tapelibrary_name+' => '',
-]);
-
-//
-// Class: NASFileSystem
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:NASFileSystem' => 'NAS-bestandssysteem',
-	'Class:NASFileSystem+' => '',
-	'Class:NASFileSystem/Attribute:name' => 'Naam',
-	'Class:NASFileSystem/Attribute:name+' => '',
-	'Class:NASFileSystem/Attribute:description' => 'Omschrijving',
-	'Class:NASFileSystem/Attribute:description+' => '',
-	'Class:NASFileSystem/Attribute:raid_level' => 'RAID-niveau',
-	'Class:NASFileSystem/Attribute:raid_level+' => '',
-	'Class:NASFileSystem/Attribute:size' => 'Grootte',
-	'Class:NASFileSystem/Attribute:size+' => '',
-	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
-	'Class:NASFileSystem/Attribute:nas_id+' => '',
-	'Class:NASFileSystem/Attribute:nas_name' => 'Naam NAS',
-	'Class:NASFileSystem/Attribute:nas_name+' => '',
-]);
-
-//
-// Class: Software
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Software' => 'Software',
-	'Class:Software+' => '',
+	'Class:Software+' => 'Software is a generic item in the software catalog. It has a particular version. In '.ITOP_APPLICATION_SHORT.' a Software has a category amongst: DB Server, Middleware, PC Software, Web Server and Other Software.~~',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s',
 	'Class:Software/Attribute:name' => 'Naam',
-	'Class:Software/Attribute:name+' => '',
+	'Class:Software/Attribute:name+' => '~~',
 	'Class:Software/Attribute:vendor' => 'Leverancier',
-	'Class:Software/Attribute:vendor+' => '',
+	'Class:Software/Attribute:vendor+' => '~~',
 	'Class:Software/Attribute:version' => 'Versie',
-	'Class:Software/Attribute:version+' => '',
+	'Class:Software/Attribute:version+' => '~~',
+	'Class:Software/Attribute:end_of_support' => 'End of support~~',
+	'Class:Software/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this software version.~~',
 	'Class:Software/Attribute:documents_list' => 'Documenten',
 	'Class:Software/Attribute:documents_list+' => 'Alle documenten gelinkt aan deze software',
 	'Class:Software/Attribute:logo' => 'Logo',
 	'Class:Software/Attribute:logo+' => 'Wordt gebruikt als pictogram voor alle software-instanties die deze software gebruiken, wanneer deze worden weergegeven in impactanalyses.',
 	'Class:Software/Attribute:type' => 'Type',
-	'Class:Software/Attribute:type+' => '',
+	'Class:Software/Attribute:type+' => '~~',
 	'Class:Software/Attribute:type/Value:DBServer' => 'Databaseserver',
 	'Class:Software/Attribute:type/Value:DBServer+' => 'Databaseserver',
 	'Class:Software/Attribute:type/Value:Middleware' => 'Middleware',
@@ -918,203 +350,357 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Software/Attribute:softwarepatch_list+' => 'Alle patches voor deze software',
 	'Class:Software/Attribute:softwarelicence_list' => 'Softwarelicenties',
 	'Class:Software/Attribute:softwarelicence_list+' => 'Alle licenties voor deze software',
-]);
-
-//
-// Class: Patch
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:SoftwareInstance' => 'Software-instantie',
+	'Class:SoftwareInstance+' => 'Abstract class representing the deployment of a Software on a device (Server, PC, VirtualMachine). In '.ITOP_APPLICATION_SHORT.' there are different types of Software Instance: DB Server, Middleware, PC Software, Web Server and Other Software~~',
+	'Class:SoftwareInstance/Attribute:system_id' => 'Systeem',
+	'Class:SoftwareInstance/Attribute:system_id+' => 'The system can be a Server, a Virtual Machine, a PC, ...~~',
+	'Class:SoftwareInstance/Attribute:system_name' => 'Naam systeem',
+	'Class:SoftwareInstance/Attribute:system_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_id' => 'Software',
+	'Class:SoftwareInstance/Attribute:software_id+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_name' => 'Naam software',
+	'Class:SoftwareInstance/Attribute:software_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_end_of_support' => 'Software end of support~~',
+	'Class:SoftwareInstance/Attribute:software_end_of_support+' => 'The date after which the editor ceases to provide patches for this software version.~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Licentie software',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Naam licentie software',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:path' => 'Pad',
+	'Class:SoftwareInstance/Attribute:path+' => '~~',
+	'Class:SoftwareInstance/Attribute:status' => 'Status',
+	'Class:SoftwareInstance/Attribute:status+' => '~~',
+	'Class:SoftwareInstance/Attribute:status/Value:active' => 'Actief',
+	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'Actief',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Inactief',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'Inactief',
+	'Class:Middleware' => 'Middleware',
+	'Class:Middleware+' => 'Software Instance offering services to other software (like: Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere or Lotus Domino) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware-instanties',
+	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Alle middleware-instanties die geleverd worden door deze middleware',
+	'Class:DBServer' => 'Databaseserver',
+	'Class:DBServer+' => 'Software Instance offering database services (MySQL 8.0, Oracle, SQL Server, DB2…) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:DBServer/Attribute:dbschema_list' => 'Databaseschema\'s',
+	'Class:DBServer/Attribute:dbschema_list+' => 'Alle databaseschema\'s voor deze databaseserver',
+	'Class:WebServer' => 'Webserver',
+	'Class:WebServer+' => 'It is a Software Instance, offering Web services (like Apache 2.4, Nginx 1.29.4, IIS 7.0) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:WebServer/Attribute:webapp_list' => 'Webapplicaties',
+	'Class:WebServer/Attribute:webapp_list+' => 'Alle webapplicaties die beschikbaar zijn voor deze webserver',
+	'Class:PCSoftware' => 'PC-software',
+	'Class:PCSoftware+' => 'Software Instance for software (like MS Office, Adobe Photoshop or Filezilla) installed on a PC.~~',
+	'Class:OtherSoftware' => 'Overige software',
+	'Class:OtherSoftware+' => 'Any type of Software Instance that do not fit in the other categories: PC Software, Middleware, DB server or Web Server.~~',
+	'Class:MiddlewareInstance' => 'Middleware-instantie',
+	'Class:MiddlewareInstance+' => 'Functional CI representing a service delivered by a Middleware.~~',
+	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Wordt gebruikt als objectpictogram bij weergave in impactanalyse.',
+	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
+	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
+	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Naam middleware',
+	'Class:MiddlewareInstance/Attribute:middleware_name+' => '~~',
+	'Class:DatabaseSchema' => 'Databaseschema',
+	'Class:DatabaseSchema+' => 'Dabatase instance running of a specific DB server.~~',
+	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s',
+	'Class:DatabaseSchema/Attribute:dbserver_id' => 'Databaseserver',
+	'Class:DatabaseSchema/Attribute:dbserver_id+' => '~~',
+	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Naam databaseserver',
+	'Class:DatabaseSchema/Attribute:dbserver_name+' => '~~',
+	'Class:WebApplication' => 'Webapplicatie',
+	'Class:WebApplication+' => 'Instance of an application accessible using a web browser and that runs on a given Web Server instance. For eg. this iTop that you\'re looking at.~~',
+	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
+	'Class:WebApplication/Attribute:webserver_id' => 'Webserver',
+	'Class:WebApplication/Attribute:webserver_id+' => '~~',
+	'Class:WebApplication/Attribute:webserver_name' => 'Naam webserver',
+	'Class:WebApplication/Attribute:webserver_name+' => '~~',
+	'Class:WebApplication/Attribute:logo' => 'Logo',
+	'Class:WebApplication/Attribute:logo+' => 'Wordt gebruikt als objectpictogram bij weergave in impactanalyse.',
+	'Class:WebApplication/Attribute:url' => 'Link (URL)',
+	'Class:WebApplication/Attribute:url+' => '~~',
+	'Class:VirtualDevice' => 'Virtueel apparaat',
+	'Class:VirtualDevice+' => 'Abstract class used for server virtualization (Virtual Host and Virtual Machine).~~',
+	'Class:VirtualDevice/Attribute:status' => 'Status',
+	'Class:VirtualDevice/Attribute:status+' => '~~',
+	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Implementatie',
+	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'Implementatie',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Buiten gebruik',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'Buiten gebruik',
+	'Class:VirtualDevice/Attribute:status/Value:production' => 'Productie',
+	'Class:VirtualDevice/Attribute:status/Value:production+' => 'Productie',
+	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Voorraad',
+	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'Voorraad',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Logical volumes',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Alle logische volumes die door dit apparaat gebruikt worden',
+	'Class:VirtualHost' => 'Virtuele host',
+	'Class:VirtualHost+' => 'Abstract class used for Virtual Devices (Hypervisor, Farm,...) hosting Virtual Machines.~~',
+	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtuele machines',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Alle virtuele machines die op deze host draaien',
+	'Class:Hypervisor' => 'Hypervisor',
+	'Class:Hypervisor+' => 'Virtual Host. Virtualization software (MS Hyper-V, VMWare ESX, Xen, etc.), running on a physical Server and supporting the creation of Virtual Machines.~~',
+	'Class:Hypervisor/Attribute:farm_id' => 'Farm',
+	'Class:Hypervisor/Attribute:farm_id+' => '~~',
+	'Class:Hypervisor/Attribute:farm_name' => 'Naam farm',
+	'Class:Hypervisor/Attribute:farm_name+' => '~~',
+	'Class:Hypervisor/Attribute:server_id' => 'Server',
+	'Class:Hypervisor/Attribute:server_id+' => '~~',
+	'Class:Hypervisor/Attribute:server_name' => 'Naam server',
+	'Class:Hypervisor/Attribute:server_name+' => '~~',
+	'Class:Farm' => 'Farm',
+	'Class:Farm+' => 'Virtual Host. A Farm (or cluster) is a group of Hypervisors pooled together and sharing storage resources to provide an overall fault tolerant system for hosting Virtual Machines.~~',
+	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisors',
+	'Class:Farm/Attribute:hypervisor_list+' => 'Alle hypervisors die samen deze farm vormen',
+	'Class:Farm/Attribute:redundancy' => 'Hoge beschikbaarheid',
+	'Class:Farm/Attribute:redundancy/disabled' => 'De farm is beschikbaar als alle hypervisors beschikbaar zijn.',
+	'Class:Farm/Attribute:redundancy/count' => 'De farm is beschikbaar als minstens %1$s hypervisor(s) actief is/zijn',
+	'Class:Farm/Attribute:redundancy/percent' => 'De farm is beschikbaar als minstens %1$s %% hypervisors beschikbaar zijn',
+	'Class:VirtualMachine' => 'Virtuele machine',
+	'Class:VirtualMachine+' => 'Virtual Device equivalent to a Server, it is hosted either on an Hypervisor or on a Farm.~~',
+	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s',
+	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Virtuele host',
+	'Class:VirtualMachine/Attribute:virtualhost_id+' => '~~',
+	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Naam virtuele host',
+	'Class:VirtualMachine/Attribute:virtualhost_name+' => '~~',
+	'Class:VirtualMachine/Attribute:osfamily_id' => 'Besturingssysteem',
+	'Class:VirtualMachine/Attribute:osfamily_id+' => '~~',
+	'Class:VirtualMachine/Attribute:osfamily_name' => 'Naam besturingssysteem',
+	'Class:VirtualMachine/Attribute:osfamily_name+' => '~~',
+	'Class:VirtualMachine/Attribute:osversion_id' => 'Versie besturingssysteem',
+	'Class:VirtualMachine/Attribute:osversion_id+' => '~~',
+	'Class:VirtualMachine/Attribute:osversion_name' => 'Naam versie besturingssysteem',
+	'Class:VirtualMachine/Attribute:osversion_name+' => '~~',
+	'Class:VirtualMachine/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:VirtualMachine/Attribute:os_end_of_support+' => 'When the OS version is no more supported by the vendor, if this information is documented on the OS Version.~~',
+	'Class:VirtualMachine/Attribute:oslicence_id' => 'Licentie besturingssysteem',
+	'Class:VirtualMachine/Attribute:oslicence_id+' => '~~',
+	'Class:VirtualMachine/Attribute:oslicence_name' => 'Naam licentie besturingssysteem',
+	'Class:VirtualMachine/Attribute:oslicence_name+' => '~~',
+	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
+	'Class:VirtualMachine/Attribute:cpu+' => '~~',
+	'Class:VirtualMachine/Attribute:ram' => 'RAM',
+	'Class:VirtualMachine/Attribute:ram+' => '~~',
+	'Class:VirtualMachine/Attribute:managementip' => 'IP',
+	'Class:VirtualMachine/Attribute:managementip+' => '~~',
+	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Netwerkinterfaces',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Alle logische netwerkinterfaces',
+	'Class:LogicalVolume' => 'Logisch volume',
+	'Class:LogicalVolume+' => 'The unit of storage managed inside a Storage System. It can be accessed by multiple Servers and Virtual Devices.~~',
+	'Class:LogicalVolume/Attribute:name' => 'Naam',
+	'Class:LogicalVolume/Attribute:name+' => '~~',
+	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
+	'Class:LogicalVolume/Attribute:lun_id+' => '~~',
+	'Class:LogicalVolume/Attribute:description' => 'Omschrijving',
+	'Class:LogicalVolume/Attribute:description+' => '~~',
+	'Class:LogicalVolume/Attribute:raid_level' => 'RAID-niveau',
+	'Class:LogicalVolume/Attribute:raid_level+' => '~~',
+	'Class:LogicalVolume/Attribute:size' => 'Grootte',
+	'Class:LogicalVolume/Attribute:size+' => '~~',
+	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Opslagsysteem',
+	'Class:LogicalVolume/Attribute:storagesystem_id+' => '~~',
+	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Naam opslagsysteem',
+	'Class:LogicalVolume/Attribute:storagesystem_name+' => '~~',
+	'Class:LogicalVolume/Attribute:servers_list' => 'Servers',
+	'Class:LogicalVolume/Attribute:servers_list+' => 'Alle servers die dit volume gebruiken',
+	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtuele apparaten',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Alle virtuele apparaten die dit volume gebruiken',
+	'Class:lnkServerToVolume' => 'Link Server / Volume',
+	'Class:lnkServerToVolume+' => 'This many-to-many link indicates that a Server uses a Logical Volume (a storage unit managed inside a Storage System). Several Servers can use the same Logical Volume.~~',
+	'Class:lnkServerToVolume/Name' => '%1$s / %2$s',
+	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume',
+	'Class:lnkServerToVolume/Attribute:volume_id+' => '~~',
+	'Class:lnkServerToVolume/Attribute:volume_name' => 'Naam volume',
+	'Class:lnkServerToVolume/Attribute:volume_name+' => '~~',
+	'Class:lnkServerToVolume/Attribute:server_id' => 'Server',
+	'Class:lnkServerToVolume/Attribute:server_id+' => '~~',
+	'Class:lnkServerToVolume/Attribute:server_name' => 'Naam server',
+	'Class:lnkServerToVolume/Attribute:server_name+' => '~~',
+	'Class:lnkServerToVolume/Attribute:size_used' => 'Gebruikte grootte',
+	'Class:lnkServerToVolume/Attribute:size_used+' => '~~',
+	'Class:lnkVirtualDeviceToVolume' => 'Link Virtueel apparaat / Volume',
+	'Class:lnkVirtualDeviceToVolume+' => 'This many-to-many link indicates that a Virtual Device uses a Logical Volume (a storage unit managed inside a Storage System). Several Virtual Devices can use the same Logical Volume.~~',
+	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Naam volume',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Virtueel apparaat',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Naam van het virtueel apparaat',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Gebruikte grootte',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '~~',
+	'Class:lnkSanToDatacenterDevice' => 'Link SAN / Datacenterapparaat',
+	'Class:lnkSanToDatacenterDevice+' => 'This many-to-many link models the network connection between a SAN Switch and a Datacenter Device (a Server, a Network Device, etc.).~~',
+	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN-switch',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'Naam SAN-switch',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Apparaat',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Naam apparaat',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'FC-poort SAN',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'FC-poort apparaat',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '~~',
+	'Class:Tape' => 'Tape',
+	'Class:Tape+' => 'Een Tape (of cartridge) binnen '.ITOP_APPLICATION_SHORT.' is een verwijderbaar opslagonderdeel van een tapebibliotheek.',
+	'Class:Tape/Attribute:name' => 'Naam',
+	'Class:Tape/Attribute:name+' => '~~',
+	'Class:Tape/Attribute:description' => 'Omschrijving',
+	'Class:Tape/Attribute:description+' => '~~',
+	'Class:Tape/Attribute:size' => 'Grootte',
+	'Class:Tape/Attribute:size+' => '~~',
+	'Class:Tape/Attribute:tapelibrary_id' => 'Tapebibliotheek',
+	'Class:Tape/Attribute:tapelibrary_id+' => '~~',
+	'Class:Tape/Attribute:tapelibrary_name' => 'Tapebibliotheek naam',
+	'Class:Tape/Attribute:tapelibrary_name+' => '~~',
+	'Class:NASFileSystem' => 'NAS-bestandssysteem',
+	'Class:NASFileSystem+' => 'Represents a shared file system hosted inside a given NAS (Network Attached Storage).~~',
+	'Class:NASFileSystem/Attribute:name' => 'Naam',
+	'Class:NASFileSystem/Attribute:name+' => '~~',
+	'Class:NASFileSystem/Attribute:description' => 'Omschrijving',
+	'Class:NASFileSystem/Attribute:description+' => '~~',
+	'Class:NASFileSystem/Attribute:raid_level' => 'RAID-niveau',
+	'Class:NASFileSystem/Attribute:raid_level+' => '~~',
+	'Class:NASFileSystem/Attribute:size' => 'Grootte',
+	'Class:NASFileSystem/Attribute:size+' => '~~',
+	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
+	'Class:NASFileSystem/Attribute:nas_id+' => '~~',
+	'Class:NASFileSystem/Attribute:nas_name' => 'Naam NAS',
+	'Class:NASFileSystem/Attribute:nas_name+' => '~~',
 	'Class:Patch' => 'Patch',
-	'Class:Patch+' => '',
+	'Class:Patch+' => 'Abstract class, for patch, hotfix, security fix or service pack for an OS or a Software.~~',
 	'Class:Patch/Attribute:name' => 'Naam',
-	'Class:Patch/Attribute:name+' => '',
+	'Class:Patch/Attribute:name+' => '~~',
 	'Class:Patch/Attribute:documents_list' => 'Documenten',
 	'Class:Patch/Attribute:documents_list+' => 'Alle documenten gelinkt aan deze patch',
 	'Class:Patch/Attribute:description' => 'Omschrijving',
-	'Class:Patch/Attribute:description+' => '',
+	'Class:Patch/Attribute:description+' => '~~',
 	'Class:Patch/Attribute:finalclass' => 'Subklasse patch',
-	'Class:Patch/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: OSPatch
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:Patch/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:OSPatch' => 'Besturingssysteempatch',
-	'Class:OSPatch+' => '',
+	'Class:OSPatch+' => 'Patch, hotfix, security fix or service pack for a given operating system.~~',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Apparaten',
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'Alle systemen waarop deze patch is geïnstalleerd',
 	'Class:OSPatch/Attribute:osversion_id' => 'Versie besturingssysteem',
-	'Class:OSPatch/Attribute:osversion_id+' => '',
+	'Class:OSPatch/Attribute:osversion_id+' => '~~',
 	'Class:OSPatch/Attribute:osfamily_id' => 'Soort besturingssysteem',
-	'Class:OSPatch/Attribute:osfamily_id+' => '',
+	'Class:OSPatch/Attribute:osfamily_id+' => '~~',
 	'Class:OSPatch/Attribute:osversion_name' => 'Naam versie besturingssysteem',
-	'Class:OSPatch/Attribute:osversion_name+' => '',
-]);
-
-//
-// Class: SoftwarePatch
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:OSPatch/Attribute:osversion_name+' => '~~',
 	'Class:SoftwarePatch' => 'Softwarepatch',
-	'Class:SoftwarePatch+' => '',
+	'Class:SoftwarePatch+' => 'Patch, hotfix, security fix or service pack for a given software.~~',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Software',
-	'Class:SoftwarePatch/Attribute:software_id+' => '',
+	'Class:SoftwarePatch/Attribute:software_id+' => '~~',
 	'Class:SoftwarePatch/Attribute:software_name' => 'Naam software',
-	'Class:SoftwarePatch/Attribute:software_name+' => '',
+	'Class:SoftwarePatch/Attribute:software_name+' => '~~',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Software-instanties',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Alle systemen waarop deze patch is geïnstalleerd',
-]);
-
-//
-// Class: Licence
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Licence' => 'Licentie',
-	'Class:Licence+' => '',
+	'Class:Licence+' => 'Abstract class. A license contract for a particular OS version or Software~~',
 	'Class:Licence/Attribute:name' => 'Naam',
-	'Class:Licence/Attribute:name+' => '',
+	'Class:Licence/Attribute:name+' => '~~',
 	'Class:Licence/Attribute:documents_list' => 'Documenten',
 	'Class:Licence/Attribute:documents_list+' => 'Alle documenten gelinkt aan deze licentie',
 	'Class:Licence/Attribute:org_id' => 'Organisatie',
-	'Class:Licence/Attribute:org_id+' => '',
+	'Class:Licence/Attribute:org_id+' => '~~',
 	'Class:Licence/Attribute:organization_name' => 'Naam organisatie',
 	'Class:Licence/Attribute:organization_name+' => 'Naam van de organisatie',
 	'Class:Licence/Attribute:usage_limit' => 'Gebruikslimiet',
-	'Class:Licence/Attribute:usage_limit+' => '',
+	'Class:Licence/Attribute:usage_limit+' => '~~',
 	'Class:Licence/Attribute:description' => 'Omschrijving',
-	'Class:Licence/Attribute:description+' => '',
+	'Class:Licence/Attribute:description+' => '~~',
 	'Class:Licence/Attribute:start_date' => 'Startdatum',
-	'Class:Licence/Attribute:start_date+' => '',
+	'Class:Licence/Attribute:start_date+' => '~~',
 	'Class:Licence/Attribute:end_date' => 'Einddatum',
-	'Class:Licence/Attribute:end_date+' => '',
+	'Class:Licence/Attribute:end_date+' => '~~',
 	'Class:Licence/Attribute:licence_key' => 'Code',
-	'Class:Licence/Attribute:licence_key+' => '',
+	'Class:Licence/Attribute:licence_key+' => '~~',
 	'Class:Licence/Attribute:perpetual' => 'Permanente licentie',
-	'Class:Licence/Attribute:perpetual+' => '',
+	'Class:Licence/Attribute:perpetual+' => '~~',
 	'Class:Licence/Attribute:perpetual/Value:no' => 'Nee',
 	'Class:Licence/Attribute:perpetual/Value:no+' => 'Nee',
 	'Class:Licence/Attribute:perpetual/Value:yes' => 'Ja',
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'Ja',
 	'Class:Licence/Attribute:finalclass' => 'Subklasse licentie',
-	'Class:Licence/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: OSLicence
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:Licence/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:OSLicence' => 'Besturingssysteemlicentie',
-	'Class:OSLicence+' => '',
+	'Class:OSLicence+' => 'A license contract for a particular operating system. The license is related to one operating system (for example Windows 2008 R2) and can be associated with several servers or virtual machines.~~',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:OSLicence/Attribute:osversion_id' => 'Versie besturingssysteem',
-	'Class:OSLicence/Attribute:osversion_id+' => '',
+	'Class:OSLicence/Attribute:osversion_id+' => '~~',
 	'Class:OSLicence/Attribute:osfamily_id' => 'Soort besturingssysteem',
-	'Class:OSLicence/Attribute:osfamily_id+' => '',
+	'Class:OSLicence/Attribute:osfamily_id+' => '~~',
 	'Class:OSLicence/Attribute:osversion_name' => 'Naam versie bestandssysteem',
-	'Class:OSLicence/Attribute:osversion_name+' => '',
+	'Class:OSLicence/Attribute:osversion_name+' => '~~',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtuele machines',
 	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Alle virtuele machines die gebruik maken van deze licentie',
 	'Class:OSLicence/Attribute:servers_list' => 'Servers',
 	'Class:OSLicence/Attribute:servers_list+' => 'Alle servers die gebruik maken van deze licentie',
-]);
-
-//
-// Class: SoftwareLicence
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:SoftwareLicence' => 'Softwarelicentie',
-	'Class:SoftwareLicence+' => '',
+	'Class:SoftwareLicence+' => 'A license contract for a particular software. The license is related to one software (for example MS Office 2010) and can be associated with several instances of this software.~~',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Software',
-	'Class:SoftwareLicence/Attribute:software_id+' => '',
+	'Class:SoftwareLicence/Attribute:software_id+' => '~~',
 	'Class:SoftwareLicence/Attribute:software_name' => 'Naam software',
-	'Class:SoftwareLicence/Attribute:software_name+' => '',
+	'Class:SoftwareLicence/Attribute:software_name+' => '~~',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Software-instanties',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Alle systemen die gebruik maken van deze licentie',
-]);
-
-//
-// Class: lnkDocumentToLicence
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkDocumentToLicence' => 'Link Document / Licentie',
-	'Class:lnkDocumentToLicence+' => '',
+	'Class:lnkDocumentToLicence+' => 'Link used when a Document is applicable to a License.~~',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licentie',
-	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Naam licentie',
-	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Naam document',
-	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
-]);
-
-//
-// Class: OSVersion
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:lnkDocumentToLicence/Attribute:document_name+' => '~~',
 	'Class:OSVersion' => 'Versie Besturingssysteem',
-	'Class:OSVersion+' => '',
+	'Class:OSVersion+' => 'Typology. List of the possible values for the "OS Version" of a computer (Server, Virtual Machine or PC). The OS Versions are organized per OS Family.~~',
 	'Class:OSVersion/Attribute:osfamily_id' => 'Soort besturingssysteem',
-	'Class:OSVersion/Attribute:osfamily_id+' => '',
+	'Class:OSVersion/Attribute:osfamily_id+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Naam soort besturingssysteem',
-	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/Attribute:osfamily_name+' => '~~',
+	'Class:OSVersion/Attribute:end_of_support' => 'End of support~~',
+	'Class:OSVersion/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
+	'Class:OSVersion/Attribute:ospatches_list' => 'OS patches~~',
+	'Class:OSVersion/Attribute:ospatches_list+' => 'All the OS patches for this OS version~~',
 	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Naam moet uniek zijn binnen de soort besturingssysteem',
 	'Class:OSVersion/UniquenessRule:name_osfamily' => 'Deze versie van het besturingssysteem bestaat al binnen de soort besturingssysteem',
-]);
-
-//
-// Class: OSFamily
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:OSFamily' => 'Soort Besturingssysteem',
-	'Class:OSFamily+' => '',
+	'Class:OSFamily+' => 'Typology. List of the possible values for the "OS Family" attribute of Servers, Virtual Machines and PCs.~~',
+	'Class:OSFamily/Attribute:osversions_list' => 'OS versions~~',
+	'Class:OSFamily/Attribute:osversions_list+' => 'All the OS versions for this OS family~~',
 	'Class:OSFamily/UniquenessRule:name+' => 'Naam moet uniek zijn',
 	'Class:OSFamily/UniquenessRule:name' => 'Deze soort besturingssysteem bestaat al',
-]);
-
-//
-// Class: Brand
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Brand' => 'Merk',
-	'Class:Brand+' => '',
+	'Class:Brand+' => 'Typology. List of the possible values for the "Brand" attribute of Physical Device.~~',
+	'Class:Brand/Attribute:iosversions_list' => 'IOS versions~~',
+	'Class:Brand/Attribute:iosversions_list+' => 'All the IOS versions from this brand~~',
 	'Class:Brand/Attribute:logo' => 'Logo',
-	'Class:Brand/Attribute:logo+' => '',
+	'Class:Brand/Attribute:logo+' => '~~',
+	'Class:Brand/Attribute:models_list' => 'Models~~',
+	'Class:Brand/Attribute:models_list+' => 'All models for this brand~~',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Fysieke apparaten',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Alle fysieke apparaten van dit merk',
 	'Class:Brand/UniquenessRule:name+' => 'De naam van het merk moet uniek zijn',
 	'Class:Brand/UniquenessRule:name' => 'Dit merk bestaat al',
-]);
-
-//
-// Class: Model
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Model' => 'Model',
-	'Class:Model+' => '',
+	'Class:Model+' => 'Typology. List the possible values for the Model attribute of a Physical Device. Each Model belongs to a single Brand, and usually applies to a single type of Physical Device.~~',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s',
 	'Class:Model/Attribute:brand_id' => 'Merk',
-	'Class:Model/Attribute:brand_id+' => '',
+	'Class:Model/Attribute:brand_id+' => '~~',
 	'Class:Model/Attribute:brand_name' => 'Naam merk',
-	'Class:Model/Attribute:brand_name+' => '',
+	'Class:Model/Attribute:brand_name+' => '~~',
 	'Class:Model/Attribute:picture' => 'Afbeelding',
-	'Class:Model/Attribute:picture+' => '',
+	'Class:Model/Attribute:picture+' => '~~',
 	'Class:Model/Attribute:type' => 'Soort apparaat',
-	'Class:Model/Attribute:type+' => '',
+	'Class:Model/Attribute:type+' => '~~',
+	'Class:Model/Attribute:end_of_support' => 'End of support~~',
+	'Class:Model/Attribute:end_of_support+' => 'The date after which the manufacturer ceases to provide patches and support for this model.~~',
 	'Class:Model/Attribute:type/Value:PowerSource' => 'Stroombron',
 	'Class:Model/Attribute:type/Value:PowerSource+' => 'Stroombron',
 	'Class:Model/Attribute:type/Value:DiskArray' => 'Schijvenset',
@@ -1155,354 +741,229 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Model/Attribute:physicaldevices_list+' => 'Alle fysieke apparaten van dit model',
 	'Class:Model/UniquenessRule:name_brand+' => 'De naam van het merk moet uniek zijn',
 	'Class:Model/UniquenessRule:name_brand' => 'De naam van dit model bestaat al voor dit merk',
-]);
-
-//
-// Class: NetworkDeviceType
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:NetworkDeviceType' => 'Soort netwerkapparaat',
-	'Class:NetworkDeviceType+' => '',
+	'Class:NetworkDeviceType+' => 'Typology. The possible values for the "Type" of a Network Device (e.g. Router, Switch, Firewall, etc.).~~',
 	'Class:NetworkDeviceType/Attribute:logo' => 'Logo',
 	'Class:NetworkDeviceType/Attribute:logo+' => 'Wordt gebruikt als pictogram voor alle netwerkapparaten van dit type wanneer deze in de console worden weergegeven (details, overzichtskaart en impactanalyse).',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Netwerkapparaten',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Alle netwerkapparaten van deze soort',
-]);
-
-//
-// Class: IOSVersion
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:IOSVersion' => 'Versie IOS',
-	'Class:IOSVersion+' => '',
+	'Class:IOSVersion+' => 'Typology. Possible values for the versions of operating system for network devices (IOS from Cisco\'s Internetwork Operating System).~~',
 	'Class:IOSVersion/Attribute:brand_id' => 'Merk',
-	'Class:IOSVersion/Attribute:brand_id+' => '',
+	'Class:IOSVersion/Attribute:brand_id+' => '~~',
 	'Class:IOSVersion/Attribute:brand_name' => 'Naam merk',
-	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/Attribute:brand_name+' => '~~',
+	'Class:IOSVersion/Attribute:end_of_support' => 'End of support~~',
+	'Class:IOSVersion/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this IOS version.~~',
+	'Class:IOSVersion/Attribute:networkdevices_list' => 'Network devices~~',
+	'Class:IOSVersion/Attribute:networkdevices_list+' => 'All the network devices running this IOS version~~',
 	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Naam moet uniek zijn binnen het merk',
 	'Class:IOSVersion/UniquenessRule:name_brand' => 'Deze IOS versie bestaat al binnen dit merk',
-]);
-
-//
-// Class: lnkDocumentToPatch
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkDocumentToPatch' => 'Link Document / Patch',
-	'Class:lnkDocumentToPatch+' => '',
+	'Class:lnkDocumentToPatch+' => 'Link used when a Document is applicable to a Patch.~~',
 	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch',
-	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Naam patch',
-	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Naam document',
-	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
-]);
-
-//
-// Class: lnkSoftwareInstanceToSoftwarePatch
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:lnkDocumentToPatch/Attribute:document_name+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Link Software-instantie / Softwarepatch',
-	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch+' => 'This link indicates that a software patch has been applied to a software instance.~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Softwarepatch',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => 'Naam softwarepatch',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id' => 'Software instantie',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Software instantie naam',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '',
-]);
-
-//
-// Class: lnkFunctionalCIToOSPatch
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch' => 'Link Functioneel CI / Besturingssysteempatch',
-	'Class:lnkFunctionalCIToOSPatch+' => '',
+	'Class:lnkFunctionalCIToOSPatch+' => 'Models the deployment of an OS Patch on a device.~~',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'Besturingssysteempatch',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => 'Naam besturingssysteempatch',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id' => 'Functioneel CI',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'Naam functioneel CI',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '',
-]);
-
-//
-// Class: lnkDocumentToSoftware
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '~~',
 	'Class:lnkDocumentToSoftware' => 'Link Document / Software',
-	'Class:lnkDocumentToSoftware+' => '',
+	'Class:lnkDocumentToSoftware+' => 'Link used when a Document is applicable to Software.~~',
 	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Software',
-	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Naam software',
-	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Naam document',
-	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
-]);
-
-//
-// Class: Subnet
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '~~',
 	'Class:Subnet' => 'Subnet',
-	'Class:Subnet+' => '',
+	'Class:Subnet+' => 'Segment of an IP network, defined by an IP address and a mask~~',
 	'Class:Subnet/Name' => '%1$s/%2$s',
 	'Class:Subnet/ComplementaryName' => '%1$s - %2$s',
 	'Class:Subnet/Attribute:description' => 'Omschrijving',
-	'Class:Subnet/Attribute:description+' => '',
+	'Class:Subnet/Attribute:description+' => '~~',
 	'Class:Subnet/Attribute:subnet_name' => 'Naam subnet',
-	'Class:Subnet/Attribute:subnet_name+' => '',
+	'Class:Subnet/Attribute:subnet_name+' => '~~',
 	'Class:Subnet/Attribute:org_id' => 'Organisatie',
-	'Class:Subnet/Attribute:org_id+' => '',
+	'Class:Subnet/Attribute:org_id+' => '~~',
 	'Class:Subnet/Attribute:org_name' => 'Naam',
 	'Class:Subnet/Attribute:org_name+' => 'Naam van het subnet',
 	'Class:Subnet/Attribute:ip' => 'IP',
-	'Class:Subnet/Attribute:ip+' => '',
+	'Class:Subnet/Attribute:ip+' => '~~',
 	'Class:Subnet/Attribute:ip_mask' => 'IP Mask',
-	'Class:Subnet/Attribute:ip_mask+' => '',
+	'Class:Subnet/Attribute:ip_mask+' => '~~',
 	'Class:Subnet/Attribute:vlans_list' => 'VLAN\'s',
-	'Class:Subnet/Attribute:vlans_list+' => '',
-]);
-
-//
-// Class: VLAN
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:Subnet/Attribute:vlans_list+' => '~~',
 	'Class:VLAN' => 'VLAN',
-	'Class:VLAN+' => '',
+	'Class:VLAN+' => 'A Virtual LAN is used to group together in a logical way networks Subnets and Physical Interfaces that participate in the same VLAN.~~',
 	'Class:VLAN/Attribute:vlan_tag' => 'VLAN-tag',
-	'Class:VLAN/Attribute:vlan_tag+' => '',
+	'Class:VLAN/Attribute:vlan_tag+' => '~~',
 	'Class:VLAN/Attribute:description' => 'Omschrijving',
-	'Class:VLAN/Attribute:description+' => '',
+	'Class:VLAN/Attribute:description+' => '~~',
 	'Class:VLAN/Attribute:org_id' => 'Organisatie',
-	'Class:VLAN/Attribute:org_id+' => '',
+	'Class:VLAN/Attribute:org_id+' => '~~',
 	'Class:VLAN/Attribute:org_name' => 'Naam organisatie',
 	'Class:VLAN/Attribute:org_name+' => 'Naam van de organisatie',
 	'Class:VLAN/Attribute:subnets_list' => 'Subnetten',
-	'Class:VLAN/Attribute:subnets_list+' => '',
+	'Class:VLAN/Attribute:subnets_list+' => '~~',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Fysieke netwerkinterfaces',
-	'Class:VLAN/Attribute:physicalinterfaces_list+' => '',
-]);
-
-//
-// Class: lnkSubnetToVLAN
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:VLAN/Attribute:physicalinterfaces_list+' => '~~',
 	'Class:lnkSubnetToVLAN' => 'Link Subnet / VLAN',
-	'Class:lnkSubnetToVLAN+' => '',
+	'Class:lnkSubnetToVLAN+' => 'This many-to-many link indicates that a VLAN is present on a Subnet. Several VLANs can be present on the same Subnet and a VLAN can span several Subnets.~~',
 	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Subnet',
-	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_ip' => 'IP subnet',
-	'Class:lnkSubnetToVLAN/Attribute:subnet_ip+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_ip+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_name' => 'Naam subnet',
-	'Class:lnkSubnetToVLAN/Attribute:subnet_name+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_name+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id' => 'VLAN',
-	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'Tag VLAN',
-	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '',
-]);
-
-//
-// Class: NetworkInterface
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '~~',
 	'Class:NetworkInterface' => 'Netwerkinterface',
-	'Class:NetworkInterface+' => '',
+	'Class:NetworkInterface+' => 'Abstract class for all types of network interfaces.~~',
 	'Class:NetworkInterface/Attribute:name' => 'Naam',
-	'Class:NetworkInterface/Attribute:name+' => '',
+	'Class:NetworkInterface/Attribute:name+' => '~~',
 	'Class:NetworkInterface/Attribute:finalclass' => 'Subklasse netwerkinterface',
-	'Class:NetworkInterface/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: IPInterface
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:NetworkInterface/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:IPInterface' => 'IP-interface',
-	'Class:IPInterface+' => '',
+	'Class:IPInterface+' => 'Abstract class. A type of Network Interface with an IP address~~',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP-adres',
-	'Class:IPInterface/Attribute:ipaddress+' => '',
+	'Class:IPInterface/Attribute:ipaddress+' => '~~',
 	'Class:IPInterface/Attribute:macaddress' => 'MAC-adres',
-	'Class:IPInterface/Attribute:macaddress+' => '',
+	'Class:IPInterface/Attribute:macaddress+' => '~~',
 	'Class:IPInterface/Attribute:comment' => 'Commentaar',
-	'Class:IPInterface/Attribute:coment+' => '',
+	'Class:IPInterface/Attribute:coment+' => '~~',
 	'Class:IPInterface/Attribute:ipgateway' => 'IP-gateway',
-	'Class:IPInterface/Attribute:ipgateway+' => '',
+	'Class:IPInterface/Attribute:ipgateway+' => '~~',
 	'Class:IPInterface/Attribute:ipmask' => 'IP-mask',
-	'Class:IPInterface/Attribute:ipmask+' => '',
+	'Class:IPInterface/Attribute:ipmask+' => '~~',
 	'Class:IPInterface/Attribute:speed' => 'Snelheid',
-	'Class:IPInterface/Attribute:speed+' => '',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:IPInterface/Attribute:speed+' => '~~',
 	'Class:PhysicalInterface' => 'Fysieke interface',
-	'Class:PhysicalInterface+' => '',
+	'Class:PhysicalInterface+' => 'A type of IP Interface that represents a physical network interface (e.g. an Ethernet card).~~',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Apparaat',
-	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
+	'Class:PhysicalInterface/Attribute:connectableci_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Naam apparaat',
-	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
+	'Class:PhysicalInterface/Attribute:connectableci_name+' => '~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organisatie',
+	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Locatie',
+	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLAN\'s',
-	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
-]);
-
-//
-// Class: lnkPhysicalInterfaceToVLAN
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:PhysicalInterface/Attribute:vlans_list+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Link Fysieke interface / VLAN',
-	'Class:lnkPhysicalInterfaceToVLAN+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN+' => 'This link indicates when a network interface is part of a VLAN (Virtual Local Area Network).~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Fysieke interface',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name' => 'Naam fysieke interface',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id' => 'Apparaat',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name' => 'Naam apparaat',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id' => 'VLAN',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'Tag VLAN',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '',
-]);
-
-//
-// Class: LogicalInterface
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '~~',
 	'Class:LogicalInterface' => 'Logische interface',
-	'Class:LogicalInterface+' => '',
+	'Class:LogicalInterface+' => 'IP Interface which is not associated permanently with a particular physical port, the association is dynamic. It can be used for Virtual Machine.~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Virtuele machine',
-	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '',
+	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Naam virtuele machine',
-	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '',
-]);
-
-//
-// Class: FiberChannelInterface
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '~~',
 	'Class:FiberChannelInterface' => 'Fiber Channel-interface',
-	'Class:FiberChannelInterface+' => '',
+	'Class:FiberChannelInterface+' => 'Network Interface to a high-speed network technology primarily used for connecting Storage Systems.~~',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Snelheid',
-	'Class:FiberChannelInterface/Attribute:speed+' => '',
+	'Class:FiberChannelInterface/Attribute:speed+' => '~~',
 	'Class:FiberChannelInterface/Attribute:topology' => 'Topologie',
-	'Class:FiberChannelInterface/Attribute:topology+' => '',
+	'Class:FiberChannelInterface/Attribute:topology+' => '~~',
 	'Class:FiberChannelInterface/Attribute:wwn' => 'WWN',
-	'Class:FiberChannelInterface/Attribute:wwn+' => '',
+	'Class:FiberChannelInterface/Attribute:wwn+' => '~~',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id' => 'Apparaat',
-	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '',
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '~~',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Naam apparaat',
-	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '',
-]);
-
-//
-// Class: lnkConnectableCIToNetworkDevice
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice' => 'Link ConnectableCI / Netwerkapparaat',
-	'Class:lnkConnectableCIToNetworkDevice+' => '',
+	'Class:lnkConnectableCIToNetworkDevice+' => 'Defines on which network equipment a device is connected.~~',
 	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Netwerkapparaat',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => 'Naam netwerkapparaat',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id' => 'Verbonden apparaat',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name' => 'Naam verbonden apparaat',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port' => 'Netwerkpoort',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port' => 'Apparaatpoort',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type' => 'Soort connectie',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type+' => '',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink' => 'downlink',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'downlink',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'uplink',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'uplink',
-]);
-
-//
-// Class: lnkApplicationSolutionToFunctionalCI
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Link Applicatie-oplossing / Functioneel CI',
-	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI+' => 'Models the membership of a device to an Application Solution. The meaning of this relationship varies depending on the types of Application Solution.~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Applicatie-oplossing',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'Naam applicatie-oplossing',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id' => 'Functioneel CI',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'Naam functioneel CI',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '',
-]);
-
-//
-// Class: lnkApplicationSolutionToBusinessProcess
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Link ApplicationSolution / Bedrijfsproces',
-	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess+' => 'Models the relationship between an Application Solution and a Business Process.~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Bedrijfsproces',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => 'Naam bedrijfsproces',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id' => 'Applicatie-oplossing',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Naam applicatie-oplossing',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '',
-]);
-
-//
-// Class: Group
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '~~',
 	'Class:Group' => 'Groep',
-	'Class:Group+' => '',
+	'Class:Group+' => 'Group is designed to define explicit sets of configurations items for any project purpose. In contrast to Application Solution, a Group is not impacted by any of its component and does not impact them. For example when doing an OS migration, Group can be convenient to gather “Servers to be migrated”. Migrated servers being removed from the group as the migration progresses.~~',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s',
 	'Class:Group/Attribute:name' => 'Naam',
-	'Class:Group/Attribute:name+' => '',
+	'Class:Group/Attribute:name+' => '~~',
 	'Class:Group/Attribute:status' => 'Status',
-	'Class:Group/Attribute:status+' => '',
+	'Class:Group/Attribute:status+' => '~~',
 	'Class:Group/Attribute:status/Value:implementation' => 'Implementatie',
 	'Class:Group/Attribute:status/Value:implementation+' => 'Implementatie',
 	'Class:Group/Attribute:status/Value:obsolete' => 'Buiten gebruik',
@@ -1510,56 +971,55 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Group/Attribute:status/Value:production' => 'Productie',
 	'Class:Group/Attribute:status/Value:production+' => 'Productie',
 	'Class:Group/Attribute:org_id' => 'Organisatie',
-	'Class:Group/Attribute:org_id+' => '',
+	'Class:Group/Attribute:org_id+' => '~~',
 	'Class:Group/Attribute:owner_name' => 'Naam',
 	'Class:Group/Attribute:owner_name+' => 'Naam van de eigenaar',
 	'Class:Group/Attribute:description' => 'Omschrijving',
-	'Class:Group/Attribute:description+' => '',
+	'Class:Group/Attribute:description+' => '~~',
 	'Class:Group/Attribute:type' => 'Soort',
-	'Class:Group/Attribute:type+' => '',
+	'Class:Group/Attribute:type+' => '~~',
 	'Class:Group/Attribute:parent_id' => 'Hoofdgroep',
-	'Class:Group/Attribute:parent_id+' => '',
+	'Class:Group/Attribute:parent_id+' => '~~',
 	'Class:Group/Attribute:parent_name' => 'Naam',
-	'Class:Group/Attribute:parent_name+' => '',
+	'Class:Group/Attribute:parent_name+' => '~~',
 	'Class:Group/Attribute:ci_list' => 'Gelinkte CI\'s',
 	'Class:Group/Attribute:ci_list+' => 'Alle configuratie-items gelinkt aan deze groep',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Hoofdgroep',
-	'Class:Group/Attribute:parent_id_friendlyname+' => '',
-]);
-
-//
-// Class: lnkGroupToCI
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:Group/Attribute:parent_id_friendlyname+' => '~~',
 	'Class:lnkGroupToCI' => 'Link Groep / CI',
-	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI+' => 'This link indicates when a Functional CI is part of a Group.~~',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'Groep',
-	'Class:lnkGroupToCI/Attribute:group_id+' => '',
+	'Class:lnkGroupToCI/Attribute:group_id+' => '~~',
 	'Class:lnkGroupToCI/Attribute:group_name' => 'Naam',
-	'Class:lnkGroupToCI/Attribute:group_name+' => '',
+	'Class:lnkGroupToCI/Attribute:group_name+' => '~~',
 	'Class:lnkGroupToCI/Attribute:ci_id' => 'CI',
-	'Class:lnkGroupToCI/Attribute:ci_id+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_id+' => '~~',
 	'Class:lnkGroupToCI/Attribute:ci_name' => 'Naam',
-	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_name+' => '~~',
 	'Class:lnkGroupToCI/Attribute:reason' => 'Reden',
-	'Class:lnkGroupToCI/Attribute:reason+' => '',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:lnkGroupToCI/Attribute:reason+' => '~~',
+	'Class:lnkDocumentToFunctionalCI' => 'Link Document / Functioneel CI',
+	'Class:lnkDocumentToFunctionalCI+' => 'Link used when a Document is applicable to a Functional CI.~~',
+	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Functioneel CI',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Naam Functioneel CI',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Naam document',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
 	'ConfigMgmt:baseinfo' => 'Globale informatie',
 	'ConfigMgmt:moreinfo' => 'CI specifieke informatie',
-	'Storage:moreinfo' => 'Opslaginformatie',
 	'ConfigMgmt:otherinfo' => 'Andere informatie',
 	'ConfigMgmt:dates' => 'Datums',
+	'Storage:moreinfo' => 'Opslaginformatie',
 	'Software:moreinfo' => 'Software informatie',
 	'Phone:moreinfo' => 'Telefoon informatie',
 	'Server:baseinfo' => 'Globale informatie',
-	'Server:Date' => 'Datum',
 	'Server:moreinfo' => 'Meer informatie',
+	'Server:Date' => 'Datum',
 	'Server:otherinfo' => 'Andere informatie',
 	'Server:power' => 'Stroomtoevoer',
 	'Class:Subnet/Tab:IPUsage' => 'IP-gebruik',
@@ -1569,31 +1029,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Subnet/Tab:FreeIPs-count' => 'Beschikbare IP-adressen: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Dit zijn 10 beschikbare IP-adressen',
 	'Class:Document:PreviewTab' => 'Voorbeeld',
-]);
-
-//
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:lnkDocumentToFunctionalCI' => 'Link Document / Functioneel CI',
-	'Class:lnkDocumentToFunctionalCI+' => '',
-	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Functioneel CI',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Naam Functioneel CI',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Naam document',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:Application' => 'Applicaties',
 	'Menu:Application+' => 'Alle applicaties',
 	'Menu:DBServer' => 'Databaseservers',
@@ -1635,18 +1070,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:Group' => 'Groepen van CI\'s',
 	'Menu:Group+' => 'Groepen van CI\'s',
 	'Menu:OSVersion' => 'Versies besturingssysteem',
-	'Menu:OSVersion+' => '',
+	'Menu:OSVersion+' => '~~',
 	'Menu:Software' => 'Softwarecatalogus',
 	'Menu:Software+' => 'Softwarecatalogus',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organisatie',
-	'Class:PhysicalInterface/Attribute:org_id+' => '',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Locatie',
-	'Class:PhysicalInterface/Attribute:location_id+' => '',
 ]);

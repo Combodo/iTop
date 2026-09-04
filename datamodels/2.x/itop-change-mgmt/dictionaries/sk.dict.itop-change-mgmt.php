@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -19,7 +18,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:SearchChanges' => 'Vyhľadať zmeny',
 	'Menu:SearchChanges+' => 'Search for change tickets~~',
 	'Menu:Change:Shortcuts' => 'Skratky',
-	'Menu:Change:Shortcuts+' => '~~',
+	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => 'Zmeny očakávajúce prijatie',
 	'Menu:WaitingAcceptance+' => '~~',
 	'Menu:WaitingApproval' => 'Zmeny očakávajúce schválenie',
@@ -34,25 +33,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Zmeny podľa stavu za posledných 7 dní',
 	'Tickets:Related:OpenChanges' => 'Open changes~~',
 	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Change
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Change' => 'Zmena',
-	'Class:Change+' => '~~',
+	'Class:Change+' => 'A type of Ticket to handle Change which has an effect on delivered Services.~~',
 	'Class:Change/Attribute:status' => 'Stav',
 	'Class:Change/Attribute:status+' => '~~',
 	'Class:Change/Attribute:status/Value:new' => 'Nová',

@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -22,52 +21,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Relation:impacts/LoadData' => 'Carica dati',
 	'Relation:impacts/NoFilteredData' => 'seleziona oggetti e carica dati',
 	'Relation:impacts/FilteredData' => 'Dati filtrati',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: lnkContactToFunctionalCI
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContactToFunctionalCI' => 'Link Contact / FunctionalCI',
-	'Class:lnkContactToFunctionalCI+' => '~~',
+	'Class:lnkContactToFunctionalCI+' => 'Manages Contacts linked to Functional CIs. This can be a team responsible for the equipment, to assign related Tickets, or the person to whom an individual device such as a PC or phone is assigned, to manage the inventory.~~',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'CI funzionale',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '~~',
@@ -77,21 +32,14 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Nome Contatto',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '~~',
-]);
-
-//
-// Class: FunctionalCI
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:FunctionalCI' => 'CI Funzionale',
-	'Class:FunctionalCI+' => '',
+	'Class:FunctionalCI+' => 'Abstract class grouping most Configuration Items types used for CMDB.~~',
 	'Class:FunctionalCI/Attribute:name' => 'Nome',
-	'Class:FunctionalCI/Attribute:name+' => '',
+	'Class:FunctionalCI/Attribute:name+' => '~~',
 	'Class:FunctionalCI/Attribute:description' => 'Descrizione',
 	'Class:FunctionalCI/Attribute:description+' => '~~',
 	'Class:FunctionalCI/Attribute:org_id' => 'Organizzazione proprietaria',
-	'Class:FunctionalCI/Attribute:org_id+' => '',
+	'Class:FunctionalCI/Attribute:org_id+' => '~~',
 	'Class:FunctionalCI/Attribute:organization_name' => 'Nome organizzazione',
 	'Class:FunctionalCI/Attribute:organization_name+' => 'Nome comune',
 	'Class:FunctionalCI/Attribute:business_criticity' => 'Criticità aziendale',
@@ -104,6 +52,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => 'media',
 	'Class:FunctionalCI/Attribute:move2production' => 'Data di passaggio alla produzione',
 	'Class:FunctionalCI/Attribute:move2production+' => '~~',
+	'Class:FunctionalCI/Attribute:groups_list' => 'Groups~~',
+	'Class:FunctionalCI/Attribute:groups_list+' => 'Groups can be used as tags, to document environment, projects (migration, upgrade, security), etc…~~',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Contatti',
 	'Class:FunctionalCI/Attribute:contacts_list+' => 'Tutti i contatti per questo elemento di configurazione',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Documenti',
@@ -113,18 +63,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Software',
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'Tutti i software installati su questo elemento di configurazione',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Tipo',
-	'Class:FunctionalCI/Attribute:finalclass+' => '',
+	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Ticket attivi',
 	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Ticket attivi che stanno influenzando questa CI funzionale',
-]);
-
-//
-// Class: PhysicalDevice
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PhysicalDevice' => 'Dispositivo Fisico',
-	'Class:PhysicalDevice+' => '~~',
+	'Class:PhysicalDevice+' => 'Abstract class grouping physical types of Configuration Items. A Physical Device can be located. It has usually a Brand and Model.~~',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'Numero di serie',
 	'Class:PhysicalDevice/Attribute:serialnumber+' => '~~',
@@ -148,6 +91,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PhysicalDevice/Attribute:brand_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:model_id' => 'Modello',
 	'Class:PhysicalDevice/Attribute:model_id+' => '~~',
+	'Class:PhysicalDevice/Attribute:model_end_of_support' => 'Model end of support~~',
+	'Class:PhysicalDevice/Attribute:model_end_of_support+' => 'When the hardware model is no more supported by the manufacturer, if this information is documented on the Model.~~',
 	'Class:PhysicalDevice/Attribute:model_name' => 'Nome Modello',
 	'Class:PhysicalDevice/Attribute:model_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:asset_number' => 'Numero di asset',
@@ -156,15 +101,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PhysicalDevice/Attribute:purchase_date+' => '~~',
 	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Scadenza garanzia',
 	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '~~',
-]);
-
-//
-// Class: Rack
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Rack' => 'Rack',
-	'Class:Rack+' => '~~',
+	'Class:Rack+' => 'A physical cabinet for Datacenter Devices and Enclosures.~~',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s',
 	'Class:Rack/Attribute:nb_u' => 'Unità Rack',
 	'Class:Rack/Attribute:nb_u+' => '~~',
@@ -172,64 +110,22 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Rack/Attribute:device_list+' => 'Tutti i dispositivi fisici installati in questo rack',
 	'Class:Rack/Attribute:enclosure_list' => 'Contenitori',
 	'Class:Rack/Attribute:enclosure_list+' => 'Tutti i contenitori in questo rack',
-]);
-
-//
-// Class: TelephonyCI
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TelephonyCI' => 'CI Telefoni',
-	'Class:TelephonyCI+' => '~~',
+	'Class:TelephonyCI+' => 'Abstract class grouping telephony devices~~',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Numero di telefono',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '~~',
-]);
-
-//
-// Class: Phone
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Phone' => 'Telefono fisso',
-	'Class:Phone+' => '~~',
-]);
-
-//
-// Class: MobilePhone
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:Phone+' => 'End User device. Plain wired phone~~',
 	'Class:MobilePhone' => 'Cellulari',
-	'Class:MobilePhone+' => '',
+	'Class:MobilePhone+' => 'End User device. Wireless phone~~',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
-	'Class:MobilePhone/Attribute:imei+' => '',
+	'Class:MobilePhone/Attribute:imei+' => '~~',
 	'Class:MobilePhone/Attribute:hw_pin' => 'Hardware PIN',
-	'Class:MobilePhone/Attribute:hw_pin+' => '',
-]);
-
-//
-// Class: IPPhone
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:MobilePhone/Attribute:hw_pin+' => '~~',
 	'Class:IPPhone' => 'Telefoni IP / VoIP',
-	'Class:IPPhone+' => '~~',
-]);
-
-//
-// Class: Tablet
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:IPPhone+' => 'Physical device dedicated to phone calls, connected to a network~~',
 	'Class:Tablet' => 'Tablet',
-	'Class:Tablet+' => '~~',
-]);
-
-//
-// Class: ConnectableCI
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:Tablet+' => 'End User device. For example iPad, Galaxy Note/Tab Nexus, Kindle...~~',
 	'Class:ConnectableCI' => 'CI collegabile',
 	'Class:ConnectableCI+' => 'CI fisico',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s',
@@ -237,15 +133,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Tutti i dispositivi di rete collegati a questo dispositivo',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Interfacce di rete',
 	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'Tutte le interfacce di rete fisiche',
-]);
-
-//
-// Class: DatacenterDevice
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DatacenterDevice' => 'Datacenter Device',
-	'Class:DatacenterDevice+' => '~~',
+	'Class:DatacenterDevice+' => 'A physical equipment, connected to the network and installed in a data center, usually in a Rack or an Enclosure. This can include Servers, Network Devices, Storage Systems, SAN Switches, Tape Libraries, NAS Devices, etc.~~',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'Rack',
 	'Class:DatacenterDevice/Attribute:rack_id+' => '~~',
@@ -275,15 +164,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'Il dispositivo è operativo se almeno una connessione elettrica (A o B) è attiva',
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'Il dispositivo è operativo se tutte le sue connessioni elettriche sono attive',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'Il dispositivo è operativo se almeno il %1$s %% delle sue connessioni elettriche sono attive',
-]);
-
-//
-// Class: NetworkDevice
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:NetworkDevice' => 'Dispositivi di rete',
-	'Class:NetworkDevice+' => '',
+	'Class:NetworkDevice+' => 'Any type of network device: router, switch, hub, load balancer, firewall…~~',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Tipo di Rete',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '~~',
@@ -295,17 +177,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:NetworkDevice/Attribute:iosversion_id+' => '~~',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'Nome Versione IOS',
 	'Class:NetworkDevice/Attribute:iosversion_name+' => '~~',
+	'Class:NetworkDevice/Attribute:ios_end_of_support' => 'IOS end of support~~',
+	'Class:NetworkDevice/Attribute:ios_end_of_support+' => 'The date after which the editor no longer provides fixes for this IOS version.~~',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
-	'Class:NetworkDevice/Attribute:ram+' => '',
-]);
-
-//
-// Class: Server
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:NetworkDevice/Attribute:ram+' => '~~',
 	'Class:Server' => 'Server',
-	'Class:Server+' => '',
+	'Class:Server+' => 'Datacenter Device managing access to centralized resources or services. It contains an OS Version executing Software Instances.~~',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s',
 	'Class:Server/Attribute:osfamily_id' => 'Famiglia OS',
 	'Class:Server/Attribute:osfamily_id+' => '~~',
@@ -315,73 +192,40 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Server/Attribute:osversion_id+' => '~~',
 	'Class:Server/Attribute:osversion_name' => 'Nome Versione OS',
 	'Class:Server/Attribute:osversion_name+' => '~~',
+	'Class:Server/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:Server/Attribute:os_end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
 	'Class:Server/Attribute:oslicence_id' => 'Licenza OS',
 	'Class:Server/Attribute:oslicence_id+' => '~~',
 	'Class:Server/Attribute:oslicence_name' => 'Nome Licenza OS',
 	'Class:Server/Attribute:oslicence_name+' => '~~',
 	'Class:Server/Attribute:cpu' => 'CPU',
-	'Class:Server/Attribute:cpu+' => '',
+	'Class:Server/Attribute:cpu+' => '~~',
 	'Class:Server/Attribute:ram' => 'RAM',
-	'Class:Server/Attribute:ram+' => '',
+	'Class:Server/Attribute:ram+' => '~~',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Volumi Logici',
 	'Class:Server/Attribute:logicalvolumes_list+' => 'Tutti i volumi logici collegati a questo server',
-]);
-
-//
-// Class: StorageSystem
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:StorageSystem' => 'Sistema di Archiviazione',
-	'Class:StorageSystem+' => '~~',
+	'Class:StorageSystem+' => 'Storage system that can be attached either to a SAN or to an Ethernet network. The logical unit of storage managed by a Storage System is a Logical Volume.~~',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Volumi Logici',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Tutti i volumi logici in questo sistema di archiviazione',
-]);
-
-//
-// Class: SANSwitch
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SANSwitch' => 'SAN Switch',
-	'Class:SANSwitch+' => '~~',
+	'Class:SANSwitch+' => 'A SAN Switch is a network switch compatible with the Fibre Channel protocol used by storage networks. It is a Datacenter Device.~~',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Dispositivi',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Tutti i dispositivi collegati a questo switch SAN',
-]);
-
-//
-// Class: TapeLibrary
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TapeLibrary' => 'Libreria di nastri',
-	'Class:TapeLibrary+' => '~~',
+	'Class:TapeLibrary+' => 'Datacenter Device which hosts multiple magnetic Tapes (or cartridge). Tape Libraries are used for data backup or archiving.~~',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Nastri',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'Tutti i nastri nella libreria di nastri',
-]);
-
-//
-// Class: NAS
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:NAS' => 'NAS',
-	'Class:NAS+' => '~~',
+	'Class:NAS+' => 'High-capacity storage device racked in a datacenter and connected to a network. In '.ITOP_APPLICATION_SHORT.' a NAS (Network-attached storage) is hosting NAS File Systems.~~',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'File system',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'Tutti i file system in questo NAS',
-]);
-
-//
-// Class: PC
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PC' => 'PC',
-	'Class:PC+' => '',
+	'Class:PC+' => 'Connectable CI. A Personal Computer (PC) is a Physical Device, Desktop or Laptop, running an operating system and designed to execute Software Instances.~~',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s',
 	'Class:PC/Attribute:osfamily_id' => 'Famiglia OS',
 	'Class:PC/Attribute:osfamily_id+' => '~~',
@@ -391,57 +235,31 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PC/Attribute:osversion_id+' => '~~',
 	'Class:PC/Attribute:osversion_name' => 'Nome Versione OS',
 	'Class:PC/Attribute:osversion_name+' => '~~',
+	'Class:PC/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:PC/Attribute:os_end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
 	'Class:PC/Attribute:cpu' => 'CPU',
-	'Class:PC/Attribute:cpu+' => '',
+	'Class:PC/Attribute:cpu+' => '~~',
 	'Class:PC/Attribute:ram' => 'RAM',
-	'Class:PC/Attribute:ram+' => '',
+	'Class:PC/Attribute:ram+' => '~~',
 	'Class:PC/Attribute:type' => 'Tipo',
 	'Class:PC/Attribute:type+' => '~~',
 	'Class:PC/Attribute:type/Value:desktop' => 'desktop~~',
 	'Class:PC/Attribute:type/Value:desktop+' => 'desktop~~',
 	'Class:PC/Attribute:type/Value:laptop' => 'laptop~~',
 	'Class:PC/Attribute:type/Value:laptop+' => 'laptop~~',
-]);
-
-//
-// Class: Printer
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Printer' => 'Stampante',
-	'Class:Printer+' => '',
+	'Class:Printer+' => 'Connectable CI. Physical Device connected either to the network or to a PC.~~',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s',
-]);
-
-//
-// Class: PowerConnection
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PowerConnection' => 'Connessione di Alimentazione',
-	'Class:PowerConnection+' => '~~',
+	'Class:PowerConnection+' => 'Abstract class grouping physical devices used for electrical power supply.~~',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s',
-]);
-
-//
-// Class: PowerSource
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PowerSource' => 'Sorgente di Alimentazione',
-	'Class:PowerSource+' => '~~',
+	'Class:PowerSource+' => 'Physical Power Connection. Used in a datacenter to document any kind of power source (main power inlet, breaker…) that is not a PDU.~~',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDU',
 	'Class:PowerSource/Attribute:pdus_list+' => 'Tutte le PDU che utilizzano questa sorgente di alimentazione',
-]);
-
-//
-// Class: PDU
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PDU' => 'PDU',
-	'Class:PDU+' => '~~',
+	'Class:PDU+' => 'Power Connection. PDU (Power Distribution Unit) is a device fitted with multiple outputs designed to distribute electric power, especially to racks of computers and networking equipment located within a datacenter.~~',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s',
 	'Class:PDU/Attribute:rack_id' => 'Rack',
 	'Class:PDU/Attribute:rack_id+' => '~~',
@@ -451,25 +269,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PDU/Attribute:powerstart_id+' => '~~',
 	'Class:PDU/Attribute:powerstart_name' => 'Nome Avvio Alimentazione',
 	'Class:PDU/Attribute:powerstart_name+' => '~~',
-]);
-
-//
-// Class: Peripheral
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Peripheral' => 'Periferica',
-	'Class:Peripheral+' => '~~',
+	'Class:Peripheral+' => 'Physical device, used to document any kind of computer peripheral.
+For example: external hard drives, scanners, input devices (trackballs, bar code scanners), etc…~~',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s',
-]);
-
-//
-// Class: Enclosure
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Enclosure' => 'Contenitore',
-	'Class:Enclosure+' => '~~',
+	'Class:Enclosure+' => 'An open-frame chassis mounted inside a Rack, in which to mount IT equipment such as Blade Servers, Network Device...~~',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Enclosure/Attribute:rack_id' => 'Rack',
 	'Class:Enclosure/Attribute:rack_id+' => '~~',
@@ -479,15 +284,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Enclosure/Attribute:nb_u+' => '~~',
 	'Class:Enclosure/Attribute:device_list' => 'Dispositivi',
 	'Class:Enclosure/Attribute:device_list+' => 'Tutti i dispositivi in questo contenitore',
-]);
-
-//
-// Class: ApplicationSolution
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ApplicationSolution' => 'Soluzione Applicativa',
-	'Class:ApplicationSolution+' => '',
+	'Class:ApplicationSolution+' => 'Application Solutions describe complex applications that are made of (or depend on) several basic components. The main information conveyed by an Application Solution is its list of relationships.~~',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Tutti gli elementi di configurazione che compongono questa soluzione applicativa',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Processi aziendali',
@@ -504,15 +302,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'La soluzione è attiva se tutti gli elementi di configurazione sono attivi',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'La soluzione è attiva se almeno %1$s elemento(i) di configurazione sono attivi',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'La soluzione è attiva se almeno il %1$s %% degli elementi di configurazione sono attivi',
-]);
-
-//
-// Class: BusinessProcess
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:BusinessProcess' => 'Processi aziendali',
-	'Class:BusinessProcess+' => '',
+	'Class:BusinessProcess+' => 'A Business Process is used to document a high-level process or an important application for the operations. It is quite similar to an Application Solution but for describing higher level applications or whole processes in the organization.~~',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Soluzioni applicative',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Tutte le soluzioni applicative che influenzano questo processo aziendale',
 	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
@@ -523,377 +314,17 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:BusinessProcess/Attribute:status/Value:active+' => 'attivo',
 	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'inattivo',
 	'Class:BusinessProcess/Attribute:status/Value:inactive+' => 'inattivo',
-]);
-
-//
-// Class: SoftwareInstance
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:SoftwareInstance' => 'Istanza Software',
-	'Class:SoftwareInstance+' => '',
-	'Class:SoftwareInstance/Attribute:system_id' => 'Sistema',
-	'Class:SoftwareInstance/Attribute:system_id+' => 'The system can be a Server, a Virtual Machine, a PC, ...~~',
-	'Class:SoftwareInstance/Attribute:system_name' => 'Nome Sistema',
-	'Class:SoftwareInstance/Attribute:system_name+' => '~~',
-	'Class:SoftwareInstance/Attribute:software_id' => 'Software',
-	'Class:SoftwareInstance/Attribute:software_id+' => '~~',
-	'Class:SoftwareInstance/Attribute:software_name' => 'Software',
-	'Class:SoftwareInstance/Attribute:software_name+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Licenza Software',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '~~',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Nome Licenza Software',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '~~',
-	'Class:SoftwareInstance/Attribute:path' => 'Percorso',
-	'Class:SoftwareInstance/Attribute:path+' => '~~',
-	'Class:SoftwareInstance/Attribute:status' => 'Stato',
-	'Class:SoftwareInstance/Attribute:status+' => '~~',
-	'Class:SoftwareInstance/Attribute:status/Value:active' => 'attivo',
-	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'attivo',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'inattivo',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'inattivo',
-]);
-
-//
-// Class: Middleware
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:Middleware' => 'Middleware',
-	'Class:Middleware+' => '~~',
-	'Class:Middleware/Attribute:middlewareinstance_list' => 'Istanze Middleware',
-	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Tutte le istanze del middleware fornite da questo middleware',
-]);
-
-//
-// Class: DBServer
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:DBServer' => 'Database',
-	'Class:DBServer+' => 'Database server SW',
-	'Class:DBServer/Attribute:dbschema_list' => 'Schema Database',
-	'Class:DBServer/Attribute:dbschema_list+' => 'Tutti gli schemi del database per questo server di database',
-]);
-
-//
-// Class: WebServer
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:WebServer' => 'Web Server',
-	'Class:WebServer+' => '~~',
-	'Class:WebServer/Attribute:webapp_list' => 'Applicazioni web',
-	'Class:WebServer/Attribute:webapp_list+' => 'Tutte le applicazioni web disponibili su questo server web',
-]);
-
-//
-// Class: PCSoftware
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:PCSoftware' => 'Software PC',
-	'Class:PCSoftware+' => '~~',
-]);
-
-//
-// Class: OtherSoftware
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:OtherSoftware' => 'Altro Software',
-	'Class:OtherSoftware+' => '~~',
-]);
-
-//
-// Class: MiddlewareInstance
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:MiddlewareInstance' => 'Istanza Middleware',
-	'Class:MiddlewareInstance+' => '~~',
-	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
-	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
-	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
-	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
-	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
-	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Nome Middleware',
-	'Class:MiddlewareInstance/Attribute:middleware_name+' => '~~',
-]);
-
-//
-// Class: DatabaseSchema
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:DatabaseSchema' => 'Schema del Database',
-	'Class:DatabaseSchema+' => '~~',
-	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s',
-	'Class:DatabaseSchema/Attribute:dbserver_id' => 'Server del Database',
-	'Class:DatabaseSchema/Attribute:dbserver_id+' => '~~',
-	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Nome Server del Database',
-	'Class:DatabaseSchema/Attribute:dbserver_name+' => '~~',
-]);
-
-//
-// Class: WebApplication
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:WebApplication' => 'Web Application',
-	'Class:WebApplication+' => '~~',
-	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
-	'Class:WebApplication/Attribute:webserver_id' => 'Web server',
-	'Class:WebApplication/Attribute:webserver_id+' => '~~',
-	'Class:WebApplication/Attribute:webserver_name' => 'Nome del web server',
-	'Class:WebApplication/Attribute:webserver_name+' => '~~',
-	'Class:WebApplication/Attribute:logo' => 'Logo~~',
-	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
-	'Class:WebApplication/Attribute:url' => 'URL',
-	'Class:WebApplication/Attribute:url+' => '~~',
-]);
-
-//
-// Class: VirtualDevice
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:VirtualDevice' => 'Dispositivo virtuale',
-	'Class:VirtualDevice+' => '~~',
-	'Class:VirtualDevice/Attribute:status' => 'Stato',
-	'Class:VirtualDevice/Attribute:status+' => '~~',
-	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Implementazione',
-	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'Implementazione',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Obsoleto',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'Obsoleto',
-	'Class:VirtualDevice/Attribute:status/Value:production' => 'Produzione',
-	'Class:VirtualDevice/Attribute:status/Value:production+' => 'Produzione',
-	'Class:VirtualDevice/Attribute:status/Value:stock' => 'In Stock',
-	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'In Stock',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Volumi Logici',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Tutti i volumi logici utilizzati da questo dispositivo',
-]);
-
-//
-// Class: VirtualHost
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:VirtualHost' => 'Host Virtuale',
-	'Class:VirtualHost+' => '~~',
-	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Macchine virtuali',
-	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Tutte le macchine virtuali ospitate da questo host',
-]);
-
-//
-// Class: Hypervisor
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:Hypervisor' => 'Hypervisor',
-	'Class:Hypervisor+' => '~~',
-	'Class:Hypervisor/Attribute:farm_id' => 'Farm',
-	'Class:Hypervisor/Attribute:farm_id+' => '~~',
-	'Class:Hypervisor/Attribute:farm_name' => 'Nome Farm',
-	'Class:Hypervisor/Attribute:farm_name+' => '~~',
-	'Class:Hypervisor/Attribute:server_id' => 'Server',
-	'Class:Hypervisor/Attribute:server_id+' => '~~',
-	'Class:Hypervisor/Attribute:server_name' => 'Nome Server',
-	'Class:Hypervisor/Attribute:server_name+' => '~~',
-]);
-
-//
-// Class: Farm
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:Farm' => 'Farm',
-	'Class:Farm+' => '~~',
-	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisor',
-	'Class:Farm/Attribute:hypervisor_list+' => 'Tutti gli hypervisor che compongono questa farm',
-	'Class:Farm/Attribute:redundancy' => 'Alta disponibilità',
-	'Class:Farm/Attribute:redundancy/disabled' => 'La farm è attiva se tutti gli hypervisor sono attivi',
-	'Class:Farm/Attribute:redundancy/count' => 'La farm è attiva se almeno %1$s hypervisor è(sono) attivo(i)',
-	'Class:Farm/Attribute:redundancy/percent' => 'La farm è attiva se almeno %1$s %% degli hypervisor è attivo',
-]);
-
-//
-// Class: VirtualMachine
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:VirtualMachine' => 'Macchina virtuale',
-	'Class:VirtualMachine+' => '~~',
-	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s',
-	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Host virtuale',
-	'Class:VirtualMachine/Attribute:virtualhost_id+' => '~~',
-	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Nome host virtuale',
-	'Class:VirtualMachine/Attribute:virtualhost_name+' => '~~',
-	'Class:VirtualMachine/Attribute:osfamily_id' => 'Famiglia del sistema operativo',
-	'Class:VirtualMachine/Attribute:osfamily_id+' => '~~',
-	'Class:VirtualMachine/Attribute:osfamily_name' => 'Nome della famiglia del sistema operativo',
-	'Class:VirtualMachine/Attribute:osfamily_name+' => '~~',
-	'Class:VirtualMachine/Attribute:osversion_id' => 'Versione del sistema operativo',
-	'Class:VirtualMachine/Attribute:osversion_id+' => '~~',
-	'Class:VirtualMachine/Attribute:osversion_name' => 'Nome della versione del sistema operativo',
-	'Class:VirtualMachine/Attribute:osversion_name+' => '~~',
-	'Class:VirtualMachine/Attribute:oslicence_id' => 'Licenza del Sistema Operativo',
-	'Class:VirtualMachine/Attribute:oslicence_id+' => '~~',
-	'Class:VirtualMachine/Attribute:oslicence_name' => 'Nome della licenza del sistema operativo',
-	'Class:VirtualMachine/Attribute:oslicence_name+' => '~~',
-	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
-	'Class:VirtualMachine/Attribute:cpu+' => '~~',
-	'Class:VirtualMachine/Attribute:ram' => 'RAM',
-	'Class:VirtualMachine/Attribute:ram+' => '~~',
-	'Class:VirtualMachine/Attribute:managementip' => 'IP di gestione',
-	'Class:VirtualMachine/Attribute:managementip+' => '~~',
-	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Interfacce di rete logiche',
-	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Tutte le interfacce di rete logiche',
-]);
-
-//
-// Class: LogicalVolume
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:LogicalVolume' => 'Volume Logico',
-	'Class:LogicalVolume+' => '~~',
-	'Class:LogicalVolume/Attribute:name' => 'Nome',
-	'Class:LogicalVolume/Attribute:name+' => '~~',
-	'Class:LogicalVolume/Attribute:lun_id' => 'ID LUN',
-	'Class:LogicalVolume/Attribute:lun_id+' => '~~',
-	'Class:LogicalVolume/Attribute:description' => 'Descrizione',
-	'Class:LogicalVolume/Attribute:description+' => '~~',
-	'Class:LogicalVolume/Attribute:raid_level' => 'Livello di RAID',
-	'Class:LogicalVolume/Attribute:raid_level+' => '~~',
-	'Class:LogicalVolume/Attribute:size' => 'Dimensione',
-	'Class:LogicalVolume/Attribute:size+' => '~~',
-	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Sistema di archiviazione',
-	'Class:LogicalVolume/Attribute:storagesystem_id+' => '~~',
-	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Nome del sistema di archiviazione',
-	'Class:LogicalVolume/Attribute:storagesystem_name+' => '~~',
-	'Class:LogicalVolume/Attribute:servers_list' => 'Server',
-	'Class:LogicalVolume/Attribute:servers_list+' => 'Tutti i server che utilizzano questo volume',
-	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Dispositivi Virtuali',
-	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Tutti i dispositivi virtuali che utilizzano questo volume',
-]);
-
-//
-// Class: lnkServerToVolume
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:lnkServerToVolume' => 'Collegamento Server / Volume',
-	'Class:lnkServerToVolume+' => '~~',
-	'Class:lnkServerToVolume/Name' => '%1$s / %2$s',
-	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume',
-	'Class:lnkServerToVolume/Attribute:volume_id+' => '~~',
-	'Class:lnkServerToVolume/Attribute:volume_name' => 'Nome del volume',
-	'Class:lnkServerToVolume/Attribute:volume_name+' => '~~',
-	'Class:lnkServerToVolume/Attribute:server_id' => 'Server',
-	'Class:lnkServerToVolume/Attribute:server_id+' => '~~',
-	'Class:lnkServerToVolume/Attribute:server_name' => 'Nome del server',
-	'Class:lnkServerToVolume/Attribute:server_name+' => '~~',
-	'Class:lnkServerToVolume/Attribute:size_used' => 'Dimensione utilizzata',
-	'Class:lnkServerToVolume/Attribute:size_used+' => '~~',
-]);
-
-//
-// Class: lnkVirtualDeviceToVolume
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:lnkVirtualDeviceToVolume' => 'Collegamento dispositivo virtuale / volume',
-	'Class:lnkVirtualDeviceToVolume+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Nome del volume',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Dispositivo virtuale',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Nome del dispositivo virtuale',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Dimensione utilizzata',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '~~',
-]);
-
-//
-// Class: lnkSanToDatacenterDevice
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:lnkSanToDatacenterDevice' => 'Collegamento SAN / Dispositivo Datacenter',
-	'Class:lnkSanToDatacenterDevice+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN switch',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'Nome SAN switch',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Dispositivo',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Nome del dispositivo',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'Porta SAN FC',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Porta dispositivo FC',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '~~',
-]);
-
-//
-// Class: Tape
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:Tape' => 'Nastro',
-	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
-	'Class:Tape/Attribute:name' => 'Nome',
-	'Class:Tape/Attribute:name+' => '~~',
-	'Class:Tape/Attribute:description' => 'Descrizione',
-	'Class:Tape/Attribute:description+' => '~~',
-	'Class:Tape/Attribute:size' => 'Dimensione',
-	'Class:Tape/Attribute:size+' => '~~',
-	'Class:Tape/Attribute:tapelibrary_id' => 'Libreria di nastri',
-	'Class:Tape/Attribute:tapelibrary_id+' => '~~',
-	'Class:Tape/Attribute:tapelibrary_name' => 'Nome della libreria di nastri',
-	'Class:Tape/Attribute:tapelibrary_name+' => '~~',
-]);
-
-//
-// Class: NASFileSystem
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:NASFileSystem' => 'File System NAS',
-	'Class:NASFileSystem+' => '~~',
-	'Class:NASFileSystem/Attribute:name' => 'Nome',
-	'Class:NASFileSystem/Attribute:name+' => '~~',
-	'Class:NASFileSystem/Attribute:description' => 'Descrizione',
-	'Class:NASFileSystem/Attribute:description+' => '~~',
-	'Class:NASFileSystem/Attribute:raid_level' => 'Livello RAID',
-	'Class:NASFileSystem/Attribute:raid_level+' => '~~',
-	'Class:NASFileSystem/Attribute:size' => 'Dimensione',
-	'Class:NASFileSystem/Attribute:size+' => '~~',
-	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
-	'Class:NASFileSystem/Attribute:nas_id+' => '~~',
-	'Class:NASFileSystem/Attribute:nas_name' => 'Nome del NAS',
-	'Class:NASFileSystem/Attribute:nas_name+' => '~~',
-]);
-
-//
-// Class: Software
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Software' => 'Software',
-	'Class:Software+' => '',
+	'Class:Software+' => 'Software is a generic item in the software catalog. It has a particular version. In '.ITOP_APPLICATION_SHORT.' a Software has a category amongst: DB Server, Middleware, PC Software, Web Server and Other Software.~~',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s',
 	'Class:Software/Attribute:name' => 'Nome',
-	'Class:Software/Attribute:name+' => '',
+	'Class:Software/Attribute:name+' => '~~',
 	'Class:Software/Attribute:vendor' => 'Fornitore',
 	'Class:Software/Attribute:vendor+' => '~~',
 	'Class:Software/Attribute:version' => 'Versione',
 	'Class:Software/Attribute:version+' => '~~',
+	'Class:Software/Attribute:end_of_support' => 'End of support~~',
+	'Class:Software/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this software version.~~',
 	'Class:Software/Attribute:documents_list' => 'Documenti',
 	'Class:Software/Attribute:documents_list+' => 'Tutti i documenti collegati a questo software',
 	'Class:Software/Attribute:logo' => 'Logo~~',
@@ -916,32 +347,237 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Software/Attribute:softwarepatch_list+' => 'Tutte le patch per questo software',
 	'Class:Software/Attribute:softwarelicence_list' => 'Licenze Software',
 	'Class:Software/Attribute:softwarelicence_list+' => 'Tutte le licenze per questo software',
-]);
-
-//
-// Class: Patch
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:SoftwareInstance' => 'Istanza Software',
+	'Class:SoftwareInstance+' => 'Abstract class representing the deployment of a Software on a device (Server, PC, VirtualMachine). In '.ITOP_APPLICATION_SHORT.' there are different types of Software Instance: DB Server, Middleware, PC Software, Web Server and Other Software~~',
+	'Class:SoftwareInstance/Attribute:system_id' => 'Sistema',
+	'Class:SoftwareInstance/Attribute:system_id+' => 'The system can be a Server, a Virtual Machine, a PC, ...~~',
+	'Class:SoftwareInstance/Attribute:system_name' => 'Nome Sistema',
+	'Class:SoftwareInstance/Attribute:system_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_id' => 'Software',
+	'Class:SoftwareInstance/Attribute:software_id+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_name' => 'Software',
+	'Class:SoftwareInstance/Attribute:software_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_end_of_support' => 'Software end of support~~',
+	'Class:SoftwareInstance/Attribute:software_end_of_support+' => 'The date after which the editor ceases to provide patches for this software version.~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Licenza Software',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Nome Licenza Software',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:path' => 'Percorso',
+	'Class:SoftwareInstance/Attribute:path+' => '~~',
+	'Class:SoftwareInstance/Attribute:status' => 'Stato',
+	'Class:SoftwareInstance/Attribute:status+' => '~~',
+	'Class:SoftwareInstance/Attribute:status/Value:active' => 'attivo',
+	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'attivo',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'inattivo',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'inattivo',
+	'Class:Middleware' => 'Middleware',
+	'Class:Middleware+' => 'Software Instance offering services to other software (like: Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere or Lotus Domino) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:Middleware/Attribute:middlewareinstance_list' => 'Istanze Middleware',
+	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Tutte le istanze del middleware fornite da questo middleware',
+	'Class:DBServer' => 'Database',
+	'Class:DBServer+' => 'Database server SW',
+	'Class:DBServer/Attribute:dbschema_list' => 'Schema Database',
+	'Class:DBServer/Attribute:dbschema_list+' => 'Tutti gli schemi del database per questo server di database',
+	'Class:WebServer' => 'Web Server',
+	'Class:WebServer+' => 'It is a Software Instance, offering Web services (like Apache 2.4, Nginx 1.29.4, IIS 7.0) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:WebServer/Attribute:webapp_list' => 'Applicazioni web',
+	'Class:WebServer/Attribute:webapp_list+' => 'Tutte le applicazioni web disponibili su questo server web',
+	'Class:PCSoftware' => 'Software PC',
+	'Class:PCSoftware+' => 'Software Instance for software (like MS Office, Adobe Photoshop or Filezilla) installed on a PC.~~',
+	'Class:OtherSoftware' => 'Altro Software',
+	'Class:OtherSoftware+' => 'Any type of Software Instance that do not fit in the other categories: PC Software, Middleware, DB server or Web Server.~~',
+	'Class:MiddlewareInstance' => 'Istanza Middleware',
+	'Class:MiddlewareInstance+' => 'Functional CI representing a service delivered by a Middleware.~~',
+	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
+	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
+	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Nome Middleware',
+	'Class:MiddlewareInstance/Attribute:middleware_name+' => '~~',
+	'Class:DatabaseSchema' => 'Schema del Database',
+	'Class:DatabaseSchema+' => 'Dabatase instance running of a specific DB server.~~',
+	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s',
+	'Class:DatabaseSchema/Attribute:dbserver_id' => 'Server del Database',
+	'Class:DatabaseSchema/Attribute:dbserver_id+' => '~~',
+	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Nome Server del Database',
+	'Class:DatabaseSchema/Attribute:dbserver_name+' => '~~',
+	'Class:WebApplication' => 'Web Application',
+	'Class:WebApplication+' => 'Instance of an application accessible using a web browser and that runs on a given Web Server instance. For eg. this iTop that you\'re looking at.~~',
+	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
+	'Class:WebApplication/Attribute:webserver_id' => 'Web server',
+	'Class:WebApplication/Attribute:webserver_id+' => '~~',
+	'Class:WebApplication/Attribute:webserver_name' => 'Nome del web server',
+	'Class:WebApplication/Attribute:webserver_name+' => '~~',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:WebApplication/Attribute:url' => 'URL',
+	'Class:WebApplication/Attribute:url+' => '~~',
+	'Class:VirtualDevice' => 'Dispositivo virtuale',
+	'Class:VirtualDevice+' => 'Abstract class used for server virtualization (Virtual Host and Virtual Machine).~~',
+	'Class:VirtualDevice/Attribute:status' => 'Stato',
+	'Class:VirtualDevice/Attribute:status+' => '~~',
+	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Implementazione',
+	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'Implementazione',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Obsoleto',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'Obsoleto',
+	'Class:VirtualDevice/Attribute:status/Value:production' => 'Produzione',
+	'Class:VirtualDevice/Attribute:status/Value:production+' => 'Produzione',
+	'Class:VirtualDevice/Attribute:status/Value:stock' => 'In Stock',
+	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'In Stock',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Volumi Logici',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Tutti i volumi logici utilizzati da questo dispositivo',
+	'Class:VirtualHost' => 'Host Virtuale',
+	'Class:VirtualHost+' => 'Abstract class used for Virtual Devices (Hypervisor, Farm,...) hosting Virtual Machines.~~',
+	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Macchine virtuali',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Tutte le macchine virtuali ospitate da questo host',
+	'Class:Hypervisor' => 'Hypervisor',
+	'Class:Hypervisor+' => 'Virtual Host. Virtualization software (MS Hyper-V, VMWare ESX, Xen, etc.), running on a physical Server and supporting the creation of Virtual Machines.~~',
+	'Class:Hypervisor/Attribute:farm_id' => 'Farm',
+	'Class:Hypervisor/Attribute:farm_id+' => '~~',
+	'Class:Hypervisor/Attribute:farm_name' => 'Nome Farm',
+	'Class:Hypervisor/Attribute:farm_name+' => '~~',
+	'Class:Hypervisor/Attribute:server_id' => 'Server',
+	'Class:Hypervisor/Attribute:server_id+' => '~~',
+	'Class:Hypervisor/Attribute:server_name' => 'Nome Server',
+	'Class:Hypervisor/Attribute:server_name+' => '~~',
+	'Class:Farm' => 'Farm',
+	'Class:Farm+' => 'Virtual Host. A Farm (or cluster) is a group of Hypervisors pooled together and sharing storage resources to provide an overall fault tolerant system for hosting Virtual Machines.~~',
+	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisor',
+	'Class:Farm/Attribute:hypervisor_list+' => 'Tutti gli hypervisor che compongono questa farm',
+	'Class:Farm/Attribute:redundancy' => 'Alta disponibilità',
+	'Class:Farm/Attribute:redundancy/disabled' => 'La farm è attiva se tutti gli hypervisor sono attivi',
+	'Class:Farm/Attribute:redundancy/count' => 'La farm è attiva se almeno %1$s hypervisor è(sono) attivo(i)',
+	'Class:Farm/Attribute:redundancy/percent' => 'La farm è attiva se almeno %1$s %% degli hypervisor è attivo',
+	'Class:VirtualMachine' => 'Macchina virtuale',
+	'Class:VirtualMachine+' => 'Virtual Device equivalent to a Server, it is hosted either on an Hypervisor or on a Farm.~~',
+	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s',
+	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Host virtuale',
+	'Class:VirtualMachine/Attribute:virtualhost_id+' => '~~',
+	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Nome host virtuale',
+	'Class:VirtualMachine/Attribute:virtualhost_name+' => '~~',
+	'Class:VirtualMachine/Attribute:osfamily_id' => 'Famiglia del sistema operativo',
+	'Class:VirtualMachine/Attribute:osfamily_id+' => '~~',
+	'Class:VirtualMachine/Attribute:osfamily_name' => 'Nome della famiglia del sistema operativo',
+	'Class:VirtualMachine/Attribute:osfamily_name+' => '~~',
+	'Class:VirtualMachine/Attribute:osversion_id' => 'Versione del sistema operativo',
+	'Class:VirtualMachine/Attribute:osversion_id+' => '~~',
+	'Class:VirtualMachine/Attribute:osversion_name' => 'Nome della versione del sistema operativo',
+	'Class:VirtualMachine/Attribute:osversion_name+' => '~~',
+	'Class:VirtualMachine/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:VirtualMachine/Attribute:os_end_of_support+' => 'When the OS version is no more supported by the vendor, if this information is documented on the OS Version.~~',
+	'Class:VirtualMachine/Attribute:oslicence_id' => 'Licenza del Sistema Operativo',
+	'Class:VirtualMachine/Attribute:oslicence_id+' => '~~',
+	'Class:VirtualMachine/Attribute:oslicence_name' => 'Nome della licenza del sistema operativo',
+	'Class:VirtualMachine/Attribute:oslicence_name+' => '~~',
+	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
+	'Class:VirtualMachine/Attribute:cpu+' => '~~',
+	'Class:VirtualMachine/Attribute:ram' => 'RAM',
+	'Class:VirtualMachine/Attribute:ram+' => '~~',
+	'Class:VirtualMachine/Attribute:managementip' => 'IP di gestione',
+	'Class:VirtualMachine/Attribute:managementip+' => '~~',
+	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Interfacce di rete logiche',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Tutte le interfacce di rete logiche',
+	'Class:LogicalVolume' => 'Volume Logico',
+	'Class:LogicalVolume+' => 'The unit of storage managed inside a Storage System. It can be accessed by multiple Servers and Virtual Devices.~~',
+	'Class:LogicalVolume/Attribute:name' => 'Nome',
+	'Class:LogicalVolume/Attribute:name+' => '~~',
+	'Class:LogicalVolume/Attribute:lun_id' => 'ID LUN',
+	'Class:LogicalVolume/Attribute:lun_id+' => '~~',
+	'Class:LogicalVolume/Attribute:description' => 'Descrizione',
+	'Class:LogicalVolume/Attribute:description+' => '~~',
+	'Class:LogicalVolume/Attribute:raid_level' => 'Livello di RAID',
+	'Class:LogicalVolume/Attribute:raid_level+' => '~~',
+	'Class:LogicalVolume/Attribute:size' => 'Dimensione',
+	'Class:LogicalVolume/Attribute:size+' => '~~',
+	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Sistema di archiviazione',
+	'Class:LogicalVolume/Attribute:storagesystem_id+' => '~~',
+	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Nome del sistema di archiviazione',
+	'Class:LogicalVolume/Attribute:storagesystem_name+' => '~~',
+	'Class:LogicalVolume/Attribute:servers_list' => 'Server',
+	'Class:LogicalVolume/Attribute:servers_list+' => 'Tutti i server che utilizzano questo volume',
+	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Dispositivi Virtuali',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Tutti i dispositivi virtuali che utilizzano questo volume',
+	'Class:lnkServerToVolume' => 'Collegamento Server / Volume',
+	'Class:lnkServerToVolume+' => 'This many-to-many link indicates that a Server uses a Logical Volume (a storage unit managed inside a Storage System). Several Servers can use the same Logical Volume.~~',
+	'Class:lnkServerToVolume/Name' => '%1$s / %2$s',
+	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume',
+	'Class:lnkServerToVolume/Attribute:volume_id+' => '~~',
+	'Class:lnkServerToVolume/Attribute:volume_name' => 'Nome del volume',
+	'Class:lnkServerToVolume/Attribute:volume_name+' => '~~',
+	'Class:lnkServerToVolume/Attribute:server_id' => 'Server',
+	'Class:lnkServerToVolume/Attribute:server_id+' => '~~',
+	'Class:lnkServerToVolume/Attribute:server_name' => 'Nome del server',
+	'Class:lnkServerToVolume/Attribute:server_name+' => '~~',
+	'Class:lnkServerToVolume/Attribute:size_used' => 'Dimensione utilizzata',
+	'Class:lnkServerToVolume/Attribute:size_used+' => '~~',
+	'Class:lnkVirtualDeviceToVolume' => 'Collegamento dispositivo virtuale / volume',
+	'Class:lnkVirtualDeviceToVolume+' => 'This many-to-many link indicates that a Virtual Device uses a Logical Volume (a storage unit managed inside a Storage System). Several Virtual Devices can use the same Logical Volume.~~',
+	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Nome del volume',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Dispositivo virtuale',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Nome del dispositivo virtuale',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Dimensione utilizzata',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '~~',
+	'Class:lnkSanToDatacenterDevice' => 'Collegamento SAN / Dispositivo Datacenter',
+	'Class:lnkSanToDatacenterDevice+' => 'This many-to-many link models the network connection between a SAN Switch and a Datacenter Device (a Server, a Network Device, etc.).~~',
+	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN switch',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'Nome SAN switch',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Dispositivo',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Nome del dispositivo',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'Porta SAN FC',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Porta dispositivo FC',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '~~',
+	'Class:Tape' => 'Nastro',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
+	'Class:Tape/Attribute:name' => 'Nome',
+	'Class:Tape/Attribute:name+' => '~~',
+	'Class:Tape/Attribute:description' => 'Descrizione',
+	'Class:Tape/Attribute:description+' => '~~',
+	'Class:Tape/Attribute:size' => 'Dimensione',
+	'Class:Tape/Attribute:size+' => '~~',
+	'Class:Tape/Attribute:tapelibrary_id' => 'Libreria di nastri',
+	'Class:Tape/Attribute:tapelibrary_id+' => '~~',
+	'Class:Tape/Attribute:tapelibrary_name' => 'Nome della libreria di nastri',
+	'Class:Tape/Attribute:tapelibrary_name+' => '~~',
+	'Class:NASFileSystem' => 'File System NAS',
+	'Class:NASFileSystem+' => 'Represents a shared file system hosted inside a given NAS (Network Attached Storage).~~',
+	'Class:NASFileSystem/Attribute:name' => 'Nome',
+	'Class:NASFileSystem/Attribute:name+' => '~~',
+	'Class:NASFileSystem/Attribute:description' => 'Descrizione',
+	'Class:NASFileSystem/Attribute:description+' => '~~',
+	'Class:NASFileSystem/Attribute:raid_level' => 'Livello RAID',
+	'Class:NASFileSystem/Attribute:raid_level+' => '~~',
+	'Class:NASFileSystem/Attribute:size' => 'Dimensione',
+	'Class:NASFileSystem/Attribute:size+' => '~~',
+	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
+	'Class:NASFileSystem/Attribute:nas_id+' => '~~',
+	'Class:NASFileSystem/Attribute:nas_name' => 'Nome del NAS',
+	'Class:NASFileSystem/Attribute:nas_name+' => '~~',
 	'Class:Patch' => 'Patch',
-	'Class:Patch+' => '',
+	'Class:Patch+' => 'Abstract class, for patch, hotfix, security fix or service pack for an OS or a Software.~~',
 	'Class:Patch/Attribute:name' => 'Nome',
-	'Class:Patch/Attribute:name+' => '',
+	'Class:Patch/Attribute:name+' => '~~',
 	'Class:Patch/Attribute:documents_list' => 'Documenti',
 	'Class:Patch/Attribute:documents_list+' => 'Tutti i documenti collegati a questa patch',
 	'Class:Patch/Attribute:description' => 'Descrizione',
-	'Class:Patch/Attribute:description+' => '',
+	'Class:Patch/Attribute:description+' => '~~',
 	'Class:Patch/Attribute:finalclass' => 'Tipo',
 	'Class:Patch/Attribute:finalclass+' => 'Nome della classe finale',
-]);
-
-//
-// Class: OSPatch
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OSPatch' => 'Patch del Sistema Operativo',
-	'Class:OSPatch+' => '~~',
+	'Class:OSPatch+' => 'Patch, hotfix, security fix or service pack for a given operating system.~~',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Dispositivi',
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'Tutti i sistemi in cui questa patch è installata',
 	'Class:OSPatch/Attribute:osversion_id' => 'Versione del Sistema Operativo',
@@ -950,40 +586,26 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OSPatch/Attribute:osfamily_id+' => '~~',
 	'Class:OSPatch/Attribute:osversion_name' => 'Nome della Versione del Sistema Operativo',
 	'Class:OSPatch/Attribute:osversion_name+' => '~~',
-]);
-
-//
-// Class: SoftwarePatch
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SoftwarePatch' => 'Patch del Software',
-	'Class:SoftwarePatch+' => '~~',
+	'Class:SoftwarePatch+' => 'Patch, hotfix, security fix or service pack for a given software.~~',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Software',
 	'Class:SoftwarePatch/Attribute:software_id+' => '~~',
 	'Class:SoftwarePatch/Attribute:software_name' => 'Nome del Software',
 	'Class:SoftwarePatch/Attribute:software_name+' => '~~',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Istanze del Software',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Tutti i sistemi in cui questa patch del software è installata',
-]);
-
-//
-// Class: Licence
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Licence' => 'Licenza',
-	'Class:Licence+' => '',
+	'Class:Licence+' => 'Abstract class. A license contract for a particular OS version or Software~~',
 	'Class:Licence/Attribute:name' => 'Nome',
-	'Class:Licence/Attribute:name+' => '',
+	'Class:Licence/Attribute:name+' => '~~',
 	'Class:Licence/Attribute:documents_list' => 'Documenti collegati',
 	'Class:Licence/Attribute:documents_list+' => 'Tutti i documenti collegati a questa licenza',
 	'Class:Licence/Attribute:org_id' => 'Proprietario',
-	'Class:Licence/Attribute:org_id+' => '',
+	'Class:Licence/Attribute:org_id+' => '~~',
 	'Class:Licence/Attribute:organization_name' => 'Nome dell\'organizzazione',
 	'Class:Licence/Attribute:organization_name+' => 'Nome comune',
 	'Class:Licence/Attribute:usage_limit' => 'Limiti d\'uso',
-	'Class:Licence/Attribute:usage_limit+' => '',
+	'Class:Licence/Attribute:usage_limit+' => '~~',
 	'Class:Licence/Attribute:description' => 'Descrizione',
 	'Class:Licence/Attribute:description+' => '~~',
 	'Class:Licence/Attribute:start_date' => 'Data di inizio',
@@ -991,7 +613,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Licence/Attribute:end_date' => 'Data di scadenza',
 	'Class:Licence/Attribute:end_date+' => '~~',
 	'Class:Licence/Attribute:licence_key' => 'Chiave',
-	'Class:Licence/Attribute:licence_key+' => '',
+	'Class:Licence/Attribute:licence_key+' => '~~',
 	'Class:Licence/Attribute:perpetual' => 'Perpetua',
 	'Class:Licence/Attribute:perpetual+' => '~~',
 	'Class:Licence/Attribute:perpetual/Value:no' => 'no',
@@ -1000,15 +622,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'sì',
 	'Class:Licence/Attribute:finalclass' => 'Tipo',
 	'Class:Licence/Attribute:finalclass+' => 'Nome della classe finale',
-]);
-
-//
-// Class: OSLicence
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OSLicence' => 'Licenza OS',
-	'Class:OSLicence+' => '~~',
+	'Class:OSLicence+' => 'A license contract for a particular operating system. The license is related to one operating system (for example Windows 2008 R2) and can be associated with several servers or virtual machines.~~',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:OSLicence/Attribute:osversion_id' => 'Versione del sistema operativo',
 	'Class:OSLicence/Attribute:osversion_id+' => '~~',
@@ -1020,15 +635,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Tutte le macchine virtuali in cui questa licenza è utilizzata',
 	'Class:OSLicence/Attribute:servers_list' => 'Server',
 	'Class:OSLicence/Attribute:servers_list+' => 'Tutti i server in cui questa licenza è utilizzata',
-]);
-
-//
-// Class: SoftwareLicence
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SoftwareLicence' => 'Licenza software',
-	'Class:SoftwareLicence+' => '~~',
+	'Class:SoftwareLicence+' => 'A license contract for a particular software. The license is related to one software (for example MS Office 2010) and can be associated with several instances of this software.~~',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Software',
 	'Class:SoftwareLicence/Attribute:software_id+' => '~~',
@@ -1036,15 +644,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SoftwareLicence/Attribute:software_name+' => '~~',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Istanze software',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Tutti i sistemi in cui questa licenza è utilizzata',
-]);
-
-//
-// Class: lnkDocumentToLicence
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToLicence' => 'Link Documento/Licenza',
-	'Class:lnkDocumentToLicence+' => '~~',
+	'Class:lnkDocumentToLicence+' => 'Link used when a Document is applicable to a License.~~',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licenza',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '~~',
@@ -1054,86 +655,49 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Nome documento',
 	'Class:lnkDocumentToLicence/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: OSVersion
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OSVersion' => 'Versione del Sistema Operativo',
-	'Class:OSVersion+' => '~~',
+	'Class:OSVersion+' => 'Typology. List of the possible values for the "OS Version" of a computer (Server, Virtual Machine or PC). The OS Versions are organized per OS Family.~~',
 	'Class:OSVersion/Attribute:osfamily_id' => 'Famiglia del Sistema Operativo',
 	'Class:OSVersion/Attribute:osfamily_id+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Nome della Famiglia del Sistema Operativo',
-	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/Attribute:osfamily_name+' => '~~',
+	'Class:OSVersion/Attribute:end_of_support' => 'End of support~~',
+	'Class:OSVersion/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
+	'Class:OSVersion/Attribute:ospatches_list' => 'OS patches~~',
+	'Class:OSVersion/Attribute:ospatches_list+' => 'All the OS patches for this OS version~~',
 	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
 	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
-]);
-
-//
-// Class: OSFamily
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OSFamily' => 'Famiglia del Sistema Operativo',
-	'Class:OSFamily+' => '',
+	'Class:OSFamily+' => 'Typology. List of the possible values for the "OS Family" attribute of Servers, Virtual Machines and PCs.~~',
+	'Class:OSFamily/Attribute:osversions_list' => 'OS versions~~',
+	'Class:OSFamily/Attribute:osversions_list+' => 'All the OS versions for this OS family~~',
 	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
 	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
-]);
-
-//
-// Class: Brand
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Brand' => 'Marca',
-	'Class:Brand+' => '~~',
+	'Class:Brand+' => 'Typology. List of the possible values for the "Brand" attribute of Physical Device.~~',
+	'Class:Brand/Attribute:iosversions_list' => 'IOS versions~~',
+	'Class:Brand/Attribute:iosversions_list+' => 'All the IOS versions from this brand~~',
+	'Class:Brand/Attribute:logo' => 'Logo~~',
+	'Class:Brand/Attribute:logo+' => '~~',
+	'Class:Brand/Attribute:models_list' => 'Models~~',
+	'Class:Brand/Attribute:models_list+' => 'All models for this brand~~',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Dispositivi fisici',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Tutti i dispositivi fisici corrispondenti a questa marca',
 	'Class:Brand/UniquenessRule:name+' => 'Il nome deve essere univoco',
 	'Class:Brand/UniquenessRule:name' => 'Questa marca esiste già',
-]);
-
-//
-// Class: Model
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Model' => 'Modello',
-	'Class:Model+' => '~~',
-	'Class:Model/Attribute/type/Value:NAS+' => 'NAS',
-	'Class:Model/Attribute/type/Value:NetworkDevice' => 'Dispositivo di rete',
-	'Class:Model/Attribute/type/Value:NetworkDevice+' => 'Dispositivo di rete',
-	'Class:Model/Attribute/type/Value:PC' => 'PC',
-	'Class:Model/Attribute/type/Value:PC+' => 'PC',
-	'Class:Model/Attribute/type/Value:PDU' => 'PDU',
-	'Class:Model/Attribute/type/Value:PDU+' => 'PDU',
-	'Class:Model/Attribute/type/Value:Peripheral' => 'Periferica',
-	'Class:Model/Attribute/type/Value:Peripheral+' => 'Periferica',
-	'Class:Model/Attribute/type/Value:Phone' => 'Telefono',
-	'Class:Model/Attribute/type/Value:Phone+' => 'Telefono',
-	'Class:Model/Attribute/type/Value:Printer' => 'Stampante',
-	'Class:Model/Attribute/type/Value:Printer+' => 'Stampante',
-	'Class:Model/Attribute/type/Value:Rack' => 'Rack',
-	'Class:Model/Attribute/type/Value:Rack+' => 'Rack',
-	'Class:Model/Attribute/type/Value:SANSwitch' => 'SAN switch',
-	'Class:Model/Attribute/type/Value:SANSwitch+' => 'SAN switch',
-	'Class:Model/Attribute/type/Value:Server' => 'Server',
-	'Class:Model/Attribute/type/Value:Server+' => 'Server',
-	'Class:Model/Attribute/type/Value:StorageSystem' => 'Storage System',
-	'Class:Model/Attribute/type/Value:StorageSystem+' => 'Storage System',
-	'Class:Model/Attribute/type/Value:Tablet' => 'Tablet',
-	'Class:Model/Attribute/type/Value:Tablet+' => 'Tablet',
-	'Class:Model/Attribute/type/Value:TapeLibrary' => 'Tape Library',
-	'Class:Model/Attribute/type/Value:TapeLibrary+' => 'Tape Library',
+	'Class:Model+' => 'Typology. List the possible values for the Model attribute of a Physical Device. Each Model belongs to a single Brand, and usually applies to a single type of Physical Device.~~',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s',
 	'Class:Model/Attribute:brand_id' => 'Marca',
 	'Class:Model/Attribute:brand_id+' => '~~',
 	'Class:Model/Attribute:brand_name' => 'Nome della marca',
 	'Class:Model/Attribute:brand_name+' => '~~',
+	'Class:Model/Attribute:picture' => 'Picture~~',
+	'Class:Model/Attribute:picture+' => '~~',
 	'Class:Model/Attribute:type' => 'Tipo di dispositivo',
 	'Class:Model/Attribute:type+' => '~~',
+	'Class:Model/Attribute:end_of_support' => 'End of support~~',
+	'Class:Model/Attribute:end_of_support+' => 'The date after which the manufacturer ceases to provide patches and support for this model.~~',
 	'Class:Model/Attribute:type/Value:PowerSource' => 'Sorgente di alimentazione',
 	'Class:Model/Attribute:type/Value:PowerSource+' => 'Sorgente di alimentazione',
 	'Class:Model/Attribute:type/Value:DiskArray' => 'Disk Array',
@@ -1174,43 +738,26 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Model/Attribute:physicaldevices_list+' => 'Tutti i dispositivi fisici corrispondenti a questo modello',
 	'Class:Model/UniquenessRule:name_brand+' => 'Il nome deve essere univoco nella marca',
 	'Class:Model/UniquenessRule:name_brand' => 'Questo modello esiste già per questa marca',
-]);
-
-//
-// Class: NetworkDeviceType
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:NetworkDeviceType' => 'Tipo di Dispositivo di Rete',
-	'Class:NetworkDeviceType+' => '~~',
+	'Class:NetworkDeviceType+' => 'Typology. The possible values for the "Type" of a Network Device (e.g. Router, Switch, Firewall, etc.).~~',
 	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
 	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Dispositivi di Rete',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Tutti i dispositivi di rete corrispondenti a questo tipo',
-]);
-
-//
-// Class: IOSVersion
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:IOSVersion' => 'Versione IOS',
-	'Class:IOSVersion+' => '~~',
+	'Class:IOSVersion+' => 'Typology. Possible values for the versions of operating system for network devices (IOS from Cisco\'s Internetwork Operating System).~~',
 	'Class:IOSVersion/Attribute:brand_id' => 'Marca',
 	'Class:IOSVersion/Attribute:brand_id+' => '~~',
 	'Class:IOSVersion/Attribute:brand_name' => 'Nome della marca',
 	'Class:IOSVersion/Attribute:brand_name+' => '~~',
+	'Class:IOSVersion/Attribute:end_of_support' => 'End of support~~',
+	'Class:IOSVersion/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this IOS version.~~',
+	'Class:IOSVersion/Attribute:networkdevices_list' => 'Network devices~~',
+	'Class:IOSVersion/Attribute:networkdevices_list+' => 'All the network devices running this IOS version~~',
 	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
 	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
-]);
-
-//
-// Class: lnkDocumentToPatch
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToPatch' => 'Collegamento documento / patch',
-	'Class:lnkDocumentToPatch+' => '~~',
+	'Class:lnkDocumentToPatch+' => 'Link used when a Document is applicable to a Patch.~~',
 	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch',
 	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '~~',
@@ -1220,15 +767,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToPatch/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Nome del documento',
 	'Class:lnkDocumentToPatch/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: lnkSoftwareInstanceToSoftwarePatch
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Collegamento istanza software / patch software',
-	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '~~',
+	'Class:lnkSoftwareInstanceToSoftwarePatch+' => 'This link indicates that a software patch has been applied to a software instance.~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Patch software',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '~~',
@@ -1238,15 +778,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Nome dell\'istanza software',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '~~',
-]);
-
-//
-// Class: lnkFunctionalCIToOSPatch
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkFunctionalCIToOSPatch' => 'Collegamento CI funzionale / patch OS',
-	'Class:lnkFunctionalCIToOSPatch+' => '~~',
+	'Class:lnkFunctionalCIToOSPatch+' => 'Models the deployment of an OS Patch on a device.~~',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'Patch OS',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '~~',
@@ -1256,15 +789,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'Nome del CI funzionale',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '~~',
-]);
-
-//
-// Class: lnkDocumentToSoftware
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToSoftware' => 'Collegamento documento / software',
-	'Class:lnkDocumentToSoftware+' => '~~',
+	'Class:lnkDocumentToSoftware+' => 'Link used when a Document is applicable to Software.~~',
 	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Software',
 	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '~~',
@@ -1274,40 +800,26 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Nome del documento',
 	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: Subnet
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Subnet' => 'Subnet',
-	'Class:Subnet+' => '',
+	'Class:Subnet+' => 'Segment of an IP network, defined by an IP address and a mask~~',
 	'Class:Subnet/Name' => '%1$s/%2$s',
 	'Class:Subnet/ComplementaryName' => '%1$s - %2$s',
 	'Class:Subnet/Attribute:description' => 'Descrizione',
-	'Class:Subnet/Attribute:description+' => '',
+	'Class:Subnet/Attribute:description+' => '~~',
 	'Class:Subnet/Attribute:subnet_name' => 'Nome Subnet',
 	'Class:Subnet/Attribute:subnet_name+' => '~~',
 	'Class:Subnet/Attribute:org_id' => 'Organizzazione proprietaria',
-	'Class:Subnet/Attribute:org_id+' => '',
+	'Class:Subnet/Attribute:org_id+' => '~~',
 	'Class:Subnet/Attribute:org_name' => 'Nome organizzazione',
 	'Class:Subnet/Attribute:org_name+' => 'Nome comune',
 	'Class:Subnet/Attribute:ip' => 'IP',
-	'Class:Subnet/Attribute:ip+' => '',
+	'Class:Subnet/Attribute:ip+' => '~~',
 	'Class:Subnet/Attribute:ip_mask' => 'Maschera IP',
-	'Class:Subnet/Attribute:ip_mask+' => '',
+	'Class:Subnet/Attribute:ip_mask+' => '~~',
 	'Class:Subnet/Attribute:vlans_list' => 'VLANs',
 	'Class:Subnet/Attribute:vlans_list+' => '~~',
-]);
-
-//
-// Class: VLAN
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:VLAN' => 'VLAN',
-	'Class:VLAN+' => '~~',
+	'Class:VLAN+' => 'A Virtual LAN is used to group together in a logical way networks Subnets and Physical Interfaces that participate in the same VLAN.~~',
 	'Class:VLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:VLAN/Attribute:vlan_tag+' => '~~',
 	'Class:VLAN/Attribute:description' => 'Descrizione',
@@ -1320,15 +832,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:VLAN/Attribute:subnets_list+' => '~~',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Interfacce di rete fisiche',
 	'Class:VLAN/Attribute:physicalinterfaces_list+' => '~~',
-]);
-
-//
-// Class: lnkSubnetToVLAN
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkSubnetToVLAN' => 'Link Subnet / VLAN',
-	'Class:lnkSubnetToVLAN+' => '~~',
+	'Class:lnkSubnetToVLAN+' => 'This many-to-many link indicates that a VLAN is present on a Subnet. Several VLANs can be present on the same Subnet and a VLAN can span several Subnets.~~',
 	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Subnet',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '~~',
@@ -1340,28 +845,14 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN tag',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '~~',
-]);
-
-//
-// Class: NetworkInterface
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:NetworkInterface' => 'Interfaccia di Rete',
-	'Class:NetworkInterface+' => '',
+	'Class:NetworkInterface+' => 'Abstract class for all types of network interfaces.~~',
 	'Class:NetworkInterface/Attribute:name' => 'Nome',
 	'Class:NetworkInterface/Attribute:name+' => '~~',
 	'Class:NetworkInterface/Attribute:finalclass' => 'Tipo',
 	'Class:NetworkInterface/Attribute:finalclass+' => 'Nome della classe finale',
-]);
-
-//
-// Class: IPInterface
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:IPInterface' => 'Interfaccia IP',
-	'Class:IPInterface+' => '~~',
+	'Class:IPInterface+' => 'Abstract class. A type of Network Interface with an IP address~~',
 	'Class:IPInterface/Attribute:ipaddress' => 'Indirizzo IP',
 	'Class:IPInterface/Attribute:ipaddress+' => '~~',
 	'Class:IPInterface/Attribute:macaddress' => 'Indirizzo MAC',
@@ -1374,31 +865,21 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:IPInterface/Attribute:ipmask+' => '~~',
 	'Class:IPInterface/Attribute:speed' => 'Velocità',
 	'Class:IPInterface/Attribute:speed+' => '~~',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PhysicalInterface' => 'Interfaccia fisica',
-	'Class:PhysicalInterface+' => '~~',
+	'Class:PhysicalInterface+' => 'A type of IP Interface that represents a physical network interface (e.g. an Ethernet card).~~',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Dispositivo',
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Nome del dispositivo',
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
+	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
+	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLAN',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '~~',
-]);
-
-//
-// Class: lnkPhysicalInterfaceToVLAN
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Collegamento interfaccia fisica / VLAN',
-	'Class:lnkPhysicalInterfaceToVLAN+' => '~~',
+	'Class:lnkPhysicalInterfaceToVLAN+' => 'This link indicates when a network interface is part of a VLAN (Virtual Local Area Network).~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Interfaccia fisica',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '~~',
@@ -1412,28 +893,14 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'Tag VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '~~',
-]);
-
-//
-// Class: LogicalInterface
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:LogicalInterface' => 'Interfaccia logica',
-	'Class:LogicalInterface+' => '~~',
+	'Class:LogicalInterface+' => 'IP Interface which is not associated permanently with a particular physical port, the association is dynamic. It can be used for Virtual Machine.~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Macchina Virtuale',
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Nome Macchina Virtuale',
 	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '~~',
-]);
-
-//
-// Class: FiberChannelInterface
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:FiberChannelInterface' => 'Interfaccia Fibre Channel',
-	'Class:FiberChannelInterface+' => '~~',
+	'Class:FiberChannelInterface+' => 'Network Interface to a high-speed network technology primarily used for connecting Storage Systems.~~',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Velocità',
 	'Class:FiberChannelInterface/Attribute:speed+' => '~~',
 	'Class:FiberChannelInterface/Attribute:topology' => 'Topologia',
@@ -1444,15 +911,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '~~',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Nome Dispositivo',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '~~',
-]);
-
-//
-// Class: lnkConnectableCIToNetworkDevice
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkConnectableCIToNetworkDevice' => 'Collega CI collegabile / Dispositivo di rete',
-	'Class:lnkConnectableCIToNetworkDevice+' => '~~',
+	'Class:lnkConnectableCIToNetworkDevice+' => 'Defines on which network equipment a device is connected.~~',
 	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Dispositivo di rete',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '~~',
@@ -1472,15 +932,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'Collegamento verso il basso',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'Collegamento verso l\'alto',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'Collegamento verso l\'alto',
-]);
-
-//
-// Class: lnkApplicationSolutionToFunctionalCI
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Collega soluzione applicativa / CI funzionale',
-	'Class:lnkApplicationSolutionToFunctionalCI+' => '~~',
+	'Class:lnkApplicationSolutionToFunctionalCI+' => 'Models the membership of a device to an Application Solution. The meaning of this relationship varies depending on the types of Application Solution.~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Soluzione applicativa',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '~~',
@@ -1490,15 +943,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'Nome CI funzionale',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '~~',
-]);
-
-//
-// Class: lnkApplicationSolutionToBusinessProcess
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Collega Soluzione Applicativa / Processo Aziendale',
-	'Class:lnkApplicationSolutionToBusinessProcess+' => '~~',
+	'Class:lnkApplicationSolutionToBusinessProcess+' => 'Models the relationship between an Application Solution and a Business Process.~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Processo Aziendale',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '~~',
@@ -1508,20 +954,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Nome Soluzione Applicativa',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '~~',
-]);
-
-//
-// Class: Group
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Group' => 'Gruppo',
-	'Class:Group+' => '',
+	'Class:Group+' => 'Group is designed to define explicit sets of configurations items for any project purpose. In contrast to Application Solution, a Group is not impacted by any of its component and does not impact them. For example when doing an OS migration, Group can be convenient to gather “Servers to be migrated”. Migrated servers being removed from the group as the migration progresses.~~',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s',
 	'Class:Group/Attribute:name' => 'Nome',
-	'Class:Group/Attribute:name+' => '',
+	'Class:Group/Attribute:name+' => '~~',
 	'Class:Group/Attribute:status' => 'Stato',
-	'Class:Group/Attribute:status+' => '',
+	'Class:Group/Attribute:status+' => '~~',
 	'Class:Group/Attribute:status/Value:implementation' => 'Implementazione',
 	'Class:Group/Attribute:status/Value:implementation+' => 'Implementazione',
 	'Class:Group/Attribute:status/Value:obsolete' => 'Obsoleto',
@@ -1529,74 +968,36 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Group/Attribute:status/Value:production' => 'Produzione',
 	'Class:Group/Attribute:status/Value:production+' => 'Produzione',
 	'Class:Group/Attribute:org_id' => 'Organizzazione',
-	'Class:Group/Attribute:org_id+' => '',
+	'Class:Group/Attribute:org_id+' => '~~',
 	'Class:Group/Attribute:owner_name' => 'Nome del proprietario',
 	'Class:Group/Attribute:owner_name+' => 'Cognome del proprietario',
 	'Class:Group/Attribute:description' => 'Descrizione',
-	'Class:Group/Attribute:description+' => '',
+	'Class:Group/Attribute:description+' => '~~',
 	'Class:Group/Attribute:type' => 'Tipo',
-	'Class:Group/Attribute:type+' => '',
+	'Class:Group/Attribute:type+' => '~~',
 	'Class:Group/Attribute:parent_id' => 'Gruppo padre',
-	'Class:Group/Attribute:parent_id+' => '',
+	'Class:Group/Attribute:parent_id+' => '~~',
 	'Class:Group/Attribute:parent_name' => 'Nome del gruppo padre',
-	'Class:Group/Attribute:parent_name+' => '',
+	'Class:Group/Attribute:parent_name+' => '~~',
 	'Class:Group/Attribute:ci_list' => 'Elementi di configurazione collegati',
 	'Class:Group/Attribute:ci_list+' => 'Tutti gli elementi di configurazione collegati a questo gruppo',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Nome del gruppo padre',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '~~',
-]);
-
-//
-// Class: lnkGroupToCI
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkGroupToCI' => 'Gruppo / CI',
-	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI+' => 'This link indicates when a Functional CI is part of a Group.~~',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'Gruppo',
-	'Class:lnkGroupToCI/Attribute:group_id+' => '',
+	'Class:lnkGroupToCI/Attribute:group_id+' => '~~',
 	'Class:lnkGroupToCI/Attribute:group_name' => 'Nome del gruppo',
-	'Class:lnkGroupToCI/Attribute:group_name+' => '',
+	'Class:lnkGroupToCI/Attribute:group_name+' => '~~',
 	'Class:lnkGroupToCI/Attribute:ci_id' => 'CI',
-	'Class:lnkGroupToCI/Attribute:ci_id+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_id+' => '~~',
 	'Class:lnkGroupToCI/Attribute:ci_name' => 'Nome del CI',
-	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_name+' => '~~',
 	'Class:lnkGroupToCI/Attribute:reason' => 'Motivo',
-	'Class:lnkGroupToCI/Attribute:reason+' => '',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'ConfigMgmt:baseinfo' => 'General~~',
-	'ConfigMgmt:moreinfo' => 'CI specifics~~',
-	'Storage:moreinfo' => 'Storage specifics~~',
-	'ConfigMgmt:otherinfo' => 'Description~~',
-	'ConfigMgmt:dates' => 'Dates~~',
-	'Software:moreinfo' => 'Software specifics~~',
-	'Phone:moreinfo' => 'Phone specifics~~',
-	'Server:baseinfo' => 'Informazioni generali',
-	'Server:Date' => 'Date',
-	'Server:moreinfo' => 'Ulteriori informazioni',
-	'Server:otherinfo' => 'Altre informazioni',
-	'Server:power' => 'Alimentazione elettrica',
-	'Class:Subnet/Tab:IPUsage' => 'Utilizzo IP',
-	'Class:Subnet/Tab:IPUsage+' => 'Quali IP in questo Subnet sono utilizzati o non utilizzati',
-	'Class:Subnet/Tab:IPUsage-explain' => 'Interfacce che hanno un IP nell\'intervallo tra <em>%1$s</em> e <em>%2$s</em>',
-	'Class:Subnet/Tab:FreeIPs' => 'IP liberi',
-	'Class:Subnet/Tab:FreeIPs-count' => 'IP liberi: %1$s',
-	'Class:Subnet/Tab:FreeIPs-explain' => 'Ecco un estratto di 10 indirizzi IP liberi',
-	'Class:Document:PreviewTab' => 'Anteprima',
-]);
-
-//
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:lnkGroupToCI/Attribute:reason+' => '~~',
 	'Class:lnkDocumentToFunctionalCI' => 'Collegamento Documento / FunctionalCI',
-	'Class:lnkDocumentToFunctionalCI+' => '~~',
+	'Class:lnkDocumentToFunctionalCI+' => 'Link used when a Document is applicable to a Functional CI.~~',
 	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '~~',
@@ -1606,13 +1007,25 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Nome documento',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'ConfigMgmt:otherinfo' => 'Description~~',
+	'ConfigMgmt:dates' => 'Dates~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
+	'Server:baseinfo' => 'Informazioni generali',
+	'Server:moreinfo' => 'Ulteriori informazioni',
+	'Server:Date' => 'Date',
+	'Server:otherinfo' => 'Altre informazioni',
+	'Server:power' => 'Alimentazione elettrica',
+	'Class:Subnet/Tab:IPUsage' => 'Utilizzo IP',
+	'Class:Subnet/Tab:IPUsage+' => 'Quali IP in questo Subnet sono utilizzati o non utilizzati',
+	'Class:Subnet/Tab:IPUsage-explain' => 'Interfacce che hanno un IP nell\'intervallo tra <em>%1$s</em> e <em>%2$s</em>',
+	'Class:Subnet/Tab:FreeIPs' => 'IP liberi',
+	'Class:Subnet/Tab:FreeIPs-count' => 'IP liberi: %1$s',
+	'Class:Subnet/Tab:FreeIPs-explain' => 'Ecco un estratto di 10 indirizzi IP liberi',
+	'Class:Document:PreviewTab' => 'Anteprima',
 	'Menu:Application' => 'Applicazioni',
 	'Menu:Application+' => 'Tutte le applicazioni',
 	'Menu:DBServer' => 'Server di Database',

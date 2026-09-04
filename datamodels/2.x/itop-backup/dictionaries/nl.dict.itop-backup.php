@@ -1,15 +1,15 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
+ *
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'bkp-backup-running' => 'Er wordt een backup gemaakt. Even geduld...',
@@ -31,9 +31,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'bkp-table-file' => 'Bestand',
 	'bkp-table-file+' => 'Enkel .ZIP-bestanden worden herkend als backupbestanden.',
 	'bkp-table-size' => 'Grootte',
-	'bkp-table-size+' => '',
+	'bkp-table-size+' => '~~',
 	'bkp-table-actions' => 'Acties',
-	'bkp-table-actions+' => '',
+	'bkp-table-actions+' => '~~',
 	'bkp-status-backups-auto' => 'Geplande backups',
 	'bkp-status-backups-manual' => 'Manuele backups',
 	'bkp-status-backups-none' => 'Nog geen backups beschikbaar',

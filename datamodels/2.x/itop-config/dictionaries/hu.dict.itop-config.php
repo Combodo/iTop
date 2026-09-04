@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -14,7 +13,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:ConfigFileEditor' => 'Plain text editor~~',
 	'itop-config/Operation:Edit/Title' => 'Konfigurációs fájl szerkesztő',
 	'config-edit-intro' => 'Legyen nagyon óvatos a konfiguráció szerkesztésénél!',
-	'Menu:ConfigEditor' => 'Konfiguráció szerkesztő',
 	'config-apply' => 'Alkalmaz',
 	'config-apply-title' => 'Alkalmaz (Ctrl+S)',
 	'config-cancel' => 'Visszaállítás',

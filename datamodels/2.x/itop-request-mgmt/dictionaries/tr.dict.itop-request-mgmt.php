@@ -1,24 +1,23 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
  */
 Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:RequestManagement' => 'Helpdesk~~',
-	'Menu:RequestManagement+' => '',
+	'Menu:RequestManagement+' => '~~',
 	'Menu:RequestManagementProvider' => 'Helpdesk provider~~',
-	'Menu:RequestManagementProvider+' => '',
+	'Menu:RequestManagementProvider+' => '~~',
 	'Menu:UserRequest:Provider' => 'Open requests transferred to provider~~',
-	'Menu:UserRequest:Provider+' => '',
+	'Menu:UserRequest:Provider+' => '~~',
 	'Menu:UserRequest:Overview' => 'Overview~~',
-	'Menu:UserRequest:Overview+' => '',
+	'Menu:UserRequest:Overview+' => '~~',
 	'Menu:NewUserRequest' => 'New request~~',
 	'Menu:NewUserRequest+' => 'Create a new user request ticket~~',
 	'Menu:SearchUserRequests' => 'Search for requests~~',
@@ -46,25 +45,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:UserRequest:MyWorkOrders+' => 'All work orders assigned to me~~',
 	'Class:Problem:KnownProblemList' => 'Known problems~~',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: UserRequest
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:UserRequest/Method:UpdateChildTicketWith:public_log' => '<i><u>Public log automatic copy from parent User Request %2$s:</u></i><br><br>~~',
+	'Class:UserRequest/Method:UpdateChildTicketWith:private_log' => '<i>Private log automatic copy from parent User Request [[UserRequest:%1$s]]:</i><br><br>~~',
 	'Class:UserRequest' => 'User Request~~',
-	'Class:UserRequest+' => '~~',
+	'Class:UserRequest+' => 'Ticket type that covers incidents and service requests.~~',
 	'Class:UserRequest/Attribute:status' => 'Status~~',
 	'Class:UserRequest/Attribute:status+' => '~~',
 	'Class:UserRequest/Attribute:status/Value:new' => 'New~~',
@@ -90,9 +74,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:UserRequest/Attribute:request_type' => 'Request Type~~',
 	'Class:UserRequest/Attribute:request_type+' => '~~',
 	'Class:UserRequest/Attribute:request_type/Value:incident' => 'Incident~~',
-	'Class:UserRequest/Attribute:request_type/Value:incident+' => '',
+	'Class:UserRequest/Attribute:request_type/Value:incident+' => '~~',
 	'Class:UserRequest/Attribute:request_type/Value:service_request' => 'Service request~~',
-	'Class:UserRequest/Attribute:request_type/Value:service_request+' => '',
+	'Class:UserRequest/Attribute:request_type/Value:service_request+' => '~~',
 	'Class:UserRequest/Attribute:impact' => 'Impact~~',
 	'Class:UserRequest/Attribute:impact+' => 'Impact is the severity of the fault, how many end users are affected~~',
 	'Class:UserRequest/Attribute:impact/Value:1' => 'A department~~',
@@ -106,9 +90,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:UserRequest/Attribute:priority/Value:1' => 'Critical~~',
 	'Class:UserRequest/Attribute:priority/Value:1+' => 'Highest priority~~',
 	'Class:UserRequest/Attribute:priority/Value:2' => 'High~~',
-	'Class:UserRequest/Attribute:priority/Value:2+' => '',
+	'Class:UserRequest/Attribute:priority/Value:2+' => '~~',
 	'Class:UserRequest/Attribute:priority/Value:3' => 'Medium~~',
-	'Class:UserRequest/Attribute:priority/Value:3+' => '',
+	'Class:UserRequest/Attribute:priority/Value:3+' => '~~',
 	'Class:UserRequest/Attribute:priority/Value:4' => 'Low~~',
 	'Class:UserRequest/Attribute:priority/Value:4+' => 'Lowest priority~~',
 	'Class:UserRequest/Attribute:urgency' => 'Urgency~~',
@@ -116,9 +100,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:UserRequest/Attribute:urgency/Value:1' => 'Critical~~',
 	'Class:UserRequest/Attribute:urgency/Value:1+' => 'Most urgent~~',
 	'Class:UserRequest/Attribute:urgency/Value:2' => 'High~~',
-	'Class:UserRequest/Attribute:urgency/Value:2+' => '',
+	'Class:UserRequest/Attribute:urgency/Value:2+' => '~~',
 	'Class:UserRequest/Attribute:urgency/Value:3' => 'Medium~~',
-	'Class:UserRequest/Attribute:urgency/Value:3+' => '',
+	'Class:UserRequest/Attribute:urgency/Value:3+' => '~~',
 	'Class:UserRequest/Attribute:urgency/Value:4' => 'Low~~',
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'Lowest urgency level~~',
 	'Class:UserRequest/Attribute:origin' => 'Origin~~',
@@ -148,11 +132,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:UserRequest/Attribute:servicesubcategory_name' => 'Service subcategory name~~',
 	'Class:UserRequest/Attribute:servicesubcategory_name+' => '~~',
 	'Class:UserRequest/Attribute:escalation_flag' => 'Hot Flag~~',
-	'Class:UserRequest/Attribute:escalation_flag+' => '~~',
+	'Class:UserRequest/Attribute:escalation_flag+' => 'When set, the Ticket is added to the "Under escalation" menu~~',
 	'Class:UserRequest/Attribute:escalation_flag/Value:no' => 'No~~',
 	'Class:UserRequest/Attribute:escalation_flag/Value:no+' => '~~',
 	'Class:UserRequest/Attribute:escalation_flag/Value:yes' => 'Yes~~',
-	'Class:UserRequest/Attribute:escalation_flag/Value:yes+' => '',
+	'Class:UserRequest/Attribute:escalation_flag/Value:yes+' => '~~',
 	'Class:UserRequest/Attribute:escalation_reason' => 'Hot reason~~',
 	'Class:UserRequest/Attribute:escalation_reason+' => '~~',
 	'Class:UserRequest/Attribute:assignment_date' => 'Assignment date~~',
@@ -188,19 +172,19 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:UserRequest/Attribute:resolution_code' => 'Resolution code~~',
 	'Class:UserRequest/Attribute:resolution_code+' => 'What was done to resolve the request?~~',
 	'Class:UserRequest/Attribute:resolution_code/Value:assistance' => 'Assistance~~',
-	'Class:UserRequest/Attribute:resolution_code/Value:assistance+' => '',
+	'Class:UserRequest/Attribute:resolution_code/Value:assistance+' => '~~',
 	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed' => 'Bug fixed~~',
-	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed+' => '',
+	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed+' => '~~',
 	'Class:UserRequest/Attribute:resolution_code/Value:hardware repair' => 'Hardware repair~~',
-	'Class:UserRequest/Attribute:resolution_code/Value:hardware repair+' => '',
+	'Class:UserRequest/Attribute:resolution_code/Value:hardware repair+' => '~~',
 	'Class:UserRequest/Attribute:resolution_code/Value:other' => 'Other~~',
-	'Class:UserRequest/Attribute:resolution_code/Value:other+' => '',
+	'Class:UserRequest/Attribute:resolution_code/Value:other+' => '~~',
 	'Class:UserRequest/Attribute:resolution_code/Value:software patch' => 'Software patch~~',
-	'Class:UserRequest/Attribute:resolution_code/Value:software patch+' => '',
+	'Class:UserRequest/Attribute:resolution_code/Value:software patch+' => '~~',
 	'Class:UserRequest/Attribute:resolution_code/Value:system update' => 'System update~~',
-	'Class:UserRequest/Attribute:resolution_code/Value:system update+' => '',
+	'Class:UserRequest/Attribute:resolution_code/Value:system update+' => '~~',
 	'Class:UserRequest/Attribute:resolution_code/Value:training' => 'Training~~',
-	'Class:UserRequest/Attribute:resolution_code/Value:training+' => '',
+	'Class:UserRequest/Attribute:resolution_code/Value:training+' => '~~',
 	'Class:UserRequest/Attribute:solution' => 'Solution~~',
 	'Class:UserRequest/Attribute:solution+' => '~~',
 	'Class:UserRequest/Attribute:pending_reason' => 'Pending reason~~',
@@ -224,13 +208,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:UserRequest/Attribute:user_satisfaction' => 'User satisfaction~~',
 	'Class:UserRequest/Attribute:user_satisfaction+' => '~~',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:1' => 'Very satisfied~~',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:1+' => '',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:1+' => '~~',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:2' => 'Fairly satisfied~~',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:2+' => '',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:2+' => '~~',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:3' => 'Rather dissatisfied~~',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:3+' => '',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:3+' => '~~',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:4' => 'Very dissatisfied~~',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => '',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => '~~',
 	'Class:UserRequest/Attribute:user_comment' => 'User comment~~',
 	'Class:UserRequest/Attribute:user_comment+' => '~~',
 	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => 'parent_request_id_friendlyname~~',
@@ -260,9 +244,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Wait for approval~~',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '~~',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself~~',
-]);
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Portal:TitleDetailsFor_Request' => 'Details for request~~',
 	'Portal:ButtonUpdate' => 'Update~~',
 	'Portal:ButtonClose' => 'Close~~',
@@ -287,9 +268,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Portal:ChooseYourFavoriteLanguage' => 'Choose your favorite language~~',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
-]);
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
 	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
 	'Organization:Overview:Tickets' => 'Tickets for this organization~~',

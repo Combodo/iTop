@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
@@ -13,9 +12,9 @@
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:ServiceManagement' => 'Service-Management',
-	'Menu:ServiceManagement+' => '',
+	'Menu:ServiceManagement+' => 'Service Management Overview~~',
 	'Menu:Service:Overview' => 'Oversigt',
-	'Menu:Service:Overview+' => '',
+	'Menu:Service:Overview+' => '~~',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Kontrakter efter Service Level',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Kontrakter efter Status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Kontrakter som udløber om mindre end 30 dage',
@@ -28,9 +27,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:Service' => 'Ydelser',
 	'Menu:Service+' => 'Second level in service hierarchy~~',
 	'Menu:SLA' => 'SLAs',
-	'Menu:SLA+' => '',
+	'Menu:SLA+' => 'Service Level Agreements~~',
 	'Menu:SLT' => 'SLTs',
-	'Menu:SLT+' => '',
+	'Menu:SLT+' => 'Service Level Targets~~',
 	'Menu:DeliveryModel' => 'Leveringsmodel',
 	'Menu:DeliveryModel+' => 'Teams handling tickets~~',
 	'Menu:ServiceFamily' => 'Ydelses familie(r)',
@@ -45,206 +44,135 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
 	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
 	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
-
 	'Contract:baseinfo' => 'General information~~',
 	'Contract:moreinfo' => 'Contractual information~~',
 	'Contract:cost' => 'Cost information~~',
-]);
-
-//
-// Class: Organization
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Leverings model',
 	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Leverings model navn',
 	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
-]);
-
-//
-// Class: ContractType
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ContractType' => 'Kontrakt-Type',
-	'Class:ContractType+' => '',
-]);
-
-//
-// Class: Contract
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:ContractType+' => 'Typology for categorizing Customer and Provider Contracts.~~',
 	'Class:Contract' => 'Kontrakt',
-	'Class:Contract+' => '',
+	'Class:Contract+' => 'Abstract class to handle fields common to the different contract types.~~',
 	'Class:Contract/Attribute:name' => 'Navn',
-	'Class:Contract/Attribute:name+' => '',
+	'Class:Contract/Attribute:name+' => '~~',
 	'Class:Contract/Attribute:org_id' => 'Organisation',
-	'Class:Contract/Attribute:org_id+' => '',
+	'Class:Contract/Attribute:org_id+' => '~~',
 	'Class:Contract/Attribute:organization_name' => 'Organisations navn',
-	'Class:Contract/Attribute:organization_name+' => '',
+	'Class:Contract/Attribute:organization_name+' => 'Common name~~',
 	'Class:Contract/Attribute:contacts_list' => 'Kontakter',
 	'Class:Contract/Attribute:contacts_list+' => 'All the contacts for this customer contract~~',
 	'Class:Contract/Attribute:documents_list' => 'Dokumenter',
 	'Class:Contract/Attribute:documents_list+' => 'All the documents for this customer contract~~',
 	'Class:Contract/Attribute:description' => 'Beskrivelse',
-	'Class:Contract/Attribute:description+' => '',
+	'Class:Contract/Attribute:description+' => '~~',
 	'Class:Contract/Attribute:start_date' => 'Startdato',
-	'Class:Contract/Attribute:start_date+' => '',
+	'Class:Contract/Attribute:start_date+' => '~~',
 	'Class:Contract/Attribute:end_date' => 'Slutdato',
-	'Class:Contract/Attribute:end_date+' => '',
+	'Class:Contract/Attribute:end_date+' => '~~',
 	'Class:Contract/Attribute:cost' => 'Omkostninger',
-	'Class:Contract/Attribute:cost+' => '',
+	'Class:Contract/Attribute:cost+' => '~~',
 	'Class:Contract/Attribute:cost_currency' => 'Valuta',
-	'Class:Contract/Attribute:cost_currency+' => '',
+	'Class:Contract/Attribute:cost_currency+' => '~~',
 	'Class:Contract/Attribute:cost_currency/Value:dollars' => 'Dollar',
-	'Class:Contract/Attribute:cost_currency/Value:dollars+' => '',
+	'Class:Contract/Attribute:cost_currency/Value:dollars+' => '~~',
 	'Class:Contract/Attribute:cost_currency/Value:euros' => 'Euro',
-	'Class:Contract/Attribute:cost_currency/Value:euros+' => '',
+	'Class:Contract/Attribute:cost_currency/Value:euros+' => '~~',
 	'Class:Contract/Attribute:contracttype_id' => 'Kontrakttype',
-	'Class:Contract/Attribute:contracttype_id+' => '',
+	'Class:Contract/Attribute:contracttype_id+' => '~~',
 	'Class:Contract/Attribute:contracttype_name' => 'Kontrakt type navn',
-	'Class:Contract/Attribute:contracttype_name+' => '',
+	'Class:Contract/Attribute:contracttype_name+' => '~~',
 	'Class:Contract/Attribute:billing_frequency' => 'Afregnings frekvens',
-	'Class:Contract/Attribute:billing_frequency+' => '',
+	'Class:Contract/Attribute:billing_frequency+' => '~~',
 	'Class:Contract/Attribute:cost_unit' => 'Enhedsomkostninger',
-	'Class:Contract/Attribute:cost_unit+' => '',
+	'Class:Contract/Attribute:cost_unit+' => '~~',
 	'Class:Contract/Attribute:provider_id' => 'Leverandør',
-	'Class:Contract/Attribute:provider_id+' => '',
+	'Class:Contract/Attribute:provider_id+' => 'Provider organization for this contract. Can be different from the provider of the associated services.~~',
 	'Class:Contract/Attribute:provider_name' => 'Leverandør navn',
-	'Class:Contract/Attribute:provider_name+' => '',
+	'Class:Contract/Attribute:provider_name+' => '~~',
 	'Class:Contract/Attribute:status' => 'Status',
-	'Class:Contract/Attribute:status+' => '',
+	'Class:Contract/Attribute:status+' => 'The status is not computed based on start and end dates. It must be set manually.~~',
 	'Class:Contract/Attribute:status/Value:implementation' => 'Implementering',
-	'Class:Contract/Attribute:status/Value:implementation+' => '',
+	'Class:Contract/Attribute:status/Value:implementation+' => 'implementation~~',
 	'Class:Contract/Attribute:status/Value:obsolete' => 'Forældet',
-	'Class:Contract/Attribute:status/Value:obsolete+' => '',
+	'Class:Contract/Attribute:status/Value:obsolete+' => 'obsolete~~',
 	'Class:Contract/Attribute:status/Value:production' => 'Produktion',
-	'Class:Contract/Attribute:status/Value:production+' => '',
+	'Class:Contract/Attribute:status/Value:production+' => 'production~~',
 	'Class:Contract/Attribute:finalclass' => 'Kontrakttype',
-	'Class:Contract/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: CustomerContract
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:Contract/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:CustomerContract' => 'Kundekontrakt',
-	'Class:CustomerContract+' => '',
+	'Class:CustomerContract+' => 'Agreement between a client and a provider for the delivery of services with an optional level of commitment (SLA, Coverage Window).~~',
 	'Class:CustomerContract/Attribute:services_list' => 'Ydelser',
 	'Class:CustomerContract/Attribute:services_list+' => 'All the services purchased for this contract~~',
 	'Class:CustomerContract/Attribute:functionalcis_list' => 'CIs',
 	'Class:CustomerContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this contract~~',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Leverandørkontrakter',
 	'Class:CustomerContract/Attribute:providercontracts_list+' => 'All the provider contracts to deliver the services for this contract (underpinning contract)~~',
-]);
-
-//
-// Class: ProviderContract
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ProviderContract' => 'Leverandørkontrakt',
-	'Class:ProviderContract+' => '',
+	'Class:ProviderContract+' => 'Agreement between an external provider and an internal organization.~~',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CIs',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
-	'Class:ProviderContract/Attribute:sla+' => '',
+	'Class:ProviderContract/Attribute:sla+' => 'Service Level Agreement~~',
 	'Class:ProviderContract/Attribute:coverage' => 'Servicetider',
-	'Class:ProviderContract/Attribute:coverage+' => '',
-]);
-
-//
-// Class: lnkContactToContract
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:ProviderContract/Attribute:coverage+' => 'Temporal coverage of the contract, e.g. 24x7, 9x5, etc.~~',
 	'Class:lnkContactToContract' => 'Sammenhæng Kontakt/Kontrakt',
-	'Class:lnkContactToContract+' => '',
+	'Class:lnkContactToContract+' => 'Manages key contacts on each Customer or Provider Contract.~~',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Kontrakt',
-	'Class:lnkContactToContract/Attribute:contract_id+' => '',
+	'Class:lnkContactToContract/Attribute:contract_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contract_name' => 'Kontrakt navn',
-	'Class:lnkContactToContract/Attribute:contract_name+' => '',
+	'Class:lnkContactToContract/Attribute:contract_name+' => '~~',
 	'Class:lnkContactToContract/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkContactToContract/Attribute:contact_id+' => '',
+	'Class:lnkContactToContract/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Kontakt navn',
-	'Class:lnkContactToContract/Attribute:contact_name+' => '',
-]);
-
-//
-// Class: lnkContractToDocument
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkContactToContract/Attribute:contact_name+' => '~~',
 	'Class:lnkContractToDocument' => 'Sammenhæng Kontrakt/Dokument',
-	'Class:lnkContractToDocument+' => '',
+	'Class:lnkContractToDocument+' => 'Link used when a Document is applicable to a Contract.~~',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Kontrakt',
-	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
+	'Class:lnkContractToDocument/Attribute:contract_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:contract_name' => 'Kontrakt navn',
-	'Class:lnkContractToDocument/Attribute:contract_name+' => '',
+	'Class:lnkContractToDocument/Attribute:contract_name+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_id' => 'Dokument',
-	'Class:lnkContractToDocument/Attribute:document_id+' => '',
+	'Class:lnkContractToDocument/Attribute:document_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Dokument navn',
-	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-]);
-
-//
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkContractToDocument/Attribute:document_name+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract' => 'Sammenhæng FunctionalCI/Leverandørkontrakt',
-	'Class:lnkFunctionalCIToProviderContract+' => '',
+	'Class:lnkFunctionalCIToProviderContract+' => 'This link models the Functional CIs that are supported by an external company through a Provider Contract.~~',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Leverandørkontrakt',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Leverandørkontrakt navn',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'CI',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI navn',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
-]);
-
-//
-// Class: ServiceFamily
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '~~',
 	'Class:ServiceFamily' => 'Ydelsesfamilie',
-	'Class:ServiceFamily+' => '',
+	'Class:ServiceFamily+' => 'Top level of Service hierarchy. Required for Services to be proposed in User Portal~~',
 	'Class:ServiceFamily/Attribute:name' => 'Navn',
-	'Class:ServiceFamily/Attribute:name+' => '',
+	'Class:ServiceFamily/Attribute:name+' => '~~',
 	'Class:ServiceFamily/Attribute:icon' => 'Icon~~',
-	'Class:ServiceFamily/Attribute:icon+' => '',
+	'Class:ServiceFamily/Attribute:icon+' => '~~',
 	'Class:ServiceFamily/Attribute:services_list' => 'Ydelser',
 	'Class:ServiceFamily/Attribute:services_list+' => 'All the services in this category~~',
-]);
-
-//
-// Class: Service
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Service' => 'Ydelse',
-	'Class:Service+' => '',
+	'Class:Service+' => 'A Service is delivered by an organization and subscribed to through a Contract Client. It must contain at least one Service Subcategory.~~',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Service/Attribute:name' => 'Navn',
-	'Class:Service/Attribute:name+' => '',
+	'Class:Service/Attribute:name+' => '~~',
 	'Class:Service/Attribute:org_id' => 'Organisation',
-	'Class:Service/Attribute:org_id+' => '',
+	'Class:Service/Attribute:org_id+' => '~~',
 	'Class:Service/Attribute:organization_name' => 'Navn',
-	'Class:Service/Attribute:organization_name+' => '',
+	'Class:Service/Attribute:organization_name+' => '~~',
 	'Class:Service/Attribute:description' => 'Beskrivelse',
-	'Class:Service/Attribute:description+' => '',
+	'Class:Service/Attribute:description+' => '~~',
 	'Class:Service/Attribute:servicefamily_id' => 'Service familie',
 	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Ydelses familie navn',
-	'Class:Service/Attribute:servicefamily_name+' => '',
+	'Class:Service/Attribute:servicefamily_name+' => '~~',
 	'Class:Service/Attribute:documents_list' => 'Dokument',
 	'Class:Service/Attribute:documents_list+' => 'All the documents linked to the service~~',
 	'Class:Service/Attribute:contacts_list' => 'Kontakt',
@@ -252,168 +180,126 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Service/Attribute:status' => 'Status',
 	'Class:Service/Attribute:status+' => 'By default only Service in production are visible by Portal users~~',
 	'Class:Service/Attribute:status/Value:implementation' => 'Implementering',
-	'Class:Service/Attribute:status/Value:implementation+' => '',
+	'Class:Service/Attribute:status/Value:implementation+' => 'implementation~~',
 	'Class:Service/Attribute:status/Value:obsolete' => 'Forældet',
-	'Class:Service/Attribute:status/Value:obsolete+' => '',
+	'Class:Service/Attribute:status/Value:obsolete+' => '~~',
 	'Class:Service/Attribute:status/Value:production' => 'Produktion',
-	'Class:Service/Attribute:status/Value:production+' => '',
+	'Class:Service/Attribute:status/Value:production+' => '~~',
 	'Class:Service/Attribute:icon' => 'Icon~~',
-	'Class:Service/Attribute:icon+' => '',
+	'Class:Service/Attribute:icon+' => '~~',
 	'Class:Service/Attribute:customercontracts_list' => 'Kundekontrakt',
 	'Class:Service/Attribute:customercontracts_list+' => 'All the customer contracts that have purchased this service~~',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Ydelses underkategorier',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'All the sub categories for this service~~',
-]);
-
-//
-// Class: lnkDocumentToService
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkDocumentToService' => 'Sammenhæng Dokument/Ydelse',
-	'Class:lnkDocumentToService+' => '',
+	'Class:lnkDocumentToService+' => 'Link used when a Document is applicable to a Service.~~',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Ydelse',
-	'Class:lnkDocumentToService/Attribute:service_id+' => '',
+	'Class:lnkDocumentToService/Attribute:service_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'Ydelses navn',
-	'Class:lnkDocumentToService/Attribute:service_name+' => '',
+	'Class:lnkDocumentToService/Attribute:service_name+' => '~~',
 	'Class:lnkDocumentToService/Attribute:document_id' => 'Dokument',
-	'Class:lnkDocumentToService/Attribute:document_id+' => '',
+	'Class:lnkDocumentToService/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Dokument navn',
-	'Class:lnkDocumentToService/Attribute:document_name+' => '',
-]);
-
-//
-// Class: lnkContactToService
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkDocumentToService/Attribute:document_name+' => '~~',
 	'Class:lnkContactToService' => 'Sammenhæng Kontakt/Ydelse',
-	'Class:lnkContactToService+' => '',
+	'Class:lnkContactToService+' => 'Ideal for defining the Team to which Tickets created on the related Service will be assigned (automatically or manually).~~',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToService/Attribute:service_id' => 'Ydelse',
-	'Class:lnkContactToService/Attribute:service_id+' => '',
+	'Class:lnkContactToService/Attribute:service_id+' => '~~',
 	'Class:lnkContactToService/Attribute:service_name' => 'Ydelses navn',
-	'Class:lnkContactToService/Attribute:service_name+' => '',
+	'Class:lnkContactToService/Attribute:service_name+' => '~~',
 	'Class:lnkContactToService/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkContactToService/Attribute:contact_id+' => '',
+	'Class:lnkContactToService/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Kontakt navn',
-	'Class:lnkContactToService/Attribute:contact_name+' => '',
-]);
-
-//
-// Class: ServiceSubcategory
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkContactToService/Attribute:contact_name+' => '~~',
 	'Class:ServiceSubcategory' => 'Ydelses underkategori',
-	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory+' => 'Lowest level in Service hierarchy. User Request are usually associated to one Service Subcategory.~~',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ServiceSubcategory/Attribute:name' => 'Navn',
-	'Class:ServiceSubcategory/Attribute:name+' => '',
+	'Class:ServiceSubcategory/Attribute:name+' => '~~',
 	'Class:ServiceSubcategory/Attribute:description' => 'Beskrivelse',
-	'Class:ServiceSubcategory/Attribute:description+' => '',
+	'Class:ServiceSubcategory/Attribute:description+' => '~~',
 	'Class:ServiceSubcategory/Attribute:service_id' => 'Ydelse',
-	'Class:ServiceSubcategory/Attribute:service_id+' => '',
+	'Class:ServiceSubcategory/Attribute:service_id+' => '~~',
 	'Class:ServiceSubcategory/Attribute:service_name' => 'Ydelses navn',
-	'Class:ServiceSubcategory/Attribute:service_name+' => '',
+	'Class:ServiceSubcategory/Attribute:service_name+' => '~~',
 	'Class:ServiceSubcategory/Attribute:status' => 'Status',
-	'Class:ServiceSubcategory/Attribute:status+' => '',
+	'Class:ServiceSubcategory/Attribute:status+' => 'Service subcategory status has usually an impact on User Portal visibility.~~',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation' => 'Implementering',
-	'Class:ServiceSubcategory/Attribute:status/Value:implementation+' => '',
+	'Class:ServiceSubcategory/Attribute:status/Value:implementation+' => 'implementation~~',
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete' => 'Forældet',
-	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => '',
+	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => 'obsolete~~',
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Produktion',
-	'Class:ServiceSubcategory/Attribute:status/Value:production+' => '',
+	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'production~~',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Anmodnings type',
 	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user selects this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Incident',
-	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'incident~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Service Anmodning',
-	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'service request~~',
 	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider Name~~',
 	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider~~',
-]);
-
-//
-// Class: SLA
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:SLA' => 'SLA',
-	'Class:SLA+' => '',
+	'Class:SLA+' => 'Service Level Agreement (SLA) applicable to a Service subscribed by a customer and measured using SLTs.~~',
 	'Class:SLA/Attribute:name' => 'Navn',
-	'Class:SLA/Attribute:name+' => '',
+	'Class:SLA/Attribute:name+' => '~~',
 	'Class:SLA/Attribute:description' => 'Beskrivelse',
-	'Class:SLA/Attribute:description+' => '',
+	'Class:SLA/Attribute:description+' => '~~',
 	'Class:SLA/Attribute:org_id' => 'Organisation',
-	'Class:SLA/Attribute:org_id+' => '',
+	'Class:SLA/Attribute:org_id+' => '~~',
 	'Class:SLA/Attribute:organization_name' => 'Organisations navn',
-	'Class:SLA/Attribute:organization_name+' => '',
+	'Class:SLA/Attribute:organization_name+' => '~~',
 	'Class:SLA/Attribute:slts_list' => 'SLTs',
 	'Class:SLA/Attribute:slts_list+' => 'All the service level targets for this SLA~~',
 	'Class:SLA/Attribute:customercontracts_list' => 'Kundekontrakt',
 	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracts using this SLA~~',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
-]);
-
-//
-// Class: SLT
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:SLT' => 'SLT',
-	'Class:SLT+' => '',
+	'Class:SLT+' => 'Service Level Target under a Service Level Agreement (SLA). Defines a maximum time for a metric (TTO or TTR), a request type (Incident or Request) and a priority.~~',
 	'Class:SLT/Attribute:name' => 'Navn',
-	'Class:SLT/Attribute:name+' => '',
+	'Class:SLT/Attribute:name+' => '~~',
 	'Class:SLT/Attribute:priority' => 'Prioritet',
-	'Class:SLT/Attribute:priority+' => '',
+	'Class:SLT/Attribute:priority+' => 'Ticket priority to which this SLT applies. Only tickets with this priority must comply with this SLT.~~',
 	'Class:SLT/Attribute:priority/Value:1' => 'Kritisk',
-	'Class:SLT/Attribute:priority/Value:1+' => '',
+	'Class:SLT/Attribute:priority/Value:1+' => 'critical~~',
 	'Class:SLT/Attribute:priority/Value:2' => 'Høj',
-	'Class:SLT/Attribute:priority/Value:2+' => '',
+	'Class:SLT/Attribute:priority/Value:2+' => 'high~~',
 	'Class:SLT/Attribute:priority/Value:3' => 'Middel',
-	'Class:SLT/Attribute:priority/Value:3+' => '',
+	'Class:SLT/Attribute:priority/Value:3+' => 'medium~~',
 	'Class:SLT/Attribute:priority/Value:4' => 'Lav',
-	'Class:SLT/Attribute:priority/Value:4+' => '',
+	'Class:SLT/Attribute:priority/Value:4+' => 'low~~',
 	'Class:SLT/Attribute:request_type' => 'Anmodnings type',
-	'Class:SLT/Attribute:request_type+' => '',
+	'Class:SLT/Attribute:request_type+' => 'Request type to which this SLT applies. Only tickets with this request type must comply with this SLT.~~',
 	'Class:SLT/Attribute:request_type/Value:incident' => 'Incident',
-	'Class:SLT/Attribute:request_type/Value:incident+' => '',
+	'Class:SLT/Attribute:request_type/Value:incident+' => 'incident~~',
 	'Class:SLT/Attribute:request_type/Value:service_request' => 'Service Anmodning',
-	'Class:SLT/Attribute:request_type/Value:service_request+' => '',
+	'Class:SLT/Attribute:request_type/Value:service_request+' => 'service request~~',
 	'Class:SLT/Attribute:metric' => 'Metrisk',
-	'Class:SLT/Attribute:metric+' => '',
+	'Class:SLT/Attribute:metric+' => 'Delay type to which this SLT applies. TTO (Time To Own) or TTR (Time To Resolve).~~',
 	'Class:SLT/Attribute:metric/Value:tto' => 'TTO (Time To Own)',
-	'Class:SLT/Attribute:metric/Value:tto+' => '',
+	'Class:SLT/Attribute:metric/Value:tto+' => 'TTO~~',
 	'Class:SLT/Attribute:metric/Value:ttr' => 'TTR (Time To Resolve)',
-	'Class:SLT/Attribute:metric/Value:ttr+' => '',
+	'Class:SLT/Attribute:metric/Value:ttr+' => 'TTR~~',
 	'Class:SLT/Attribute:value' => 'Værdi',
-	'Class:SLT/Attribute:value+' => '',
+	'Class:SLT/Attribute:value+' => 'Delay value which must not be exceeded to be compliant with the target. The unit is defined in the "unit" attribute.~~',
 	'Class:SLT/Attribute:unit' => 'Enhed',
-	'Class:SLT/Attribute:unit+' => '',
+	'Class:SLT/Attribute:unit+' => 'Unit for the delay value.~~',
 	'Class:SLT/Attribute:unit/Value:hours' => 'Timer',
-	'Class:SLT/Attribute:unit/Value:hours+' => '',
+	'Class:SLT/Attribute:unit/Value:hours+' => 'hours~~',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'Minutter',
-	'Class:SLT/Attribute:unit/Value:minutes+' => '',
-]);
-
-//
-// Class: lnkSLAToSLT
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:SLT/Attribute:unit/Value:minutes+' => 'minutes~~',
 	'Class:lnkSLAToSLT' => 'Sammenhæng SLA/SLT',
-	'Class:lnkSLAToSLT+' => '',
+	'Class:lnkSLAToSLT+' => 'This link indicates that an SLT is included in the Service Level Agreement (SLA). An SLA usually contains several SLTs. An SLT can be reused as is by several SLAs (seldom).~~',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
-	'Class:lnkSLAToSLT/Attribute:sla_id+' => '',
+	'Class:lnkSLAToSLT/Attribute:sla_id+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'SLA navn',
-	'Class:lnkSLAToSLT/Attribute:sla_name+' => '',
+	'Class:lnkSLAToSLT/Attribute:sla_name+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_id' => 'SLT',
-	'Class:lnkSLAToSLT/Attribute:slt_id+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_id+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_name' => 'SLT navn',
-	'Class:lnkSLAToSLT/Attribute:slt_name+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_name+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'SLT metric~~',
 	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'SLT request type~~',
@@ -424,127 +310,79 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'SLT value unit~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkCustomerContractToService' => 'Sammenhæng Kundekontrakt/Ydelse',
-	'Class:lnkCustomerContractToService+' => '',
+	'Class:lnkCustomerContractToService+' => 'A single line of a Customer Contract, specifying the Service provided and, for this service, the subscribed commitment levels (Service Level Agreement and Coverage Window).~~',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Kundekontrakt',
-	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Kundekontrakt navn',
-	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:service_id' => 'Ydelse',
-	'Class:lnkCustomerContractToService/Attribute:service_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:service_id+' => 'All service subcategories linked to this service are also included by the contract.~~',
 	'Class:lnkCustomerContractToService/Attribute:service_name' => 'Ydelses navn',
-	'Class:lnkCustomerContractToService/Attribute:service_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:service_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_id' => 'SLA',
-	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:sla_id+' => 'Service Level Agreement applicable to this service for this customer contract.~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA-Navn',
-	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
 	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToProviderContract
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkCustomerContractToProviderContract' => 'Sammenhæng Kundekontrakt/Leverandørkontrakt',
-	'Class:lnkCustomerContractToProviderContract+' => '',
+	'Class:lnkCustomerContractToProviderContract+' => 'This link models when a Provider Contract contributes to the delivery of a Customer Contract.~~',
 	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id' => 'Kundekontrakt',
-	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name' => 'Kundekontrakt navn',
-	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name+' => '~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id' => 'Leverandørkontrakt',
-	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => '~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name' => 'Leverandørkontrakt navn',
-	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => '',
-]);
-
-//
-// Class: lnkCustomerContractToFunctionalCI
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI' => 'Sammenhæng Kundekontrakt/FunctionalCI',
-	'Class:lnkCustomerContractToFunctionalCI+' => '',
+	'Class:lnkCustomerContractToFunctionalCI+' => 'This link models the equipment (Functional CI) covered by a Customer Contract.~~',
 	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id' => 'Kundekontrakt',
-	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name' => 'Kundekontrakt navn',
-	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id' => 'CI',
-	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name' => 'CI navn',
-	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => '',
-]);
-
-//
-// Class: DeliveryModel
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => '~~',
 	'Class:DeliveryModel' => 'Leverings model',
-	'Class:DeliveryModel+' => '',
+	'Class:DeliveryModel+' => 'The Delivery Model specifies the Teams that can be assigned to Tickets; it must contain at least one Team in the Contacts tab.
+Each client Organization must have a defined Delivery Model.~~',
 	'Class:DeliveryModel/Attribute:name' => 'Navn',
-	'Class:DeliveryModel/Attribute:name+' => '',
+	'Class:DeliveryModel/Attribute:name+' => '~~',
 	'Class:DeliveryModel/Attribute:org_id' => 'Organisation',
-	'Class:DeliveryModel/Attribute:org_id+' => '',
+	'Class:DeliveryModel/Attribute:org_id+' => '~~',
 	'Class:DeliveryModel/Attribute:organization_name' => 'Organisations navn',
-	'Class:DeliveryModel/Attribute:organization_name+' => '',
+	'Class:DeliveryModel/Attribute:organization_name+' => '~~',
 	'Class:DeliveryModel/Attribute:description' => 'Beskrivelse',
-	'Class:DeliveryModel/Attribute:description+' => '',
+	'Class:DeliveryModel/Attribute:description+' => '~~',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Kontakt',
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'There must be at least one team to enable Ticket assignment~~',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Kunde',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
-]);
-
-//
-// Class: lnkDeliveryModelToContact
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkDeliveryModelToContact' => 'Sammenhæng Leveringsmodel/Kontakt',
-	'Class:lnkDeliveryModelToContact+' => '',
+	'Class:lnkDeliveryModelToContact+' => 'This link specifies the role of a Team (more rarely a Person) within a Delivery Model.~~',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Leverings model',
-	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => 'Leveringsmodel navn',
-	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkDeliveryModelToContact/Attribute:contact_id+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:contact_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:contact_name' => 'Kontaktnavn',
-	'Class:lnkDeliveryModelToContact/Attribute:contact_name+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:contact_name+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:role_id' => 'Rolle',
-	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Rolle navn',
-	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
-]);
-
-//
-// Class: lnkContactToContract
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '~~',
 	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkContractToDocument
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',

@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -31,30 +30,20 @@ ou entre em contato com o seu administrador do '.ITOP_APPLICATION_SHORT.' pois o
 	'Attachments:Render:Icons' => 'Exibir como ícones',
 	'Attachments:Render:Table' => 'Exibir como lista',
 	'UI:Attachments:DropYourFileHint' => 'Solte arquivos em qualquer lugar nesta área',
-]);
-
-//
-// Class: Attachment
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Attachment' => 'Anexo',
-	'Class:Attachment+' => '',
+	'Class:Attachment+' => 'File: text or image, linked to a single object. It can\'t be modified, only deleted. Attachment can\'t be created outside of its object edition.~~',
 	'Class:Attachment/Attribute:expire' => 'Expira',
-	'Class:Attachment/Attribute:expire+' => '',
+	'Class:Attachment/Attribute:expire+' => '~~',
 	'Class:Attachment/Attribute:temp_id' => 'ID temporário',
-	'Class:Attachment/Attribute:temp_id+' => '',
+	'Class:Attachment/Attribute:temp_id+' => '~~',
 	'Class:Attachment/Attribute:item_class' => 'Classe do item',
-	'Class:Attachment/Attribute:item_class+' => '',
+	'Class:Attachment/Attribute:item_class+' => '~~',
 	'Class:Attachment/Attribute:item_id' => 'Item',
-	'Class:Attachment/Attribute:item_id+' => '',
+	'Class:Attachment/Attribute:item_id+' => '~~',
 	'Class:Attachment/Attribute:item_org_id' => 'Organização do item',
-	'Class:Attachment/Attribute:item_org_id+' => '',
+	'Class:Attachment/Attribute:item_org_id+' => '~~',
 	'Class:Attachment/Attribute:contents' => 'Conteúdo',
-	'Class:Attachment/Attribute:contents+' => '',
-]);
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:Attachment/Attribute:contents+' => '~~',
 	'Attachments:File:Thumbnail' => 'Ícone',
 	'Attachments:File:Name' => 'Nome do arquivo',
 	'Attachments:File:Date' => 'Data de envio',
@@ -62,33 +51,20 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Attachments:File:Size' => 'Tamanho',
 	'Attachments:File:MimeType' => 'Tipo',
 	'Attachments:File:DownloadsCount' => 'Downloads~~',
-]);
-//
-// Class: Attachment
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Attachment/Attribute:creation_date' => 'Data de criação',
-	'Class:Attachment/Attribute:creation_date+' => '',
+	'Class:Attachment/Attribute:creation_date+' => '~~',
 	'Class:Attachment/Attribute:user_id' => 'Identificador do usuário',
-	'Class:Attachment/Attribute:user_id+' => '',
+	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => 'Identificador do contato',
-	'Class:Attachment/Attribute:contact_id+' => '',
-]);
-
-//
-// Class: TriggerOnAttachmentDownload
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:Attachment/Attribute:contact_id+' => '~~',
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
-	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment creation)~~',
-	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment creation~~',
+	'Class:TriggerOnAttachmentCreate' => 'Trigger (on object\'s attachment creation)~~',
+	'Class:TriggerOnAttachmentCreate+' => 'Trigger on object\'s attachment creation~~',
+	'Class:TriggerOnAttachmentDelete' => 'Trigger (on object\'s attachment deletion)~~',
+	'Class:TriggerOnAttachmentDelete+' => 'Trigger on object\'s attachment deletion~~',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email~~',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
-	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment deletion)~~',
-	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment deletion~~',
 	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email' => 'Add deleted file in email~~',
 	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email+' => 'If checked, the deleted file will be automatically attached to the email when an email action is triggered~~',
 	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',

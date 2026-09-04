@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
@@ -14,39 +13,39 @@
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Ticket' => 'Tiket',
-	'Class:Ticket+' => '',
+	'Class:Ticket+' => 'Abstract class~~',
 	'Class:Ticket/Attribute:ref' => 'ID',
-	'Class:Ticket/Attribute:ref+' => '',
+	'Class:Ticket/Attribute:ref+' => '~~',
 	'Class:Ticket/Attribute:org_id' => 'Organizace',
-	'Class:Ticket/Attribute:org_id+' => '',
+	'Class:Ticket/Attribute:org_id+' => '~~',
 	'Class:Ticket/Attribute:org_name' => 'Název organizace',
-	'Class:Ticket/Attribute:org_name+' => '',
+	'Class:Ticket/Attribute:org_name+' => '~~',
 	'Class:Ticket/Attribute:caller_id' => 'Zadavatel',
-	'Class:Ticket/Attribute:caller_id+' => '',
+	'Class:Ticket/Attribute:caller_id+' => '~~',
 	'Class:Ticket/Attribute:caller_name' => 'Název zadavatele',
-	'Class:Ticket/Attribute:caller_name+' => '',
+	'Class:Ticket/Attribute:caller_name+' => '~~',
 	'Class:Ticket/Attribute:team_id' => 'Tým',
-	'Class:Ticket/Attribute:team_id+' => '',
+	'Class:Ticket/Attribute:team_id+' => '~~',
 	'Class:Ticket/Attribute:team_name' => 'Název týmu',
-	'Class:Ticket/Attribute:team_name+' => '',
+	'Class:Ticket/Attribute:team_name+' => '~~',
 	'Class:Ticket/Attribute:agent_id' => 'Řešitel',
-	'Class:Ticket/Attribute:agent_id+' => '',
+	'Class:Ticket/Attribute:agent_id+' => '~~',
 	'Class:Ticket/Attribute:agent_name' => 'Název řešitele',
-	'Class:Ticket/Attribute:agent_name+' => '',
+	'Class:Ticket/Attribute:agent_name+' => '~~',
 	'Class:Ticket/Attribute:title' => 'Název',
-	'Class:Ticket/Attribute:title+' => '',
+	'Class:Ticket/Attribute:title+' => '~~',
 	'Class:Ticket/Attribute:description' => 'Popis',
-	'Class:Ticket/Attribute:description+' => '',
+	'Class:Ticket/Attribute:description+' => '~~',
 	'Class:Ticket/Attribute:start_date' => 'Datum vytvoření',
-	'Class:Ticket/Attribute:start_date+' => '',
+	'Class:Ticket/Attribute:start_date+' => '~~',
 	'Class:Ticket/Attribute:end_date' => 'Datum ukončení',
-	'Class:Ticket/Attribute:end_date+' => '',
+	'Class:Ticket/Attribute:end_date+' => '~~',
 	'Class:Ticket/Attribute:last_update' => 'Poslední aktualizace',
-	'Class:Ticket/Attribute:last_update+' => '',
+	'Class:Ticket/Attribute:last_update+' => '~~',
 	'Class:Ticket/Attribute:close_date' => 'Datum uzavření',
-	'Class:Ticket/Attribute:close_date+' => '',
+	'Class:Ticket/Attribute:close_date+' => '~~',
 	'Class:Ticket/Attribute:private_log' => 'Interní záznam',
-	'Class:Ticket/Attribute:private_log+' => '',
+	'Class:Ticket/Attribute:private_log+' => '~~',
 	'Class:Ticket/Attribute:contacts_list' => 'Kontakty',
 	'Class:Ticket/Attribute:contacts_list+' => 'Všechny kontakty spojené s tímto tiketem',
 	'Class:Ticket/Attribute:functionalcis_list' => 'Konfigurační položky',
@@ -54,85 +53,67 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Ticket/Attribute:workorders_list' => 'Pracovní příkazy',
 	'Class:Ticket/Attribute:workorders_list+' => 'Všechny pracovní příkazy pro tento tiket',
 	'Class:Ticket/Attribute:finalclass' => 'Typ',
-	'Class:Ticket/Attribute:finalclass+' => '',
+	'Class:Ticket/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Ticket/Attribute:operational_status' => 'Provozní stav',
 	'Class:Ticket/Attribute:operational_status+' => 'Vypočítán z podrobného stavu',
 	'Class:Ticket/Attribute:operational_status/Value:ongoing' => 'Probíhající',
-	'Class:Ticket/Attribute:operational_status/Value:ongoing+' => '',
+	'Class:Ticket/Attribute:operational_status/Value:ongoing+' => 'Work in progress~~',
 	'Class:Ticket/Attribute:operational_status/Value:resolved' => 'Vyřešený',
-	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '',
+	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '~~',
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Uzavřený',
-	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
+	'Class:Ticket/Attribute:operational_status/Value:closed+' => '~~',
 	'Ticket:ImpactAnalysis' => 'Analýza dopadů',
-]);
-
-//
-// Class: lnkContactToTicket
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkContactToTicket' => 'Spojení (Kontakt / Tiket)',
-	'Class:lnkContactToTicket+' => '',
+	'Class:lnkContactToTicket+' => 'Allows linking several Contacts to notify them about the progress of Tickets, in addition to the requester and the agent.~~',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Tiket',
-	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
+	'Class:lnkContactToTicket/Attribute:ticket_id+' => '~~',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'ID',
-	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '',
+	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_name' => 'Jméno kontaktu',
 	'Class:lnkContactToTicket/Attribute:contact_name+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_email' => 'Email kontaktu',
-	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_email+' => '~~',
 	'Class:lnkContactToTicket/Attribute:role' => 'Role (text)',
-	'Class:lnkContactToTicket/Attribute:role+' => '',
+	'Class:lnkContactToTicket/Attribute:role+' => '~~',
 	'Class:lnkContactToTicket/Attribute:role_code' => 'Role',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Přidán manuálně',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Automaticky',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Neupozorňovat',
-]);
-
-//
-// Class: WorkOrder
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:WorkOrder' => 'Pracovní příkaz',
-	'Class:WorkOrder+' => '',
+	'Class:WorkOrder+' => 'A task required for the resolution of a Ticket, assigned to a Team or even an agent.~~',
 	'Class:WorkOrder/Attribute:name' => 'Název',
-	'Class:WorkOrder/Attribute:name+' => '',
+	'Class:WorkOrder/Attribute:name+' => '~~',
 	'Class:WorkOrder/Attribute:status' => 'Stav',
-	'Class:WorkOrder/Attribute:status+' => '',
+	'Class:WorkOrder/Attribute:status+' => '~~',
 	'Class:WorkOrder/Attribute:status/Value:open' => 'otevřený',
-	'Class:WorkOrder/Attribute:status/Value:open+' => '',
+	'Class:WorkOrder/Attribute:status/Value:open+' => '~~',
 	'Class:WorkOrder/Attribute:status/Value:closed' => 'uzavřený',
-	'Class:WorkOrder/Attribute:status/Value:closed+' => '',
+	'Class:WorkOrder/Attribute:status/Value:closed+' => '~~',
 	'Class:WorkOrder/Attribute:description' => 'Popis',
-	'Class:WorkOrder/Attribute:description+' => '',
+	'Class:WorkOrder/Attribute:description+' => '~~',
 	'Class:WorkOrder/Attribute:ticket_id' => 'Tiket',
-	'Class:WorkOrder/Attribute:ticket_id+' => '',
+	'Class:WorkOrder/Attribute:ticket_id+' => '~~',
 	'Class:WorkOrder/Attribute:ticket_ref' => 'ID tiketu',
-	'Class:WorkOrder/Attribute:ticket_ref+' => '',
+	'Class:WorkOrder/Attribute:ticket_ref+' => '~~',
 	'Class:WorkOrder/Attribute:team_id' => 'Tým',
-	'Class:WorkOrder/Attribute:team_id+' => '',
+	'Class:WorkOrder/Attribute:team_id+' => '~~',
 	'Class:WorkOrder/Attribute:team_name' => 'Název týmu',
-	'Class:WorkOrder/Attribute:team_name+' => '',
+	'Class:WorkOrder/Attribute:team_name+' => '~~',
 	'Class:WorkOrder/Attribute:agent_id' => 'Řešitel',
-	'Class:WorkOrder/Attribute:agent_id+' => '',
+	'Class:WorkOrder/Attribute:agent_id+' => '~~',
 	'Class:WorkOrder/Attribute:agent_email' => 'Email řešitele',
-	'Class:WorkOrder/Attribute:agent_email+' => '',
+	'Class:WorkOrder/Attribute:agent_email+' => '~~',
 	'Class:WorkOrder/Attribute:start_date' => 'Datum začátku',
-	'Class:WorkOrder/Attribute:start_date+' => '',
+	'Class:WorkOrder/Attribute:start_date+' => '~~',
 	'Class:WorkOrder/Attribute:end_date' => 'Datum konce',
-	'Class:WorkOrder/Attribute:end_date+' => '',
+	'Class:WorkOrder/Attribute:end_date+' => '~~',
 	'Class:WorkOrder/Attribute:log' => 'Log',
-	'Class:WorkOrder/Attribute:log+' => '',
+	'Class:WorkOrder/Attribute:log+' => '~~',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Uzavřít',
-	'Class:WorkOrder/Stimulus:ev_close+' => '',
-]);
-
-// Fieldset translation
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
+	'Class:WorkOrder/Stimulus:ev_close+' => '~~',
 	'Ticket:baseinfo' => 'Obecné informace',
 	'Ticket:date' => 'Data',
 	'Ticket:contact' => 'Kontakty',
@@ -222,13 +203,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Cíl úrovně služeb typu TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Čas pro vyřešení (TTR)',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Cíl úrovně služeb typu TTR',
-]);
-
-//
-// Class: Ticket
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
 ]);

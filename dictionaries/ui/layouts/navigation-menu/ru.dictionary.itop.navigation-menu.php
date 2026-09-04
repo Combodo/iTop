@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -23,5 +22,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => 'Фотография',
 	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Открыть меню пользователя',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Фильтр пунктов меню',
-
 ]);

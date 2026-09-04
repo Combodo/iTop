@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -22,22 +21,22 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Core:AttributeLinkedSet+' => 'Ogni tipo di oggetto della stessa classe o sottoclasse',
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicati nel campo \'%1$s\': %2$s',
 	'Core:AttributeDashboard' => 'Cruscotto',
-	'Core:AttributeDashboard+' => '',
+	'Core:AttributeDashboard+' => '~~',
 	'Core:AttributePhoneNumber' => 'Numero di telefono',
-	'Core:AttributePhoneNumber+' => '',
+	'Core:AttributePhoneNumber+' => '~~',
 	'Core:AttributeObsolescenceDate' => 'Data di obsolescenza',
-	'Core:AttributeObsolescenceDate+' => '',
+	'Core:AttributeObsolescenceDate+' => '~~',
 	'Core:AttributeTagSet' => 'Elenco di tag',
-	'Core:AttributeTagSet+' => '',
+	'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'clicca per aggiungere',
 	'Core:Placeholder:CannotBeResolved' => '(%1$s : non può essere risolto)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s da %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s da classi figlie)',
 	'Core:AttributeCaseLog' => 'Registro',
-	'Core:AttributeCaseLog+' => '',
+	'Core:AttributeCaseLog+' => '~~',
 	'Core:AttributeMetaEnum' => 'Enum calcolato',
-	'Core:AttributeMetaEnum+' => '',
+	'Core:AttributeMetaEnum+' => '~~',
 	'Core:AttributeLinkedSetIndirect' => 'Array di oggetti (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'ogni tipo di oggetti [sottoclasse] della stessa classe',
 	'Core:AttributeInteger' => 'Interger',
@@ -45,8 +44,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Core:AttributeDecimal' => 'Decimale',
 	'Core:AttributeDecimal+' => 'Valore decimale (non può essere negativo)',
 	'Core:AttributeBoolean' => 'Booleano',
-	'Core:AttributeBoolean+' => '',
-	'Core:AttributeBoolean/Value:null' => '',
+	'Core:AttributeBoolean+' => '~~',
+	'Core:AttributeBoolean/Value:null' => '~~',
 	'Core:AttributeBoolean/Value:yes' => 'Sì',
 	'Core:AttributeBoolean/Value:no' => 'No',
 	'Core:AttributeArchiveFlag' => 'Flag di archiviazione',
@@ -54,9 +53,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Core:AttributeArchiveFlag/Value:yes+' => 'Questo oggetto è visibile solo in modalità archivio',
 	'Core:AttributeArchiveFlag/Value:no' => 'No',
 	'Core:AttributeArchiveFlag/Label' => 'Archiviato',
-	'Core:AttributeArchiveFlag/Label+' => '',
+	'Core:AttributeArchiveFlag/Label+' => '~~',
 	'Core:AttributeArchiveDate/Label' => 'Data di archiviazione',
-	'Core:AttributeArchiveDate/Label+' => '',
+	'Core:AttributeArchiveDate/Label+' => '~~',
 	'Core:AttributeObsolescenceFlag' => 'Flag di obsolescenza',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Sì',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Questo oggetto è escluso dall\'analisi dell\'impatto ed è nascosto dai risultati della ricerca',
@@ -68,7 +67,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Core:AttributeString' => 'Stringa',
 	'Core:AttributeString+' => 'Stringa alfanumerica',
 	'Core:AttributeClass' => 'Classe',
-	'Core:AttributeClass+' => '',
+	'Core:AttributeClass+' => '~~',
 	'Core:AttributeApplicationLanguage' => 'Lingua dell\'applicazione',
 	'Core:AttributeApplicationLanguage+' => 'Lingua e Paese (EN US)',
 	'Core:AttributeFinalClass' => 'Classe finale (auto)',
@@ -84,9 +83,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => 'Stringa HTML',
 	'Core:AttributeEmailAddress' => 'Indirizzo Email',
-	'Core:AttributeEmailAddress+' => '',
+	'Core:AttributeEmailAddress+' => 'Email address~~',
 	'Core:AttributeIPAddress' => 'Indirizzo IP',
-	'Core:AttributeIPAddress+' => '',
+	'Core:AttributeIPAddress+' => 'IP address~~',
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Espressione Object Query Langage',
 	'Core:AttributeEnum' => 'Enum',
@@ -151,25 +150,13 @@ Operatori:<br/>
 	'Core:FriendlyName-Label' => 'Nome',
 	'Core:FriendlyName-Description' => 'Friendly name',
 	'Core:AttributeTag' => 'Tag',
-	'Core:AttributeTag+' => '',
+	'Core:AttributeTag+' => '~~',
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Sincronizzazione',
 	'Core:Context=Setup' => 'Configurazione',
 	'Core:Context=GUI:Console' => 'Console',
 	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portale',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'core/cmdb'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: CMDBChange
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:CMDBChange' => 'Cambio',
 	'Class:CMDBChange+' => 'Rilevamento delle modifiche',
 	'Class:CMDBChange/Attribute:date' => 'data',
@@ -184,72 +171,34 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'Servizi web REST/JSON',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'Servizi web SOAP',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Da un\'estensione',
-]);
-
-//
-// Class: CMDBChangeOp
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:CMDBChangeOp' => 'Operazione di cambio',
 	'Class:CMDBChangeOp+' => 'Rilevamento delle operazioni di cambio',
 	'Class:CMDBChangeOp/Attribute:change' => 'cambio',
-	'Class:CMDBChangeOp/Attribute:change+' => '',
+	'Class:CMDBChangeOp/Attribute:change+' => '~~',
 	'Class:CMDBChangeOp/Attribute:date' => 'data',
 	'Class:CMDBChangeOp/Attribute:date+' => 'data e ora del cambio',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'utente',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => 'chi ha fatto questo cambio',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'classe oggetto',
-	'Class:CMDBChangeOp/Attribute:objclass+' => '',
+	'Class:CMDBChangeOp/Attribute:objclass+' => 'class name of the object on which the change was made~~',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'oggetto id',
-	'Class:CMDBChangeOp/Attribute:objkey+' => '',
+	'Class:CMDBChangeOp/Attribute:objkey+' => 'id of the object on which the change was made~~',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'tipo',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: CMDBChangeOpCreate
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:CMDBChangeOp/Attribute:finalclass+' => 'type of change which was performed~~',
 	'Class:CMDBChangeOpCreate' => 'creazione oggetto',
 	'Class:CMDBChangeOpCreate+' => 'Rilevamento creazione oggetto',
-]);
-
-//
-// Class: CMDBChangeOpDelete
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:CMDBChangeOpDelete' => 'cancellazione oggetto',
 	'Class:CMDBChangeOpDelete+' => 'Rilevamento cancellazione oggetto',
-]);
-
-//
-// Class: CMDBChangeOpSetAttribute
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:CMDBChangeOpSetAttribute' => 'cambio oggetto',
 	'Class:CMDBChangeOpSetAttribute+' => 'Rilevamento modifiche delle proprietà dell\'oggetto',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Attributo',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'ccodice della proprietà modificata',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeScalar
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'proprietà cambio',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Rilevamento delle modifiche delle proprietà scalari dell\'oggetto',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Valore precedente',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'valore precedente dell\'attributo',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Nuovo valore',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'nuovo valore dell\'attributo',
-]);
-// Used by CMDBChangeOp... & derived classes
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Change:ObjectCreated' => 'Oggetto creato',
 	'Change:ObjectDeleted' => 'Oggetto cancellato',
 	'Change:ObjectModified' => 'Oggetto modificato',
@@ -266,35 +215,14 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Change:LinkSet:Added' => 'aggiunto %1$s',
 	'Change:LinkSet:Removed' => 'rimosso %1$s',
 	'Change:LinkSet:Modified' => 'modificato %1$s',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeBlob
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'dati del cambio',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'rilevamento dati del cambio',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Dati precedente',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'contenuto precedente dell\'attributo',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeText
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:CMDBChangeOpSetAttributeText' => 'cambio	testo',
 	'Class:CMDBChangeOpSetAttributeText+' => 'rilevamento cambio testo',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Dati precendenti',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'contenuto precedente dell\'attributo',
-]);
-
-//
-// Class: Event
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Event' => 'Log Evento',
 	'Class:Event+' => 'Un\'applicazione evento interno',
 	'Class:Event/Attribute:message' => 'Messagio',
@@ -304,14 +232,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Event/Attribute:userinfo' => 'Info Utente',
 	'Class:Event/Attribute:userinfo+' => 'l\'identificazione dell\'utente che stava facendo l\'azione che ha attivato questo evento',
 	'Class:Event/Attribute:finalclass' => 'Tipo',
-	'Class:Event/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: EventNotification
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:Event/Attribute:finalclass+' => 'Name of the final class: specifies the sort of event which occurred~~',
 	'Class:EventNotification' => 'Notifica dell\'evento',
 	'Class:EventNotification+' => 'Traccia di una notifica che è stato inviato',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
@@ -320,36 +241,24 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:EventNotification/Attribute:action_id+' => 'account utente',
 	'Class:EventNotification/Attribute:object_id' => 'Id oggetto',
 	'Class:EventNotification/Attribute:object_id+' => 'Id oggetto (classe definita dal trigger ?)',
-]);
-
-//
-// Class: EventNotificationEmail
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'Emissione evento Email',
 	'Class:EventNotificationEmail+' => 'Traccia di una e-mail che è stato inviata',
 	'Class:EventNotificationEmail/Attribute:to' => 'A',
-	'Class:EventNotificationEmail/Attribute:to+' => '',
+	'Class:EventNotificationEmail/Attribute:to+' => '~~',
 	'Class:EventNotificationEmail/Attribute:cc' => 'CC',
-	'Class:EventNotificationEmail/Attribute:cc+' => '',
+	'Class:EventNotificationEmail/Attribute:cc+' => '~~',
 	'Class:EventNotificationEmail/Attribute:bcc' => 'BCC',
-	'Class:EventNotificationEmail/Attribute:bcc+' => '',
+	'Class:EventNotificationEmail/Attribute:bcc+' => '~~',
 	'Class:EventNotificationEmail/Attribute:from' => 'Da',
 	'Class:EventNotificationEmail/Attribute:from+' => 'Mittente del messaggio',
 	'Class:EventNotificationEmail/Attribute:subject' => 'Oggetto',
-	'Class:EventNotificationEmail/Attribute:subject+' => '',
+	'Class:EventNotificationEmail/Attribute:subject+' => '~~',
 	'Class:EventNotificationEmail/Attribute:body' => 'Corpo',
-	'Class:EventNotificationEmail/Attribute:body+' => '',
+	'Class:EventNotificationEmail/Attribute:body+' => '~~',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Allegati',
-	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-]);
-
-//
-// Class: EventIssue
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:EventNotificationEmail/Attribute:attachments+' => '~~',
 	'Class:EventIssue' => 'Evento Problematico',
 	'Class:EventIssue+' => 'Traccia di un problema (avviso, errore, etc)',
 	'Class:EventIssue/Attribute:issue' => 'Problema',
@@ -363,16 +272,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:EventIssue/Attribute:arguments_get' => 'Argomenti URL',
 	'Class:EventIssue/Attribute:arguments_get+' => 'Argomenti GET HTTP',
 	'Class:EventIssue/Attribute:callstack' => 'Pila di chiamate',
-	'Class:EventIssue/Attribute:callstack+' => '',
+	'Class:EventIssue/Attribute:callstack+' => '~~',
 	'Class:EventIssue/Attribute:data' => 'Dati',
 	'Class:EventIssue/Attribute:data+' => 'Informazioni aggiuntive',
-]);
-
-//
-// Class: EventWebService
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:EventWebService' => 'Evento di servizio web',
 	'Class:EventWebService+' => 'Traccia di una chiamata di servizio web',
 	'Class:EventWebService/Attribute:verb' => 'Verbo',
@@ -387,9 +289,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:EventWebService/Attribute:log_error+' => 'Risultati error log',
 	'Class:EventWebService/Attribute:data' => 'Dati',
 	'Class:EventWebService/Attribute:data+' => 'Risultati dei dati',
-]);
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:EventRestService' => 'Chiamata REST/JSON',
 	'Class:EventRestService+' => 'Traccia di una chiamata del servizio REST/JSON',
 	'Class:EventRestService/Attribute:operation' => 'Operazione',
@@ -404,36 +303,22 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:EventRestService/Attribute:json_output+' => 'Risposta HTTP (json)',
 	'Class:EventRestService/Attribute:provider' => 'Provider',
 	'Class:EventRestService/Attribute:provider+' => 'Classe PHP che implementa l\'operazione prevista',
-]);
-
-//
-// Class: EventLoginUsage
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:EventLoginUsage' => 'Uso Login',
 	'Class:EventLoginUsage+' => 'Connessione all\'applicazione',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
-	'Class:EventLoginUsage/Attribute:user_id+' => '',
+	'Class:EventLoginUsage/Attribute:user_id+' => '~~',
 	'Class:EventLoginUsage/Attribute:contact_name' => 'User Name',
-	'Class:EventLoginUsage/Attribute:contact_name+' => '',
+	'Class:EventLoginUsage/Attribute:contact_name+' => '~~',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'User Email',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'Indirizzo email dell\'utente',
-]);
-
-//
-// Class: EventNotificationNewsroom
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:EventNotificationNewsroom' => 'Notizia inviata',
 	'Class:EventNotificationNewsroom+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:title' => 'Titolo',
 	'Class:EventNotificationNewsroom/Attribute:title+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:icon' => 'Icona',
-	'Class:EventNotificationNewsroom/Attribute:icon+' => '',
+	'Class:EventNotificationNewsroom/Attribute:icon+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:priority' => 'Priorità',
-	'Class:EventNotificationNewsroom/Attribute:priority+' => '',
+	'Class:EventNotificationNewsroom/Attribute:priority+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:1' => 'Critica',
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:1+' => 'Critica',
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:2' => 'Urgente',
@@ -453,29 +338,24 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:EventNotificationNewsroom/Attribute:read_date' => 'Data di lettura',
 	'Class:EventNotificationNewsroom/Attribute:read_date+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contatto',
-	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '~~',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Class:Action' => 'Azione personalizzata',
 	'Class:Action+' => 'Azione definita dall\'utente',
 	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
 	'Class:Action/Attribute:name' => 'Nome',
-	'Class:Action/Attribute:name+' => '',
+	'Class:Action/Attribute:name+' => 'Any value that is meaningful to distinguish this action from the others~~',
 	'Class:Action/Attribute:description' => 'Descrizione',
-	'Class:Action/Attribute:description+' => '',
+	'Class:Action/Attribute:description+' => 'A longer explanation about the purpose of this action. For information only.~~',
 	'Class:Action/Attribute:status' => 'Stato',
 	'Class:Action/Attribute:status+' => 'In produzione o ?',
 	'Class:Action/Attribute:status/Value:test' => 'In fase di test',
-	'Class:Action/Attribute:status/Value:test+' => '',
+	'Class:Action/Attribute:status/Value:test+' => '~~',
 	'Class:Action/Attribute:status/Value:enabled' => 'In produzione',
-	'Class:Action/Attribute:status/Value:enabled+' => '',
+	'Class:Action/Attribute:status/Value:enabled+' => '~~',
 	'Class:Action/Attribute:status/Value:disabled' => 'Inattivo',
-	'Class:Action/Attribute:status/Value:disabled+' => '',
+	'Class:Action/Attribute:status/Value:disabled+' => '~~',
 	'Class:Action/Attribute:trigger_list' => 'Triggers correlati',
 	'Class:Action/Attribute:trigger_list+' => 'Triggers colleagati a questa azione',
 	'Class:Action/Attribute:asynchronous' => 'Asincrono',
@@ -484,42 +364,42 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Action/Attribute:asynchronous/Value:yes' => 'Sì',
 	'Class:Action/Attribute:asynchronous/Value:no' => 'No',
 	'Class:Action/Attribute:finalclass' => 'Tipo',
-	'Class:Action/Attribute:finalclass+' => '',
+	'Class:Action/Attribute:finalclass+' => 'Name of the final class~~',
 	'Action:WarningNoTriggerLinked' => 'Avviso, nessun trigger è collegato all\'azione. Non sarà attivo finché non avrà almeno 1.',
 	'Action:last_executions_tab' => 'Ultime esecuzioni',
 	'Action:last_executions_tab_panel_title' => 'Esecuzioni di questa azione (%1$s)',
 	'Action:last_executions_tab_limit_days' => 'ultimi %1$s giorni',
 	'Action:last_executions_tab_limit_none' => 'nessun limite',
-]);
-
-//
-// Class: ActionNotification
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ActionNotification' => 'Notifica',
 	'Class:ActionNotification+' => 'Notifica (sommario)',
-]);
-
-//
-// Class: ActionEmail
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:ActionNotification/Attribute:language' => 'Language~~',
+	'Class:ActionNotification/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:lnkActionNotificationToContact' => 'Link ActionNotification / Contact~~',
+	'Class:lnkActionNotificationToContact+' => 'Contact subscription to Notification Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Contact~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Contact who subscribed (or not) to the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'The notification that the contact received at least once, and to which he can subscribe or unsubscribe~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Trigger~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'The trigger that fired the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Subscribed~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification~~',
 	'Class:ActionEmail' => 'Email di notifica',
-	'Class:ActionEmail+' => '',
+	'Class:ActionEmail+' => '~~',
 	'Class:ActionEmail/Attribute:status+' => 'Questo stato determina chi verrà notificato: solo il destinatario di prova, tutti (To, Cc e Bcc) o nessuno',
 	'Class:ActionEmail/Attribute:status/Value:test+' => 'Solo il destinatario di prova verrà notificato',
 	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Tutte le email To, Cc e Bcc saranno notificate',
 	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'La notifica via email non verrà inviata',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Destinatario di prova',
-	'Class:ActionEmail/Attribute:test_recipient+' => '',
+	'Class:ActionEmail/Attribute:test_recipient+' => 'Destination email address used instead of To, Cc and Bcc when notification is being tested~~',
 	'Class:ActionEmail/Attribute:from' => 'Da',
-	'Class:ActionEmail/Attribute:from+' => '',
+	'Class:ActionEmail/Attribute:from+' => 'Either a static email address or a placeholder like $this->agent_id->email$.
+The latest may not be accepted by some email servers.~~',
 	'Class:ActionEmail/Attribute:from_label' => 'Da (etichetta)',
 	'Class:ActionEmail/Attribute:from_label+' => 'Il nome visualizzato del mittente verrà inviato nell\'intestazione dell\'email',
 	'Class:ActionEmail/Attribute:reply_to' => 'Rispondi A',
-	'Class:ActionEmail/Attribute:reply_to+' => '',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Either a static email address or a placeholder like $this->team_id->email$.
+If omitted the From (email) is used.~~',
 	'Class:ActionEmail/Attribute:reply_to_label' => 'Rispondi a (etichetta)',
 	'Class:ActionEmail/Attribute:reply_to_label+' => 'Il nome visualizzato del mittente di risposta verrà inviato nell\'intestazione dell\'email',
 	'Class:ActionEmail/Attribute:to' => 'A',
@@ -533,13 +413,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ActionEmail/Attribute:body' => 'Corpo',
 	'Class:ActionEmail/Attribute:body+' => 'Contenuto dell\'email',
 	'Class:ActionEmail/Attribute:importance' => 'Priorità',
-	'Class:ActionEmail/Attribute:importance+' => '',
+	'Class:ActionEmail/Attribute:importance+' => 'Importance flag set on the generated email~~',
 	'Class:ActionEmail/Attribute:importance/Value:low' => 'Bassa',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '~~',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'Normale',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '~~',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'Alta',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '~~',
 	'Class:ActionEmail/Attribute:language' => 'Lingua',
 	'Class:ActionEmail/Attribute:language+' => 'Lingua da utilizzare per i segnaposto ($xxx$) all\'interno del messaggio (stato, importanza, priorità, ecc.)',
 	'Class:ActionEmail/Attribute:html_template' => 'Template HTML',
@@ -556,13 +436,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'ActionEmail:preview_warning' => 'L\'e-mail effettiva potrebbe apparire diversa nel client di posta elettronica rispetto a questa anteprima nel tuo browser.',
 	'ActionEmail:preview_more_info' => 'Per ulteriori informazioni sulle funzionalità CSS supportate dai diversi client di posta elettronica, consulta %1$s',
 	'ActionEmail:content_placeholder_missing' => 'Il segnaposto "%1$s" non è stato trovato nel template HTML. Il contenuto del campo "%2$s" non verrà incluso nelle email generate.',
-]);
-
-//
-// Class: ActionNewsroom
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'ActionNewsroom:trigger' => 'Trigger',
 	'ActionNewsroom:content' => 'Messaggio',
 	'ActionNewsroom:settings' => 'Impostazioni',
@@ -597,13 +470,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ActionNewsroom/Attribute:recipients+' => 'Una query OQL che restituisce oggetti Contatto',
 	'Class:ActionNewsroom/Attribute:url' => 'URL',
 	'Class:ActionNewsroom/Attribute:url+' => 'L\'URL punterà all\'oggetto che attiva la notifica. Ma puoi anche specificare un URL personalizzato.',
-]);
-
-//
-// Class: Trigger
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Trigger' => 'Trigger',
 	'Class:Trigger+' => 'Gestore di eventi personalizzati',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
@@ -612,7 +478,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Trigger/Attribute:action_list' => 'Azioni triggerate',
 	'Class:Trigger/Attribute:action_list+' => 'Azioni eseguite quando il trigger viene attivato',
 	'Class:Trigger/Attribute:finalclass' => 'Tipo',
-	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Trigger/Attribute:context' => 'Contesto',
 	'Class:Trigger/Attribute:context+' => 'Contesto che consente al trigger di essere attivato',
 	'Class:Trigger/Attribute:complement' => 'Informazioni aggiuntive',
@@ -622,152 +488,62 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Consenti annullamento completo dell\'iscrizione',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Obbliga almeno un canale (News o Email)',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Nega l\'annullamento dell\'iscrizione',
-]);
-
-//
-// Class: TriggerOnObject
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TriggerOnObject' => 'Trigger (classe dipendente)',
 	'Class:TriggerOnObject+' => 'Trigger su una determinata classe di oggetti',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Classe Bersaglio',
-	'Class:TriggerOnObject/Attribute:target_class+' => '',
+	'Class:TriggerOnObject/Attribute:target_class+' => 'Objects in this class will activate the trigger~~',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtro',
 	'Class:TriggerOnObject/Attribute:filter+' => 'Limita l\'elenco degli oggetti (della classe bersaglio) che attiveranno il trigger',
 	'TriggerOnObject:WrongFilterQuery' => 'Query di filtro errata: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'La query di filtro deve restituire oggetti della classe \\"%1$s\\"',
-]);
-
-//
-// Class: TriggerOnPortalUpdate
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TriggerOnPortalUpdate' => 'Trigger (dopo l\'aggiornamento dal portale )',
 	'Class:TriggerOnPortalUpdate+' => 'Trigger sull\'aggiornamento dell\'utente dal portale',
-]);
-
-//
-// Class: TriggerOnStateChange
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TriggerOnStateChange' => 'Trigger (su cambio stato)',
 	'Class:TriggerOnStateChange+' => 'Trigger su cambio stato di un oggetto',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Stato',
-	'Class:TriggerOnStateChange/Attribute:state+' => '',
-]);
-
-//
-// Class: TriggerOnStateEnter
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:TriggerOnStateChange/Attribute:state+' => '~~',
 	'Class:TriggerOnStateEnter' => 'Trigger (all\'entrata di uno stato)',
 	'Class:TriggerOnStateEnter+' => 'Trigger su cambio stato di un oggetto - entrata',
-]);
-
-//
-// Class: TriggerOnStateLeave
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TriggerOnStateLeave' => 'Trigger (all\'uscita di uno stato)',
 	'Class:TriggerOnStateLeave+' => 'Trigger su cambio stato di un oggetto - uscita',
-]);
-
-//
-// Class: TriggerOnObjectCreate
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TriggerOnObjectCreate' => 'Trigger (sulla creazione)',
 	'Class:TriggerOnObjectCreate+' => 'Trigger sulla creazione di un oggetto [una classe figlia di] di una data classe',
-]);
-
-//
-// Class: TriggerOnObjectDelete
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TriggerOnObjectDelete' => 'Trigger (alla cancellazione dell\'oggetto)',
 	'Class:TriggerOnObjectDelete+' => 'Trigger alla cancellazione dell\'oggetto di [una classe figlia della] classe specificata',
-]);
-
-//
-// Class: TriggerOnObjectUpdate
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TriggerOnObjectUpdate' => 'Trigger (alla modifica dell\'oggetto)',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger alla modifica dell\'oggetto di [una classe figlia della] classe specificata',
 	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'This filter is computed after the object update in database. It restricts the objects which can trigger the actions~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Campi di destinazione',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
-]);
-
-//
-// Class: TriggerOnObjectMention
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
 	'Class:TriggerOnObjectMention' => 'Trigger (alla menzione dell\'oggetto)',
 	'Class:TriggerOnObjectMention+' => 'Trigger alla menzione (@xxx) di un oggetto di [una classe figlia della] classe specificata in un attributo di log',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Filtro menzionato',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limita l\'elenco degli oggetti menzionati che attiveranno il trigger. Se vuoto, qualsiasi oggetto menzionato (di qualsiasi classe) lo attiverà.',
-]);
-
-//
-// Class: TriggerOnAttributeBlobDownload
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (al download del documento dell\'oggetto)',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger al download del campo documento dell\'oggetto di [una classe figlia della] classe specificata',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Campi di destinazione',
-	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
-]);
-
-//
-// Class: TriggerOnThresholdReached
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
 	'Class:TriggerOnThresholdReached' => 'Trigger (sulla soglia raggiunta)',
 	'Class:TriggerOnThresholdReached+' => 'Trigger sulla soglia del cronometro raggiunta',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Cronometro',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '~~',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Soglia',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-]);
-
-//
-// Class: lnkTriggerAction
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '~~',
 	'Class:lnkTriggerAction' => 'Azione/Trigger',
 	'Class:lnkTriggerAction+' => 'Collegamento tra trigger e azione',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Azione',
 	'Class:lnkTriggerAction/Attribute:action_id+' => 'Azione da eseguire',
 	'Class:lnkTriggerAction/Attribute:action_name' => 'Azione',
-	'Class:lnkTriggerAction/Attribute:action_name+' => '',
+	'Class:lnkTriggerAction/Attribute:action_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_id' => 'Trigger',
-	'Class:lnkTriggerAction/Attribute:trigger_id+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_id+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_name' => 'Trigger',
-	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:order' => 'Ordine',
 	'Class:lnkTriggerAction/Attribute:order+' => 'Ordine di esecuzione delle azioni',
-]);
-
-//
-// Synchro Data Source
-//
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SynchroDataSource' => 'Sorgente sincronizzazione dati',
 	'Class:SynchroDataSource/Attribute:name' => 'Nome',
-	'Class:SynchroDataSource/Attribute:name+' => '',
+	'Class:SynchroDataSource/Attribute:name+' => '~~',
 	'Class:SynchroDataSource/Attribute:description' => 'Descrizione',
 	'Class:SynchroDataSource/Attribute:status' => 'Stato',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Classe bersaglio',
@@ -970,38 +746,37 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SynchroReplica/Attribute:status_last_warning' => 'Avvisi',
 	'Class:SynchroReplica/Attribute:info_creation_date' => 'Data di creazione',
 	'Class:SynchroReplica/Attribute:info_last_modified' => 'Data di ultima modifica',
-	'Class:SynchroReplica/Action:delete+'        => 'Delete the replica but not the destination object. If the raw data corresponding to this replica is still part of the source, it will be recreated during the next synchronization import.~~',
-	'Class:SynchroReplica/Action:unlink'         => 'Unlink~~',
-	'Class:SynchroReplica/Action:unlink+'        => 'Unlink replica from destination object. It will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
-	'Class:SynchroReplica/Action:unlinksynchro'  => 'Unlink & Synchronize~~',
+	'Class:SynchroReplica/Action:delete+' => 'Delete the replica but not the destination object. If the raw data corresponding to this replica is still part of the source, it will be recreated during the next synchronization import.~~',
+	'Class:SynchroReplica/Action:unlink' => 'Unlink~~',
+	'Class:SynchroReplica/Action:unlink+' => 'Unlink replica from destination object. It will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
+	'Class:SynchroReplica/Action:unlinksynchro' => 'Unlink & Synchronize~~',
 	'Class:SynchroReplica/Action:unlinksynchro+' => 'Force immediate resynchronization of the replica. This can change the destination id. Required after a Data Synchro change on attribute reconciliation flag or if reconciliation attributes were not locked, and you wish to retain the iTop objects modified since then, while recovering or recreating objects aligned with the source.~~',
-	'Class:SynchroReplica/Action:synchro'       => 'Synchronize~~',
-	'Class:SynchroReplica/Action:synchro+'      => 'Force immediate synchronization of the replica. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
-	'Class:SynchroReplica/Action:allowdelete'   => 'Allow deletion of destination~~',
-	'Class:SynchroReplica/Action:allowdelete+'  => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:denydelete'    => 'Deny deletion of destination~~',
-	'Class:SynchroReplica/Action:denydelete+'   => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:unlink_all'    => 'Unlink Replicas~~',
-	'Class:SynchroReplica/Action:unlink_all+'   => 'Unlink Replicas from their destination object. They will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
+	'Class:SynchroReplica/Action:synchro' => 'Synchronize~~',
+	'Class:SynchroReplica/Action:synchro+' => 'Force immediate synchronization of the replica. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
+	'Class:SynchroReplica/Action:allowdelete' => 'Allow deletion of destination~~',
+	'Class:SynchroReplica/Action:allowdelete+' => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
+	'Class:SynchroReplica/Action:denydelete' => 'Deny deletion of destination~~',
+	'Class:SynchroReplica/Action:denydelete+' => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
+	'Class:SynchroReplica/Action:unlink_all' => 'Unlink Replicas~~',
+	'Class:SynchroReplica/Action:unlink_all+' => 'Unlink Replicas from their destination object. They will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
 	'Class:SynchroReplica/Action:unlinksynchro_all' => 'Unlink & Synchronize Replicas~~',
 	'Class:SynchroReplica/Action:unlinksynchro_all+' => 'Force immediate resynchronization of the replicas. This can change their destination id. Required after a Data Synchro change on attribute reconciliation flag or if reconciliation attributes were not locked, and you wish to retain the iTop objects modified since then, while recovering or recreating objects aligned with the source.~~',
-	'Class:SynchroReplica/Action:synchro_all'      => 'Synchronize Replicas~~',
-	'Class:SynchroReplica/Action:synchro_all+'     => 'Force immediate synchronization of the replicas. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
-	'Class:SynchroReplica/Action:allowdelete_all'  => 'Allow deletion of destination objects~~',
+	'Class:SynchroReplica/Action:synchro_all' => 'Synchronize Replicas~~',
+	'Class:SynchroReplica/Action:synchro_all+' => 'Force immediate synchronization of the replicas. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
+	'Class:SynchroReplica/Action:allowdelete_all' => 'Allow deletion of destination objects~~',
 	'Class:SynchroReplica/Action:allowdelete_all+' => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:denydelete_all'   => 'Deny deletion of destination objects~~',
-	'Class:SynchroReplica/Action:denydelete_all+'  => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
-
-	'UI:UnlinkAllTabTitle'         => 'Unlink Replicas~~',
-	'UI:UnlinkAllPageTitle'        => 'Unlink Replicas from their destination object~~',
-	'UI:UnlinkSynchroAllTabTitle'  => 'Unlink & Synchronize Replicas~~',
+	'Class:SynchroReplica/Action:denydelete_all' => 'Deny deletion of destination objects~~',
+	'Class:SynchroReplica/Action:denydelete_all+' => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
+	'UI:UnlinkAllTabTitle' => 'Unlink Replicas~~',
+	'UI:UnlinkAllPageTitle' => 'Unlink Replicas from their destination object~~',
+	'UI:UnlinkSynchroAllTabTitle' => 'Unlink & Synchronize Replicas~~',
 	'UI:UnlinkSynchroAllPageTitle' => 'Unlink Replicas from their destination object & Synchronize them again~~',
-	'UI:SynchroAllTabTitle'        => 'Synchronize Replicas~~',
-	'UI:SynchroAllPageTitle'       => 'Synchronize Replicas: leading to a destination object creation, mapping or an error~~',
-	'UI:AllowDeleteAllTabTitle'    => 'Allow deletion of synchronized object~~',
-	'UI:AllowDeleteAllPageTitle'   => 'Allow propagation of Replica deletion to their destination object~~',
-	'UI:DenyDeleteAllTabTitle'     => 'Deny deletion of synchronized object~~',
-	'UI:DenyDeleteAllPageTitle'    => 'Deny propagation of Replica deletion to their destination object~~',
+	'UI:SynchroAllTabTitle' => 'Synchronize Replicas~~',
+	'UI:SynchroAllPageTitle' => 'Synchronize Replicas: leading to a destination object creation, mapping or an error~~',
+	'UI:AllowDeleteAllTabTitle' => 'Allow deletion of synchronized object~~',
+	'UI:AllowDeleteAllPageTitle' => 'Allow propagation of Replica deletion to their destination object~~',
+	'UI:DenyDeleteAllTabTitle' => 'Deny deletion of synchronized object~~',
+	'UI:DenyDeleteAllPageTitle' => 'Deny propagation of Replica deletion to their destination object~~',
 	'Class:appUserPreferences' => 'Preferenze utente',
 	'Class:appUserPreferences/Attribute:userid' => 'Utente',
 	'Class:appUserPreferences/Attribute:preferences' => 'Prefs',
@@ -1083,22 +858,14 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Core:Validator:Mandatory' => 'Per favore, compila questo campo',
 	'Core:Validator:MustBeInteger' => 'Deve essere un numero intero',
 	'Core:Validator:MustSelectOne' => 'Per favore, seleziona uno',
-	'Menu:DataSources' => 'Sorgente di sincronizzazione dei dati',
-	'Menu:DataSources+' => '',
-]);
-
-//
-// Class: TagSetFieldData
-//
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TagSetFieldData' => '%2$s per la classe %1$s',
-	'Class:TagSetFieldData+' => '',
+	'Class:TagSetFieldData+' => '~~',
 	'Class:TagSetFieldData/Attribute:code' => 'Codice',
 	'Class:TagSetFieldData/Attribute:code+' => 'Codice interno. Deve contenere almeno 3 caratteri alfanumerici',
 	'Class:TagSetFieldData/Attribute:label' => 'Etichetta',
 	'Class:TagSetFieldData/Attribute:label+' => 'Etichetta visualizzata',
 	'Class:TagSetFieldData/Attribute:description' => 'Descrizione',
-	'Class:TagSetFieldData/Attribute:description+' => '',
+	'Class:TagSetFieldData/Attribute:description+' => '~~',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Classe tag',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Classe oggetto',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Codice campo',
@@ -1112,122 +879,72 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Il "Codice attributo" dei tag non può essere cambiato',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Utilizzo tag (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => 'Nessuna voce trovata per questo tag',
-]);
-
-//
-// Class: DBProperty
-//
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DBProperty' => 'Proprietà DB',
-	'Class:DBProperty+' => '',
+	'Class:DBProperty+' => '~~',
 	'Class:DBProperty/Attribute:name' => 'Nome',
-	'Class:DBProperty/Attribute:name+' => '',
+	'Class:DBProperty/Attribute:name+' => '~~',
 	'Class:DBProperty/Attribute:description' => 'Descrizione',
-	'Class:DBProperty/Attribute:description+' => '',
+	'Class:DBProperty/Attribute:description+' => '~~',
 	'Class:DBProperty/Attribute:value' => 'Valore',
-	'Class:DBProperty/Attribute:value+' => '',
+	'Class:DBProperty/Attribute:value+' => '~~',
 	'Class:DBProperty/Attribute:change_date' => 'Data di modifica',
-	'Class:DBProperty/Attribute:change_date+' => '',
+	'Class:DBProperty/Attribute:change_date+' => '~~',
 	'Class:DBProperty/Attribute:change_comment' => 'Commento modifica',
-	'Class:DBProperty/Attribute:change_comment+' => '',
-]);
-
-//
-// Class: BackgroundTask
-//
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:DBProperty/Attribute:change_comment+' => '~~',
 	'Class:BackgroundTask' => 'Task in background',
-	'Class:BackgroundTask+' => '',
+	'Class:BackgroundTask+' => '~~',
 	'Class:BackgroundTask/Attribute:class_name' => 'Nome della classe',
-	'Class:BackgroundTask/Attribute:class_name+' => '',
+	'Class:BackgroundTask/Attribute:class_name+' => '~~',
 	'Class:BackgroundTask/Attribute:first_run_date' => 'Data della prima esecuzione',
-	'Class:BackgroundTask/Attribute:first_run_date+' => '',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:latest_run_date' => 'Data dell\'ultima esecuzione',
-	'Class:BackgroundTask/Attribute:latest_run_date+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:next_run_date' => 'Data della prossima esecuzione',
-	'Class:BackgroundTask/Attribute:next_run_date+' => '',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:total_exec_count' => 'Totale esecuzioni',
-	'Class:BackgroundTask/Attribute:total_exec_count+' => '',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
 	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Durata dell\'ultima esecuzione',
-	'Class:BackgroundTask/Attribute:latest_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:min_run_duration' => 'Durata minima di esecuzione',
-	'Class:BackgroundTask/Attribute:min_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:max_run_duration' => 'Durata massima di esecuzione',
-	'Class:BackgroundTask/Attribute:max_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:average_run_duration' => 'Durata media di esecuzione',
-	'Class:BackgroundTask/Attribute:average_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:running' => 'In esecuzione',
-	'Class:BackgroundTask/Attribute:running+' => '',
+	'Class:BackgroundTask/Attribute:running+' => '~~',
 	'Class:BackgroundTask/Attribute:status' => 'Stato',
-	'Class:BackgroundTask/Attribute:status+' => '',
-]);
-
-//
-// Class: AsyncTask
-//
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:BackgroundTask/Attribute:status+' => '~~',
 	'Class:AsyncTask' => 'Attività asincrona',
-	'Class:AsyncTask+' => '',
+	'Class:AsyncTask+' => '~~',
 	'Class:AsyncTask/Attribute:created' => 'Creata',
-	'Class:AsyncTask/Attribute:created+' => '',
+	'Class:AsyncTask/Attribute:created+' => '~~',
 	'Class:AsyncTask/Attribute:started' => 'Iniziata',
-	'Class:AsyncTask/Attribute:started+' => '',
+	'Class:AsyncTask/Attribute:started+' => '~~',
 	'Class:AsyncTask/Attribute:planned' => 'Pianificata',
-	'Class:AsyncTask/Attribute:planned+' => '',
+	'Class:AsyncTask/Attribute:planned+' => '~~',
 	'Class:AsyncTask/Attribute:event_id' => 'Evento',
-	'Class:AsyncTask/Attribute:event_id+' => '',
+	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Classe finale',
-	'Class:AsyncTask/Attribute:finalclass+' => '',
+	'Class:AsyncTask/Attribute:finalclass+' => '~~',
 	'Class:AsyncTask/Attribute:status' => 'Stato',
-	'Class:AsyncTask/Attribute:status+' => '',
+	'Class:AsyncTask/Attribute:status+' => '~~',
 	'Class:AsyncTask/Attribute:remaining_retries' => 'Tentativi rimanenti',
-	'Class:AsyncTask/Attribute:remaining_retries+' => '',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
 	'Class:AsyncTask/Attribute:last_error_code' => 'Ultimo codice di errore',
-	'Class:AsyncTask/Attribute:last_error_code+' => '',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
 	'Class:AsyncTask/Attribute:last_error' => 'Ultimo errore',
-	'Class:AsyncTask/Attribute:last_error+' => '',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Ultimo tentativo',
-	'Class:AsyncTask/Attribute:last_attempt+' => '',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Formato non valido per la configurazione di "async_task_retries[%1$s]". Ci si aspetta un array con le seguenti chiavi: %2$s',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Formato non valido per la configurazione di "async_task_retries[%1$s]": chiave "%2$s" inaspettata. Ci si aspetta solo le seguenti chiavi: %3$s',
-]);
-
-//
-// Class: AbstractResource
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:AbstractResource' => 'Risorsa Astratta',
-	'Class:AbstractResource+' => '',
-]);
-
-//
-// Class: ResourceAdminMenu
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:AbstractResource+' => '~~',
 	'Class:ResourceAdminMenu' => 'Menu di Amministrazione delle Risorse',
-	'Class:ResourceAdminMenu+' => '',
-]);
-
-//
-// Class: ResourceRunQueriesMenu
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:ResourceAdminMenu+' => '~~',
 	'Class:ResourceRunQueriesMenu' => 'Menu Esegui Query Risorse',
-	'Class:ResourceRunQueriesMenu+' => '',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:ResourceRunQueriesMenu+' => '~~',
 	'Class:ResourceSystemMenu' => 'Menu di Sistema delle Risorse',
-	'Class:ResourceSystemMenu+' => '',
-	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
-	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
-	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
-	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ]);

@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -19,7 +18,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:SearchChanges' => 'Değişiklik ara',
 	'Menu:SearchChanges+' => 'Değişiklik isteği ara',
 	'Menu:Change:Shortcuts' => 'Kısayollar',
-	'Menu:Change:Shortcuts+' => '~~',
+	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => 'Kabul bekleyen değişiklik talepleri',
 	'Menu:WaitingAcceptance+' => '~~',
 	'Menu:WaitingApproval' => 'Onay bekleyen değişiklik talepleri',
@@ -34,25 +33,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Son 7 gün için duruma göre değişiklikler',
 	'Tickets:Related:OpenChanges' => 'Açık değişiklikler',
 	'Tickets:Related:RecentChanges' => 'Son değişiklikler (72H)',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Change
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Change' => 'Değişiklik',
-	'Class:Change+' => '~~',
+	'Class:Change+' => 'A type of Ticket to handle Change which has an effect on delivered Services.~~',
 	'Class:Change/Attribute:status' => 'Durumu',
 	'Class:Change/Attribute:status+' => '~~',
 	'Class:Change/Attribute:status/Value:new' => 'Yeni',

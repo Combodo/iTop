@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Izzet Sirin <izzet.sirin@htr.com.tr>
@@ -19,11 +18,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:KnownError/Attribute:org_id' => 'Müşteri',
 	'Class:KnownError/Attribute:org_id+' => 'Link the known error to the service provider in charge of handling them, or maybe to a customer organization if the error is specific to them~~',
 	'Class:KnownError/Attribute:cust_name' => 'Müşteri Adı',
-	'Class:KnownError/Attribute:cust_name+' => '',
+	'Class:KnownError/Attribute:cust_name+' => '~~',
 	'Class:KnownError/Attribute:problem_id' => 'İlgili problem',
 	'Class:KnownError/Attribute:problem_id+' => 'The problem which couldn\'t be solved immediately and has led to the creation of this known error~~',
 	'Class:KnownError/Attribute:problem_ref' => 'Referans',
-	'Class:KnownError/Attribute:problem_ref+' => '',
+	'Class:KnownError/Attribute:problem_ref+' => '~~',
 	'Class:KnownError/Attribute:symptom' => 'Belirtisi',
 	'Class:KnownError/Attribute:symptom+' => 'What are the observable effects of this error?~~',
 	'Class:KnownError/Attribute:root_cause' => 'Ana sebep',
@@ -37,13 +36,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:KnownError/Attribute:domain' => 'Etki alanı',
 	'Class:KnownError/Attribute:domain+' => 'Choose the technical domain related to this known error?~~',
 	'Class:KnownError/Attribute:domain/Value:Application' => 'Uygulama',
-	'Class:KnownError/Attribute:domain/Value:Application+' => '',
+	'Class:KnownError/Attribute:domain/Value:Application+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Desktop' => 'Masaüstü',
-	'Class:KnownError/Attribute:domain/Value:Desktop+' => '',
+	'Class:KnownError/Attribute:domain/Value:Desktop+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Network' => 'Ağ',
-	'Class:KnownError/Attribute:domain/Value:Network+' => '',
+	'Class:KnownError/Attribute:domain/Value:Network+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Server' => 'Sunucu',
-	'Class:KnownError/Attribute:domain/Value:Server+' => '',
+	'Class:KnownError/Attribute:domain/Value:Server+' => '~~',
 	'Class:KnownError/Attribute:vendor' => 'Üretici',
 	'Class:KnownError/Attribute:vendor+' => 'A free text field to identify the vendor of the CI(s) concerned by this known error~~',
 	'Class:KnownError/Attribute:model' => 'Model',
@@ -54,13 +53,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:KnownError/Attribute:ci_list+' => 'The configuration items that are potentially impacted by this known error~~',
 	'Class:KnownError/Attribute:document_list' => 'Dokümanlar',
 	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
-]);
-
-//
-// Class: lnkErrorToFunctionalCI
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkErrorToFunctionalCI' => 'Hata / İşlevsel CI bağla',
 	'Class:lnkErrorToFunctionalCI+' => ' Bilinen bir hatayla ilgili alt bilgi',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -74,13 +66,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Sebep',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '~~',
-]);
-
-//
-// Class: lnkDocumentToError
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDocumentToError' => 'Belge / hata bağla',
 	'Class:lnkDocumentToError+' => 'Bir belge ile bilinen bir hata arasındaki bağlantı',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
@@ -94,9 +79,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDocumentToError/Attribute:error_name+' => '~~',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'Bağlantı tipi',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '~~',
-]);
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:ProblemManagement' => 'Problem Yönetimi',
 	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Kısayollar',

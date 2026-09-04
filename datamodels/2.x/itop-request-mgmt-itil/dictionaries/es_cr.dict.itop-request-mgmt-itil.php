@@ -1,12 +1,14 @@
 <?php
-
 /**
- * Spanish Localized data
+ * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
+ *
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:RequestManagement' => 'Administración de Requerimientos',
@@ -40,23 +42,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Requerimientos Abiertos por Cliente',
 	'Class:UserRequest:KnownErrorList' => 'Errores Conocidos',
 	'Class:UserRequest:KnownErrorList+' => 'Errores conocidos relacionados con el EC funcional vinculado al ticket actual',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: UserRequest
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+	'Class:UserRequest/Method:UpdateChildTicketWith:public_log' => '<i><u>Public log automatic copy from parent User Request %2$s:</u></i><br><br>~~',
+	'Class:UserRequest/Method:UpdateChildTicketWith:private_log' => '<i>Private log automatic copy from parent User Request [[UserRequest:%1$s]]:</i><br><br>~~',
 	'Class:UserRequest' => 'Requerimiento',
 	'Class:UserRequest+' => 'Requerimiento',
 	'Class:UserRequest/Attribute:status' => 'Estatus',
@@ -260,9 +247,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'No puede asignarse el requerimiento Padre a si mismo',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Resolver tickets hijos',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascadear la solución a los tickets hijos (ev_autoresolve), y alinear las siguientes características: servicio, equipo, agente, información de solución',
-]);
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Organization:Overview:UserRequests' => 'Requerimientos para esta Organización',
 	'Organization:Overview:MyUserRequests' => 'Mis Requerimientos para esta Organización',
 	'Organization:Overview:Tickets' => 'Tickets para esta Organización',

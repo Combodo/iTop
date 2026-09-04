@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Izzet Sirin <izzet.sirin@htr.com.tr>
@@ -23,22 +22,22 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Core:AttributeLinkedSet+' => 'Aynı sınıf veya alt sınıfın her türlü nesnesi',
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
 	'Core:AttributeDashboard' => 'Dashboard~~',
-	'Core:AttributeDashboard+' => '',
+	'Core:AttributeDashboard+' => '~~',
 	'Core:AttributePhoneNumber' => 'Phone number~~',
-	'Core:AttributePhoneNumber+' => '',
+	'Core:AttributePhoneNumber+' => '~~',
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
-	'Core:AttributeObsolescenceDate+' => '',
+	'Core:AttributeObsolescenceDate+' => '~~',
 	'Core:AttributeTagSet' => 'List of tags~~',
-	'Core:AttributeTagSet+' => '',
+	'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
 	'Core:Placeholder:CannotBeResolved' => '(%1$s : cannot be resolved)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 	'Core:AttributeCaseLog' => 'Log~~',
-	'Core:AttributeCaseLog+' => '',
+	'Core:AttributeCaseLog+' => '~~',
 	'Core:AttributeMetaEnum' => 'Computed enum~~',
-	'Core:AttributeMetaEnum+' => '',
+	'Core:AttributeMetaEnum+' => '~~',
 	'Core:AttributeLinkedSetIndirect' => 'Nesnelerin dizisi (n-n)',
 	'Core:AttributeLinkedSetIndirect+' => 'Aynı sınıftan her türlü nesne [Altsınıf]',
 	'Core:AttributeInteger' => 'Tamsayı',
@@ -46,8 +45,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Core:AttributeDecimal' => 'Ondalık',
 	'Core:AttributeDecimal+' => 'Ondalık değer (negatif olabilir)',
 	'Core:AttributeBoolean' => 'Boolean',
-	'Core:AttributeBoolean+' => '',
-	'Core:AttributeBoolean/Value:null' => '',
+	'Core:AttributeBoolean+' => '~~',
+	'Core:AttributeBoolean/Value:null' => '~~',
 	'Core:AttributeBoolean/Value:yes' => 'Evet',
 	'Core:AttributeBoolean/Value:no' => 'Hayır',
 	'Core:AttributeArchiveFlag' => 'Arşiv işareti',
@@ -55,9 +54,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Core:AttributeArchiveFlag/Value:yes+' => 'Bu nesne yalnızca arşiv modunda görünürdür',
 	'Core:AttributeArchiveFlag/Value:no' => 'Hayır',
 	'Core:AttributeArchiveFlag/Label' => 'Arşivlendi',
-	'Core:AttributeArchiveFlag/Label+' => '',
+	'Core:AttributeArchiveFlag/Label+' => '~~',
 	'Core:AttributeArchiveDate/Label' => 'Arşiv Tarihi',
-	'Core:AttributeArchiveDate/Label+' => '',
+	'Core:AttributeArchiveDate/Label+' => '~~',
 	'Core:AttributeObsolescenceFlag' => 'Kullanım dışı işareti',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Evet',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Bu nesne, etki analizinden hariç tutulur ve arama sonuçlarından gizlenir',
@@ -69,7 +68,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Core:AttributeString' => 'Dize',
 	'Core:AttributeString+' => 'Alfanümerik dize',
 	'Core:AttributeClass' => 'Sınıf',
-	'Core:AttributeClass+' => '',
+	'Core:AttributeClass+' => '~~',
 	'Core:AttributeApplicationLanguage' => 'Kullanıcı dili',
 	'Core:AttributeApplicationLanguage+' => 'Dil ve Ülke (TR Türkiye)',
 	'Core:AttributeFinalClass' => 'Sınıf (Otomatik)',
@@ -85,9 +84,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => 'HTML dizesi',
 	'Core:AttributeEmailAddress' => 'E-posta Adresi',
-	'Core:AttributeEmailAddress+' => '',
+	'Core:AttributeEmailAddress+' => 'Email address~~',
 	'Core:AttributeIPAddress' => 'IP adresi',
-	'Core:AttributeIPAddress+' => '',
+	'Core:AttributeIPAddress+' => 'IP address~~',
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Nesne sorgusu Dili ifadesi',
 	'Core:AttributeEnum' => 'Enum',
@@ -152,25 +151,13 @@ Operators:<br/>
 	'Core:FriendlyName-Label' => 'Yaygın Adı',
 	'Core:FriendlyName-Description' => 'Yaygın Adı',
 	'Core:AttributeTag' => 'Tags~~',
-	'Core:AttributeTag+' => '',
+	'Core:AttributeTag+' => '~~',
 	'Core:Context=REST/JSON' => 'REST~~',
 	'Core:Context=Synchro' => 'Synchro~~',
 	'Core:Context=Setup' => 'Setup~~',
 	'Core:Context=GUI:Console' => 'Console~~',
 	'Core:Context=CRON' => 'cron~~',
 	'Core:Context=GUI:Portal' => 'Portal~~',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'core/cmdb'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: CMDBChange
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:CMDBChange' => 'Değişiklik',
 	'Class:CMDBChange+' => 'Değişiklik izleme',
 	'Class:CMDBChange/Attribute:date' => 'tarih',
@@ -185,72 +172,34 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
-]);
-
-//
-// Class: CMDBChangeOp
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:CMDBChangeOp' => 'Değişiklik işlemi',
-	'Class:CMDBChangeOp+' => '',
+	'Class:CMDBChangeOp+' => 'Change made by one person, at a single time, on a single object~~',
 	'Class:CMDBChangeOp/Attribute:change' => 'değişiklik',
-	'Class:CMDBChangeOp/Attribute:change+' => '',
+	'Class:CMDBChangeOp/Attribute:change+' => '~~',
 	'Class:CMDBChangeOp/Attribute:date' => 'tarih',
 	'Class:CMDBChangeOp/Attribute:date+' => 'değişikliğin yapıldığı zaman',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'kullanıcı',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => 'değişikliğ yapan',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'nesne sınıfı',
-	'Class:CMDBChangeOp/Attribute:objclass+' => '',
+	'Class:CMDBChangeOp/Attribute:objclass+' => 'class name of the object on which the change was made~~',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'nesne no',
-	'Class:CMDBChangeOp/Attribute:objkey+' => '',
+	'Class:CMDBChangeOp/Attribute:objkey+' => 'id of the object on which the change was made~~',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'tip',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: CMDBChangeOpCreate
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:CMDBChangeOp/Attribute:finalclass+' => 'type of change which was performed~~',
 	'Class:CMDBChangeOpCreate' => 'nesne yaratımı',
 	'Class:CMDBChangeOpCreate+' => 'Nesne Yaratım izleme',
-]);
-
-//
-// Class: CMDBChangeOpDelete
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:CMDBChangeOpDelete' => 'nesne silimi',
 	'Class:CMDBChangeOpDelete+' => 'Nesne silme izleme',
-]);
-
-//
-// Class: CMDBChangeOpSetAttribute
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:CMDBChangeOpSetAttribute' => 'nesne değişikliği',
 	'Class:CMDBChangeOpSetAttribute+' => 'Nesne değişiminin izlemesi',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Özellik',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'Değişen özelliğin kodu',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeScalar
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'özellik değişimi',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Nesne özellik değişimi izleme',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Önceki değer',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '',
+	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'previous value of the attribute~~',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Yeni değer',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => '',
-]);
-// Used by CMDBChangeOp... & derived classes
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'new value of the attribute~~',
 	'Change:ObjectCreated' => 'Nesne yaratıldı',
 	'Change:ObjectDeleted' => 'Nesne silindi',
 	'Change:ObjectModified' => 'Nesne değiştirildi',
@@ -267,35 +216,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Change:LinkSet:Added' => '%1$s \'eklendi',
 	'Change:LinkSet:Removed' => 'Kaldırıldı %1$s',
 	'Change:LinkSet:Modified' => 'Değiştirilmiş %1$s',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeBlob
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'tarih değişimi',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'tarih değişim izleme',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Önceki veri',
-	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => '',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeText
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'previous contents of the attribute~~',
 	'Class:CMDBChangeOpSetAttributeText' => 'metin değişikliği',
 	'Class:CMDBChangeOpSetAttributeText+' => 'metin değişikliği izleme',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Önceki veri',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'önceki değer',
-]);
-
-//
-// Class: Event
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Event' => 'Olay kaydı',
 	'Class:Event+' => 'Uygulama olayı',
 	'Class:Event/Attribute:message' => 'mesaj',
@@ -305,14 +233,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Event/Attribute:userinfo' => 'kullanıcı bigileri',
 	'Class:Event/Attribute:userinfo+' => 'olay anındaki kullanıcı',
 	'Class:Event/Attribute:finalclass' => 'tip',
-	'Class:Event/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: EventNotification
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:Event/Attribute:finalclass+' => 'Name of the final class: specifies the sort of event which occurred~~',
 	'Class:EventNotification' => 'Olay uyarımı',
 	'Class:EventNotification+' => 'Uyarının tarihçesi',
 	'Class:EventNotification/Attribute:trigger_id' => 'Uyarı tetikçisi',
@@ -321,36 +242,24 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:EventNotification/Attribute:action_id+' => 'kullanıcı hesabı',
 	'Class:EventNotification/Attribute:object_id' => 'Nesne belirleyicisi',
 	'Class:EventNotification/Attribute:object_id+' => 'nesne belirleyicisi (olayı tetikleyen nesne ?)',
-]);
-
-//
-// Class: EventNotificationEmail
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'E-posta gönderim işlemi',
 	'Class:EventNotificationEmail+' => 'Gönderilen E-posta tarihçesi',
 	'Class:EventNotificationEmail/Attribute:to' => 'Kime',
-	'Class:EventNotificationEmail/Attribute:to+' => '',
+	'Class:EventNotificationEmail/Attribute:to+' => '~~',
 	'Class:EventNotificationEmail/Attribute:cc' => 'Kopya',
-	'Class:EventNotificationEmail/Attribute:cc+' => '',
+	'Class:EventNotificationEmail/Attribute:cc+' => '~~',
 	'Class:EventNotificationEmail/Attribute:bcc' => 'Gizli Kopya',
-	'Class:EventNotificationEmail/Attribute:bcc+' => '',
+	'Class:EventNotificationEmail/Attribute:bcc+' => '~~',
 	'Class:EventNotificationEmail/Attribute:from' => 'Kimden',
 	'Class:EventNotificationEmail/Attribute:from+' => 'Mesajı gönderen',
 	'Class:EventNotificationEmail/Attribute:subject' => 'Konu',
-	'Class:EventNotificationEmail/Attribute:subject+' => '',
+	'Class:EventNotificationEmail/Attribute:subject+' => '~~',
 	'Class:EventNotificationEmail/Attribute:body' => 'Mesaj',
-	'Class:EventNotificationEmail/Attribute:body+' => '',
+	'Class:EventNotificationEmail/Attribute:body+' => '~~',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Eklentiler',
-	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-]);
-
-//
-// Class: EventIssue
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:EventNotificationEmail/Attribute:attachments+' => '~~',
 	'Class:EventIssue' => 'Olay ekle',
 	'Class:EventIssue+' => 'Olay tipi (uyarı, hata, vb.)',
 	'Class:EventIssue/Attribute:issue' => 'Konu',
@@ -364,16 +273,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:EventIssue/Attribute:arguments_get' => 'URL POST değişken değerleri',
 	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET değişken değerleri',
 	'Class:EventIssue/Attribute:callstack' => 'Çağrım sırası',
-	'Class:EventIssue/Attribute:callstack+' => '',
+	'Class:EventIssue/Attribute:callstack+' => '~~',
 	'Class:EventIssue/Attribute:data' => 'Veri',
 	'Class:EventIssue/Attribute:data+' => 'Diğer bilgiler',
-]);
-
-//
-// Class: EventWebService
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:EventWebService' => 'Web service olayı',
 	'Class:EventWebService+' => 'web service çağrım sırası',
 	'Class:EventWebService/Attribute:verb' => 'Fiil',
@@ -388,9 +290,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:EventWebService/Attribute:log_error+' => 'Sonuç hata kaydı',
 	'Class:EventWebService/Attribute:data' => 'Veri',
 	'Class:EventWebService/Attribute:data+' => 'Sonuç veri',
-]);
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:EventRestService' => 'REST/JSON çağrısı',
 	'Class:EventRestService+' => 'REST/JSON izleme hizmet çağrısı',
 	'Class:EventRestService/Attribute:operation' => 'Operasyon',
@@ -405,28 +304,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP Yanıt (JSON)',
 	'Class:EventRestService/Attribute:provider' => 'Sağlayıcı',
 	'Class:EventRestService/Attribute:provider+' => 'PHP Sınıfı Beklenen Operasyonun Uygulanması',
-]);
-
-//
-// Class: EventLoginUsage
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:EventLoginUsage' => 'Giriş Kullanımı',
 	'Class:EventLoginUsage+' => 'Uygulamaya bağlantı',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Giriş',
-	'Class:EventLoginUsage/Attribute:user_id+' => '',
+	'Class:EventLoginUsage/Attribute:user_id+' => '~~',
 	'Class:EventLoginUsage/Attribute:contact_name' => 'Kullanıcı adı',
-	'Class:EventLoginUsage/Attribute:contact_name+' => '',
+	'Class:EventLoginUsage/Attribute:contact_name+' => '~~',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'Kullanıcı e-postası',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'Kullanıcının e-posta adresi',
-]);
-
-//
-// Class: EventNotificationNewsroom
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:EventNotificationNewsroom' => 'News sent~~',
 	'Class:EventNotificationNewsroom+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:title' => 'Title~~',
@@ -455,28 +340,23 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:EventNotificationNewsroom/Attribute:read_date+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contact~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '~~',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Class:Action' => 'Özel işlem',
 	'Class:Action+' => 'Kullanıcının tanımladığı işlemler',
 	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
 	'Class:Action/Attribute:name' => 'Adı',
-	'Class:Action/Attribute:name+' => '',
+	'Class:Action/Attribute:name+' => 'Any value that is meaningful to distinguish this action from the others~~',
 	'Class:Action/Attribute:description' => 'Tanımlama',
-	'Class:Action/Attribute:description+' => '',
+	'Class:Action/Attribute:description+' => 'A longer explanation about the purpose of this action. For information only.~~',
 	'Class:Action/Attribute:status' => 'Durum',
 	'Class:Action/Attribute:status+' => 'Kullanımda mı?',
 	'Class:Action/Attribute:status/Value:test' => 'Test aşamasında',
-	'Class:Action/Attribute:status/Value:test+' => '',
+	'Class:Action/Attribute:status/Value:test+' => '~~',
 	'Class:Action/Attribute:status/Value:enabled' => 'Kullanımda',
-	'Class:Action/Attribute:status/Value:enabled+' => '',
+	'Class:Action/Attribute:status/Value:enabled+' => '~~',
 	'Class:Action/Attribute:status/Value:disabled' => 'Etkin değil',
-	'Class:Action/Attribute:status/Value:disabled+' => '',
+	'Class:Action/Attribute:status/Value:disabled+' => '~~',
 	'Class:Action/Attribute:trigger_list' => 'İlgili tetikleyiciler',
 	'Class:Action/Attribute:trigger_list+' => 'İşleme bağlı tetikleyici',
 	'Class:Action/Attribute:asynchronous' => 'Asynchronous~~',
@@ -485,30 +365,28 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Action/Attribute:asynchronous/Value:yes' => 'Yes~~',
 	'Class:Action/Attribute:asynchronous/Value:no' => 'No~~',
 	'Class:Action/Attribute:finalclass' => 'Tip',
-	'Class:Action/Attribute:finalclass+' => '',
+	'Class:Action/Attribute:finalclass+' => 'Name of the final class~~',
 	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 	'Action:last_executions_tab' => 'Last executions~~',
 	'Action:last_executions_tab_panel_title' => 'Executions of this action (%1$s)~~',
 	'Action:last_executions_tab_limit_days' => 'past %1$s days~~',
 	'Action:last_executions_tab_limit_none' => 'no limit~~',
-]);
-
-//
-// Class: ActionNotification
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ActionNotification' => 'Bildirim',
 	'Class:ActionNotification+' => 'Bildirim (soyut)',
-]);
-
-//
-// Class: ActionEmail
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:ActionNotification/Attribute:language' => 'Language~~',
+	'Class:ActionNotification/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:lnkActionNotificationToContact' => 'Link ActionNotification / Contact~~',
+	'Class:lnkActionNotificationToContact+' => 'Contact subscription to Notification Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Contact~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Contact who subscribed (or not) to the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'The notification that the contact received at least once, and to which he can subscribe or unsubscribe~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Trigger~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'The trigger that fired the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Subscribed~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification~~',
 	'Class:ActionEmail' => 'E-posta bildirimi',
-	'Class:ActionEmail+' => '',
+	'Class:ActionEmail+' => '~~',
 	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: 
 - Being tested: just the Test recipient, 
 - In production: all (To, cc and Bcc) 
@@ -530,21 +408,30 @@ If omitted the From (label) is used.~~',
 	'Class:ActionEmail/Attribute:to' => 'Kime',
 	'Class:ActionEmail/Attribute:to+' => 'E-posta alıcısı',
 	'Class:ActionEmail/Attribute:cc' => 'Kopya',
-	'Class:ActionEmail/Attribute:cc+' => '',
+	'Class:ActionEmail/Attribute:cc+' => 'Carbon Copy: an OQL query returning objects having an email field.
+While editing, click on the magnifier to get pertinent examples.
+You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.~~',
 	'Class:ActionEmail/Attribute:bcc' => 'Gizli kopya',
 	'Class:ActionEmail/Attribute:bcc+' => 'Gizli alıcı',
 	'Class:ActionEmail/Attribute:subject' => 'Konu',
 	'Class:ActionEmail/Attribute:subject+' => 'E-posta konusu',
 	'Class:ActionEmail/Attribute:body' => 'E-posta içeriği',
-	'Class:ActionEmail/Attribute:body+' => '',
+	'Class:ActionEmail/Attribute:body+' => 'Contents of the email. Can contain placeholders like:
+- $this->attribute_code$ any attribute of the object triggering the notification,
+- $this->html(attribute_code)$ same as above but displayed in html format,
+- $this->hyperlink()$ hyperlink in the backoffice to the object triggering the notification,
+- $this->hyperlink(portal)$ hyperlink in the portal to the object triggering the notification,
+- $this->head_html(case_log_attribute)$ last reply in html format of a caselog attribute,
+- $this->attribute_external_key->attribute$ recursive syntax for any remote attribute,
+- $current_contact->attribute$ attribute of the Person who triggered the notification~~',
 	'Class:ActionEmail/Attribute:importance' => 'önem derecesi',
-	'Class:ActionEmail/Attribute:importance+' => '',
+	'Class:ActionEmail/Attribute:importance+' => 'Importance flag set on the generated email~~',
 	'Class:ActionEmail/Attribute:importance/Value:low' => 'düşük',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '~~',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'normal',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '~~',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'yüksek',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '~~',
 	'Class:ActionEmail/Attribute:language' => 'Language~~',
 	'Class:ActionEmail/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
 	'Class:ActionEmail/Attribute:html_template' => 'HTML template~~',
@@ -561,13 +448,6 @@ If omitted the From (label) is used.~~',
 	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
 	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
 	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
-]);
-
-//
-// Class: ActionNewsroom
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'ActionNewsroom:trigger' => 'Trigger~~',
 	'ActionNewsroom:content' => 'Message~~',
 	'ActionNewsroom:settings' => 'Settings~~',
@@ -602,13 +482,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ActionNewsroom/Attribute:recipients+' => 'An OQL query returning Contact objects~~',
 	'Class:ActionNewsroom/Attribute:url' => 'URL~~',
 	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.~~',
-]);
-
-//
-// Class: Trigger
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Trigger' => 'Tetikleyici',
 	'Class:Trigger+' => 'Özel olay yürütücü',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
@@ -617,7 +490,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Trigger/Attribute:action_list' => 'Tetiklenen işlemler',
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated~~',
 	'Class:Trigger/Attribute:finalclass' => 'Tip',
-	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Trigger/Attribute:context' => 'Context~~',
 	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 	'Class:Trigger/Attribute:complement' => 'Additional information~~',
@@ -627,152 +500,62 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow complete unsubscription~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel (News or Email)~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Deny unsubscription~~',
-]);
-
-//
-// Class: TriggerOnObject
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:TriggerOnObject' => 'Tetiklenen (sınıf bağımlılığı)',
 	'Class:TriggerOnObject+' => 'Verilen sınıflar üzerinde işlemleri gerçekleştir',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Hedef sınıf',
-	'Class:TriggerOnObject/Attribute:target_class+' => '',
+	'Class:TriggerOnObject/Attribute:target_class+' => 'Objects in this class will activate the trigger~~',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtre',
-	'Class:TriggerOnObject/Attribute:filter+' => '',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Yanlış filtre sorgusu: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Filtre sorgusu, \\"%1$s\\"  \'sınıfının nesnelerini dönmelidir.',
-]);
-
-//
-// Class: TriggerOnPortalUpdate
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:TriggerOnPortalUpdate' => 'Tetikle (portaldan güncellendiğinde)',
 	'Class:TriggerOnPortalUpdate+' => 'Son kullanıcının portalından gelen güncellemelerinde tetikle',
-]);
-
-//
-// Class: TriggerOnStateChange
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:TriggerOnStateChange' => 'Tetiklenen (durum değişikliğinde)',
 	'Class:TriggerOnStateChange+' => 'Durum değişikliğinde tetiklenen işlemler',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Durum',
-	'Class:TriggerOnStateChange/Attribute:state+' => '',
-]);
-
-//
-// Class: TriggerOnStateEnter
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:TriggerOnStateChange/Attribute:state+' => '~~',
 	'Class:TriggerOnStateEnter' => 'Tetiklenen (duruma girişte)',
 	'Class:TriggerOnStateEnter+' => 'Durum değişikliğinde tetiklenen işlemler (duruma giriş)',
-]);
-
-//
-// Class: TriggerOnStateLeave
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:TriggerOnStateLeave' => 'Tetiklenen (durum çıkışında)',
 	'Class:TriggerOnStateLeave+' => 'Durum değişikliğinde tetiklenen işlemler (duruma çıkış)',
-]);
-
-//
-// Class: TriggerOnObjectCreate
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:TriggerOnObjectCreate' => 'Tetiklenen (nesne yaratımında)',
 	'Class:TriggerOnObjectCreate+' => 'Verilen sınıf tipi nesne yaratımında tetiklenen işlemler',
-]);
-
-//
-// Class: TriggerOnObjectDelete
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)~~',
 	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
-]);
-
-//
-// Class: TriggerOnObjectUpdate
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'This filter is computed after the object update in database. It restricts the objects which can trigger the actions~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
-]);
-
-//
-// Class: TriggerOnObjectMention
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
 	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
 	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
-]);
-
-//
-// Class: TriggerOnAttributeBlobDownload
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
-]);
-
-//
-// Class: TriggerOnThresholdReached
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:TriggerOnThresholdReached' => 'Tetikle (eşik üzerinde)',
 	'Class:TriggerOnThresholdReached+' => 'Dur-izle eşiğinde tetikle',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'İzlemeyi bırak',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '~~',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Eşik',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-]);
-
-//
-// Class: lnkTriggerAction
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '~~',
 	'Class:lnkTriggerAction' => 'İşlem/Tetikleme',
 	'Class:lnkTriggerAction+' => 'Tetikleme ve işlem arasındaki ilişki',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'İşlem',
 	'Class:lnkTriggerAction/Attribute:action_id+' => 'Yapılacak işlem',
 	'Class:lnkTriggerAction/Attribute:action_name' => 'İşlem',
-	'Class:lnkTriggerAction/Attribute:action_name+' => '',
+	'Class:lnkTriggerAction/Attribute:action_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_id' => 'Tetikleme',
-	'Class:lnkTriggerAction/Attribute:trigger_id+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_id+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_name' => 'Tetikleme',
-	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:order' => 'Order',
 	'Class:lnkTriggerAction/Attribute:order+' => 'İşlem uygulama sırası',
-]);
-
-//
-// Synchro Data Source
-//
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:SynchroDataSource' => 'Synchro Veri Kaynağı',
 	'Class:SynchroDataSource/Attribute:name' => 'İsim',
-	'Class:SynchroDataSource/Attribute:name+' => '',
+	'Class:SynchroDataSource/Attribute:name+' => '~~',
 	'Class:SynchroDataSource/Attribute:description' => 'Açıklama',
 	'Class:SynchroDataSource/Attribute:status' => 'Durum',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Hedef sınıf',
@@ -975,39 +758,37 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:SynchroReplica/Attribute:status_last_warning' => 'Uyarılar',
 	'Class:SynchroReplica/Attribute:info_creation_date' => 'Yaratılış Tarihi',
 	'Class:SynchroReplica/Attribute:info_last_modified' => 'Son değiştirilme tarih',
-	'Class:SynchroReplica/Action:delete+'        => 'Delete the replica but not the destination object. If the raw data corresponding to this replica is still part of the source, it will be recreated during the next synchronization import.~~',
-	'Class:SynchroReplica/Action:unlink'         => 'Unlink~~',
-	'Class:SynchroReplica/Action:unlink+'        => 'Unlink replica from destination object. It will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
-	'Class:SynchroReplica/Action:unlinksynchro'  => 'Unlink & Synchronize~~',
+	'Class:SynchroReplica/Action:delete+' => 'Delete the replica but not the destination object. If the raw data corresponding to this replica is still part of the source, it will be recreated during the next synchronization import.~~',
+	'Class:SynchroReplica/Action:unlink' => 'Unlink~~',
+	'Class:SynchroReplica/Action:unlink+' => 'Unlink replica from destination object. It will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
+	'Class:SynchroReplica/Action:unlinksynchro' => 'Unlink & Synchronize~~',
 	'Class:SynchroReplica/Action:unlinksynchro+' => 'Force immediate resynchronization of the replica. This can change the destination id. Required after a Data Synchro change on attribute reconciliation flag or if reconciliation attributes were not locked, and you wish to retain the iTop objects modified since then, while recovering or recreating objects aligned with the source.~~',
-	'Class:SynchroReplica/Action:synchro'       => 'Synchronize~~',
-	'Class:SynchroReplica/Action:synchro+'      => 'Force immediate synchronization of the replica. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
-	'Class:SynchroReplica/Action:allowdelete'   => 'Allow deletion of destination~~',
-	'Class:SynchroReplica/Action:allowdelete+'  => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:denydelete'    => 'Deny deletion of destination~~',
-	'Class:SynchroReplica/Action:denydelete+'   => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:unlink_all'    => 'Unlink Replicas~~',
-	'Class:SynchroReplica/Action:unlink_all+'   => 'Unlink Replicas from their destination object. They will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
+	'Class:SynchroReplica/Action:synchro' => 'Synchronize~~',
+	'Class:SynchroReplica/Action:synchro+' => 'Force immediate synchronization of the replica. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
+	'Class:SynchroReplica/Action:allowdelete' => 'Allow deletion of destination~~',
+	'Class:SynchroReplica/Action:allowdelete+' => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
+	'Class:SynchroReplica/Action:denydelete' => 'Deny deletion of destination~~',
+	'Class:SynchroReplica/Action:denydelete+' => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
+	'Class:SynchroReplica/Action:unlink_all' => 'Unlink Replicas~~',
+	'Class:SynchroReplica/Action:unlink_all+' => 'Unlink Replicas from their destination object. They will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
 	'Class:SynchroReplica/Action:unlinksynchro_all' => 'Unlink & Synchronize Replicas~~',
 	'Class:SynchroReplica/Action:unlinksynchro_all+' => 'Force immediate resynchronization of the replicas. This can change their destination id. Required after a Data Synchro change on attribute reconciliation flag or if reconciliation attributes were not locked, and you wish to retain the iTop objects modified since then, while recovering or recreating objects aligned with the source.~~',
-	'Class:SynchroReplica/Action:synchro_all'      => 'Synchronize Replicas~~',
-	'Class:SynchroReplica/Action:synchro_all+'     => 'Force immediate synchronization of the replicas. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
-	'Class:SynchroReplica/Action:allowdelete_all'  => 'Allow deletion of destination objects~~',
+	'Class:SynchroReplica/Action:synchro_all' => 'Synchronize Replicas~~',
+	'Class:SynchroReplica/Action:synchro_all+' => 'Force immediate synchronization of the replicas. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
+	'Class:SynchroReplica/Action:allowdelete_all' => 'Allow deletion of destination objects~~',
 	'Class:SynchroReplica/Action:allowdelete_all+' => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:denydelete_all'   => 'Deny deletion of destination objects~~',
-	'Class:SynchroReplica/Action:denydelete_all+'  => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
-
-	'UI:UnlinkAllTabTitle'         => 'Unlink Replicas~~',
-	'UI:UnlinkAllPageTitle'        => 'Unlink Replicas from their destination object~~',
-	'UI:UnlinkSynchroAllTabTitle'  => 'Unlink & Synchronize Replicas~~',
+	'Class:SynchroReplica/Action:denydelete_all' => 'Deny deletion of destination objects~~',
+	'Class:SynchroReplica/Action:denydelete_all+' => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
+	'UI:UnlinkAllTabTitle' => 'Unlink Replicas~~',
+	'UI:UnlinkAllPageTitle' => 'Unlink Replicas from their destination object~~',
+	'UI:UnlinkSynchroAllTabTitle' => 'Unlink & Synchronize Replicas~~',
 	'UI:UnlinkSynchroAllPageTitle' => 'Unlink Replicas from their destination object & Synchronize them again~~',
-	'UI:SynchroAllTabTitle'        => 'Synchronize Replicas~~',
-	'UI:SynchroAllPageTitle'       => 'Synchronize Replicas: leading to a destination object creation, mapping or an error~~',
-	'UI:AllowDeleteAllTabTitle'    => 'Allow deletion of synchronized object~~',
-	'UI:AllowDeleteAllPageTitle'   => 'Allow propagation of Replica deletion to their destination object~~',
-	'UI:DenyDeleteAllTabTitle'     => 'Deny deletion of synchronized object~~',
-	'UI:DenyDeleteAllPageTitle'    => 'Deny propagation of Replica deletion to their destination object~~',
-
+	'UI:SynchroAllTabTitle' => 'Synchronize Replicas~~',
+	'UI:SynchroAllPageTitle' => 'Synchronize Replicas: leading to a destination object creation, mapping or an error~~',
+	'UI:AllowDeleteAllTabTitle' => 'Allow deletion of synchronized object~~',
+	'UI:AllowDeleteAllPageTitle' => 'Allow propagation of Replica deletion to their destination object~~',
+	'UI:DenyDeleteAllTabTitle' => 'Deny deletion of synchronized object~~',
+	'UI:DenyDeleteAllPageTitle' => 'Deny propagation of Replica deletion to their destination object~~',
 	'Class:appUserPreferences' => 'Kullanıcı Tercihleri',
 	'Class:appUserPreferences/Attribute:userid' => 'Kullanıcı',
 	'Class:appUserPreferences/Attribute:preferences' => 'Tercihler',
@@ -1089,22 +870,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Core:Validator:Mandatory' => 'Lütfen bu alanı doldurun',
 	'Core:Validator:MustBeInteger' => 'Bir tamsayı olmalı',
 	'Core:Validator:MustSelectOne' => 'Lütfen bir tane seçin',
-	'Menu:DataSources' => 'Senkronizasyon Veri Kaynakları',
-	'Menu:DataSources+' => 'Tüm Senkronizasyon Veri Kaynakları',
-]);
-
-//
-// Class: TagSetFieldData
-//
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
-	'Class:TagSetFieldData+' => '',
+	'Class:TagSetFieldData+' => '~~',
 	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
 	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
 	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
 	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
 	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
-	'Class:TagSetFieldData/Attribute:description+' => '',
+	'Class:TagSetFieldData/Attribute:description+' => '~~',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
@@ -1118,122 +891,72 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
 	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
-]);
-
-//
-// Class: DBProperty
-//
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:DBProperty' => 'DB property~~',
-	'Class:DBProperty+' => '',
+	'Class:DBProperty+' => '~~',
 	'Class:DBProperty/Attribute:name' => 'Name~~',
-	'Class:DBProperty/Attribute:name+' => '',
+	'Class:DBProperty/Attribute:name+' => '~~',
 	'Class:DBProperty/Attribute:description' => 'Description~~',
-	'Class:DBProperty/Attribute:description+' => '',
+	'Class:DBProperty/Attribute:description+' => '~~',
 	'Class:DBProperty/Attribute:value' => 'Value~~',
-	'Class:DBProperty/Attribute:value+' => '',
+	'Class:DBProperty/Attribute:value+' => '~~',
 	'Class:DBProperty/Attribute:change_date' => 'Change date~~',
-	'Class:DBProperty/Attribute:change_date+' => '',
+	'Class:DBProperty/Attribute:change_date+' => '~~',
 	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
-	'Class:DBProperty/Attribute:change_comment+' => '',
-]);
-
-//
-// Class: BackgroundTask
-//
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:DBProperty/Attribute:change_comment+' => '~~',
 	'Class:BackgroundTask' => 'Background task~~',
-	'Class:BackgroundTask+' => '',
+	'Class:BackgroundTask+' => '~~',
 	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
-	'Class:BackgroundTask/Attribute:class_name+' => '',
+	'Class:BackgroundTask/Attribute:class_name+' => '~~',
 	'Class:BackgroundTask/Attribute:first_run_date' => 'First run date~~',
-	'Class:BackgroundTask/Attribute:first_run_date+' => '',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:latest_run_date' => 'Latest run date~~',
-	'Class:BackgroundTask/Attribute:latest_run_date+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:next_run_date' => 'Next run date~~',
-	'Class:BackgroundTask/Attribute:next_run_date+' => '',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total exec. count~~',
-	'Class:BackgroundTask/Attribute:total_exec_count+' => '',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
 	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Latest run duration~~',
-	'Class:BackgroundTask/Attribute:latest_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:min_run_duration' => 'Min. run duration~~',
-	'Class:BackgroundTask/Attribute:min_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:max_run_duration' => 'Max. run duration~~',
-	'Class:BackgroundTask/Attribute:max_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:average_run_duration' => 'Average run duration~~',
-	'Class:BackgroundTask/Attribute:average_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:running' => 'Running~~',
-	'Class:BackgroundTask/Attribute:running+' => '',
+	'Class:BackgroundTask/Attribute:running+' => '~~',
 	'Class:BackgroundTask/Attribute:status' => 'Status~~',
-	'Class:BackgroundTask/Attribute:status+' => '',
-]);
-
-//
-// Class: AsyncTask
-//
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:BackgroundTask/Attribute:status+' => '~~',
 	'Class:AsyncTask' => 'Async. task~~',
-	'Class:AsyncTask+' => '',
+	'Class:AsyncTask+' => '~~',
 	'Class:AsyncTask/Attribute:created' => 'Created~~',
-	'Class:AsyncTask/Attribute:created+' => '',
+	'Class:AsyncTask/Attribute:created+' => '~~',
 	'Class:AsyncTask/Attribute:started' => 'Started~~',
-	'Class:AsyncTask/Attribute:started+' => '',
+	'Class:AsyncTask/Attribute:started+' => '~~',
 	'Class:AsyncTask/Attribute:planned' => 'Planned~~',
-	'Class:AsyncTask/Attribute:planned+' => '',
+	'Class:AsyncTask/Attribute:planned+' => '~~',
 	'Class:AsyncTask/Attribute:event_id' => 'Event~~',
-	'Class:AsyncTask/Attribute:event_id+' => '',
+	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
-	'Class:AsyncTask/Attribute:finalclass+' => '',
+	'Class:AsyncTask/Attribute:finalclass+' => '~~',
 	'Class:AsyncTask/Attribute:status' => 'Status~~',
-	'Class:AsyncTask/Attribute:status+' => '',
+	'Class:AsyncTask/Attribute:status+' => '~~',
 	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
-	'Class:AsyncTask/Attribute:remaining_retries+' => '',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
 	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
-	'Class:AsyncTask/Attribute:last_error_code+' => '',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
 	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
-	'Class:AsyncTask/Attribute:last_error+' => '',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
-	'Class:AsyncTask/Attribute:last_attempt+' => '',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
-]);
-
-//
-// Class: AbstractResource
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:AbstractResource' => 'Abstract Resource~~',
-	'Class:AbstractResource+' => '',
-]);
-
-//
-// Class: ResourceAdminMenu
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:AbstractResource+' => '~~',
 	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
-	'Class:ResourceAdminMenu+' => '',
-]);
-
-//
-// Class: ResourceRunQueriesMenu
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:ResourceAdminMenu+' => '~~',
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
-	'Class:ResourceRunQueriesMenu+' => '',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:ResourceRunQueriesMenu+' => '~~',
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
-	'Class:ResourceSystemMenu+' => '',
-	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
-	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
-	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
-	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ]);

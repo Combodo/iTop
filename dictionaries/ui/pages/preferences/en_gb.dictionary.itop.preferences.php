@@ -1,11 +1,14 @@
 <?php
-
 /**
- * @copyright Copyright (C) 2024 Combodo SAS
- * @license https://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-
-// Navigation menu
+/**
+ *
+ */
 Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:Preferences:Title' => 'Preferences',
 	'UI:Preferences:UserInterface:Title' => 'User interface',
@@ -40,7 +43,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:Preferences:ChooseAPlaceholder' => 'User placeholder image',
 	'UI:Preferences:ChooseAPlaceholder+' => 'Choose a placeholder image that will be displayed if the contact linked to your user doesn\'t have one.',
 	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Your placeholder image has been successfully updated',
-	'UI:Preferences:Notifications' 								       => 'Notifications',
-	'UI:Preferences:Notifications+' 								   => 'Configure the notifications you want to receive <a href="%1$s">on this page</a>.',
-
+	'UI:Preferences:Notifications' => 'Notifications',
+	'UI:Preferences:Notifications+' => 'Configure the notifications you want to receive <a href="%1$s">on this page</a>.',
 ]);

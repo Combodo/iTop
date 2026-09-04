@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -29,7 +28,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'iTopUpdate:UI:NewVersion' => 'Nowo zainstalowana wersja',
 	'iTopUpdate:UI:Back' => 'Wstecz',
 	'iTopUpdate:UI:Cancel' => 'Anuluj',
-	'iTopUpdate:UI:CannotUpdateNewModules' => '<b>Wykryto kilka nowych modułów</b>, nie można wykonać częściowej aktualizacji.</br>Postępuj zgodnie z <a target="_blank" href="%2$s"> procedurą</a> w celu ręcznej aktualizacji iTop. Musisz użyć <a href="%1$s">setup</a> aby zaktualizować aplikację.',
 	'iTopUpdate:UI:Continue' => 'Kontynuuj',
 	'iTopUpdate:UI:RunSetup' => 'Uruchom instalację',
 	'iTopUpdate:UI:WithDBBackup' => 'Kopia zapasowa bazy danych',
@@ -42,12 +40,14 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'Podczas aktualizacji aplikacja będzie tylko do odczytu.',
 	'iTopUpdate:UI:Status' => 'Status',
 	'iTopUpdate:UI:Action' => 'Aktualizacja',
-	'iTopUpdate:UI:Setup' => 'Konfiguracja '.ITOP_APPLICATION_SHORT, 'iTopUpdate:UI:History' => 'Historia wersji',
+	'iTopUpdate:UI:Setup' => 'Konfiguracja '.ITOP_APPLICATION_SHORT,
+	'iTopUpdate:UI:History' => 'Historia wersji',
 	'iTopUpdate:UI:Progress' => 'Progress of the upgrade',
 	'iTopUpdate:UI:Backup:Label' => 'Kopie zapasowe plików i bazy danych',
 	'iTopUpdate:UI:Backup:Warning' => 'Tworzenie kopii zapasowych nie jest zalecane ze względu na ograniczoną ilość wolnego miejsca na dysku',
 	'iTopUpdate:UI:DiskFreeSpace' => 'Wolne miejsce na dysku',
-	'iTopUpdate:UI:ItopDiskSpace' => 'Przestrzeń dyskowa  '.ITOP_APPLICATION_SHORT, 'iTopUpdate:UI:DBDiskSpace' => 'Przestrzeń dyskowa bazy danych',
+	'iTopUpdate:UI:ItopDiskSpace' => 'Przestrzeń dyskowa  '.ITOP_APPLICATION_SHORT,
+	'iTopUpdate:UI:DBDiskSpace' => 'Przestrzeń dyskowa bazy danych',
 	'iTopUpdate:UI:FileUploadMaxSize' => 'Maksymalny rozmiar przesyłanego pliku',
 	'iTopUpdate:UI:PostMaxSize' => 'Wartość PHP ini post_max_size: %1$s',
 	'iTopUpdate:UI:UploadMaxFileSize' => 'Wartość PHP ini upload_max_filesize: %1$s',
@@ -60,7 +60,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Ostrzeżenie: aktualizacja aplikacji może się nie powieść: %1$s',
 	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Wykryto kilka zmodyfikowanych plików</b>, nie można wykonać częściowej aktualizacji.</br>Postępuj zgodnie z <a target="_blank" href="%2$s"> procedurą</a> w celu ręcznej aktualizacji iTop. Musisz użyć <a href="%1$s">setup</a> aby zaktualizować aplikację.',
 	'iTopUpdate:UI:CheckInProgress' => 'Proszę czekać trwa sprawdzanie integralności',
-	'iTopUpdate:UI:SetupLaunch' => 'Uruchom konfigurację '.ITOP_APPLICATION_SHORT, 'iTopUpdate:UI:SetupLaunchConfirm' => 'Zostanie uruchomiona '.ITOP_APPLICATION_SHORT.' konfiguracja, jesteś pewien?',
+	'iTopUpdate:UI:SetupLaunch' => 'Uruchom konfigurację '.ITOP_APPLICATION_SHORT,
+	'iTopUpdate:UI:SetupLaunchConfirm' => 'Zostanie uruchomiona '.ITOP_APPLICATION_SHORT.' konfiguracja, jesteś pewien?',
 	'iTopUpdate:UI:FastSetupLaunch' => 'Fast Setup~~',
 	'iTopUpdate:UI:SetupMessage:Ready' => 'Gotowy do startu',
 	'iTopUpdate:UI:SetupMessage:EnterMaintenance' => 'Wejście w tryb konserwacji',

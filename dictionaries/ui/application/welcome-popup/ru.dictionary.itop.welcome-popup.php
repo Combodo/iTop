@@ -1,18 +1,18 @@
 <?php
-
-/*
- * @copyright   Copyright (C) 2010-2024 Combodo SAS
- * @license     http://opensource.org/licenses/AGPL-3.0
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-// UI elements
+/**
+ *
+ */
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:WelcomePopup:Button:RemindLater' => 'Напомнить позже',
 	'UI:WelcomePopup:Button:AcknowledgeAndNext' => 'Далее',
 	'UI:WelcomePopup:Button:AcknowledgeAndClose' => 'Закрыть',
-]);
-
-// Message
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:WelcomePopup:Message:330_01_Welcome:Title' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT.' 3.3',
 	'UI:WelcomePopup:Message:330_01_Welcome:Description' => '<div>Мы рады представить этот новый релиз с рядом обновлений и улучшений!</div>
 <br>

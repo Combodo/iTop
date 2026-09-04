@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
@@ -35,41 +34,24 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Изменения по статусу за 7 дней',
 	'Tickets:Related:OpenChanges' => 'Открытые изменения',
 	'Tickets:Related:RecentChanges' => 'Недавние изменения (72ч)',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Change
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Change' => 'Изменение',
-	'Class:Change+' => '',
+	'Class:Change+' => 'A type of Ticket to handle Change which has an effect on delivered Services.~~',
 	'Class:Change/Attribute:status' => 'Статус',
-	'Class:Change/Attribute:status+' => '',
+	'Class:Change/Attribute:status+' => '~~',
 	'Class:Change/Attribute:status/Value:new' => 'Новый',
-	'Class:Change/Attribute:status/Value:new+' => '',
+	'Class:Change/Attribute:status/Value:new+' => '~~',
 	'Class:Change/Attribute:status/Value:assigned' => 'Назначен',
-	'Class:Change/Attribute:status/Value:assigned+' => '',
+	'Class:Change/Attribute:status/Value:assigned+' => '~~',
 	'Class:Change/Attribute:status/Value:planned' => 'Запланировано',
-	'Class:Change/Attribute:status/Value:planned+' => '',
+	'Class:Change/Attribute:status/Value:planned+' => '~~',
 	'Class:Change/Attribute:status/Value:rejected' => 'Отклонён',
-	'Class:Change/Attribute:status/Value:rejected+' => '',
+	'Class:Change/Attribute:status/Value:rejected+' => '~~',
 	'Class:Change/Attribute:status/Value:approved' => 'Утверждён',
-	'Class:Change/Attribute:status/Value:approved+' => '',
+	'Class:Change/Attribute:status/Value:approved+' => '~~',
 	'Class:Change/Attribute:status/Value:closed' => 'Закрыт',
-	'Class:Change/Attribute:status/Value:closed+' => '',
+	'Class:Change/Attribute:status/Value:closed+' => '~~',
 	'Class:Change/Attribute:category' => 'Категория',
-	'Class:Change/Attribute:category+' => '',
+	'Class:Change/Attribute:category+' => '~~',
 	'Class:Change/Attribute:category/Value:application' => 'Приложение',
 	'Class:Change/Attribute:category/Value:application+' => 'Приложение',
 	'Class:Change/Attribute:category/Value:hardware' => 'Оборудование',
@@ -83,21 +65,21 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Change/Attribute:category/Value:system' => 'Система',
 	'Class:Change/Attribute:category/Value:system+' => 'Система',
 	'Class:Change/Attribute:reject_reason' => 'Причина отклонения',
-	'Class:Change/Attribute:reject_reason+' => '',
+	'Class:Change/Attribute:reject_reason+' => '~~',
 	'Class:Change/Attribute:changemanager_id' => 'Менеджер изменения',
-	'Class:Change/Attribute:changemanager_id+' => '',
+	'Class:Change/Attribute:changemanager_id+' => '~~',
 	'Class:Change/Attribute:changemanager_email' => 'Email менеджера',
-	'Class:Change/Attribute:changemanager_email+' => '',
+	'Class:Change/Attribute:changemanager_email+' => '~~',
 	'Class:Change/Attribute:parent_id' => 'Родительское изменение',
-	'Class:Change/Attribute:parent_id+' => '',
+	'Class:Change/Attribute:parent_id+' => '~~',
 	'Class:Change/Attribute:parent_name' => 'Родительское изменение',
-	'Class:Change/Attribute:parent_name+' => '',
+	'Class:Change/Attribute:parent_name+' => '~~',
 	'Class:Change/Attribute:creation_date' => 'Дата создания',
-	'Class:Change/Attribute:creation_date+' => '',
+	'Class:Change/Attribute:creation_date+' => '~~',
 	'Class:Change/Attribute:approval_date' => 'Дата утверждения',
-	'Class:Change/Attribute:approval_date+' => '',
+	'Class:Change/Attribute:approval_date+' => '~~',
 	'Class:Change/Attribute:fallback_plan' => 'План отката',
-	'Class:Change/Attribute:fallback_plan+' => '',
+	'Class:Change/Attribute:fallback_plan+' => '~~',
 	'Class:Change/Attribute:related_request_list' => 'Связанные запросы',
 	'Class:Change/Attribute:related_request_list+' => 'Связанные запросы',
 	'Class:Change/Attribute:related_incident_list' => 'Связанные инциденты',
@@ -107,23 +89,23 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Change/Attribute:child_changes_list' => 'Дочерние изменения',
 	'Class:Change/Attribute:child_changes_list+' => 'Дочерние изменения',
 	'Class:Change/Attribute:parent_id_friendlyname' => 'Родительское изменение',
-	'Class:Change/Attribute:parent_id_friendlyname+' => '',
+	'Class:Change/Attribute:parent_id_friendlyname+' => '~~',
 	'Class:Change/Stimulus:ev_assign' => 'Назначить',
-	'Class:Change/Stimulus:ev_assign+' => '',
+	'Class:Change/Stimulus:ev_assign+' => '~~',
 	'Class:Change/Stimulus:ev_plan' => 'Планировать',
-	'Class:Change/Stimulus:ev_plan+' => '',
+	'Class:Change/Stimulus:ev_plan+' => '~~',
 	'Class:Change/Stimulus:ev_reject' => 'Отклонить',
-	'Class:Change/Stimulus:ev_reject+' => '',
+	'Class:Change/Stimulus:ev_reject+' => '~~',
 	'Class:Change/Stimulus:ev_reopen' => 'Вновь открыть',
-	'Class:Change/Stimulus:ev_reopen+' => '',
+	'Class:Change/Stimulus:ev_reopen+' => '~~',
 	'Class:Change/Stimulus:ev_approve' => 'Утвердить',
-	'Class:Change/Stimulus:ev_approve+' => '',
+	'Class:Change/Stimulus:ev_approve+' => '~~',
 	'Class:Change/Stimulus:ev_finish' => 'Закрыть',
-	'Class:Change/Stimulus:ev_finish+' => '',
+	'Class:Change/Stimulus:ev_finish+' => '~~',
 	'Class:Change/Attribute:outage' => 'Простой услуги',
-	'Class:Change/Attribute:outage+' => '',
+	'Class:Change/Attribute:outage+' => '~~',
 	'Class:Change/Attribute:outage/Value:no' => 'Нет',
-	'Class:Change/Attribute:outage/Value:no+' => '',
+	'Class:Change/Attribute:outage/Value:no+' => '~~',
 	'Class:Change/Attribute:outage/Value:yes' => 'Да',
-	'Class:Change/Attribute:outage/Value:yes+' => '',
+	'Class:Change/Attribute:outage/Value:yes+' => '~~',
 ]);

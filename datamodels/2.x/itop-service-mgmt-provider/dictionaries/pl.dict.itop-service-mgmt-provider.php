@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -14,7 +13,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Menu:ServiceManagement' => 'Zarządzanie usługami',
 	'Menu:ServiceManagement+' => 'Omówienie zarządzania usługami',
 	'Menu:Service:Overview' => 'Przegląd',
-	'Menu:Service:Overview+' => '',
+	'Menu:Service:Overview+' => '~~',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Umowy według poziomu usług',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Umowy według statusu',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Umowy kończące się za mniej niż 30 dni',
@@ -44,43 +43,21 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
 	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
 	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
-
 	'Contract:baseinfo' => 'Informacje ogólne',
 	'Contract:moreinfo' => 'Informacje o umowach',
 	'Contract:cost' => 'Informacje o kosztach',
-]);
-
-//
-// Class: Organization
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Model obsługi',
-	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Nazwa modelu obsługi',
-	'Class:Organization/Attribute:deliverymodel_name+' => '',
-]);
-
-//
-// Class: ContractType
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
 	'Class:ContractType' => 'Typ umowy',
-	'Class:ContractType+' => '',
-]);
-
-//
-// Class: Contract
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Class:ContractType+' => 'Typology for categorizing Customer and Provider Contracts.~~',
 	'Class:Contract' => 'Umowa',
-	'Class:Contract+' => '',
+	'Class:Contract+' => 'Abstract class to handle fields common to the different contract types.~~',
 	'Class:Contract/Attribute:name' => 'Nazwa',
-	'Class:Contract/Attribute:name+' => '',
+	'Class:Contract/Attribute:name+' => '~~',
 	'Class:Contract/Attribute:org_id' => 'Organizacja',
-	'Class:Contract/Attribute:org_id+' => '',
+	'Class:Contract/Attribute:org_id+' => '~~',
 	'Class:Contract/Attribute:organization_name' => 'Nazwa klienta',
 	'Class:Contract/Attribute:organization_name+' => 'Nazwa zwyczajowa',
 	'Class:Contract/Attribute:contacts_list' => 'Kontakty',
@@ -88,33 +65,33 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Contract/Attribute:documents_list' => 'Dokumenty',
 	'Class:Contract/Attribute:documents_list+' => 'Wszystkie dokumenty dotyczące tej umowy z klientem',
 	'Class:Contract/Attribute:description' => 'Opis',
-	'Class:Contract/Attribute:description+' => '',
+	'Class:Contract/Attribute:description+' => '~~',
 	'Class:Contract/Attribute:start_date' => 'Data rozpoczęcia',
-	'Class:Contract/Attribute:start_date+' => '',
+	'Class:Contract/Attribute:start_date+' => '~~',
 	'Class:Contract/Attribute:end_date' => 'Data zakończenia',
-	'Class:Contract/Attribute:end_date+' => '',
+	'Class:Contract/Attribute:end_date+' => '~~',
 	'Class:Contract/Attribute:cost' => 'Koszt',
-	'Class:Contract/Attribute:cost+' => '',
+	'Class:Contract/Attribute:cost+' => '~~',
 	'Class:Contract/Attribute:cost_currency' => 'Waluta kosztu',
-	'Class:Contract/Attribute:cost_currency+' => '',
+	'Class:Contract/Attribute:cost_currency+' => '~~',
 	'Class:Contract/Attribute:cost_currency/Value:dollars' => 'Dolar',
-	'Class:Contract/Attribute:cost_currency/Value:dollars+' => '',
+	'Class:Contract/Attribute:cost_currency/Value:dollars+' => '~~',
 	'Class:Contract/Attribute:cost_currency/Value:euros' => 'Euro',
-	'Class:Contract/Attribute:cost_currency/Value:euros+' => '',
+	'Class:Contract/Attribute:cost_currency/Value:euros+' => '~~',
 	'Class:Contract/Attribute:contracttype_id' => 'Typ umowy',
-	'Class:Contract/Attribute:contracttype_id+' => '',
+	'Class:Contract/Attribute:contracttype_id+' => '~~',
 	'Class:Contract/Attribute:contracttype_name' => 'Nazwa typu umowy',
-	'Class:Contract/Attribute:contracttype_name+' => '',
+	'Class:Contract/Attribute:contracttype_name+' => '~~',
 	'Class:Contract/Attribute:billing_frequency' => 'Częstotliwość rozliczeń',
-	'Class:Contract/Attribute:billing_frequency+' => '',
+	'Class:Contract/Attribute:billing_frequency+' => '~~',
 	'Class:Contract/Attribute:cost_unit' => 'Jednostka kosztu',
-	'Class:Contract/Attribute:cost_unit+' => '',
+	'Class:Contract/Attribute:cost_unit+' => '~~',
 	'Class:Contract/Attribute:provider_id' => 'Dostawca',
-	'Class:Contract/Attribute:provider_id+' => '',
+	'Class:Contract/Attribute:provider_id+' => 'Provider organization for this contract. Can be different from the provider of the associated services.~~',
 	'Class:Contract/Attribute:provider_name' => 'Nazwa dostawcy',
-	'Class:Contract/Attribute:provider_name+' => '',
+	'Class:Contract/Attribute:provider_name+' => '~~',
 	'Class:Contract/Attribute:status' => 'Status',
-	'Class:Contract/Attribute:status+' => '',
+	'Class:Contract/Attribute:status+' => 'The status is not computed based on start and end dates. It must be set manually.~~',
 	'Class:Contract/Attribute:status/Value:implementation' => 'wdrażane',
 	'Class:Contract/Attribute:status/Value:implementation+' => 'wdrażane',
 	'Class:Contract/Attribute:status/Value:obsolete' => 'wycofane',
@@ -123,127 +100,78 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Contract/Attribute:status/Value:production+' => 'użytkowane',
 	'Class:Contract/Attribute:finalclass' => 'Podklasa umowy',
 	'Class:Contract/Attribute:finalclass+' => 'Nazwa ostatniej klasy',
-]);
-
-//
-// Class: CustomerContract
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:CustomerContract' => 'Umowa z klientem',
-	'Class:CustomerContract+' => '',
+	'Class:CustomerContract+' => 'Agreement between a client and a provider for the delivery of services with an optional level of commitment (SLA, Coverage Window).~~',
 	'Class:CustomerContract/Attribute:services_list' => 'Usługi',
 	'Class:CustomerContract/Attribute:services_list+' => 'Wszystkie usługi zakupione w ramach tej umowy',
 	'Class:CustomerContract/Attribute:functionalcis_list' => 'Konfiguracje',
 	'Class:CustomerContract/Attribute:functionalcis_list+' => 'Wszystkie elementy konfiguracji objęte niniejszą umową',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Umowy z dostawcami',
 	'Class:CustomerContract/Attribute:providercontracts_list+' => 'Wszystkie umowy z dostawcami na świadczenie usług w ramach tej umowy (umowa stanowiąca podstawę)',
-]);
-
-//
-// Class: ProviderContract
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:ProviderContract' => 'Umowa z dostawcą',
-	'Class:ProviderContract+' => '',
+	'Class:ProviderContract+' => 'Agreement between an external provider and an internal organization.~~',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'Konfiguracje',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Wszystkie elementy konfiguracji objęte niniejszą umową',
 	'Class:ProviderContract/Attribute:sla' => 'Umowa SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Umowa dotycząca poziomu usług',
 	'Class:ProviderContract/Attribute:coverage' => 'Godziny usługi',
-	'Class:ProviderContract/Attribute:coverage+' => '',
-]);
-
-//
-// Class: lnkContactToContract
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Class:ProviderContract/Attribute:coverage+' => 'Temporal coverage of the contract, e.g. 24x7, 9x5, etc.~~',
 	'Class:lnkContactToContract' => 'Połączenie Kontakt / Umowa',
-	'Class:lnkContactToContract+' => '',
+	'Class:lnkContactToContract+' => 'Manages key contacts on each Customer or Provider Contract.~~',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Umowa',
-	'Class:lnkContactToContract/Attribute:contract_id+' => '',
+	'Class:lnkContactToContract/Attribute:contract_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contract_name' => 'Nazwa umowy',
-	'Class:lnkContactToContract/Attribute:contract_name+' => '',
+	'Class:lnkContactToContract/Attribute:contract_name+' => '~~',
 	'Class:lnkContactToContract/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkContactToContract/Attribute:contact_id+' => '',
+	'Class:lnkContactToContract/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Nazwa kontaktu',
-	'Class:lnkContactToContract/Attribute:contact_name+' => '',
-]);
-
-//
-// Class: lnkContractToDocument
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Class:lnkContactToContract/Attribute:contact_name+' => '~~',
 	'Class:lnkContractToDocument' => 'Połączenie Umowa / Dokument',
-	'Class:lnkContractToDocument+' => '',
+	'Class:lnkContractToDocument+' => 'Link used when a Document is applicable to a Contract.~~',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Umowa',
-	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
+	'Class:lnkContractToDocument/Attribute:contract_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:contract_name' => 'Nazwa umowy',
-	'Class:lnkContractToDocument/Attribute:contract_name+' => '',
+	'Class:lnkContractToDocument/Attribute:contract_name+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_id' => 'Dokument',
-	'Class:lnkContractToDocument/Attribute:document_id+' => '',
+	'Class:lnkContractToDocument/Attribute:document_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Nazwa dokumentu',
-	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-]);
-
-//
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Class:lnkContractToDocument/Attribute:document_name+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract' => 'Połączenie Konfiguracja / Umowa z dostawcą',
-	'Class:lnkFunctionalCIToProviderContract+' => '',
+	'Class:lnkFunctionalCIToProviderContract+' => 'This link models the Functional CIs that are supported by an external company through a Provider Contract.~~',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Umowa z dostawcą',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Nazwa umowy z dostawcą',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'Konfiguracja',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Nazwa konfiguracji',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
-]);
-
-//
-// Class: ServiceFamily
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '~~',
 	'Class:ServiceFamily' => 'Rodzina usług',
-	'Class:ServiceFamily+' => '',
+	'Class:ServiceFamily+' => 'Top level of Service hierarchy. Required for Services to be proposed in User Portal~~',
 	'Class:ServiceFamily/Attribute:name' => 'Nazwa',
-	'Class:ServiceFamily/Attribute:name+' => '',
+	'Class:ServiceFamily/Attribute:name+' => '~~',
 	'Class:ServiceFamily/Attribute:icon' => 'Ikona',
-	'Class:ServiceFamily/Attribute:icon+' => '',
+	'Class:ServiceFamily/Attribute:icon+' => '~~',
 	'Class:ServiceFamily/Attribute:services_list' => 'Usługi',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Wszystkie usługi w tej kategorii',
-]);
-
-//
-// Class: Service
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Service' => 'Usługa',
-	'Class:Service+' => '',
+	'Class:Service+' => 'A Service is delivered by an organization and subscribed to through a Contract Client. It must contain at least one Service Subcategory.~~',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s',
 	'Class:Service/Attribute:name' => 'Nazwa',
-	'Class:Service/Attribute:name+' => '',
+	'Class:Service/Attribute:name+' => '~~',
 	'Class:Service/Attribute:org_id' => 'Dostawca',
-	'Class:Service/Attribute:org_id+' => '',
+	'Class:Service/Attribute:org_id+' => '~~',
 	'Class:Service/Attribute:organization_name' => 'Nazwa dostawcy',
-	'Class:Service/Attribute:organization_name+' => '',
+	'Class:Service/Attribute:organization_name+' => '~~',
 	'Class:Service/Attribute:description' => 'Opis',
-	'Class:Service/Attribute:description+' => '',
+	'Class:Service/Attribute:description+' => '~~',
 	'Class:Service/Attribute:servicefamily_id' => 'Rodzina usług',
 	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Nazwa rodziny usług',
-	'Class:Service/Attribute:servicefamily_name+' => '',
+	'Class:Service/Attribute:servicefamily_name+' => '~~',
 	'Class:Service/Attribute:documents_list' => 'Dokumenty',
 	'Class:Service/Attribute:documents_list+' => 'Wszystkie dokumenty związane z usługą',
 	'Class:Service/Attribute:contacts_list' => 'Kontakty',
@@ -253,71 +181,50 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Service/Attribute:status/Value:implementation' => 'wdrażane',
 	'Class:Service/Attribute:status/Value:implementation+' => 'wdrażane',
 	'Class:Service/Attribute:status/Value:obsolete' => 'wycofane',
-	'Class:Service/Attribute:status/Value:obsolete+' => '',
+	'Class:Service/Attribute:status/Value:obsolete+' => '~~',
 	'Class:Service/Attribute:status/Value:production' => 'użytkowane',
-	'Class:Service/Attribute:status/Value:production+' => '',
+	'Class:Service/Attribute:status/Value:production+' => '~~',
 	'Class:Service/Attribute:icon' => 'Ikona',
-	'Class:Service/Attribute:icon+' => '',
+	'Class:Service/Attribute:icon+' => '~~',
 	'Class:Service/Attribute:customercontracts_list' => 'Umowy z klientami',
 	'Class:Service/Attribute:customercontracts_list+' => 'Wszystkie umowy z klientami, którzy kupili tę usługę',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Podkategorie usług',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'Wszystkie podkategorie tej usługi',
-]);
-
-//
-// Class: lnkDocumentToService
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkDocumentToService' => 'Połączenie Dokument / Usługa',
-	'Class:lnkDocumentToService+' => '',
+	'Class:lnkDocumentToService+' => 'Link used when a Document is applicable to a Service.~~',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Usługa',
-	'Class:lnkDocumentToService/Attribute:service_id+' => '',
+	'Class:lnkDocumentToService/Attribute:service_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'Nazwa usługi',
-	'Class:lnkDocumentToService/Attribute:service_name+' => '',
+	'Class:lnkDocumentToService/Attribute:service_name+' => '~~',
 	'Class:lnkDocumentToService/Attribute:document_id' => 'Dokument',
-	'Class:lnkDocumentToService/Attribute:document_id+' => '',
+	'Class:lnkDocumentToService/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Nazwa dokumentu',
-	'Class:lnkDocumentToService/Attribute:document_name+' => '',
-]);
-
-//
-// Class: lnkContactToService
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Class:lnkDocumentToService/Attribute:document_name+' => '~~',
 	'Class:lnkContactToService' => 'Połączenie Kontakt / Usługa',
-	'Class:lnkContactToService+' => '',
+	'Class:lnkContactToService+' => 'Ideal for defining the Team to which Tickets created on the related Service will be assigned (automatically or manually).~~',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s',
 	'Class:lnkContactToService/Attribute:service_id' => 'Usługa',
-	'Class:lnkContactToService/Attribute:service_id+' => '',
+	'Class:lnkContactToService/Attribute:service_id+' => '~~',
 	'Class:lnkContactToService/Attribute:service_name' => 'Nazwa usługi',
-	'Class:lnkContactToService/Attribute:service_name+' => '',
+	'Class:lnkContactToService/Attribute:service_name+' => '~~',
 	'Class:lnkContactToService/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkContactToService/Attribute:contact_id+' => '',
+	'Class:lnkContactToService/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Nazwa kontaktu',
-	'Class:lnkContactToService/Attribute:contact_name+' => '',
-]);
-
-//
-// Class: ServiceSubcategory
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Class:lnkContactToService/Attribute:contact_name+' => '~~',
 	'Class:ServiceSubcategory' => 'Podkategoria usługi',
-	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory+' => 'Lowest level in Service hierarchy. User Request are usually associated to one Service Subcategory.~~',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
 	'Class:ServiceSubcategory/Attribute:name' => 'Nazwa',
-	'Class:ServiceSubcategory/Attribute:name+' => '',
+	'Class:ServiceSubcategory/Attribute:name+' => '~~',
 	'Class:ServiceSubcategory/Attribute:description' => 'Opis',
-	'Class:ServiceSubcategory/Attribute:description+' => '',
+	'Class:ServiceSubcategory/Attribute:description+' => '~~',
 	'Class:ServiceSubcategory/Attribute:service_id' => 'Usługa',
-	'Class:ServiceSubcategory/Attribute:service_id+' => '',
+	'Class:ServiceSubcategory/Attribute:service_id+' => '~~',
 	'Class:ServiceSubcategory/Attribute:service_name' => 'Nazwa usługi',
-	'Class:ServiceSubcategory/Attribute:service_name+' => '',
+	'Class:ServiceSubcategory/Attribute:service_name+' => '~~',
 	'Class:ServiceSubcategory/Attribute:status' => 'Status',
-	'Class:ServiceSubcategory/Attribute:status+' => '',
+	'Class:ServiceSubcategory/Attribute:status+' => 'Service subcategory status has usually an impact on User Portal visibility.~~',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation' => 'wdrażane',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation+' => 'wdrażane',
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete' => 'wycofane',
@@ -332,41 +239,27 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'zgłoszenie serwisowe',
 	'Class:ServiceSubcategory/Attribute:service_provider' => 'Nazwa dostawcy',
 	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Dostawca',
-]);
-
-//
-// Class: SLA
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:SLA' => 'Umowa SLA',
-	'Class:SLA+' => '',
+	'Class:SLA+' => 'Service Level Agreement (SLA) applicable to a Service subscribed by a customer and measured using SLTs.~~',
 	'Class:SLA/Attribute:name' => 'Nazwa',
-	'Class:SLA/Attribute:name+' => '',
+	'Class:SLA/Attribute:name+' => '~~',
 	'Class:SLA/Attribute:description' => 'Opis',
-	'Class:SLA/Attribute:description+' => '',
+	'Class:SLA/Attribute:description+' => '~~',
 	'Class:SLA/Attribute:org_id' => 'Organizacja',
-	'Class:SLA/Attribute:org_id+' => '',
+	'Class:SLA/Attribute:org_id+' => '~~',
 	'Class:SLA/Attribute:organization_name' => 'Nazwa organizacji',
-	'Class:SLA/Attribute:organization_name+' => '',
+	'Class:SLA/Attribute:organization_name+' => '~~',
 	'Class:SLA/Attribute:slts_list' => 'Poziomy usług (SLT)',
 	'Class:SLA/Attribute:slts_list+' => 'Wszystkie docelowe poziomy usług dla tej umowy SLA',
 	'Class:SLA/Attribute:customercontracts_list' => 'Umowy z klientami',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Wszystkie umowy z klientami korzystające z tej umowy SLA',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Nie udało się zapisać połączenia z umową klienta %1$s i usługą %2$s : Umowa SLA już istnieje',
-]);
-
-//
-// Class: SLT
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:SLT' => 'Poziom usług SLT',
-	'Class:SLT+' => '',
+	'Class:SLT+' => 'Service Level Target under a Service Level Agreement (SLA). Defines a maximum time for a metric (TTO or TTR), a request type (Incident or Request) and a priority.~~',
 	'Class:SLT/Attribute:name' => 'Nazwa',
-	'Class:SLT/Attribute:name+' => '',
+	'Class:SLT/Attribute:name+' => '~~',
 	'Class:SLT/Attribute:priority' => 'Priorytet',
-	'Class:SLT/Attribute:priority+' => '',
+	'Class:SLT/Attribute:priority+' => 'Ticket priority to which this SLT applies. Only tickets with this priority must comply with this SLT.~~',
 	'Class:SLT/Attribute:priority/Value:1' => 'krytyczny',
 	'Class:SLT/Attribute:priority/Value:1+' => 'krytyczny',
 	'Class:SLT/Attribute:priority/Value:2' => 'wysoki',
@@ -376,174 +269,119 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:SLT/Attribute:priority/Value:4' => 'niski',
 	'Class:SLT/Attribute:priority/Value:4+' => 'niski',
 	'Class:SLT/Attribute:request_type' => 'Typ zgłoszenia',
-	'Class:SLT/Attribute:request_type+' => '',
+	'Class:SLT/Attribute:request_type+' => 'Request type to which this SLT applies. Only tickets with this request type must comply with this SLT.~~',
 	'Class:SLT/Attribute:request_type/Value:incident' => 'incydent',
 	'Class:SLT/Attribute:request_type/Value:incident+' => 'incydent',
 	'Class:SLT/Attribute:request_type/Value:service_request' => 'zgłoszenie serwisowe',
 	'Class:SLT/Attribute:request_type/Value:service_request+' => 'zgłoszenie serwisowe',
 	'Class:SLT/Attribute:metric' => 'Miara',
-	'Class:SLT/Attribute:metric+' => '',
+	'Class:SLT/Attribute:metric+' => 'Delay type to which this SLT applies. TTO (Time To Own) or TTR (Time To Resolve).~~',
 	'Class:SLT/Attribute:metric/Value:tto' => 'Termin podjęcia TTO',
 	'Class:SLT/Attribute:metric/Value:tto+' => 'Termin podjęcia TTO',
 	'Class:SLT/Attribute:metric/Value:ttr' => 'Termin rozwiązania TTR',
 	'Class:SLT/Attribute:metric/Value:ttr+' => 'Termin rozwiązania TTR',
 	'Class:SLT/Attribute:value' => 'Wartość',
-	'Class:SLT/Attribute:value+' => '',
+	'Class:SLT/Attribute:value+' => 'Delay value which must not be exceeded to be compliant with the target. The unit is defined in the "unit" attribute.~~',
 	'Class:SLT/Attribute:unit' => 'Jednostka',
-	'Class:SLT/Attribute:unit+' => '',
+	'Class:SLT/Attribute:unit+' => 'Unit for the delay value.~~',
 	'Class:SLT/Attribute:unit/Value:hours' => 'godzin',
 	'Class:SLT/Attribute:unit/Value:hours+' => 'godzin',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'minut',
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'minut',
-]);
-
-//
-// Class: lnkSLAToSLT
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkSLAToSLT' => 'Połączenie SLA / SLT',
-	'Class:lnkSLAToSLT+' => '',
+	'Class:lnkSLAToSLT+' => 'This link indicates that an SLT is included in the Service Level Agreement (SLA). An SLA usually contains several SLTs. An SLT can be reused as is by several SLAs (seldom).~~',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'Umowa SLA',
-	'Class:lnkSLAToSLT/Attribute:sla_id+' => '',
+	'Class:lnkSLAToSLT/Attribute:sla_id+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'Nazwa umowy SLA',
-	'Class:lnkSLAToSLT/Attribute:sla_name+' => '',
+	'Class:lnkSLAToSLT/Attribute:sla_name+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_id' => 'Poziom usług SLT',
-	'Class:lnkSLAToSLT/Attribute:slt_id+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_id+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_name' => 'Nazwa poziomu usług SLT',
-	'Class:lnkSLAToSLT/Attribute:slt_name+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_name+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Miara poziomu usług SLT',
-	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Typ zgłoszenia SLT',
-	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'Priorytet zgłoszeń SLT',
-	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value' => 'Wartość SLT',
-	'Class:lnkSLAToSLT/Attribute:slt_value+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Jednostka wartości SLT',
-	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
 	'Class:lnkCustomerContractToService' => 'Połączenie Umowa z klientem / Usługa',
-	'Class:lnkCustomerContractToService+' => '',
+	'Class:lnkCustomerContractToService+' => 'A single line of a Customer Contract, specifying the Service provided and, for this service, the subscribed commitment levels (Service Level Agreement and Coverage Window).~~',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Umowa z klientem',
-	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Nazwa umowy z klientem',
-	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:service_id' => 'Usługa',
-	'Class:lnkCustomerContractToService/Attribute:service_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:service_id+' => 'All service subcategories linked to this service are also included by the contract.~~',
 	'Class:lnkCustomerContractToService/Attribute:service_name' => 'Nazwa usługi',
-	'Class:lnkCustomerContractToService/Attribute:service_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:service_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_id' => 'Umowa SLA',
-	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:sla_id+' => 'Service Level Agreement applicable to this service for this customer contract.~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'Nazwa umowy SLA',
-	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
 	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToProviderContract
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkCustomerContractToProviderContract' => 'Połączenie Umowa z klientem / Umowa z dostawcą',
-	'Class:lnkCustomerContractToProviderContract+' => '',
+	'Class:lnkCustomerContractToProviderContract+' => 'This link models when a Provider Contract contributes to the delivery of a Customer Contract.~~',
 	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id' => 'Umowa z klientem',
-	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name' => 'Nazwa umowy z klientem',
-	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name+' => '~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id' => 'Umowa z dostawcą',
-	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => '~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name' => 'Nazwa umowy z dostawcą',
-	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => '',
-]);
-
-//
-// Class: lnkCustomerContractToFunctionalCI
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI' => 'Połączenie Umowa z klientem / Konfiguracja',
-	'Class:lnkCustomerContractToFunctionalCI+' => '',
+	'Class:lnkCustomerContractToFunctionalCI+' => 'This link models the equipment (Functional CI) covered by a Customer Contract.~~',
 	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id' => 'Umowa z klientem',
-	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name' => 'Nazwa umowy z klientem',
-	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id' => 'Konfiguracja',
-	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name' => 'Nazwa konfiguracji',
-	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => '',
-]);
-
-//
-// Class: DeliveryModel
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => '~~',
 	'Class:DeliveryModel' => 'Model obsługi',
-	'Class:DeliveryModel+' => '',
+	'Class:DeliveryModel+' => 'The Delivery Model specifies the Teams that can be assigned to Tickets; it must contain at least one Team in the Contacts tab.
+Each client Organization must have a defined Delivery Model.~~',
 	'Class:DeliveryModel/Attribute:name' => 'Nazwa',
-	'Class:DeliveryModel/Attribute:name+' => '',
+	'Class:DeliveryModel/Attribute:name+' => '~~',
 	'Class:DeliveryModel/Attribute:org_id' => 'Organizacja',
-	'Class:DeliveryModel/Attribute:org_id+' => '',
+	'Class:DeliveryModel/Attribute:org_id+' => '~~',
 	'Class:DeliveryModel/Attribute:organization_name' => 'Nazwa organizacji',
-	'Class:DeliveryModel/Attribute:organization_name+' => '',
+	'Class:DeliveryModel/Attribute:organization_name+' => '~~',
 	'Class:DeliveryModel/Attribute:description' => 'Opis',
-	'Class:DeliveryModel/Attribute:description+' => '',
+	'Class:DeliveryModel/Attribute:description+' => '~~',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Kontakty',
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'Wszystkie kontakty (zespoły i osoby) dla tego modelu obsługi',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Klienci',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'Wszyscy klienci posiadający ten model obsługi',
-]);
-
-//
-// Class: lnkDeliveryModelToContact
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkDeliveryModelToContact' => 'Połączenie Model obsługi / Kontakt',
-	'Class:lnkDeliveryModelToContact+' => '',
+	'Class:lnkDeliveryModelToContact+' => 'This link specifies the role of a Team (more rarely a Person) within a Delivery Model.~~',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Model obsługi',
-	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => 'Nazwa modelu obsługi',
-	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkDeliveryModelToContact/Attribute:contact_id+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:contact_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:contact_name' => 'Nazwa kontaktu',
-	'Class:lnkDeliveryModelToContact/Attribute:contact_name+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:contact_name+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:role_id' => 'Rola',
-	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Nazwa roli',
-	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
-]);
-
-//
-// Class: lnkContactToContract
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '~~',
 	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkContractToDocument
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',

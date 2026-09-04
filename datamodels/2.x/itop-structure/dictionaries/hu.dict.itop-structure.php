@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
@@ -13,155 +12,129 @@
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Organization' => 'Szevezeti egység',
-	'Class:Organization+' => '',
+	'Class:Organization+' => 'It can be a customer, a provider, your company or departments within your company. Organizations can be structured hierarchically. Users can be limited to objects belonging to some organizations only.~~',
 	'Class:Organization/Attribute:name' => 'Név',
-	'Class:Organization/Attribute:name+' => '',
+	'Class:Organization/Attribute:name+' => 'Common name~~',
 	'Class:Organization/Attribute:code' => 'Azonosító',
-	'Class:Organization/Attribute:code+' => '',
+	'Class:Organization/Attribute:code+' => 'Organization code (Siret, DUNS,...)~~',
 	'Class:Organization/Attribute:status' => 'Állapot',
-	'Class:Organization/Attribute:status+' => '',
+	'Class:Organization/Attribute:status+' => '~~',
 	'Class:Organization/Attribute:status/Value:active' => 'Aktív',
-	'Class:Organization/Attribute:status/Value:active+' => '',
+	'Class:Organization/Attribute:status/Value:active+' => 'Active~~',
 	'Class:Organization/Attribute:status/Value:inactive' => 'Inaktív',
-	'Class:Organization/Attribute:status/Value:inactive+' => '',
+	'Class:Organization/Attribute:status/Value:inactive+' => 'Inactive~~',
 	'Class:Organization/Attribute:parent_id' => 'Fölérendelt szervezeti egység',
-	'Class:Organization/Attribute:parent_id+' => '',
+	'Class:Organization/Attribute:parent_id+' => 'Parent organization~~',
 	'Class:Organization/Attribute:parent_name' => 'Fölérendelt szervezeti egység név',
-	'Class:Organization/Attribute:parent_name+' => '',
+	'Class:Organization/Attribute:parent_name+' => 'Name of the parent organization~~',
 	'Class:Organization/Attribute:deliverymodel_id' => 'Teljesítési modell',
-	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Teljesítési modell név',
-	'Class:Organization/Attribute:deliverymodel_name+' => '',
+	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Fölérendelt szervezeti egység név',
-	'Class:Organization/Attribute:parent_id_friendlyname+' => '',
+	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Parent organization~~',
 	'Class:Organization/Attribute:overview' => 'Áttekintő',
 	'Organization:Overview:FunctionalCIs' => 'A szervezet konfigurációs elemei',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'típus szerint',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' szervezeten belüli felhasználók',
-]);
-
-//
-// Class: Location
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Location' => 'Helyszín',
-	'Class:Location+' => '',
+	'Class:Location+' => 'Any type of location: Region, Country, City, Site, Building, Floor, Room,...~~',
 	'Class:Location/Attribute:name' => 'Név',
-	'Class:Location/Attribute:name+' => '',
+	'Class:Location/Attribute:name+' => '~~',
 	'Class:Location/Attribute:status' => 'Állapot',
-	'Class:Location/Attribute:status+' => '',
+	'Class:Location/Attribute:status+' => '~~',
 	'Class:Location/Attribute:status/Value:active' => 'Aktív',
-	'Class:Location/Attribute:status/Value:active+' => '',
+	'Class:Location/Attribute:status/Value:active+' => 'Active~~',
 	'Class:Location/Attribute:status/Value:inactive' => 'Inaktív',
-	'Class:Location/Attribute:status/Value:inactive+' => '',
+	'Class:Location/Attribute:status/Value:inactive+' => 'Inactive~~',
 	'Class:Location/Attribute:org_id' => 'Tulajdonos szervezeti egység',
-	'Class:Location/Attribute:org_id+' => '',
+	'Class:Location/Attribute:org_id+' => '~~',
 	'Class:Location/Attribute:org_name' => 'Tulajdonos szervezeti egység név',
-	'Class:Location/Attribute:org_name+' => '',
+	'Class:Location/Attribute:org_name+' => '~~',
 	'Class:Location/Attribute:address' => 'Cím',
 	'Class:Location/Attribute:address+' => 'Postacím',
 	'Class:Location/Attribute:postal_code' => 'Irányítószám',
-	'Class:Location/Attribute:postal_code+' => '',
+	'Class:Location/Attribute:postal_code+' => 'ZIP/Postal code~~',
 	'Class:Location/Attribute:city' => 'Város',
-	'Class:Location/Attribute:city+' => '',
+	'Class:Location/Attribute:city+' => '~~',
 	'Class:Location/Attribute:country' => 'Ország',
-	'Class:Location/Attribute:country+' => '',
+	'Class:Location/Attribute:country+' => '~~',
 	'Class:Location/Attribute:physicaldevice_list' => 'Eszközök',
 	'Class:Location/Attribute:physicaldevice_list+' => 'A helyszín összes eszköze',
 	'Class:Location/Attribute:person_list' => 'Kapcsolattartók',
 	'Class:Location/Attribute:person_list+' => 'A helyszín összes kapcsolattartója',
-]);
-
-//
-// Class: Contact
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Contact' => 'Kapcsolattartó',
-	'Class:Contact+' => '',
+	'Class:Contact+' => 'Abstract class. A Contact can be linked to Tickets and FunctionalCIs for different purposes, such as incident dispatching and notifications.~~',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => 'Név',
-	'Class:Contact/Attribute:name+' => '',
+	'Class:Contact/Attribute:name+' => '~~',
 	'Class:Contact/Attribute:status' => 'Állapot',
-	'Class:Contact/Attribute:status+' => '',
+	'Class:Contact/Attribute:status+' => '~~',
 	'Class:Contact/Attribute:status/Value:active' => 'Aktív',
-	'Class:Contact/Attribute:status/Value:active+' => '',
+	'Class:Contact/Attribute:status/Value:active+' => 'Active~~',
 	'Class:Contact/Attribute:status/Value:inactive' => 'Inaktív',
-	'Class:Contact/Attribute:status/Value:inactive+' => '',
+	'Class:Contact/Attribute:status/Value:inactive+' => 'Inactive~~',
 	'Class:Contact/Attribute:org_id' => 'Szervezeti egység',
-	'Class:Contact/Attribute:org_id+' => '',
+	'Class:Contact/Attribute:org_id+' => '~~',
 	'Class:Contact/Attribute:org_name' => 'Szervezeti egység név',
-	'Class:Contact/Attribute:org_name+' => '',
+	'Class:Contact/Attribute:org_name+' => '~~',
 	'Class:Contact/Attribute:email' => 'Email',
-	'Class:Contact/Attribute:email+' => '',
+	'Class:Contact/Attribute:email+' => '~~',
 	'Class:Contact/Attribute:phone' => 'Telefonszám',
-	'Class:Contact/Attribute:phone+' => '',
+	'Class:Contact/Attribute:phone+' => '~~',
 	'Class:Contact/Attribute:notify' => 'Értesítés',
-	'Class:Contact/Attribute:notify+' => '',
+	'Class:Contact/Attribute:notify+' => 'Flag which can be used by each notification~~',
 	'Class:Contact/Attribute:notify/Value:no' => 'Nem',
-	'Class:Contact/Attribute:notify/Value:no+' => '',
+	'Class:Contact/Attribute:notify/Value:no+' => 'no~~',
 	'Class:Contact/Attribute:notify/Value:yes' => 'Igen',
-	'Class:Contact/Attribute:notify/Value:yes+' => '',
+	'Class:Contact/Attribute:notify/Value:yes+' => 'yes~~',
 	'Class:Contact/Attribute:function' => 'Beosztás',
-	'Class:Contact/Attribute:function+' => '',
+	'Class:Contact/Attribute:function+' => '~~',
 	'Class:Contact/Attribute:cis_list' => 'CI-k',
 	'Class:Contact/Attribute:cis_list+' => 'A kapcsolattartóhoz tartozó összes konfigurációs elem',
 	'Class:Contact/Attribute:finalclass' => 'Kapcsolattartó típus',
-	'Class:Contact/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: Person
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:Contact/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Person' => 'Kapcsolattartó',
-	'Class:Person+' => '',
+	'Class:Person+' => 'A type of Contact used to describe physical persons. Persons can be grouped into Teams. Persons can be linked to other configuration items (eg. to describe who to contact in case of incident with an application).
+Other usage: the caller of a User request is a Person as well as the agent assigned to resolve it.~~',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => 'Vezetéknév',
-	'Class:Person/Attribute:name+' => '',
+	'Class:Person/Attribute:name+' => '~~',
 	'Class:Person/Attribute:first_name' => 'Keresztnév',
-	'Class:Person/Attribute:first_name+' => '',
+	'Class:Person/Attribute:first_name+' => '~~',
 	'Class:Person/Attribute:employee_number' => 'Alkalmazotti szám',
-	'Class:Person/Attribute:employee_number+' => '',
+	'Class:Person/Attribute:employee_number+' => '~~',
 	'Class:Person/Attribute:mobile_phone' => 'Mobiltelefon',
-	'Class:Person/Attribute:mobile_phone+' => '',
+	'Class:Person/Attribute:mobile_phone+' => '~~',
 	'Class:Person/Attribute:location_id' => 'Helyszín',
-	'Class:Person/Attribute:location_id+' => '',
+	'Class:Person/Attribute:location_id+' => '~~',
 	'Class:Person/Attribute:location_name' => 'Helyszín név',
-	'Class:Person/Attribute:location_name+' => '',
+	'Class:Person/Attribute:location_name+' => '~~',
 	'Class:Person/Attribute:manager_id' => 'Felettes',
-	'Class:Person/Attribute:manager_id+' => '',
+	'Class:Person/Attribute:manager_id+' => '~~',
 	'Class:Person/Attribute:manager_name' => 'Felettes neve',
-	'Class:Person/Attribute:manager_name+' => '',
+	'Class:Person/Attribute:manager_name+' => '~~',
 	'Class:Person/Attribute:team_list' => 'Csapatok',
-	'Class:Person/Attribute:team_list+' => '',
+	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to~~',
 	'Class:Person/Attribute:tickets_list' => 'Hibajegyek',
-	'Class:Person/Attribute:tickets_list+' => '',
+	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller~~',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Create a %4$s for %2$s~~',
 	'Class:Person/Attribute:user_list' => 'Users~~',
 	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Felettes rövid neve',
-	'Class:Person/Attribute:manager_id_friendlyname+' => '',
+	'Class:Person/Attribute:manager_id_friendlyname+' => '~~',
 	'Class:Person/Attribute:picture' => 'Kép',
-	'Class:Person/Attribute:picture+' => '',
+	'Class:Person/Attribute:picture+' => '~~',
 	'Class:Person/UniquenessRule:employee_number+' => 'A szervezeten belül az alkalmazotti számnak egyedinek kell lennie',
 	'Class:Person/UniquenessRule:employee_number' => 'már van egy személy a \'$this->this->org_name$\' szervezetben ugyanezzel az alkalmazotti számmal',
 	'Class:Person/UniquenessRule:name+' => 'Az alkalmazott nevének egyedinek kell lennie a szervezeten belül',
 	'Class:Person/UniquenessRule:name' => 'A \'$this->org_name$\' szervezetben már van egy ugyanilyen nevű személy.',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-]);
-
-//
-// Class: Team
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Team' => 'Csapat',
-	'Class:Team+' => '',
+	'Class:Team+' => 'A type of Contact. Often used to group Persons, but not only. Teams are expected to watch Tickets dispatched to them, and assign it to an agent, usually a member of that team.~~',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Tagok',
-	'Class:Team/Attribute:persons_list+' => '',
+	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
 	'Class:Team/Attribute:overview' => 'Overview~~',
 	'Team:Overview' => 'Tickets and CIs managed by the team~~',
 	'Team:Overview:ActiveTickets' => 'Active tickets~~',
@@ -170,116 +143,60 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Team:Overview:UserRequest-ClosedByMonth' => 'User requests closed in last 12 months~~',
 	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months~~',
 	'Class:Team/Attribute:tickets_list' => 'Hibajegyek',
-	'Class:Team/Attribute:tickets_list+' => '',
-]);
-
-//
-// Class: Document
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
 	'Class:Document' => 'Dokumentum',
-	'Class:Document+' => '',
+	'Class:Document+' => 'Abstract class. A document that can be shared across multiple objects, making it easy and quick to retrieve from all relevant locations.~~',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => 'Név',
-	'Class:Document/Attribute:name+' => '',
+	'Class:Document/Attribute:name+' => '~~',
 	'Class:Document/Attribute:org_id' => 'Szervezeti egység',
-	'Class:Document/Attribute:org_id+' => '',
+	'Class:Document/Attribute:org_id+' => '~~',
 	'Class:Document/Attribute:org_name' => 'Szervezeti egység név',
-	'Class:Document/Attribute:org_name+' => '',
+	'Class:Document/Attribute:org_name+' => '~~',
 	'Class:Document/Attribute:documenttype_id' => 'Dokumentum típus',
-	'Class:Document/Attribute:documenttype_id+' => '',
+	'Class:Document/Attribute:documenttype_id+' => '~~',
 	'Class:Document/Attribute:documenttype_name' => 'Dokumentum típus név',
-	'Class:Document/Attribute:documenttype_name+' => '',
+	'Class:Document/Attribute:documenttype_name+' => '~~',
 	'Class:Document/Attribute:version' => 'Verzió',
-	'Class:Document/Attribute:version+' => '',
+	'Class:Document/Attribute:version+' => '~~',
 	'Class:Document/Attribute:description' => 'Leírás',
-	'Class:Document/Attribute:description+' => '',
+	'Class:Document/Attribute:description+' => '~~',
 	'Class:Document/Attribute:status' => 'Állapot',
-	'Class:Document/Attribute:status+' => '',
+	'Class:Document/Attribute:status+' => '~~',
 	'Class:Document/Attribute:status/Value:draft' => 'Munkapéldány',
-	'Class:Document/Attribute:status/Value:draft+' => '',
+	'Class:Document/Attribute:status/Value:draft+' => '~~',
 	'Class:Document/Attribute:status/Value:obsolete' => 'Elavult',
-	'Class:Document/Attribute:status/Value:obsolete+' => '',
+	'Class:Document/Attribute:status/Value:obsolete+' => '~~',
 	'Class:Document/Attribute:status/Value:published' => 'Érvényes',
-	'Class:Document/Attribute:status/Value:published+' => '',
+	'Class:Document/Attribute:status/Value:published+' => '~~',
 	'Class:Document/Attribute:cis_list' => 'CI-k',
-	'Class:Document/Attribute:cis_list+' => '',
+	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
 	'Class:Document/Attribute:finalclass' => 'Dokumentum típus',
 	'Class:Document/Attribute:finalclass+' => 'A végső osztály neve',
-]);
-
-//
-// Class: DocumentFile
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:DocumentFile' => 'Dokumentum fájl',
-	'Class:DocumentFile+' => '~~',
+	'Class:DocumentFile+' => 'It\'s a type of Document which includes an uploaded file (in any format: Word, PDF, Spreadsheet, etc.).~~',
 	'Class:DocumentFile/Attribute:file' => 'Fájl',
 	'Class:DocumentFile/Attribute:file+' => '~~',
-]);
-
-//
-// Class: DocumentNote
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:DocumentNote' => 'Dokumentum jegyzet',
-	'Class:DocumentNote+' => '~~',
+	'Class:DocumentNote+' => 'Used to store a text document. HTML formatting is supported using the WYSIWYG editor. Search can be performed on its content.~~',
 	'Class:DocumentNote/Attribute:text' => 'Szöveg',
 	'Class:DocumentNote/Attribute:text+' => '~~',
-]);
-
-//
-// Class: DocumentWeb
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:DocumentWeb' => 'Webdokumentum',
-	'Class:DocumentWeb+' => '~~',
+	'Class:DocumentWeb+' => 'Hyperlinks to external applications or documents, acting as pointers to external resources. You cannot search in their content from '.ITOP_APPLICATION_SHORT.'~~',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
-	'Class:DocumentWeb/Attribute:url+' => '',
-]);
-
-//
-// Class: Typology
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:DocumentWeb/Attribute:url+' => '~~',
 	'Class:Typology' => 'Tipológia',
-	'Class:Typology+' => '~~',
+	'Class:Typology+' => 'Abstract class. ExternalKeyAttribute to a Typology subclass are used in place of an EnumAttribute, to have more dynamic values.~~',
 	'Class:Typology/Attribute:name' => 'Név',
 	'Class:Typology/Attribute:name+' => '~~',
 	'Class:Typology/Attribute:finalclass' => 'Tipológia típus',
-	'Class:Typology/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: DocumentType
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:Typology/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:DocumentType' => 'Dokumentum típus',
-	'Class:DocumentType+' => '~~',
-]);
-
-//
-// Class: ContactType
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:DocumentType+' => 'Typology. A classification system used to organize and logically group documents~~',
 	'Class:ContactType' => 'Kapcsolattartó típus',
-	'Class:ContactType+' => '~~',
-]);
-
-//
-// Class: lnkPersonToTeam
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:ContactType+' => 'Typology to organize your Contacts and group them logically for you.~~',
 	'Class:lnkPersonToTeam' => 'Kapcsolattartó / Csapat',
-	'Class:lnkPersonToTeam+' => '~~',
+	'Class:lnkPersonToTeam+' => 'This link indicates when a Person is a member of a Team.~~',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
 	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Csapat',
@@ -294,64 +211,48 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkPersonToTeam/Attribute:role_id+' => 'To select within a typology of possible roles~~',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Szerepkör név',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '~~',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:DataAdministration' => 'Adat adminisztráció',
-	'Menu:DataAdministration+' => '',
+	'Menu:DataAdministration+' => 'Data administration~~',
 	'Menu:Catalogs' => 'Katalógusok',
-	'Menu:Catalogs+' => '',
+	'Menu:Catalogs+' => 'Data types~~',
 	'Menu:Audit' => 'Audit',
-	'Menu:Audit+' => '',
+	'Menu:Audit+' => 'Audit~~',
 	'Menu:CSVImport' => 'CSV import',
-	'Menu:CSVImport+' => '',
+	'Menu:CSVImport+' => 'Bulk creation or update~~',
 	'Menu:Organization' => 'Szervezeti egység',
-	'Menu:Organization+' => '',
+	'Menu:Organization+' => 'All organizations~~',
 	'Menu:ConfigManagement' => 'Konfigurációkezelés',
-	'Menu:ConfigManagement+' => '',
+	'Menu:ConfigManagement+' => 'Configuration management~~',
 	'Menu:ConfigManagementCI' => 'Konfigurációs elemek (CI)',
-	'Menu:ConfigManagementCI+' => '',
+	'Menu:ConfigManagementCI+' => 'Configuration items~~',
 	'Menu:ConfigManagementOverview' => 'Áttekintő',
-	'Menu:ConfigManagementOverview+' => '',
+	'Menu:ConfigManagementOverview+' => 'Overview~~',
 	'Menu:Contact' => 'Kapcsolattartók',
-	'Menu:Contact+' => '',
+	'Menu:Contact+' => 'Contacts~~',
 	'Menu:Contact:Count' => '%1$d kapcsolattartó',
 	'Menu:Person' => 'Személyek',
-	'Menu:Person+' => '',
+	'Menu:Person+' => 'All persons~~',
 	'Menu:Team' => 'Csapatok',
-	'Menu:Team+' => '',
+	'Menu:Team+' => 'All teams~~',
 	'Menu:Document' => 'Dokumentumok',
-	'Menu:Document+' => '',
+	'Menu:Document+' => 'All documents~~',
 	'Menu:Location' => 'Helyszínek',
-	'Menu:Location+' => '',
+	'Menu:Location+' => 'All locations~~',
 	'Menu:NewContact' => 'Új kapcsolattartó',
-	'Menu:NewContact+' => '',
+	'Menu:NewContact+' => 'New contact~~',
 	'Menu:SearchContacts' => 'Kapcsolattartó keresés',
-	'Menu:SearchContacts+' => '',
+	'Menu:SearchContacts+' => 'Search for contacts~~',
 	'Menu:ConfigManagement:Shortcuts' => 'Gyorsgombok',
 	'Menu:ConfigManagement:AllContacts' => 'Összes kapcsolattartó: %1$d',
 	'Menu:Typology' => 'Tipológia konfiguráció',
-	'Menu:Typology+' => '',
+	'Menu:Typology+' => 'Typology configuration~~',
 	'UI_WelcomeMenu_AllConfigItems' => 'Összegzés',
 	'Menu:ConfigManagement:Typology' => 'Tipológia konfiguráció',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Person:info' => 'Általános információk',
 	'User:info' => 'Általános információk',
 	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Személyes információk',
 	'Person:notifiy' => 'Értesítés',
-]);
-
-// Themes
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'theme:fullmoon' => 'Full moon',
 	'theme:test-red' => 'Tesztpéldány (Red)',
 ]);

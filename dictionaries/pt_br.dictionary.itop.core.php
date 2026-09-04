@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -22,20 +21,20 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Core:AttributeLinkedSet+' => 'Quaisquer tipos de objetos da mesma classe ou subclasses',
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicatas no campo \'%1$s\' : %2$s',
 	'Core:AttributeDashboard' => 'Painel do '.ITOP_APPLICATION_SHORT,
-	'Core:AttributeDashboard+' => '',
+	'Core:AttributeDashboard+' => '~~',
 	'Core:AttributePhoneNumber' => 'Número de telefone',
-	'Core:AttributePhoneNumber+' => '',
+	'Core:AttributePhoneNumber+' => '~~',
 	'Core:AttributeObsolescenceDate' => 'Data de obsolescência',
-	'Core:AttributeObsolescenceDate+' => '',
+	'Core:AttributeObsolescenceDate+' => '~~',
 	'Core:AttributeTagSet' => 'Lista de tags',
-	'Core:AttributeTagSet+' => '',
+	'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'clique para adicionar',
 	'Core:Placeholder:CannotBeResolved' => '(%1$s : cannot be resolved)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s de %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s de classes filhas)',
 	'Core:AttributeCaseLog' => 'Log',
-	'Core:AttributeCaseLog+' => '',
+	'Core:AttributeCaseLog+' => '~~',
 	'Core:AttributeMetaEnum' => 'Enum Computado',
 	'Core:AttributeMetaEnum+' => 'Exibir Strings alfanuméricas computadas',
 	'Core:AttributeLinkedSetIndirect' => 'Array de objetos (N-N)',
@@ -45,8 +44,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Core:AttributeDecimal' => 'Decimal',
 	'Core:AttributeDecimal+' => 'Valor decimal (não pode ser negativo)',
 	'Core:AttributeBoolean' => 'Booleano',
-	'Core:AttributeBoolean+' => '',
-	'Core:AttributeBoolean/Value:null' => '',
+	'Core:AttributeBoolean+' => '~~',
+	'Core:AttributeBoolean/Value:null' => '~~',
 	'Core:AttributeBoolean/Value:yes' => 'Sim',
 	'Core:AttributeBoolean/Value:no' => 'Não',
 	'Core:AttributeArchiveFlag' => 'Flag de arquivamento',
@@ -54,9 +53,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Core:AttributeArchiveFlag/Value:yes+' => 'Este objeto é visível apenas no modo de arquivamento',
 	'Core:AttributeArchiveFlag/Value:no' => 'Não',
 	'Core:AttributeArchiveFlag/Label' => 'Arquivado',
-	'Core:AttributeArchiveFlag/Label+' => '',
+	'Core:AttributeArchiveFlag/Label+' => '~~',
 	'Core:AttributeArchiveDate/Label' => 'Data de arquivamento',
-	'Core:AttributeArchiveDate/Label+' => '',
+	'Core:AttributeArchiveDate/Label+' => '~~',
 	'Core:AttributeObsolescenceFlag' => 'Flag de obsolescência',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Sim',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Este objeto será excluído da análise de impacto e ocultado dos resultados de pesquisa',
@@ -68,7 +67,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Core:AttributeString' => 'String',
 	'Core:AttributeString+' => 'Sequência alfanumérica',
 	'Core:AttributeClass' => 'Classe',
-	'Core:AttributeClass+' => '',
+	'Core:AttributeClass+' => '~~',
 	'Core:AttributeApplicationLanguage' => 'Idioma do usuário',
 	'Core:AttributeApplicationLanguage+' => 'Idioma e país (por exemplo: EN US)',
 	'Core:AttributeFinalClass' => 'Classe (automática)',
@@ -84,9 +83,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => 'String HTML',
 	'Core:AttributeEmailAddress' => 'Endereço de e-mail',
-	'Core:AttributeEmailAddress+' => '',
+	'Core:AttributeEmailAddress+' => 'Email address~~',
 	'Core:AttributeIPAddress' => 'Endereço IP',
-	'Core:AttributeIPAddress+' => '',
+	'Core:AttributeIPAddress+' => 'IP address~~',
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Expressão Object Query Language (OQL)',
 	'Core:AttributeEnum' => 'Enum',
@@ -149,27 +148,15 @@ Operadores:<br/>
 	'Core:AttributeFriendlyName' => 'Nome amigável',
 	'Core:AttributeFriendlyName+' => 'Atributo criado automaticamente; o nome amigável é baseado nos diferentes atributos do objeto',
 	'Core:FriendlyName-Label' => 'Nome amigável',
-	'Core:FriendlyName-Description' => '',
+	'Core:FriendlyName-Description' => 'Full name~~',
 	'Core:AttributeTag' => 'Etiquetas',
-	'Core:AttributeTag+' => '',
+	'Core:AttributeTag+' => '~~',
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
 	'Core:Context=GUI:Console' => 'Console',
 	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal do usuário',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'core/cmdb'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: CMDBChange
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChange' => 'Alterações no CMDB',
 	'Class:CMDBChange+' => 'Controle de mudanças no CMDB',
 	'Class:CMDBChange/Attribute:date' => 'Data',
@@ -184,72 +171,34 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP WebServices',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Por uma extensão',
-]);
-
-//
-// Class: CMDBChangeOp
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChangeOp' => 'Operações de alteração',
 	'Class:CMDBChangeOp+' => 'Controle de operações de alteração',
 	'Class:CMDBChangeOp/Attribute:change' => 'Alteração',
-	'Class:CMDBChangeOp/Attribute:change+' => '',
+	'Class:CMDBChangeOp/Attribute:change+' => '~~',
 	'Class:CMDBChangeOp/Attribute:date' => 'Data',
 	'Class:CMDBChangeOp/Attribute:date+' => 'Data e hora da alteração',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'Usuário',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => 'Quem fez essa alteração',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'Classe do objeto',
-	'Class:CMDBChangeOp/Attribute:objclass+' => '',
+	'Class:CMDBChangeOp/Attribute:objclass+' => 'class name of the object on which the change was made~~',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'ID do objeto',
-	'Class:CMDBChangeOp/Attribute:objkey+' => '',
+	'Class:CMDBChangeOp/Attribute:objkey+' => 'id of the object on which the change was made~~',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Tipo',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: CMDBChangeOpCreate
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:CMDBChangeOp/Attribute:finalclass+' => 'type of change which was performed~~',
 	'Class:CMDBChangeOpCreate' => 'Criação de objeto',
 	'Class:CMDBChangeOpCreate+' => 'Controle de criação do objeto',
-]);
-
-//
-// Class: CMDBChangeOpDelete
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChangeOpDelete' => 'Exclusão de objeto',
 	'Class:CMDBChangeOpDelete+' => 'Controle de exclusão do objeto',
-]);
-
-//
-// Class: CMDBChangeOpSetAttribute
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChangeOpSetAttribute' => 'Alteração de propriedades',
 	'Class:CMDBChangeOpSetAttribute+' => 'Controle de alteração de propriedades do objeto',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Atributo',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'Código da propriedade modificada',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeScalar
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'Alteração de propriedades escalares',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Controle de alterações de propriedades escalares do objeto',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Valor anterior',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'Valor anterior do atributo',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Novo valor',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'Novo valor do atributo',
-]);
-// Used by CMDBChangeOp... & derived classes
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Change:ObjectCreated' => 'Objeto criado',
 	'Change:ObjectDeleted' => 'Objeto excluído',
 	'Change:ObjectModified' => 'Objeto modificado',
@@ -266,35 +215,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Change:LinkSet:Added' => 'adicionado %1$s',
 	'Change:LinkSet:Removed' => 'excluído %1$s',
 	'Change:LinkSet:Modified' => 'modificado %1$s',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeBlob
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'Alteração de conteúdo (Blob)',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'Controle de alterações de conteúdo de dados (Blob)',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Valor anterior',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'Conteúdo anterior do atributo',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeText
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChangeOpSetAttributeText' => 'Alteração de texto',
 	'Class:CMDBChangeOpSetAttributeText+' => 'Controle de alterações de texto do objeto',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Valor anterior',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'Conteúdo anterior do atributo',
-]);
-
-//
-// Class: Event
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Event' => 'Registro de evento',
 	'Class:Event+' => 'Um evento interno da aplicação',
 	'Class:Event/Attribute:message' => 'Mensagem',
@@ -304,14 +232,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Event/Attribute:userinfo' => 'Informações do usuário',
 	'Class:Event/Attribute:userinfo+' => 'Identificação do usuário que estava executando a ação que desencadeou este evento',
 	'Class:Event/Attribute:finalclass' => 'Tipo',
-	'Class:Event/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: EventNotification
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:Event/Attribute:finalclass+' => 'Name of the final class: specifies the sort of event which occurred~~',
 	'Class:EventNotification' => 'Notificação de evento',
 	'Class:EventNotification+' => 'Controle de notificações que foram enviadas',
 	'Class:EventNotification/Attribute:trigger_id' => 'Gatilho',
@@ -320,13 +241,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventNotification/Attribute:action_id+' => 'Conta de usuário',
 	'Class:EventNotification/Attribute:object_id' => 'ID do objeto',
 	'Class:EventNotification/Attribute:object_id+' => 'ID do objeto (classe definida pelo gatilho?)',
-]);
-
-//
-// Class: EventNotificationEmail
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'Evento de envio de e-mail',
 	'Class:EventNotificationEmail+' => 'Controle de e-mails que foram enviados',
 	'Class:EventNotificationEmail/Attribute:to' => 'Para',
@@ -342,14 +258,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventNotificationEmail/Attribute:body' => 'Corpo',
 	'Class:EventNotificationEmail/Attribute:body+' => 'Conteúdo do e-mail',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Anexos',
-	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-]);
-
-//
-// Class: EventIssue
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:EventNotificationEmail/Attribute:attachments+' => '~~',
 	'Class:EventIssue' => 'Evento de entrega',
 	'Class:EventIssue+' => 'Controle de entrega (aviso, erro, etc.)',
 	'Class:EventIssue/Attribute:issue' => 'Entrega',
@@ -363,16 +272,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventIssue/Attribute:arguments_get' => 'Argumentos URL',
 	'Class:EventIssue/Attribute:arguments_get+' => 'Argumentos HTTP GET',
 	'Class:EventIssue/Attribute:callstack' => 'Quantidade de solicitações',
-	'Class:EventIssue/Attribute:callstack+' => '',
+	'Class:EventIssue/Attribute:callstack+' => '~~',
 	'Class:EventIssue/Attribute:data' => 'Dados',
 	'Class:EventIssue/Attribute:data+' => 'Mais informações',
-]);
-
-//
-// Class: EventWebService
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventWebService' => 'Evento Web service',
 	'Class:EventWebService+' => 'Controle de uma solicitação de WebService',
 	'Class:EventWebService/Attribute:verb' => 'Verb',
@@ -380,16 +282,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventWebService/Attribute:result' => 'Resultado',
 	'Class:EventWebService/Attribute:result+' => 'Sucesso/erro geral',
 	'Class:EventWebService/Attribute:log_info' => 'Log de resultado',
-	'Class:EventWebService/Attribute:log_info+' => '',
+	'Class:EventWebService/Attribute:log_info+' => 'Result info log~~',
 	'Class:EventWebService/Attribute:log_warning' => 'Log de alerta',
-	'Class:EventWebService/Attribute:log_warning+' => '',
+	'Class:EventWebService/Attribute:log_warning+' => 'Result warning log~~',
 	'Class:EventWebService/Attribute:log_error' => 'Log de erro',
-	'Class:EventWebService/Attribute:log_error+' => '',
+	'Class:EventWebService/Attribute:log_error+' => 'Result error log~~',
 	'Class:EventWebService/Attribute:data' => 'Dados',
 	'Class:EventWebService/Attribute:data+' => 'Mais informações',
-]);
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventRestService' => 'Chamada REST/JSON',
 	'Class:EventRestService+' => 'Controle de uma chamada de serviço REST/JSON',
 	'Class:EventRestService/Attribute:operation' => 'Operação',
@@ -404,28 +303,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventRestService/Attribute:json_output+' => 'Resposta HTTP (JSON)',
 	'Class:EventRestService/Attribute:provider' => 'Provedor',
 	'Class:EventRestService/Attribute:provider+' => 'Classe PHP implementando a operação esperada',
-]);
-
-//
-// Class: EventLoginUsage
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventLoginUsage' => 'Logins',
 	'Class:EventLoginUsage+' => 'Conexões com a aplicação',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
-	'Class:EventLoginUsage/Attribute:user_id+' => '',
+	'Class:EventLoginUsage/Attribute:user_id+' => '~~',
 	'Class:EventLoginUsage/Attribute:contact_name' => 'Nome de usuário',
-	'Class:EventLoginUsage/Attribute:contact_name+' => '',
+	'Class:EventLoginUsage/Attribute:contact_name+' => '~~',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'E-mail do usuário',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'Endereço de e-mail deste usuário',
-]);
-
-//
-// Class: EventNotificationNewsroom
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventNotificationNewsroom' => 'News sent~~',
 	'Class:EventNotificationNewsroom+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:title' => 'Title~~',
@@ -454,28 +339,23 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventNotificationNewsroom/Attribute:read_date+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contact~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '~~',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Class:Action' => 'Ação personalizada',
 	'Class:Action+' => 'Ações definidas pelo usuário',
 	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
 	'Class:Action/Attribute:name' => 'Nome',
-	'Class:Action/Attribute:name+' => '',
+	'Class:Action/Attribute:name+' => 'Any value that is meaningful to distinguish this action from the others~~',
 	'Class:Action/Attribute:description' => 'Descrição',
-	'Class:Action/Attribute:description+' => '',
+	'Class:Action/Attribute:description+' => 'A longer explanation about the purpose of this action. For information only.~~',
 	'Class:Action/Attribute:status' => 'Status',
 	'Class:Action/Attribute:status+' => 'Ativo ou ?',
 	'Class:Action/Attribute:status/Value:test' => 'Em homologação',
-	'Class:Action/Attribute:status/Value:test+' => '',
+	'Class:Action/Attribute:status/Value:test+' => '~~',
 	'Class:Action/Attribute:status/Value:enabled' => 'Ativo',
-	'Class:Action/Attribute:status/Value:enabled+' => '',
+	'Class:Action/Attribute:status/Value:enabled+' => '~~',
 	'Class:Action/Attribute:status/Value:disabled' => 'Inativo',
-	'Class:Action/Attribute:status/Value:disabled+' => '',
+	'Class:Action/Attribute:status/Value:disabled+' => '~~',
 	'Class:Action/Attribute:trigger_list' => 'Gatilhos relacionados',
 	'Class:Action/Attribute:trigger_list+' => 'Gatilhos associadas à esta ação',
 	'Class:Action/Attribute:asynchronous' => 'Asynchronous~~',
@@ -484,28 +364,26 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Action/Attribute:asynchronous/Value:yes' => 'Yes~~',
 	'Class:Action/Attribute:asynchronous/Value:no' => 'No~~',
 	'Class:Action/Attribute:finalclass' => 'Tipo',
-	'Class:Action/Attribute:finalclass+' => '',
+	'Class:Action/Attribute:finalclass+' => 'Name of the final class~~',
 	'Action:WarningNoTriggerLinked' => 'Aviso, nenhum gatilho está associado à ação. Não será ativo até que esta ação tenha pelo menos um gatilho associado',
 	'Action:last_executions_tab' => 'Last executions~~',
 	'Action:last_executions_tab_panel_title' => 'Executions of this action (%1$s)~~',
 	'Action:last_executions_tab_limit_days' => 'past %1$s days~~',
 	'Action:last_executions_tab_limit_none' => 'no limit~~',
-]);
-
-//
-// Class: ActionNotification
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ActionNotification' => 'Notificação',
 	'Class:ActionNotification+' => 'Notificação (resumo)',
-]);
-
-//
-// Class: ActionEmail
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:ActionNotification/Attribute:language' => 'Language~~',
+	'Class:ActionNotification/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:lnkActionNotificationToContact' => 'Link ActionNotification / Contact~~',
+	'Class:lnkActionNotificationToContact+' => 'Contact subscription to Notification Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Contact~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Contact who subscribed (or not) to the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'The notification that the contact received at least once, and to which he can subscribe or unsubscribe~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Trigger~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'The trigger that fired the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Subscribed~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification~~',
 	'Class:ActionEmail' => 'Notificação via E-mail',
 	'Class:ActionEmail+' => 'Lista de Notificações via E-mail',
 	'Class:ActionEmail/Attribute:status+' => 'Esse status especifica quem será notificado: apenas o destinatário do Teste, todos (Para, CC e CCO) ou ninguém',
@@ -533,13 +411,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ActionEmail/Attribute:body' => 'Corpo',
 	'Class:ActionEmail/Attribute:body+' => 'Conteúdo do e-mail',
 	'Class:ActionEmail/Attribute:importance' => 'Prioridade',
-	'Class:ActionEmail/Attribute:importance+' => '',
+	'Class:ActionEmail/Attribute:importance+' => 'Importance flag set on the generated email~~',
 	'Class:ActionEmail/Attribute:importance/Value:low' => 'Baixa',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '~~',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'Normal',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '~~',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'Alta',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '~~',
 	'Class:ActionEmail/Attribute:language' => 'Language~~',
 	'Class:ActionEmail/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
 	'Class:ActionEmail/Attribute:html_template' => 'HTML template~~',
@@ -556,13 +434,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
 	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
 	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
-]);
-
-//
-// Class: ActionNewsroom
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'ActionNewsroom:trigger' => 'Trigger~~',
 	'ActionNewsroom:content' => 'Message~~',
 	'ActionNewsroom:settings' => 'Settings~~',
@@ -597,13 +468,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ActionNewsroom/Attribute:recipients+' => 'An OQL query returning Contact objects~~',
 	'Class:ActionNewsroom/Attribute:url' => 'URL~~',
 	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.~~',
-]);
-
-//
-// Class: Trigger
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Trigger' => 'Gatilho',
 	'Class:Trigger+' => 'Manipulador de eventos personalizado',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
@@ -612,7 +476,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Trigger/Attribute:action_list' => 'Ações desencadeadas',
 	'Class:Trigger/Attribute:action_list+' => 'Ações executadas quando o gatilho é acionado',
 	'Class:Trigger/Attribute:finalclass' => 'Tipo',
-	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Trigger/Attribute:context' => 'Contexto',
 	'Class:Trigger/Attribute:context+' => 'Contexto para permitir o acionamento do gatilho',
 	'Class:Trigger/Attribute:complement' => 'Additional information~~',
@@ -622,152 +486,62 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow complete unsubscription~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel (News or Email)~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Deny unsubscription~~',
-]);
-
-//
-// Class: TriggerOnObject
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnObject' => 'Gatilho (classe dependente)',
 	'Class:TriggerOnObject+' => 'Gatilho em uma determinada classe de objetos',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Classe alvo',
-	'Class:TriggerOnObject/Attribute:target_class+' => '',
+	'Class:TriggerOnObject/Attribute:target_class+' => 'Objects in this class will activate the trigger~~',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtro',
 	'Class:TriggerOnObject/Attribute:filter+' => 'Limita a lista de objetos (da classe de destino) que irá ativar o gatilho',
 	'TriggerOnObject:WrongFilterQuery' => 'Consulta de filtro incorreta: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'A consulta de filtro deve retornar objetos da classe \\"%1$s\\"',
-]);
-
-//
-// Class: TriggerOnPortalUpdate
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnPortalUpdate' => 'Gatilho (quando atualizado a partir do portal do usuário)',
 	'Class:TriggerOnPortalUpdate+' => 'Gatilho acionado a partir de uma atualização do usuário final através do portal do usuário',
-]);
-
-//
-// Class: TriggerOnStateChange
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnStateChange' => 'Gatilho (na mudança de status)',
 	'Class:TriggerOnStateChange+' => 'Gatilho de mudança de status do objeto',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Status',
-	'Class:TriggerOnStateChange/Attribute:state+' => '',
-]);
-
-//
-// Class: TriggerOnStateEnter
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:TriggerOnStateChange/Attribute:state+' => '~~',
 	'Class:TriggerOnStateEnter' => 'Gatilho (ao entrar em um status)',
 	'Class:TriggerOnStateEnter+' => 'Gatilho de mudança de status do objeto - entrada',
-]);
-
-//
-// Class: TriggerOnStateLeave
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnStateLeave' => 'Gatilho (ao sair de um status)',
 	'Class:TriggerOnStateLeave+' => 'Gatilho de mudança de status do objeto - saída',
-]);
-
-//
-// Class: TriggerOnObjectCreate
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnObjectCreate' => 'Gatilho (na criação do objeto)',
 	'Class:TriggerOnObjectCreate+' => 'Gatilho de criação de objeto de [uma classe filha] de determinada classe',
-]);
-
-//
-// Class: TriggerOnObjectDelete
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnObjectDelete' => 'Gatilho (na exclusão de objetos)',
 	'Class:TriggerOnObjectDelete+' => 'Gatilho na exclusão de objeto de [uma classe filha] de determinada classe',
-]);
-
-//
-// Class: TriggerOnObjectUpdate
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnObjectUpdate' => 'Gatilho (na atualização do objeto)',
 	'Class:TriggerOnObjectUpdate+' => 'Gatilho na atualização de objeto de [uma classe filha] de uma determinada classe',
 	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'This filter is computed after the object update in database. It restricts the objects which can trigger the actions~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Campos de destino',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
-]);
-
-//
-// Class: TriggerOnObjectMention
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
 	'Class:TriggerOnObjectMention' => 'Gatilho (na menção do objeto)',
 	'Class:TriggerOnObjectMention+' => 'Gatilho em menção (@xxx) de um objeto de [uma classe filha] de uma determinada classe em um atributo de log',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Filtro de menções',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limita a lista de objetos mencionados que ativarão o gatilho. Se vazio, qualquer objeto mencionado (de qualquer classe) irá ativá-lo',
-]);
-
-//
-// Class: TriggerOnAttributeBlobDownload
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
-]);
-
-//
-// Class: TriggerOnThresholdReached
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnThresholdReached' => 'Gatilho (no alcance do limite)',
 	'Class:TriggerOnThresholdReached+' => 'Gatilho no alcance do limite do cronômetro',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Cronômetro',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '~~',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Limite',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-]);
-
-//
-// Class: lnkTriggerAction
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '~~',
 	'Class:lnkTriggerAction' => 'Ação/Gatilho',
 	'Class:lnkTriggerAction+' => 'Relação entre Gatilho / Ação',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Ação',
 	'Class:lnkTriggerAction/Attribute:action_id+' => 'Ação a ser executada',
 	'Class:lnkTriggerAction/Attribute:action_name' => 'Ação',
-	'Class:lnkTriggerAction/Attribute:action_name+' => '',
+	'Class:lnkTriggerAction/Attribute:action_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_id' => 'Gatilho',
-	'Class:lnkTriggerAction/Attribute:trigger_id+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_id+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_name' => 'Gatilho',
-	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:order' => 'Ordem',
 	'Class:lnkTriggerAction/Attribute:order+' => 'Ordem de execução das ações',
-]);
-
-//
-// Synchro Data Source
-//
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:SynchroDataSource' => 'Fonte de Sincronização de Dados',
 	'Class:SynchroDataSource/Attribute:name' => 'Nome',
-	'Class:SynchroDataSource/Attribute:name+' => '',
+	'Class:SynchroDataSource/Attribute:name+' => '~~',
 	'Class:SynchroDataSource/Attribute:description' => 'Descrição',
 	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Classe alvo',
@@ -970,38 +744,37 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:SynchroReplica/Attribute:status_last_warning' => 'Alertas',
 	'Class:SynchroReplica/Attribute:info_creation_date' => 'Data de criação',
 	'Class:SynchroReplica/Attribute:info_last_modified' => 'Última data modificação',
-	'Class:SynchroReplica/Action:delete+'        => 'Delete the replica but not the destination object. If the raw data corresponding to this replica is still part of the source, it will be recreated during the next synchronization import.~~',
-	'Class:SynchroReplica/Action:unlink'         => 'Unlink~~',
-	'Class:SynchroReplica/Action:unlink+'        => 'Unlink replica from destination object. It will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
-	'Class:SynchroReplica/Action:unlinksynchro'  => 'Unlink & Synchronize~~',
+	'Class:SynchroReplica/Action:delete+' => 'Delete the replica but not the destination object. If the raw data corresponding to this replica is still part of the source, it will be recreated during the next synchronization import.~~',
+	'Class:SynchroReplica/Action:unlink' => 'Unlink~~',
+	'Class:SynchroReplica/Action:unlink+' => 'Unlink replica from destination object. It will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
+	'Class:SynchroReplica/Action:unlinksynchro' => 'Unlink & Synchronize~~',
 	'Class:SynchroReplica/Action:unlinksynchro+' => 'Force immediate resynchronization of the replica. This can change the destination id. Required after a Data Synchro change on attribute reconciliation flag or if reconciliation attributes were not locked, and you wish to retain the iTop objects modified since then, while recovering or recreating objects aligned with the source.~~',
-	'Class:SynchroReplica/Action:synchro'       => 'Synchronize~~',
-	'Class:SynchroReplica/Action:synchro+'      => 'Force immediate synchronization of the replica. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
-	'Class:SynchroReplica/Action:allowdelete'   => 'Allow deletion of destination~~',
-	'Class:SynchroReplica/Action:allowdelete+'  => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:denydelete'    => 'Deny deletion of destination~~',
-	'Class:SynchroReplica/Action:denydelete+'   => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:unlink_all'    => 'Unlink Replicas~~',
-	'Class:SynchroReplica/Action:unlink_all+'   => 'Unlink Replicas from their destination object. They will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
+	'Class:SynchroReplica/Action:synchro' => 'Synchronize~~',
+	'Class:SynchroReplica/Action:synchro+' => 'Force immediate synchronization of the replica. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
+	'Class:SynchroReplica/Action:allowdelete' => 'Allow deletion of destination~~',
+	'Class:SynchroReplica/Action:allowdelete+' => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
+	'Class:SynchroReplica/Action:denydelete' => 'Deny deletion of destination~~',
+	'Class:SynchroReplica/Action:denydelete+' => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
+	'Class:SynchroReplica/Action:unlink_all' => 'Unlink Replicas~~',
+	'Class:SynchroReplica/Action:unlink_all+' => 'Unlink Replicas from their destination object. They will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
 	'Class:SynchroReplica/Action:unlinksynchro_all' => 'Unlink & Synchronize Replicas~~',
 	'Class:SynchroReplica/Action:unlinksynchro_all+' => 'Force immediate resynchronization of the replicas. This can change their destination id. Required after a Data Synchro change on attribute reconciliation flag or if reconciliation attributes were not locked, and you wish to retain the iTop objects modified since then, while recovering or recreating objects aligned with the source.~~',
-	'Class:SynchroReplica/Action:synchro_all'      => 'Synchronize Replicas~~',
-	'Class:SynchroReplica/Action:synchro_all+'     => 'Force immediate synchronization of the replicas. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
-	'Class:SynchroReplica/Action:allowdelete_all'  => 'Allow deletion of destination objects~~',
+	'Class:SynchroReplica/Action:synchro_all' => 'Synchronize Replicas~~',
+	'Class:SynchroReplica/Action:synchro_all+' => 'Force immediate synchronization of the replicas. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
+	'Class:SynchroReplica/Action:allowdelete_all' => 'Allow deletion of destination objects~~',
 	'Class:SynchroReplica/Action:allowdelete_all+' => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:denydelete_all'   => 'Deny deletion of destination objects~~',
-	'Class:SynchroReplica/Action:denydelete_all+'  => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
-
-	'UI:UnlinkAllTabTitle'         => 'Unlink Replicas~~',
-	'UI:UnlinkAllPageTitle'        => 'Unlink Replicas from their destination object~~',
-	'UI:UnlinkSynchroAllTabTitle'  => 'Unlink & Synchronize Replicas~~',
+	'Class:SynchroReplica/Action:denydelete_all' => 'Deny deletion of destination objects~~',
+	'Class:SynchroReplica/Action:denydelete_all+' => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
+	'UI:UnlinkAllTabTitle' => 'Unlink Replicas~~',
+	'UI:UnlinkAllPageTitle' => 'Unlink Replicas from their destination object~~',
+	'UI:UnlinkSynchroAllTabTitle' => 'Unlink & Synchronize Replicas~~',
 	'UI:UnlinkSynchroAllPageTitle' => 'Unlink Replicas from their destination object & Synchronize them again~~',
-	'UI:SynchroAllTabTitle'        => 'Synchronize Replicas~~',
-	'UI:SynchroAllPageTitle'       => 'Synchronize Replicas: leading to a destination object creation, mapping or an error~~',
-	'UI:AllowDeleteAllTabTitle'    => 'Allow deletion of synchronized object~~',
-	'UI:AllowDeleteAllPageTitle'   => 'Allow propagation of Replica deletion to their destination object~~',
-	'UI:DenyDeleteAllTabTitle'     => 'Deny deletion of synchronized object~~',
-	'UI:DenyDeleteAllPageTitle'    => 'Deny propagation of Replica deletion to their destination object~~',
+	'UI:SynchroAllTabTitle' => 'Synchronize Replicas~~',
+	'UI:SynchroAllPageTitle' => 'Synchronize Replicas: leading to a destination object creation, mapping or an error~~',
+	'UI:AllowDeleteAllTabTitle' => 'Allow deletion of synchronized object~~',
+	'UI:AllowDeleteAllPageTitle' => 'Allow propagation of Replica deletion to their destination object~~',
+	'UI:DenyDeleteAllTabTitle' => 'Deny deletion of synchronized object~~',
+	'UI:DenyDeleteAllPageTitle' => 'Deny propagation of Replica deletion to their destination object~~',
 	'Class:appUserPreferences' => 'Preferências de usuário',
 	'Class:appUserPreferences/Attribute:userid' => 'Usuário',
 	'Class:appUserPreferences/Attribute:preferences' => 'Preferências',
@@ -1083,23 +856,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Core:Validator:Mandatory' => 'Por favor, preencha este campo',
 	'Core:Validator:MustBeInteger' => 'Deve ser um número inteiro',
 	'Core:Validator:MustSelectOne' => 'Por favor, selecione um',
-	'INTERNAL:JQuery-DatePicker:LangCode' => 'pt-BR',
-	'Menu:DataSources' => 'Fontes de Sincronização de Dados',
-	'Menu:DataSources+' => 'Lista de Fontes de Sincronização de Dados',
-]);
-
-//
-// Class: TagSetFieldData
-//
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TagSetFieldData' => '%2$s para classe %1$s',
-	'Class:TagSetFieldData+' => '',
+	'Class:TagSetFieldData+' => '~~',
 	'Class:TagSetFieldData/Attribute:code' => 'Código',
 	'Class:TagSetFieldData/Attribute:code+' => 'Código interno. Deve conter pelo menos 3 caracteres alfanuméricos',
 	'Class:TagSetFieldData/Attribute:label' => 'Rótulo',
 	'Class:TagSetFieldData/Attribute:label+' => 'Rótulo exibido',
 	'Class:TagSetFieldData/Attribute:description' => 'Descrição',
-	'Class:TagSetFieldData/Attribute:description+' => '',
+	'Class:TagSetFieldData/Attribute:description+' => '~~',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Classe da etiqueta',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Classe de objeto',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Código de atributo',
@@ -1113,122 +877,72 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags de "Código do atributo" não podem ser alteradas',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Uso de tags (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => 'Nenhuma entrada encontrada para esta tag',
-]);
-
-//
-// Class: DBProperty
-//
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:DBProperty' => 'Propriedades do DB',
-	'Class:DBProperty+' => '',
+	'Class:DBProperty+' => '~~',
 	'Class:DBProperty/Attribute:name' => 'Nome',
-	'Class:DBProperty/Attribute:name+' => '',
+	'Class:DBProperty/Attribute:name+' => '~~',
 	'Class:DBProperty/Attribute:description' => 'Descrição',
-	'Class:DBProperty/Attribute:description+' => '',
+	'Class:DBProperty/Attribute:description+' => '~~',
 	'Class:DBProperty/Attribute:value' => 'Valor',
-	'Class:DBProperty/Attribute:value+' => '',
+	'Class:DBProperty/Attribute:value+' => '~~',
 	'Class:DBProperty/Attribute:change_date' => 'Data de alteração',
-	'Class:DBProperty/Attribute:change_date+' => '',
+	'Class:DBProperty/Attribute:change_date+' => '~~',
 	'Class:DBProperty/Attribute:change_comment' => 'Editar comentário',
-	'Class:DBProperty/Attribute:change_comment+' => '',
-]);
-
-//
-// Class: BackgroundTask
-//
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:DBProperty/Attribute:change_comment+' => '~~',
 	'Class:BackgroundTask' => 'Tarefas de fundo',
-	'Class:BackgroundTask+' => '',
+	'Class:BackgroundTask+' => '~~',
 	'Class:BackgroundTask/Attribute:class_name' => 'Nome da classe',
-	'Class:BackgroundTask/Attribute:class_name+' => '',
+	'Class:BackgroundTask/Attribute:class_name+' => '~~',
 	'Class:BackgroundTask/Attribute:first_run_date' => 'Data da primeira execução',
-	'Class:BackgroundTask/Attribute:first_run_date+' => '',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:latest_run_date' => 'Data da execução mais recente',
-	'Class:BackgroundTask/Attribute:latest_run_date+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:next_run_date' => 'Data da próxima execução',
-	'Class:BackgroundTask/Attribute:next_run_date+' => '',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:total_exec_count' => 'Número total de execuções',
-	'Class:BackgroundTask/Attribute:total_exec_count+' => '',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
 	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Duração da execução mais recente',
-	'Class:BackgroundTask/Attribute:latest_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:min_run_duration' => 'Duração mín. de execução',
-	'Class:BackgroundTask/Attribute:min_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:max_run_duration' => 'Duração máx. de execução',
-	'Class:BackgroundTask/Attribute:max_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:average_run_duration' => 'Duração média de execução',
-	'Class:BackgroundTask/Attribute:average_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:running' => 'Em execução',
-	'Class:BackgroundTask/Attribute:running+' => '',
+	'Class:BackgroundTask/Attribute:running+' => '~~',
 	'Class:BackgroundTask/Attribute:status' => 'Status',
-	'Class:BackgroundTask/Attribute:status+' => '',
-]);
-
-//
-// Class: AsyncTask
-//
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:BackgroundTask/Attribute:status+' => '~~',
 	'Class:AsyncTask' => 'Tarefa assíncrona',
-	'Class:AsyncTask+' => '',
+	'Class:AsyncTask+' => '~~',
 	'Class:AsyncTask/Attribute:created' => 'Criada',
-	'Class:AsyncTask/Attribute:created+' => '',
+	'Class:AsyncTask/Attribute:created+' => '~~',
 	'Class:AsyncTask/Attribute:started' => 'Iniciada',
-	'Class:AsyncTask/Attribute:started+' => '',
+	'Class:AsyncTask/Attribute:started+' => '~~',
 	'Class:AsyncTask/Attribute:planned' => 'Planejada',
-	'Class:AsyncTask/Attribute:planned+' => '',
+	'Class:AsyncTask/Attribute:planned+' => '~~',
 	'Class:AsyncTask/Attribute:event_id' => 'Evento',
-	'Class:AsyncTask/Attribute:event_id+' => '',
+	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Classe final',
-	'Class:AsyncTask/Attribute:finalclass+' => '',
+	'Class:AsyncTask/Attribute:finalclass+' => '~~',
 	'Class:AsyncTask/Attribute:status' => 'Status',
-	'Class:AsyncTask/Attribute:status+' => '',
+	'Class:AsyncTask/Attribute:status+' => '~~',
 	'Class:AsyncTask/Attribute:remaining_retries' => 'Tentativas restantes',
-	'Class:AsyncTask/Attribute:remaining_retries+' => '',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
 	'Class:AsyncTask/Attribute:last_error_code' => 'Último código de erro',
-	'Class:AsyncTask/Attribute:last_error_code+' => '',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
 	'Class:AsyncTask/Attribute:last_error' => 'Último erro',
-	'Class:AsyncTask/Attribute:last_error+' => '',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Última tentativa',
-	'Class:AsyncTask/Attribute:last_attempt+' => '',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Formato inválido para a configuração de "async_task_retries[%1$s]". Esperando um array com as seguintes chaves: %2$s',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Formato inválido para a configuração de "async_task_retries[%1$s]": chave inesperada "%2$s". Esperando somente as seguintes chaves: %3$s',
-]);
-
-//
-// Class: AbstractResource
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:AbstractResource' => 'Recurso Abstrato',
-	'Class:AbstractResource+' => '',
-]);
-
-//
-// Class: ResourceAdminMenu
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:AbstractResource+' => '~~',
 	'Class:ResourceAdminMenu' => 'Recurso Menu de Administração',
-	'Class:ResourceAdminMenu+' => '',
-]);
-
-//
-// Class: ResourceRunQueriesMenu
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:ResourceAdminMenu+' => '~~',
 	'Class:ResourceRunQueriesMenu' => 'Recurso Livro de Consultas',
-	'Class:ResourceRunQueriesMenu+' => '',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:ResourceRunQueriesMenu+' => '~~',
 	'Class:ResourceSystemMenu' => 'Recurso Menu do Sistema',
-	'Class:ResourceSystemMenu+' => '',
-	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
-	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
-	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
-	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ]);

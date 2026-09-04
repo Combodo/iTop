@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
@@ -15,7 +14,7 @@
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:ConfigFileEditor' => 'Plain text editor~~',
 	'itop-config/Operation:Edit/Title' => 'Editor konfiguračního souboru',
-	'config-edit-intro' => 'Při úpravách konfiguračního souboru buďte velice opatrní. Nesprávné nastavení může vést k nedostupnosti '.ITOP_APPLICATION_SHORT, 'Menu:ConfigEditor' => 'Konfigurace',
+	'config-edit-intro' => 'Při úpravách konfiguračního souboru buďte velice opatrní. Nesprávné nastavení může vést k nedostupnosti '.ITOP_APPLICATION_SHORT,
 	'config-apply' => 'Použít',
 	'config-apply-title' => 'Použít (Ctrl+S)',
 	'config-cancel' => 'Zrušit',

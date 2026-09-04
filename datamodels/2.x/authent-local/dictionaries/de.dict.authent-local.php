@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
@@ -19,11 +18,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:UserLocal/Attribute:expiration' => 'Passwortablauf',
 	'Class:UserLocal/Attribute:expiration+' => 'Passwortablaufstatus (statusabhängige Effekte müssen per Extension implementiert werden)',
 	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'kann ablaufen',
-	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '~~',
 	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'läuft nie ab',
-	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '~~',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'abgelaufen',
-	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '~~',
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'einmaliges Passwort',
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Das Passwort kann vom Benutzer nicht geändert werden.',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Letzte Passworterneuerung',

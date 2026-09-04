@@ -1,11 +1,14 @@
 <?php
-
 /**
- * @copyright Copyright (C) 2024 Combodo SAS
- * @license https://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-
-// Navigation menu
+/**
+ *
+ */
 Dict::Add('EN GB', 'British English', 'British English', [
 	'core/Operation:Landing/Title' => 'OAuth token creation',
 ]);

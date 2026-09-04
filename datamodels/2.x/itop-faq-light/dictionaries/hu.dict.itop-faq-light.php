@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -28,21 +27,12 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:FAQ/Attribute:key_words' => 'Kulcsszavak',
 	'Class:FAQ/Attribute:key_words+' => 'A keresést segítő kulcsszavak',
 	'Class:FAQ/Attribute:domains' => 'Hibatartomány',
-]);
-
-//
-// Class: FAQCategory
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:FAQCategory' => 'Tudástár kategória',
-	'Class:FAQCategory+' => '',
+	'Class:FAQCategory+' => 'Typology for Frequently Asked Questions (FAQ)~~',
 	'Class:FAQCategory/Attribute:name' => 'Kategória név',
 	'Class:FAQCategory/Attribute:name+' => '~~',
 	'Class:FAQCategory/Attribute:faq_list' => 'Tudástárak',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Gyakori kérdések ehhez a kategóriához kapcsolódóan',
-]);
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:ProblemManagement' => 'Problémakezelés',
 	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Gyorsgombok',

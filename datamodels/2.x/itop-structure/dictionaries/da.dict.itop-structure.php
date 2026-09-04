@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
@@ -14,136 +13,117 @@
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Organization' => 'Organisation',
-	'Class:Organization+' => '',
+	'Class:Organization+' => 'It can be a customer, a provider, your company or departments within your company. Organizations can be structured hierarchically. Users can be limited to objects belonging to some organizations only.~~',
 	'Class:Organization/Attribute:name' => 'Navn',
 	'Class:Organization/Attribute:name+' => 'Almindeligt navn',
 	'Class:Organization/Attribute:code' => 'Kodenummer',
-	'Class:Organization/Attribute:code+' => '',
+	'Class:Organization/Attribute:code+' => 'Organization code (Siret, DUNS,...)~~',
 	'Class:Organization/Attribute:status' => 'Status',
-	'Class:Organization/Attribute:status+' => '',
+	'Class:Organization/Attribute:status+' => '~~',
 	'Class:Organization/Attribute:status/Value:active' => 'Aktiv',
 	'Class:Organization/Attribute:status/Value:active+' => 'Aktiv',
 	'Class:Organization/Attribute:status/Value:inactive' => 'Inaktiv',
 	'Class:Organization/Attribute:status/Value:inactive+' => 'Inaktiv',
 	'Class:Organization/Attribute:parent_id' => 'Parent id',
-	'Class:Organization/Attribute:parent_id+' => '',
+	'Class:Organization/Attribute:parent_id+' => 'Parent organization~~',
 	'Class:Organization/Attribute:parent_name' => 'Parent name',
 	'Class:Organization/Attribute:parent_name+' => 'Parent name',
 	'Class:Organization/Attribute:deliverymodel_id' => 'Leverings Model Id',
-	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Leveringsmodel navn',
-	'Class:Organization/Attribute:deliverymodel_name+' => '',
+	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Parent',
-	'Class:Organization/Attribute:parent_id_friendlyname+' => '',
+	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Parent organization~~',
 	'Class:Organization/Attribute:overview' => 'Overview~~',
 	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Users within this organization~~',
-]);
-
-//
-// Class: Location
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Location' => 'Placering',
 	'Class:Location+' => 'Enhver type af placering: Region, land, by, bygning, rum rack, ...',
 	'Class:Location/Attribute:name' => 'Navn',
-	'Class:Location/Attribute:name+' => '',
+	'Class:Location/Attribute:name+' => '~~',
 	'Class:Location/Attribute:status' => 'Status',
-	'Class:Location/Attribute:status+' => '',
+	'Class:Location/Attribute:status+' => '~~',
 	'Class:Location/Attribute:status/Value:active' => 'Aktiv',
 	'Class:Location/Attribute:status/Value:active+' => 'Aktiv',
 	'Class:Location/Attribute:status/Value:inactive' => 'Inaktiv',
 	'Class:Location/Attribute:status/Value:inactive+' => 'Inaktiv',
 	'Class:Location/Attribute:org_id' => 'Organisation',
-	'Class:Location/Attribute:org_id+' => '',
+	'Class:Location/Attribute:org_id+' => '~~',
 	'Class:Location/Attribute:org_name' => 'Organisationsnavn',
-	'Class:Location/Attribute:org_name+' => '',
+	'Class:Location/Attribute:org_name+' => '~~',
 	'Class:Location/Attribute:address' => 'Adresse',
 	'Class:Location/Attribute:address+' => 'Postadresse',
 	'Class:Location/Attribute:postal_code' => 'Postnummer',
 	'Class:Location/Attribute:postal_code+' => 'Postnummer',
 	'Class:Location/Attribute:city' => 'By',
-	'Class:Location/Attribute:city+' => '',
+	'Class:Location/Attribute:city+' => '~~',
 	'Class:Location/Attribute:country' => 'Land',
-	'Class:Location/Attribute:country+' => '',
+	'Class:Location/Attribute:country+' => '~~',
 	'Class:Location/Attribute:physicaldevice_list' => 'List Fysiske Enheder',
 	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location~~',
 	'Class:Location/Attribute:person_list' => 'List Kontakter',
 	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location~~',
-]);
-
-//
-// Class: Contact
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Contact' => 'Kontakt',
-	'Class:Contact+' => '',
+	'Class:Contact+' => 'Abstract class. A Contact can be linked to Tickets and FunctionalCIs for different purposes, such as incident dispatching and notifications.~~',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => 'Navn',
-	'Class:Contact/Attribute:name+' => '',
+	'Class:Contact/Attribute:name+' => '~~',
 	'Class:Contact/Attribute:status' => 'Status',
-	'Class:Contact/Attribute:status+' => '',
+	'Class:Contact/Attribute:status+' => '~~',
 	'Class:Contact/Attribute:status/Value:active' => 'Aktiv',
 	'Class:Contact/Attribute:status/Value:active+' => 'Aktiv',
 	'Class:Contact/Attribute:status/Value:inactive' => 'Inaktiv',
 	'Class:Contact/Attribute:status/Value:inactive+' => 'Inaktiv',
 	'Class:Contact/Attribute:org_id' => 'Organisation',
-	'Class:Contact/Attribute:org_id+' => '',
+	'Class:Contact/Attribute:org_id+' => '~~',
 	'Class:Contact/Attribute:org_name' => 'Organisation',
-	'Class:Contact/Attribute:org_name+' => '',
+	'Class:Contact/Attribute:org_name+' => '~~',
 	'Class:Contact/Attribute:email' => 'Email',
-	'Class:Contact/Attribute:email+' => '',
+	'Class:Contact/Attribute:email+' => '~~',
 	'Class:Contact/Attribute:phone' => 'Telefonnummer',
-	'Class:Contact/Attribute:phone+' => '',
+	'Class:Contact/Attribute:phone+' => '~~',
 	'Class:Contact/Attribute:notify' => 'Underretning',
-	'Class:Contact/Attribute:notify+' => '',
+	'Class:Contact/Attribute:notify+' => 'Flag which can be used by each notification~~',
 	'Class:Contact/Attribute:notify/Value:no' => 'Nej',
-	'Class:Contact/Attribute:notify/Value:no+' => '',
+	'Class:Contact/Attribute:notify/Value:no+' => 'no~~',
 	'Class:Contact/Attribute:notify/Value:yes' => 'Ja',
-	'Class:Contact/Attribute:notify/Value:yes+' => '',
+	'Class:Contact/Attribute:notify/Value:yes+' => 'yes~~',
 	'Class:Contact/Attribute:function' => 'Funktion',
-	'Class:Contact/Attribute:function+' => '',
+	'Class:Contact/Attribute:function+' => '~~',
 	'Class:Contact/Attribute:cis_list' => 'CIs',
 	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact~~',
 	'Class:Contact/Attribute:finalclass' => 'Type',
-	'Class:Contact/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: Person
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:Contact/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Person' => 'Person',
-	'Class:Person+' => '',
+	'Class:Person+' => 'A type of Contact used to describe physical persons. Persons can be grouped into Teams. Persons can be linked to other configuration items (eg. to describe who to contact in case of incident with an application).
+Other usage: the caller of a User request is a Person as well as the agent assigned to resolve it.~~',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => 'Efternavn',
 	'Class:Person/Attribute:name+' => '~~',
 	'Class:Person/Attribute:first_name' => 'Fornavn',
-	'Class:Person/Attribute:first_name+' => '',
+	'Class:Person/Attribute:first_name+' => '~~',
 	'Class:Person/Attribute:employee_number' => 'Personalenummer',
-	'Class:Person/Attribute:employee_number+' => '',
+	'Class:Person/Attribute:employee_number+' => '~~',
 	'Class:Person/Attribute:mobile_phone' => 'Mobiltelefon',
-	'Class:Person/Attribute:mobile_phone+' => '',
+	'Class:Person/Attribute:mobile_phone+' => '~~',
 	'Class:Person/Attribute:location_id' => 'Placering',
-	'Class:Person/Attribute:location_id+' => '',
+	'Class:Person/Attribute:location_id+' => '~~',
 	'Class:Person/Attribute:location_name' => 'Placering',
-	'Class:Person/Attribute:location_name+' => '',
+	'Class:Person/Attribute:location_name+' => '~~',
 	'Class:Person/Attribute:manager_id' => 'Manager',
-	'Class:Person/Attribute:manager_id+' => '',
+	'Class:Person/Attribute:manager_id+' => '~~',
 	'Class:Person/Attribute:manager_name' => 'Manager-Navn',
-	'Class:Person/Attribute:manager_name+' => '',
+	'Class:Person/Attribute:manager_name+' => '~~',
 	'Class:Person/Attribute:team_list' => 'List Teams',
 	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to~~',
 	'Class:Person/Attribute:tickets_list' => 'List Tickets',
 	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller~~',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Create a %4$s for %2$s~~',
 	'Class:Person/Attribute:user_list' => 'Users~~',
 	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager Friendly Name',
-	'Class:Person/Attribute:manager_id_friendlyname+' => '',
+	'Class:Person/Attribute:manager_id_friendlyname+' => '~~',
 	'Class:Person/Attribute:picture' => 'Picture~~',
 	'Class:Person/Attribute:picture+' => '~~',
 	'Class:Person/UniquenessRule:employee_number+' => 'The employee number must be unique in the organization~~',
@@ -151,15 +131,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
 	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-]);
-
-//
-// Class: Team
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Team' => 'Team',
-	'Class:Team+' => '',
+	'Class:Team+' => 'A type of Contact. Often used to group Persons, but not only. Teams are expected to watch Tickets dispatched to them, and assign it to an agent, usually a member of that team.~~',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'List Medlemmer',
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
@@ -172,138 +145,75 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months~~',
 	'Class:Team/Attribute:tickets_list' => 'List Tickets',
 	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
-]);
-
-//
-// Class: Document
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Document' => 'Dokument',
-	'Class:Document+' => '',
+	'Class:Document+' => 'Abstract class. A document that can be shared across multiple objects, making it easy and quick to retrieve from all relevant locations.~~',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => 'Navn',
-	'Class:Document/Attribute:name+' => '',
+	'Class:Document/Attribute:name+' => '~~',
 	'Class:Document/Attribute:org_id' => 'Organisation',
-	'Class:Document/Attribute:org_id+' => '',
+	'Class:Document/Attribute:org_id+' => '~~',
 	'Class:Document/Attribute:org_name' => 'Organisationsnavn',
-	'Class:Document/Attribute:org_name+' => '',
+	'Class:Document/Attribute:org_name+' => '~~',
 	'Class:Document/Attribute:documenttype_id' => 'Dokumenttype',
-	'Class:Document/Attribute:documenttype_id+' => '',
+	'Class:Document/Attribute:documenttype_id+' => '~~',
 	'Class:Document/Attribute:documenttype_name' => 'Dokumenttypnavn',
-	'Class:Document/Attribute:documenttype_name+' => '',
+	'Class:Document/Attribute:documenttype_name+' => '~~',
 	'Class:Document/Attribute:version' => 'Version~~',
 	'Class:Document/Attribute:version+' => '~~',
 	'Class:Document/Attribute:description' => 'Beskrivelse',
-	'Class:Document/Attribute:description+' => '',
+	'Class:Document/Attribute:description+' => '~~',
 	'Class:Document/Attribute:status' => 'Status',
-	'Class:Document/Attribute:status+' => '',
+	'Class:Document/Attribute:status+' => '~~',
 	'Class:Document/Attribute:status/Value:draft' => 'Udkast',
-	'Class:Document/Attribute:status/Value:draft+' => '',
+	'Class:Document/Attribute:status/Value:draft+' => '~~',
 	'Class:Document/Attribute:status/Value:obsolete' => 'Forældet',
-	'Class:Document/Attribute:status/Value:obsolete+' => '',
+	'Class:Document/Attribute:status/Value:obsolete+' => '~~',
 	'Class:Document/Attribute:status/Value:published' => 'Offentlig',
-	'Class:Document/Attribute:status/Value:published+' => '',
+	'Class:Document/Attribute:status/Value:published+' => '~~',
 	'Class:Document/Attribute:cis_list' => 'CIs',
 	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
 	'Class:Document/Attribute:finalclass' => 'Dokumenttype',
-	'Class:Document/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: DocumentFile
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:Document/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:DocumentFile' => 'Dokument (Data)',
-	'Class:DocumentFile+' => '',
+	'Class:DocumentFile+' => 'It\'s a type of Document which includes an uploaded file (in any format: Word, PDF, Spreadsheet, etc.).~~',
 	'Class:DocumentFile/Attribute:file' => 'Data',
-	'Class:DocumentFile/Attribute:file+' => '',
-]);
-
-//
-// Class: DocumentNote
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:DocumentFile/Attribute:file+' => '~~',
 	'Class:DocumentNote' => 'Dokument (Noter)',
-	'Class:DocumentNote+' => '',
+	'Class:DocumentNote+' => 'Used to store a text document. HTML formatting is supported using the WYSIWYG editor. Search can be performed on its content.~~',
 	'Class:DocumentNote/Attribute:text' => 'Tekst',
-	'Class:DocumentNote/Attribute:text+' => '',
-]);
-
-//
-// Class: DocumentWeb
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:DocumentNote/Attribute:text+' => '~~',
 	'Class:DocumentWeb' => 'Dokument (Web)',
-	'Class:DocumentWeb+' => '',
+	'Class:DocumentWeb+' => 'Hyperlinks to external applications or documents, acting as pointers to external resources. You cannot search in their content from '.ITOP_APPLICATION_SHORT.'~~',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
-	'Class:DocumentWeb/Attribute:url+' => '',
-]);
-
-//
-// Class: Typology
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:DocumentWeb/Attribute:url+' => '~~',
 	'Class:Typology' => 'Typologi',
-	'Class:Typology+' => '',
+	'Class:Typology+' => 'Abstract class. ExternalKeyAttribute to a Typology subclass are used in place of an EnumAttribute, to have more dynamic values.~~',
 	'Class:Typology/Attribute:name' => 'Navn',
-	'Class:Typology/Attribute:name+' => '',
+	'Class:Typology/Attribute:name+' => '~~',
 	'Class:Typology/Attribute:finalclass' => 'Type',
-	'Class:Typology/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: DocumentType
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:Typology/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:DocumentType' => 'Dokumentype',
-	'Class:DocumentType+' => '',
-]);
-
-//
-// Class: ContactType
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:DocumentType+' => 'Typology. A classification system used to organize and logically group documents~~',
 	'Class:ContactType' => 'Kontakttype',
-	'Class:ContactType+' => '',
-]);
-
-//
-// Class: lnkPersonToTeam
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:ContactType+' => 'Typology to organize your Contacts and group them logically for you.~~',
 	'Class:lnkPersonToTeam' => 'Sammenhæng Person/Team',
-	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam+' => 'This link indicates when a Person is a member of a Team.~~',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
 	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Team',
-	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_id+' => 'A team to which the person belongs~~',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Team navn',
-	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:person_id' => 'Person',
-	'Class:lnkPersonToTeam/Attribute:person_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_id+' => 'A member of the team~~',
 	'Class:lnkPersonToTeam/Attribute:person_name' => 'Person navn',
-	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:role_id' => 'Rolle',
-	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:role_id+' => 'To select within a typology of possible roles~~',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Rollen navn',
-	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkPersonToTeam/Attribute:role_name+' => '~~',
 	'Menu:DataAdministration' => 'Data administration',
-	'Menu:DataAdministration+' => '',
+	'Menu:DataAdministration+' => 'Data administration~~',
 	'Menu:Catalogs' => 'Katalog',
 	'Menu:Catalogs+' => 'Datatyper',
 	'Menu:Audit' => 'Audit',
@@ -336,23 +246,14 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:ConfigManagement:Shortcuts' => 'Genveje',
 	'Menu:ConfigManagement:AllContacts' => 'Alle Kontakter: %1$d',
 	'Menu:Typology' => 'Typologi-Konfiguration',
-	'Menu:Typology+' => '',
+	'Menu:Typology+' => 'Typology configuration~~',
 	'UI_WelcomeMenu_AllConfigItems' => 'Sammenfatning',
 	'Menu:ConfigManagement:Typology' => 'Typologi Konfiguration',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Person:info' => 'Almindelig Information',
 	'User:info' => 'Almindelig Information',
 	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Underretning',
-]);
-
-// Themes
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ]);

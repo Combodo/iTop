@@ -1,21 +1,20 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
+ *
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:ConfigFileEditor' => 'Plain text editor~~',
 	'itop-config/Operation:Edit/Title' => 'Aanpassen configuratie',
 	'config-edit-intro' => 'Wees uiterst voorzichtig bij het aanpassen van de configuratie.',
-	'Menu:ConfigEditor' => 'Configuratie',
 	'config-apply' => 'Opslaan',
 	'config-apply-title' => 'Opslaan (Ctrl+S)',
 	'config-cancel' => 'Herbegin',

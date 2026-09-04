@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -28,21 +27,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:FAQ/Attribute:key_words' => 'Parola Chiave',
 	'Class:FAQ/Attribute:key_words+' => '~~',
 	'Class:FAQ/Attribute:domains' => 'Dominio',
-]);
-
-//
-// Class: FAQCategory
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:FAQCategory' => 'Categoria FAQ',
 	'Class:FAQCategory+' => 'Categoria per FAQ',
 	'Class:FAQCategory/Attribute:name' => 'Nome',
 	'Class:FAQCategory/Attribute:name+' => '~~',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Tutte le faq legate a questa categoria',
-]);
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:ProblemManagement' => 'Gestione dei problemi',
 	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Scorciatoia',

@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -14,7 +13,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:ServiceManagement' => 'Gestione del servizio',
 	'Menu:ServiceManagement+' => 'Panoramica della gestione del servizio',
 	'Menu:Service:Overview' => 'Panoramica',
-	'Menu:Service:Overview+' => '',
+	'Menu:Service:Overview+' => '~~',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contratti per livello di servizio',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratti per stato',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratti che terminano in meno di 30 giorni',
@@ -44,41 +43,19 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
 	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
 	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
-
 	'Menu:Procedure' => 'Catalogo delle Procedure',
 	'Menu:Procedure+' => 'Tutti i cataloghi delle procedure',
 	'Contract:baseinfo' => 'Informazioni Generali',
 	'Contract:moreinfo' => 'Informazioni Contrattuali',
 	'Contract:cost' => 'Informazioni sui Costi',
-]);
-
-//
-// Class: Organization
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Modello di Consegna',
 	'Class:Organization/Attribute:deliverymodel_id+' => 'This is required for Tickets handling.
 The delivery model specifies the teams to which tickets can be assigned.~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Nome del Modello di Consegna',
-]);
-
-//
-// Class: ContractType
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ContractType' => 'Tipo di Contratto',
-	'Class:ContractType+' => '~~',
-]);
-
-//
-// Class: Contract
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:ContractType+' => 'Typology for categorizing Customer and Provider Contracts.~~',
 	'Class:Contract' => 'Contratto',
-	'Class:Contract+' => '~~',
+	'Class:Contract+' => 'Abstract class to handle fields common to the different contract sub-classes.~~',
 	'Class:Contract/Attribute:name' => 'Nome',
 	'Class:Contract/Attribute:name+' => '~~',
 	'Class:Contract/Attribute:org_id' => 'Cliente',
@@ -112,11 +89,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Contract/Attribute:cost_unit' => 'Costo unitario',
 	'Class:Contract/Attribute:cost_unit+' => '~~',
 	'Class:Contract/Attribute:provider_id' => 'Fornitore',
-	'Class:Contract/Attribute:provider_id+' => '~~',
+	'Class:Contract/Attribute:provider_id+' => 'Provider organization for this contract. Can be different from the provider of the associated services.~~',
 	'Class:Contract/Attribute:provider_name' => 'Nome del Fornitore',
 	'Class:Contract/Attribute:provider_name+' => 'Common name~~',
 	'Class:Contract/Attribute:status' => 'Stato',
-	'Class:Contract/Attribute:status+' => '~~',
+	'Class:Contract/Attribute:status+' => 'The status is not computed based on start and end dates. It must be set manually.~~',
 	'Class:Contract/Attribute:status/Value:implementation' => 'implementazione',
 	'Class:Contract/Attribute:status/Value:implementation+' => 'implementation~~',
 	'Class:Contract/Attribute:status/Value:obsolete' => 'obsoleto',
@@ -125,46 +102,26 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Contract/Attribute:status/Value:production+' => 'production~~',
 	'Class:Contract/Attribute:finalclass' => 'Tipo',
 	'Class:Contract/Attribute:finalclass+' => 'Name of the final class~~',
-]);
-//
-// Class: CustomerContract
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:CustomerContract' => 'Contratto con cliente',
-	'Class:CustomerContract+' => '',
+	'Class:CustomerContract+' => 'Agreement between a client and a provider for the delivery of services with an optional level of commitment (SLA, Coverage Window).~~',
 	'Class:CustomerContract/Attribute:services_list' => 'Servizi',
 	'Class:CustomerContract/Attribute:services_list+' => 'Tutti i servizi acquistati per questo contratto',
-]);
-
-//
-// Class: ProviderContract
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ProviderContract' => 'Contratto con Provider',
-	'Class:ProviderContract+' => '~~',
+	'Class:ProviderContract+' => 'Agreement between an external provider and an internal organization.~~',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CI',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Tutti gli elementi di configurazione coperti da questo contratto con il provider',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Accordo di Livello di Servizio',
 	'Class:ProviderContract/Attribute:coverage' => 'Ore di servizio',
-	'Class:ProviderContract/Attribute:coverage+' => '~~',
+	'Class:ProviderContract/Attribute:coverage+' => 'Temporal coverage of the contract, e.g. 24x7, 9x5, etc.~~',
 	'Class:ProviderContract/Attribute:contracttype_id' => 'Tipo di Contratto',
 	'Class:ProviderContract/Attribute:contracttype_id+' => '~~',
 	'Class:ProviderContract/Attribute:contracttype_name' => 'Nome del Tipo di Contratto',
 	'Class:ProviderContract/Attribute:contracttype_name+' => '~~',
 	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
 	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
-]);
-
-//
-// Class: lnkContactToContract
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContactToContract' => 'Link Contact / Contract',
-	'Class:lnkContactToContract+' => '~~',
+	'Class:lnkContactToContract+' => 'Manages key contacts on each customer or provider contract.~~',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Contratto',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '~~',
@@ -174,15 +131,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContactToContract/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Nome del Contatto',
 	'Class:lnkContactToContract/Attribute:contact_name+' => '~~',
-]);
-
-//
-// Class: lnkContractToDocument
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContractToDocument' => 'Link Contract / Document',
-	'Class:lnkContractToDocument+' => '~~',
+	'Class:lnkContractToDocument+' => 'Link used when a Document is applicable to a Contract.~~',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Contratto',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '~~',
@@ -192,30 +142,16 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContractToDocument/Attribute:document_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Nome del Documento',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: ServiceFamily
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ServiceFamily' => 'Famiglia di Servizi',
-	'Class:ServiceFamily+' => '~~',
+	'Class:ServiceFamily+' => 'Top level of Service hierarchy. Required for Services to be proposed in User Portal.~~',
 	'Class:ServiceFamily/Attribute:name' => 'Nome',
 	'Class:ServiceFamily/Attribute:name+' => '~~',
 	'Class:ServiceFamily/Attribute:icon' => 'Icona',
 	'Class:ServiceFamily/Attribute:icon+' => '~~',
 	'Class:ServiceFamily/Attribute:services_list' => 'Servizi',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Tutti i servizi in questa categoria',
-]);
-
-//
-// Class: Service
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Service' => 'Servizio',
-	'Class:Service+' => '~~',
+	'Class:Service+' => 'A Service is delivered by an organization and subscribed to through a Contract Client. It must contain at least one Service Subcategory.~~',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s',
 	'Class:Service/Attribute:name' => 'Nome',
 	'Class:Service/Attribute:name+' => '~~',
@@ -234,7 +170,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Service/Attribute:contacts_list' => 'Contatti',
 	'Class:Service/Attribute:contacts_list+' => 'Tutti i contatti per questo servizio',
 	'Class:Service/Attribute:status' => 'Stato',
-	'Class:Service/Attribute:status+' => '~~',
+	'Class:Service/Attribute:status+' => 'By default only Service in production are visible by Portal users~~',
 	'Class:Service/Attribute:status/Value:implementation' => 'implementazione',
 	'Class:Service/Attribute:status/Value:implementation+' => 'implementation~~',
 	'Class:Service/Attribute:status/Value:obsolete' => 'Obsoleto',
@@ -251,15 +187,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Service/Attribute:functionalcis_list+' => 'Tutti gli elementi di configurazione utilizzati per fornire questo servizio',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Sotto-categorie di Servizio',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'Tutte le sotto-categorie per questo servizio',
-]);
-
-//
-// Class: lnkDocumentToService
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToService' => 'Link Document / Service',
-	'Class:lnkDocumentToService+' => '~~',
+	'Class:lnkDocumentToService+' => 'Link used when a Document is applicable to a Service.~~',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Servizio',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '~~',
@@ -269,15 +198,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToService/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Nome del Documento',
 	'Class:lnkDocumentToService/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: lnkContactToService
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContactToService' => 'Link Contact / Service',
-	'Class:lnkContactToService+' => '~~',
+	'Class:lnkContactToService+' => 'Ideal for defining the team to which Tickets created on the related Service will be assigned (automatically or manually).~~',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s',
 	'Class:lnkContactToService/Attribute:service_id' => 'Servizio',
 	'Class:lnkContactToService/Attribute:service_id+' => '~~',
@@ -287,15 +209,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContactToService/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Nome del Contatto',
 	'Class:lnkContactToService/Attribute:contact_name+' => '~~',
-]);
-
-//
-// Class: ServiceSubcategory
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ServiceSubcategory' => 'Sottocategorie del servizio',
-	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory+' => 'Lowest level in Service hierarchy. User Request are usually associated to one Service Subcategory.~~',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
 	'Class:ServiceSubcategory/Attribute:name' => 'Nome',
 	'Class:ServiceSubcategory/Attribute:name+' => '~~',
@@ -312,22 +227,15 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'richiesta di servizio',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'service request~~',
 	'Class:ServiceSubcategory/Attribute:status' => 'Stato',
-	'Class:ServiceSubcategory/Attribute:status+' => '~~',
+	'Class:ServiceSubcategory/Attribute:status+' => 'Service subcategory status has usually an impact on User Portal visibility.~~',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation' => 'implementazione',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation+' => 'implementation~~',
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete' => 'obsoleto',
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => 'obsolete~~',
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'produzione',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'production~~',
-]);
-
-//
-// Class: SLA
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SLA' => 'SLA',
-	'Class:SLA+' => '',
+	'Class:SLA+' => 'Service Level Agreement (SLA) applicable to a Service subscribed by a customer and measured using SLTs.~~',
 	'Class:SLA/Attribute:name' => 'Nome',
 	'Class:SLA/Attribute:name+' => '~~',
 	'Class:SLA/Attribute:description' => 'Descrizione',
@@ -341,19 +249,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SLA/Attribute:customercontracts_list' => 'Contratti Cliente',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Tutti i contratti cliente che utilizzano questo SLA',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Impossibile salvare il collegamento con il contratto cliente %1$s e il servizio %2$s: SLA già esistente',
-]);
-
-//
-// Class: SLT
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SLT' => 'SLT',
-	'Class:SLT+' => '~~',
+	'Class:SLT+' => 'Service Level Target under a Service Level Agreement (SLA). Defines a maximum time for a metric (TTO or TTR), a request type (Incident or Request) and a priority.~~',
 	'Class:SLT/Attribute:name' => 'Nome',
 	'Class:SLT/Attribute:name+' => '~~',
 	'Class:SLT/Attribute:priority' => 'Priorità',
-	'Class:SLT/Attribute:priority+' => '~~',
+	'Class:SLT/Attribute:priority+' => 'Ticket priority to which this SLT applies. Only tickets with this priority must comply with this SLT.~~',
 	'Class:SLT/Attribute:priority/Value:1' => 'critico',
 	'Class:SLT/Attribute:priority/Value:1+' => 'critical~~',
 	'Class:SLT/Attribute:priority/Value:2' => 'alto',
@@ -363,36 +264,29 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SLT/Attribute:priority/Value:4' => 'basso',
 	'Class:SLT/Attribute:priority/Value:4+' => 'low~~',
 	'Class:SLT/Attribute:request_type' => 'Tipo di Richiesta',
-	'Class:SLT/Attribute:request_type+' => '~~',
+	'Class:SLT/Attribute:request_type+' => 'Request type to which this SLT applies. Only tickets with this request type must comply with this SLT.~~',
 	'Class:SLT/Attribute:request_type/Value:incident' => 'incidente',
 	'Class:SLT/Attribute:request_type/Value:incident+' => 'incident~~',
 	'Class:SLT/Attribute:request_type/Value:service_request' => 'richiesta di servizio',
 	'Class:SLT/Attribute:request_type/Value:service_request+' => 'service request~~',
 	'Class:SLT/Attribute:metric' => 'Metrica',
-	'Class:SLT/Attribute:metric+' => '~~',
+	'Class:SLT/Attribute:metric+' => 'Delay type to which this SLT applies. TTO (Time To Own) or TTR (Time To Resolve).~~',
 	'Class:SLT/Attribute:metric/Value:tto' => 'TTO~~',
 	'Class:SLT/Attribute:metric/Value:tto+' => 'TTO~~',
 	'Class:SLT/Attribute:metric/Value:ttr' => 'TTR~~',
 	'Class:SLT/Attribute:metric/Value:ttr+' => 'TTR~~',
 	'Class:SLT/Attribute:value' => 'Valore',
-	'Class:SLT/Attribute:value+' => '~~',
+	'Class:SLT/Attribute:value+' => 'Delay value which must not be exceeded to be compliant with the target. The unit is defined in the "unit" attribute.~~',
 	'Class:SLT/Attribute:unit' => 'Unità',
-	'Class:SLT/Attribute:unit+' => '~~',
+	'Class:SLT/Attribute:unit+' => 'Unit for the delay value.~~',
 	'Class:SLT/Attribute:unit/Value:hours' => 'ore',
 	'Class:SLT/Attribute:unit/Value:hours+' => 'hours~~',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'minuti',
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'minutes~~',
 	'Class:SLT/Attribute:slas_list' => 'SLA',
 	'Class:SLT/Attribute:slas_list+' => 'Tutti gli accordi di livello di servizio che utilizzano questo SLT',
-]);
-
-//
-// Class: lnkSLAToSLT
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkSLAToSLT' => 'Link SLA / SLT',
-	'Class:lnkSLAToSLT+' => '~~',
+	'Class:lnkSLAToSLT+' => 'This link indicates that an SLT is included in the Service Level Agreement (SLA). An SLA usually contains several SLTs. An SLT can be reused as is by several SLAs (seldom).~~',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '~~',
@@ -412,37 +306,25 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Unità di valore SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkCustomerContractToService' => 'Link Customer Contract / Service',
-	'Class:lnkCustomerContractToService+' => '~~',
+	'Class:lnkCustomerContractToService+' => 'A single line of a customer contract, specifying the Service provided and, for this service, the subscribed commitment levels (Service Level Aggrement and Coverage Window).~~',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Customer contract~~',
-	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Customer contract Name~~',
-	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:service_id' => 'Service~~',
-	'Class:lnkCustomerContractToService/Attribute:service_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:service_id+' => 'All service subcategories linked to this service are also included by the contract.~~',
 	'Class:lnkCustomerContractToService/Attribute:service_name' => 'Service Name~~',
-	'Class:lnkCustomerContractToService/Attribute:service_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:service_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_id' => 'SLA~~',
-	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:sla_id+' => 'Service Level Agreement applicable to this service for this customer contract.~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA Name~~',
-	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
-]);
-
-//
-// Class: lnkProviderContractToService
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 	'Class:lnkProviderContractToService' => 'Link Provider Contract / Service',
-	'Class:lnkProviderContractToService+' => '~~',
+	'Class:lnkProviderContractToService+' => 'This link can model that a provider contract enables the delivery of a Service.~~',
 	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s',
 	'Class:lnkProviderContractToService/Attribute:service_id' => 'Servizio',
 	'Class:lnkProviderContractToService/Attribute:service_id+' => '~~',
@@ -452,15 +334,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '~~',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Nome del Contratto con Fornitore',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '~~',
-]);
-
-//
-// Class: DeliveryModel
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:lnkProviderContractToService/Attribute:provider_id' => 'Provider id~~',
+	'Class:lnkProviderContractToService/Attribute:provider_id+' => '~~',
 	'Class:DeliveryModel' => 'Modello di Consegna',
-	'Class:DeliveryModel+' => '~~',
+	'Class:DeliveryModel+' => 'The Delivery Model specifies the Teams that can be assigned to Tickets; it must contain at least one Team in the Contacts tab.
+Each client Organization must have a defined Delivery Model.~~',
 	'Class:DeliveryModel/Attribute:name' => 'Nome',
 	'Class:DeliveryModel/Attribute:name+' => 'Don\'t forget to add teams to this delivery model~~',
 	'Class:DeliveryModel/Attribute:org_id' => 'Organizzazione',
@@ -473,15 +351,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'Tutti i contatti (Team e Persone) per questo modello di consegna',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Clienti',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'Tutti i clienti che utilizzano questo modello di consegna',
-]);
-
-//
-// Class: lnkDeliveryModelToContact
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDeliveryModelToContact' => 'Link Delivery Model / Contact',
-	'Class:lnkDeliveryModelToContact+' => '~~',
+	'Class:lnkDeliveryModelToContact+' => 'This link specifies the role of a Team (more rarely a Person) within a Delivery Model.~~',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Modello di Consegna',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '~~',
@@ -495,44 +366,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Nome del Ruolo',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '~~',
-]);
-
-//
-// Class: lnkContactToContract
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkContractToDocument
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkProviderContractToService
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:lnkProviderContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkProviderContractToService/Attribute:provider_id+' => '~~',
 ]);

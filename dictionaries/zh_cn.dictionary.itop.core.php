@@ -1,90 +1,61 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
- * @license    http://opensource.org/licenses/AGPL-3.0
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-
+/**
+ *
+ */
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
 	'Core:DeletedObjectTip' => '对象已被删除于 %1$s (%2$s)',
-
 	'Core:UnknownObjectLabel' => '找不到对象 (类型: %1$s, 编号: %2$d)',
 	'Core:UnknownObjectTip' => '对象没有找到. 其可能已经被删除并且日志已经被清除.',
-
 	'Core:UniquenessDefaultError' => '唯一性规则 \'%1$s\' 错误',
 	'Core:CheckConsistencyError' => '一致性规则没有被遵守: %1$s',
 	'Core:CheckValueError' => '属性 \'%1$s\' (%2$s)的未知值: %3$s',
-
 	'Core:AttributeLinkedSet' => '对象数组',
 	'Core:AttributeLinkedSet+' => '任何相同类型或子类型的对象',
-
 	'Core:AttributeLinkedSetDuplicatesFound' => '字段 \'%1$s\' 内容重复: %2$s',
-
 	'Core:AttributeDashboard' => '仪表盘',
-	'Core:AttributeDashboard+' => '',
-
+	'Core:AttributeDashboard+' => '~~',
 	'Core:AttributePhoneNumber' => '电话号码',
-	'Core:AttributePhoneNumber+' => '',
-
+	'Core:AttributePhoneNumber+' => '~~',
 	'Core:AttributeObsolescenceDate' => '报废日期',
-	'Core:AttributeObsolescenceDate+' => '',
-
+	'Core:AttributeObsolescenceDate+' => '~~',
 	'Core:AttributeTagSet' => '清单',
-	'Core:AttributeTagSet+' => '',
+	'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => '请点击这里添加',
 	'Core:Placeholder:CannotBeResolved' => '(%1$s : 无法解析)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s来自%3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s来自子类型',
-
 	'Core:AttributeCaseLog' => '日志',
-	'Core:AttributeCaseLog+' => '',
-
+	'Core:AttributeCaseLog+' => '~~',
 	'Core:AttributeMetaEnum' => '计算的数字',
-	'Core:AttributeMetaEnum+' => '',
-
+	'Core:AttributeMetaEnum+' => '~~',
 	'Core:AttributeLinkedSetIndirect' => '对象数组 (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => '相同类型的任何对象 [子类型]',
-
 	'Core:AttributeInteger' => '整数',
 	'Core:AttributeInteger+' => '整数(可以为负)',
-
 	'Core:AttributeDecimal' => '小数',
 	'Core:AttributeDecimal+' => '小数(可以为负)',
-
 	'Core:AttributeBoolean' => '布尔',
-	'Core:AttributeBoolean+' => '',
-	'Core:AttributeBoolean/Value:null' => '',
+	'Core:AttributeBoolean+' => '~~',
+	'Core:AttributeBoolean/Value:null' => '~~',
 	'Core:AttributeBoolean/Value:yes' => '是',
 	'Core:AttributeBoolean/Value:no' => '否',
-
 	'Core:AttributeArchiveFlag' => '归档标识',
 	'Core:AttributeArchiveFlag/Value:yes' => '是',
 	'Core:AttributeArchiveFlag/Value:yes+' => '该对象仅在归档模式可见',
 	'Core:AttributeArchiveFlag/Value:no' => '否',
 	'Core:AttributeArchiveFlag/Label' => '已归档',
-	'Core:AttributeArchiveFlag/Label+' => '',
+	'Core:AttributeArchiveFlag/Label+' => '~~',
 	'Core:AttributeArchiveDate/Label' => '归档日期',
-	'Core:AttributeArchiveDate/Label+' => '',
-
+	'Core:AttributeArchiveDate/Label+' => '~~',
 	'Core:AttributeObsolescenceFlag' => '废弃标识',
 	'Core:AttributeObsolescenceFlag/Value:yes' => '是',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => '该对象排除在影响分析中, 并且在搜索结果中隐藏',
@@ -93,54 +64,38 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Core:AttributeObsolescenceFlag/Label+' => '基于其它属性动态计算',
 	'Core:AttributeObsolescenceDate/Label' => '废弃时间',
 	'Core:AttributeObsolescenceDate/Label+' => '该对象被废弃的大概日期',
-
 	'Core:AttributeString' => '字符串',
 	'Core:AttributeString+' => '字符串',
-
 	'Core:AttributeClass' => '类',
-	'Core:AttributeClass+' => '',
-
+	'Core:AttributeClass+' => '~~',
 	'Core:AttributeApplicationLanguage' => '用户语言',
 	'Core:AttributeApplicationLanguage+' => '语言和国家/地区(EN US)',
-
 	'Core:AttributeFinalClass' => '类型 (自动)',
 	'Core:AttributeFinalClass+' => '对象真实的类型 (内核自动创建)',
-
 	'Core:AttributePassword' => '密码',
 	'Core:AttributePassword+' => '外部设备的密码',
-
 	'Core:AttributeEncryptedString' => '加密字符串',
 	'Core:AttributeEncryptedString+' => '使用本地密钥加密的字符串',
 	'Core:AttributeEncryptUnknownLibrary' => '未知的加密库 (%1$s)',
 	'Core:AttributeEncryptFailedToDecrypt' => '** 解密错误 **',
-
 	'Core:AttributeText' => '文本',
 	'Core:AttributeText+' => '多行字符串',
-
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => 'HTML字符串',
-
 	'Core:AttributeEmailAddress' => '邮箱地址',
 	'Core:AttributeEmailAddress+' => 'Email 地址',
-
 	'Core:AttributeIPAddress' => 'IP 地址',
 	'Core:AttributeIPAddress+' => 'IP 地址',
-
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => '对象查询语言表达式',
-
 	'Core:AttributeEnum' => '数字',
 	'Core:AttributeEnum+' => '预定义的数字列表',
-
 	'Core:AttributeTemplateString' => '字符模板',
 	'Core:AttributeTemplateString+' => '包含占位符的字符串',
-
 	'Core:AttributeTemplateText' => '文本模板',
 	'Core:AttributeTemplateText+' => '包含占位符的文本',
-
 	'Core:AttributeTemplateHTML' => 'HTML模板',
 	'Core:AttributeTemplateHTML+' => '含有占位符的HTML',
-
 	'Core:AttributeDateTime' => '日期/时间',
 	'Core:AttributeDateTime+' => '日期和时间 (年-月-日 时:分:秒)',
 	'Core:AttributeDateTime?SmartSearch' => '
@@ -158,7 +113,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 <p>
 如果省略时间,则默认为 00:00:00
 </p>',
-
 	'Core:AttributeDate' => '日期',
 	'Core:AttributeDate+' => '日期 (年-月-日)',
 	'Core:AttributeDate?SmartSearch' => '
@@ -173,61 +127,36 @@ Operators:<br/>
     <b>&lt;</b><em>日期</em><br/>
     <b>[</b><em>日期</em>,<em>日期</em><b>]</b>
 </p>',
-
 	'Core:AttributeDeadline' => '截止日期',
 	'Core:AttributeDeadline+' => '日期, 显示与当前的相对时间',
-
 	'Core:AttributeExternalKey' => '外键',
 	'Core:AttributeExternalKey+' => '外面(或外部)的键',
-
 	'Core:AttributeHierarchicalKey' => 'Hierarchical Key~~',
 	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent~~',
-
 	'Core:AttributeExternalField' => '外部字段',
 	'Core:AttributeExternalField+' => 'Field mapped to an external key~~',
-
 	'Core:AttributeURL' => 'URL',
 	'Core:AttributeURL+' => '绝对或相对的URL字符串',
-
 	'Core:AttributeBlob' => 'Blob',
 	'Core:AttributeBlob+' => '任何二进制内容(文档)',
-
 	'Core:AttributeOneWayPassword' => '单向密码',
 	'Core:AttributeOneWayPassword+' => '单向加密 (或哈希) 的密码',
-
 	'Core:AttributeTable' => '表',
 	'Core:AttributeTable+' => '带索引的二维数组',
-
 	'Core:AttributePropertySet' => '属性',
 	'Core:AttributePropertySet+' => '非类型化的属性列表 (名称和值)',
-
 	'Core:AttributeFriendlyName' => '昵称',
 	'Core:AttributeFriendlyName+' => '自动创建的属性; 显示名称基于多个属性计算',
-
 	'Core:FriendlyName-Label' => '全称',
 	'Core:FriendlyName-Description' => '全称',
-
 	'Core:AttributeTag' => '标签',
-	'Core:AttributeTag+' => '',
-
+	'Core:AttributeTag+' => '~~',
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => '同步',
 	'Core:Context=Setup' => '安装向导',
 	'Core:Context=GUI:Console' => '终端',
 	'Core:Context=CRON' => '定时任务',
 	'Core:Context=GUI:Portal' => '门户',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'core/cmdb'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: CMDBChange
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChange' => '变更',
 	'Class:CMDBChange+' => '变更跟踪',
 	'Class:CMDBChange/Attribute:date' => '日期',
@@ -242,13 +171,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON服务',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP服务',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => '插件',
-]);
-
-//
-// Class: CMDBChangeOp
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChangeOp' => '变更操作',
 	'Class:CMDBChangeOp+' => '变更操作跟踪',
 	'Class:CMDBChangeOp/Attribute:change' => '变更',
@@ -263,51 +185,20 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChangeOp/Attribute:objkey+' => '对象id',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDB 操作类型',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '根本属性的名称',
-]);
-
-//
-// Class: CMDBChangeOpCreate
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChangeOpCreate' => '对象创建',
 	'Class:CMDBChangeOpCreate+' => '对象创建跟踪',
-]);
-
-//
-// Class: CMDBChangeOpDelete
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChangeOpDelete' => '对象删除',
 	'Class:CMDBChangeOpDelete+' => '对象删除跟踪',
-]);
-
-//
-// Class: CMDBChangeOpSetAttribute
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChangeOpSetAttribute' => '对象变化',
 	'Class:CMDBChangeOpSetAttribute+' => '对象属性变化跟踪',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => '属性',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => '更改的属性编码',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeScalar
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChangeOpSetAttributeScalar' => '属性更改跟踪',
 	'Class:CMDBChangeOpSetAttributeScalar+' => '对象属性更改跟踪',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => '旧值',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '以前该属性的值',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => '新值',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => '属性的新值',
-]);
-// Used by CMDBChangeOp... & derived classes
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Change:ObjectCreated' => '对象已创建',
 	'Change:ObjectDeleted' => '对象已删除',
 	'Change:ObjectModified' => '对象已修改',
@@ -324,35 +215,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Change:LinkSet:Added' => '已添加 %1$s',
 	'Change:LinkSet:Removed' => '已移除 %1$s',
 	'Change:LinkSet:Modified' => '已修改 %1$s',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeBlob
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChangeOpSetAttributeBlob' => '数据变更跟踪',
 	'Class:CMDBChangeOpSetAttributeBlob+' => '数据变更跟踪',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => '之前的值',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => '该数据之前的内容',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeText
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChangeOpSetAttributeText' => '文本变更跟踪',
 	'Class:CMDBChangeOpSetAttributeText+' => '文本变更跟踪',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => '旧值',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => '该文本之前的内容',
-]);
-
-//
-// Class: Event
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Event' => '日志事件',
 	'Class:Event+' => '应用程序的内部事件',
 	'Class:Event/Attribute:message' => '消息',
@@ -363,30 +233,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Event/Attribute:userinfo+' => '触发此事件的动作执行用户的身份',
 	'Class:Event/Attribute:finalclass' => '事件类型',
 	'Class:Event/Attribute:finalclass+' => '根本属性的名称',
-]);
-
-//
-// Class: EventNotification
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventNotification' => '通知事件',
 	'Class:EventNotification+' => '已发送通知的追踪',
 	'Class:EventNotification/Attribute:trigger_id' => '触发器',
 	'Class:EventNotification/Attribute:trigger_id+' => '账号',
-	'Class:EventNotification/Attribute:object_class' => '对象类型',
-	'Class:EventNotification/Attribute:object_class+' => '对象类型 (与触发器相同)',
 	'Class:EventNotification/Attribute:action_id' => '用户',
 	'Class:EventNotification/Attribute:action_id+' => '账号',
 	'Class:EventNotification/Attribute:object_id' => '对象id',
 	'Class:EventNotification/Attribute:object_id+' => '对象编号 (类型由触发器定义?)',
-]);
-
-//
-// Class: EventNotificationEmail
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:EventNotification/Attribute:object_class' => '对象类型',
+	'Class:EventNotification/Attribute:object_class+' => '对象类型 (与触发器相同)',
 	'Class:EventNotificationEmail' => '邮件发送',
 	'Class:EventNotificationEmail+' => '跟踪每封已发送的邮件',
 	'Class:EventNotificationEmail/Attribute:to' => '收件人',
@@ -402,14 +258,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventNotificationEmail/Attribute:body' => '正文',
 	'Class:EventNotificationEmail/Attribute:body+' => '内容',
 	'Class:EventNotificationEmail/Attribute:attachments' => '附件',
-	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-]);
-
-//
-// Class: EventIssue
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:EventNotificationEmail/Attribute:attachments+' => '~~',
 	'Class:EventIssue' => '问题事件',
 	'Class:EventIssue+' => '跟踪问题 (告警, 错误, 等)',
 	'Class:EventIssue/Attribute:issue' => '事件',
@@ -426,13 +275,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventIssue/Attribute:callstack+' => '调用栈',
 	'Class:EventIssue/Attribute:data' => '数据',
 	'Class:EventIssue/Attribute:data+' => '更多信息',
-]);
-
-//
-// Class: EventWebService
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventWebService' => 'WebService调用',
 	'Class:EventWebService+' => '跟踪WebService调用',
 	'Class:EventWebService/Attribute:verb' => '命令',
@@ -447,9 +289,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventWebService/Attribute:log_error+' => '结果错误记录',
 	'Class:EventWebService/Attribute:data' => '数据',
 	'Class:EventWebService/Attribute:data+' => '结果数据',
-]);
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventRestService' => 'REST/JSON 调用',
 	'Class:EventRestService+' => '跟踪REST/JSON服务调用',
 	'Class:EventRestService/Attribute:operation' => '操作',
@@ -464,13 +303,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP 响应 (json)',
 	'Class:EventRestService/Attribute:provider' => '提供者',
 	'Class:EventRestService/Attribute:provider+' => '实现该功能的PHP类',
-]);
-
-//
-// Class: EventLoginUsage
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventLoginUsage' => '登录频率',
 	'Class:EventLoginUsage+' => '连接至应用',
 	'Class:EventLoginUsage/Attribute:user_id' => '登录',
@@ -479,19 +311,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventLoginUsage/Attribute:contact_name+' => '用户名',
 	'Class:EventLoginUsage/Attribute:contact_email' => '用户邮箱',
 	'Class:EventLoginUsage/Attribute:contact_email+' => '用户的邮箱地址',
-]);
-
-//
-// Class: EventNotificationNewsroom
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventNotificationNewsroom' => '已发送的新闻',
-	'Class:EventNotificationNewsroom+' => '',
+	'Class:EventNotificationNewsroom+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:title' => '标题',
-	'Class:EventNotificationNewsroom/Attribute:title+' => '',
+	'Class:EventNotificationNewsroom/Attribute:title+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:icon' => '图标',
-	'Class:EventNotificationNewsroom/Attribute:icon+' => '',
+	'Class:EventNotificationNewsroom/Attribute:icon+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:priority' => '优先级',
 	'Class:EventNotificationNewsroom/Attribute:priority+' => '优先级',
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:1' => '关键',
@@ -503,41 +328,34 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:4' => '标准',
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:4+' => '标准',
 	'Class:EventNotificationNewsroom/Attribute:url' => 'URL',
-	'Class:EventNotificationNewsroom/Attribute:url+' => '',
+	'Class:EventNotificationNewsroom/Attribute:url+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:read' => '已读',
-	'Class:EventNotificationNewsroom/Attribute:read+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:read/Value:no' => '否',
 	'Class:EventNotificationNewsroom/Attribute:read/Value:no+' => '否',
 	'Class:EventNotificationNewsroom/Attribute:read/Value:yes' => '是',
 	'Class:EventNotificationNewsroom/Attribute:read/Value:yes+' => '是',
 	'Class:EventNotificationNewsroom/Attribute:read_date' => '读取日期',
-	'Class:EventNotificationNewsroom/Attribute:read_date+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read_date+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id' => '联系人',
-	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '',
+	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '~~',
 	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => '通知未发送',
 	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => '保存通知时发生错误',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:Action'                                  => '自定义操作',
-	'Class:Action+'                                 => '用户定义的操作',
-	'Class:Action/ComplementaryName'                => '%1$s: %2$s',
-	'Class:Action/Attribute:name'                   => '名称',
-	'Class:Action/Attribute:name+'                  => 'Any value that is meaningful to distinguish this action from the others',
-	'Class:Action/Attribute:description'            => '描述',
-	'Class:Action/Attribute:description+'           => 'A longer explanation about the purpose of this action. For information only.',
-	'Class:Action/Attribute:status'                 => '状态',
-	'Class:Action/Attribute:status+'                => '是否正式环境?',
-	'Class:Action/Attribute:status/Value:test'      => '正在测试',
-	'Class:Action/Attribute:status/Value:test+'     => '',
-	'Class:Action/Attribute:status/Value:enabled'   => '正式',
-	'Class:Action/Attribute:status/Value:enabled+'  => '',
-	'Class:Action/Attribute:status/Value:disabled'  => '停用',
-	'Class:Action/Attribute:status/Value:disabled+' => '',
+	'Class:Action' => '自定义操作',
+	'Class:Action+' => '用户定义的操作',
+	'Class:Action/ComplementaryName' => '%1$s: %2$s',
+	'Class:Action/Attribute:name' => '名称',
+	'Class:Action/Attribute:name+' => 'Any value that is meaningful to distinguish this action from the others',
+	'Class:Action/Attribute:description' => '描述',
+	'Class:Action/Attribute:description+' => 'A longer explanation about the purpose of this action. For information only.',
+	'Class:Action/Attribute:status' => '状态',
+	'Class:Action/Attribute:status+' => '是否正式环境?',
+	'Class:Action/Attribute:status/Value:test' => '正在测试',
+	'Class:Action/Attribute:status/Value:test+' => '~~',
+	'Class:Action/Attribute:status/Value:enabled' => '正式',
+	'Class:Action/Attribute:status/Value:enabled+' => '~~',
+	'Class:Action/Attribute:status/Value:disabled' => '停用',
+	'Class:Action/Attribute:status/Value:disabled+' => '~~',
 	'Class:Action/Attribute:trigger_list' => '相关的触发器',
 	'Class:Action/Attribute:trigger_list+' => '此操作相关的触发器',
 	'Class:Action/Attribute:asynchronous' => '异步',
@@ -552,24 +370,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Action:last_executions_tab_panel_title' => '此操作的执行记录 (%1$s)',
 	'Action:last_executions_tab_limit_days' => '过去 %1$s 天',
 	'Action:last_executions_tab_limit_none' => '无限制',
-]);
-
-//
-// Class: ActionNotification
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ActionNotification' => '通知操作',
 	'Class:ActionNotification+' => '通知操作 (抽象)',
 	'Class:ActionNotification/Attribute:language' => '语言',
 	'Class:ActionNotification/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
-]);
-
-//
-// Class: lnkActionNotificationToContact
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkActionNotificationToContact' => '链接 操作通知/联系人',
 	'Class:lnkActionNotificationToContact+' => 'Contact subscription to Notification Action~~',
 	'Class:lnkActionNotificationToContact/Attribute:contact_id' => '联系人',
@@ -580,50 +384,43 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'The trigger that fired the notification~~',
 	'Class:lnkActionNotificationToContact/Attribute:subscribed' => '已订阅',
 	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification~~',
-]);
-
-//
-// Class: ActionEmail
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:ActionEmail'                                     => '邮件通知',
-	'Class:ActionEmail+'                                    => '',
-	'Class:ActionEmail/Attribute:status+'                   => '此状态将决定提醒谁: 
+	'Class:ActionEmail' => '邮件通知',
+	'Class:ActionEmail+' => '~~',
+	'Class:ActionEmail/Attribute:status+' => '此状态将决定提醒谁: 
 - 正在测试: 仅测试收件人, 
 - 生产: 所有人 (收件人, 抄送和密送) 
 - 禁用: 没有人',
-	'Class:ActionEmail/Attribute:status/Value:test+'        => '仅测试收件人会被通知',
-	'Class:ActionEmail/Attribute:status/Value:enabled+'     => '通知所有人, 包含抄送和秘抄',
-	'Class:ActionEmail/Attribute:status/Value:disabled+'    => '不发送邮件通知',
-	'Class:ActionEmail/Attribute:test_recipient'            => '测试收件人',
-	'Class:ActionEmail/Attribute:test_recipient+'           => '通知为测试中时将使用此邮件地址, 而不是收件人, 抄送和密送',
-	'Class:ActionEmail/Attribute:from'                      => '发件人 (邮箱)',
-	'Class:ActionEmail/Attribute:from+'                     => '固定的邮箱地址或者类似$this->agent_id->email$的占位符.
+	'Class:ActionEmail/Attribute:status/Value:test+' => '仅测试收件人会被通知',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => '通知所有人, 包含抄送和秘抄',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => '不发送邮件通知',
+	'Class:ActionEmail/Attribute:test_recipient' => '测试收件人',
+	'Class:ActionEmail/Attribute:test_recipient+' => '通知为测试中时将使用此邮件地址, 而不是收件人, 抄送和密送',
+	'Class:ActionEmail/Attribute:from' => '发件人 (邮箱)',
+	'Class:ActionEmail/Attribute:from+' => '固定的邮箱地址或者类似$this->agent_id->email$的占位符.
 有些邮件服务器可能不接收占位符.',
-	'Class:ActionEmail/Attribute:from_label'                => '发件人 (显示名)',
-	'Class:ActionEmail/Attribute:from_label+'               => '固定的显示名或者类似 $this->agent_id->friendlyname$ 的占位符',
-	'Class:ActionEmail/Attribute:reply_to'                  => '回复至 (邮箱)',
-	'Class:ActionEmail/Attribute:reply_to+'                 => '固定的邮箱地址或者类似$this->team_id->email$的占位符.
+	'Class:ActionEmail/Attribute:from_label' => '发件人 (显示名)',
+	'Class:ActionEmail/Attribute:from_label+' => '固定的显示名或者类似 $this->agent_id->friendlyname$ 的占位符',
+	'Class:ActionEmail/Attribute:reply_to' => '回复至 (邮箱)',
+	'Class:ActionEmail/Attribute:reply_to+' => '固定的邮箱地址或者类似$this->team_id->email$的占位符.
 如果忽略则使用发件人 (邮箱).',
-	'Class:ActionEmail/Attribute:reply_to_label'            => '回复至 (显示名)',
-	'Class:ActionEmail/Attribute:reply_to_label+'           => '固定的显示名或者类似$this->team_id->friendlyname$的占位符.
+	'Class:ActionEmail/Attribute:reply_to_label' => '回复至 (显示名)',
+	'Class:ActionEmail/Attribute:reply_to_label+' => '固定的显示名或者类似$this->team_id->friendlyname$的占位符.
 如果忽略则使用发件人 (显示名).',
-	'Class:ActionEmail/Attribute:to'                        => '收件人',
-	'Class:ActionEmail/Attribute:to+'                      => 'To: an OQL query returning objects having an email field.
+	'Class:ActionEmail/Attribute:to' => '收件人',
+	'Class:ActionEmail/Attribute:to+' => 'To: an OQL query returning objects having an email field.
 While editing, click on the magnifier to get pertinent examples.
 You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.~~',
-	'Class:ActionEmail/Attribute:cc'                        => '抄送',
-	'Class:ActionEmail/Attribute:cc+'                      => 'Carbon Copy: an OQL query returning objects having an email field.
+	'Class:ActionEmail/Attribute:cc' => '抄送',
+	'Class:ActionEmail/Attribute:cc+' => 'Carbon Copy: an OQL query returning objects having an email field.
 While editing, click on the magnifier to get pertinent examples.
 You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.~~',
-	'Class:ActionEmail/Attribute:bcc'                       => '密抄',
-	'Class:ActionEmail/Attribute:bcc+'                      => '密送: 返回含有邮箱字段对象的OQL查询.
+	'Class:ActionEmail/Attribute:bcc' => '密抄',
+	'Class:ActionEmail/Attribute:bcc+' => '密送: 返回含有邮箱字段对象的OQL查询.
 编辑时可点击放大镜图标获取参考示例',
-	'Class:ActionEmail/Attribute:subject'                   => '主题',
-	'Class:ActionEmail/Attribute:subject+'                  => '邮件主题. 可包含类似$this->attribute_code$的占位符',
-	'Class:ActionEmail/Attribute:body'                      => '正文',
-	'Class:ActionEmail/Attribute:body+'                     => '邮件正文. 可包含以下占位符:
+	'Class:ActionEmail/Attribute:subject' => '主题',
+	'Class:ActionEmail/Attribute:subject+' => '邮件主题. 可包含类似$this->attribute_code$的占位符',
+	'Class:ActionEmail/Attribute:body' => '正文',
+	'Class:ActionEmail/Attribute:body+' => '邮件正文. 可包含以下占位符:
 - $this->attribute_code$ 触发通知的对象的任何属性,
 - $this->html(attribute_code)$ 内容同上但是使用html格式,
 - $this->hyperlink()$ 触发通知的对象的控制台链接,
@@ -631,42 +428,35 @@ You can use in the OQL :this->attribute_code with an attribute code of the objec
 - $this->head_html(case_log_attribute)$ 事例日志中的最新一条html格式的回复,
 - $this->attribute_external_key->attribute$ 任何远程属性的递归语法,
 - $current_contact->attribute$ 触发通知的用户的属性',
-	'Class:ActionEmail/Attribute:importance'                => '重要性',
-	'Class:ActionEmail/Attribute:importance+'               => '生成邮件的重要性标签设置',
-	'Class:ActionEmail/Attribute:importance/Value:low'      => '低',
-	'Class:ActionEmail/Attribute:importance/Value:low+'     => '',
-	'Class:ActionEmail/Attribute:importance/Value:normal'   => '普通',
-	'Class:ActionEmail/Attribute:importance/Value:normal+'  => '',
-	'Class:ActionEmail/Attribute:importance/Value:high'     => '高',
-	'Class:ActionEmail/Attribute:importance/Value:high+'    => '',
-	'Class:ActionEmail/Attribute:language'                  => '语言',
-	'Class:ActionEmail/Attribute:language+'                 => '在邮件中 (状态, 重要性, 优先级, 等等) 所使用的占位符 ($xxx$) 的语言',
-	'Class:ActionEmail/Attribute:html_template'             => 'HTML模板',
-	'Class:ActionEmail/Attribute:html_template+'            => '绑定在以下 \'正文\' 属性内容上的可选HTML模板, 用于定制邮件布局 (在模板中, \'正文\' 属性的内容将被占位符 $content$ 替换)',
-	'Class:ActionEmail/Attribute:ignore_notify'             => '忽略通知标记',
-	'Class:ActionEmail/Attribute:ignore_notify+'            => '如果设置为 \'是\' 则联系人的 \'通知\' 标记将不生效.',
-	'Class:ActionEmail/Attribute:ignore_notify/Value:no'    => '否',
-	'Class:ActionEmail/Attribute:ignore_notify/Value:yes'   => '是',
-	'ActionEmail:main'                                      => '消息',
-	'ActionEmail:trigger'                                   => '触发器',
-	'ActionEmail:recipients'                                => '联系人',
-	'ActionEmail:preview_tab'                               => '预览',
-	'ActionEmail:preview_tab+'                              => '预览邮件模板',
-	'ActionEmail:preview_warning'                           => '实际收到的邮件在客户端中可能与当前在浏览器中的预览有所不同.',
-	'ActionEmail:preview_more_info'                         => '若需更多不同邮件客户端支持的CSS特性信息, 请参阅%1$s',
-	'ActionEmail:content_placeholder_missing'               => '标识符 "%1$s" 在HTML中不存在. 字段 "%2$s" 的内容将不会包含在生成的邮件中.',
-]);
-
-//
-// Class: ActionNewsroom
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:ActionEmail/Attribute:importance' => '重要性',
+	'Class:ActionEmail/Attribute:importance+' => '生成邮件的重要性标签设置',
+	'Class:ActionEmail/Attribute:importance/Value:low' => '低',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '~~',
+	'Class:ActionEmail/Attribute:importance/Value:normal' => '普通',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '~~',
+	'Class:ActionEmail/Attribute:importance/Value:high' => '高',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '~~',
+	'Class:ActionEmail/Attribute:language' => '语言',
+	'Class:ActionEmail/Attribute:language+' => '在邮件中 (状态, 重要性, 优先级, 等等) 所使用的占位符 ($xxx$) 的语言',
+	'Class:ActionEmail/Attribute:html_template' => 'HTML模板',
+	'Class:ActionEmail/Attribute:html_template+' => '绑定在以下 \'正文\' 属性内容上的可选HTML模板, 用于定制邮件布局 (在模板中, \'正文\' 属性的内容将被占位符 $content$ 替换)',
+	'Class:ActionEmail/Attribute:ignore_notify' => '忽略通知标记',
+	'Class:ActionEmail/Attribute:ignore_notify+' => '如果设置为 \'是\' 则联系人的 \'通知\' 标记将不生效.',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:no' => '否',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:yes' => '是',
+	'ActionEmail:main' => '消息',
+	'ActionEmail:trigger' => '触发器',
+	'ActionEmail:recipients' => '联系人',
+	'ActionEmail:preview_tab' => '预览',
+	'ActionEmail:preview_tab+' => '预览邮件模板',
+	'ActionEmail:preview_warning' => '实际收到的邮件在客户端中可能与当前在浏览器中的预览有所不同.',
+	'ActionEmail:preview_more_info' => '若需更多不同邮件客户端支持的CSS特性信息, 请参阅%1$s',
+	'ActionEmail:content_placeholder_missing' => '标识符 "%1$s" 在HTML中不存在. 字段 "%2$s" 的内容将不会包含在生成的邮件中.',
 	'ActionNewsroom:trigger' => '触发器',
 	'ActionNewsroom:content' => '消息',
 	'ActionNewsroom:settings' => '设置',
 	'Class:ActionNewsroom' => '新闻室的通知',
-	'Class:ActionNewsroom+' => '',
+	'Class:ActionNewsroom+' => '~~',
 	'Class:ActionNewsroom/Attribute:title' => '标题',
 	'Class:ActionNewsroom/Attribute:title+' => 'Title of the news. Can contain placeholders like $this->attribute_code$~~',
 	'Class:ActionNewsroom/Attribute:message' => '消息',
@@ -696,177 +486,80 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ActionNewsroom/Attribute:recipients+' => '返回联系人的 OQL 查询',
 	'Class:ActionNewsroom/Attribute:url' => 'URL',
 	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.~~',
-]);
-
-//
-// Class: Trigger
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:Trigger'                         => '触发器',
-	'Class:Trigger+'                        => '自定义事件处理',
-	'Class:Trigger/ComplementaryName'       => '%1$s, %2$s',
-	'Class:Trigger/Attribute:description'   => '描述',
-	'Class:Trigger/Attribute:description+'  => '简短描述',
-	'Class:Trigger/Attribute:action_list'   => '触发的操作',
-	'Class:Trigger/Attribute:action_list+'  => '此触发器激活后要执行的操作',
-	'Class:Trigger/Attribute:finalclass'    => '触发器类型',
-	'Class:Trigger/Attribute:finalclass+'   => '根本属性的名称',
-	'Class:Trigger/Attribute:context'       => '上下文',
-	'Class:Trigger/Attribute:context+'      => '允许此触发器开启的上下文',
-	'Class:Trigger/Attribute:complement'    => '其它信息',
-	'Class:Trigger/Attribute:complement+'   => '此触发器提供的更多信息, 使用英文',
-	'Class:Trigger/Attribute:subscription_policy'   => '订阅策略',
-	'Class:Trigger/Attribute:subscription_policy+'  => '允许用户从触发器取消订阅',
+	'Class:Trigger' => '触发器',
+	'Class:Trigger+' => '自定义事件处理',
+	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
+	'Class:Trigger/Attribute:description' => '描述',
+	'Class:Trigger/Attribute:description+' => '简短描述',
+	'Class:Trigger/Attribute:action_list' => '触发的操作',
+	'Class:Trigger/Attribute:action_list+' => '此触发器激活后要执行的操作',
+	'Class:Trigger/Attribute:finalclass' => '触发器类型',
+	'Class:Trigger/Attribute:finalclass+' => '根本属性的名称',
+	'Class:Trigger/Attribute:context' => '上下文',
+	'Class:Trigger/Attribute:context+' => '允许此触发器开启的上下文',
+	'Class:Trigger/Attribute:complement' => '其它信息',
+	'Class:Trigger/Attribute:complement+' => '此触发器提供的更多信息, 使用英文',
+	'Class:Trigger/Attribute:subscription_policy' => '订阅策略',
+	'Class:Trigger/Attribute:subscription_policy+' => '允许用户从触发器取消订阅',
 	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => '允许完全取消订阅',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => '强制至少选择一个通道 (新闻或邮件)',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => '拒绝取消订阅',
-]);
-
-//
-// Class: TriggerOnObject
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:TriggerOnObject'                         => '触发器 (类型依赖的)',
-	'Class:TriggerOnObject+'                        => '在指定类型对象上的触发器',
-	'Class:TriggerOnObject/Attribute:target_class'  => '目标类型',
+	'Class:TriggerOnObject' => '触发器 (类型依赖的)',
+	'Class:TriggerOnObject+' => '在指定类型对象上的触发器',
+	'Class:TriggerOnObject/Attribute:target_class' => '目标类型',
 	'Class:TriggerOnObject/Attribute:target_class+' => '可激活此触发器的类',
-	'Class:TriggerOnObject/Attribute:filter'        => '筛选器',
-	'Class:TriggerOnObject/Attribute:filter+'       => '限定将激活触发器的对象 (目标类型)',
-	'TriggerOnObject:WrongFilterQuery'              => '错误的筛选查询: %1$s',
-	'TriggerOnObject:WrongFilterClass'              => '筛选查询返回的对象必须是 "%1$s"',
-]);
-
-//
-// Class: TriggerOnPortalUpdate
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:TriggerOnObject/Attribute:filter' => '筛选器',
+	'Class:TriggerOnObject/Attribute:filter+' => '限定将激活触发器的对象 (目标类型)',
+	'TriggerOnObject:WrongFilterQuery' => '错误的筛选查询: %1$s',
+	'TriggerOnObject:WrongFilterClass' => '筛选查询返回的对象必须是 "%1$s"',
 	'Class:TriggerOnPortalUpdate' => '触发器 (工单被更新时)',
 	'Class:TriggerOnPortalUpdate+' => '终端用户更新工单时触发',
-]);
-
-//
-// Class: TriggerOnStateChange
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnStateChange' => '触发器 (当状态变化时)',
 	'Class:TriggerOnStateChange+' => '当对象状态变化时触发',
 	'Class:TriggerOnStateChange/Attribute:state' => '状态',
-	'Class:TriggerOnStateChange/Attribute:state+' => '',
-]);
-
-//
-// Class: TriggerOnStateEnter
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:TriggerOnStateChange/Attribute:state+' => '~~',
 	'Class:TriggerOnStateEnter' => '触发器 (进入指定状态)',
 	'Class:TriggerOnStateEnter+' => '对象进入指定状态时触发',
-]);
-
-//
-// Class: TriggerOnStateLeave
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnStateLeave' => '触发器 (离开指定状态时)',
 	'Class:TriggerOnStateLeave+' => '对象离开指定状态时触发',
-]);
-
-//
-// Class: TriggerOnObjectCreate
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnObjectCreate' => '触发器 (对象被创建时)',
 	'Class:TriggerOnObjectCreate+' => '对象创建时触发',
-]);
-
-//
-// Class: TriggerOnObjectDelete
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnObjectDelete' => '触发器 (对象被删除时)',
 	'Class:TriggerOnObjectDelete+' => '指定类型或子类型对象删除时的触发器',
-]);
-
-//
-// Class: TriggerOnObjectUpdate
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnObjectUpdate' => '触发器 (对象被更新时)',
 	'Class:TriggerOnObjectUpdate+' => '指定类型或子类型对象更新时的触发器',
 	'Class:TriggerOnObjectUpdate/Attribute:filter+' => '此筛选器在数据库中的对象更新后开始计算. 它可限制可以触发操作的对象',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => '目标字段',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
-]);
-
-//
-// Class: TriggerOnObjectMention
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
 	'Class:TriggerOnObjectMention' => '触发器 (对象被提及时)',
 	'Class:TriggerOnObjectMention+' => '指定类型或子类型对象在属性日志中提及 (@xxx) 时的触发器',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => '提及筛选',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => '限定将激活此触发器的提及对象. 如果为空则任何类的提及对象将激活此触发器.',
-]);
-
-//
-// Class: TriggerOnAttributeBlobDownload
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnAttributeBlobDownload' => '触发器 (对象文档被下载时)',
 	'Class:TriggerOnAttributeBlobDownload+' => '指定类型或子类型对象的文档下载时的触发器',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => '目标字段',
-	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
-]);
-
-//
-// Class: TriggerOnThresholdReached
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
 	'Class:TriggerOnThresholdReached' => '触发器 (基于阈值)',
 	'Class:TriggerOnThresholdReached+' => '当达到某个阈值时触发',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => '秒表',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '~~',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => '阈值',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-]);
-
-//
-// Class: lnkTriggerAction
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '~~',
 	'Class:lnkTriggerAction' => '链接 操作/触发器',
 	'Class:lnkTriggerAction+' => '链接触发器和操作',
 	'Class:lnkTriggerAction/Attribute:action_id' => '操作',
 	'Class:lnkTriggerAction/Attribute:action_id+' => '要执行的操作',
 	'Class:lnkTriggerAction/Attribute:action_name' => '操作',
-	'Class:lnkTriggerAction/Attribute:action_name+' => '',
+	'Class:lnkTriggerAction/Attribute:action_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_id' => '触发器',
-	'Class:lnkTriggerAction/Attribute:trigger_id+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_id+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_name' => '触发器',
-	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:order' => '顺序',
 	'Class:lnkTriggerAction/Attribute:order+' => '操作的执行顺序',
-]);
-
-//
-// Synchro Data Source
-//
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:SynchroDataSource' => '数据源同步',
 	'Class:SynchroDataSource/Attribute:name' => '名称',
-	'Class:SynchroDataSource/Attribute:name+' => '',
+	'Class:SynchroDataSource/Attribute:name+' => '~~',
 	'Class:SynchroDataSource/Attribute:description' => '描述',
 	'Class:SynchroDataSource/Attribute:status' => '状态',
 	'Class:SynchroDataSource/Attribute:scope_class' => '目标类型',
@@ -932,7 +625,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => '仅管理员',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => '所有允许删除此类型对象的用户',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => '没有人',
-
 	'SynchroDataSource:Description' => '描述',
 	'SynchroDataSource:Reconciliation' => '搜索 &amp; 使一致',
 	'SynchroDataSource:Deletion' => '删除规则',
@@ -1029,7 +721,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => '已锁定',
 	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => '未锁定',
 	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => '初始化空值',
-	'Class:SynchroAttribute/Attribute:finalclass' => '',
+	'Class:SynchroAttribute/Attribute:finalclass' => 'Class~~',
 	'Class:SynchroAttExtKey' => '同步属性 (外键)',
 	'Class:SynchroAttExtKey/Attribute:reconciliation_attcode' => '复制属性',
 	'Class:SynchroAttLinkSet' => '同步属性 (链集)',
@@ -1075,57 +767,49 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:SynchroReplica/Attribute:status_last_warning' => '告警',
 	'Class:SynchroReplica/Attribute:info_creation_date' => '创建日期',
 	'Class:SynchroReplica/Attribute:info_last_modified' => '最后修改日期',
-	'Class:SynchroReplica/Action:delete+'        => 'Delete the replica but not the destination object. If the raw data corresponding to this replica is still part of the source, it will be recreated during the next synchronization import.~~',
-	'Class:SynchroReplica/Action:unlink'         => 'Unlink~~',
-	'Class:SynchroReplica/Action:unlink+'        => 'Unlink replica from destination object. It will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
-	'Class:SynchroReplica/Action:unlinksynchro'  => 'Unlink & Synchronize~~',
+	'Class:SynchroReplica/Action:delete+' => 'Delete the replica but not the destination object. If the raw data corresponding to this replica is still part of the source, it will be recreated during the next synchronization import.~~',
+	'Class:SynchroReplica/Action:unlink' => 'Unlink~~',
+	'Class:SynchroReplica/Action:unlink+' => 'Unlink replica from destination object. It will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
+	'Class:SynchroReplica/Action:unlinksynchro' => 'Unlink & Synchronize~~',
 	'Class:SynchroReplica/Action:unlinksynchro+' => 'Force immediate resynchronization of the replica. This can change the destination id. Required after a Data Synchro change on attribute reconciliation flag or if reconciliation attributes were not locked, and you wish to retain the iTop objects modified since then, while recovering or recreating objects aligned with the source.~~',
-	'Class:SynchroReplica/Action:synchro'       => 'Synchronize~~',
-	'Class:SynchroReplica/Action:synchro+'      => 'Force immediate synchronization of the replica. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
-	'Class:SynchroReplica/Action:allowdelete'   => 'Allow deletion of destination~~',
-	'Class:SynchroReplica/Action:allowdelete+'  => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:denydelete'    => 'Deny deletion of destination~~',
-	'Class:SynchroReplica/Action:denydelete+'   => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:unlink_all'    => 'Unlink Replicas~~',
-	'Class:SynchroReplica/Action:unlink_all+'   => 'Unlink Replicas from their destination object. They will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
+	'Class:SynchroReplica/Action:synchro' => 'Synchronize~~',
+	'Class:SynchroReplica/Action:synchro+' => 'Force immediate synchronization of the replica. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
+	'Class:SynchroReplica/Action:allowdelete' => 'Allow deletion of destination~~',
+	'Class:SynchroReplica/Action:allowdelete+' => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
+	'Class:SynchroReplica/Action:denydelete' => 'Deny deletion of destination~~',
+	'Class:SynchroReplica/Action:denydelete+' => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
+	'Class:SynchroReplica/Action:unlink_all' => 'Unlink Replicas~~',
+	'Class:SynchroReplica/Action:unlink_all+' => 'Unlink Replicas from their destination object. They will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
 	'Class:SynchroReplica/Action:unlinksynchro_all' => 'Unlink & Synchronize Replicas~~',
 	'Class:SynchroReplica/Action:unlinksynchro_all+' => 'Force immediate resynchronization of the replicas. This can change their destination id. Required after a Data Synchro change on attribute reconciliation flag or if reconciliation attributes were not locked, and you wish to retain the iTop objects modified since then, while recovering or recreating objects aligned with the source.~~',
-	'Class:SynchroReplica/Action:synchro_all'      => 'Synchronize Replicas~~',
-	'Class:SynchroReplica/Action:synchro_all+'     => 'Force immediate synchronization of the replicas. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
-	'Class:SynchroReplica/Action:allowdelete_all'  => 'Allow deletion of destination objects~~',
+	'Class:SynchroReplica/Action:synchro_all' => 'Synchronize Replicas~~',
+	'Class:SynchroReplica/Action:synchro_all+' => 'Force immediate synchronization of the replicas. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
+	'Class:SynchroReplica/Action:allowdelete_all' => 'Allow deletion of destination objects~~',
 	'Class:SynchroReplica/Action:allowdelete_all+' => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:denydelete_all'   => 'Deny deletion of destination objects~~',
-	'Class:SynchroReplica/Action:denydelete_all+'  => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
-
-	'UI:UnlinkAllTabTitle'         => 'Unlink Replicas~~',
-	'UI:UnlinkAllPageTitle'        => 'Unlink Replicas from their destination object~~',
-	'UI:UnlinkSynchroAllTabTitle'  => 'Unlink & Synchronize Replicas~~',
+	'Class:SynchroReplica/Action:denydelete_all' => 'Deny deletion of destination objects~~',
+	'Class:SynchroReplica/Action:denydelete_all+' => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
+	'UI:UnlinkAllTabTitle' => 'Unlink Replicas~~',
+	'UI:UnlinkAllPageTitle' => 'Unlink Replicas from their destination object~~',
+	'UI:UnlinkSynchroAllTabTitle' => 'Unlink & Synchronize Replicas~~',
 	'UI:UnlinkSynchroAllPageTitle' => 'Unlink Replicas from their destination object & Synchronize them again~~',
-	'UI:SynchroAllTabTitle'        => 'Synchronize Replicas~~',
-	'UI:SynchroAllPageTitle'       => 'Synchronize Replicas: leading to a destination object creation, mapping or an error~~',
-	'UI:AllowDeleteAllTabTitle'    => 'Allow deletion of synchronized object~~',
-	'UI:AllowDeleteAllPageTitle'   => 'Allow propagation of Replica deletion to their destination object~~',
-	'UI:DenyDeleteAllTabTitle'     => 'Deny deletion of synchronized object~~',
-	'UI:DenyDeleteAllPageTitle'    => 'Deny propagation of Replica deletion to their destination object~~',
-
+	'UI:SynchroAllTabTitle' => 'Synchronize Replicas~~',
+	'UI:SynchroAllPageTitle' => 'Synchronize Replicas: leading to a destination object creation, mapping or an error~~',
+	'UI:AllowDeleteAllTabTitle' => 'Allow deletion of synchronized object~~',
+	'UI:AllowDeleteAllPageTitle' => 'Allow propagation of Replica deletion to their destination object~~',
+	'UI:DenyDeleteAllTabTitle' => 'Deny deletion of synchronized object~~',
+	'UI:DenyDeleteAllPageTitle' => 'Deny propagation of Replica deletion to their destination object~~',
 	'Class:appUserPreferences' => '用户偏好',
 	'Class:appUserPreferences/Attribute:userid' => '用户',
 	'Class:appUserPreferences/Attribute:preferences' => '偏好设置',
 	'Core:ExecProcess:Code1' => '命令错误或命令执行出错 (例如错误的脚本名称)',
 	'Core:ExecProcess:Code255' => 'PHP错误 (解析, 或运行时)',
-
-	// Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
-
-	// Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => '耗时 (储存为 "%1$s")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => '在 "%1$s" 上消耗的时间',
 	'Core:ExplainWTC:StopWatch-Deadline' => '"%1$s" 的期限截止于%2$d%%',
-
-	// Bulk export
 	'Core:BulkExport:MissingParameter_Param' => '缺少参数 "%1$s"',
 	'Core:BulkExport:InvalidParameter_Query' => '参数 "query" 的值无效. 在查询薄中没有找到对应编号: "%1$s" 的记录.',
 	'Core:BulkExport:ExportFormatPrompt' => '导出格式:',
@@ -1195,15 +879,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Core:Validator:Mandatory' => '这里必填',
 	'Core:Validator:MustBeInteger' => '必须是整数',
 	'Core:Validator:MustSelectOne' => '请选择',
-]);
-
-//
-// Class: TagSetFieldData
-//
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TagSetFieldData' => '%1$s %2$s',
-	'Class:TagSetFieldData+' => '',
-
+	'Class:TagSetFieldData+' => '~~',
 	'Class:TagSetFieldData/Attribute:code' => '代码',
 	'Class:TagSetFieldData/Attribute:code+' => '内部代码. 必须至少包含3个数字或字母',
 	'Class:TagSetFieldData/Attribute:label' => '标签',
@@ -1213,7 +890,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TagSetFieldData/Attribute:finalclass' => '标签类型',
 	'Class:TagSetFieldData/Attribute:obj_class' => '对象类型',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => '字段编码',
-
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => '已使用的标签无法删除',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => '标签编码或名称必须唯一',
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => '标签编码必须介于3到%1$d个字符, 以字母开头.',
@@ -1224,70 +900,52 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => '标签 "属性编码" 不能更改',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => '标签使用率 (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => '此标签没有条目',
-]);
-
-//
-// Class: DBProperty
-//
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:DBProperty' => '数据库属性',
-	'Class:DBProperty+' => '',
+	'Class:DBProperty+' => '~~',
 	'Class:DBProperty/Attribute:name' => '名称',
-	'Class:DBProperty/Attribute:name+' => '',
+	'Class:DBProperty/Attribute:name+' => '~~',
 	'Class:DBProperty/Attribute:description' => '描述',
-	'Class:DBProperty/Attribute:description+' => '',
+	'Class:DBProperty/Attribute:description+' => '~~',
 	'Class:DBProperty/Attribute:value' => '值',
-	'Class:DBProperty/Attribute:value+' => '',
+	'Class:DBProperty/Attribute:value+' => '~~',
 	'Class:DBProperty/Attribute:change_date' => '修改日期',
-	'Class:DBProperty/Attribute:change_date+' => '',
+	'Class:DBProperty/Attribute:change_date+' => '~~',
 	'Class:DBProperty/Attribute:change_comment' => '备注',
-	'Class:DBProperty/Attribute:change_comment+' => '',
-]);
-
-//
-// Class: BackgroundTask
-//
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:DBProperty/Attribute:change_comment+' => '~~',
 	'Class:BackgroundTask' => '后台任务',
-	'Class:BackgroundTask+' => '',
+	'Class:BackgroundTask+' => '~~',
 	'Class:BackgroundTask/Attribute:class_name' => '类型名称',
 	'Class:BackgroundTask/Attribute:class_name+' => '~~',
 	'Class:BackgroundTask/Attribute:first_run_date' => '首次运行时间',
-	'Class:BackgroundTask/Attribute:first_run_date+' => '',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:latest_run_date' => '最近运行时间',
-	'Class:BackgroundTask/Attribute:latest_run_date+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:next_run_date' => '下次运行时间',
-	'Class:BackgroundTask/Attribute:next_run_date+' => '',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:total_exec_count' => '总共执行的次数',
-	'Class:BackgroundTask/Attribute:total_exec_count+' => '',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
 	'Class:BackgroundTask/Attribute:latest_run_duration' => '最近运行时长',
-	'Class:BackgroundTask/Attribute:latest_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:min_run_duration' => '最少运行时长',
-	'Class:BackgroundTask/Attribute:min_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:max_run_duration' => '最多运行时长',
-	'Class:BackgroundTask/Attribute:max_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:average_run_duration' => '平均运行时长',
-	'Class:BackgroundTask/Attribute:average_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:running' => '运行中',
-	'Class:BackgroundTask/Attribute:running+' => '',
+	'Class:BackgroundTask/Attribute:running+' => '~~',
 	'Class:BackgroundTask/Attribute:status' => '状态',
-	'Class:BackgroundTask/Attribute:status+' => '',
-]);
-
-//
-// Class: AsyncTask
-//
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:BackgroundTask/Attribute:status+' => '~~',
 	'Class:AsyncTask' => '异步任务',
-	'Class:AsyncTask+' => '',
+	'Class:AsyncTask+' => '~~',
 	'Class:AsyncTask/Attribute:created' => '已创建',
-	'Class:AsyncTask/Attribute:created+' => '',
+	'Class:AsyncTask/Attribute:created+' => '~~',
 	'Class:AsyncTask/Attribute:started' => '已开始',
-	'Class:AsyncTask/Attribute:started+' => '',
+	'Class:AsyncTask/Attribute:started+' => '~~',
 	'Class:AsyncTask/Attribute:planned' => '已计划',
-	'Class:AsyncTask/Attribute:planned+' => '',
+	'Class:AsyncTask/Attribute:planned+' => '~~',
 	'Class:AsyncTask/Attribute:event_id' => '事件',
-	'Class:AsyncTask/Attribute:event_id+' => '',
+	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => '类型',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
 	'Class:AsyncTask/Attribute:status' => '状态',
@@ -1302,45 +960,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => '配置 "async_task_retries[%1$s]" 的格式无效. 应该为包含以下值的数组: %2$s',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => '配置 "async_task_retries[%1$s]" 的格式无效: 未知的值 "%2$s". 应该只包含以下值: %3$s',
-]);
-
-//
-// Class: AbstractResource
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:AbstractResource' => '抽象资源',
-	'Class:AbstractResource+' => '',
-]);
-
-//
-// Class: ResourceAdminMenu
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:AbstractResource+' => '~~',
 	'Class:ResourceAdminMenu' => '资源管理菜单',
-	'Class:ResourceAdminMenu+' => '',
-]);
-
-//
-// Class: ResourceRunQueriesMenu
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:ResourceAdminMenu+' => '~~',
 	'Class:ResourceRunQueriesMenu' => '资源运行查询菜单',
-	'Class:ResourceRunQueriesMenu+' => '',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:ResourceRunQueriesMenu+' => '~~',
 	'Class:ResourceSystemMenu' => '资源系统菜单',
-	'Class:ResourceSystemMenu+' => '',
-]);
-
-// additional translation for zh_cn
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
+	'Class:ResourceSystemMenu+' => '~~',
 ]);

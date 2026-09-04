@@ -1,19 +1,18 @@
 <?php
-
-/*
- * @copyright   Copyright (C) 2010-2024 Combodo SAS
- * @license     http://opensource.org/licenses/AGPL-3.0
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-
-// UI elements
+/**
+ *
+ */
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:WelcomePopup:Button:RemindLater' => '以后再提醒我',
 	'UI:WelcomePopup:Button:AcknowledgeAndNext' => '下一步',
 	'UI:WelcomePopup:Button:AcknowledgeAndClose' => '关闭',
-]);
-
-// Message
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:WelcomePopup:Message:330_01_Welcome:Title' => '欢迎使用 '.ITOP_APPLICATION_SHORT.' 3.3',
 	'UI:WelcomePopup:Message:330_01_Welcome:Description' => '<div>我们很高兴推出最新版本, 带来了一系列更新和改进!</div>
 <br>

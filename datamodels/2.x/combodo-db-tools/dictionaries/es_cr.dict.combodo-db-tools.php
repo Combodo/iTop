@@ -1,12 +1,14 @@
 <?php
-
 /**
- * Spanish Localized data
+ * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
+ *
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:DBToolsMenu' => 'Integridad de Base de Datos',
@@ -42,17 +44,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'DBAnalyzer-Fetch-Count-Error' => 'Obtener cuenta de errores en `%1$s`, %2$d entradas recuperadas / %3$d contadas',
 	'DBAnalyzer-Integrity-FinalClass' => 'Campo `%2$s`.`%1$s` debe tener los mismos valores que `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Campo `%2$s`.`%1$s` debe contener un caracter válido',
-]);
-
-// Database Info
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'DBTools:DatabaseInfo' => 'Información de Base de Datos',
 	'DBTools:Base' => 'Base',
 	'DBTools:Size' => 'Tamaño',
-]);
-
-// Lost attachments
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'DBTools:LostAttachments' => 'Adjuntos perdidos',
 	'DBTools:LostAttachments:Disclaimer' => 'Aquí usted puede buscar anexos perdidos o fuera de lugar. Esta NO es una herramienta de recuperación de datos, no obtiene datos borrados.',
 	'DBTools:LostAttachments:Button:Analyze' => 'Analizar',

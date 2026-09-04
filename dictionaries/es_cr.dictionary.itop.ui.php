@@ -1,12 +1,14 @@
 <?php
-
 /**
- * Spanish Localized data
+ * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
+ *
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:AuditCategory' => 'Auditoría de Categorías',
@@ -25,13 +27,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Porcentaje de objetos no válidos por debajo del cual el resultado es erróneo (rojo)',
 	'Class:AuditCategory/Attribute:domains_list' => 'Dominios',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Dominios que incluyen esta categoría',
-]);
-
-//
-// Class: AuditRule
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:AuditRule' => 'Regla de Auditoría',
 	'Class:AuditRule+' => 'Regla a revisar para una categoría de auditoría específica',
 	'Class:AuditRule/Attribute:name' => 'Nombre de la Regla',
@@ -45,22 +40,15 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:AuditRule/Attribute:valid_flag' => '¿Objetos Válidos?',
 	'Class:AuditRule/Attribute:valid_flag+' => 'Verdadero si la regla retorna los objetos válidos, falso cualquier otra cosa',
 	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'Verdadero',
-	'Class:AuditRule/Attribute:valid_flag/Value:true+' => '',
+	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'Then objects in error are those part of the scope and not in the list of valid objects~~',
 	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'Falso',
-	'Class:AuditRule/Attribute:valid_flag/Value:false+' => '',
+	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'Then objects in error are the invalid objects which are part of the scope~~',
 	'Class:AuditRule/Attribute:category_id' => 'Categoría',
 	'Class:AuditRule/Attribute:category_id+' => 'La categoría para esta regla',
 	'Class:AuditRule/Attribute:category_name' => 'Categoría',
 	'Class:AuditRule/Attribute:category_name+' => 'Nombre de la categoría para esta regla',
 	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
 	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
-]);
-
-//
-// Class: AuditDomain
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:AuditDomain' => 'Auditar Dominio',
 	'Class:AuditDomain+' => 'La auditoría de dominios permiten agrupar las categorías de auditoría.
 El dominio suele corresponder a quién se encarga de comprobar y corregir errores.',
@@ -72,13 +60,6 @@ El dominio suele corresponder a quién se encarga de comprobar y corregir errore
 	'Class:AuditDomain/Attribute:icon+' => 'Icono',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categorías',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Categorías de auditoría relacionadas. Al ejecutar la auditoría en un dominio, se verifican todas las categorías de auditoría relacionadas y solo esas.',
-]);
-
-//
-// Class: lnkAuditCategoryToAuditDomain
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Relación Categoría de auditoría / Dominio de auditoría',
 	'Class:lnkAuditCategoryToAuditDomain+' => 'Relación Categoría de auditoría / Dominio de auditoría',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Categoría',
@@ -89,13 +70,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Dominio de auditoría',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Nombre de dominio',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Nombre de auditoria de dominio',
-]);
-
-//
-// Class: QueryOQL
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Query' => 'Consulta',
 	'Class:Query+' => 'Un query es un set de datos definidos de manera dinámica',
 	'Class:Query/Attribute:name' => 'Nombre',
@@ -115,7 +89,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Query/Attribute:export_last_user_contact' => 'Contacto',
 	'Class:Query/Attribute:export_last_user_contact+' => 'El contacto que ejecutó la última exportación.',
 	'Class:Query/Attribute:usages' => 'Usages~~',
-		'Class:Query/Attribute:usages+' => 'Specify the possible usages for this query.
+	'Class:Query/Attribute:usages+' => 'Specify the possible usages for this query.
  - The "Reference for AI" tag assumes the description is very explicit and compliant with OQL. It may be used as an example for building OQL queries by AI.
  - The "Notification" tag implies the class of returned objects has one and only one field of type email.
  - The "Dashlet" tag assumes the OQL returns a single class of objects.~~',
@@ -134,18 +108,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:QueryOQL+' => 'Una consulta basada en Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => 'Expresión',
 	'Class:QueryOQL/Attribute:oql+' => 'Expresión OQL',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'addon/userrights'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: User
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:User' => 'Usuario',
 	'Class:User+' => 'Credencial de usuario',
 	'Class:User/Attribute:finalclass' => 'Tipo de Cuenta',
@@ -193,13 +155,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:User/Warning:NoContactHasImpact' => 'Cuidado: no hay ninguna Persona definida sobre este Usuario, esto impide el acceso a portales, notificaciones de noticias y otros efectos secundarios en el back-office',
 	'Class:UserInternal' => 'Usuario Interno',
 	'Class:UserInternal+' => 'Usuario definido en '.ITOP_APPLICATION_SHORT,
-]);
-
-//
-// Class: URP_Profiles
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_Profiles' => 'Perfil',
 	'Class:URP_Profiles+' => 'Perfil de usuario',
 	'Class:URP_Profiles/Attribute:name' => 'Nombre',
@@ -208,13 +163,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_Profiles/Attribute:description+' => 'descripción en una línea',
 	'Class:URP_Profiles/Attribute:user_list' => 'Usuarios',
 	'Class:URP_Profiles/Attribute:user_list+' => 'Personas que tienen este Rol.',
-]);
-
-//
-// Class: URP_Dimensions
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_Dimensions' => 'Dimensión',
 	'Class:URP_Dimensions+' => 'Dimensión de Aplicación (definiendo silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Nombre',
@@ -223,13 +171,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_Dimensions/Attribute:description+' => 'Descripción en una línea',
 	'Class:URP_Dimensions/Attribute:type' => 'Tipo',
 	'Class:URP_Dimensions/Attribute:type+' => 'Nombre de Clase o Tipo de Datos (Unidad de Proyección)',
-]);
-
-//
-// Class: URP_UserProfile
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_UserProfile' => 'Asignación de Perfiles',
 	'Class:URP_UserProfile+' => 'Perfiles de Usuarios',
 	'Class:URP_UserProfile/Name' => 'Vinculo entre %1$s y %2$s',
@@ -243,13 +184,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_UserProfile/Attribute:profile+' => 'Nombre del perfil',
 	'Class:URP_UserProfile/Attribute:reason' => 'Motivo',
 	'Class:URP_UserProfile/Attribute:reason+' => 'Justificación de por qué esta persona tiene este rol',
-]);
-
-//
-// Class: URP_UserOrg
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_UserOrg' => 'Organizaciones de Usuario',
 	'Class:URP_UserOrg+' => 'Organizaciones Permitidas',
 	'Class:URP_UserOrg/Name' => 'Vínculo entre %1$s y %2$s',
@@ -263,13 +197,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Organización Permitida',
 	'Class:URP_UserOrg/Attribute:reason' => 'Motivo',
 	'Class:URP_UserOrg/Attribute:reason+' => 'Explicar porqué esta persona tiene permitido ver la información de esta Organización',
-]);
-
-//
-// Class: URP_ProfileProjection
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_ProfileProjection' => 'Proyecciones de Perfil',
 	'Class:URP_ProfileProjection+' => 'Proyecciones de Perfil',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimensión',
@@ -284,13 +211,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_ProfileProjection/Attribute:value+' => 'Expresión OQL (usando $user) | constante |  | +código de atributo',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Atributo',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Código de Atributo Destino (opcional)',
-]);
-
-//
-// Class: URP_ClassProjection
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_ClassProjection' => 'Proyecciones de Clase',
 	'Class:URP_ClassProjection+' => 'Proyecciones de Clase',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimensión',
@@ -303,13 +223,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_ClassProjection/Attribute:value+' => 'Expresión OQL (usando $this) | constante |  | +código de atributo',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Atributo',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Código de Atributo Destino (opcional)',
-]);
-
-//
-// Class: URP_ActionGrant
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_ActionGrant' => 'Permisos sobre Acciones',
 	'Class:URP_ActionGrant+' => 'Permisos sobre Acciones',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Perfil',
@@ -326,13 +239,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'no',
 	'Class:URP_ActionGrant/Attribute:action' => 'Acción',
 	'Class:URP_ActionGrant/Attribute:action+' => 'Operaciones a realizar en la clase especificada',
-]);
-
-//
-// Class: URP_StimulusGrant
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_StimulusGrant' => 'Permisos de Cambio de Estado',
 	'Class:URP_StimulusGrant+' => 'Permisos de Cambio de Estado en el Ciclo de Vida del Objeto',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Perfil',
@@ -344,30 +250,17 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_StimulusGrant/Attribute:permission' => 'Permiso',
 	'Class:URP_StimulusGrant/Attribute:permission+' => '¿Permitido o No Permitido?',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:yes' => 'Si',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => '',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => 'yes~~',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no' => 'No',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => '',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'no~~',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Cambio de Estado',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'Código de Cambio de Estado',
-]);
-
-//
-// Class: URP_AttributeGrant
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_AttributeGrant' => 'Permisos en Atributos',
 	'Class:URP_AttributeGrant+' => 'Permisos en Atributos',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Concesión de Acción',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'concesión de Acción',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Atributo',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Código de Atributo',
-]);
-
-//
-// Class: UserDashboard
-//
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:UserDashboard' => 'Tablero de Usuario',
 	'Class:UserDashboard+' => 'Tablero de Usuario',
 	'Class:UserDashboard/Attribute:user_id' => 'Usuario',
@@ -376,15 +269,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:UserDashboard/Attribute:menu_code+' => 'Código de Menú',
 	'Class:UserDashboard/Attribute:contents' => 'Contenidos',
 	'Class:UserDashboard/Attribute:contents+' => 'Contenidos',
-]);
-
-//
-// Duplicated into itop-welcome-itil ( will be removed from here...)
-//
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:WelcomeMenu' => 'Bienvenido',
-	'Menu:WelcomeMenu+' => 'Bienvenido a '.ITOP_APPLICATION_SHORT, 'Menu:WelcomeMenuPage' => 'Bienvenido',
-	'Menu:WelcomeMenuPage+' => 'Bienvenido a '.ITOP_APPLICATION_SHORT, 'Menu:AdminTools' => 'Herramientas Administrativas',
+	'Menu:WelcomeMenu+' => 'Bienvenido a '.ITOP_APPLICATION_SHORT,
+	'Menu:WelcomeMenuPage' => 'Bienvenido',
+	'Menu:WelcomeMenuPage+' => 'Bienvenido a '.ITOP_APPLICATION_SHORT,
+	'Menu:AdminTools' => 'Herramientas Administrativas',
 	'Menu:AdminTools+' => 'Herramientas Administrativas',
 	'Menu:AdminTools?' => 'Herramientas accesibles sólo a usuarios con Perfil de administrador',
 	'Menu:CSVImportMenu' => 'Importar CSV',
@@ -396,19 +285,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:NotificationsMenu' => 'Notificaciones',
 	'Menu:NotificationsMenu+' => 'Configuración de las notificaciones',
 	'Menu:MyShortcuts' => 'Mis Accesos Rápidos',
-	'Menu:Notifications:Title' => 'Auditar categorías',
 	'Menu:DataAdministration' => 'Administración de Datos',
 	'Menu:DataAdministration+' => 'Administración de Datos',
-]);
-
-//
-// String from the User Interface: menu, messages, buttons, etc...
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'BooleanLabel:yes' => 'Si',
 	'BooleanLabel:no' => 'No',
-	'UI:WelcomeMenu:Title' => 'Bienvenido a '.ITOP_APPLICATION_SHORT, 'UI:WelcomeMenu:AllOpenRequests' => 'Requerimientos Abiertos: %1$d',
+	'UI:WelcomeMenu:Title' => 'Bienvenido a '.ITOP_APPLICATION_SHORT,
+	'UI:WelcomeMenu:AllOpenRequests' => 'Requerimientos Abiertos: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mis Requerimientos',
 	'UI:WelcomeMenu:OpenIncidents' => 'Incidentes Abiertos: %1$d',
 	'UI:WelcomeMenu:AllConfigItems' => 'Elementos de Configuración: %1$d',
@@ -502,6 +384,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Error:MaintenanceMode' => 'La aplicación se encuentra actualmente en mantenimiento',
 	'UI:Error:MaintenanceTitle' => 'Mantenimiento',
 	'UI:Error:InvalidToken' => 'La sesión actual no es válida. Actualice la página e inténtelo de nuevo. Si el problema persiste, cierre sesión y vuelva a iniciarla.',
+	'UI:Error:TwigController' => 'Internal error in form controller~~',
 	'UI:Error:SMTP:UnknownVendor' => 'El proveedor SMTP de OAuth %1$s no existe (email_transport_smtp.oauth.provider)',
 	'UI:GroupBy:Count' => 'Cuenta',
 	'UI:GroupBy:Count+' => 'Número de Elementos',
@@ -663,6 +546,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:CSVReport-Row-Issue-Reconciliation' => 'Falla al reconciliar',
 	'UI:CSVReport-Row-Issue-Ambiguous' => 'Reconciliación Ambigua',
 	'UI:CSVReport-Row-Issue-Internal' => 'Error Interno: %1$s, %2$s',
+	'UI:CSVReport-Value-Issue-NoValue' => 'No value~~',
+	'UI:CSVReport-Row-Issue-NbField' => 'Not the expected number of columns (found: %1$s, expected: %2$s)~~',
 	'UI:CSVReport-Icon-Unchanged' => 'Sin Cambio',
 	'UI:CSVReport-Icon-Modified' => 'Modificado',
 	'UI:CSVReport-Icon-Missing' => 'Faltante',
@@ -695,7 +580,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Audit:Interactive:Domain:BreadCrumb' => '%1$s',
 	'UI:Audit:Interactive:Domain:BreadCrumb+' => 'Auditoría de dominio: %1$s',
 	'UI:Audit:Interactive:Selection:Title' => 'Selección de una auditoría',
-	'UI:Audit:InteractiveAudit' => 'Auditoría Interactiva',
 	'UI:Audit:Interactive:Selection:SubTitle' => 'Seleccione un dominio para obtener resultados limitados a este dominio o seleccione "Todas las categorías" para obtener una auditoría completa (puede llevar tiempo o incluso fallar si hay demasiados datos para auditar)',
 	'UI:Audit:Interactive:Selection:BreadCrumb' => 'Selección',
 	'UI:Audit:Interactive:Selection:BreadCrumb+' => 'Selección de una auditoría a ejecutar',
@@ -737,7 +621,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:RunQuery:Error' => 'Ha ocurrido un error al ejecutar la consulta: %1$s',
 	'UI:Query:UrlForExcel' => 'URL para usarse en consultas web de MS-Excel',
 	'UI:Query:UrlV1' => 'La lista de campos se ha dejado sin especificación. La página <em>export-V2.php</em> no puede ser invocada sin está información. Por lo tanto, el URL sugerido abajo apunta a la página legada: <em>export.php</em>. Esta versión legada de exportación tiene la siguiente limitación: la lista de campos exportados puede variar, dependiendo del formato de salida y el modelo de datos de '.ITOP_APPLICATION_SHORT.'.Desea garantizar que la lista de columnas exportadas permanenzcan estables durante la ejecución, entonces debe especificar un valor para el atributo "Campos" y utilice la página <em>export-V2.php</em>.',
-	'UI:Schema:Title' => 'Esquema de Objetos en '.ITOP_APPLICATION_SHORT, 'UI:Schema:TitleForClass' => 'Esquema de %1$s',
+	'UI:Schema:Title' => 'Esquema de Objetos en '.ITOP_APPLICATION_SHORT,
+	'UI:Schema:TitleForClass' => 'Esquema de %1$s',
 	'UI:Schema:NoClassSelected' => 'No class selected, please choose one~~',
 	'UI:Schema:CategoryMenuItem' => 'Categoria <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relaciones',
@@ -865,7 +750,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Por favor confirme que quiere eliminar los siguientes %1$d objeto de la clase %2$s.',
 	'UI:Delete:Confirm_Object' => 'Por favor confirme que quiere borrar %1$s.',
 	'UI:Delete:Confirm_Count_ObjectsOf_Class' => 'Por favor confirme que quiere eliminar los siguientes %1$d objeto de la clase %2$s.',
-	'UI:WelcomeToITop' => 'Bienvenido a '.ITOP_APPLICATION_SHORT, 'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - Detalles %2$s',
+	'UI:WelcomeToITop' => 'Bienvenido a '.ITOP_APPLICATION_SHORT,
+	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - Detalles %2$s',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Error',
 	'UI:ObjectDoesNotExist' => 'Disculpe, este objeto no existe (o no está autorizado para verlo).',
 	'UI:ObjectArchived' => 'Este objeto ha sido archivado. Por favor habilité el modo Archivado o contacte al Administrador.',
@@ -899,8 +785,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:BulkDeleteTitle' => 'Seleccione los objetos que desea eliminar:',
 	'UI:PageTitle:ObjectCreated' => 'Objeto de '.ITOP_APPLICATION_SHORT.' creado.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s creado.',
-	'UI:Toggle:CustomDashboard' => 'Personalizado',
-	'UI:Toggle:StandardDashboard' => 'Estándar',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Aplicando %1$s en el objeto: %2$s en estado %3$s al estado deseado: %4$s.',
 	'UI:ObjectCouldNotBeWritten' => 'el objeto no pudo ser escrito: %1$s',
 	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - Error Fatal',
@@ -941,14 +825,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'No se ha definido ciclo de vida para esta clase',
 	'UI:UserManagement:GrantMatrix' => 'Matriz de Acceso',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Vínculo entre %1$s y %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Vinculo entre %1$s y %2$s',
 	'Menu:SystemTools' => 'Sistema',
 	'UI:ChangeManagementMenu' => 'Control de Cambios',
-	'UI:ChangeManagementMenu+' => '',
+	'UI:ChangeManagementMenu+' => 'Change Management~~',
 	'UI:ChangeManagementMenu:Title' => 'Resumen de Cambios',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Cambios por Tipo',
-	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Cambios por Grupo de Trabajo',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Cambios por Estatus',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Cambios No Asignados Aún',
 	'UI:ConfigurationManagementMenu' => 'Administración de la Configuración',
@@ -1094,7 +975,8 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'Portal:Button:CloseTicket' => 'Cerrar este Ticket',
 	'Portal:Button:UpdateRequest' => 'Actualizar el Requerimiento',
 	'Portal:EnterYourCommentsOnTicket' => 'Captura tus Comentarios acerca de la Solución de este Ticket:',
-	'Portal:ErrorNoContactForThisUser' => 'Error: el Usuario no está asociado con un Contacto/Persona. Por favor contacte al Administrador de '.ITOP_APPLICATION_SHORT, 'Portal:Attachments' => 'Anexos',
+	'Portal:ErrorNoContactForThisUser' => 'Error: el Usuario no está asociado con un Contacto/Persona. Por favor contacte al Administrador de '.ITOP_APPLICATION_SHORT,
+	'Portal:Attachments' => 'Anexos',
 	'Portal:AddAttachment' => 'Agregar Anexo',
 	'Portal:RemoveAttachment' => 'Borrar Anexo',
 	'Portal:Attachment_No_To_Ticket_Name' => 'Anexo #%1$d to %2$s (%3$s)',
@@ -1188,7 +1070,6 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:Dashboard:EditCustom' => 'Editar versión personalizada...',
 	'UI:Dashboard:CreateCustom' => 'Crear versión personalizada...',
 	'UI:Dashboard:DeleteCustom' => 'Borrar versión personalizada...',
-	'UI:Dashboard:Edit' => 'Editar esta Página',
 	'UI:Dashboard:RevertConfirm' => 'Todos los cambios realizados a la versión original se perderan.  Por favor confirmar que desea hacer esto.',
 	'UI:ExportDashBoard' => 'Exportar a un archivo',
 	'UI:ImportDashBoard' => 'Importar de un archivo',
@@ -1196,7 +1077,6 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:ImportDashboardText' => 'Seleccione el archivo de Panel de Control a importar:',
 	'UI:Dashboard:Actions' => 'Acciones en Panel de Control',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'Este panel de control muestra información que no incluye los cambios en curso',
-	'UI:Dashboard:Revert' => 'Regresar a Versión Original',
 	'UI:DashletCreation:Title' => 'Crear Dashlet',
 	'UI:DashletCreation:Dashboard' => 'Panel de Control',
 	'UI:DashletCreation:DashletType' => 'Tipo de Dashlet',
@@ -1243,6 +1123,7 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth' => 'Día del mes por %1$s',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (hora)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (mes)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-Year' => '%1$s (year)~~',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (día de la semana)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (día del mes)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Por favor seleccione los campos por los cuales los objetos serán agrupados',
@@ -1341,9 +1222,6 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'Class:ShortcutOQL+' => 'Resultado de Búsqueda de Acceso Rápido',
 	'Class:ShortcutOQL/Attribute:oql' => 'Consulta',
 	'Class:ShortcutOQL/Attribute:oql+' => 'OQL definiendo la lista de objetos a buscar',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Clase Etiqueta',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Código de Campo',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Clase Objeto',
 	'Class:ShortcutOQL/Attribute:auto_reload' => 'Actualización Automática',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Deshabilitado',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Frecuencia configurable',
@@ -1382,7 +1260,8 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:AddAnExisting_Class' => 'Agregar objetos del tipo %1$s...',
 	'UI:SelectionOf_Class' => 'Selección de objetos del tipo %1$s',
 	'UI:AboutBox' => 'Acerca de '.ITOP_APPLICATION_SHORT.'...',
-	'UI:About:Title' => 'Acerca de '.ITOP_APPLICATION_SHORT, 'UI:About:DataModel' => 'Modelo de Datos',
+	'UI:About:Title' => 'Acerca de '.ITOP_APPLICATION_SHORT,
+	'UI:About:DataModel' => 'Modelo de Datos',
 	'UI:About:Support' => 'Información de Soporte',
 	'UI:About:Licenses' => 'Licencias',
 	'UI:About:InstallationOptions' => 'Opciones de Instalación',
@@ -1514,12 +1393,7 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtrado',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtrado en %1$s',
 	'UI:StateChanged' => 'Estado cambiado',
-]);
-
-//
-// Expression to Natural language
-//
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+	'UI:AddSubTree' => 'Add entry~~',
 	'Expression:Operator:AND' => ' Y ',
 	'Expression:Operator:OR' => ' O ',
 	'Expression:Operator:=' => ': ',
@@ -1532,12 +1406,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Expression:Unit:Long:MINUTE' => 'minuto(s)',
 	'Expression:Verb:NOW' => 'Ahora',
 	'Expression:Verb:ISNULL' => ': Nulo',
-]);
-
-//
-// iTop Newsroom menu
-//
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Newsroom:NoNewMessage' => 'Sin Mensajes',
 	'UI:Newsroom:XNewMessage' => '%1$s nuevo(s) mensaje(s)',
 	'UI:Newsroom:MarkAllAsRead' => 'Marcar todos los mensajes como leídos',
@@ -1552,9 +1420,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgente',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Importante',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normal',
-]);
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:DataSources' => 'Fuentes de Datos Sincronizables',
 	'Menu:DataSources+' => 'Fuentes de Datos Sincronizables',
 	'Menu:AuditCategories' => 'Auditar categorías',
@@ -1581,5 +1446,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:ConfigEditor+' => 'Configuration File editor~~',
 	'Menu:Integrations' => 'Integraciones',
 	'Menu:Integrations+' => '~~',
-
 ]);

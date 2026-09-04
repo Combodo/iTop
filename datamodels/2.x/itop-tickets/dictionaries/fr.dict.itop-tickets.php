@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -14,49 +13,43 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => 'Classe abstraite',
 	'Class:Ticket/Attribute:ref' => 'Référence',
-	'Class:Ticket/Attribute:ref+' => '',
+	'Class:Ticket/Attribute:ref+' => '~~',
 	'Class:Ticket/Attribute:org_id' => 'Client',
-	'Class:Ticket/Attribute:org_id+' => '',
+	'Class:Ticket/Attribute:org_id+' => '~~',
 	'Class:Ticket/Attribute:org_name' => 'Nom Client',
-	'Class:Ticket/Attribute:org_name+' => '',
+	'Class:Ticket/Attribute:org_name+' => '~~',
 	'Class:Ticket/Attribute:caller_id' => 'Demandeur',
-	'Class:Ticket/Attribute:caller_id+' => '',
+	'Class:Ticket/Attribute:caller_id+' => '~~',
 	'Class:Ticket/Attribute:caller_name' => 'Nom Demandeur',
-	'Class:Ticket/Attribute:caller_name+' => '',
+	'Class:Ticket/Attribute:caller_name+' => '~~',
 	'Class:Ticket/Attribute:team_id' => 'Equipe',
-	'Class:Ticket/Attribute:team_id+' => '',
+	'Class:Ticket/Attribute:team_id+' => '~~',
 	'Class:Ticket/Attribute:team_name' => 'Nom Equipe',
-	'Class:Ticket/Attribute:team_name+' => '',
+	'Class:Ticket/Attribute:team_name+' => '~~',
 	'Class:Ticket/Attribute:agent_id' => 'Agent',
-	'Class:Ticket/Attribute:agent_id+' => '',
+	'Class:Ticket/Attribute:agent_id+' => '~~',
 	'Class:Ticket/Attribute:agent_name' => 'Nom Agent',
-	'Class:Ticket/Attribute:agent_name+' => '',
+	'Class:Ticket/Attribute:agent_name+' => '~~',
 	'Class:Ticket/Attribute:title' => 'Titre',
-	'Class:Ticket/Attribute:title+' => '',
+	'Class:Ticket/Attribute:title+' => '~~',
 	'Class:Ticket/Attribute:description' => 'Description',
-	'Class:Ticket/Attribute:description+' => '',
+	'Class:Ticket/Attribute:description+' => '~~',
 	'Class:Ticket/Attribute:start_date' => 'Date de début',
-	'Class:Ticket/Attribute:start_date+' => '',
+	'Class:Ticket/Attribute:start_date+' => '~~',
 	'Class:Ticket/Attribute:end_date' => 'Date de fin',
-	'Class:Ticket/Attribute:end_date+' => '',
+	'Class:Ticket/Attribute:end_date+' => '~~',
 	'Class:Ticket/Attribute:last_update' => 'Dernière mise à jour',
-	'Class:Ticket/Attribute:last_update+' => '',
+	'Class:Ticket/Attribute:last_update+' => '~~',
 	'Class:Ticket/Attribute:close_date' => 'Date de fermeture',
-	'Class:Ticket/Attribute:close_date+' => '',
+	'Class:Ticket/Attribute:close_date+' => '~~',
 	'Class:Ticket/Attribute:private_log' => 'Journal privé',
-	'Class:Ticket/Attribute:private_log+' => '',
+	'Class:Ticket/Attribute:private_log+' => '~~',
 	'Class:Ticket/Attribute:contacts_list' => 'Contacts',
 	'Class:Ticket/Attribute:contacts_list+' => 'Tous les contacts liés à ce ticket',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CIs',
 	'Class:Ticket/Attribute:functionalcis_list+' => 'Tous les éléments de configuration impactés par ce ticket. Les éléments marqués comme "Calculés" sont le résultat du calcul de l\'analyse d\'impact. Les éléments marqués comme "Non impactés" sont exclus de cette analyse.',
 	'Class:Ticket/Attribute:workorders_list' => 'Tâches',
 	'Class:Ticket/Attribute:workorders_list+' => 'Toutes les tâches de ce ticket',
-	'Class:Ticket/Attribute:workorders_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:Ticket/Attribute:workorders_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:Ticket/Attribute:workorders_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:Ticket/Attribute:workorders_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:Ticket/Attribute:workorders_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:Ticket/Attribute:workorders_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 	'Class:Ticket/Attribute:finalclass' => 'Sous-classe de Ticket',
 	'Class:Ticket/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Class:Ticket/Attribute:operational_status' => 'Etat agrégé',
@@ -64,79 +57,61 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Ticket/Attribute:operational_status/Value:ongoing' => 'En cours',
 	'Class:Ticket/Attribute:operational_status/Value:ongoing+' => 'Traitement en cours',
 	'Class:Ticket/Attribute:operational_status/Value:resolved' => 'Résolu',
-	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '',
+	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '~~',
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Clos',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => 'Fermé',
 	'Ticket:ImpactAnalysis' => 'Analyse d\'Impact',
-]);
-
-//
-// Class: lnkContactToTicket
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkContactToTicket' => 'Lien Contact / Ticket',
 	'Class:lnkContactToTicket+' => 'Permet de lier plusieurs Contacts afin de les notifier sur l\'avancement des Tickets, en plus du demandeur et de l\'agent.',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Ticket',
-	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
+	'Class:lnkContactToTicket/Attribute:ticket_id+' => '~~',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'Référence',
-	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '',
+	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Contact',
-	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_name' => 'Nom du contact',
-	'Class:lnkContactToTicket/Attribute:contact_name+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_name+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_email' => 'Email du contact',
-	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_email+' => '~~',
 	'Class:lnkContactToTicket/Attribute:role' => 'Rôle (texte)',
-	'Class:lnkContactToTicket/Attribute:role+' => '',
+	'Class:lnkContactToTicket/Attribute:role+' => '~~',
 	'Class:lnkContactToTicket/Attribute:role_code' => 'Rôle',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Ajouté manuellement',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Calculé',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Ne pas notifier',
-]);
-
-//
-// Class: WorkOrder
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:WorkOrder' => 'Tâche',
 	'Class:WorkOrder+' => 'Tâche nécessaire à la résolution d\'un Ticket, affectée à une Équipe voire à un agent.',
 	'Class:WorkOrder/Attribute:name' => 'Nom',
-	'Class:WorkOrder/Attribute:name+' => '',
+	'Class:WorkOrder/Attribute:name+' => '~~',
 	'Class:WorkOrder/Attribute:status' => 'Etat',
-	'Class:WorkOrder/Attribute:status+' => '',
+	'Class:WorkOrder/Attribute:status+' => '~~',
 	'Class:WorkOrder/Attribute:status/Value:open' => 'Ouverte',
-	'Class:WorkOrder/Attribute:status/Value:open+' => '',
+	'Class:WorkOrder/Attribute:status/Value:open+' => '~~',
 	'Class:WorkOrder/Attribute:status/Value:closed' => 'Fermée',
-	'Class:WorkOrder/Attribute:status/Value:closed+' => '',
+	'Class:WorkOrder/Attribute:status/Value:closed+' => '~~',
 	'Class:WorkOrder/Attribute:description' => 'Description',
-	'Class:WorkOrder/Attribute:description+' => '',
+	'Class:WorkOrder/Attribute:description+' => '~~',
 	'Class:WorkOrder/Attribute:ticket_id' => 'Ticket',
-	'Class:WorkOrder/Attribute:ticket_id+' => '',
+	'Class:WorkOrder/Attribute:ticket_id+' => '~~',
 	'Class:WorkOrder/Attribute:ticket_ref' => 'Référence ticket',
-	'Class:WorkOrder/Attribute:ticket_ref+' => '',
+	'Class:WorkOrder/Attribute:ticket_ref+' => '~~',
 	'Class:WorkOrder/Attribute:team_id' => 'Equipe',
-	'Class:WorkOrder/Attribute:team_id+' => '',
+	'Class:WorkOrder/Attribute:team_id+' => '~~',
 	'Class:WorkOrder/Attribute:team_name' => 'Nom Equipe',
-	'Class:WorkOrder/Attribute:team_name+' => '',
+	'Class:WorkOrder/Attribute:team_name+' => '~~',
 	'Class:WorkOrder/Attribute:agent_id' => 'Agent',
-	'Class:WorkOrder/Attribute:agent_id+' => '',
+	'Class:WorkOrder/Attribute:agent_id+' => '~~',
 	'Class:WorkOrder/Attribute:agent_email' => 'Email Agent',
-	'Class:WorkOrder/Attribute:agent_email+' => '',
+	'Class:WorkOrder/Attribute:agent_email+' => '~~',
 	'Class:WorkOrder/Attribute:start_date' => 'Date de début',
-	'Class:WorkOrder/Attribute:start_date+' => '',
+	'Class:WorkOrder/Attribute:start_date+' => '~~',
 	'Class:WorkOrder/Attribute:end_date' => 'Date de fin',
-	'Class:WorkOrder/Attribute:end_date+' => '',
+	'Class:WorkOrder/Attribute:end_date+' => '~~',
 	'Class:WorkOrder/Attribute:log' => 'Journal',
-	'Class:WorkOrder/Attribute:log+' => '',
+	'Class:WorkOrder/Attribute:log+' => '~~',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Fermer',
-	'Class:WorkOrder/Stimulus:ev_close+' => '',
-]);
-
-// Fieldset translation
-Dict::Add('FR FR', 'French', 'Français', [
+	'Class:WorkOrder/Stimulus:ev_close+' => '~~',
 	'Ticket:baseinfo' => 'Informations générales',
 	'Ticket:date' => 'Dates',
 	'Ticket:contact' => 'Contacts',
@@ -222,29 +197,10 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:cmdbAbstractObject/Method:ApplyStimulus+' => 'Applique le stimulus spécifié à l\'objet courant',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1' => 'Code du stimulus',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1+' => 'Un code de stimulus valide pour la classe courante',
-	'Class:Person/Attribute:tickets_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Person/Attribute:tickets_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Person/Attribute:tickets_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:Person/Attribute:tickets_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Person/Attribute:tickets_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de sa %1$s',
 	'Class:ResponseTicketTTO/Interface:iMetricComputer' => 'Temps d\'Assignation (TTO)',
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Objectif calculé à partir d\'un SLT de type TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Temps de Résolution (TTR)',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Objectif calculé à partir d\'un SLT de type TTR',
-	'Class:Team/Attribute:tickets_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Team/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Team/Attribute:tickets_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Team/Attribute:tickets_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:Team/Attribute:tickets_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Team/Attribute:tickets_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-]);
-
-//
-// Class: Ticket
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Ticket/Attribute:team_email' => 'Email équipe',
-	'Class:Ticket/Attribute:team_email+' => '',
+	'Class:Ticket/Attribute:team_email+' => '~~',
 ]);

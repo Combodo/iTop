@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -23,5 +22,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => 'Foto del contatto di %1$s',
 	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Apri menu utente',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filtra le voci del menu',
-
 ]);

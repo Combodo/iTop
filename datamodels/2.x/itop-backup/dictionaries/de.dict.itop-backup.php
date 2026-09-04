@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
@@ -31,9 +30,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'bkp-table-file' => 'Datei',
 	'bkp-table-file+' => 'Nur Dateien mit der Endung .zip werden als Backup-Dateien berücksichtigt.',
 	'bkp-table-size' => 'Größe',
-	'bkp-table-size+' => '',
+	'bkp-table-size+' => '~~',
 	'bkp-table-actions' => 'Aktionen',
-	'bkp-table-actions+' => '',
+	'bkp-table-actions+' => '~~',
 	'bkp-status-backups-auto' => 'Geplante Backups',
 	'bkp-status-backups-manual' => 'Manuelle Backups',
 	'bkp-status-backups-none' => 'Kein Backup vorhanden',

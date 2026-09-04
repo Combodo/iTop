@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -42,7 +41,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'iTopHub:ExtensionCategory:Remote' => 'Rozszerzenia wdrożone z iTop Hub',
 	'iTopHub:ExtensionCategory:Remote+' => 'Następujące rozszerzenia zostały wdrożone z iTop Hub:',
 	'iTopHub:NoExtensionInThisCategory' => 'W tej kategorii nie ma rozszerzenia.<br/><br/>Przeglądaj iTop Hub, aby znaleźć rozszerzenia, które pomogą Ci dostosować i dostosować '.ITOP_APPLICATION_SHORT.' do Twoich procesów.',
-	'iTopHub:NoExtensionInThisCategory+' => '',
+	'iTopHub:NoExtensionInThisCategory+' => 'Browse iTop Hub to find the extensions that will help you customize and adapt '.ITOP_APPLICATION_SHORT.' to your processes !~~',
 	'iTopHub:ExtensionNotInstalled' => 'Nie zainstalowane',
 	'iTopHub:GetMoreExtensions' => 'Pobierz rozszerzenia z iTop Hub...',
 	'iTopHub:LandingWelcome' => 'Gratulacje! Następujące rozszerzenia zostały pobrane z iTop Hub i wdrożone w '.ITOP_APPLICATION_SHORT.'.',

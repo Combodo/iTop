@@ -27,13 +27,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
-]);
-
-//
-// Class: AuditRule
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:AuditRule' => 'Denetleme Kuralı',
 	'Class:AuditRule+' => 'Denetleme Kategorisi kuralı',
 	'Class:AuditRule/Attribute:name' => 'Kural Adı',
@@ -56,13 +49,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:AuditRule/Attribute:category_name+' => 'Kural için kategori adı',
 	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
 	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
-]);
-
-//
-// Class: AuditDomain
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:AuditDomain' => 'Audit Domain~~',
 	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors~~',
@@ -74,13 +60,6 @@ Domain usually correspond to who is responsible for checking and fixing errors~~
 	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
-]);
-
-//
-// Class: lnkAuditCategoryToAuditDomain
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
 	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
@@ -91,13 +70,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
-]);
-
-//
-// Class: QueryOQL
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Query' => 'Sorgu',
 	'Class:Query+' => 'Bir sorgu, dinamik bir şekilde tanımlanan bir veri setidir',
 	'Class:Query/Attribute:name' => 'İsim',
@@ -117,7 +89,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Query/Attribute:export_last_user_contact' => 'Contact~~',
 	'Class:Query/Attribute:export_last_user_contact+' => 'The contact who executed the last export~~',
 	'Class:Query/Attribute:usages' => 'Usages~~',
-		'Class:Query/Attribute:usages+' => 'Specify the possible usages for this query.
+	'Class:Query/Attribute:usages+' => 'Specify the possible usages for this query.
  - The "Reference for AI" tag assumes the description is very explicit and compliant with OQL. It may be used as an example for building OQL queries by AI.
  - The "Notification" tag implies the class of returned objects has one and only one field of type email.
  - The "Dashlet" tag assumes the OQL returns a single class of objects.~~',
@@ -136,22 +108,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:QueryOQL+' => 'Nesne sorgusu diline dayanan bir sorgu',
 	'Class:QueryOQL/Attribute:oql' => 'İfade',
 	'Class:QueryOQL/Attribute:oql+' => 'OQL ifadesi',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'addon/userrights'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: User
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:User' => 'Kullanıcı',
 	'Class:User+' => 'Kullanıcı',
 	'Class:User/Attribute:finalclass' => 'Hesap tipi',
-	'Class:User/Attribute:finalclass+' => '',
+	'Class:User/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:User/Attribute:contactid' => 'İrtibat (kişi)',
 	'Class:User/Attribute:contactid+' => 'İrtibat detayları',
 	'Class:User/Attribute:org_id' => 'Kurum',
@@ -195,13 +155,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => 'Dahili kullanıcı',
 	'Class:UserInternal+' => ITOP_APPLICATION_SHORT.'\'ta tanımlanan kullanıcı',
-]);
-
-//
-// Class: URP_Profiles
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_Profiles' => 'Profil',
 	'Class:URP_Profiles+' => 'Kullanıcı profili',
 	'Class:URP_Profiles/Attribute:name' => 'Adı',
@@ -210,13 +163,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_Profiles/Attribute:description+' => 'Profil tanımlama',
 	'Class:URP_Profiles/Attribute:user_list' => 'Kullanıcılar',
 	'Class:URP_Profiles/Attribute:user_list+' => 'bu rolü kullanan kullanıcılar',
-]);
-
-//
-// Class: URP_Dimensions
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_Dimensions' => 'boyut',
 	'Class:URP_Dimensions+' => 'uygulama boyutları (silo kullanımları)',
 	'Class:URP_Dimensions/Attribute:name' => 'Adı',
@@ -225,13 +171,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_Dimensions/Attribute:description+' => 'Tanımlama',
 	'Class:URP_Dimensions/Attribute:type' => 'Tip',
 	'Class:URP_Dimensions/Attribute:type+' => 'sınıf adı veya veri tipi (projection unit)',
-]);
-
-//
-// Class: URP_UserProfile
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_UserProfile' => 'Kullanıcı Profili',
 	'Class:URP_UserProfile+' => 'Kullanıcı Profili',
 	'Class:URP_UserProfile/Name' => '%1$s ve %2$s arasındaki ilişki',
@@ -245,13 +184,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_UserProfile/Attribute:profile+' => 'Profil adı',
 	'Class:URP_UserProfile/Attribute:reason' => 'Sebep',
 	'Class:URP_UserProfile/Attribute:reason+' => 'Kullanıcının bu rolü alma sebebini açıklayınız',
-]);
-
-//
-// Class: URP_UserOrg
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_UserOrg' => 'Kullanıcı Kurumu',
 	'Class:URP_UserOrg+' => 'İzin verilen kurumlar',
 	'Class:URP_UserOrg/Name' => '%1$s ve %2$s arasındaki ilişki',
@@ -265,13 +197,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Erişim yetkisi verilen kurumlar',
 	'Class:URP_UserOrg/Attribute:reason' => 'Sebep',
 	'Class:URP_UserOrg/Attribute:reason+' => 'Kullanıcının bu rolü alma sebebini açıklayınız',
-]);
-
-//
-// Class: URP_ProfileProjection
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_ProfileProjection' => 'profile_projection',
 	'Class:URP_ProfileProjection+' => 'profile projections',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Boyut',
@@ -286,13 +211,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL ifadesi (kullanıcı $user) | sabit |  | +özellik kodu',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Hedef özellik kodu (opsiyonel)',
-]);
-
-//
-// Class: URP_ClassProjection
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_ClassProjection' => 'sınıf projeksiyonu',
 	'Class:URP_ClassProjection+' => 'sınıf projeksiyonu',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Boyut',
@@ -305,13 +223,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL ifadesi (kullanıcı $user) | sabit |  | +özellik kodu',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Özellik',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Hedef özellik kodu (opsiyonel)',
-]);
-
-//
-// Class: URP_ActionGrant
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_ActionGrant' => 'işlem yetkileri',
 	'Class:URP_ActionGrant+' => 'sınıf üzerindeki yetkiler',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profil',
@@ -328,13 +239,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'hayır',
 	'Class:URP_ActionGrant/Attribute:action' => 'İşlem',
 	'Class:URP_ActionGrant/Attribute:action+' => 'verilen sınıf üzerinde uygulanacak işlemler',
-]);
-
-//
-// Class: URP_StimulusGrant
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_StimulusGrant' => 'uyarı yetkileri',
 	'Class:URP_StimulusGrant+' => 'nesnenin yaşam döngüsündeki uyarı yetkileri',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profil',
@@ -351,25 +255,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'hayır',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Uyarı',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'uyarı kodu',
-]);
-
-//
-// Class: URP_AttributeGrant
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_AttributeGrant' => 'özellik yetkisi',
 	'Class:URP_AttributeGrant+' => 'özellik seviyesinde yetki',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'İzin verilen işlem',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'İşlem izni',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Özellik',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Özellik kodu',
-]);
-
-//
-// Class: UserDashboard
-//
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:UserDashboard' => 'User dashboard~~',
 	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'User~~',
@@ -378,12 +269,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Contents~~',
 	'Class:UserDashboard/Attribute:contents+' => '~~',
-]);
-
-//
-// Duplicated into itop-welcome-itil ( will be removed from here...)
-//
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:WelcomeMenu' => 'Hoşgeldiniz',
 	'Menu:WelcomeMenu+' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
 	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz',
@@ -400,16 +285,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:NotificationsMenu' => 'Uyarılar',
 	'Menu:NotificationsMenu+' => 'Uyarıların yapılandırılması',
 	'Menu:MyShortcuts' => 'My Shortcuts~~',
-	'Menu:Notifications:Title' => 'Denetleme Kategorileri',
 	'Menu:DataAdministration' => 'Veri Yönetimi',
 	'Menu:DataAdministration+' => 'Veri Yönetimi',
-]);
-
-//
-// String from the User Interface: menu, messages, buttons, etc...
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'BooleanLabel:yes' => 'evet',
 	'BooleanLabel:no' => 'hayır',
 	'UI:WelcomeMenu:Title' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
@@ -507,6 +384,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 	'UI:Error:InvalidToken' => 'Mevcut oturum geçersiz. Lütfen sayfayı yenileyip tekrar deneyin. Sorun devam ederse, oturumu kapatıp yeniden açın.',
+	'UI:Error:TwigController' => 'Internal error in form controller~~',
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 	'UI:GroupBy:Count' => 'Say',
 	'UI:GroupBy:Count+' => 'Eleman sayısı',
@@ -668,6 +546,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'UI:CSVReport-Row-Issue-Reconciliation' => 'Uzlaşamadı',
 	'UI:CSVReport-Row-Issue-Ambiguous' => 'Belirsiz uzlaşma',
 	'UI:CSVReport-Row-Issue-Internal' => 'Dahili Hata: %1$s, %2$s',
+	'UI:CSVReport-Value-Issue-NoValue' => 'No value~~',
+	'UI:CSVReport-Row-Issue-NbField' => 'Not the expected number of columns (found: %1$s, expected: %2$s)~~',
 	'UI:CSVReport-Icon-Unchanged' => 'Değiştirilmemiş',
 	'UI:CSVReport-Icon-Modified' => 'Değiştirilmiş',
 	'UI:CSVReport-Icon-Missing' => 'Kayıp',
@@ -700,7 +580,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'UI:Audit:Interactive:Domain:BreadCrumb' => '%1$s~~',
 	'UI:Audit:Interactive:Domain:BreadCrumb+' => 'Audit for Domain: %1$s~~',
 	'UI:Audit:Interactive:Selection:Title' => 'Selection of an audit~~',
-	'UI:Audit:InteractiveAudit' => 'Etkileşimli Denetleme',
 	'UI:Audit:Interactive:Selection:SubTitle' => 'Select a domain to get the results limited to this domain or select "All categories" to get a full audit (can take time or even fail if too much data to audit)~~',
 	'UI:Audit:Interactive:Selection:BreadCrumb' => 'Selection~~',
 	'UI:Audit:Interactive:Selection:BreadCrumb+' => 'Selection of an Audit to run~~',
@@ -906,8 +785,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'UI:BulkDeleteTitle' => 'Silmek istediğiniz nesneleri seçiniz:',
 	'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.' Nesne yaratıldı.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s yaratıldı.',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => '%1$s işlemi %2$s durumunda %3$s nesnesine uygulanır. Bir sonraki durum: %4$s.',
 	'UI:ObjectCouldNotBeWritten' => 'Nesne kaydedilemedi: %1$s',
 	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - Kritik Hata',
@@ -1036,7 +913,6 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:PasswordConfirm' => 'Onay',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Yeni %1$s nesneleri eklemeden önce bu nesneyi kaydediniz.',
 	'UI:DisplayThisMessageAtStartup' => 'Bu mesajı başlangıçta göster',
-	'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page~~',
 	'UI:RelationshipGraph' => 'Grafiksel gösterim',
 	'UI:RelationshipList' => 'List~~',
 	'UI:RelationGroups' => 'Gruplar',
@@ -1192,7 +1068,6 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:Dashboard:EditCustom' => 'Bu sayfayı düzenleyin...',
 	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
 	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
-	'UI:Dashboard:Edit' => 'Edit This Page...~~',
 	'UI:Dashboard:RevertConfirm' => 'Orijinal versiyonda yapılan her değişiklik kaybolacaktır. Lütfen bunu yapmak istediğinizi onaylayın.',
 	'UI:ExportDashBoard' => 'Bir dosyaya çıkart',
 	'UI:ImportDashBoard' => 'Bir dosyadan aktar ...',
@@ -1200,7 +1075,6 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:ImportDashboardText' => 'İçe aktarılacak bir gösterge paneli dosyası seçin:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
-	'UI:Dashboard:Revert' => 'Revert To Original Version...~~',
 	'UI:DashletCreation:Title' => 'Yeni bir gösterge paneli öğesi oluşturun',
 	'UI:DashletCreation:Dashboard' => 'Gösterge paneli',
 	'UI:DashletCreation:DashletType' => 'Gösterge paneli öğesi tipi',
@@ -1247,6 +1121,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth' => '%1$s için haftanın günü,',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (saat)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (ay)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-Year' => '%1$s (year)~~',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (hafta Günü)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (ayın günü)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Lütfen nesnelerin birlikte gruplandırılacağı alanı seçin',
@@ -1345,9 +1220,6 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Class:ShortcutOQL+' => '~~',
 	'Class:ShortcutOQL/Attribute:oql' => 'Sorgu',
 	'Class:ShortcutOQL/Attribute:oql+' => 'OQL Aramak için nesnelerin listesini tanımlama',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:ShortcutOQL/Attribute:auto_reload' => 'Otomatik yenileme',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Devre dışı',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Özel Oran',
@@ -1386,7 +1258,8 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:AddAnExisting_Class' => '%1$s tipi nesneleri ekleyin...',
 	'UI:SelectionOf_Class' => '%1$s türünün nesnelerinin seçimi',
 	'UI:AboutBox' => 'About'.ITOP_APPLICATION_SHORT.'...',
-	'UI:About:Title' => 'About '.ITOP_APPLICATION_SHORT, 'UI:About:DataModel' => 'Veri modeli',
+	'UI:About:Title' => 'About '.ITOP_APPLICATION_SHORT,
+	'UI:About:DataModel' => 'Veri modeli',
 	'UI:About:Support' => 'Destek bilgisi',
 	'UI:About:Licenses' => 'Lisanslar',
 	'UI:About:InstallationOptions' => 'Yüklü modüller',
@@ -1408,7 +1281,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'ExcelExport:PreparingExport' => 'Dışarı aktarma hazırlanıyor...',
 	'ExcelExport:Statistics' => 'İstatistikler',
 	'portal:legacy_portal' => 'Son Kullanıcı Arayüzü',
-	'portal:backoffice' => ITOP_APPLICATION_SHORT.'Arka Ofis Kullanıcı Arayüzü',
+	'portal:backoffice' => ITOP_APPLICATION_SHORT.'rka Ofis Kullanıcı Arayüzü',
 	'UI:CurrentObjectIsLockedBy_User' => 'Nesne %1$s tarafından değiştirildiğinden beri kilitli.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'Nesne  şu anda %1$s tarafından değiştiriliyor. Değişiklikleriniz üzerine yazıldığı için gönderilemez.',
 	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they have finished.~~',
@@ -1518,12 +1391,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
 	'UI:StateChanged' => 'State changed~~',
-]);
-
-//
-// Expression to Natural language
-//
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'UI:AddSubTree' => 'Add entry~~',
 	'Expression:Operator:AND' => ' AND ~~',
 	'Expression:Operator:OR' => ' OR ~~',
 	'Expression:Operator:=' => ': ~~',
@@ -1536,12 +1404,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Expression:Unit:Long:MINUTE' => 'minute(s)~~',
 	'Expression:Verb:NOW' => 'now~~',
 	'Expression:Verb:ISNULL' => ': undefined~~',
-]);
-
-//
-// iTop Newsroom menu
-//
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
 	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
@@ -1556,9 +1418,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
-]);
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:DataSources' => 'Synchronization Data Sources~~',
 	'Menu:DataSources+' => 'Data synchro used for batch import of external data~~',
 	'Menu:AuditCategories' => 'Denetleme Kategorileri',
@@ -1585,5 +1444,4 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:ConfigEditor+' => 'Configuration File editor~~',
 	'Menu:Integrations' => 'Integrations~~',
 	'Menu:Integrations+' => '~~',
-
 ]);

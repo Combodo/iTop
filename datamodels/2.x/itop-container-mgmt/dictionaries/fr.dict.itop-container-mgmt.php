@@ -1,37 +1,28 @@
 <?php
-
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2013 XXXXX
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-
-//
-// Fieldsets for Container classes
-//
-
+/**
+ *
+ */
 Dict::Add('FR FR', 'French', 'Français', [
 	'Container:baseinfo' => 'Informations générales',
 	'Container:moreinfo' => 'Spécificités de la conteneurisation',
 	'Container:otherinfo' => 'Dates et description',
-]);
-
-//
-// Class Container Image
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerImage/Name' => '%1$s %2$s',
 	'Class:ContainerImage/ComplementaryName' => '%1$s - %2$s',
 	'Class:ContainerImage' => 'Image pour conteneur',
 	'Class:ContainerImage+' => 'L\'image d\'un logiciel, constituant d\'une Application conteneurisée',
 	'Class:ContainerImage/Attribute:name' => 'Nom',
-	'Class:ContainerImage/Attribute:name+' => '',
+	'Class:ContainerImage/Attribute:name+' => '~~',
 	'Class:ContainerImage/Attribute:version' => 'Version',
-	'Class:ContainerImage/Attribute:version+' => '',
+	'Class:ContainerImage/Attribute:version+' => '~~',
 	'Class:ContainerImage/Attribute:description' => 'Description',
-	'Class:ContainerImage/Attribute:description+' => '',
+	'Class:ContainerImage/Attribute:description+' => '~~',
 	'Class:ContainerImage/Attribute:publisher' => 'Editeur',
 	'Class:ContainerImage/Attribute:publisher+' => 'Fournisseur de l\'image',
 	'Class:ContainerImage/Attribute:image' => 'Image',
@@ -39,22 +30,9 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerImage/Attribute:type_id' => 'Type',
 	'Class:ContainerImage/Attribute:type_id+' => 'Type d\'image',
 	'Class:ContainerImage/Attribute:software_id' => 'Logiciel',
-	'Class:ContainerImage/Attribute:software_id+' => '',
+	'Class:ContainerImage/Attribute:software_id+' => '~~',
 	'Class:ContainerImage/Attribute:containerapplications_list' => 'Applications conteneurisées',
 	'Class:ContainerImage/Attribute:containerapplications_list+' => 'Les applications qui utilisent cette image',
-	'Class:ContainerImage/Attribute:containerapplications_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:ContainerImage/Attribute:containerapplications_list/UI:Links:Create:Modal:Title' => 'Ajouter %2$s à une nouvelle %4$s',
-	'Class:ContainerImage/Attribute:containerapplications_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:ContainerImage/Attribute:containerapplications_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:ContainerImage/Attribute:containerapplications_list/UI:Links:Remove:Button+' => 'Retirer %2$s de cette %4$s',
-	'Class:ContainerImage/Attribute:containerapplications_list/UI:Links:Remove:Modal:Title' => 'Retirer %1$s de cette %4$s',
-]);
-
-//
-// Class Container Application
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerApplication/Name' => '%1$s',
 	'Class:ContainerApplication/ComplementaryName' => '%1$s',
 	'Class:ContainerApplication' => 'Application conteneurisée',
@@ -69,36 +47,16 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerApplication/Attribute:containertype_id+' => 'Typologie de plateforme de conteneurisation',
 	'Class:ContainerApplication/Attribute:containerimages_list' => 'Images',
 	'Class:ContainerApplication/Attribute:containerimages_list+' => 'Images des conteneurs constitutifs de cette application',
-	'Class:ContainerApplication/Attribute:containerimages_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:ContainerApplication/Attribute:containerimages_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:ContainerApplication/Attribute:containerimages_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:ContainerApplication/Attribute:containerimages_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:ContainerApplication/Attribute:containerimages_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:ContainerApplication/Attribute:containerimages_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-]);
-
-//
-// Class: lnkContainerApplicationToImage
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkContainerApplicationToImage' => 'Lien Application conteneurisée / Image pour conteneur',
-	'Class:lnkContainerApplicationToImage+' => '',
+	'Class:lnkContainerApplicationToImage+' => '~~',
 	'Class:lnkContainerApplicationToImage/Name' => '%1$s / %2$s',
-	'Class:lnkContainerApplicationToImage/Name+' => '',
+	'Class:lnkContainerApplicationToImage/Name+' => '~~',
 	'Class:lnkContainerApplicationToImage/Attribute:containerapplication_id' => 'Application conteneurisée',
 	'Class:lnkContainerApplicationToImage/Attribute:containerapplication_id+' => 'Application qui utilise cette image',
 	'Class:lnkContainerApplicationToImage/Attribute:containerimage_id' => 'Image pour conteneur',
 	'Class:lnkContainerApplicationToImage/Attribute:containerimage_id+' => 'Une image qui contribue à l\'application',
-]);
-
-//
-// Class Container Virtual Host
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerVirtualHost/Name' => '%1$s',
-	'Class:ContainerVirtualHost/ComplementaryName' => '',
+	'Class:ContainerVirtualHost/ComplementaryName' => '~~',
 	'Class:ContainerVirtualHost' => 'Plateforme de conteneurisation',
 	'Class:ContainerVirtualHost+' => 'Plateforme sur laquelle des applications s\'exécutent dans des conteneurs',
 	'Class:ContainerVirtualHost/Attribute:containertype_id' => 'Type de plateforme',
@@ -107,22 +65,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerVirtualHost/Attribute:status+' => 'État de la plateforme de conteneurisation',
 	'Class:ContainerVirtualHost/Attribute:containerapplications_list' => 'Applications',
 	'Class:ContainerVirtualHost/Attribute:containerapplications_list+' => 'Applications qui sont déployées sur cette plateforme',
-	'Class:ContainerVirtualHost/Attribute:containerapplications_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:ContainerVirtualHost/Attribute:containerapplications_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:ContainerVirtualHost/Attribute:containerapplications_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:ContainerVirtualHost/Attribute:containerapplications_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:ContainerVirtualHost/Attribute:containerapplications_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:ContainerVirtualHost/Attribute:containerapplications_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s',
-
-	'ContainerVirtualHost:baseinfo' => 'Informations générales',
-	'ContainerVirtualHost:moreinfo' => 'Spécificités de la conteneurisation',
-]);
-
-//
-// Class Container Host
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerHost/Name' => '%1$s',
 	'Class:ContainerHost/ComplementaryName' => '%1$s-%2$s',
 	'Class:ContainerHost' => 'Hôte pour conteneurs',
@@ -131,20 +73,13 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerHost/Attribute:containercluster_id+' => 'Grappe d\'hôtes pour conteneurs',
 	'Class:ContainerHost/Attribute:role' => 'Rôle',
 	'Class:ContainerHost/Attribute:role+' => 'Rôle de cet hôte au sein de la grappe : Maître ou Esclave. Autonome en l\'absence de grappe',
+	'Class:ContainerHost/Attribute:system_id' => 'Système',
+	'Class:ContainerHost/Attribute:system_id+' => 'Le système sur lequel cet hôte tourne. Cela peut être un Serveur, une Machine virtuelle ou un Nuage',
 	'Class:ContainerHost/Attribute:role/Value:master' => 'Maître',
 	'Class:ContainerHost/Attribute:role/Value:worker' => 'Esclave',
 	'Class:ContainerHost/Attribute:role/Value:standalone' => 'Autonome',
-	'Class:ContainerHost/Attribute:system_id' => 'Système',
-	'Class:ContainerHost/Attribute:system_id+' => 'Le système sur lequel cet hôte tourne. Cela peut être un Serveur, une Machine virtuelle ou un Nuage',
-]);
-
-//
-// Class Container Cluster
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerCluster/Name' => '%1$s',
-	'Class:ContainerCluster/ComplementaryName' => '',
+	'Class:ContainerCluster/ComplementaryName' => '~~',
 	'Class:ContainerCluster' => 'Grappe pour conteneurs',
 	'Class:ContainerCluster+' => 'Plateforme de conteneurisation constituée d\'une grappe d\'Hôtes pour conteneurs',
 	'Class:ContainerCluster/Attribute:redundancy' => 'Configuration de la redondance',
@@ -153,67 +88,20 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerCluster/Attribute:redundancy/percent' => 'Pourcentage minimal d\'hôtes pour que la grappe soit opérationnelle : %1$s %%',
 	'Class:ContainerCluster/Attribute:containerhosts_list' => 'Hôtes pour conteneurs',
 	'Class:ContainerCluster/Attribute:containerhosts_list+' => 'Hôtes composant cette grappe',
-]);
-
-//
-// Class Container Type
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerType/Name' => '%1$s',
-	'Class:ContainerType/ComplementaryName' => '',
+	'Class:ContainerType/ComplementaryName' => '~~',
 	'Class:ContainerType' => 'Type de conteneurisation',
 	'Class:ContainerType+' => 'Technologie de conteneurisation',
-]);
-
-//
-// Class Container Image Type
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerImageType/Name' => '%1$s',
-	'Class:ContainerImageType/ComplementaryName' => '',
+	'Class:ContainerImageType/ComplementaryName' => '~~',
 	'Class:ContainerImageType' => 'Type d\'image',
 	'Class:ContainerImageType+' => 'Typologie d\'images pour container',
-]);
-
-//
-// Class Cloud, Server and Virtual Machine
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Cloud/Attribute:containerhosts_list' => 'Hôtes pour conteneurs',
 	'Class:Cloud/Attribute:containerhosts_list+' => 'Liste des hôtes hébergés dans ce nuage',
-	'Class:Cloud/Attribute:containerhosts_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Cloud/Attribute:containerhosts_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Cloud/Attribute:containerhosts_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Cloud/Attribute:containerhosts_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:Cloud/Attribute:containerhosts_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Cloud/Attribute:containerhosts_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-
 	'Class:Server/Attribute:containerhosts_list' => 'Hôtes pour conteneurs',
 	'Class:Server/Attribute:containerhosts_list+' => 'Liste des hôtes pour conteneurs hébergés sur ce serveur',
-	'Class:Server/Attribute:containerhosts_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Server/Attribute:containerhosts_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Server/Attribute:containerhosts_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Server/Attribute:containerhosts_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:Server/Attribute:containerhosts_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Server/Attribute:containerhosts_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-
 	'Class:VirtualMachine/Attribute:containerhosts_list' => 'Hôtes pour conteneurs',
 	'Class:VirtualMachine/Attribute:containerhosts_list+' => 'Liste des hôtes pour conteneurs hébergés sur cette machine virtuelle',
-	'Class:VirtualMachine/Attribute:containerhosts_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:VirtualMachine/Attribute:containerhosts_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:VirtualMachine/Attribute:containerhosts_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:VirtualMachine/Attribute:containerhosts_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:VirtualMachine/Attribute:containerhosts_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:VirtualMachine/Attribute:containerhosts_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de sa %1$s',
-
 	'Class:Software/Attribute:containerimages_list' => 'Images pour conteneurs',
 	'Class:Software/Attribute:containerimages_list+' => 'Liste des images pour conteneurs qui tournent ce Logiciel',
-	'Class:Software/Attribute:containerimages_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:Software/Attribute:containerimages_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:Software/Attribute:containerimages_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:Software/Attribute:containerimages_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:Software/Attribute:containerimages_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 ]);

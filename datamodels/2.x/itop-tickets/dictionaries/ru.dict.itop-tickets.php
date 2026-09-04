@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
@@ -13,37 +12,37 @@
  */
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Ticket' => 'Тикет',
-	'Class:Ticket+' => '',
+	'Class:Ticket+' => 'Abstract class~~',
 	'Class:Ticket/Attribute:ref' => 'Номер',
-	'Class:Ticket/Attribute:ref+' => '',
+	'Class:Ticket/Attribute:ref+' => '~~',
 	'Class:Ticket/Attribute:org_id' => 'Организация',
-	'Class:Ticket/Attribute:org_id+' => '',
+	'Class:Ticket/Attribute:org_id+' => '~~',
 	'Class:Ticket/Attribute:org_name' => 'Организация',
-	'Class:Ticket/Attribute:org_name+' => '',
+	'Class:Ticket/Attribute:org_name+' => '~~',
 	'Class:Ticket/Attribute:caller_id' => 'Инициатор',
-	'Class:Ticket/Attribute:caller_id+' => '',
+	'Class:Ticket/Attribute:caller_id+' => '~~',
 	'Class:Ticket/Attribute:caller_name' => 'Инициатор',
-	'Class:Ticket/Attribute:caller_name+' => '',
+	'Class:Ticket/Attribute:caller_name+' => '~~',
 	'Class:Ticket/Attribute:team_id' => 'Команда',
-	'Class:Ticket/Attribute:team_id+' => '',
+	'Class:Ticket/Attribute:team_id+' => '~~',
 	'Class:Ticket/Attribute:team_name' => 'Команда',
-	'Class:Ticket/Attribute:team_name+' => '',
+	'Class:Ticket/Attribute:team_name+' => '~~',
 	'Class:Ticket/Attribute:agent_id' => 'Агент',
-	'Class:Ticket/Attribute:agent_id+' => '',
+	'Class:Ticket/Attribute:agent_id+' => '~~',
 	'Class:Ticket/Attribute:agent_name' => 'Агент',
-	'Class:Ticket/Attribute:agent_name+' => '',
+	'Class:Ticket/Attribute:agent_name+' => '~~',
 	'Class:Ticket/Attribute:title' => 'Название',
-	'Class:Ticket/Attribute:title+' => '',
+	'Class:Ticket/Attribute:title+' => '~~',
 	'Class:Ticket/Attribute:description' => 'Описание',
-	'Class:Ticket/Attribute:description+' => '',
+	'Class:Ticket/Attribute:description+' => '~~',
 	'Class:Ticket/Attribute:start_date' => 'Дата начала',
-	'Class:Ticket/Attribute:start_date+' => '',
+	'Class:Ticket/Attribute:start_date+' => '~~',
 	'Class:Ticket/Attribute:end_date' => 'Дата окончания',
-	'Class:Ticket/Attribute:end_date+' => '',
+	'Class:Ticket/Attribute:end_date+' => '~~',
 	'Class:Ticket/Attribute:last_update' => 'Дата обновления',
-	'Class:Ticket/Attribute:last_update+' => '',
+	'Class:Ticket/Attribute:last_update+' => '~~',
 	'Class:Ticket/Attribute:close_date' => 'Дата закрытия',
-	'Class:Ticket/Attribute:close_date+' => '',
+	'Class:Ticket/Attribute:close_date+' => '~~',
 	'Class:Ticket/Attribute:private_log' => 'Внутренний журнал',
 	'Class:Ticket/Attribute:private_log+' => 'Информация внутреннего журнала недоступна пользователям портала',
 	'Class:Ticket/Attribute:contacts_list' => 'Контакты',
@@ -53,85 +52,67 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Ticket/Attribute:workorders_list' => 'Наряды на работу',
 	'Class:Ticket/Attribute:workorders_list+' => 'Наряды на работу',
 	'Class:Ticket/Attribute:finalclass' => 'Тип',
-	'Class:Ticket/Attribute:finalclass+' => '',
+	'Class:Ticket/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Ticket/Attribute:operational_status' => 'Статус обработки',
 	'Class:Ticket/Attribute:operational_status+' => 'Вычисляется после детального статуса',
 	'Class:Ticket/Attribute:operational_status/Value:ongoing' => 'Выполняется',
 	'Class:Ticket/Attribute:operational_status/Value:ongoing+' => 'В процессе обработки',
 	'Class:Ticket/Attribute:operational_status/Value:resolved' => 'Выполнен',
-	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '',
+	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '~~',
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Закрыт',
-	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
+	'Class:Ticket/Attribute:operational_status/Value:closed+' => '~~',
 	'Ticket:ImpactAnalysis' => 'Анализ влияния',
-]);
-
-//
-// Class: lnkContactToTicket
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkContactToTicket' => 'Связь Контакт/Тикет',
-	'Class:lnkContactToTicket+' => '',
+	'Class:lnkContactToTicket+' => 'Allows linking several Contacts to notify them about the progress of Tickets, in addition to the requester and the agent.~~',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Тикет',
-	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
+	'Class:lnkContactToTicket/Attribute:ticket_id+' => '~~',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'Связь',
-	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '',
+	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Контакт',
-	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_name' => 'Имя контакта',
-	'Class:lnkContactToTicket/Attribute:contact_name+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_name+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_email' => 'Email контакта',
-	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_email+' => '~~',
 	'Class:lnkContactToTicket/Attribute:role' => 'Роль (текст)',
-	'Class:lnkContactToTicket/Attribute:role+' => '',
+	'Class:lnkContactToTicket/Attribute:role+' => '~~',
 	'Class:lnkContactToTicket/Attribute:role_code' => 'Роль',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Добавлено вручную',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Вычислено',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Не уведомлять',
-]);
-
-//
-// Class: WorkOrder
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:WorkOrder' => 'Наряд на работу',
-	'Class:WorkOrder+' => '',
+	'Class:WorkOrder+' => 'A task required for the resolution of a Ticket, assigned to a Team or even an agent.~~',
 	'Class:WorkOrder/Attribute:name' => 'Название',
-	'Class:WorkOrder/Attribute:name+' => '',
+	'Class:WorkOrder/Attribute:name+' => '~~',
 	'Class:WorkOrder/Attribute:status' => 'Статус',
-	'Class:WorkOrder/Attribute:status+' => '',
+	'Class:WorkOrder/Attribute:status+' => '~~',
 	'Class:WorkOrder/Attribute:status/Value:open' => 'Открыт',
-	'Class:WorkOrder/Attribute:status/Value:open+' => '',
+	'Class:WorkOrder/Attribute:status/Value:open+' => '~~',
 	'Class:WorkOrder/Attribute:status/Value:closed' => 'Закрыт',
-	'Class:WorkOrder/Attribute:status/Value:closed+' => '',
+	'Class:WorkOrder/Attribute:status/Value:closed+' => '~~',
 	'Class:WorkOrder/Attribute:description' => 'Описание',
-	'Class:WorkOrder/Attribute:description+' => '',
+	'Class:WorkOrder/Attribute:description+' => '~~',
 	'Class:WorkOrder/Attribute:ticket_id' => 'Тикет',
-	'Class:WorkOrder/Attribute:ticket_id+' => '',
+	'Class:WorkOrder/Attribute:ticket_id+' => '~~',
 	'Class:WorkOrder/Attribute:ticket_ref' => 'Тикет',
-	'Class:WorkOrder/Attribute:ticket_ref+' => '',
+	'Class:WorkOrder/Attribute:ticket_ref+' => '~~',
 	'Class:WorkOrder/Attribute:team_id' => 'Команда',
-	'Class:WorkOrder/Attribute:team_id+' => '',
+	'Class:WorkOrder/Attribute:team_id+' => '~~',
 	'Class:WorkOrder/Attribute:team_name' => 'Команда',
-	'Class:WorkOrder/Attribute:team_name+' => '',
+	'Class:WorkOrder/Attribute:team_name+' => '~~',
 	'Class:WorkOrder/Attribute:agent_id' => 'Агент',
-	'Class:WorkOrder/Attribute:agent_id+' => '',
+	'Class:WorkOrder/Attribute:agent_id+' => '~~',
 	'Class:WorkOrder/Attribute:agent_email' => 'Email агента',
-	'Class:WorkOrder/Attribute:agent_email+' => '',
+	'Class:WorkOrder/Attribute:agent_email+' => '~~',
 	'Class:WorkOrder/Attribute:start_date' => 'Дата начала',
-	'Class:WorkOrder/Attribute:start_date+' => '',
+	'Class:WorkOrder/Attribute:start_date+' => '~~',
 	'Class:WorkOrder/Attribute:end_date' => 'Дата окончания',
-	'Class:WorkOrder/Attribute:end_date+' => '',
+	'Class:WorkOrder/Attribute:end_date+' => '~~',
 	'Class:WorkOrder/Attribute:log' => 'Журнал',
-	'Class:WorkOrder/Attribute:log+' => '',
+	'Class:WorkOrder/Attribute:log+' => '~~',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Закрыть',
-	'Class:WorkOrder/Stimulus:ev_close+' => '',
-]);
-
-// Fieldset translation
-Dict::Add('RU RU', 'Russian', 'Русский', [
+	'Class:WorkOrder/Stimulus:ev_close+' => '~~',
 	'Ticket:baseinfo' => 'Общая информация',
 	'Ticket:date' => 'Даты',
 	'Ticket:contact' => 'Контакты',
@@ -221,13 +202,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Показатель, основанный на SLT типа TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Время до решения (TTR)',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Показатель, основанный на SLT типа TTR',
-]);
-
-//
-// Class: Ticket
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Ticket/Attribute:team_email' => 'Email команды',
-	'Class:Ticket/Attribute:team_email+' => '',
+	'Class:Ticket/Attribute:team_email+' => '~~',
 ]);

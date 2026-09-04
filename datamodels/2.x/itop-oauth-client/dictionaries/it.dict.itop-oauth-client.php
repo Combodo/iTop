@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -13,7 +12,7 @@
 Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:CreateMailbox' => 'Crea una casella di posta...',
 	'Menu:OAuthClient' => 'OAuth Mail Access~~',
-	'Menu:OAuthClient+' => '~~',
+	'Menu:OAuthClient+' => 'Oauth for email access~~',
 	'Menu:GenerateTokens' => 'Genera token di accesso...',
 	'Menu:RegenerateTokens' => 'Rigenera token di accesso...',
 	'itop-oauth-client/Operation:CreateMailBox/Title' => 'Creazione di una casella di posta',
@@ -28,13 +27,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'OAuthClient:Name/UseForSMTPMustBeUnique' => 'La combinazione Login (%1$s) e Uso per SMTP (%2$s) è già stata utilizzata per un altro Client OAuth',
 	'OAuthClient:baseinfo' => 'Informazioni di base',
 	'OAuthClient:scope' => 'Ambito',
-]);
-
-//
-// Class: OAuthClient
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OAuthClient' => 'OAuth Mail Access~~',
 	'Class:OAuthClient/Attribute:provider' => 'Fornitore',
 	'Class:OAuthClient/Attribute:provider+' => '~~',
@@ -54,7 +46,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OAuthClient/Attribute:refresh_token+' => '~~',
 	'Class:OAuthClient/Attribute:refresh_token_expiration' => 'Scadenza del token di aggiornamento',
 	'Class:OAuthClient/Attribute:refresh_token_expiration+' => '~~',
-	'Class:OAuthClient/Attribute:scope' => 'Ambito',
 	'Class:OAuthClient/Attribute:token' => 'Token di accesso',
 	'Class:OAuthClient/Attribute:token+' => '~~',
 	'Class:OAuthClient/Attribute:token_expiration' => 'Scadenza del token di accesso',
@@ -64,13 +55,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 Erase the field to recalculate default value~~',
 	'Class:OAuthClient/Attribute:mailbox_list' => 'Lista delle caselle di posta',
 	'Class:OAuthClient/Attribute:mailbox_list+' => '~~',
-]);
-
-//
-// Class: OAuthClientAzure
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OAuthClientAzure' => 'OAuth Mail Access for Microsoft Azure~~',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Ambito',
@@ -93,13 +77,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'No',
 	'Class:OAuthClientAzure/Attribute:tenant' => 'Tenant~~',
 	'Class:OAuthClientAzure/Attribute:tenant+' => 'Tenant ID of the configured application. For multi-tenant application, use "common".~~',
-]);
-
-//
-// Class: OAuthClientGoogle
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OAuthClientGoogle' => 'OAuth Mail Access for Google~~',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Ambito',

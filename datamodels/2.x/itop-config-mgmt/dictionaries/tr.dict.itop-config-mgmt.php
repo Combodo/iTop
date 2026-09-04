@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Izzet Sirin <izzet.sirin@htr.com.tr>
@@ -23,52 +22,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Relation:impacts/LoadData' => 'Load data~~',
 	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
 	'Relation:impacts/FilteredData' => 'Filtered data~~',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: lnkContactToFunctionalCI
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContactToFunctionalCI' => 'Kişi / İşlevsel CI bağla',
-	'Class:lnkContactToFunctionalCI+' => '~~',
+	'Class:lnkContactToFunctionalCI+' => 'Manages Contacts linked to Functional CIs. This can be a team responsible for the equipment, to assign related Tickets, or the person to whom an individual device such as a PC or phone is assigned, to manage the inventory.~~',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'İşlevsel CI',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '~~',
@@ -78,21 +33,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Kişi Adı',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '~~',
-]);
-
-//
-// Class: FunctionalCI
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:FunctionalCI' => 'Fonksiyonel KK',
-	'Class:FunctionalCI+' => '',
+	'Class:FunctionalCI+' => 'Abstract class grouping most Configuration Items types used for CMDB.~~',
 	'Class:FunctionalCI/Attribute:name' => 'Adı',
-	'Class:FunctionalCI/Attribute:name+' => '',
+	'Class:FunctionalCI/Attribute:name+' => '~~',
 	'Class:FunctionalCI/Attribute:description' => 'Açıklama',
 	'Class:FunctionalCI/Attribute:description+' => '~~',
 	'Class:FunctionalCI/Attribute:org_id' => 'Sahip kurum',
-	'Class:FunctionalCI/Attribute:org_id+' => '',
+	'Class:FunctionalCI/Attribute:org_id+' => '~~',
 	'Class:FunctionalCI/Attribute:organization_name' => 'Organizasyon Adı',
 	'Class:FunctionalCI/Attribute:organization_name+' => 'Ortak Adı',
 	'Class:FunctionalCI/Attribute:business_criticity' => 'İşin önemi',
@@ -105,6 +53,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => 'orta',
 	'Class:FunctionalCI/Attribute:move2production' => 'Üretim tarihine geç',
 	'Class:FunctionalCI/Attribute:move2production+' => '~~',
+	'Class:FunctionalCI/Attribute:groups_list' => 'Groups~~',
+	'Class:FunctionalCI/Attribute:groups_list+' => 'Groups can be used as tags, to document environment, projects (migration, upgrade, security), etc…~~',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Kişiler',
 	'Class:FunctionalCI/Attribute:contacts_list+' => 'Bu yapılandırma öğesi için tüm kişiler',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Belgeler',
@@ -114,18 +64,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Yazılımlar',
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'Bu yapılandırma öğesinde yüklü tüm yazılımlar',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Tip',
-	'Class:FunctionalCI/Attribute:finalclass+' => '',
+	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Aktif Çağrı Kayıtları',
 	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Active Tickets which are impacting this functional CI~~',
-]);
-
-//
-// Class: PhysicalDevice
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:PhysicalDevice' => 'Fiziksel cihaz',
-	'Class:PhysicalDevice+' => '~~',
+	'Class:PhysicalDevice+' => 'Abstract class grouping physical types of Configuration Items. A Physical Device can be located. It has usually a Brand and Model.~~',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'Seri numarası',
 	'Class:PhysicalDevice/Attribute:serialnumber+' => '~~',
@@ -149,6 +92,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:PhysicalDevice/Attribute:brand_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:model_id' => 'Model',
 	'Class:PhysicalDevice/Attribute:model_id+' => '~~',
+	'Class:PhysicalDevice/Attribute:model_end_of_support' => 'Model end of support~~',
+	'Class:PhysicalDevice/Attribute:model_end_of_support+' => 'When the hardware model is no more supported by the manufacturer, if this information is documented on the Model.~~',
 	'Class:PhysicalDevice/Attribute:model_name' => 'Model Adı',
 	'Class:PhysicalDevice/Attribute:model_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:asset_number' => 'Demirbaş numarası',
@@ -157,15 +102,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:PhysicalDevice/Attribute:purchase_date+' => '~~',
 	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Garantinin sonu',
 	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '~~',
-]);
-
-//
-// Class: Rack
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Rack' => 'Raf',
-	'Class:Rack+' => '~~',
+	'Class:Rack+' => 'A physical cabinet for Datacenter Devices and Enclosures.~~',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Rack/Attribute:nb_u' => 'Raf birimleri',
 	'Class:Rack/Attribute:nb_u+' => '~~',
@@ -173,64 +111,22 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Rack/Attribute:device_list+' => 'Bu rafa yerleştirilmiş tüm fiziksel cihazlar',
 	'Class:Rack/Attribute:enclosure_list' => 'Muhafazalar',
 	'Class:Rack/Attribute:enclosure_list+' => 'Bu raftaki tüm muhafazalar',
-]);
-
-//
-// Class: TelephonyCI
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:TelephonyCI' => 'Telefon CI',
-	'Class:TelephonyCI+' => '~~',
+	'Class:TelephonyCI+' => 'Abstract class grouping telephony devices~~',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Telefon numarası',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '~~',
-]);
-
-//
-// Class: Phone
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Phone' => 'Telefon',
-	'Class:Phone+' => '~~',
-]);
-
-//
-// Class: MobilePhone
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:Phone+' => 'End User device. Plain wired phone~~',
 	'Class:MobilePhone' => 'Cep telefonu',
-	'Class:MobilePhone+' => '',
+	'Class:MobilePhone+' => 'End User device. Wireless phone~~',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
-	'Class:MobilePhone/Attribute:imei+' => '',
+	'Class:MobilePhone/Attribute:imei+' => '~~',
 	'Class:MobilePhone/Attribute:hw_pin' => 'Hardware PIN',
-	'Class:MobilePhone/Attribute:hw_pin+' => '',
-]);
-
-//
-// Class: IPPhone
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:MobilePhone/Attribute:hw_pin+' => '~~',
 	'Class:IPPhone' => 'IP telefonu',
-	'Class:IPPhone+' => '~~',
-]);
-
-//
-// Class: Tablet
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:IPPhone+' => 'Physical device dedicated to phone calls, connected to a network~~',
 	'Class:Tablet' => 'Tablet',
-	'Class:Tablet+' => '~~',
-]);
-
-//
-// Class: ConnectableCI
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:Tablet+' => 'End User device. For example iPad, Galaxy Note/Tab Nexus, Kindle...~~',
 	'Class:ConnectableCI' => 'Bağlanabilir KK',
 	'Class:ConnectableCI+' => 'Fiziksel KK',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s~~',
@@ -238,15 +134,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Bu cihaza bağlı tüm ağ cihazları',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Ağ arayüzleri',
 	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'Tüm fiziksel ağ arayüzleri',
-]);
-
-//
-// Class: DatacenterDevice
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:DatacenterDevice' => 'Veri merkezi cihazı',
-	'Class:DatacenterDevice+' => '~~',
+	'Class:DatacenterDevice+' => 'A physical equipment, connected to the network and installed in a data center, usually in a Rack or an Enclosure. This can include Servers, Network Devices, Storage Systems, SAN Switches, Tape Libraries, NAS Devices, etc.~~',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'Raf',
 	'Class:DatacenterDevice/Attribute:rack_id+' => '~~',
@@ -276,15 +165,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'En az bir güç bağlantısı (A veya B) ayakta ise, cihaz ayaktadır',
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'Tüm güç bağlantıları ayakta ise, cihaz ayaktadır',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'En az %1$s %% güç bağlantısı ayakta ise cihaz ayaktadır',
-]);
-
-//
-// Class: NetworkDevice
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:NetworkDevice' => 'Ağ Cihazı',
-	'Class:NetworkDevice+' => '',
+	'Class:NetworkDevice+' => 'Any type of network device: router, switch, hub, load balancer, firewall…~~',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Ağ tipi',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '~~',
@@ -296,17 +178,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:NetworkDevice/Attribute:iosversion_id+' => '~~',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'IOS Sürüm Adı',
 	'Class:NetworkDevice/Attribute:iosversion_name+' => '~~',
+	'Class:NetworkDevice/Attribute:ios_end_of_support' => 'IOS end of support~~',
+	'Class:NetworkDevice/Attribute:ios_end_of_support+' => 'The date after which the editor no longer provides fixes for this IOS version.~~',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
-	'Class:NetworkDevice/Attribute:ram+' => '',
-]);
-
-//
-// Class: Server
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:NetworkDevice/Attribute:ram+' => '~~',
 	'Class:Server' => 'Sunucu',
-	'Class:Server+' => '',
+	'Class:Server+' => 'Datacenter Device managing access to centralized resources or services. It contains an OS Version executing Software Instances.~~',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Server/Attribute:osfamily_id' => 'OS ailesi',
 	'Class:Server/Attribute:osfamily_id+' => '~~',
@@ -316,73 +193,40 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Server/Attribute:osversion_id+' => '~~',
 	'Class:Server/Attribute:osversion_name' => 'OS Sürüm Adı',
 	'Class:Server/Attribute:osversion_name+' => '~~',
+	'Class:Server/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:Server/Attribute:os_end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
 	'Class:Server/Attribute:oslicence_id' => 'OS Lisansı',
 	'Class:Server/Attribute:oslicence_id+' => '~~',
 	'Class:Server/Attribute:oslicence_name' => 'OS Lisans Adı',
 	'Class:Server/Attribute:oslicence_name+' => '~~',
 	'Class:Server/Attribute:cpu' => 'CPU',
-	'Class:Server/Attribute:cpu+' => '',
+	'Class:Server/Attribute:cpu+' => '~~',
 	'Class:Server/Attribute:ram' => 'RAM',
-	'Class:Server/Attribute:ram+' => '',
+	'Class:Server/Attribute:ram+' => '~~',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Mantıksal depolama alanları',
 	'Class:Server/Attribute:logicalvolumes_list+' => 'Bu sunucuya bağlı tüm mantıksal depolama alanları',
-]);
-
-//
-// Class: StorageSystem
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:StorageSystem' => 'Depolama sistemi',
-	'Class:StorageSystem+' => '~~',
+	'Class:StorageSystem+' => 'Storage system that can be attached either to a SAN or to an Ethernet network. The logical unit of storage managed by a Storage System is a Logical Volume.~~',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Mantıksal depolama alanları',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Bu depolama sistemindeki tüm mantıksal depolama alanları',
-]);
-
-//
-// Class: SANSwitch
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:SANSwitch' => 'SAN Anahtarı',
-	'Class:SANSwitch+' => '~~',
+	'Class:SANSwitch+' => 'A SAN Switch is a network switch compatible with the Fibre Channel protocol used by storage networks. It is a Datacenter Device.~~',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Cihazlar',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Bu SAN anahtarına bağlı tüm cihazlar',
-]);
-
-//
-// Class: TapeLibrary
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:TapeLibrary' => 'Teyp Kütüphanesi',
-	'Class:TapeLibrary+' => '~~',
+	'Class:TapeLibrary+' => 'Datacenter Device which hosts multiple magnetic Tapes (or cartridge). Tape Libraries are used for data backup or archiving.~~',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Teypler',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'Teyp kitaplığındaki tüm teypler',
-]);
-
-//
-// Class: NAS
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:NAS' => 'NAS',
-	'Class:NAS+' => '~~',
+	'Class:NAS+' => 'High-capacity storage device racked in a datacenter and connected to a network. In '.ITOP_APPLICATION_SHORT.' a NAS (Network-attached storage) is hosting NAS File Systems.~~',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Dosya sistemleri',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'Bu NAS\'daki tüm dosya sistemleri',
-]);
-
-//
-// Class: PC
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:PC' => 'PC',
-	'Class:PC+' => '',
+	'Class:PC+' => 'Connectable CI. A Personal Computer (PC) is a Physical Device, Desktop or Laptop, running an operating system and designed to execute Software Instances.~~',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PC/Attribute:osfamily_id' => 'OS ailesi',
 	'Class:PC/Attribute:osfamily_id+' => '~~',
@@ -392,57 +236,31 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:PC/Attribute:osversion_id+' => '~~',
 	'Class:PC/Attribute:osversion_name' => 'OS Sürüm Adı',
 	'Class:PC/Attribute:osversion_name+' => '~~',
+	'Class:PC/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:PC/Attribute:os_end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
 	'Class:PC/Attribute:cpu' => 'CPU',
-	'Class:PC/Attribute:cpu+' => '',
+	'Class:PC/Attribute:cpu+' => '~~',
 	'Class:PC/Attribute:ram' => 'RAM',
-	'Class:PC/Attribute:ram+' => '',
+	'Class:PC/Attribute:ram+' => '~~',
 	'Class:PC/Attribute:type' => 'Tip',
 	'Class:PC/Attribute:type+' => '~~',
 	'Class:PC/Attribute:type/Value:desktop' => 'masaüstü',
 	'Class:PC/Attribute:type/Value:desktop+' => 'masaüstü',
 	'Class:PC/Attribute:type/Value:laptop' => 'dizüstü',
 	'Class:PC/Attribute:type/Value:laptop+' => 'dizüstü',
-]);
-
-//
-// Class: Printer
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Printer' => 'Yazıcı',
-	'Class:Printer+' => '',
+	'Class:Printer+' => 'Connectable CI. Physical Device connected either to the network or to a PC.~~',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s~~',
-]);
-
-//
-// Class: PowerConnection
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:PowerConnection' => 'Güç Bağlantısı',
-	'Class:PowerConnection+' => '~~',
+	'Class:PowerConnection+' => 'Abstract class grouping physical devices used for electrical power supply.~~',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s~~',
-]);
-
-//
-// Class: PowerSource
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:PowerSource' => 'Güç Kaynağı',
-	'Class:PowerSource+' => '~~',
+	'Class:PowerSource+' => 'Physical Power Connection. Used in a datacenter to document any kind of power source (main power inlet, breaker…) that is not a PDU.~~',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDU\'lar',
 	'Class:PowerSource/Attribute:pdus_list+' => 'Bu güç kaynağını kullanan tüm PDU\'lar',
-]);
-
-//
-// Class: PDU
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:PDU' => 'PDU',
-	'Class:PDU+' => '~~',
+	'Class:PDU+' => 'Power Connection. PDU (Power Distribution Unit) is a device fitted with multiple outputs designed to distribute electric power, especially to racks of computers and networking equipment located within a datacenter.~~',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s~~',
 	'Class:PDU/Attribute:rack_id' => 'Raf',
 	'Class:PDU/Attribute:rack_id+' => '~~',
@@ -452,25 +270,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:PDU/Attribute:powerstart_id+' => '~~',
 	'Class:PDU/Attribute:powerstart_name' => 'Güç başlatıcı adı',
 	'Class:PDU/Attribute:powerstart_name+' => '~~',
-]);
-
-//
-// Class: Peripheral
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Peripheral' => 'Çevresel Birim',
-	'Class:Peripheral+' => '~~',
+	'Class:Peripheral+' => 'Physical device, used to document any kind of computer peripheral.
+For example: external hard drives, scanners, input devices (trackballs, bar code scanners), etc…~~',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s~~',
-]);
-
-//
-// Class: Enclosure
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Enclosure' => 'Muhafaza',
-	'Class:Enclosure+' => '~~',
+	'Class:Enclosure+' => 'An open-frame chassis mounted inside a Rack, in which to mount IT equipment such as Blade Servers, Network Device...~~',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Enclosure/Attribute:rack_id' => 'Raf',
 	'Class:Enclosure/Attribute:rack_id+' => '~~',
@@ -480,15 +285,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Enclosure/Attribute:nb_u+' => '~~',
 	'Class:Enclosure/Attribute:device_list' => 'Cihazlar',
 	'Class:Enclosure/Attribute:device_list+' => 'Bu muhafazadaki tüm cihazlar',
-]);
-
-//
-// Class: ApplicationSolution
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ApplicationSolution' => 'Uygulama çözümleri',
-	'Class:ApplicationSolution+' => '',
+	'Class:ApplicationSolution+' => 'Application Solutions describe complex applications that are made of (or depend on) several basic components. The main information conveyed by an Application Solution is its list of relationships.~~',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Bu uygulama sistemü oluşturan tüm yapılandırma öğeleri',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'İş Süreçleri',
@@ -505,15 +303,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'Tüm CI\'ler hazır ise sistem hazırdır',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'CI\'lerin en az %1$s \'i hazır ise sistem hazırdır',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'CI\'lerin en az %1$s %% \'i hazır ise sistem hazırdır.',
-]);
-
-//
-// Class: BusinessProcess
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:BusinessProcess' => 'İş süreci',
-	'Class:BusinessProcess+' => '',
+	'Class:BusinessProcess+' => 'A Business Process is used to document a high-level process or an important application for the operations. It is quite similar to an Application Solution but for describing higher level applications or whole processes in the organization.~~',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Uygulama sistemleri',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Bu iş sürecini etkileyen tüm uygulama çözümleri',
 	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
@@ -524,377 +315,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:BusinessProcess/Attribute:status/Value:active+' => 'Aktif',
 	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'Aktif değil',
 	'Class:BusinessProcess/Attribute:status/Value:inactive+' => 'Aktif değil',
-]);
-
-//
-// Class: SoftwareInstance
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:SoftwareInstance' => 'Yazılım Kurulumu',
-	'Class:SoftwareInstance+' => '',
-	'Class:SoftwareInstance/Attribute:system_id' => 'Sistem',
-	'Class:SoftwareInstance/Attribute:system_id+' => 'The system can be a Server, a Virtual Machine, a PC, ...~~',
-	'Class:SoftwareInstance/Attribute:system_name' => 'Sistem Adı',
-	'Class:SoftwareInstance/Attribute:system_name+' => '~~',
-	'Class:SoftwareInstance/Attribute:software_id' => 'Yazılım',
-	'Class:SoftwareInstance/Attribute:software_id+' => '~~',
-	'Class:SoftwareInstance/Attribute:software_name' => 'Yazılım Adı',
-	'Class:SoftwareInstance/Attribute:software_name+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Yazılım Lisansı',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '~~',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Yazılım Lisans Adı',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '~~',
-	'Class:SoftwareInstance/Attribute:path' => 'Yol',
-	'Class:SoftwareInstance/Attribute:path+' => '~~',
-	'Class:SoftwareInstance/Attribute:status' => 'Durum',
-	'Class:SoftwareInstance/Attribute:status+' => '~~',
-	'Class:SoftwareInstance/Attribute:status/Value:active' => 'Aktif',
-	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'Aktif',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Aktif değil',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'Aktif değil',
-]);
-
-//
-// Class: Middleware
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:Middleware' => 'Ara katman yazılımı',
-	'Class:Middleware+' => '~~',
-	'Class:Middleware/Attribute:middlewareinstance_list' => 'Ara katman yazılımı olayları',
-	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Bu ara katman yazılımı tarafından sağlanan tüm ara katman yazılımı olayları',
-]);
-
-//
-// Class: DBServer
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:DBServer' => 'Veritabanı',
-	'Class:DBServer+' => 'Veritabanı yazılımı',
-	'Class:DBServer/Attribute:dbschema_list' => 'Veritabanı şemaları',
-	'Class:DBServer/Attribute:dbschema_list+' => 'Bu veritabanı sunucusu için tüm veritabanı şemaları',
-]);
-
-//
-// Class: WebServer
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:WebServer' => 'Web Sunucusu',
-	'Class:WebServer+' => '~~',
-	'Class:WebServer/Attribute:webapp_list' => 'Web Uygulamaları',
-	'Class:WebServer/Attribute:webapp_list+' => 'Bu web sunucusunda mevcut tüm web uygulamaları',
-]);
-
-//
-// Class: PCSoftware
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:PCSoftware' => 'PC yazılımı',
-	'Class:PCSoftware+' => '~~',
-]);
-
-//
-// Class: OtherSoftware
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:OtherSoftware' => 'Diğer yazılım',
-	'Class:OtherSoftware+' => '~~',
-]);
-
-//
-// Class: MiddlewareInstance
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:MiddlewareInstance' => 'Ara katman yazılımı olayı',
-	'Class:MiddlewareInstance+' => '~~',
-	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
-	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
-	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Ara katman yazılımı',
-	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
-	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Ara katman yazılımı adı',
-	'Class:MiddlewareInstance/Attribute:middleware_name+' => '~~',
-]);
-
-//
-// Class: DatabaseSchema
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:DatabaseSchema' => 'Veritabanı Şeması',
-	'Class:DatabaseSchema+' => '~~',
-	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:DatabaseSchema/Attribute:dbserver_id' => 'Veritabanı Sunucusu',
-	'Class:DatabaseSchema/Attribute:dbserver_id+' => '~~',
-	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Veritabanı sunucu adı',
-	'Class:DatabaseSchema/Attribute:dbserver_name+' => '~~',
-]);
-
-//
-// Class: WebApplication
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:WebApplication' => 'Web Uygulaması',
-	'Class:WebApplication+' => '~~',
-	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:WebApplication/Attribute:webserver_id' => 'Web Sunucusu',
-	'Class:WebApplication/Attribute:webserver_id+' => '~~',
-	'Class:WebApplication/Attribute:webserver_name' => 'Web Sunucusu Adı',
-	'Class:WebApplication/Attribute:webserver_name+' => '~~',
-	'Class:WebApplication/Attribute:logo' => 'Logo~~',
-	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
-	'Class:WebApplication/Attribute:url' => 'URL',
-	'Class:WebApplication/Attribute:url+' => '~~',
-]);
-
-//
-// Class: VirtualDevice
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:VirtualDevice' => 'Sanal cihaz',
-	'Class:VirtualDevice+' => '~~',
-	'Class:VirtualDevice/Attribute:status' => 'Durum',
-	'Class:VirtualDevice/Attribute:status+' => '~~',
-	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Uygulama',
-	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'Uygulama',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'kullanım dışı',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'kullanım dışı',
-	'Class:VirtualDevice/Attribute:status/Value:production' => 'kullanımda',
-	'Class:VirtualDevice/Attribute:status/Value:production+' => 'kullanımda',
-	'Class:VirtualDevice/Attribute:status/Value:stock' => 'stok',
-	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'stok',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Mantıksal depolama alanları',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Bu cihaz tarafından kullanılan tüm mantıksal depolama alanları',
-]);
-
-//
-// Class: VirtualHost
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:VirtualHost' => 'Sanal Ana Makine',
-	'Class:VirtualHost+' => '~~',
-	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Sanal Makineler',
-	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Bu ana makine üzerinde çalışan tüm sanal makineler',
-]);
-
-//
-// Class: Hypervisor
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:Hypervisor' => 'Hipervizör',
-	'Class:Hypervisor+' => '~~',
-	'Class:Hypervisor/Attribute:farm_id' => 'Çiftlik',
-	'Class:Hypervisor/Attribute:farm_id+' => '~~',
-	'Class:Hypervisor/Attribute:farm_name' => 'Çiftlik Adı',
-	'Class:Hypervisor/Attribute:farm_name+' => '~~',
-	'Class:Hypervisor/Attribute:server_id' => 'Sunucu',
-	'Class:Hypervisor/Attribute:server_id+' => '~~',
-	'Class:Hypervisor/Attribute:server_name' => 'Sunucu adı',
-	'Class:Hypervisor/Attribute:server_name+' => '~~',
-]);
-
-//
-// Class: Farm
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:Farm' => 'Çiftlik',
-	'Class:Farm+' => '~~',
-	'Class:Farm/Attribute:hypervisor_list' => 'Hipervizörler',
-	'Class:Farm/Attribute:hypervisor_list+' => 'Bu çiftliği oluşturan tüm hipervizörler',
-	'Class:Farm/Attribute:redundancy' => 'Yüksek Kullanılabilirlik',
-	'Class:Farm/Attribute:redundancy/disabled' => 'Tüm hipervizörler ayakta ise çiftlik ayaktadır',
-	'Class:Farm/Attribute:redundancy/count' => 'Hipervizörlerin en az %1$s  \'i ayakta ise çiftlik ayaktadır',
-	'Class:Farm/Attribute:redundancy/percent' => 'Hipervizörlerin en az %1$s %% \'i ayakta ise çiftlik ayaktadır.',
-]);
-
-//
-// Class: VirtualMachine
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:VirtualMachine' => 'Sanal makine',
-	'Class:VirtualMachine+' => '~~',
-	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Sanal Ana Makine',
-	'Class:VirtualMachine/Attribute:virtualhost_id+' => '~~',
-	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Sanal Ana Makine Adı',
-	'Class:VirtualMachine/Attribute:virtualhost_name+' => '~~',
-	'Class:VirtualMachine/Attribute:osfamily_id' => 'OS ailesi',
-	'Class:VirtualMachine/Attribute:osfamily_id+' => '~~',
-	'Class:VirtualMachine/Attribute:osfamily_name' => 'OS Aile Adı',
-	'Class:VirtualMachine/Attribute:osfamily_name+' => '~~',
-	'Class:VirtualMachine/Attribute:osversion_id' => 'OS Sürümü',
-	'Class:VirtualMachine/Attribute:osversion_id+' => '~~',
-	'Class:VirtualMachine/Attribute:osversion_name' => 'OS Sürüm Adı',
-	'Class:VirtualMachine/Attribute:osversion_name+' => '~~',
-	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS Lisansı',
-	'Class:VirtualMachine/Attribute:oslicence_id+' => '~~',
-	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS Lisans Adı',
-	'Class:VirtualMachine/Attribute:oslicence_name+' => '~~',
-	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
-	'Class:VirtualMachine/Attribute:cpu+' => '~~',
-	'Class:VirtualMachine/Attribute:ram' => 'RAM',
-	'Class:VirtualMachine/Attribute:ram+' => '~~',
-	'Class:VirtualMachine/Attribute:managementip' => 'IP',
-	'Class:VirtualMachine/Attribute:managementip+' => '~~',
-	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Ağ arayüzleri',
-	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Tüm mantıksal ağ arayüzleri',
-]);
-
-//
-// Class: LogicalVolume
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:LogicalVolume' => 'Mantıksal Depolama Alanları',
-	'Class:LogicalVolume+' => '~~',
-	'Class:LogicalVolume/Attribute:name' => 'İsim',
-	'Class:LogicalVolume/Attribute:name+' => '~~',
-	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
-	'Class:LogicalVolume/Attribute:lun_id+' => '~~',
-	'Class:LogicalVolume/Attribute:description' => 'Açıklama',
-	'Class:LogicalVolume/Attribute:description+' => '~~',
-	'Class:LogicalVolume/Attribute:raid_level' => 'RAID Seviyesi',
-	'Class:LogicalVolume/Attribute:raid_level+' => '~~',
-	'Class:LogicalVolume/Attribute:size' => 'Boyutu',
-	'Class:LogicalVolume/Attribute:size+' => '~~',
-	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Depolama sistemi',
-	'Class:LogicalVolume/Attribute:storagesystem_id+' => '~~',
-	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Depolama Sistemi Adı',
-	'Class:LogicalVolume/Attribute:storagesystem_name+' => '~~',
-	'Class:LogicalVolume/Attribute:servers_list' => 'Sunucular',
-	'Class:LogicalVolume/Attribute:servers_list+' => 'Bu depolama alanını kullanan tüm sunucular',
-	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Sanal Cihazlar',
-	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Bu depolama alanını kullanan tüm sanal cihazlar',
-]);
-
-//
-// Class: lnkServerToVolume
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:lnkServerToVolume' => 'Bağlantılı sunucu / Depolama alanı',
-	'Class:lnkServerToVolume+' => '~~',
-	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
-	'Class:lnkServerToVolume/Attribute:volume_id' => 'Depolama alanı',
-	'Class:lnkServerToVolume/Attribute:volume_id+' => '~~',
-	'Class:lnkServerToVolume/Attribute:volume_name' => 'Depolama alanı adı',
-	'Class:lnkServerToVolume/Attribute:volume_name+' => '~~',
-	'Class:lnkServerToVolume/Attribute:server_id' => 'Sunucu',
-	'Class:lnkServerToVolume/Attribute:server_id+' => '~~',
-	'Class:lnkServerToVolume/Attribute:server_name' => 'Sunucu adı',
-	'Class:lnkServerToVolume/Attribute:server_name+' => '~~',
-	'Class:lnkServerToVolume/Attribute:size_used' => 'Kullanılan boyut',
-	'Class:lnkServerToVolume/Attribute:size_used+' => '~~',
-]);
-
-//
-// Class: lnkVirtualDeviceToVolume
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:lnkVirtualDeviceToVolume' => 'Sanal cihaz / Depolama alanı bağla',
-	'Class:lnkVirtualDeviceToVolume+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Depolama alanı',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Depolama alanı adı',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Depolama alanı adı',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Sanal Cihaz Adı',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Kullanılan boyut',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '~~',
-]);
-
-//
-// Class: lnkSanToDatacenterDevice
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:lnkSanToDatacenterDevice' => 'SAN/ Veri merkezi cihazı bağla',
-	'Class:lnkSanToDatacenterDevice+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN Anahtarı',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'SAN Anahtarı Adı',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Cihaz',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Cihaz adı',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'SAN FC',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Cihaz FC',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '~~',
-]);
-
-//
-// Class: Tape
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:Tape' => 'Teyp',
-	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
-	'Class:Tape/Attribute:name' => 'İsim',
-	'Class:Tape/Attribute:name+' => '~~',
-	'Class:Tape/Attribute:description' => 'Açıklama',
-	'Class:Tape/Attribute:description+' => '~~',
-	'Class:Tape/Attribute:size' => 'Boyutu',
-	'Class:Tape/Attribute:size+' => '~~',
-	'Class:Tape/Attribute:tapelibrary_id' => 'Teyp Kütüphanesi',
-	'Class:Tape/Attribute:tapelibrary_id+' => '~~',
-	'Class:Tape/Attribute:tapelibrary_name' => 'Teyp Kütüphanesi Adı',
-	'Class:Tape/Attribute:tapelibrary_name+' => '~~',
-]);
-
-//
-// Class: NASFileSystem
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:NASFileSystem' => 'NAS dosya sistemi',
-	'Class:NASFileSystem+' => '~~',
-	'Class:NASFileSystem/Attribute:name' => 'İsim',
-	'Class:NASFileSystem/Attribute:name+' => '~~',
-	'Class:NASFileSystem/Attribute:description' => 'Açıklama',
-	'Class:NASFileSystem/Attribute:description+' => '~~',
-	'Class:NASFileSystem/Attribute:raid_level' => 'RAID Seviyesi',
-	'Class:NASFileSystem/Attribute:raid_level+' => '~~',
-	'Class:NASFileSystem/Attribute:size' => 'Boyutu',
-	'Class:NASFileSystem/Attribute:size+' => '~~',
-	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
-	'Class:NASFileSystem/Attribute:nas_id+' => '~~',
-	'Class:NASFileSystem/Attribute:nas_name' => 'NAS Adı',
-	'Class:NASFileSystem/Attribute:nas_name+' => '~~',
-]);
-
-//
-// Class: Software
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Software' => 'Yazılım',
-	'Class:Software+' => '',
+	'Class:Software+' => 'Software is a generic item in the software catalog. It has a particular version. In '.ITOP_APPLICATION_SHORT.' a Software has a category amongst: DB Server, Middleware, PC Software, Web Server and Other Software.~~',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Software/Attribute:name' => 'Adı',
-	'Class:Software/Attribute:name+' => '',
+	'Class:Software/Attribute:name+' => '~~',
 	'Class:Software/Attribute:vendor' => 'satıcı',
 	'Class:Software/Attribute:vendor+' => '~~',
 	'Class:Software/Attribute:version' => 'Sürüm',
 	'Class:Software/Attribute:version+' => '~~',
+	'Class:Software/Attribute:end_of_support' => 'End of support~~',
+	'Class:Software/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this software version.~~',
 	'Class:Software/Attribute:documents_list' => 'Belgeler',
 	'Class:Software/Attribute:documents_list+' => 'Bu yazılımla bağlantılı tüm belgeler',
 	'Class:Software/Attribute:logo' => 'Logo~~',
@@ -917,32 +348,237 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Software/Attribute:softwarepatch_list+' => 'Bu yazılım için tüm yamalar',
 	'Class:Software/Attribute:softwarelicence_list' => 'Yazılım Lisansları',
 	'Class:Software/Attribute:softwarelicence_list+' => 'Bu yazılımın tüm lisansları',
-]);
-
-//
-// Class: Patch
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:SoftwareInstance' => 'Yazılım Kurulumu',
+	'Class:SoftwareInstance+' => 'Abstract class representing the deployment of a Software on a device (Server, PC, VirtualMachine). In '.ITOP_APPLICATION_SHORT.' there are different types of Software Instance: DB Server, Middleware, PC Software, Web Server and Other Software~~',
+	'Class:SoftwareInstance/Attribute:system_id' => 'Sistem',
+	'Class:SoftwareInstance/Attribute:system_id+' => 'The system can be a Server, a Virtual Machine, a PC, ...~~',
+	'Class:SoftwareInstance/Attribute:system_name' => 'Sistem Adı',
+	'Class:SoftwareInstance/Attribute:system_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_id' => 'Yazılım',
+	'Class:SoftwareInstance/Attribute:software_id+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_name' => 'Yazılım Adı',
+	'Class:SoftwareInstance/Attribute:software_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_end_of_support' => 'Software end of support~~',
+	'Class:SoftwareInstance/Attribute:software_end_of_support+' => 'The date after which the editor ceases to provide patches for this software version.~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Yazılım Lisansı',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Yazılım Lisans Adı',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:path' => 'Yol',
+	'Class:SoftwareInstance/Attribute:path+' => '~~',
+	'Class:SoftwareInstance/Attribute:status' => 'Durum',
+	'Class:SoftwareInstance/Attribute:status+' => '~~',
+	'Class:SoftwareInstance/Attribute:status/Value:active' => 'Aktif',
+	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'Aktif',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Aktif değil',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'Aktif değil',
+	'Class:Middleware' => 'Ara katman yazılımı',
+	'Class:Middleware+' => 'Software Instance offering services to other software (like: Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere or Lotus Domino) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:Middleware/Attribute:middlewareinstance_list' => 'Ara katman yazılımı olayları',
+	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Bu ara katman yazılımı tarafından sağlanan tüm ara katman yazılımı olayları',
+	'Class:DBServer' => 'Veritabanı',
+	'Class:DBServer+' => 'Veritabanı yazılımı',
+	'Class:DBServer/Attribute:dbschema_list' => 'Veritabanı şemaları',
+	'Class:DBServer/Attribute:dbschema_list+' => 'Bu veritabanı sunucusu için tüm veritabanı şemaları',
+	'Class:WebServer' => 'Web Sunucusu',
+	'Class:WebServer+' => 'It is a Software Instance, offering Web services (like Apache 2.4, Nginx 1.29.4, IIS 7.0) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:WebServer/Attribute:webapp_list' => 'Web Uygulamaları',
+	'Class:WebServer/Attribute:webapp_list+' => 'Bu web sunucusunda mevcut tüm web uygulamaları',
+	'Class:PCSoftware' => 'PC yazılımı',
+	'Class:PCSoftware+' => 'Software Instance for software (like MS Office, Adobe Photoshop or Filezilla) installed on a PC.~~',
+	'Class:OtherSoftware' => 'Diğer yazılım',
+	'Class:OtherSoftware+' => 'Any type of Software Instance that do not fit in the other categories: PC Software, Middleware, DB server or Web Server.~~',
+	'Class:MiddlewareInstance' => 'Ara katman yazılımı olayı',
+	'Class:MiddlewareInstance+' => 'Functional CI representing a service delivered by a Middleware.~~',
+	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Ara katman yazılımı',
+	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
+	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Ara katman yazılımı adı',
+	'Class:MiddlewareInstance/Attribute:middleware_name+' => '~~',
+	'Class:DatabaseSchema' => 'Veritabanı Şeması',
+	'Class:DatabaseSchema+' => 'Dabatase instance running of a specific DB server.~~',
+	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:DatabaseSchema/Attribute:dbserver_id' => 'Veritabanı Sunucusu',
+	'Class:DatabaseSchema/Attribute:dbserver_id+' => '~~',
+	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Veritabanı sunucu adı',
+	'Class:DatabaseSchema/Attribute:dbserver_name+' => '~~',
+	'Class:WebApplication' => 'Web Uygulaması',
+	'Class:WebApplication+' => 'Instance of an application accessible using a web browser and that runs on a given Web Server instance. For eg. this iTop that you\'re looking at.~~',
+	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:WebApplication/Attribute:webserver_id' => 'Web Sunucusu',
+	'Class:WebApplication/Attribute:webserver_id+' => '~~',
+	'Class:WebApplication/Attribute:webserver_name' => 'Web Sunucusu Adı',
+	'Class:WebApplication/Attribute:webserver_name+' => '~~',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:WebApplication/Attribute:url' => 'URL',
+	'Class:WebApplication/Attribute:url+' => '~~',
+	'Class:VirtualDevice' => 'Sanal cihaz',
+	'Class:VirtualDevice+' => 'Abstract class used for server virtualization (Virtual Host and Virtual Machine).~~',
+	'Class:VirtualDevice/Attribute:status' => 'Durum',
+	'Class:VirtualDevice/Attribute:status+' => '~~',
+	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Uygulama',
+	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'Uygulama',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'kullanım dışı',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'kullanım dışı',
+	'Class:VirtualDevice/Attribute:status/Value:production' => 'kullanımda',
+	'Class:VirtualDevice/Attribute:status/Value:production+' => 'kullanımda',
+	'Class:VirtualDevice/Attribute:status/Value:stock' => 'stok',
+	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'stok',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Mantıksal depolama alanları',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Bu cihaz tarafından kullanılan tüm mantıksal depolama alanları',
+	'Class:VirtualHost' => 'Sanal Ana Makine',
+	'Class:VirtualHost+' => 'Abstract class used for Virtual Devices (Hypervisor, Farm,...) hosting Virtual Machines.~~',
+	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Sanal Makineler',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Bu ana makine üzerinde çalışan tüm sanal makineler',
+	'Class:Hypervisor' => 'Hipervizör',
+	'Class:Hypervisor+' => 'Virtual Host. Virtualization software (MS Hyper-V, VMWare ESX, Xen, etc.), running on a physical Server and supporting the creation of Virtual Machines.~~',
+	'Class:Hypervisor/Attribute:farm_id' => 'Çiftlik',
+	'Class:Hypervisor/Attribute:farm_id+' => '~~',
+	'Class:Hypervisor/Attribute:farm_name' => 'Çiftlik Adı',
+	'Class:Hypervisor/Attribute:farm_name+' => '~~',
+	'Class:Hypervisor/Attribute:server_id' => 'Sunucu',
+	'Class:Hypervisor/Attribute:server_id+' => '~~',
+	'Class:Hypervisor/Attribute:server_name' => 'Sunucu adı',
+	'Class:Hypervisor/Attribute:server_name+' => '~~',
+	'Class:Farm' => 'Çiftlik',
+	'Class:Farm+' => 'Virtual Host. A Farm (or cluster) is a group of Hypervisors pooled together and sharing storage resources to provide an overall fault tolerant system for hosting Virtual Machines.~~',
+	'Class:Farm/Attribute:hypervisor_list' => 'Hipervizörler',
+	'Class:Farm/Attribute:hypervisor_list+' => 'Bu çiftliği oluşturan tüm hipervizörler',
+	'Class:Farm/Attribute:redundancy' => 'Yüksek Kullanılabilirlik',
+	'Class:Farm/Attribute:redundancy/disabled' => 'Tüm hipervizörler ayakta ise çiftlik ayaktadır',
+	'Class:Farm/Attribute:redundancy/count' => 'Hipervizörlerin en az %1$s  \'i ayakta ise çiftlik ayaktadır',
+	'Class:Farm/Attribute:redundancy/percent' => 'Hipervizörlerin en az %1$s %% \'i ayakta ise çiftlik ayaktadır.',
+	'Class:VirtualMachine' => 'Sanal makine',
+	'Class:VirtualMachine+' => 'Virtual Device equivalent to a Server, it is hosted either on an Hypervisor or on a Farm.~~',
+	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Sanal Ana Makine',
+	'Class:VirtualMachine/Attribute:virtualhost_id+' => '~~',
+	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Sanal Ana Makine Adı',
+	'Class:VirtualMachine/Attribute:virtualhost_name+' => '~~',
+	'Class:VirtualMachine/Attribute:osfamily_id' => 'OS ailesi',
+	'Class:VirtualMachine/Attribute:osfamily_id+' => '~~',
+	'Class:VirtualMachine/Attribute:osfamily_name' => 'OS Aile Adı',
+	'Class:VirtualMachine/Attribute:osfamily_name+' => '~~',
+	'Class:VirtualMachine/Attribute:osversion_id' => 'OS Sürümü',
+	'Class:VirtualMachine/Attribute:osversion_id+' => '~~',
+	'Class:VirtualMachine/Attribute:osversion_name' => 'OS Sürüm Adı',
+	'Class:VirtualMachine/Attribute:osversion_name+' => '~~',
+	'Class:VirtualMachine/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:VirtualMachine/Attribute:os_end_of_support+' => 'When the OS version is no more supported by the vendor, if this information is documented on the OS Version.~~',
+	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS Lisansı',
+	'Class:VirtualMachine/Attribute:oslicence_id+' => '~~',
+	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS Lisans Adı',
+	'Class:VirtualMachine/Attribute:oslicence_name+' => '~~',
+	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
+	'Class:VirtualMachine/Attribute:cpu+' => '~~',
+	'Class:VirtualMachine/Attribute:ram' => 'RAM',
+	'Class:VirtualMachine/Attribute:ram+' => '~~',
+	'Class:VirtualMachine/Attribute:managementip' => 'IP',
+	'Class:VirtualMachine/Attribute:managementip+' => '~~',
+	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Ağ arayüzleri',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Tüm mantıksal ağ arayüzleri',
+	'Class:LogicalVolume' => 'Mantıksal Depolama Alanları',
+	'Class:LogicalVolume+' => 'The unit of storage managed inside a Storage System. It can be accessed by multiple Servers and Virtual Devices.~~',
+	'Class:LogicalVolume/Attribute:name' => 'İsim',
+	'Class:LogicalVolume/Attribute:name+' => '~~',
+	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
+	'Class:LogicalVolume/Attribute:lun_id+' => '~~',
+	'Class:LogicalVolume/Attribute:description' => 'Açıklama',
+	'Class:LogicalVolume/Attribute:description+' => '~~',
+	'Class:LogicalVolume/Attribute:raid_level' => 'RAID Seviyesi',
+	'Class:LogicalVolume/Attribute:raid_level+' => '~~',
+	'Class:LogicalVolume/Attribute:size' => 'Boyutu',
+	'Class:LogicalVolume/Attribute:size+' => '~~',
+	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Depolama sistemi',
+	'Class:LogicalVolume/Attribute:storagesystem_id+' => '~~',
+	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Depolama Sistemi Adı',
+	'Class:LogicalVolume/Attribute:storagesystem_name+' => '~~',
+	'Class:LogicalVolume/Attribute:servers_list' => 'Sunucular',
+	'Class:LogicalVolume/Attribute:servers_list+' => 'Bu depolama alanını kullanan tüm sunucular',
+	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Sanal Cihazlar',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Bu depolama alanını kullanan tüm sanal cihazlar',
+	'Class:lnkServerToVolume' => 'Bağlantılı sunucu / Depolama alanı',
+	'Class:lnkServerToVolume+' => 'This many-to-many link indicates that a Server uses a Logical Volume (a storage unit managed inside a Storage System). Several Servers can use the same Logical Volume.~~',
+	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
+	'Class:lnkServerToVolume/Attribute:volume_id' => 'Depolama alanı',
+	'Class:lnkServerToVolume/Attribute:volume_id+' => '~~',
+	'Class:lnkServerToVolume/Attribute:volume_name' => 'Depolama alanı adı',
+	'Class:lnkServerToVolume/Attribute:volume_name+' => '~~',
+	'Class:lnkServerToVolume/Attribute:server_id' => 'Sunucu',
+	'Class:lnkServerToVolume/Attribute:server_id+' => '~~',
+	'Class:lnkServerToVolume/Attribute:server_name' => 'Sunucu adı',
+	'Class:lnkServerToVolume/Attribute:server_name+' => '~~',
+	'Class:lnkServerToVolume/Attribute:size_used' => 'Kullanılan boyut',
+	'Class:lnkServerToVolume/Attribute:size_used+' => '~~',
+	'Class:lnkVirtualDeviceToVolume' => 'Sanal cihaz / Depolama alanı bağla',
+	'Class:lnkVirtualDeviceToVolume+' => 'This many-to-many link indicates that a Virtual Device uses a Logical Volume (a storage unit managed inside a Storage System). Several Virtual Devices can use the same Logical Volume.~~',
+	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Depolama alanı',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Depolama alanı adı',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Depolama alanı adı',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Sanal Cihaz Adı',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Kullanılan boyut',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '~~',
+	'Class:lnkSanToDatacenterDevice' => 'SAN/ Veri merkezi cihazı bağla',
+	'Class:lnkSanToDatacenterDevice+' => 'This many-to-many link models the network connection between a SAN Switch and a Datacenter Device (a Server, a Network Device, etc.).~~',
+	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN Anahtarı',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'SAN Anahtarı Adı',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Cihaz',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Cihaz adı',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'SAN FC',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Cihaz FC',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '~~',
+	'Class:Tape' => 'Teyp',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
+	'Class:Tape/Attribute:name' => 'İsim',
+	'Class:Tape/Attribute:name+' => '~~',
+	'Class:Tape/Attribute:description' => 'Açıklama',
+	'Class:Tape/Attribute:description+' => '~~',
+	'Class:Tape/Attribute:size' => 'Boyutu',
+	'Class:Tape/Attribute:size+' => '~~',
+	'Class:Tape/Attribute:tapelibrary_id' => 'Teyp Kütüphanesi',
+	'Class:Tape/Attribute:tapelibrary_id+' => '~~',
+	'Class:Tape/Attribute:tapelibrary_name' => 'Teyp Kütüphanesi Adı',
+	'Class:Tape/Attribute:tapelibrary_name+' => '~~',
+	'Class:NASFileSystem' => 'NAS dosya sistemi',
+	'Class:NASFileSystem+' => 'Represents a shared file system hosted inside a given NAS (Network Attached Storage).~~',
+	'Class:NASFileSystem/Attribute:name' => 'İsim',
+	'Class:NASFileSystem/Attribute:name+' => '~~',
+	'Class:NASFileSystem/Attribute:description' => 'Açıklama',
+	'Class:NASFileSystem/Attribute:description+' => '~~',
+	'Class:NASFileSystem/Attribute:raid_level' => 'RAID Seviyesi',
+	'Class:NASFileSystem/Attribute:raid_level+' => '~~',
+	'Class:NASFileSystem/Attribute:size' => 'Boyutu',
+	'Class:NASFileSystem/Attribute:size+' => '~~',
+	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
+	'Class:NASFileSystem/Attribute:nas_id+' => '~~',
+	'Class:NASFileSystem/Attribute:nas_name' => 'NAS Adı',
+	'Class:NASFileSystem/Attribute:nas_name+' => '~~',
 	'Class:Patch' => 'Yama',
-	'Class:Patch+' => '',
+	'Class:Patch+' => 'Abstract class, for patch, hotfix, security fix or service pack for an OS or a Software.~~',
 	'Class:Patch/Attribute:name' => 'Adı',
-	'Class:Patch/Attribute:name+' => '',
+	'Class:Patch/Attribute:name+' => '~~',
 	'Class:Patch/Attribute:documents_list' => 'Belgeler',
 	'Class:Patch/Attribute:documents_list+' => 'Bu yama ile bağlantılı tüm belgeler',
 	'Class:Patch/Attribute:description' => 'Tanımlama',
-	'Class:Patch/Attribute:description+' => '',
+	'Class:Patch/Attribute:description+' => '~~',
 	'Class:Patch/Attribute:finalclass' => 'Tip',
 	'Class:Patch/Attribute:finalclass+' => 'Name of the final class~~',
-]);
-
-//
-// Class: OSPatch
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:OSPatch' => 'İşletim sistemi yaması',
-	'Class:OSPatch+' => '~~',
+	'Class:OSPatch+' => 'Patch, hotfix, security fix or service pack for a given operating system.~~',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Cihazlar',
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'Bu yamanın kurulduğu tüm sistemler',
 	'Class:OSPatch/Attribute:osversion_id' => 'OS Sürümü',
@@ -951,40 +587,26 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:OSPatch/Attribute:osfamily_id+' => '~~',
 	'Class:OSPatch/Attribute:osversion_name' => 'OS Sürüm Adı',
 	'Class:OSPatch/Attribute:osversion_name+' => '~~',
-]);
-
-//
-// Class: SoftwarePatch
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:SoftwarePatch' => 'Yazılım yaması',
-	'Class:SoftwarePatch+' => '~~',
+	'Class:SoftwarePatch+' => 'Patch, hotfix, security fix or service pack for a given software.~~',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Yazılım',
 	'Class:SoftwarePatch/Attribute:software_id+' => '~~',
 	'Class:SoftwarePatch/Attribute:software_name' => 'Yazılım adı',
 	'Class:SoftwarePatch/Attribute:software_name+' => '~~',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Yazılım olayları',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Bu yazılım yamasının kurulduğu tüm sistemler',
-]);
-
-//
-// Class: Licence
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Licence' => 'Lisans',
-	'Class:Licence+' => '',
+	'Class:Licence+' => 'Abstract class. A license contract for a particular OS version or Software~~',
 	'Class:Licence/Attribute:name' => 'Adı',
-	'Class:Licence/Attribute:name+' => '',
+	'Class:Licence/Attribute:name+' => '~~',
 	'Class:Licence/Attribute:documents_list' => 'Belgeler',
 	'Class:Licence/Attribute:documents_list+' => 'Bu lisansla bağlantılı tüm belgeler',
 	'Class:Licence/Attribute:org_id' => 'Sahibi',
-	'Class:Licence/Attribute:org_id+' => '',
+	'Class:Licence/Attribute:org_id+' => '~~',
 	'Class:Licence/Attribute:organization_name' => 'Organizasyon Adı',
 	'Class:Licence/Attribute:organization_name+' => 'Ortak Adı',
 	'Class:Licence/Attribute:usage_limit' => 'Kullanım limit',
-	'Class:Licence/Attribute:usage_limit+' => '',
+	'Class:Licence/Attribute:usage_limit+' => '~~',
 	'Class:Licence/Attribute:description' => 'Açıklama',
 	'Class:Licence/Attribute:description+' => '~~',
 	'Class:Licence/Attribute:start_date' => 'Başlangıç tarihi',
@@ -992,7 +614,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Licence/Attribute:end_date' => 'Son Tarihi',
 	'Class:Licence/Attribute:end_date+' => '~~',
 	'Class:Licence/Attribute:licence_key' => 'Lisans',
-	'Class:Licence/Attribute:licence_key+' => '',
+	'Class:Licence/Attribute:licence_key+' => '~~',
 	'Class:Licence/Attribute:perpetual' => 'Sürekli',
 	'Class:Licence/Attribute:perpetual+' => '~~',
 	'Class:Licence/Attribute:perpetual/Value:no' => 'hayır',
@@ -1001,15 +623,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'evet',
 	'Class:Licence/Attribute:finalclass' => 'Tip',
 	'Class:Licence/Attribute:finalclass+' => 'Name of the final class~~',
-]);
-
-//
-// Class: OSLicence
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:OSLicence' => 'OS Lisansı',
-	'Class:OSLicence+' => '~~',
+	'Class:OSLicence+' => 'A license contract for a particular operating system. The license is related to one operating system (for example Windows 2008 R2) and can be associated with several servers or virtual machines.~~',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:OSLicence/Attribute:osversion_id' => 'OS Sürümü',
 	'Class:OSLicence/Attribute:osversion_id+' => '~~',
@@ -1021,15 +636,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Bu lisansın kullanıldığı tüm sanal makineler',
 	'Class:OSLicence/Attribute:servers_list' => 'Sunucular',
 	'Class:OSLicence/Attribute:servers_list+' => 'Bu lisansın kullanıldığı tüm sunucular',
-]);
-
-//
-// Class: SoftwareLicence
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:SoftwareLicence' => 'Yazılım Lisansı',
-	'Class:SoftwareLicence+' => '~~',
+	'Class:SoftwareLicence+' => 'A license contract for a particular software. The license is related to one software (for example MS Office 2010) and can be associated with several instances of this software.~~',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Yazılım',
 	'Class:SoftwareLicence/Attribute:software_id+' => '~~',
@@ -1037,15 +645,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:SoftwareLicence/Attribute:software_name+' => '~~',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Yazılım olayları',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Bu lisansın kullanıldığı tüm sistemler',
-]);
-
-//
-// Class: lnkDocumentToLicence
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDocumentToLicence' => 'Belge / lisans bağla',
-	'Class:lnkDocumentToLicence+' => '~~',
+	'Class:lnkDocumentToLicence+' => 'Link used when a Document is applicable to a License.~~',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Lisans',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '~~',
@@ -1055,56 +656,38 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Belge Adı',
 	'Class:lnkDocumentToLicence/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: OSVersion
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:OSVersion' => 'OS Sürümü',
-	'Class:OSVersion+' => '~~',
+	'Class:OSVersion+' => 'Typology. List of the possible values for the "OS Version" of a computer (Server, Virtual Machine or PC). The OS Versions are organized per OS Family.~~',
 	'Class:OSVersion/Attribute:osfamily_id' => 'OS ailesi',
 	'Class:OSVersion/Attribute:osfamily_id+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_name' => 'OS Aile Adı',
 	'Class:OSVersion/Attribute:osfamily_name+' => '~~',
+	'Class:OSVersion/Attribute:end_of_support' => 'End of support~~',
+	'Class:OSVersion/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
+	'Class:OSVersion/Attribute:ospatches_list' => 'OS patches~~',
+	'Class:OSVersion/Attribute:ospatches_list+' => 'All the OS patches for this OS version~~',
 	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
 	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
-]);
-
-//
-// Class: OSFamily
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:OSFamily' => 'OS ailesi',
-	'Class:OSFamily+' => '~~',
+	'Class:OSFamily+' => 'Typology. List of the possible values for the "OS Family" attribute of Servers, Virtual Machines and PCs.~~',
+	'Class:OSFamily/Attribute:osversions_list' => 'OS versions~~',
+	'Class:OSFamily/Attribute:osversions_list+' => 'All the OS versions for this OS family~~',
 	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
 	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
-]);
-
-//
-// Class: Brand
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Brand' => 'Marka',
-	'Class:Brand+' => '~~',
+	'Class:Brand+' => 'Typology. List of the possible values for the "Brand" attribute of Physical Device.~~',
+	'Class:Brand/Attribute:iosversions_list' => 'IOS versions~~',
+	'Class:Brand/Attribute:iosversions_list+' => 'All the IOS versions from this brand~~',
 	'Class:Brand/Attribute:logo' => 'Logo~~',
 	'Class:Brand/Attribute:logo+' => '~~',
+	'Class:Brand/Attribute:models_list' => 'Models~~',
+	'Class:Brand/Attribute:models_list+' => 'All models for this brand~~',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Fiziksel cihazlar',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Bu markaya karşılık gelen tüm fiziksel cihazlar',
 	'Class:Brand/UniquenessRule:name+' => 'The name must be unique~~',
 	'Class:Brand/UniquenessRule:name' => 'This brand already exists~~',
-]);
-
-//
-// Class: Model
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Model' => 'Model',
-	'Class:Model+' => '~~',
+	'Class:Model+' => 'Typology. List the possible values for the Model attribute of a Physical Device. Each Model belongs to a single Brand, and usually applies to a single type of Physical Device.~~',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Model/Attribute:brand_id' => 'Marka',
 	'Class:Model/Attribute:brand_id+' => '~~',
@@ -1114,6 +697,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Model/Attribute:picture+' => '~~',
 	'Class:Model/Attribute:type' => 'Cihaz tipi',
 	'Class:Model/Attribute:type+' => '~~',
+	'Class:Model/Attribute:end_of_support' => 'End of support~~',
+	'Class:Model/Attribute:end_of_support+' => 'The date after which the manufacturer ceases to provide patches and support for this model.~~',
 	'Class:Model/Attribute:type/Value:PowerSource' => 'Güç Kaynağı',
 	'Class:Model/Attribute:type/Value:PowerSource+' => 'Güç Kaynağı',
 	'Class:Model/Attribute:type/Value:DiskArray' => 'Disk dizisi',
@@ -1154,43 +739,26 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Model/Attribute:physicaldevices_list+' => 'Bu modele karşılık gelen tüm fiziksel cihazlar',
 	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
 	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand~~',
-]);
-
-//
-// Class: NetworkDeviceType
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:NetworkDeviceType' => 'Ağ Cihazı Tipi',
-	'Class:NetworkDeviceType+' => '~~',
+	'Class:NetworkDeviceType+' => 'Typology. The possible values for the "Type" of a Network Device (e.g. Router, Switch, Firewall, etc.).~~',
 	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
 	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Ağ Aygıtları',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Bu türde karşılık gelen tüm ağ aygıtları',
-]);
-
-//
-// Class: IOSVersion
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:IOSVersion' => 'IOS sürümü',
-	'Class:IOSVersion+' => '~~',
+	'Class:IOSVersion+' => 'Typology. Possible values for the versions of operating system for network devices (IOS from Cisco\'s Internetwork Operating System).~~',
 	'Class:IOSVersion/Attribute:brand_id' => 'Marka',
 	'Class:IOSVersion/Attribute:brand_id+' => '~~',
 	'Class:IOSVersion/Attribute:brand_name' => 'Marka Adı',
 	'Class:IOSVersion/Attribute:brand_name+' => '~~',
+	'Class:IOSVersion/Attribute:end_of_support' => 'End of support~~',
+	'Class:IOSVersion/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this IOS version.~~',
+	'Class:IOSVersion/Attribute:networkdevices_list' => 'Network devices~~',
+	'Class:IOSVersion/Attribute:networkdevices_list+' => 'All the network devices running this IOS version~~',
 	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
 	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
-]);
-
-//
-// Class: lnkDocumentToPatch
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDocumentToPatch' => 'Bağlantılı belge / yama',
-	'Class:lnkDocumentToPatch+' => '~~',
+	'Class:lnkDocumentToPatch+' => 'Link used when a Document is applicable to a Patch.~~',
 	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Yama',
 	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '~~',
@@ -1200,15 +768,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDocumentToPatch/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Belge Adı',
 	'Class:lnkDocumentToPatch/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: lnkSoftwareInstanceToSoftwarePatch
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Yazılımı olayı / Yazılım yaması bağla',
-	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '~~',
+	'Class:lnkSoftwareInstanceToSoftwarePatch+' => 'This link indicates that a software patch has been applied to a software instance.~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Yazılım yaması',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '~~',
@@ -1218,15 +779,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Yazılım olayı adı',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '~~',
-]);
-
-//
-// Class: lnkFunctionalCIToOSPatch
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkFunctionalCIToOSPatch' => 'İşlevsel CI / OS Yaması bağla',
-	'Class:lnkFunctionalCIToOSPatch+' => '~~',
+	'Class:lnkFunctionalCIToOSPatch+' => 'Models the deployment of an OS Patch on a device.~~',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'İşletim sistemi yaması',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '~~',
@@ -1236,15 +790,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'İşlevsel CI Adı',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '~~',
-]);
-
-//
-// Class: lnkDocumentToSoftware
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDocumentToSoftware' => 'Belge / yazılım bağla',
-	'Class:lnkDocumentToSoftware+' => '~~',
+	'Class:lnkDocumentToSoftware+' => 'Link used when a Document is applicable to Software.~~',
 	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Yazılım',
 	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '~~',
@@ -1254,40 +801,26 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Belge Adı',
 	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: Subnet
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Subnet' => 'Subnet',
-	'Class:Subnet+' => '',
+	'Class:Subnet+' => 'Segment of an IP network, defined by an IP address and a mask~~',
 	'Class:Subnet/Name' => '%1$s/%2$s~~',
 	'Class:Subnet/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Subnet/Attribute:description' => 'Tanımlama',
-	'Class:Subnet/Attribute:description+' => '',
+	'Class:Subnet/Attribute:description+' => '~~',
 	'Class:Subnet/Attribute:subnet_name' => 'Alt ağ adı',
 	'Class:Subnet/Attribute:subnet_name+' => '~~',
 	'Class:Subnet/Attribute:org_id' => 'Kurum',
-	'Class:Subnet/Attribute:org_id+' => '',
+	'Class:Subnet/Attribute:org_id+' => '~~',
 	'Class:Subnet/Attribute:org_name' => 'İsim',
 	'Class:Subnet/Attribute:org_name+' => 'Ortak Adı',
 	'Class:Subnet/Attribute:ip' => 'IP',
-	'Class:Subnet/Attribute:ip+' => '',
+	'Class:Subnet/Attribute:ip+' => '~~',
 	'Class:Subnet/Attribute:ip_mask' => 'IP Mask',
-	'Class:Subnet/Attribute:ip_mask+' => '',
+	'Class:Subnet/Attribute:ip_mask+' => '~~',
 	'Class:Subnet/Attribute:vlans_list' => 'VLAN \'lar',
 	'Class:Subnet/Attribute:vlans_list+' => '~~',
-]);
-
-//
-// Class: VLAN
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:VLAN' => 'Vlan',
-	'Class:VLAN+' => '~~',
+	'Class:VLAN+' => 'A Virtual LAN is used to group together in a logical way networks Subnets and Physical Interfaces that participate in the same VLAN.~~',
 	'Class:VLAN/Attribute:vlan_tag' => 'Vlan etiketi',
 	'Class:VLAN/Attribute:vlan_tag+' => '~~',
 	'Class:VLAN/Attribute:description' => 'Açıklama',
@@ -1300,15 +833,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:VLAN/Attribute:subnets_list+' => '~~',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Fiziksel Ağ Arayüzleri',
 	'Class:VLAN/Attribute:physicalinterfaces_list+' => '~~',
-]);
-
-//
-// Class: lnkSubnetToVLAN
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkSubnetToVLAN' => 'Alt Ağ / VLAN  bağla',
-	'Class:lnkSubnetToVLAN+' => '~~',
+	'Class:lnkSubnetToVLAN+' => 'This many-to-many link indicates that a VLAN is present on a Subnet. Several VLANs can be present on the same Subnet and a VLAN can span several Subnets.~~',
 	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Alt Ağ',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '~~',
@@ -1320,28 +846,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN Etiketi',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '~~',
-]);
-
-//
-// Class: NetworkInterface
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:NetworkInterface' => 'Network arayüzü',
-	'Class:NetworkInterface+' => '',
+	'Class:NetworkInterface+' => 'Abstract class for all types of network interfaces.~~',
 	'Class:NetworkInterface/Attribute:name' => 'İsim',
 	'Class:NetworkInterface/Attribute:name+' => '~~',
 	'Class:NetworkInterface/Attribute:finalclass' => 'Tip',
 	'Class:NetworkInterface/Attribute:finalclass+' => 'Name of the final class~~',
-]);
-
-//
-// Class: IPInterface
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:IPInterface' => 'IP arayüzü',
-	'Class:IPInterface+' => '~~',
+	'Class:IPInterface+' => 'Abstract class. A type of Network Interface with an IP address~~',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP adresi',
 	'Class:IPInterface/Attribute:ipaddress+' => '~~',
 	'Class:IPInterface/Attribute:macaddress' => 'MAC adresi',
@@ -1354,31 +866,21 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:IPInterface/Attribute:ipmask+' => '~~',
 	'Class:IPInterface/Attribute:speed' => 'Hız',
 	'Class:IPInterface/Attribute:speed+' => '~~',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:PhysicalInterface' => 'Fiziksel arayüz',
-	'Class:PhysicalInterface+' => '~~',
+	'Class:PhysicalInterface+' => 'A type of IP Interface that represents a physical network interface (e.g. an Ethernet card).~~',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s~~',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Cihaz',
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Cihaz adı',
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
+	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
+	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLAN\'lar',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '~~',
-]);
-
-//
-// Class: lnkPhysicalInterfaceToVLAN
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Fiziksel Arabirim / VLAN bağla',
-	'Class:lnkPhysicalInterfaceToVLAN+' => '~~',
+	'Class:lnkPhysicalInterfaceToVLAN+' => 'This link indicates when a network interface is part of a VLAN (Virtual Local Area Network).~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Fiziksel arabirim',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '~~',
@@ -1392,28 +894,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN etiketi',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '~~',
-]);
-
-//
-// Class: LogicalInterface
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:LogicalInterface' => 'Mantıksal arabirim',
-	'Class:LogicalInterface+' => '~~',
+	'Class:LogicalInterface+' => 'IP Interface which is not associated permanently with a particular physical port, the association is dynamic. It can be used for Virtual Machine.~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Sanal makine',
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Sanal Makine Adı',
 	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '~~',
-]);
-
-//
-// Class: FiberChannelInterface
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:FiberChannelInterface' => 'Fiber Kanal Arabirimi',
-	'Class:FiberChannelInterface+' => '~~',
+	'Class:FiberChannelInterface+' => 'Network Interface to a high-speed network technology primarily used for connecting Storage Systems.~~',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Hız',
 	'Class:FiberChannelInterface/Attribute:speed+' => '~~',
 	'Class:FiberChannelInterface/Attribute:topology' => 'Topoloji',
@@ -1424,15 +912,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '~~',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Cihaz adı',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '~~',
-]);
-
-//
-// Class: lnkConnectableCIToNetworkDevice
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkConnectableCIToNetworkDevice' => 'İlişkilendirilebilir CI / Ağ cihazı bağla',
-	'Class:lnkConnectableCIToNetworkDevice+' => '~~',
+	'Class:lnkConnectableCIToNetworkDevice+' => 'Defines on which network equipment a device is connected.~~',
 	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Ağ cihazı',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '~~',
@@ -1452,15 +933,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'aşağı bağlantı',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'yukarı bağlantı',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'yukarı bağlantı',
-]);
-
-//
-// Class: lnkApplicationSolutionToFunctionalCI
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Uygulama Çözümü / İşlevsel CI bağla',
-	'Class:lnkApplicationSolutionToFunctionalCI+' => '~~',
+	'Class:lnkApplicationSolutionToFunctionalCI+' => 'Models the membership of a device to an Application Solution. The meaning of this relationship varies depending on the types of Application Solution.~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Uygulama çözümü',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '~~',
@@ -1470,15 +944,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'İşlevsel CI Adı',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '~~',
-]);
-
-//
-// Class: lnkApplicationSolutionToBusinessProcess
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Uygulama Çözümü / İş Süreci bağla',
-	'Class:lnkApplicationSolutionToBusinessProcess+' => '~~',
+	'Class:lnkApplicationSolutionToBusinessProcess+' => 'Models the relationship between an Application Solution and a Business Process.~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'İş süreci',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '~~',
@@ -1488,20 +955,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Uygulama Çözümü Adı',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '~~',
-]);
-
-//
-// Class: Group
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Group' => 'Grup',
-	'Class:Group+' => '',
+	'Class:Group+' => 'Group is designed to define explicit sets of configurations items for any project purpose. In contrast to Application Solution, a Group is not impacted by any of its component and does not impact them. For example when doing an OS migration, Group can be convenient to gather “Servers to be migrated”. Migrated servers being removed from the group as the migration progresses.~~',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Group/Attribute:name' => 'Adı',
-	'Class:Group/Attribute:name+' => '',
+	'Class:Group/Attribute:name+' => '~~',
 	'Class:Group/Attribute:status' => 'Surumu',
-	'Class:Group/Attribute:status+' => '',
+	'Class:Group/Attribute:status+' => '~~',
 	'Class:Group/Attribute:status/Value:implementation' => 'Uygulama',
 	'Class:Group/Attribute:status/Value:implementation+' => 'Uygulama',
 	'Class:Group/Attribute:status/Value:obsolete' => 'Üretimden kalkan',
@@ -1509,74 +969,36 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Group/Attribute:status/Value:production' => 'Kullanımda',
 	'Class:Group/Attribute:status/Value:production+' => 'Kullanımda',
 	'Class:Group/Attribute:org_id' => 'Kurum',
-	'Class:Group/Attribute:org_id+' => '',
+	'Class:Group/Attribute:org_id+' => '~~',
 	'Class:Group/Attribute:owner_name' => 'Adı',
 	'Class:Group/Attribute:owner_name+' => 'Kullanılan Adı',
 	'Class:Group/Attribute:description' => 'Tanımlama',
-	'Class:Group/Attribute:description+' => '',
+	'Class:Group/Attribute:description+' => '~~',
 	'Class:Group/Attribute:type' => 'Tip',
-	'Class:Group/Attribute:type+' => '',
+	'Class:Group/Attribute:type+' => '~~',
 	'Class:Group/Attribute:parent_id' => 'Bağlı olduğu grup',
-	'Class:Group/Attribute:parent_id+' => '',
+	'Class:Group/Attribute:parent_id+' => '~~',
 	'Class:Group/Attribute:parent_name' => 'Adı',
-	'Class:Group/Attribute:parent_name+' => '',
+	'Class:Group/Attribute:parent_name+' => '~~',
 	'Class:Group/Attribute:ci_list' => 'Bağlantılı Konfigürasyon Kalemleri (KK)',
 	'Class:Group/Attribute:ci_list+' => 'All the configuration items linked to this group~~',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Ana Grup',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '~~',
-]);
-
-//
-// Class: lnkGroupToCI
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkGroupToCI' => 'Grup / KK',
-	'Class:lnkGroupToCI+' => '',
+	'Class:lnkGroupToCI+' => 'This link indicates when a Functional CI is part of a Group.~~',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'Grup',
-	'Class:lnkGroupToCI/Attribute:group_id+' => '',
+	'Class:lnkGroupToCI/Attribute:group_id+' => '~~',
 	'Class:lnkGroupToCI/Attribute:group_name' => 'Adı',
-	'Class:lnkGroupToCI/Attribute:group_name+' => '',
+	'Class:lnkGroupToCI/Attribute:group_name+' => '~~',
 	'Class:lnkGroupToCI/Attribute:ci_id' => 'KK',
-	'Class:lnkGroupToCI/Attribute:ci_id+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_id+' => '~~',
 	'Class:lnkGroupToCI/Attribute:ci_name' => 'Adı',
-	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
+	'Class:lnkGroupToCI/Attribute:ci_name+' => '~~',
 	'Class:lnkGroupToCI/Attribute:reason' => 'Sebep',
-	'Class:lnkGroupToCI/Attribute:reason+' => '',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'ConfigMgmt:baseinfo' => 'General~~',
-	'ConfigMgmt:moreinfo' => 'CI specifics~~',
-	'Storage:moreinfo' => 'Storage specifics~~',
-	'ConfigMgmt:otherinfo' => 'Description~~',
-	'ConfigMgmt:dates' => 'Dates~~',
-	'Software:moreinfo' => 'Software specifics~~',
-	'Phone:moreinfo' => 'Phone specifics~~',
-	'Server:baseinfo' => 'Genel Bilgi',
-	'Server:Date' => 'Tarihler',
-	'Server:moreinfo' => 'Daha fazla bilgi',
-	'Server:otherinfo' => 'Diğer bilgiler',
-	'Server:power' => 'Güç kaynağı',
-	'Class:Subnet/Tab:IPUsage' => 'IP Kullanımı',
-	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not~~',
-	'Class:Subnet/Tab:IPUsage-explain' => '<em>%1$s</em> - <em>%2$s</em> aralığındaki IPye sahip arayüzler',
-	'Class:Subnet/Tab:FreeIPs' => 'Boş IPler',
-	'Class:Subnet/Tab:FreeIPs-count' => 'Boş IPler: %1$s',
-	'Class:Subnet/Tab:FreeIPs-explain' => 'Boş IP adresleri',
-	'Class:Document:PreviewTab' => 'Ön görünüm',
-]);
-
-//
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:lnkGroupToCI/Attribute:reason+' => '~~',
 	'Class:lnkDocumentToFunctionalCI' => 'Belge / İşlevsel CI bağla',
-	'Class:lnkDocumentToFunctionalCI+' => '~~',
+	'Class:lnkDocumentToFunctionalCI+' => 'Link used when a Document is applicable to a Functional CI.~~',
 	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'İşlevsel CI',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '~~',
@@ -1586,13 +1008,25 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Belge Adı',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'ConfigMgmt:otherinfo' => 'Description~~',
+	'ConfigMgmt:dates' => 'Dates~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
+	'Server:baseinfo' => 'Genel Bilgi',
+	'Server:moreinfo' => 'Daha fazla bilgi',
+	'Server:Date' => 'Tarihler',
+	'Server:otherinfo' => 'Diğer bilgiler',
+	'Server:power' => 'Güç kaynağı',
+	'Class:Subnet/Tab:IPUsage' => 'IP Kullanımı',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not~~',
+	'Class:Subnet/Tab:IPUsage-explain' => '<em>%1$s</em> - <em>%2$s</em> aralığındaki IPye sahip arayüzler',
+	'Class:Subnet/Tab:FreeIPs' => 'Boş IPler',
+	'Class:Subnet/Tab:FreeIPs-count' => 'Boş IPler: %1$s',
+	'Class:Subnet/Tab:FreeIPs-explain' => 'Boş IP adresleri',
+	'Class:Document:PreviewTab' => 'Ön görünüm',
 	'Menu:Application' => 'Uygulamalar',
 	'Menu:Application+' => 'Tüm Uygulamalar',
 	'Menu:DBServer' => 'Veritabanı sunucuları',
@@ -1637,15 +1071,4 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:OSVersion+' => '~~',
 	'Menu:Software' => 'Yazılım Kataloğu',
 	'Menu:Software+' => 'Yazılım Kataloğu',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
-	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
-	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 ]);

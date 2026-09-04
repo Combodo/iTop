@@ -1,11 +1,14 @@
 <?php
-
 /**
- * @copyright Copyright (C) 2024 Combodo SAS
- * @license https://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-
-// Display DataTable
+/**
+ *
+ */
 Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:Datatables:Language:Processing' => 'Please wait...',
 	'UI:Datatables:Language:LengthMenu' => '_MENU_ per page',
@@ -17,8 +20,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:Datatables:Language:DisplayLength:All' => 'All',
 	'UI:Datatables:Language:Sort:Ascending' => 'enable for an ascending sort',
 	'UI:Datatables:Language:Sort:Descending' => 'enable for a descending sort',
-	'UI:Datatables:Column:RowActions:Label' => '',
-	'UI:Datatables:Column:RowActions:Description' => '',
+	'UI:Datatables:Column:RowActions:Label' => '~~',
+	'UI:Datatables:Column:RowActions:Description' => '~~',
 	'UI:Datatables:RowActions:ConfirmationDialog' => 'Action Confirmation',
 	'UI:Datatables:RowActions:ConfirmationMessage' => 'Do you confirm action?',
 ]);

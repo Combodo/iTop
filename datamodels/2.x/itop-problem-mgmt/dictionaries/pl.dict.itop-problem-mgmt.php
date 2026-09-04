@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -32,45 +31,38 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Nieprzypisane problemy',
 	'UI:ProblemMgmtMenuOverview:Title' => 'Pulpit do zarządzania problemami',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Pulpit do zarządzania problemami',
-
-]);
-//
-// Class: Problem
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Problem' => 'Problem',
-	'Class:Problem+' => '',
+	'Class:Problem+' => 'An incident becomes a Problem when it is not resolved in a timely manner or when it recurs frequently~~',
 	'Class:Problem/Attribute:status' => 'Status',
-	'Class:Problem/Attribute:status+' => '',
+	'Class:Problem/Attribute:status+' => '~~',
 	'Class:Problem/Attribute:status/Value:new' => 'Nowy',
-	'Class:Problem/Attribute:status/Value:new+' => '',
+	'Class:Problem/Attribute:status/Value:new+' => '~~',
 	'Class:Problem/Attribute:status/Value:assigned' => 'Przydzielony',
-	'Class:Problem/Attribute:status/Value:assigned+' => '',
+	'Class:Problem/Attribute:status/Value:assigned+' => '~~',
 	'Class:Problem/Attribute:status/Value:resolved' => 'Rozwiązany',
-	'Class:Problem/Attribute:status/Value:resolved+' => '',
+	'Class:Problem/Attribute:status/Value:resolved+' => '~~',
 	'Class:Problem/Attribute:status/Value:closed' => 'Zamknięty',
-	'Class:Problem/Attribute:status/Value:closed+' => '',
+	'Class:Problem/Attribute:status/Value:closed+' => '~~',
 	'Class:Problem/Attribute:service_id' => 'Usługa',
-	'Class:Problem/Attribute:service_id+' => '',
+	'Class:Problem/Attribute:service_id+' => '~~',
 	'Class:Problem/Attribute:service_name' => 'Nazwa usługi',
-	'Class:Problem/Attribute:service_name+' => '',
+	'Class:Problem/Attribute:service_name+' => '~~',
 	'Class:Problem/Attribute:servicesubcategory_id' => 'Podkategoria usług',
-	'Class:Problem/Attribute:servicesubcategory_id+' => '',
+	'Class:Problem/Attribute:servicesubcategory_id+' => '~~',
 	'Class:Problem/Attribute:servicesubcategory_name' => 'Podkategoria usług',
-	'Class:Problem/Attribute:servicesubcategory_name+' => '',
+	'Class:Problem/Attribute:servicesubcategory_name+' => '~~',
 	'Class:Problem/Attribute:product' => 'Produkt',
-	'Class:Problem/Attribute:product+' => '',
+	'Class:Problem/Attribute:product+' => '~~',
 	'Class:Problem/Attribute:impact' => 'Dotyczy',
-	'Class:Problem/Attribute:impact+' => '',
+	'Class:Problem/Attribute:impact+' => 'Impact is the severity of the problem, how many end users are affected~~',
 	'Class:Problem/Attribute:impact/Value:1' => 'Wydział',
-	'Class:Problem/Attribute:impact/Value:1+' => '',
+	'Class:Problem/Attribute:impact/Value:1+' => '~~',
 	'Class:Problem/Attribute:impact/Value:2' => 'Usługa',
-	'Class:Problem/Attribute:impact/Value:2+' => '',
+	'Class:Problem/Attribute:impact/Value:2+' => '~~',
 	'Class:Problem/Attribute:impact/Value:3' => 'Osoba',
-	'Class:Problem/Attribute:impact/Value:3+' => '',
+	'Class:Problem/Attribute:impact/Value:3+' => '~~',
 	'Class:Problem/Attribute:urgency' => 'Pilność',
-	'Class:Problem/Attribute:urgency+' => '',
+	'Class:Problem/Attribute:urgency+' => 'How quickly the problem needs to be resolved~~',
 	'Class:Problem/Attribute:urgency/Value:1' => 'krytyczna',
 	'Class:Problem/Attribute:urgency/Value:1+' => 'krytyczna',
 	'Class:Problem/Attribute:urgency/Value:2' => 'wysoka',
@@ -80,7 +72,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Problem/Attribute:urgency/Value:4' => 'niska',
 	'Class:Problem/Attribute:urgency/Value:4+' => 'niska',
 	'Class:Problem/Attribute:priority' => 'Priorytet',
-	'Class:Problem/Attribute:priority+' => '',
+	'Class:Problem/Attribute:priority+' => 'Order in which problems need to be handled~~',
 	'Class:Problem/Attribute:priority/Value:1' => 'krytyczny',
 	'Class:Problem/Attribute:priority/Value:1+' => 'krytyczny',
 	'Class:Problem/Attribute:priority/Value:2' => 'wysoki',
@@ -90,13 +82,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Problem/Attribute:priority/Value:4' => 'niski',
 	'Class:Problem/Attribute:priority/Value:4+' => 'niski',
 	'Class:Problem/Attribute:related_change_id' => 'Powiązana zmiana',
-	'Class:Problem/Attribute:related_change_id+' => '',
+	'Class:Problem/Attribute:related_change_id+' => '~~',
 	'Class:Problem/Attribute:related_change_ref' => 'Odniesienie do powiązanej zmiany',
-	'Class:Problem/Attribute:related_change_ref+' => '',
+	'Class:Problem/Attribute:related_change_ref+' => '~~',
 	'Class:Problem/Attribute:assignment_date' => 'Data przydziału',
-	'Class:Problem/Attribute:assignment_date+' => '',
+	'Class:Problem/Attribute:assignment_date+' => '~~',
 	'Class:Problem/Attribute:resolution_date' => 'Data rozwiązania',
-	'Class:Problem/Attribute:resolution_date+' => '',
+	'Class:Problem/Attribute:resolution_date+' => '~~',
 	'Class:Problem/Attribute:knownerrors_list' => 'Znane błędy',
 	'Class:Problem/Attribute:knownerrors_list+' => 'Wszystkie znane błędy związane z tym problemem',
 	'Class:Problem/Attribute:related_request_list' => 'Powiązane zgłoszenia',
@@ -104,11 +96,11 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Problem/Attribute:related_incident_list' => 'Powiązane incydenty',
 	'Class:Problem/Attribute:related_incident_list+' => 'Wszystkie incydenty związane z tym problemem',
 	'Class:Problem/Stimulus:ev_assign' => 'Przydziel',
-	'Class:Problem/Stimulus:ev_assign+' => '',
+	'Class:Problem/Stimulus:ev_assign+' => '~~',
 	'Class:Problem/Stimulus:ev_reassign' => 'Przydziel ponownie',
-	'Class:Problem/Stimulus:ev_reassign+' => '',
+	'Class:Problem/Stimulus:ev_reassign+' => '~~',
 	'Class:Problem/Stimulus:ev_resolve' => 'Rozwiąż',
-	'Class:Problem/Stimulus:ev_resolve+' => '',
+	'Class:Problem/Stimulus:ev_resolve+' => '~~',
 	'Class:Problem/Stimulus:ev_close' => 'Zamknij',
-	'Class:Problem/Stimulus:ev_close+' => '',
+	'Class:Problem/Stimulus:ev_close+' => '~~',
 ]);

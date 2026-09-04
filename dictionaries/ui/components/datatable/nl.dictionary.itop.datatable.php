@@ -1,14 +1,14 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
+ *
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Datatables:Language:Processing' => 'Even geduld…',
@@ -21,8 +21,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Datatables:Language:DisplayLength:All' => 'Alles',
 	'UI:Datatables:Language:Sort:Ascending' => 'Oplopend sorteren',
 	'UI:Datatables:Language:Sort:Descending' => 'Aflopend sorteren',
-	'UI:Datatables:Column:RowActions:Label' => '',
-	'UI:Datatables:Column:RowActions:Description' => '',
+	'UI:Datatables:Column:RowActions:Label' => '~~',
+	'UI:Datatables:Column:RowActions:Description' => '~~',
 	'UI:Datatables:RowActions:ConfirmationDialog' => 'Bevestiging actie',
 	'UI:Datatables:RowActions:ConfirmationMessage' => 'Bevestig je deze actie?',
 ]);

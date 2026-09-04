@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -17,7 +16,7 @@ Elle regroupe toutes les régles qui s\'appliquent au même périmètre d\'objet
 	'Class:AuditCategory/Attribute:name' => 'Nom',
 	'Class:AuditCategory/Attribute:name+' => 'Identifie un ensemble d\'objets à auditer',
 	'Class:AuditCategory/Attribute:description' => 'Description',
-	'Class:AuditCategory/Attribute:description+' => '',
+	'Class:AuditCategory/Attribute:description+' => 'Long description for this audit category~~',
 	'Class:AuditCategory/Attribute:definition_set' => 'Périmètre',
 	'Class:AuditCategory/Attribute:definition_set+' => 'Requête OQL retournant les objets qui sont dans le périmètre d\'application de cet audit',
 	'Class:AuditCategory/Attribute:rules_list' => 'Règles d\'audit',
@@ -28,13 +27,6 @@ Elle regroupe toutes les régles qui s\'appliquent au même périmètre d\'objet
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Pourcentage d\'objets en erreur au dela duquel le résultat est en erreur (rouge)',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domaines',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domaines incluant cette catégorie d\'audit',
-]);
-
-//
-// Class: AuditRule
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:AuditRule' => 'Règle d\'audit',
 	'Class:AuditRule+' => 'Une règle d\'audit correspond à une vérification particulière.
 Elle s\'applique à tous les objets dans le périmètre de sa catégorie d\'audit',
@@ -55,39 +47,25 @@ Elle s\'applique à tous les objets dans le périmètre de sa catégorie d\'audi
 	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'les objets invalides',
 	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'Alors les objets en erreur sont les invalides qui font partie du périmètre',
 	'Class:AuditRule/Attribute:category_id' => 'Catégorie',
-	'Class:AuditRule/Attribute:category_id+' => '',
+	'Class:AuditRule/Attribute:category_id+' => 'The category of this rule~~',
 	'Class:AuditRule/Attribute:category_name' => 'Nom de la catégorie',
-	'Class:AuditRule/Attribute:category_name+' => '',
+	'Class:AuditRule/Attribute:category_name+' => 'Name of the category of this rule~~',
 	'Class:AuditRule/Attribute:contact_id' => 'Responsable',
 	'Class:AuditRule/Attribute:contact_id+' => 'Personne ou équipe responsable de la correction des erreurs détectées par cette règle',
-]);
-
-//
-// Class: AuditDomain
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:AuditDomain' => 'Domaine d\'audit',
 	'Class:AuditDomain+' => 'Un domaine permet de regrouper ensemble des catégories d\'audit.
 Cela recouvre en général, un domaine d\'intérêt ou de responsabilité',
 	'Class:AuditDomain/Attribute:name' => 'Nom',
 	'Class:AuditDomain/Attribute:name+' => 'C\'est un filtre sur les catégories d\'audit pour une population en charge de contrôler ou de fixer les erreurs',
 	'Class:AuditDomain/Attribute:description' => 'Description',
-	'Class:AuditDomain/Attribute:description+' => '',
+	'Class:AuditDomain/Attribute:description+' => '~~',
 	'Class:AuditDomain/Attribute:icon' => 'Icône',
-	'Class:AuditDomain/Attribute:icon+' => '',
+	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Catégories',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Catégories d\'audit incluses dans ce domaine. Cette inclusion n\'est pas exclusive.
 Lorsqu\'on execute l\'audit sur un domaine, toutes les catégories d\'audit incluses sont vérifiées en même temps et seulement celles là',
-]);
-
-//
-// Class: lnkAuditCategoryToAuditDomain
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain',
-	'Class:lnkAuditCategoryToAuditDomain+' => '',
+	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Catégorie',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id+' => 'Catégorie d\'audit',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name' => 'Nom de la catégorie',
@@ -96,13 +74,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Domaine d\'audit',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Nom du domain',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Nom du domain d\'audit',
-]);
-
-//
-// Class: QueryOQL
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Query' => 'Requête',
 	'Class:Query+' => 'Une requête définit un ensemble d\'information de manière dynamique',
 	'Class:Query/Attribute:name' => 'Nom',
@@ -141,18 +112,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:QueryOQL+' => 'Une requête écrite dans le langage "Object Query Language"',
 	'Class:QueryOQL/Attribute:oql' => 'Expression',
 	'Class:QueryOQL/Attribute:oql+' => 'Expression OQL',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'addon/userrights'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: User
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:User' => 'Utilisateur',
 	'Class:User+' => 'Compte utilisateur',
 	'Class:User/Attribute:finalclass' => 'Type de compte',
@@ -200,83 +159,48 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:User/Warning:NoContactHasImpact' => 'Attention: il n\'y a pas de Personne liée à cet utilisateur, il ne pourra pas se connecter à un portail, ni recevoir de News, ni changer sa langue.',
 	'Class:UserInternal' => 'Utilisateur interne',
 	'Class:UserInternal+' => 'Utilisateur défini dans '.ITOP_APPLICATION_SHORT,
-]);
-
-//
-// Class: URP_Profiles
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_Profiles' => 'Profil',
 	'Class:URP_Profiles+' => 'Profil utilisateur',
 	'Class:URP_Profiles/Attribute:name' => 'Nom',
-	'Class:URP_Profiles/Attribute:name+' => '',
+	'Class:URP_Profiles/Attribute:name+' => '~~',
 	'Class:URP_Profiles/Attribute:description' => 'Description',
-	'Class:URP_Profiles/Attribute:description+' => '',
+	'Class:URP_Profiles/Attribute:description+' => 'one line description~~',
 	'Class:URP_Profiles/Attribute:user_list' => 'Utilisateurs',
 	'Class:URP_Profiles/Attribute:user_list+' => 'Comptes utilisateur (logins) ayant ce profil',
-]);
-
-//
-// Class: URP_Dimensions
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_Dimensions' => 'Dimension',
 	'Class:URP_Dimensions+' => 'Dimension applicative (défini des silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Nom',
-	'Class:URP_Dimensions/Attribute:name+' => '',
+	'Class:URP_Dimensions/Attribute:name+' => '~~',
 	'Class:URP_Dimensions/Attribute:description' => 'Description',
-	'Class:URP_Dimensions/Attribute:description+' => '',
+	'Class:URP_Dimensions/Attribute:description+' => 'one line description~~',
 	'Class:URP_Dimensions/Attribute:type' => 'Type',
 	'Class:URP_Dimensions/Attribute:type+' => 'Nom de classe ou type de données (unité de projection)',
-]);
-
-//
-// Class: URP_UserProfile
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_UserProfile' => 'Utilisateur/Profil',
-	'Class:URP_UserProfile+' => '',
+	'Class:URP_UserProfile+' => 'user profiles~~',
 	'Class:URP_UserProfile/Name' => 'Lien entre %1$s et %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Utilisateur',
-	'Class:URP_UserProfile/Attribute:userid+' => '',
+	'Class:URP_UserProfile/Attribute:userid+' => 'user account~~',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
-	'Class:URP_UserProfile/Attribute:userlogin+' => '',
+	'Class:URP_UserProfile/Attribute:userlogin+' => 'User\'s login~~',
 	'Class:URP_UserProfile/Attribute:profileid' => 'Profil',
-	'Class:URP_UserProfile/Attribute:profileid+' => '',
+	'Class:URP_UserProfile/Attribute:profileid+' => 'usage profile~~',
 	'Class:URP_UserProfile/Attribute:profile' => 'Profil',
-	'Class:URP_UserProfile/Attribute:profile+' => '',
+	'Class:URP_UserProfile/Attribute:profile+' => 'Profile name~~',
 	'Class:URP_UserProfile/Attribute:reason' => 'Raison',
 	'Class:URP_UserProfile/Attribute:reason+' => 'Justifie le rôle affecté à cet utilisateur',
-]);
-
-//
-// Class: URP_UserOrg
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_UserOrg' => 'Utilisateur/Organisation',
 	'Class:URP_UserOrg+' => 'Organisations permises pour l\'utilisateur',
 	'Class:URP_UserOrg/Name' => 'Lien entre %1$s et %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Utilisateur',
-	'Class:URP_UserOrg/Attribute:userid+' => '',
+	'Class:URP_UserOrg/Attribute:userid+' => 'user account~~',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
-	'Class:URP_UserOrg/Attribute:userlogin+' => '',
+	'Class:URP_UserOrg/Attribute:userlogin+' => 'User\'s login~~',
 	'Class:URP_UserOrg/Attribute:allowed_org_id' => 'Organisation',
-	'Class:URP_UserOrg/Attribute:allowed_org_id+' => '',
+	'Class:URP_UserOrg/Attribute:allowed_org_id+' => 'Allowed organization~~',
 	'Class:URP_UserOrg/Attribute:allowed_org_name' => 'Organisation',
-	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '',
+	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Allowed organization~~',
 	'Class:URP_UserOrg/Attribute:reason' => 'Raison',
 	'Class:URP_UserOrg/Attribute:reason+' => 'Justifie la permission de voir les données de cette organisation',
-]);
-
-//
-// Class: URP_ProfileProjection
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_ProfileProjection' => 'profile_projection',
 	'Class:URP_ProfileProjection+' => 'profile projections',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimension',
@@ -291,13 +215,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL expression (using $user) | constant |  | +attribute code',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Target attribute code (optional)',
-]);
-
-//
-// Class: URP_ClassProjection
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_ClassProjection' => 'class_projection',
 	'Class:URP_ClassProjection+' => 'class projections',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimension',
@@ -310,13 +227,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL expression (using $this) | constant |  | +attribute code',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Target attribute code (optional)',
-]);
-
-//
-// Class: URP_ActionGrant
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_ActionGrant' => 'action_permission',
 	'Class:URP_ActionGrant+' => 'permissions on classes',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profile',
@@ -333,13 +243,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'non',
 	'Class:URP_ActionGrant/Attribute:action' => 'Action',
 	'Class:URP_ActionGrant/Attribute:action+' => 'operations to perform on the given class',
-]);
-
-//
-// Class: URP_StimulusGrant
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_StimulusGrant' => 'stimulus_permission',
 	'Class:URP_StimulusGrant+' => 'permissions on stimulus in the life cycle of the object',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profile',
@@ -356,42 +259,25 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'no',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'stimulus code',
-]);
-
-//
-// Class: URP_AttributeGrant
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_AttributeGrant' => 'attribute_permission',
 	'Class:URP_AttributeGrant+' => 'permissions at the attributes level',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Action grant',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'action grant',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribute',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'attribute code',
-]);
-
-//
-// Class: UserDashboard
-//
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:UserDashboard' => 'Tableau de bord utilisateur',
-	'Class:UserDashboard+' => '',
+	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'Utilisateur',
-	'Class:UserDashboard/Attribute:user_id+' => '',
+	'Class:UserDashboard/Attribute:user_id+' => '~~',
 	'Class:UserDashboard/Attribute:menu_code' => 'Menu',
-	'Class:UserDashboard/Attribute:menu_code+' => '',
+	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Contenu',
-	'Class:UserDashboard/Attribute:contents+' => '',
-]);
-
-//
-// Duplicated into itop-welcome-itil ( will be removed from here...)
-//
-Dict::Add('FR FR', 'French', 'Français', [
+	'Class:UserDashboard/Attribute:contents+' => '~~',
 	'Menu:WelcomeMenu' => 'Bienvenue',
-	'Menu:WelcomeMenu+' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT, 'Menu:WelcomeMenuPage' => 'Bienvenue',
-	'Menu:WelcomeMenuPage+' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT, 'Menu:AdminTools' => 'Administration',
+	'Menu:WelcomeMenu+' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT,
+	'Menu:WelcomeMenuPage' => 'Bienvenue',
+	'Menu:WelcomeMenuPage+' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT,
+	'Menu:AdminTools' => 'Administration',
 	'Menu:AdminTools+' => 'Outils d\'administration',
 	'Menu:AdminTools?' => 'Ces outils sont accessibles uniquement aux utilisateurs possédant le profil Administrateur.',
 	'Menu:CSVImportMenu' => 'Import CSV',
@@ -403,30 +289,14 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:NotificationsMenu' => 'Notifications',
 	'Menu:NotificationsMenu+' => 'Configurer les Notifications',
 	'Menu:MyShortcuts' => 'Mes raccourcis',
-	'Menu:Notifications:Title' => 'Catégories d\'audit',
 	'Menu:DataAdministration' => 'Administration des données',
 	'Menu:DataAdministration+' => 'Administration des données',
-]);
-
-//
-// String from the User Interface: menu, messages, buttons, etc...
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'BooleanLabel:yes' => 'oui',
 	'BooleanLabel:no' => 'non',
-	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login',
-	'UI:WelcomeMenu:Title' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT, 'UI:WelcomeMenu:AllOpenRequests' => 'Requêtes en cours: %1$d',
+	'UI:WelcomeMenu:Title' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT,
+	'UI:WelcomeMenu:AllOpenRequests' => 'Requêtes en cours: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mes appels support',
 	'UI:WelcomeMenu:OpenIncidents' => 'Incidents en cours: %1$d',
-	'UI:WelcomeMenu:Text' => '<div>Félicitations, vous avez atterri sur '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.' !</div>
-
-<div>Cette version présente un tout nouveau design moderne et accessible pour la console de support.</div>
-
-<div>Nous avons conservé les fonctions de base d\''.ITOP_APPLICATION.' que vous aviez apprécié et les avons modernisées pour vous les faire adorer.
-Nous espérons que vous aimerez cette version autant que nous avons eu du plaisir à l\'imaginer et à la créer.</div>
-
-<div>Configurez vos préférences '.ITOP_APPLICATION.' pour une expérience personnalisée.</div>',
 	'UI:WelcomeMenu:AllConfigItems' => 'Actifs: %1$d',
 	'UI:WelcomeMenu:MyIncidents' => 'Mes incidents',
 	'UI:AllOrganizations' => ' Toutes les Organisations ',
@@ -582,51 +452,9 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:SearchValue:CheckAll' => 'Cocher',
 	'UI:SearchValue:UncheckAll' => 'Décocher',
 	'UI:SelectOne' => '-- choisir une valeur --',
-	'UI:Login:Welcome' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT.'!',
-	'UI:Login:IncorrectLoginPassword' => 'Mot de passe ou identifiant incorrect.',
-	'UI:Login:IdentifyYourself' => 'Merci de vous identifier',
-	'UI:Login:UserNamePrompt' => 'Identifiant',
-	'UI:Login:PasswordPrompt' => 'Mot de passe',
-	'UI:Login:ForgotPwd' => 'Mot de passe oublié ?',
-	'UI:Login:ForgotPwdForm' => 'Mot de passe oublié',
-	'UI:Login:ForgotPwdForm+' => 'Vous pouvez demander à saisir un nouveau mot de passe. Vous allez recevoir un email et vous pourrez suivre les instructions.',
-	'UI:Login:ResetPassword' => 'Envoyer le message',
-	'UI:Login:ResetPwdFailed' => 'Impossible de vous faire parvenir le message: %1$s',
-	'UI:Login:SeparatorOr' => 'Ou',
-	'UI:ResetPwd-Error-WrongLogin' => 'le compte \'%1$s\' est inconnu.',
-	'UI:ResetPwd-Error-NotPossible' => 'les comptes "externes" ne permettent pas la saisie d\'un mot de passe dans '.ITOP_APPLICATION_SHORT.'.',
-	'UI:ResetPwd-Error-FixedPwd' => 'ce mode de saisie du mot de passe n\'est pas autorisé pour ce compte.',
-	'UI:ResetPwd-Error-NoContact' => 'le comte n\'est pas associé à une Personne.',
-	'UI:ResetPwd-Error-NoEmailAtt' => 'il manque un attribut de type "email" sur la Personne associée à ce compte. Veuillez contacter l\'administrateur de l\'application.',
-	'UI:ResetPwd-Error-NoEmail' => 'il manque une adresse email sur la Personne associée à ce compte. Veuillez contacter l\'administrateur de l\'application.',
-	'UI:ResetPwd-Error-Send' => 'erreur technique lors de l\'envoi de l\'email. Veuillez contacter l\'administrateur de l\'application.',
-	'UI:ResetPwd-EmailSent' => 'Veuillez vérifier votre boîte de réception. Ensuite, suivez les instructions données dans l\'email. Si vous ne recevez pas d\'email, merci de vérifier le login saisi',
-	'UI:ResetPwd-EmailSubject' => 'Changer votre mot de passe '.ITOP_APPLICATION_SHORT, 'UI:ResetPwd-EmailBody' => '<body><p>Vous avez demandé à changer votre mot de passe '.ITOP_APPLICATION_SHORT.' sans connaître le mot de passe précédent.</p><p>Veuillez suivre le lien suivant (usage unique) afin de pouvoir <a href="%1$s">saisir un nouveau mot de passe</a></p>.',
-	'UI:ResetPwd-Title' => 'Nouveau mot de passe',
-	'UI:ResetPwd-Error-InvalidToken' => 'Désolé, le mot de passe a déjà été modifié avec le lien que vous avez suivi, ou bien vous avez reçu plusieurs emails. Dans ce cas, veillez à utiliser le tout dernier lien reçu.',
-	'UI:ResetPwd-Error-EnterPassword' => 'Veuillez saisir le nouveau mot de passe pour \'%1$s\'.',
-	'UI:ResetPwd-Ready' => 'Le mot de passe a bien été changé.',
-	'UI:ResetPwd-Login' => 'Cliquez ici pour vous connecter...',
-	'UI:Login:About' => ITOP_APPLICATION.' créé par Combodo',
-	'UI:Login:ChangeYourPassword' => 'Changer de mot de passe',
-	'UI:Login:OldPasswordPrompt' => 'Ancien mot de passe',
-	'UI:Login:NewPasswordPrompt' => 'Nouveau mot de passe',
-	'UI:Login:RetypeNewPasswordPrompt' => 'Resaisir le nouveau mot de passe',
-	'UI:Login:IncorrectOldPassword' => 'Erreur: l\'ancien mot de passe est incorrect',
-	'UI:LogOffMenu' => 'Déconnexion',
-	'UI:LogOff:ThankYou' => 'Merci d\'avoir utilisé '.ITOP_APPLICATION_SHORT, 'UI:LogOff:ClickHereToLoginAgain' => 'Cliquez ici pour vous reconnecter...',
-	'UI:ChangePwdMenu' => 'Changer de mot de passe...',
-	'UI:Login:PasswordChanged' => 'Mot de passe mis à jour !',
-	'UI:Login:PasswordNotChanged' => 'Erreur : le mot de passe est identique !',
 	'UI:AccessRO-All' => ITOP_APPLICATION_SHORT.' est en lecture seule',
 	'UI:AccessRO-Users' => ITOP_APPLICATION_SHORT.' est en lecture seule pour les utilisateurs finaux',
 	'UI:ApplicationEnvironment' => 'Environnement applicatif: %1$s',
-	'UI:Login:RetypePwdDoesNotMatch' => 'Les deux saisies du nouveau mot de passe ne sont pas identiques !',
-	'UI:Button:Login' => 'Entrer dans '.ITOP_APPLICATION_SHORT, 'UI:Login:Error:AccessRestricted' => 'L\'accès à cette page '.ITOP_APPLICATION_SHORT.' est soumis à autorisation. Merci de contacter votre administrateur '.ITOP_APPLICATION_SHORT.'.',
-	'UI:Login:Error:AccessAdmin' => 'Accès restreint aux utilisateurs possédant le profil Administrateur.',
-	'UI:Login:Error:WrongOrganizationName' => 'Organisation inconnue',
-	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Email partagé par plusieurs contacts',
-	'UI:Login:Error:NoValidProfiles' => 'Pas de profil valide',
 	'UI:CSVImport:MappingSelectOne' => '-- choisir une valeur --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignorer ce champ --',
 	'UI:CSVImport:NoData' => 'Aucune donnée... merci de fournir des données !',
@@ -714,7 +542,6 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:CSVReport-Value-Issue-NoMatch' => 'Valeur incorrecte pour \'%1$s\': pas de correspondance, veuillez vérifier la syntaxe',
 	'UI:CSVReport-Value-Issue-AllowedValues' => 'Valeurs autorisées pour \'%1$s\' : %2$s',
 	'UI:CSVReport-Value-Issue-Unknown' => 'Valeur incorrecte pour \'%1$s\': %2$s',
-	'UI:CSVReport-Value-Issue-NoValue' => 'Pas de valeur',
 	'UI:CSVReport-Row-Issue-Inconsistent' => 'Incohérence entre attributs: %1$s',
 	'UI:CSVReport-Row-Issue-Attribute' => 'Des attributs ont des valeurs incorrectes',
 	'UI:CSVReport-Row-Issue-MissingExtKey' => 'Ne peut pas être créé car il manque des clés externes : %1$s',
@@ -723,6 +550,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:CSVReport-Row-Issue-Reconciliation' => 'Echec de réconciliation',
 	'UI:CSVReport-Row-Issue-Ambiguous' => 'Réconciliation ambigüe',
 	'UI:CSVReport-Row-Issue-Internal' => 'Erreur interne: %1$s, %2$s',
+	'UI:CSVReport-Value-Issue-NoValue' => 'Pas de valeur',
 	'UI:CSVReport-Row-Issue-NbField' => 'Le nombre de colonnes ne correspond pas à ce qui est attendu (constaté : %1$s, attendu : %2$s)',
 	'UI:CSVReport-Icon-Unchanged' => 'Non modifié',
 	'UI:CSVReport-Icon-Modified' => 'Modifié',
@@ -797,7 +625,8 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:RunQuery:Error' => 'Une erreur s\'est produite durant l\'exécution de la requête',
 	'UI:Query:UrlForExcel' => 'Lien à copier-coller dans Excel, pour déclarer une source de données à partir du web',
 	'UI:Query:UrlV1' => 'La liste des champs à exporter n\'a pas été spécifiée. La page <em>export-V2.php</em> ne peut pas fonctionner sans cette information. Par conséquent, le lien fourni ci-dessous pointe sur l\'ancienne page: <em>export.php</em>. Cette ancienne version de l\'export présente la limitation suivante : la liste des champs exportés varie en fonction du format de l\'export et du modèle de données. <br/>Si vous devez garantir la stabilité du format de l\'export (liste des colonnes) sur le long terme, alors vous devrez renseigner l\'attribut "Champs" et utiliser la page <em>export-V2.php</em>.',
-	'UI:Schema:Title' => 'Modèle de données '.ITOP_APPLICATION_SHORT, 'UI:Schema:TitleForClass' => 'Modèle de données de %1$s',
+	'UI:Schema:Title' => 'Modèle de données '.ITOP_APPLICATION_SHORT,
+	'UI:Schema:TitleForClass' => 'Modèle de données de %1$s',
 	'UI:Schema:NoClassSelected' => 'Aucune classe sélectionnée, veuillez en choisir une',
 	'UI:Schema:CategoryMenuItem' => 'Catégorie <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relations',
@@ -925,7 +754,8 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Confirmez que vous voulez bien supprimer les %1$d objets de type %2$s ci-dessous.',
 	'UI:Delete:Confirm_Object' => 'Confirmez que vous voulez bien supprimer %1$s.',
 	'UI:Delete:Confirm_Count_ObjectsOf_Class' => 'Confirmez que vous voulez bien supprimer les %1$d objets de type %2$s ci-dessous.',
-	'UI:WelcomeToITop' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT, 'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %2$s - Détails de %1$s',
+	'UI:WelcomeToITop' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT,
+	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %2$s - Détails de %1$s',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Erreur',
 	'UI:ObjectDoesNotExist' => 'Désolé cet objet n\'existe pas (ou vous n\'êtes pas autorisé à l\'afficher).',
 	'UI:ObjectArchived' => 'Cet objet a été archivé. Veuillez activer le mode Archive, ou contactez votre administrateur.',
@@ -1119,7 +949,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:RelationTooltip:Redundancy' => 'Redondance',
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => 'Nb éléments impactés: %1$d / %2$d',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Seuil critique: %1$d / %2$d',
-	'Portal:Title' => 'Portail utilisateur '.ITOP_APPLICATION_SHORT, 'Portal:NoRequestMgmt' => 'Chèr(e) %1$s, vous avez été redirigé(e) vers cette page car votre compte utilisateur est configuré avec le profil \'Utilisateur du Portail\'.Malheureusement, iTop n\'a pas été installé avec le module de \'Gestion des Demandes\'.Merci de contacter votre administrateur '.ITOP_APPLICATION_SHORT.'.',
+	'Portal:Title' => 'Portail utilisateur '.ITOP_APPLICATION_SHORT,
+	'Portal:NoRequestMgmt' => 'Chèr(e) %1$s, vous avez été redirigé(e) vers cette page car votre compte utilisateur est configuré avec le profil \'Utilisateur du Portail\'.Malheureusement, iTop n\'a pas été installé avec le module de \'Gestion des Demandes\'.Merci de contacter votre administrateur '.ITOP_APPLICATION_SHORT.'.',
 	'Portal:Refresh' => 'Rafraîchir',
 	'Portal:Back' => 'Retour',
 	'Portal:WelcomeUserOrg' => 'Bienvenue %1$s (%2$s)',
@@ -1166,9 +997,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Button:PreviewModifications' => 'Aperçu des modifications >>',
 	'UI:ModifiedObject' => 'Objet Modifié',
 	'UI:BulkModifyStatus' => 'Opération',
-	'UI:BulkModifyStatus+' => '',
+	'UI:BulkModifyStatus+' => 'Status of the operation~~',
 	'UI:BulkModifyErrors' => 'Erreur',
-	'UI:BulkModifyErrors+' => '',
+	'UI:BulkModifyErrors+' => 'Errors preventing the modification~~',
 	'UI:BulkModifyStatusOk' => 'Ok',
 	'UI:BulkModifyStatusError' => 'Erreur',
 	'UI:BulkModifyStatusModified' => 'Modifié',
@@ -1386,11 +1217,11 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:ShortcutDelete:Confirm' => 'Veuillez confirmer la suppression du ou des raccourci(s)',
 	'UI:ObjectShortcutInsert' => 'Insérer un raccourcis vers un objet',
 	'Class:Shortcut' => 'Raccourci',
-	'Class:Shortcut+' => '',
+	'Class:Shortcut+' => '~~',
 	'Class:Shortcut/Attribute:name' => 'Nom',
 	'Class:Shortcut/Attribute:name+' => 'Label utilisé dans le menu et comme titre de la page',
 	'Class:ShortcutOQL' => 'Raccourci vers une liste d\'objets',
-	'Class:ShortcutOQL+' => '',
+	'Class:ShortcutOQL+' => '~~',
 	'Class:ShortcutOQL/Attribute:oql' => 'Requête',
 	'Class:ShortcutOQL/Attribute:oql+' => 'Requête de définition de l\'ensemble des objets',
 	'Class:ShortcutOQL/Attribute:auto_reload' => 'Réactualisation automatique',
@@ -1431,7 +1262,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:AddAnExisting_Class' => 'Ajouter des objets de type %1$s...',
 	'UI:SelectionOf_Class' => 'Sélection d\'objets de type %1$s',
 	'UI:AboutBox' => 'A propos d\''.ITOP_APPLICATION_SHORT.'...',
-	'UI:About:Title' => 'A propos d\''.ITOP_APPLICATION_SHORT, 'UI:About:DataModel' => 'Modèle de données',
+	'UI:About:Title' => 'A propos d\''.ITOP_APPLICATION_SHORT,
+	'UI:About:DataModel' => 'Modèle de données',
 	'UI:About:Support' => 'Informations pour le support',
 	'UI:About:Licenses' => 'Licences',
 	'UI:About:InstallationOptions' => 'Options d\'installation',
@@ -1453,7 +1285,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'ExcelExport:PreparingExport' => 'Préparation de l\'export...',
 	'ExcelExport:Statistics' => 'Statistiques',
 	'portal:legacy_portal' => 'Portail Utilisateurs',
-	'portal:backoffice' => 'Console '.ITOP_APPLICATION_SHORT, 'UI:CurrentObjectIsLockedBy_User' => 'L\'objet est verrouillé car il est en train d\'être modifié par %1$s.',
+	'portal:backoffice' => 'Console '.ITOP_APPLICATION_SHORT,
+	'UI:CurrentObjectIsLockedBy_User' => 'L\'objet est verrouillé car il est en train d\'être modifié par %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'L\'objet est en train d\'être modifié par %1$s. Vos modifications ne peuvent pas être acceptées car elles risquent d\'être écrasées.',
 	'UI:CurrentObjectIsSoftLockedBy_User' => 'L\'objet est en train d\'être modifié par %1$s. Vous pourrez envoyer vos modifications quand il/elle aura fini.',
 	'UI:CurrentObjectLockExpired' => 'Le verrouillage interdisant les modifications concurrentes a expiré.',
@@ -1563,12 +1396,6 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtré sur %1$s',
 	'UI:StateChanged' => 'État modifié',
 	'UI:AddSubTree' => 'Ajouter une entrée',
-]);
-
-//
-// Expression to Natural language
-//
-Dict::Add('FR FR', 'French', 'Français', [
 	'Expression:Operator:AND' => ' ET ',
 	'Expression:Operator:OR' => ' OU ',
 	'Expression:Operator:=' => ' : ',
@@ -1581,12 +1408,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Expression:Unit:Long:MINUTE' => 'minute(s)',
 	'Expression:Verb:NOW' => 'maintenant',
 	'Expression:Verb:ISNULL' => ' : non défini',
-]);
-
-//
-// iTop Newsroom menu
-//
-Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Newsroom:NoNewMessage' => 'Aucun nouveau message',
 	'UI:Newsroom:XNewMessage' => '%1$s nouveau(x) message(s)',
 	'UI:Newsroom:MarkAllAsRead' => 'Marquer tous les messages comme lus',
@@ -1601,9 +1422,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Important',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Standard',
-]);
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:DataSources' => 'Synchronisation',
 	'Menu:DataSources+' => 'Configurations d\'import de données issues de sources externes',
 	'Menu:AuditCategories' => 'Configurer l\'audit',
@@ -1629,6 +1447,5 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:ConfigEditor' => 'Configuration générale',
 	'Menu:ConfigEditor+' => 'Édition du fichier de configuration',
 	'Menu:Integrations' => 'Intégrations',
-	'Menu:Integrations+' => '',
-
+	'Menu:Integrations+' => '~~',
 ]);

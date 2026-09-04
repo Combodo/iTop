@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author LinProfs <info@linprofs.com>
@@ -20,11 +19,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:KnownError/Attribute:org_id' => 'Organisatie',
 	'Class:KnownError/Attribute:org_id+' => 'Link the known error to the service provider in charge of handling them, or maybe to a customer organization if the error is specific to them~~',
 	'Class:KnownError/Attribute:cust_name' => 'Naam klant',
-	'Class:KnownError/Attribute:cust_name+' => '',
+	'Class:KnownError/Attribute:cust_name+' => '~~',
 	'Class:KnownError/Attribute:problem_id' => 'Gerelateerd probleem',
 	'Class:KnownError/Attribute:problem_id+' => 'The problem which couldn\'t be solved immediately and has led to the creation of this known error~~',
 	'Class:KnownError/Attribute:problem_ref' => 'Ref. gerelateerd probleem',
-	'Class:KnownError/Attribute:problem_ref+' => '',
+	'Class:KnownError/Attribute:problem_ref+' => '~~',
 	'Class:KnownError/Attribute:symptom' => 'Symptoom',
 	'Class:KnownError/Attribute:symptom+' => 'What are the observable effects of this error?~~',
 	'Class:KnownError/Attribute:root_cause' => 'Hoofdoorzaak',
@@ -38,13 +37,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:KnownError/Attribute:domain' => 'Domein',
 	'Class:KnownError/Attribute:domain+' => 'Choose the technical domain related to this known error?~~',
 	'Class:KnownError/Attribute:domain/Value:Application' => 'Applicatie',
-	'Class:KnownError/Attribute:domain/Value:Application+' => '',
+	'Class:KnownError/Attribute:domain/Value:Application+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Desktop' => 'Desktop',
-	'Class:KnownError/Attribute:domain/Value:Desktop+' => '',
+	'Class:KnownError/Attribute:domain/Value:Desktop+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Network' => 'Netwerk',
-	'Class:KnownError/Attribute:domain/Value:Network+' => '',
+	'Class:KnownError/Attribute:domain/Value:Network+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Server' => 'Server',
-	'Class:KnownError/Attribute:domain/Value:Server+' => '',
+	'Class:KnownError/Attribute:domain/Value:Server+' => '~~',
 	'Class:KnownError/Attribute:vendor' => 'Verkoper',
 	'Class:KnownError/Attribute:vendor+' => 'A free text field to identify the vendor of the CI(s) concerned by this known error~~',
 	'Class:KnownError/Attribute:model' => 'Model',
@@ -55,49 +54,32 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:KnownError/Attribute:ci_list+' => 'Alle configuratie-items gerelateerd aan deze gekende fout',
 	'Class:KnownError/Attribute:document_list' => 'Documenten',
 	'Class:KnownError/Attribute:document_list+' => 'Alle documenten gerelateerd aan deze gekende fout',
-]);
-
-//
-// Class: lnkErrorToFunctionalCI
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkErrorToFunctionalCI' => 'Link Fout / Functioneel CI',
 	'Class:lnkErrorToFunctionalCI+' => 'Infrastructuur gelinkt aan een gekende fout',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Naam CI',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Fout',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Naam fout',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Reden',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-]);
-
-//
-// Class: lnkDocumentToError
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '~~',
 	'Class:lnkDocumentToError' => 'Link Document / Fout',
 	'Class:lnkDocumentToError+' => 'Een link tussen een document en een gekende fout',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToError/Attribute:document_id+' => '',
+	'Class:lnkDocumentToError/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Naam document',
-	'Class:lnkDocumentToError/Attribute:document_name+' => '',
+	'Class:lnkDocumentToError/Attribute:document_name+' => '~~',
 	'Class:lnkDocumentToError/Attribute:error_id' => 'Fout',
-	'Class:lnkDocumentToError/Attribute:error_id+' => '',
+	'Class:lnkDocumentToError/Attribute:error_id+' => '~~',
 	'Class:lnkDocumentToError/Attribute:error_name' => 'Naam fout',
-	'Class:lnkDocumentToError/Attribute:error_name+' => '',
+	'Class:lnkDocumentToError/Attribute:error_name+' => '~~',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'Soort link',
-	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-]);
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:lnkDocumentToError/Attribute:link_type+' => '~~',
 	'Menu:ProblemManagement' => 'Probleem Management',
 	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Snelkoppelingen',

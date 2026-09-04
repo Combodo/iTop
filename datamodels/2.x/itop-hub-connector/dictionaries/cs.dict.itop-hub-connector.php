@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -16,7 +15,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:iTopHub:Register+' => 'Go to iTop Hub to update your '.ITOP_APPLICATION_SHORT.' instance~~',
 	'Menu:iTopHub:Register:Description' => '<p>Get access to your community platform iTop Hub!<br>Find all the content and information you need, manage your instances through personalized tools & install more extensions.<br><br>By connecting to the Hub from this page, you will push information about this '.ITOP_APPLICATION_SHORT.' instance into the Hub.</p>~~',
 	'Menu:iTopHub:MyExtensions' => 'Nasazená rozšíření',
-	'Menu:iTopHub:MyExtensions+' => 'Seznam rozšíření nasazených v rámci instance '.ITOP_APPLICATION_SHORT.'',
+	'Menu:iTopHub:MyExtensions+' => 'Seznam rozšíření nasazených v rámci instance '.ITOP_APPLICATION_SHORT,
 	'Menu:iTopHub:BrowseExtensions' => 'Získat rozšíření z iTop Hubu',
 	'Menu:iTopHub:BrowseExtensions+' => 'Procházet rozšíření dostupná na iTop Hubu',
 	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Look into iTop Hub’s store, your one stop place to find wonderful iTop extensions !<br>Find the ones that will help you customize and adapt '.ITOP_APPLICATION_SHORT.' to your processes.<br><br>By connecting to the Hub from this page, you will push information about this '.ITOP_APPLICATION_SHORT.' instance into the Hub.</p>',

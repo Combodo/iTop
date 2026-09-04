@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -27,13 +26,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
-]);
-
-//
-// Class: AuditRule
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:AuditRule' => 'Audit-regel',
 	'Class:AuditRule+' => 'En regel til at efterprøve den angivne Audit-kategori med',
 	'Class:AuditRule/Attribute:name' => 'Regel Navn',
@@ -56,13 +48,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:AuditRule/Attribute:category_name+' => 'Kategorinavn for denne regel',
 	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
 	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
-]);
-
-//
-// Class: AuditDomain
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:AuditDomain' => 'Audit Domain~~',
 	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors~~',
@@ -74,13 +59,6 @@ Domain usually correspond to who is responsible for checking and fixing errors~~
 	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
-]);
-
-//
-// Class: lnkAuditCategoryToAuditDomain
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
 	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
@@ -91,19 +69,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
-]);
-
-//
-// Class: QueryOQL
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Query' => 'Forespørgsel',
-	'Class:Query+' => '',
+	'Class:Query+' => 'A query is a data set defined in a dynamic way~~',
 	'Class:Query/Attribute:name' => 'Navn',
-	'Class:Query/Attribute:name+' => '',
+	'Class:Query/Attribute:name+' => 'Identifies the query~~',
 	'Class:Query/Attribute:description' => 'Beskrivelse',
-	'Class:Query/Attribute:description+' => '',
+	'Class:Query/Attribute:description+' => 'Long description for the query (purpose, usage, etc.)~~',
 	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
 	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
 	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
@@ -117,7 +88,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Query/Attribute:export_last_user_contact' => 'Contact~~',
 	'Class:Query/Attribute:export_last_user_contact+' => 'The contact who executed the last export~~',
 	'Class:Query/Attribute:usages' => 'Usages~~',
-		'Class:Query/Attribute:usages+' => 'Specify the possible usages for this query.
+	'Class:Query/Attribute:usages+' => 'Specify the possible usages for this query.
  - The "Reference for AI" tag assumes the description is very explicit and compliant with OQL. It may be used as an example for building OQL queries by AI.
  - The "Notification" tag implies the class of returned objects has one and only one field of type email.
  - The "Dashlet" tag assumes the OQL returns a single class of objects.~~',
@@ -131,27 +102,15 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Query:baseinfo' => 'General information~~',
 	'Query:exportInfo' => 'Export information~~',
 	'Class:QueryOQL/Attribute:fields' => 'Felter',
-	'Class:QueryOQL/Attribute:fields+' => '',
+	'Class:QueryOQL/Attribute:fields+' => 'Comma separated list of attributes (or alias.attribute) to export~~',
 	'Class:QueryOQL' => 'OQL forespørgsel',
-	'Class:QueryOQL+' => '',
+	'Class:QueryOQL+' => 'A query based on the Object Query Language~~',
 	'Class:QueryOQL/Attribute:oql' => 'Udtryk',
-	'Class:QueryOQL/Attribute:oql+' => '',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'addon/userrights'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: User
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:QueryOQL/Attribute:oql+' => 'OQL Expression~~',
 	'Class:User' => 'Bruger',
 	'Class:User+' => 'Bruger log in',
 	'Class:User/Attribute:finalclass' => 'Type af brugerkonto',
-	'Class:User/Attribute:finalclass+' => '',
+	'Class:User/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:User/Attribute:contactid' => 'kontakt (person)',
 	'Class:User/Attribute:contactid+' => 'Personlige oplysninger og virksomheds data',
 	'Class:User/Attribute:org_id' => 'Organisation',
@@ -195,13 +154,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => 'User Internal~~',
 	'Class:UserInternal+' => 'User defined within '.ITOP_APPLICATION_SHORT.'~~',
-]);
-
-//
-// Class: URP_Profiles
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_Profiles' => 'Profil',
 	'Class:URP_Profiles+' => 'Brugerprofil',
 	'Class:URP_Profiles/Attribute:name' => 'Navn',
@@ -210,13 +162,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_Profiles/Attribute:description+' => 'Kort beskrivelse',
 	'Class:URP_Profiles/Attribute:user_list' => 'Brugere',
 	'Class:URP_Profiles/Attribute:user_list+' => 'Personer, der har denne Rolle',
-]);
-
-//
-// Class: URP_Dimensions
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_Dimensions' => 'Dimension',
 	'Class:URP_Dimensions+' => 'Anvendelsesdimension (Fastlæggelse af siloer)',
 	'Class:URP_Dimensions/Attribute:name' => 'Navn',
@@ -225,13 +170,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_Dimensions/Attribute:description+' => 'Kort beskrivelse',
 	'Class:URP_Dimensions/Attribute:type' => 'Type',
 	'Class:URP_Dimensions/Attribute:type+' => 'Klassenavn eller datatype',
-]);
-
-//
-// Class: URP_UserProfile
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_UserProfile' => 'Brugerprofil',
 	'Class:URP_UserProfile+' => 'Brugerprofil',
 	'Class:URP_UserProfile/Name' => 'Link mellem %1$s and %2$s',
@@ -245,33 +183,19 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_UserProfile/Attribute:profile+' => 'Profilnavn',
 	'Class:URP_UserProfile/Attribute:reason' => 'Begrundelse',
 	'Class:URP_UserProfile/Attribute:reason+' => 'Begrundelse, hvorfor denne bruger skal have denne profil',
-]);
-
-//
-// Class: URP_UserOrg
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_UserOrg' => 'Bruger organisation(er)',
 	'Class:URP_UserOrg+' => 'Tilladte organisation(er)',
 	'Class:URP_UserOrg/Name' => 'Link mellem %1$s og %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Bruger',
-	'Class:URP_UserOrg/Attribute:userid+' => '',
+	'Class:URP_UserOrg/Attribute:userid+' => 'user account~~',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
-	'Class:URP_UserOrg/Attribute:userlogin+' => '',
+	'Class:URP_UserOrg/Attribute:userlogin+' => 'User\'s login~~',
 	'Class:URP_UserOrg/Attribute:allowed_org_id' => 'Organisation',
-	'Class:URP_UserOrg/Attribute:allowed_org_id+' => '',
+	'Class:URP_UserOrg/Attribute:allowed_org_id+' => 'Allowed organization~~',
 	'Class:URP_UserOrg/Attribute:allowed_org_name' => 'Organisation',
-	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '',
+	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Allowed organization~~',
 	'Class:URP_UserOrg/Attribute:reason' => 'Begrundelse',
-	'Class:URP_UserOrg/Attribute:reason+' => '',
-]);
-
-//
-// Class: URP_ProfileProjection
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:URP_UserOrg/Attribute:reason+' => 'explain why this person is allowed to see the data belonging to this organization~~',
 	'Class:URP_ProfileProjection' => 'Profil_projection',
 	'Class:URP_ProfileProjection+' => 'Profilbillede',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimension',
@@ -286,13 +210,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL-udtryk (Benyttes af $user) | konstant | | + Attribut-Code',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribut',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Mål for Attribut-kode (valgfri)',
-]);
-
-//
-// Class: URP_ClassProjection
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_ClassProjection' => 'Klasse_projection',
 	'Class:URP_ClassProjection+' => 'Klassebillede',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimension',
@@ -305,13 +222,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL-udtryk (Benyttes af $this) | konstant | | + Attribut-Code',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attribut',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Mål for Attribut-kode (valgfri)',
-]);
-
-//
-// Class: URP_ActionGrant
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_ActionGrant' => 'Handlings godkendelser',
 	'Class:URP_ActionGrant+' => 'Tilladelser på klasser',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profil',
@@ -328,13 +238,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'Nej',
 	'Class:URP_ActionGrant/Attribute:action' => 'Handling',
 	'Class:URP_ActionGrant/Attribute:action+' => 'Handling som skal udføres på den valgte klasse',
-]);
-
-//
-// Class: URP_StimulusGrant
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_StimulusGrant' => 'Tilladels til påvirkning',
 	'Class:URP_StimulusGrant+' => 'Tilladelserne til påvirkning af livscyklus af objektet',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profil',
@@ -351,25 +254,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'Nej',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Påvirkning',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'Påvirknings-kode',
-]);
-
-//
-// Class: URP_AttributeGrant
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_AttributeGrant' => 'Godkendelse af Attributter',
 	'Class:URP_AttributeGrant+' => 'Godkendelse af Attributter',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Tillad handling',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'Tillad handling',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribut',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Attribut-kode',
-]);
-
-//
-// Class: UserDashboard
-//
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:UserDashboard' => 'User dashboard~~',
 	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'User~~',
@@ -378,19 +268,15 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Contents~~',
 	'Class:UserDashboard/Attribute:contents+' => '~~',
-]);
-
-//
-// Duplicated into itop-welcome-itil ( will be removed from here...)
-//
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:WelcomeMenu' => 'Velkomen',
-	'Menu:WelcomeMenu+' => 'Velkommen til '.ITOP_APPLICATION_SHORT, 'Menu:WelcomeMenuPage' => 'Velkomen',
-	'Menu:WelcomeMenuPage+' => 'Velkommen til '.ITOP_APPLICATION_SHORT, 'Menu:AdminTools' => 'Admin værktøjer',
+	'Menu:WelcomeMenu+' => 'Velkommen til '.ITOP_APPLICATION_SHORT,
+	'Menu:WelcomeMenuPage' => 'Velkomen',
+	'Menu:WelcomeMenuPage+' => 'Velkommen til '.ITOP_APPLICATION_SHORT,
+	'Menu:AdminTools' => 'Admin værktøjer',
 	'Menu:AdminTools+' => 'Administration tools~~',
 	'Menu:AdminTools?' => 'Værktøjer kun tilgængelige for brugere med administrator profil',
 	'Menu:CSVImportMenu' => 'CSV import',
-	'Menu:CSVImportMenu+' => '',
+	'Menu:CSVImportMenu+' => 'Bulk creation or update~~',
 	'Menu:DataModelMenu' => 'Data model~~',
 	'Menu:DataModelMenu+' => 'Overview of the data model~~',
 	'Menu:ExportMenu' => 'Export~~',
@@ -398,19 +284,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:NotificationsMenu' => 'Notifikationer',
 	'Menu:NotificationsMenu+' => 'Configuration of the Notifications~~',
 	'Menu:MyShortcuts' => 'Mine Genveje',
-	'Menu:Notifications:Title' => 'Audit Kategorier',
 	'Menu:DataAdministration' => 'Data administration~~',
 	'Menu:DataAdministration+' => '~~',
-]);
-
-//
-// String from the User Interface: menu, messages, buttons, etc...
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'BooleanLabel:yes' => 'yes~~',
 	'BooleanLabel:no' => 'no~~',
-	'UI:WelcomeMenu:Title' => 'Velkommen til '.ITOP_APPLICATION_SHORT, 'UI:WelcomeMenu:AllOpenRequests' => 'Åbne anmodninger: %1$d',
+	'UI:WelcomeMenu:Title' => 'Velkommen til '.ITOP_APPLICATION_SHORT,
+	'UI:WelcomeMenu:AllOpenRequests' => 'Åbne anmodninger: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mine brugerhenvendelser',
 	'UI:WelcomeMenu:OpenIncidents' => 'Åbne Incidents: %1$d',
 	'UI:WelcomeMenu:AllConfigItems' => 'Configuration Items: %1$d',
@@ -504,6 +383,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 	'UI:Error:InvalidToken' => 'Den nuværende session er ugyldig. Opdater siden, og prøv igen. Hvis problemet fortsætter, skal du logge ud og logge ind igen.',
+	'UI:Error:TwigController' => 'Internal error in form controller~~',
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 	'UI:GroupBy:Count' => 'Antal',
 	'UI:GroupBy:Count+' => 'Antal af elementer',
@@ -514,7 +394,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:HistoryTab' => 'Historik',
 	'UI:NotificationsTab' => 'Bemærkninger',
 	'UI:History:BulkImports' => 'Historik',
-	'UI:History:BulkImports+' => '',
+	'UI:History:BulkImports+' => 'List of CSV imports (latest import first)~~',
 	'UI:History:BulkImportDetails' => 'Ændringer som følge af CSV import foretaget den %1$s (af %2$s)',
 	'UI:History:Date' => 'Dato',
 	'UI:History:Date+' => 'Dato for ændring',
@@ -665,6 +545,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:CSVReport-Row-Issue-Reconciliation' => 'Fejl ved forening',
 	'UI:CSVReport-Row-Issue-Ambiguous' => 'Tvetydig forening',
 	'UI:CSVReport-Row-Issue-Internal' => 'Intern fejl: %1$s, %2$s',
+	'UI:CSVReport-Value-Issue-NoValue' => 'No value~~',
+	'UI:CSVReport-Row-Issue-NbField' => 'Not the expected number of columns (found: %1$s, expected: %2$s)~~',
 	'UI:CSVReport-Icon-Unchanged' => 'Uændret',
 	'UI:CSVReport-Icon-Modified' => 'Ændret',
 	'UI:CSVReport-Icon-Missing' => 'Mangler',
@@ -680,9 +562,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:CSVReport-Stats-Created' => '%1$.0f %% af de hentede objekter vil blive oprettet.',
 	'UI:CSVReport-Stats-Modified' => '%1$.0f %% af de hentede objekter vil blive ændret.',
 	'UI:CSVExport:AdvancedMode' => 'Advanceret tilstand',
-	'UI:CSVExport:AdvancedMode+' => '',
+	'UI:CSVExport:AdvancedMode+' => 'In advanced mode, several columns are added to the export: the id of the object, the id of external keys and their reconciliation attributes.~~',
 	'UI:CSVExport:LostChars' => 'Encoding problem',
-	'UI:CSVExport:LostChars+' => '',
+	'UI:CSVExport:LostChars+' => 'The downloaded file will be encoded into %1$s. '.ITOP_APPLICATION_SHORT.' has detected some characters that are not compatible with this format. Those characters will either be replaced by a substitute (e.g. accentuated chars losing the accent), or they will be discarded. You can copy/paste the data from your web browser. Alternatively, you can contact your administrator to change the encoding (See parameter \'csv_file_default_charset\').~~',
 	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB Audit',
 	'UI:Audit:Interactive:All:Title' => 'Audit results~~',
 	'UI:Audit:Interactive:All:SubTitle' => 'Full audit: includes all rules, all categories, all domains~~',
@@ -697,7 +579,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:Audit:Interactive:Domain:BreadCrumb' => '%1$s~~',
 	'UI:Audit:Interactive:Domain:BreadCrumb+' => 'Audit for Domain: %1$s~~',
 	'UI:Audit:Interactive:Selection:Title' => 'Selection of an audit~~',
-	'UI:Audit:InteractiveAudit' => 'Interaktiv Audit',
 	'UI:Audit:Interactive:Selection:SubTitle' => 'Select a domain to get the results limited to this domain or select "All categories" to get a full audit (can take time or even fail if too much data to audit)~~',
 	'UI:Audit:Interactive:Selection:BreadCrumb' => 'Selection~~',
 	'UI:Audit:Interactive:Selection:BreadCrumb+' => 'Selection of an Audit to run~~',
@@ -741,6 +622,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. <br/>Should you want to guarantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' objekt skema',
 	'UI:Schema:TitleForClass' => '%1$s skema',
+	'UI:Schema:NoClassSelected' => 'No class selected, please choose one~~',
 	'UI:Schema:CategoryMenuItem' => 'Kategori <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relationer',
 	'UI:Schema:AbstractClass' => 'Abstrakt klasse: intet objekt fra denne klasse kan instantieres.',
@@ -764,7 +646,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:Schema:Description' => 'Beskrivelse',
 	'UI:Schema:Description+' => 'Beskrivelse af disse attributter',
 	'UI:Schema:AllowedValues' => 'Tilladte værdier',
-	'UI:Schema:AllowedValues+' => '',
+	'UI:Schema:AllowedValues+' => 'Restrictions on the possible values for this attribute~~',
 	'UI:Schema:MoreInfo' => 'Mere information',
 	'UI:Schema:MoreInfo+' => 'Mere information om dette felt',
 	'UI:Schema:SearchCriteria' => 'Søgekriterie',
@@ -815,7 +697,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:Schema:Events:Listener' => 'Listener~~',
 	'UI:Schema:Events:Rank' => 'Rank~~',
 	'UI:Schema:Events:Module' => 'Module~~',
-	'UI:LinksWidget:Autocomplete+' => '',
+	'UI:LinksWidget:Autocomplete+' => 'Type the first 3 characters...~~',
 	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Test forespørgsel',
 	'UI:Combo:SelectValue' => '--- vælg en værdi ---',
@@ -846,7 +728,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:Delete:AutomaticResetOf_Fields' => 'Automatisk reset af felt(er): %1$s',
 	'UI:Delete:CleaningUpRefencesTo_Object' => 'Oprydning af alle referencer til %1$s...',
 	'UI:Delete:CleaningUpRefencesTo_Several_ObjectsOf_Class' => 'Oprydning af alle referencer til %1$d objekter af klasse %2$s...',
-	'UI:Delete:Done+' => '',
+	'UI:Delete:Done+' => 'What was done...~~',
 	'UI:Delete:_Name_Class_Deleted' => '%1$s - %2$s slettet.',
 	'UI:Delete:ConfirmDeletionOf_Name' => 'Sletning af %1$s',
 	'UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class' => 'Sletning af %1$d objekter af klasse %2$s',
@@ -860,14 +742,15 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d objekter/links refererer %2$s',
 	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objekter/links refererer til nogle af de objekter som slettes',
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'For at sikre Database integritet, skal alle referencer slettes',
-	'UI:Delete:Consequence+' => '',
+	'UI:Delete:Consequence+' => 'What will be done~~',
 	'UI:Delete:SorryDeletionNotAllowed' => 'Beklager, du har ikke tilladelse til at slette dette objekt, se the detaljeret forklaring ovenfor',
 	'UI:Delete:PleaseDoTheManualOperations' => 'Venligst foretag den manuelle opreration som er nævnt ovenfor, før sletning af objektet',
 	'UI:Delect:Confirm_Object' => 'Venligst bekræft at du ønsker at slette %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Venligst bekræft at du ønsker at slette følgende %1$d objekter af klassen %2$s.',
 	'UI:Delete:Confirm_Object' => 'Venligst bekræft at du ønsker at slette %1$s.',
 	'UI:Delete:Confirm_Count_ObjectsOf_Class' => 'Venligst bekræft at du ønsker at slette følgende %1$d objekter af klassen %2$s.',
-	'UI:WelcomeToITop' => 'Velkommen til '.ITOP_APPLICATION_SHORT, 'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s detaljer',
+	'UI:WelcomeToITop' => 'Velkommen til '.ITOP_APPLICATION_SHORT,
+	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s detaljer',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Fejl',
 	'UI:ObjectDoesNotExist' => 'Beklager, dette objekt eksisterer ikke (eller du har ikke tilladelse til at se det).',
 	'UI:ObjectArchived' => 'This object has been archived. Please enable the archive mode or contact your administrator.~~',
@@ -901,8 +784,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:BulkDeleteTitle' => 'Vælg objekt som ønskes slettet:',
 	'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.' Objekt Oprettet.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s oprettet.',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Anvender %1$s på objekt: %2$s i tilstand %3$s for sluttilstand: %4$s.',
 	'UI:ObjectCouldNotBeWritten' => 'Objektet kunne ikke skrives: %1$s',
 	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - Fatal Fejl',
@@ -911,47 +792,47 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:Error_Details' => 'Fejl: %1$s.',
 	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' bruger styring - profil projection',
 	'UI:UserManagement:Class' => 'Klasse',
-	'UI:UserManagement:Class+' => '',
+	'UI:UserManagement:Class+' => 'Class of objects~~',
 	'UI:UserManagement:ProjectedObject' => 'Objekt',
-	'UI:UserManagement:ProjectedObject+' => '',
+	'UI:UserManagement:ProjectedObject+' => 'Projected object~~',
 	'UI:UserManagement:AnyObject' => '* enhver *',
 	'UI:UserManagement:User' => 'Bruger',
-	'UI:UserManagement:User+' => '',
+	'UI:UserManagement:User+' => 'User involved in the projection~~',
 	'UI:UserManagement:Action:Read' => 'Læs',
-	'UI:UserManagement:Action:Read+' => '',
+	'UI:UserManagement:Action:Read+' => 'Read/display objects~~',
 	'UI:UserManagement:Action:Modify' => 'Ændring',
-	'UI:UserManagement:Action:Modify+' => '',
+	'UI:UserManagement:Action:Modify+' => 'Create and edit (modify) objects~~',
 	'UI:UserManagement:Action:Delete' => 'Slet',
-	'UI:UserManagement:Action:Delete+' => '',
+	'UI:UserManagement:Action:Delete+' => 'Delete objects~~',
 	'UI:UserManagement:Action:BulkRead' => 'Masselæsning (Export)',
-	'UI:UserManagement:Action:BulkRead+' => '',
+	'UI:UserManagement:Action:BulkRead+' => 'List objects or export massively~~',
 	'UI:UserManagement:Action:BulkModify' => 'Masseændring',
-	'UI:UserManagement:Action:BulkModify+' => '',
+	'UI:UserManagement:Action:BulkModify+' => 'Massively create/edit (CSV import)~~',
 	'UI:UserManagement:Action:BulkDelete' => 'Massesletning',
-	'UI:UserManagement:Action:BulkDelete+' => '',
+	'UI:UserManagement:Action:BulkDelete+' => 'Massively delete objects~~',
 	'UI:UserManagement:Action:Stimuli' => 'Påvirkning',
-	'UI:UserManagement:Action:Stimuli+' => '',
+	'UI:UserManagement:Action:Stimuli+' => 'Allowed (compound) actions~~',
 	'UI:UserManagement:Action' => 'Handling',
-	'UI:UserManagement:Action+' => '',
+	'UI:UserManagement:Action+' => 'Action performed by the user~~',
 	'UI:UserManagement:TitleActions' => 'Handlinger',
 	'UI:UserManagement:Permission' => 'Tilladelse',
-	'UI:UserManagement:Permission+' => '',
+	'UI:UserManagement:Permission+' => 'User\'s permissions~~',
 	'UI:UserManagement:Attributes' => 'Attributter',
 	'UI:UserManagement:ActionAllowed:Yes' => 'Ja',
 	'UI:UserManagement:ActionAllowed:No' => 'Nej',
-	'UI:UserManagement:AdminProfile+' => '',
+	'UI:UserManagement:AdminProfile+' => 'Administrators have full read/write access to all objects in the database.~~',
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
-	'UI:UserManagement:NoLifeCycleApplicable+' => '',
+	'UI:UserManagement:NoLifeCycleApplicable+' => 'No lifecycle has been defined for this class~~',
 	'UI:UserManagement:GrantMatrix' => 'Grant Matrix',
 	'Menu:SystemTools' => 'System~~',
 	'UI:ChangeManagementMenu' => 'Change Management',
-	'UI:ChangeManagementMenu+' => '',
+	'UI:ChangeManagementMenu+' => 'Change Management~~',
 	'UI:ChangeManagementMenu:Title' => 'Changes Overblik',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Changes efter type',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes efter status',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changes endnu ikke tildelt',
 	'UI:ConfigurationManagementMenu' => 'Configuration Management',
-	'UI:ConfigurationManagementMenu+' => '',
+	'UI:ConfigurationManagementMenu+' => 'Configuration Management~~',
 	'UI:ConfigurationManagementMenu:Title' => 'Infrastruktur Overblik',
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Infrastruktur objekter efter type',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Infrastruktur objekter efter status',
@@ -974,7 +855,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Kunde kontrakter til fornyelse indenfor 30 dage',
 	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Leverandør kontrakter til fornyelse indenfor 30 dage',
 	'UI:ContactsMenu' => 'Kontakter',
-	'UI:ContactsMenu+' => '',
+	'UI:ContactsMenu+' => 'Contacts~~',
 	'UI:ContactsMenu:Title' => 'Kontakter Overblik',
 	'UI-ContactsMenu-ContactsByLocation' => 'Kontakter efter lokation',
 	'UI-ContactsMenu-ContactsByType' => 'Kontakter efter type',
@@ -1111,9 +992,9 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:Button:PreviewModifications' => 'Preview Ændringer >>',
 	'UI:ModifiedObject' => 'Objekt Ændret',
 	'UI:BulkModifyStatus' => 'Operation',
-	'UI:BulkModifyStatus+' => '',
+	'UI:BulkModifyStatus+' => 'Status of the operation~~',
 	'UI:BulkModifyErrors' => 'Fejl (hvis nogen)',
-	'UI:BulkModifyErrors+' => '',
+	'UI:BulkModifyErrors+' => 'Errors preventing the modification~~',
 	'UI:BulkModifyStatusOk' => 'Ok',
 	'UI:BulkModifyStatusError' => 'Fejl',
 	'UI:BulkModifyStatusModified' => 'Ændret',
@@ -1143,7 +1024,7 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:ArchiveMode:Banner' => 'Archive mode~~',
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Favorit Organisationer',
-	'UI:FavoriteOrganizations+' => '',
+	'UI:FavoriteOrganizations+' => 'Check in the list below the organizations that you want to see in the drop-down menu for a quick access. Note that this is not a security setting, objects from any organization are still visible and can be accessed by selecting "All Organizations" in the drop-down list.~~',
 	'UI:FavoriteLanguage' => 'Sprog i brugergrænseflade',
 	'UI:Favorites:SelectYourLanguage' => 'Vælg dit foretrukne sprog',
 	'UI:FavoriteOtherSettings' => 'Andre indstillinger',
@@ -1186,7 +1067,6 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
 	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
 	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
-	'UI:Dashboard:Edit' => 'Rediger denne side...',
 	'UI:Dashboard:RevertConfirm' => 'Enhver ændring foretaget i den oprindelige version vil blive tabt. Bekræft venligst at du ønsker dette.',
 	'UI:ExportDashBoard' => 'Exporter til fil',
 	'UI:ImportDashBoard' => 'Importer fra fil...',
@@ -1194,7 +1074,6 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:ImportDashboardText' => 'Vælg en dashboard fil til import:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
-	'UI:Dashboard:Revert' => 'Tilbage til original version...',
 	'UI:DashletCreation:Title' => 'Opret en ny Dashlet',
 	'UI:DashletCreation:Dashboard' => 'Dashboard',
 	'UI:DashletCreation:DashletType' => 'Dashlet Type',
@@ -1241,6 +1120,7 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth' => 'Dag i måneden for %1$s',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (time)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (måned)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-Year' => '%1$s (year)~~',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (ugedag)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (dag i måned)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Vælg venligst det felt, somobjekterne skal grupperes efter',
@@ -1332,16 +1212,13 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:ShortcutDelete:Confirm' => 'Bekræft venligst at du ønsker at slette genvej(e).',
 	'UI:ObjectShortcutInsert' => 'Insert Object Shortcut~~',
 	'Class:Shortcut' => 'Genvej',
-	'Class:Shortcut+' => '',
+	'Class:Shortcut+' => '~~',
 	'Class:Shortcut/Attribute:name' => 'Navn',
-	'Class:Shortcut/Attribute:name+' => '',
+	'Class:Shortcut/Attribute:name+' => 'Label used in the menu and page title~~',
 	'Class:ShortcutOQL' => 'Søge resultat genvej',
-	'Class:ShortcutOQL+' => '',
+	'Class:ShortcutOQL+' => '~~',
 	'Class:ShortcutOQL/Attribute:oql' => 'Søgning',
-	'Class:ShortcutOQL/Attribute:oql+' => '',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
+	'Class:ShortcutOQL/Attribute:oql+' => 'OQL defining the list of objects to search for~~',
 	'Class:ShortcutOQL/Attribute:auto_reload' => 'Automatic refresh~~',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Disabled~~',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Custom rate~~',
@@ -1513,12 +1390,7 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
 	'UI:StateChanged' => 'State changed~~',
-]);
-
-//
-// Expression to Natural language
-//
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'UI:AddSubTree' => 'Add entry~~',
 	'Expression:Operator:AND' => ' AND ~~',
 	'Expression:Operator:OR' => ' OR ~~',
 	'Expression:Operator:=' => ': ~~',
@@ -1531,12 +1403,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Expression:Unit:Long:MINUTE' => 'minute(s)~~',
 	'Expression:Verb:NOW' => 'now~~',
 	'Expression:Verb:ISNULL' => ': undefined~~',
-]);
-
-//
-// iTop Newsroom menu
-//
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
 	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
@@ -1551,9 +1417,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
-]);
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:DataSources' => 'Synkroniserings Data Kilder',
 	'Menu:DataSources+' => 'Data synchro used for batch import of external data~~',
 	'Menu:AuditCategories' => 'Audit Kategorier',
@@ -1580,5 +1443,4 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:ConfigEditor+' => 'Configuration File editor~~',
 	'Menu:Integrations' => 'Integrations~~',
 	'Menu:Integrations+' => '~~',
-
 ]);

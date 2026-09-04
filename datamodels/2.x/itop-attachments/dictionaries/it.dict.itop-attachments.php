@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -31,15 +30,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Attachments:Render:Icons' => 'Visualizza come icone',
 	'Attachments:Render:Table' => 'Visualizza come lista',
 	'UI:Attachments:DropYourFileHint' => 'Rilascia i file ovunque in quest\'area',
-]);
-
-//
-// Class: Attachment
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Attachment' => 'Allegato',
-	'Class:Attachment+' => '~~',
+	'Class:Attachment+' => 'File: text or image, linked to a single object. It can\'t be modified, only deleted. Attachment can\'t be created outside of its object edition.~~',
 	'Class:Attachment/Attribute:expire' => 'Scadenza',
 	'Class:Attachment/Attribute:expire+' => '~~',
 	'Class:Attachment/Attribute:temp_id' => 'ID temporaneo',
@@ -52,9 +44,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Attachment/Attribute:item_org_id+' => '~~',
 	'Class:Attachment/Attribute:contents' => 'Contenuti',
 	'Class:Attachment/Attribute:contents+' => '~~',
-]);
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Attachments:File:Thumbnail' => 'Icona',
 	'Attachments:File:Name' => 'Nome del file',
 	'Attachments:File:Date' => 'Data di caricamento',
@@ -62,33 +51,20 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Attachments:File:Size' => 'Dimensione',
 	'Attachments:File:MimeType' => 'Tipo',
 	'Attachments:File:DownloadsCount' => 'Download',
-]);
-//
-// Class: Attachment
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Attachment/Attribute:creation_date' => 'Data di creazione',
 	'Class:Attachment/Attribute:creation_date+' => '~~',
 	'Class:Attachment/Attribute:user_id' => 'ID utente',
 	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => 'ID contatto',
 	'Class:Attachment/Attribute:contact_id+' => '~~',
-]);
-
-//
-// Class: TriggerOnAttachmentDownload
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (al download di un allegato dell\'oggetto)',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger al download di un allegato di un oggetto di [una sottoclasse di] la classe data',
-	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment creation)~~',
-	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment creation~~',
+	'Class:TriggerOnAttachmentCreate' => 'Trigger (on object\'s attachment creation)~~',
+	'Class:TriggerOnAttachmentCreate+' => 'Trigger on object\'s attachment creation~~',
+	'Class:TriggerOnAttachmentDelete' => 'Trigger (on object\'s attachment deletion)~~',
+	'Class:TriggerOnAttachmentDelete+' => 'Trigger on object\'s attachment deletion~~',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email~~',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
-	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment deletion)~~',
-	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment deletion~~',
 	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email' => 'Add deleted file in email~~',
 	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email+' => 'If checked, the deleted file will be automatically attached to the email when an email action is triggered~~',
 	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',

@@ -1,18 +1,19 @@
 <?php
-
 /**
- * Spanish Localized data
+ * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
+ *
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:ConfigFileEditor' => 'Plain text editor~~',
 	'itop-config/Operation:Edit/Title' => 'Editor de Archivo de Configuración',
 	'config-edit-intro' => 'Sea muy cuidadoso cuando edite el archivo de configuración. En particular, sólo los elementos superiores (ejem.: the global configuration y modules settings) deberian ser editados.',
-	'Menu:ConfigEditor' => 'Configuración',
 	'config-apply' => 'Aplicar',
 	'config-apply-title' => 'Aplicar (Ctrl+S)',
 	'config-cancel' => 'Restablecer',

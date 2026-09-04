@@ -1,12 +1,14 @@
 <?php
-
 /**
- * Spanish Localized data
+ * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
+ *
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:UserLocal' => 'Usuario de '.ITOP_APPLICATION_SHORT,
@@ -16,11 +18,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:UserLocal/Attribute:expiration' => 'Expiración de contraseña',
 	'Class:UserLocal/Attribute:expiration+' => 'Estatus de expiración de contraseña (requiere de una extensión para que tenga efecto)',
 	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'Puede expirar',
-	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '~~',
 	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'Nunca expirar',
-	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '~~',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Expirado',
-	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '~~',
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'Contraseña de un solo uso',
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'El usuario no puede cambiar la contraseña.',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Renovación de contraseña',

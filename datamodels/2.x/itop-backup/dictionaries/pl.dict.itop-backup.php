@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -30,9 +29,9 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'bkp-table-file' => 'Plik',
 	'bkp-table-file+' => 'Tylko pliki z rozszerzeniem .zip są traktowane jako pliki kopii zapasowych',
 	'bkp-table-size' => 'Rozmiar',
-	'bkp-table-size+' => '',
+	'bkp-table-size+' => '~~',
 	'bkp-table-actions' => 'Działania',
-	'bkp-table-actions+' => '',
+	'bkp-table-actions+' => '~~',
 	'bkp-status-backups-auto' => 'Zaplanowane kopie zapasowe',
 	'bkp-status-backups-manual' => 'Ręczne kopie zapasowe',
 	'bkp-status-backups-none' => 'Nie ma jeszcze kopii zapasowej',

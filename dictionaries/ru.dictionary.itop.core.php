@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
@@ -23,22 +22,22 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Core:AttributeLinkedSet+' => 'Список объектов заданного класса, указывающих на текущий объект',
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Дубликаты в поле \'%1$s\': %2$s',
 	'Core:AttributeDashboard' => 'Дашборд',
-	'Core:AttributeDashboard+' => '',
+	'Core:AttributeDashboard+' => '~~',
 	'Core:AttributePhoneNumber' => 'Номер телефона',
-	'Core:AttributePhoneNumber+' => '',
+	'Core:AttributePhoneNumber+' => '~~',
 	'Core:AttributeObsolescenceDate' => 'Дата устаревания',
-	'Core:AttributeObsolescenceDate+' => '',
+	'Core:AttributeObsolescenceDate+' => '~~',
 	'Core:AttributeTagSet' => 'Список тегов',
-	'Core:AttributeTagSet+' => '',
+	'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'нажмите, чтобы добавить',
 	'Core:Placeholder:CannotBeResolved' => '(%1$s: не удалось вычислить)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s из %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s из дочерних классов)',
 	'Core:AttributeCaseLog' => 'Журнал',
-	'Core:AttributeCaseLog+' => '',
+	'Core:AttributeCaseLog+' => '~~',
 	'Core:AttributeMetaEnum' => 'Вычисляемый enum',
-	'Core:AttributeMetaEnum+' => '',
+	'Core:AttributeMetaEnum+' => '~~',
 	'Core:AttributeLinkedSetIndirect' => 'Массив объектов (n-n)',
 	'Core:AttributeLinkedSetIndirect+' => 'Список объектов заданного класса, связанные с текущим объектом через промежуточный класс',
 	'Core:AttributeInteger' => 'Целое',
@@ -47,7 +46,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Core:AttributeDecimal+' => 'Десятичное значение (может быть отрицательным)',
 	'Core:AttributeBoolean' => 'Логическое',
 	'Core:AttributeBoolean+' => 'Да/Нет',
-	'Core:AttributeBoolean/Value:null' => '',
+	'Core:AttributeBoolean/Value:null' => '~~',
 	'Core:AttributeBoolean/Value:yes' => 'Да',
 	'Core:AttributeBoolean/Value:no' => 'Нет',
 	'Core:AttributeArchiveFlag' => 'Архивный флаг',
@@ -55,9 +54,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Core:AttributeArchiveFlag/Value:yes+' => 'Этот объект виден только в режиме архива',
 	'Core:AttributeArchiveFlag/Value:no' => 'Нет',
 	'Core:AttributeArchiveFlag/Label' => 'Архивный',
-	'Core:AttributeArchiveFlag/Label+' => '',
+	'Core:AttributeArchiveFlag/Label+' => '~~',
 	'Core:AttributeArchiveDate/Label' => 'Дата архивирования',
-	'Core:AttributeArchiveDate/Label+' => '',
+	'Core:AttributeArchiveDate/Label+' => '~~',
 	'Core:AttributeObsolescenceFlag' => 'Устаревший флаг',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Да',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Этот объект исключен из анализа влияния и скрыт из результатов поиска',
@@ -83,11 +82,11 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Core:AttributeText' => 'Текст',
 	'Core:AttributeText+' => 'Многострочный текст',
 	'Core:AttributeHTML' => 'HTML',
-	'Core:AttributeHTML+' => '',
+	'Core:AttributeHTML+' => 'HTML string~~',
 	'Core:AttributeEmailAddress' => 'Email',
 	'Core:AttributeEmailAddress+' => 'Email адрес',
 	'Core:AttributeIPAddress' => 'IP адрес',
-	'Core:AttributeIPAddress+' => '',
+	'Core:AttributeIPAddress+' => 'IP address~~',
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Выражение языка запроса объекта (Object Query Language)',
 	'Core:AttributeEnum' => 'Enum',
@@ -132,7 +131,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Core:AttributeDeadline' => 'Крайний срок',
 	'Core:AttributeDeadline+' => 'Дата, отображаемая относительно текущего времени',
 	'Core:AttributeExternalKey' => 'Внешний ключ',
-	'Core:AttributeExternalKey+' => '',
+	'Core:AttributeExternalKey+' => 'External (or foreign) key~~',
 	'Core:AttributeHierarchicalKey' => 'Иерархический ключ',
 	'Core:AttributeHierarchicalKey+' => 'Внешний ключ к родителю',
 	'Core:AttributeExternalField' => 'Внешнее поле',
@@ -152,25 +151,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Core:FriendlyName-Label' => 'Полное название',
 	'Core:FriendlyName-Description' => 'Полное название',
 	'Core:AttributeTag' => 'Тег',
-	'Core:AttributeTag+' => '',
+	'Core:AttributeTag+' => '~~',
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
 	'Core:Context=GUI:Console' => 'Console',
 	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'core/cmdb'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: CMDBChange
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:CMDBChange' => 'Изменение CMDB',
 	'Class:CMDBChange+' => 'Отслеживание изменений CMDB',
 	'Class:CMDBChange/Attribute:date' => 'Дата',
@@ -185,72 +172,34 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'Веб-сервис REST/JSON',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'Веб-сервис SOAP',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Расширением',
-]);
-
-//
-// Class: CMDBChangeOp
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:CMDBChangeOp' => 'Операция изменения CMDB',
 	'Class:CMDBChangeOp+' => 'Отслеживание операции изменения CMDB',
 	'Class:CMDBChangeOp/Attribute:change' => 'Изменение CMDB',
-	'Class:CMDBChangeOp/Attribute:change+' => '',
+	'Class:CMDBChangeOp/Attribute:change+' => '~~',
 	'Class:CMDBChangeOp/Attribute:date' => 'Дата',
 	'Class:CMDBChangeOp/Attribute:date+' => 'Дата и время изменения',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'Пользователь',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => 'Кто произвёл изменение',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'Класс объекта',
-	'Class:CMDBChangeOp/Attribute:objclass+' => '',
+	'Class:CMDBChangeOp/Attribute:objclass+' => 'class name of the object on which the change was made~~',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'ID объекта',
-	'Class:CMDBChangeOp/Attribute:objkey+' => '',
+	'Class:CMDBChangeOp/Attribute:objkey+' => 'id of the object on which the change was made~~',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Итоговый класс',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: CMDBChangeOpCreate
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
+	'Class:CMDBChangeOp/Attribute:finalclass+' => 'type of change which was performed~~',
 	'Class:CMDBChangeOpCreate' => 'Операция создания объекта',
 	'Class:CMDBChangeOpCreate+' => 'Отслеживание создания объекта',
-]);
-
-//
-// Class: CMDBChangeOpDelete
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:CMDBChangeOpDelete' => 'Операция удаления объекта',
 	'Class:CMDBChangeOpDelete+' => 'Отслеживание удаления объекта',
-]);
-
-//
-// Class: CMDBChangeOpSetAttribute
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:CMDBChangeOpSetAttribute' => 'Изменение объекта',
 	'Class:CMDBChangeOpSetAttribute+' => 'Отслеживание изменения объекта',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Свойство',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'Код изменённого свойства',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeScalar
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'Изменение свойства',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Отслеживание изменения скалярного свойства объекта',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Предыдущее значение',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'Предыдущее значение атрибута',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Новое значение',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'Новое значение атрибута',
-]);
-// Used by CMDBChangeOp... & derived classes
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Change:ObjectCreated' => 'Объект создан.',
 	'Change:ObjectDeleted' => 'Объект удалён.',
 	'Change:ObjectModified' => 'Объект изменён.',
@@ -267,35 +216,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Change:LinkSet:Added' => 'добавлен объект %1$s.',
 	'Change:LinkSet:Removed' => 'удалён объект %1$s.',
 	'Change:LinkSet:Modified' => 'изменён объект %1$s.',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeBlob
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'Изменение данных',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'Отслеживание изменения данных',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Предыдущие данные',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'Предыдущее содержимое атрибута',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeText
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:CMDBChangeOpSetAttributeText' => 'Изменение текста',
 	'Class:CMDBChangeOpSetAttributeText+' => 'Отслеживание изменения текста',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Предыдущие данные',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'Предыдущее содержимое атрибута',
-]);
-
-//
-// Class: Event
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Event' => 'Событие',
 	'Class:Event+' => 'Внутренние событие приложения',
 	'Class:Event/Attribute:message' => 'Сообщение',
@@ -305,14 +233,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Event/Attribute:userinfo' => 'Пользователь',
 	'Class:Event/Attribute:userinfo+' => 'Пользователь, действия которого вызвали это событие',
 	'Class:Event/Attribute:finalclass' => 'Тип',
-	'Class:Event/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: EventNotification
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
+	'Class:Event/Attribute:finalclass+' => 'Name of the final class: specifies the sort of event which occurred~~',
 	'Class:EventNotification' => 'Уведомление',
 	'Class:EventNotification+' => 'Отслеживание отправленных уведомлений',
 	'Class:EventNotification/Attribute:trigger_id' => 'Триггер',
@@ -321,36 +242,24 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:EventNotification/Attribute:action_id+' => 'Выполненное действие',
 	'Class:EventNotification/Attribute:object_id' => 'ID объекта',
 	'Class:EventNotification/Attribute:object_id+' => 'Идентификатор объекта целевого класса триггера',
-]);
-
-//
-// Class: EventNotificationEmail
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
+	'Class:EventNotification/Attribute:object_class' => 'Класс объекта',
+	'Class:EventNotification/Attribute:object_class+' => 'Класс объекта (совпадает с классом триггера)',
 	'Class:EventNotificationEmail' => 'Уведомление по email',
 	'Class:EventNotificationEmail+' => 'Отслеживание уведомлений по email',
 	'Class:EventNotificationEmail/Attribute:to' => 'Кому',
-	'Class:EventNotificationEmail/Attribute:to+' => '',
+	'Class:EventNotificationEmail/Attribute:to+' => '~~',
 	'Class:EventNotificationEmail/Attribute:cc' => 'Копия',
-	'Class:EventNotificationEmail/Attribute:cc+' => '',
+	'Class:EventNotificationEmail/Attribute:cc+' => '~~',
 	'Class:EventNotificationEmail/Attribute:bcc' => 'Скрытая копия',
-	'Class:EventNotificationEmail/Attribute:bcc+' => '',
+	'Class:EventNotificationEmail/Attribute:bcc+' => '~~',
 	'Class:EventNotificationEmail/Attribute:from' => 'От',
 	'Class:EventNotificationEmail/Attribute:from+' => 'Отправитель сообщения',
 	'Class:EventNotificationEmail/Attribute:subject' => 'Тема',
-	'Class:EventNotificationEmail/Attribute:subject+' => '',
+	'Class:EventNotificationEmail/Attribute:subject+' => '~~',
 	'Class:EventNotificationEmail/Attribute:body' => 'Сообщение',
-	'Class:EventNotificationEmail/Attribute:body+' => '',
+	'Class:EventNotificationEmail/Attribute:body+' => '~~',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Вложения',
-	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-]);
-
-//
-// Class: EventIssue
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
+	'Class:EventNotificationEmail/Attribute:attachments+' => '~~',
 	'Class:EventIssue' => 'Ошибка',
 	'Class:EventIssue+' => 'Отслеживание ошибок (warning, error, др.)',
 	'Class:EventIssue/Attribute:issue' => 'Ошибка',
@@ -364,16 +273,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:EventIssue/Attribute:arguments_get' => 'Аргументы GET',
 	'Class:EventIssue/Attribute:arguments_get+' => 'Аргументы HTTP GET',
 	'Class:EventIssue/Attribute:callstack' => 'Стек вызовов',
-	'Class:EventIssue/Attribute:callstack+' => '',
+	'Class:EventIssue/Attribute:callstack+' => '~~',
 	'Class:EventIssue/Attribute:data' => 'Данные',
 	'Class:EventIssue/Attribute:data+' => 'Подробнее',
-]);
-
-//
-// Class: EventWebService
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:EventWebService' => 'События Web-сервиса',
 	'Class:EventWebService+' => 'Журнал вызова веб-сервиса',
 	'Class:EventWebService/Attribute:verb' => 'Операция',
@@ -388,9 +290,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:EventWebService/Attribute:log_error+' => 'Результаты логов ошибок',
 	'Class:EventWebService/Attribute:data' => 'Данные',
 	'Class:EventWebService/Attribute:data+' => 'Результаты данных',
-]);
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:EventRestService' => 'REST/JSON call',
 	'Class:EventRestService+' => 'Trace of a REST/JSON service call',
 	'Class:EventRestService/Attribute:operation' => 'Operation',
@@ -405,13 +304,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP response (json)',
 	'Class:EventRestService/Attribute:provider' => 'Provider',
 	'Class:EventRestService/Attribute:provider+' => 'PHP class implementing the expected operation',
-]);
-
-//
-// Class: EventLoginUsage
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:EventLoginUsage' => 'Статистика авторизаций',
 	'Class:EventLoginUsage+' => 'Connection to the application',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Логин',
@@ -420,21 +312,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:EventLoginUsage/Attribute:contact_name+' => 'Имя пользователя',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'Email пользователя',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'Email Address of the User',
-]);
-
-//
-// Class: EventNotificationNewsroom
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:EventNotificationNewsroom' => 'Новость отправлена',
-	'Class:EventNotificationNewsroom+' => '',
+	'Class:EventNotificationNewsroom+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:title' => 'Заголовок',
-	'Class:EventNotificationNewsroom/Attribute:title+' => '',
+	'Class:EventNotificationNewsroom/Attribute:title+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:icon' => 'Иконка',
-	'Class:EventNotificationNewsroom/Attribute:icon+' => '',
+	'Class:EventNotificationNewsroom/Attribute:icon+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:priority' => 'Приоритет',
-	'Class:EventNotificationNewsroom/Attribute:priority+' => '',
+	'Class:EventNotificationNewsroom/Attribute:priority+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:1' => 'Критический',
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:1+' => 'Критический',
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:2' => 'Срочный',
@@ -444,39 +329,34 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:4' => 'Стандартный',
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:4+' => 'Стандартный',
 	'Class:EventNotificationNewsroom/Attribute:url' => 'URL',
-	'Class:EventNotificationNewsroom/Attribute:url+' => '',
+	'Class:EventNotificationNewsroom/Attribute:url+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:read' => 'Прочитано',
-	'Class:EventNotificationNewsroom/Attribute:read+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:read/Value:no' => 'Нет',
 	'Class:EventNotificationNewsroom/Attribute:read/Value:no+' => 'Нет',
 	'Class:EventNotificationNewsroom/Attribute:read/Value:yes' => 'Да',
 	'Class:EventNotificationNewsroom/Attribute:read/Value:yes+' => 'Да',
 	'Class:EventNotificationNewsroom/Attribute:read_date' => 'Дата прочтения',
-	'Class:EventNotificationNewsroom/Attribute:read_date+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read_date+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Контакт',
-	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
+	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '~~',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Уведомление не отправлено',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'Произошла ошибка при сохранении уведомления',
 	'Class:Action' => 'Действие',
 	'Class:Action+' => 'Действие, определённое пользователем',
 	'Class:Action/ComplementaryName' => '%1$s: %2$s',
 	'Class:Action/Attribute:name' => 'Название',
-	'Class:Action/Attribute:name+' => '',
+	'Class:Action/Attribute:name+' => 'Any value that is meaningful to distinguish this action from the others~~',
 	'Class:Action/Attribute:description' => 'Описание',
-	'Class:Action/Attribute:description+' => '',
+	'Class:Action/Attribute:description+' => 'A longer explanation about the purpose of this action. For information only.~~',
 	'Class:Action/Attribute:status' => 'Статус',
-	'Class:Action/Attribute:status+' => '',
+	'Class:Action/Attribute:status+' => 'This status drives the action behavior~~',
 	'Class:Action/Attribute:status/Value:test' => 'Тест',
-	'Class:Action/Attribute:status/Value:test+' => '',
+	'Class:Action/Attribute:status/Value:test+' => '~~',
 	'Class:Action/Attribute:status/Value:enabled' => 'Включено',
-	'Class:Action/Attribute:status/Value:enabled+' => '',
+	'Class:Action/Attribute:status/Value:enabled+' => '~~',
 	'Class:Action/Attribute:status/Value:disabled' => 'Выключено',
-	'Class:Action/Attribute:status/Value:disabled+' => '',
+	'Class:Action/Attribute:status/Value:disabled+' => '~~',
 	'Class:Action/Attribute:trigger_list' => 'Связанные триггеры',
 	'Class:Action/Attribute:trigger_list+' => 'Триггеры, которые запускают данное действие',
 	'Class:Action/Attribute:asynchronous' => 'Асинхронно',
@@ -485,30 +365,28 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Action/Attribute:asynchronous/Value:yes' => 'Да',
 	'Class:Action/Attribute:asynchronous/Value:no' => 'Нет',
 	'Class:Action/Attribute:finalclass' => 'Тип',
-	'Class:Action/Attribute:finalclass+' => '',
+	'Class:Action/Attribute:finalclass+' => 'Name of the final class~~',
 	'Action:WarningNoTriggerLinked' => 'Внимание: с этим действием не связан ни один триггер. Оно не будет активным, пока не появится хотя бы один.',
 	'Action:last_executions_tab' => 'Последние выполнения',
 	'Action:last_executions_tab_panel_title' => 'Выполнения этого действия (%1$s)',
 	'Action:last_executions_tab_limit_days' => 'за последние %1$s дн.',
 	'Action:last_executions_tab_limit_none' => 'без ограничения',
-]);
-
-//
-// Class: ActionNotification
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ActionNotification' => 'Уведомление',
-	'Class:ActionNotification+' => '',
-]);
-
-//
-// Class: ActionEmail
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
+	'Class:ActionNotification+' => 'Notification Action (abstract)~~',
+	'Class:ActionNotification/Attribute:language' => 'Language~~',
+	'Class:ActionNotification/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:lnkActionNotificationToContact' => 'Link ActionNotification / Contact~~',
+	'Class:lnkActionNotificationToContact+' => 'Contact subscription to Notification Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Contact~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Contact who subscribed (or not) to the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'The notification that the contact received at least once, and to which he can subscribe or unsubscribe~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Trigger~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'The trigger that fired the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Subscribed~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification~~',
 	'Class:ActionEmail' => 'Уведомление по email',
-	'Class:ActionEmail+' => '',
+	'Class:ActionEmail+' => '~~',
 	'Class:ActionEmail/Attribute:status+' => 'Этот статус определяет, кто получит уведомление:
 - Тестируется: только тестовый получатель,
 - В эксплуатации: все (Кому, Копия и Скрытая копия)
@@ -530,7 +408,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ActionEmail/Attribute:to' => 'Кому',
 	'Class:ActionEmail/Attribute:to+' => 'Получатель email',
 	'Class:ActionEmail/Attribute:cc' => 'Копия',
-	'Class:ActionEmail/Attribute:cc+' => '',
+	'Class:ActionEmail/Attribute:cc+' => 'Carbon Copy: an OQL query returning objects having an email field.
+While editing, click on the magnifier to get pertinent examples.
+You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.~~',
 	'Class:ActionEmail/Attribute:bcc' => 'Скр. копия',
 	'Class:ActionEmail/Attribute:bcc+' => 'Скрытая копия',
 	'Class:ActionEmail/Attribute:subject' => 'Тема',
@@ -540,11 +420,11 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ActionEmail/Attribute:importance' => 'Важность',
 	'Class:ActionEmail/Attribute:importance+' => 'Флаг важности',
 	'Class:ActionEmail/Attribute:importance/Value:low' => 'Низкая',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '~~',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'Нормальная',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '~~',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'Высокая',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '~~',
 	'Class:ActionEmail/Attribute:language' => 'Язык',
 	'Class:ActionEmail/Attribute:language+' => 'Язык, используемый для плейсхолдеров ($xxx$) в тексте сообщения (статус, важность, приоритет и т. д.)',
 	'Class:ActionEmail/Attribute:html_template' => 'Шаблон HTML',
@@ -561,18 +441,11 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'ActionEmail:preview_warning' => 'Реальное письмо может выглядеть иначе в почтовом клиенте, чем в этом предпросмотре в браузере.',
 	'ActionEmail:preview_more_info' => 'Подробнее о поддержке CSS различными почтовыми клиентами см. %1$s',
 	'ActionEmail:content_placeholder_missing' => 'Плейсхолдер "%1$s" не найден в HTML-шаблоне. Содержимое поля "%2$s" не будет включено в сформированные письма.',
-]);
-
-//
-// Class: ActionNewsroom
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'ActionNewsroom:trigger' => 'Триггер',
 	'ActionNewsroom:content' => 'Сообщение',
 	'ActionNewsroom:settings' => 'Настройки',
 	'Class:ActionNewsroom' => 'Уведомление через ленту новостей',
-	'Class:ActionNewsroom+' => '',
+	'Class:ActionNewsroom+' => '~~',
 	'Class:ActionNewsroom/Attribute:title' => 'Заголовок',
 	'Class:ActionNewsroom/Attribute:title+' => 'Заголовок новости. Может содержать плейсхолдеры вида $this->attribute_code$',
 	'Class:ActionNewsroom/Attribute:message' => 'Сообщение',
@@ -602,13 +475,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ActionNewsroom/Attribute:recipients+' => 'OQL-запрос, возвращающий объекты класса Контакт',
 	'Class:ActionNewsroom/Attribute:url' => 'URL',
 	'Class:ActionNewsroom/Attribute:url+' => 'По умолчанию указывает на объект, вызвавший уведомление. Но можно задать и произвольный URL.',
-]);
-
-//
-// Class: Trigger
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Trigger' => 'Триггер',
 	'Class:Trigger+' => 'Пользовательский обработчик событий',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
@@ -617,7 +483,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Trigger/Attribute:action_list' => 'Действия триггера',
 	'Class:Trigger/Attribute:action_list+' => 'Действия, выполняемые при срабатывании триггера',
 	'Class:Trigger/Attribute:finalclass' => 'Тип',
-	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Trigger/Attribute:context' => 'Контекст',
 	'Class:Trigger/Attribute:context+' => 'Контекст, в котором будет срабатывать триггер',
 	'Class:Trigger/Attribute:complement' => 'Дополнительная информация',
@@ -627,13 +493,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Разрешить полную отписку',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Требовать хотя бы один канал (новости или email)',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Запретить отписку',
-]);
-
-//
-// Class: TriggerOnObject
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:TriggerOnObject' => 'Триггер на класс объекта',
 	'Class:TriggerOnObject+' => 'Триггер на события объектов данного класса',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Целевой класс',
@@ -642,141 +501,58 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:TriggerOnObject/Attribute:filter+' => 'Позволяет ограничить список объектов, для которых будет срабатывать триггер',
 	'TriggerOnObject:WrongFilterQuery' => 'Направильный запрос фильтра: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Запрос фильтра должен возвращать объекты класса "%1$s"',
-]);
-
-//
-// Class: TriggerOnPortalUpdate
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:TriggerOnPortalUpdate' => 'Триггер на обновление из портала',
 	'Class:TriggerOnPortalUpdate+' => 'Триггер на обновление объекта пользователем портала',
-]);
-
-//
-// Class: TriggerOnStateChange
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:TriggerOnStateChange' => 'Триггер на изменение статуса',
 	'Class:TriggerOnStateChange+' => 'Триггер на изменение статуса объекта',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Статус',
 	'Class:TriggerOnStateChange/Attribute:state+' => 'Код статуса объекта, например \'resolved\'',
-]);
-
-//
-// Class: TriggerOnStateEnter
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:TriggerOnStateEnter' => 'Триггер на вход в статус',
 	'Class:TriggerOnStateEnter+' => 'Триггер на вход объекта в статус',
-]);
-
-//
-// Class: TriggerOnStateLeave
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:TriggerOnStateLeave' => 'Триггер на выход из статуса',
 	'Class:TriggerOnStateLeave+' => 'Триггер на выход объекта из статуса',
-]);
-
-//
-// Class: TriggerOnObjectCreate
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:TriggerOnObjectCreate' => 'Триггер на создание объекта',
 	'Class:TriggerOnObjectCreate+' => 'Триггер на создание объекта данного или дочернего класса',
-]);
-
-//
-// Class: TriggerOnObjectDelete
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:TriggerOnObjectDelete' => 'Триггер на удаление объекта',
 	'Class:TriggerOnObjectDelete+' => 'Триггер на удаление объекта данного или дочернего класса',
-]);
-
-//
-// Class: TriggerOnObjectUpdate
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:TriggerOnObjectUpdate' => 'Триггер на обновление объекта',
 	'Class:TriggerOnObjectUpdate+' => 'Триггер на обновление объекта данного или дочернего класса',
 	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'Этот фильтр вычисляется после обновления объекта в базе данных. Он ограничивает набор объектов, которые могут запускать действия',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Отслеживаемые поля',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => 'Поля объекта, при обновлении которых сработает триггер',
-]);
-
-//
-// Class: TriggerOnObjectMention
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:TriggerOnObjectMention' => 'Триггер (на упоминание объекта)',
 	'Class:TriggerOnObjectMention+' => 'Триггер на упоминание (@xxx) объекта заданного класса (или его дочернего класса) в поле журнала',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Фильтр упоминаемых объектов',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Ограничивает список упоминаемых объектов, которые будут активировать триггер. Если пусто, триггер сработает на упоминание любого объекта (любого класса).',
-]);
-
-//
-// Class: TriggerOnAttributeBlobDownload
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Триггер (на скачивание документа объекта)',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Триггер на скачивание файла из поля-документа объекта заданного класса (или его дочернего класса)',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Целевые поля',
-	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
-]);
-
-//
-// Class: TriggerOnThresholdReached
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
 	'Class:TriggerOnThresholdReached' => 'Триггер на пороговое значение',
 	'Class:TriggerOnThresholdReached+' => 'Триггер на достижение секундомером порогового значения (TTO, TTR)',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Секундомер',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => 'По умолчанию для Инцидентов и Запросов доступны \'ttr\' и \'tto\'',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Порог',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => 'Пороговое значние секундомера в %, по умолчанию \'75\' и \'100\'',
-]);
-
-//
-// Class: lnkTriggerAction
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkTriggerAction' => 'Связь Триггер/Действие',
 	'Class:lnkTriggerAction+' => 'Связь между триггером и действиями',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Действие',
 	'Class:lnkTriggerAction/Attribute:action_id+' => 'Выполняемое действие',
 	'Class:lnkTriggerAction/Attribute:action_name' => 'Действие',
-	'Class:lnkTriggerAction/Attribute:action_name+' => '',
+	'Class:lnkTriggerAction/Attribute:action_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_id' => 'Триггер',
-	'Class:lnkTriggerAction/Attribute:trigger_id+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_id+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_name' => 'Триггер',
-	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:order' => 'Порядок',
 	'Class:lnkTriggerAction/Attribute:order+' => 'Порядок выполнения действий',
-]);
-
-//
-// Synchro Data Source
-//
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:SynchroDataSource' => 'Источник синхронизации данных',
 	'Class:SynchroDataSource/Attribute:name' => 'Название',
-	'Class:SynchroDataSource/Attribute:name+' => '',
+	'Class:SynchroDataSource/Attribute:name+' => '~~',
 	'Class:SynchroDataSource/Attribute:description' => 'Описание',
 	'Class:SynchroDataSource/Attribute:status' => 'Статус',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Целевой класс',
-	'Class:SynchroDataSource/Attribute:scope_class+' => 'Источник синхронизации данных может заполнять только один класс '.ITOP_APPLICATION_SHORT.'',
+	'Class:SynchroDataSource/Attribute:scope_class+' => 'Источник синхронизации данных может заполнять только один класс '.ITOP_APPLICATION_SHORT,
 	'Class:SynchroDataSource/Attribute:user_id' => 'Пользователь',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Контакт для уведомления',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Контакт для уведомления в случае ошибки',
@@ -786,7 +562,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Гиперссылка на объект в приложение-источнике данных. Возможные шаблоны: $this->attribute$ и $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Политика сопоставления',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Использовать атрибуты": объект '.ITOP_APPLICATION_SHORT.' сопоставляется со значениями реплики по атрибутам синхронизации, отмеченным для сопоставления.
-"Использовать primary_key": колонка primary_key реплики должна содержать идентификатор объекта '.ITOP_APPLICATION_SHORT.'',
+"Использовать primary_key": колонка primary_key реплики должна содержать идентификатор объекта '.ITOP_APPLICATION_SHORT,
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Интервал устаревания',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Объект будет считаться устаревшим, если данные о нем в таблице синхронизации не обновлялись в течение этого интервала.',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Действие при нуле',
@@ -975,40 +751,37 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:SynchroReplica/Attribute:status_last_warning' => 'Предупреждения',
 	'Class:SynchroReplica/Attribute:info_creation_date' => 'Дата создания',
 	'Class:SynchroReplica/Attribute:info_last_modified' => 'Дата последнего изменения',
-	'Class:SynchroReplica/Action:delete+'                               => 'удалить реплику',
-	'Class:SynchroReplica/Action:unlink'                                => 'Отвязать',
-	'Class:SynchroReplica/Action:unlink+'                               => 'Отвязать реплику от целевого объекта',
-	'Class:SynchroReplica/Action:unlinksynchro'                         => 'Отвязать и синхронизировать',
-	'Class:SynchroReplica/Action:unlinksynchro+'                        => 'Отвязать реплику от целевого объекта и выполнить синхронизацию по этой реплике',
-	'Class:SynchroReplica/Action:synchro'                               => 'Синхронизировать',
-	'Class:SynchroReplica/Action:synchro+'                              => 'Выполнить синхронизацию по этой реплике',
-	'Class:SynchroReplica/Action:allowdelete'                               => 'Разрешить удаление объекта, связанного с этой репликой',
-	'Class:SynchroReplica/Action:allowdelete+'                              => 'Объект, связанный с удалённой репликой, будет удалён',
-	'Class:SynchroReplica/Action:denydelete'                               => 'Запретить удаление объекта, связанного с этой репликой',
-	'Class:SynchroReplica/Action:denydelete+'                              =>  'Объект, связанный с удалённой репликой, не будет удалён',
-
-	'Class:SynchroReplica/Action:unlink_all'                                => 'Отвязать объекты реплик синхронизации',
-	'Class:SynchroReplica/Action:unlink_all+'                               => 'Отвязать реплику от целевого объекта',
-	'Class:SynchroReplica/Action:unlinksynchro_all'                         => 'Отвязать и синхронизировать объекты реплик синхронизации',
-	'Class:SynchroReplica/Action:unlinksynchro_all+'                        => 'Отвязать реплику от целевого объекта и выполнить синхронизацию по этой реплике',
-	'Class:SynchroReplica/Action:synchro_all'                               => 'Синхронизировать объекты реплик синхронизации',
-	'Class:SynchroReplica/Action:synchro_all+'                              => 'Выполнить синхронизацию по этой реплике',
-	'Class:SynchroReplica/Action:allowdelete_all'                               => 'Разрешить удаление объектов, связанных с репликами синхронизации',
-	'Class:SynchroReplica/Action:allowdelete_all+'                              => 'Объект, связанный с удалённой репликой, будет удалён',
-	'Class:SynchroReplica/Action:denydelete_all'                               => 'Запретить удаление объектов, связанных с репликами синхронизации',
-	'Class:SynchroReplica/Action:denydelete_all+'                              =>  'Объект, связанный с удалённой репликой, не будет удалён',
-
+	'Class:SynchroReplica/Action:delete+' => 'удалить реплику',
+	'Class:SynchroReplica/Action:unlink' => 'Отвязать',
+	'Class:SynchroReplica/Action:unlink+' => 'Отвязать реплику от целевого объекта',
+	'Class:SynchroReplica/Action:unlinksynchro' => 'Отвязать и синхронизировать',
+	'Class:SynchroReplica/Action:unlinksynchro+' => 'Отвязать реплику от целевого объекта и выполнить синхронизацию по этой реплике',
+	'Class:SynchroReplica/Action:synchro' => 'Синхронизировать',
+	'Class:SynchroReplica/Action:synchro+' => 'Выполнить синхронизацию по этой реплике',
+	'Class:SynchroReplica/Action:allowdelete' => 'Разрешить удаление объекта, связанного с этой репликой',
+	'Class:SynchroReplica/Action:allowdelete+' => 'Объект, связанный с удалённой репликой, будет удалён',
+	'Class:SynchroReplica/Action:denydelete' => 'Запретить удаление объекта, связанного с этой репликой',
+	'Class:SynchroReplica/Action:denydelete+' => 'Объект, связанный с удалённой репликой, не будет удалён',
+	'Class:SynchroReplica/Action:unlink_all' => 'Отвязать объекты реплик синхронизации',
+	'Class:SynchroReplica/Action:unlink_all+' => 'Отвязать реплику от целевого объекта',
+	'Class:SynchroReplica/Action:unlinksynchro_all' => 'Отвязать и синхронизировать объекты реплик синхронизации',
+	'Class:SynchroReplica/Action:unlinksynchro_all+' => 'Отвязать реплику от целевого объекта и выполнить синхронизацию по этой реплике',
+	'Class:SynchroReplica/Action:synchro_all' => 'Синхронизировать объекты реплик синхронизации',
+	'Class:SynchroReplica/Action:synchro_all+' => 'Выполнить синхронизацию по этой реплике',
+	'Class:SynchroReplica/Action:allowdelete_all' => 'Разрешить удаление объектов, связанных с репликами синхронизации',
+	'Class:SynchroReplica/Action:allowdelete_all+' => 'Объект, связанный с удалённой репликой, будет удалён',
+	'Class:SynchroReplica/Action:denydelete_all' => 'Запретить удаление объектов, связанных с репликами синхронизации',
+	'Class:SynchroReplica/Action:denydelete_all+' => 'Объект, связанный с удалённой репликой, не будет удалён',
 	'UI:UnlinkAllTabTitle' => 'Отвязать объекты реплик синхронизации',
 	'UI:UnlinkAllPageTitle' => 'Отвязать объекты реплик синхронизации',
-	'UI:UnlinkSynchroAllTabTitle'       => 'Отвязать и синхронизировать объекты реплик синхронизации',
+	'UI:UnlinkSynchroAllTabTitle' => 'Отвязать и синхронизировать объекты реплик синхронизации',
 	'UI:UnlinkSynchroAllPageTitle' => ' Отвязать и синхронизировать объекты реплик синхронизации',
 	'UI:SynchroAllTabTitle' => 'Синхронизировать объекты реплик синхронизации',
-	'UI:SynchroAllPageTitle'       => 'Синхронизировать объекты реплик синхронизации',
+	'UI:SynchroAllPageTitle' => 'Синхронизировать объекты реплик синхронизации',
 	'UI:AllowDeleteAllTabTitle' => 'Разрешить удаление объектов, связанных с репликами синхронизации',
-	'UI:AllowDeleteAllPageTitle'             => 'Разрешить удаление объектов, связанных с репликами синхронизации',
-	'UI:DenyDeleteAllTabTitle'              => 'Запретить удаление объектов, связанных с репликами синхронизации',
-	'UI:DenyDeleteAllPageTitle'                   => 'Запретить удаление объектов, связанных с репликами синхронизации',
-
+	'UI:AllowDeleteAllPageTitle' => 'Разрешить удаление объектов, связанных с репликами синхронизации',
+	'UI:DenyDeleteAllTabTitle' => 'Запретить удаление объектов, связанных с репликами синхронизации',
+	'UI:DenyDeleteAllPageTitle' => 'Запретить удаление объектов, связанных с репликами синхронизации',
 	'Class:appUserPreferences' => 'Предпочтения пользователя',
 	'Class:appUserPreferences/Attribute:userid' => 'Пользователь',
 	'Class:appUserPreferences/Attribute:preferences' => 'Предпочтения',
@@ -1090,22 +863,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Core:Validator:Mandatory' => 'Пожалуйста, заполните это поле',
 	'Core:Validator:MustBeInteger' => 'Должно быть целым числом',
 	'Core:Validator:MustSelectOne' => 'Пожалуйста, выберите значение',
-	'Menu:DataSources' => 'Синхронизация данных',
-	'Menu:DataSources+' => '',
-]);
-
-//
-// Class: TagSetFieldData
-//
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:TagSetFieldData' => '%2$s для класса %1$s',
-	'Class:TagSetFieldData+' => '',
+	'Class:TagSetFieldData+' => '~~',
 	'Class:TagSetFieldData/Attribute:code' => 'Код',
 	'Class:TagSetFieldData/Attribute:code+' => 'Внутренний код. Должен содержать не менее 3 цифробуквенных символа.',
 	'Class:TagSetFieldData/Attribute:label' => 'Метка',
 	'Class:TagSetFieldData/Attribute:label+' => 'Отображаемая метка',
 	'Class:TagSetFieldData/Attribute:description' => 'Описание',
-	'Class:TagSetFieldData/Attribute:description+' => '',
+	'Class:TagSetFieldData/Attribute:description+' => '~~',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Класс тега',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Класс объекта',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Код поля',
@@ -1119,122 +884,72 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Нельзя изменить "Attribute Code" тега',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Использование тега (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => 'Не найдено записей с этим тегом',
-]);
-
-//
-// Class: DBProperty
-//
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:DBProperty' => 'Свойство БД',
-	'Class:DBProperty+' => '',
+	'Class:DBProperty+' => '~~',
 	'Class:DBProperty/Attribute:name' => 'Название',
-	'Class:DBProperty/Attribute:name+' => '',
+	'Class:DBProperty/Attribute:name+' => '~~',
 	'Class:DBProperty/Attribute:description' => 'Описание',
-	'Class:DBProperty/Attribute:description+' => '',
+	'Class:DBProperty/Attribute:description+' => '~~',
 	'Class:DBProperty/Attribute:value' => 'Значение',
-	'Class:DBProperty/Attribute:value+' => '',
+	'Class:DBProperty/Attribute:value+' => '~~',
 	'Class:DBProperty/Attribute:change_date' => 'Дата изменения',
-	'Class:DBProperty/Attribute:change_date+' => '',
+	'Class:DBProperty/Attribute:change_date+' => '~~',
 	'Class:DBProperty/Attribute:change_comment' => 'Комментарий к изменению',
-	'Class:DBProperty/Attribute:change_comment+' => '',
-]);
-
-//
-// Class: BackgroundTask
-//
-Dict::Add('RU RU', 'Russian', 'Русский', [
+	'Class:DBProperty/Attribute:change_comment+' => '~~',
 	'Class:BackgroundTask' => 'Фоновая задача',
-	'Class:BackgroundTask+' => '',
+	'Class:BackgroundTask+' => '~~',
 	'Class:BackgroundTask/Attribute:class_name' => 'Класс',
-	'Class:BackgroundTask/Attribute:class_name+' => '',
+	'Class:BackgroundTask/Attribute:class_name+' => '~~',
 	'Class:BackgroundTask/Attribute:first_run_date' => 'Дата первого запуска',
-	'Class:BackgroundTask/Attribute:first_run_date+' => '',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:latest_run_date' => 'Дата последнего запуска',
-	'Class:BackgroundTask/Attribute:latest_run_date+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:next_run_date' => 'Дата следующего запуска',
-	'Class:BackgroundTask/Attribute:next_run_date+' => '',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:total_exec_count' => 'Всего выполнений',
-	'Class:BackgroundTask/Attribute:total_exec_count+' => '',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
 	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Длительность последнего выполнения',
-	'Class:BackgroundTask/Attribute:latest_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:min_run_duration' => 'Мин. длительность выполнения',
-	'Class:BackgroundTask/Attribute:min_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:max_run_duration' => 'Макс. длительность выполнения',
-	'Class:BackgroundTask/Attribute:max_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:average_run_duration' => 'Средняя длительность выполнения',
-	'Class:BackgroundTask/Attribute:average_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:running' => 'Выполняется',
-	'Class:BackgroundTask/Attribute:running+' => '',
+	'Class:BackgroundTask/Attribute:running+' => '~~',
 	'Class:BackgroundTask/Attribute:status' => 'Статус',
-	'Class:BackgroundTask/Attribute:status+' => '',
-]);
-
-//
-// Class: AsyncTask
-//
-Dict::Add('RU RU', 'Russian', 'Русский', [
+	'Class:BackgroundTask/Attribute:status+' => '~~',
 	'Class:AsyncTask' => 'Асинхронная задача',
-	'Class:AsyncTask+' => '',
+	'Class:AsyncTask+' => '~~',
 	'Class:AsyncTask/Attribute:created' => 'Создано',
-	'Class:AsyncTask/Attribute:created+' => '',
+	'Class:AsyncTask/Attribute:created+' => '~~',
 	'Class:AsyncTask/Attribute:started' => 'Запущено',
-	'Class:AsyncTask/Attribute:started+' => '',
+	'Class:AsyncTask/Attribute:started+' => '~~',
 	'Class:AsyncTask/Attribute:planned' => 'Запланировано',
-	'Class:AsyncTask/Attribute:planned+' => '',
+	'Class:AsyncTask/Attribute:planned+' => '~~',
 	'Class:AsyncTask/Attribute:event_id' => 'Событие',
-	'Class:AsyncTask/Attribute:event_id+' => '',
+	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Итоговый класс',
-	'Class:AsyncTask/Attribute:finalclass+' => '',
+	'Class:AsyncTask/Attribute:finalclass+' => '~~',
 	'Class:AsyncTask/Attribute:status' => 'Статус',
-	'Class:AsyncTask/Attribute:status+' => '',
+	'Class:AsyncTask/Attribute:status+' => '~~',
 	'Class:AsyncTask/Attribute:remaining_retries' => 'Осталось попыток',
-	'Class:AsyncTask/Attribute:remaining_retries+' => '',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
 	'Class:AsyncTask/Attribute:last_error_code' => 'Код последней ошибки',
-	'Class:AsyncTask/Attribute:last_error_code+' => '',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
 	'Class:AsyncTask/Attribute:last_error' => 'Последняя ошибка',
-	'Class:AsyncTask/Attribute:last_error+' => '',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Последняя попытка',
-	'Class:AsyncTask/Attribute:last_attempt+' => '',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Неверный формат конфигурации "async_task_retries[%1$s]". Ожидается массив со следующими ключами: %2$s',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Неверный формат конфигурации "async_task_retries[%1$s]": неожиданный ключ "%2$s". Допустимы только следующие ключи: %3$s',
-]);
-
-//
-// Class: AbstractResource
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:AbstractResource' => 'Ресурс',
-	'Class:AbstractResource+' => '',
-]);
-
-//
-// Class: ResourceAdminMenu
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
+	'Class:AbstractResource+' => '~~',
 	'Class:ResourceAdminMenu' => 'Меню Инструменты администратора',
-	'Class:ResourceAdminMenu+' => '',
-]);
-
-//
-// Class: ResourceRunQueriesMenu
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
+	'Class:ResourceAdminMenu+' => '~~',
 	'Class:ResourceRunQueriesMenu' => 'Меню Выполнение запросов',
-	'Class:ResourceRunQueriesMenu+' => '',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
+	'Class:ResourceRunQueriesMenu+' => '~~',
 	'Class:ResourceSystemMenu' => 'Меню Система',
-	'Class:ResourceSystemMenu+' => '',
-	'Class:EventNotification/Attribute:object_class' => 'Класс объекта',
-	'Class:EventNotification/Attribute:object_class+' => 'Класс объекта (совпадает с классом триггера)',
-	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Уведомление не отправлено',
-	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'Произошла ошибка при сохранении уведомления',
+	'Class:ResourceSystemMenu+' => '~~',
 ]);

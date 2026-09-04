@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -31,30 +30,20 @@ Soit demandez à votre administrateur système s\'il reste de la place disque di
 	'Attachments:Render:Icons' => 'Affichage en icônes',
 	'Attachments:Render:Table' => 'Affichage en liste',
 	'UI:Attachments:DropYourFileHint' => 'Déposez vos fichiers dans cet espace',
-]);
-
-//
-// Class: Attachment
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Attachment' => 'Pièce jointe',
 	'Class:Attachment+' => 'Fichier : texte ou image, associé à un et un seul object, supprimable mais non modifiable, non créable en dehors d\'un objet',
 	'Class:Attachment/Attribute:expire' => 'Expire',
-	'Class:Attachment/Attribute:expire+' => '',
+	'Class:Attachment/Attribute:expire+' => '~~',
 	'Class:Attachment/Attribute:temp_id' => 'Id Temporaire',
-	'Class:Attachment/Attribute:temp_id+' => '',
+	'Class:Attachment/Attribute:temp_id+' => '~~',
 	'Class:Attachment/Attribute:item_class' => 'Classe d\'Item',
-	'Class:Attachment/Attribute:item_class+' => '',
+	'Class:Attachment/Attribute:item_class+' => '~~',
 	'Class:Attachment/Attribute:item_id' => 'Item',
-	'Class:Attachment/Attribute:item_id+' => '',
+	'Class:Attachment/Attribute:item_id+' => '~~',
 	'Class:Attachment/Attribute:item_org_id' => 'Organisation de l\'Item',
-	'Class:Attachment/Attribute:item_org_id+' => '',
+	'Class:Attachment/Attribute:item_org_id+' => '~~',
 	'Class:Attachment/Attribute:contents' => 'Contenu',
-	'Class:Attachment/Attribute:contents+' => '',
-]);
-
-Dict::Add('FR FR', 'French', 'Français', [
+	'Class:Attachment/Attribute:contents+' => '~~',
 	'Attachments:File:Thumbnail' => 'Icône',
 	'Attachments:File:Name' => 'Nom du fichier',
 	'Attachments:File:Date' => 'Date de chargement',
@@ -62,33 +51,20 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Attachments:File:Size' => 'Taille',
 	'Attachments:File:MimeType' => 'Type',
 	'Attachments:File:DownloadsCount' => 'Téléchargements',
-]);
-//
-// Class: Attachment
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Attachment/Attribute:creation_date' => 'Date de création',
-	'Class:Attachment/Attribute:creation_date+' => '',
+	'Class:Attachment/Attribute:creation_date+' => '~~',
 	'Class:Attachment/Attribute:user_id' => 'Utilisateur',
-	'Class:Attachment/Attribute:user_id+' => '',
+	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => 'Contact',
-	'Class:Attachment/Attribute:contact_id+' => '',
-]);
-
-//
-// Class: TriggerOnAttachmentDownload
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
+	'Class:Attachment/Attribute:contact_id+' => '~~',
 	'Class:TriggerOnAttachmentDownload' => 'Déclencheur sur le téléchargement d\'une pièce jointe d\'un objet',
 	'Class:TriggerOnAttachmentDownload+' => 'Déclencheur sur le téléchargement d\'une pièce jointe depuis un objet de la classe donnée ou d\'une classe enfant.',
-	'Class:TriggerOnAttachmentCreate'                         => 'Déclencheur sur la création d\'une pièce jointe',
-	'Class:TriggerOnAttachmentCreate+'                        => 'Déclencheur sur la création d\'une pièce jointe d\'un objet',
+	'Class:TriggerOnAttachmentCreate' => 'Déclencheur sur la création d\'une pièce jointe',
+	'Class:TriggerOnAttachmentCreate+' => 'Déclencheur sur la création d\'une pièce jointe d\'un objet',
+	'Class:TriggerOnAttachmentDelete' => 'Déclencheur sur la suppression d\'une pièce jointe',
+	'Class:TriggerOnAttachmentDelete+' => 'Déclencheur sur la suppression d\'une pièce jointe d\'un objet',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Ajoute le fichier dans l\'email',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'Si coché, le fichier sera automatiquement attaché à l\'email quand l\'action email est lancée',
-	'Class:TriggerOnAttachmentDelete'                         => 'Déclencheur sur la suppression d\'une pièce jointe',
-	'Class:TriggerOnAttachmentDelete+'                        => 'Déclencheur sur la suppression d\'une pièce jointe d\'un objet',
 	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email' => 'Ajoute le fichier supprimé dans l\'email',
 	'Class:TriggerOnAttachmentDelete/Attribute:file_in_email+' => 'Si coché, le fichier supprimé sera automatiquement joint à l\'email quand une action email sera lancée',
 	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Les Triggers sur les objets ne sont pas autorisés sur la classe Attachement. Veuillez utiliser les triggers spécifiques pour cette classe',

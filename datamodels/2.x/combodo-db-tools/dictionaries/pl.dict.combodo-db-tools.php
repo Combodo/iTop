@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -44,17 +43,9 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'DBAnalyzer-Fetch-Count-Error' => 'Błąd liczby wpisów w `%1$s`, %2$d pobrane wpisy / %3$d obliczone',
 	'DBAnalyzer-Integrity-FinalClass' => 'Pole `%2$s`.`%1$s` musi mieć taką samą wartość jak `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Pole `%2$s`.`%1$s` musi zawierać prawidłową klasę',
-]);
-
-// Database Info
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'DBTools:DatabaseInfo' => 'Informacje o bazie danych',
 	'DBTools:Base' => 'Baza',
 	'DBTools:Size' => 'Rozmiar',
-]);
-
-// Lost attachments
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'DBTools:LostAttachments' => 'Utracone załączniki',
 	'DBTools:LostAttachments:Disclaimer' => 'Tutaj możesz przeszukiwać bazę danych w poszukiwaniu zagubionych załączników. To NIE jest narzędzie do odzyskiwania danych, nie pobiera usuniętych danych.',
 	'DBTools:LostAttachments:Button:Analyze' => 'Analiza',

@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -14,41 +13,26 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Question fréquement posée',
 	'Class:FAQ/Attribute:title' => 'Titre',
-	'Class:FAQ/Attribute:title+' => '',
+	'Class:FAQ/Attribute:title+' => '~~',
 	'Class:FAQ/Attribute:summary' => 'Résumé',
-	'Class:FAQ/Attribute:summary+' => '',
+	'Class:FAQ/Attribute:summary+' => '~~',
 	'Class:FAQ/Attribute:description' => 'Description',
-	'Class:FAQ/Attribute:description+' => '',
+	'Class:FAQ/Attribute:description+' => '~~',
 	'Class:FAQ/Attribute:category_id' => 'Catégorie',
-	'Class:FAQ/Attribute:category_id+' => '',
+	'Class:FAQ/Attribute:category_id+' => '~~',
 	'Class:FAQ/Attribute:category_name' => 'Nom catégorie',
-	'Class:FAQ/Attribute:category_name+' => '',
+	'Class:FAQ/Attribute:category_name+' => '~~',
 	'Class:FAQ/Attribute:error_code' => 'Code d\'erreur',
-	'Class:FAQ/Attribute:error_code+' => '',
+	'Class:FAQ/Attribute:error_code+' => '~~',
 	'Class:FAQ/Attribute:key_words' => 'Mots clés',
-	'Class:FAQ/Attribute:key_words+' => '',
+	'Class:FAQ/Attribute:key_words+' => '~~',
 	'Class:FAQ/Attribute:domains' => 'Domaines',
-]);
-
-//
-// Class: FAQCategory
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
 	'Class:FAQCategory' => 'Catégorie de FAQ',
 	'Class:FAQCategory+' => 'Segmentation de la Foire Aux Questions (FAQ)',
 	'Class:FAQCategory/Attribute:name' => 'Nom',
-	'Class:FAQCategory/Attribute:name+' => '',
+	'Class:FAQCategory/Attribute:name+' => '~~',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Toutes les questions fréquemment posées liées à cette catégorie',
-	'Class:FAQCategory/Attribute:faq_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:FAQCategory/Attribute:faq_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:FAQCategory/Attribute:faq_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:FAQCategory/Attribute:faq_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:FAQCategory/Attribute:faq_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:FAQCategory/Attribute:faq_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s',
-]);
-Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:ProblemManagement' => 'Gestion des problèmes',
 	'Menu:ProblemManagement+' => 'Un processus ITIL qui identifie la cause des incidents répétitifs, documente les Erreurs connues et les FAQs, afin de réduire la charge de travail du heldesk',
 	'Menu:Problem:Shortcuts' => 'Raccourcis',

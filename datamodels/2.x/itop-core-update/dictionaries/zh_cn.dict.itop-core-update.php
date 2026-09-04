@@ -1,25 +1,13 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'iTopUpdate:UI:PageTitle' => '应用升级',
@@ -28,12 +16,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'itop-core-update:UI:UpdateCoreFiles' => '应用升级',
 	'iTopUpdate:UI:MaintenanceModeActive' => '此应用当前维护中, 不允许任何用户访问. 必须运行安装向导或恢复归档来使其处于正常模式.',
 	'itop-core-update:UI:UpdateDone' => '应用升级',
-
 	'itop-core-update/Operation:SelectUpdateFile/Title' => '应用升级',
 	'itop-core-update/Operation:ConfirmUpdate/Title' => '请确认升级应用',
 	'itop-core-update/Operation:UpdateCoreFiles/Title' => '应用正在升级',
 	'itop-core-update/Operation:UpdateDone/Title' => '应用升级完毕',
-
 	'iTopUpdate:UI:SelectUpdateFile' => '请选择要上传的升级文件',
 	'iTopUpdate:UI:CheckUpdate' => '校验升级文件',
 	'iTopUpdate:UI:ConfirmInstallFile' => '即将安装 %1$s',
@@ -52,7 +38,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'iTopUpdate:UI:UploadArchive' => '请选择要上传的软件包',
 	'iTopUpdate:UI:ServerFile' => '服务器上的软件包路径已存在',
 	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => '升级期间, 应用会变成只读状态.',
-
 	'iTopUpdate:UI:Status' => '状态',
 	'iTopUpdate:UI:Action' => '升级',
 	'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.'安装',
@@ -64,10 +49,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'iTopUpdate:UI:ItopDiskSpace' => ITOP_APPLICATION_SHORT.'的磁盘空间',
 	'iTopUpdate:UI:DBDiskSpace' => '数据库的磁盘空间',
 	'iTopUpdate:UI:FileUploadMaxSize' => '文件上传大小上限',
-
 	'iTopUpdate:UI:PostMaxSize' => 'PHP ini 的值 post_max_size: %1$s',
 	'iTopUpdate:UI:UploadMaxFileSize' => 'PHP ini 的值 upload_max_filesize: %1$s',
-
 	'iTopUpdate:UI:CanCoreUpdate:Loading' => '正在检查文件',
 	'iTopUpdate:UI:CanCoreUpdate:Error' => '文件检查失败 (%1$s)',
 	'iTopUpdate:UI:CanCoreUpdate:ErrorFileNotExist' => '文件检查失败 (%1$s 文件不存在)',
@@ -77,12 +60,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => '警告: 应用升级可能失败: %1$s',
 	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>检测到一些文件被修改</b>, 无法进行局部升级.</br>请按照<a target="_blank" href="%2$s">流程</a>一步步操作以手动升级系统. 您必须使用<a href="%1$s">安装向导</a>来升级应用.',
 	'iTopUpdate:UI:CheckInProgress' => '完整性检查中, 请稍候',
-
 	'iTopUpdate:UI:SetupLaunch' => '启动'.ITOP_APPLICATION_SHORT.'安装向导',
 	'iTopUpdate:UI:SetupLaunchConfirm' => '即将启动'.ITOP_APPLICATION_SHORT.'安装向导, 请确定?',
 	'iTopUpdate:UI:FastSetupLaunch' => '快速安装',
-
-	// Setup Messages
 	'iTopUpdate:UI:SetupMessage:Ready' => '准备开始',
 	'iTopUpdate:UI:SetupMessage:EnterMaintenance' => '正在进入维护模式',
 	'iTopUpdate:UI:SetupMessage:Backup' => '数据库备份',
@@ -93,8 +73,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => '升级数据库',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => '正在退出维护模式',
 	'iTopUpdate:UI:SetupMessage:UpdateDone' => '升级完成',
-
-	// Errors
 	'iTopUpdate:Error:MissingFunction' => '无法开始升级, 功能缺失',
 	'iTopUpdate:Error:MissingFile' => '缺少文件: %1$s',
 	'iTopUpdate:Error:CorruptedFile' => '文件 %1$s 已损坏',
@@ -107,14 +85,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'iTopUpdate:Error:InvalidToken' => '无效的 token',
 	'iTopUpdate:Error:UpdateFailed' => '升级失败',
 	'iTopUpdate:Error:FileUploadMaxSizeTooSmall' => '上传上限太小. 请调整 PHP 配置.',
-
 	'iTopUpdate:UI:RestoreArchive' => '您可以从归档文件 \'%1$s\' 还原应用程序',
 	'iTopUpdate:UI:RestoreBackup' => '您可以从 \'%1$s\' 还原数据库',
 	'iTopUpdate:UI:UpdateDone' => '升级成功',
 	'Menu:iTopUpdate' => '应用升级',
 	'Menu:iTopUpdate+' => '应用升级',
-
-	// Missing itop entries
 	'Class:ModuleInstallation/Attribute:installed' => '安装时间',
 	'Class:ModuleInstallation/Attribute:name' => '名称',
 	'Class:ModuleInstallation/Attribute:version' => '版本',

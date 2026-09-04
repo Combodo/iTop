@@ -1,50 +1,49 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
  */
 Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Ticket' => 'チケット',
-	'Class:Ticket+' => '',
+	'Class:Ticket+' => 'Abstract class~~',
 	'Class:Ticket/Attribute:ref' => '参照',
-	'Class:Ticket/Attribute:ref+' => '',
+	'Class:Ticket/Attribute:ref+' => '~~',
 	'Class:Ticket/Attribute:org_id' => '組織',
-	'Class:Ticket/Attribute:org_id+' => '',
+	'Class:Ticket/Attribute:org_id+' => '~~',
 	'Class:Ticket/Attribute:org_name' => '組織名',
-	'Class:Ticket/Attribute:org_name+' => '',
+	'Class:Ticket/Attribute:org_name+' => '~~',
 	'Class:Ticket/Attribute:caller_id' => '依頼者',
-	'Class:Ticket/Attribute:caller_id+' => '',
+	'Class:Ticket/Attribute:caller_id+' => '~~',
 	'Class:Ticket/Attribute:caller_name' => '依頼者名',
-	'Class:Ticket/Attribute:caller_name+' => '',
+	'Class:Ticket/Attribute:caller_name+' => '~~',
 	'Class:Ticket/Attribute:team_id' => 'チーム',
-	'Class:Ticket/Attribute:team_id+' => '',
+	'Class:Ticket/Attribute:team_id+' => '~~',
 	'Class:Ticket/Attribute:team_name' => 'チーム名',
-	'Class:Ticket/Attribute:team_name+' => '',
+	'Class:Ticket/Attribute:team_name+' => '~~',
 	'Class:Ticket/Attribute:agent_id' => 'エージェント',
-	'Class:Ticket/Attribute:agent_id+' => '',
+	'Class:Ticket/Attribute:agent_id+' => '~~',
 	'Class:Ticket/Attribute:agent_name' => 'エージェント名',
-	'Class:Ticket/Attribute:agent_name+' => '',
+	'Class:Ticket/Attribute:agent_name+' => '~~',
 	'Class:Ticket/Attribute:title' => '題名',
-	'Class:Ticket/Attribute:title+' => '',
+	'Class:Ticket/Attribute:title+' => '~~',
 	'Class:Ticket/Attribute:description' => '説明',
-	'Class:Ticket/Attribute:description+' => '',
+	'Class:Ticket/Attribute:description+' => '~~',
 	'Class:Ticket/Attribute:start_date' => '開始日',
-	'Class:Ticket/Attribute:start_date+' => '',
+	'Class:Ticket/Attribute:start_date+' => '~~',
 	'Class:Ticket/Attribute:end_date' => '終了日',
-	'Class:Ticket/Attribute:end_date+' => '',
+	'Class:Ticket/Attribute:end_date+' => '~~',
 	'Class:Ticket/Attribute:last_update' => '最終更新日',
-	'Class:Ticket/Attribute:last_update+' => '',
+	'Class:Ticket/Attribute:last_update+' => '~~',
 	'Class:Ticket/Attribute:close_date' => 'クローズ日',
-	'Class:Ticket/Attribute:close_date+' => '',
+	'Class:Ticket/Attribute:close_date+' => '~~',
 	'Class:Ticket/Attribute:private_log' => '個人ログ',
-	'Class:Ticket/Attribute:private_log+' => '',
+	'Class:Ticket/Attribute:private_log+' => '~~',
 	'Class:Ticket/Attribute:contacts_list' => '連絡先',
 	'Class:Ticket/Attribute:contacts_list+' => 'All the contacts linked to this ticket~~',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CI',
@@ -52,7 +51,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Ticket/Attribute:workorders_list' => '作業指示',
 	'Class:Ticket/Attribute:workorders_list+' => 'All the work orders for this ticket~~',
 	'Class:Ticket/Attribute:finalclass' => 'タイプ',
-	'Class:Ticket/Attribute:finalclass+' => '',
+	'Class:Ticket/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Ticket/Attribute:operational_status' => 'Operational status~~',
 	'Class:Ticket/Attribute:operational_status+' => 'Computed after the detailed status~~',
 	'Class:Ticket/Attribute:operational_status/Value:ongoing' => 'Ongoing~~',
@@ -62,75 +61,57 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Closed~~',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '~~',
 	'Ticket:ImpactAnalysis' => 'Impact Analysis~~',
-]);
-
-//
-// Class: lnkContactToTicket
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkContactToTicket' => 'リンク 連絡先/チケット',
-	'Class:lnkContactToTicket+' => '',
+	'Class:lnkContactToTicket+' => 'Allows linking several Contacts to notify them about the progress of Tickets, in addition to the requester and the agent.~~',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'チケット',
-	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
+	'Class:lnkContactToTicket/Attribute:ticket_id+' => '~~',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => '参照',
-	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '',
+	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_id' => '連絡先',
-	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_name' => 'Contact name~~',
 	'Class:lnkContactToTicket/Attribute:contact_name+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_email' => '連絡先電子メール',
-	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_email+' => '~~',
 	'Class:lnkContactToTicket/Attribute:role' => '役割',
-	'Class:lnkContactToTicket/Attribute:role+' => '',
+	'Class:lnkContactToTicket/Attribute:role+' => '~~',
 	'Class:lnkContactToTicket/Attribute:role_code' => 'Role~~',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Added manually~~',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Computed~~',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Do not notify~~',
-]);
-
-//
-// Class: WorkOrder
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:WorkOrder' => '作業指示',
-	'Class:WorkOrder+' => '',
+	'Class:WorkOrder+' => 'A task required for the resolution of a Ticket, assigned to a Team or even an agent.~~',
 	'Class:WorkOrder/Attribute:name' => '名前',
-	'Class:WorkOrder/Attribute:name+' => '',
+	'Class:WorkOrder/Attribute:name+' => '~~',
 	'Class:WorkOrder/Attribute:status' => '状態',
-	'Class:WorkOrder/Attribute:status+' => '',
+	'Class:WorkOrder/Attribute:status+' => '~~',
 	'Class:WorkOrder/Attribute:status/Value:open' => 'オープン',
-	'Class:WorkOrder/Attribute:status/Value:open+' => '',
+	'Class:WorkOrder/Attribute:status/Value:open+' => '~~',
 	'Class:WorkOrder/Attribute:status/Value:closed' => 'クローズ',
-	'Class:WorkOrder/Attribute:status/Value:closed+' => '',
+	'Class:WorkOrder/Attribute:status/Value:closed+' => '~~',
 	'Class:WorkOrder/Attribute:description' => '説明',
-	'Class:WorkOrder/Attribute:description+' => '',
+	'Class:WorkOrder/Attribute:description+' => '~~',
 	'Class:WorkOrder/Attribute:ticket_id' => 'チケット',
-	'Class:WorkOrder/Attribute:ticket_id+' => '',
+	'Class:WorkOrder/Attribute:ticket_id+' => '~~',
 	'Class:WorkOrder/Attribute:ticket_ref' => 'チケット参照',
-	'Class:WorkOrder/Attribute:ticket_ref+' => '',
+	'Class:WorkOrder/Attribute:ticket_ref+' => '~~',
 	'Class:WorkOrder/Attribute:team_id' => 'チーム',
-	'Class:WorkOrder/Attribute:team_id+' => '',
+	'Class:WorkOrder/Attribute:team_id+' => '~~',
 	'Class:WorkOrder/Attribute:team_name' => 'チーム名',
-	'Class:WorkOrder/Attribute:team_name+' => '',
+	'Class:WorkOrder/Attribute:team_name+' => '~~',
 	'Class:WorkOrder/Attribute:agent_id' => 'エージェント',
-	'Class:WorkOrder/Attribute:agent_id+' => '',
+	'Class:WorkOrder/Attribute:agent_id+' => '~~',
 	'Class:WorkOrder/Attribute:agent_email' => 'エージェント電子メール',
-	'Class:WorkOrder/Attribute:agent_email+' => '',
+	'Class:WorkOrder/Attribute:agent_email+' => '~~',
 	'Class:WorkOrder/Attribute:start_date' => '開始日',
-	'Class:WorkOrder/Attribute:start_date+' => '',
+	'Class:WorkOrder/Attribute:start_date+' => '~~',
 	'Class:WorkOrder/Attribute:end_date' => '終了日',
-	'Class:WorkOrder/Attribute:end_date+' => '',
+	'Class:WorkOrder/Attribute:end_date+' => '~~',
 	'Class:WorkOrder/Attribute:log' => 'ログ',
-	'Class:WorkOrder/Attribute:log+' => '',
+	'Class:WorkOrder/Attribute:log+' => '~~',
 	'Class:WorkOrder/Stimulus:ev_close' => 'クローズ',
-	'Class:WorkOrder/Stimulus:ev_close+' => '',
-]);
-
-// Fieldset translation
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:WorkOrder/Stimulus:ev_close+' => '~~',
 	'Ticket:baseinfo' => '基本情報',
 	'Ticket:date' => '日付',
 	'Ticket:contact' => '連絡先',
@@ -220,13 +201,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
-]);
-
-//
-// Class: Ticket
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
 ]);

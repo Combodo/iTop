@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -158,18 +157,6 @@ Operatori:<br/>
 	'Core:Context=GUI:Console' => 'Console~~',
 	'Core:Context=CRON' => 'cron~~',
 	'Core:Context=GUI:Portal' => 'Portal~~',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'core/cmdb'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: CMDBChange
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:CMDBChange' => 'Zmena',
 	'Class:CMDBChange+' => 'Changes tracking~~',
 	'Class:CMDBChange/Attribute:date' => 'Dátum',
@@ -184,13 +171,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
-]);
-
-//
-// Class: CMDBChangeOp
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:CMDBChangeOp' => 'Vykonanie Zmeny',
 	'Class:CMDBChangeOp+' => 'Change made by one person, at a single time, on a single object~~',
 	'Class:CMDBChangeOp/Attribute:change' => 'Zmena',
@@ -205,51 +185,20 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:CMDBChangeOp/Attribute:objkey+' => 'id of the object on which the change was made~~',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Typ',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => 'type of change which was performed~~',
-]);
-
-//
-// Class: CMDBChangeOpCreate
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:CMDBChangeOpCreate' => 'Vytvorenie objektu',
 	'Class:CMDBChangeOpCreate+' => 'Object creation tracking~~',
-]);
-
-//
-// Class: CMDBChangeOpDelete
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:CMDBChangeOpDelete' => 'Vymazanie objektu',
 	'Class:CMDBChangeOpDelete+' => 'Object deletion tracking~~',
-]);
-
-//
-// Class: CMDBChangeOpSetAttribute
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:CMDBChangeOpSetAttribute' => 'Zmena objektu',
 	'Class:CMDBChangeOpSetAttribute+' => 'Object properties change tracking~~',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Atribút',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'code of the modified property~~',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeScalar
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'Zmena vlastnosti',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Object scalar properties change tracking~~',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Predchádzajúca hodnota',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'previous value of the attribute~~',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Nová hodnota',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'new value of the attribute~~',
-]);
-// Used by CMDBChangeOp... & derived classes
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Change:ObjectCreated' => 'Objekt vytvorený',
 	'Change:ObjectDeleted' => 'Objekt odstránený',
 	'Change:ObjectModified' => 'Objekt upravený',
@@ -266,35 +215,14 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Change:LinkSet:Added' => 'Pridané %1$s',
 	'Change:LinkSet:Removed' => 'Odstránené %1$s',
 	'Change:LinkSet:Modified' => 'Upravené %1$s',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeBlob
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'Zmena údajov',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'data change tracking~~',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Predchádzajúce údaje',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'previous contents of the attribute~~',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeText
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:CMDBChangeOpSetAttributeText' => 'Zmena textu',
 	'Class:CMDBChangeOpSetAttributeText+' => 'text change tracking~~',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Predchádzajúce dáta',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'previous contents of the attribute~~',
-]);
-
-//
-// Class: Event
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Event' => 'Logovacia Udalosť',
 	'Class:Event+' => 'An application internal event~~',
 	'Class:Event/Attribute:message' => 'Správa',
@@ -305,13 +233,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Event/Attribute:userinfo+' => 'identification of the user that was doing the action that triggered this event~~',
 	'Class:Event/Attribute:finalclass' => 'Typ',
 	'Class:Event/Attribute:finalclass+' => 'Name of the final class: specifies the sort of event which occurred~~',
-]);
-
-//
-// Class: EventNotification
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:EventNotification' => 'Notifikačná Udalosť',
 	'Class:EventNotification+' => 'Trace of a notification that has been sent~~',
 	'Class:EventNotification/Attribute:trigger_id' => 'Spúštač',
@@ -319,14 +240,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:EventNotification/Attribute:action_id' => 'Akcia',
 	'Class:EventNotification/Attribute:action_id+' => '~~',
 	'Class:EventNotification/Attribute:object_id' => 'ID objektu',
-	'Class:EventNotification/Attribute:object_id+' => '',
-]);
-
-//
-// Class: EventNotificationEmail
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'Class:EventNotification/Attribute:object_id+' => 'object id (class defined by the trigger ?)~~',
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'Udalosť emitovania emailu',
 	'Class:EventNotificationEmail+' => 'Trace of an email that has been sent~~',
 	'Class:EventNotificationEmail/Attribute:to' => 'Komu',
@@ -343,13 +259,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:EventNotificationEmail/Attribute:body+' => '~~',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Prílohy',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '~~',
-]);
-
-//
-// Class: EventIssue
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:EventIssue' => 'Issue event',
 	'Class:EventIssue+' => 'Trace of an issue (warning, error, etc.)~~',
 	'Class:EventIssue/Attribute:issue' => 'Issue',
@@ -366,13 +275,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:EventIssue/Attribute:callstack+' => '~~',
 	'Class:EventIssue/Attribute:data' => 'Dáta',
 	'Class:EventIssue/Attribute:data+' => 'More information~~',
-]);
-
-//
-// Class: EventWebService
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:EventWebService' => 'Udalosť Webovej služby',
 	'Class:EventWebService+' => 'Trace of a web service call~~',
 	'Class:EventWebService/Attribute:verb' => 'Slovný',
@@ -387,9 +289,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:EventWebService/Attribute:log_error+' => 'Result error log~~',
 	'Class:EventWebService/Attribute:data' => 'Dáta',
 	'Class:EventWebService/Attribute:data+' => 'Result data~~',
-]);
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:EventRestService' => 'REST/JSON call~~',
 	'Class:EventRestService+' => 'Trace of a REST/JSON service call~~',
 	'Class:EventRestService/Attribute:operation' => 'Operation~~',
@@ -404,13 +303,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP response (json)~~',
 	'Class:EventRestService/Attribute:provider' => 'Provider~~',
 	'Class:EventRestService/Attribute:provider+' => 'PHP class implementing the expected operation~~',
-]);
-
-//
-// Class: EventLoginUsage
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:EventLoginUsage' => 'Využívanosť prihlasovacieho mena',
 	'Class:EventLoginUsage+' => 'Connection to the application~~',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Prihlasovacie meno',
@@ -419,13 +311,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:EventLoginUsage/Attribute:contact_name+' => '~~',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'Užívateľský email',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'Email Address of the User~~',
-]);
-
-//
-// Class: EventNotificationNewsroom
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:EventNotificationNewsroom' => 'News sent~~',
 	'Class:EventNotificationNewsroom+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:title' => 'Title~~',
@@ -454,20 +339,15 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:EventNotificationNewsroom/Attribute:read_date+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contact~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '~~',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Class:Action' => 'Vlastná akcia',
 	'Class:Action+' => 'User defined action~~',
 	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
 	'Class:Action/Attribute:name' => 'Názov',
-	'Class:Action/Attribute:name+' => '~~',
+	'Class:Action/Attribute:name+' => 'Any value that is meaningful to distinguish this action from the others~~',
 	'Class:Action/Attribute:description' => 'Popis',
-	'Class:Action/Attribute:description+' => '~~',
+	'Class:Action/Attribute:description+' => 'A longer explanation about the purpose of this action. For information only.~~',
 	'Class:Action/Attribute:status' => 'Stav',
 	'Class:Action/Attribute:status+' => 'This status drives the action behavior~~',
 	'Class:Action/Attribute:status/Value:test' => 'Test',
@@ -490,22 +370,20 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Action:last_executions_tab_panel_title' => 'Executions of this action (%1$s)~~',
 	'Action:last_executions_tab_limit_days' => 'past %1$s days~~',
 	'Action:last_executions_tab_limit_none' => 'no limit~~',
-]);
-
-//
-// Class: ActionNotification
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ActionNotification' => 'Upozornenie',
 	'Class:ActionNotification+' => 'Notification Action (abstract)~~',
-]);
-
-//
-// Class: ActionEmail
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'Class:ActionNotification/Attribute:language' => 'Language~~',
+	'Class:ActionNotification/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:lnkActionNotificationToContact' => 'Link ActionNotification / Contact~~',
+	'Class:lnkActionNotificationToContact+' => 'Contact subscription to Notification Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Contact~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Contact who subscribed (or not) to the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'The notification that the contact received at least once, and to which he can subscribe or unsubscribe~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Trigger~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'The trigger that fired the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Subscribed~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification~~',
 	'Class:ActionEmail' => 'Emailová notifikácia',
 	'Class:ActionEmail+' => '~~',
 	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: 
@@ -574,13 +452,6 @@ While editing, click on the magnifier to get pertinent examples~~',
 	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
 	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
 	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
-]);
-
-//
-// Class: ActionNewsroom
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'ActionNewsroom:trigger' => 'Trigger~~',
 	'ActionNewsroom:content' => 'Message~~',
 	'ActionNewsroom:settings' => 'Settings~~',
@@ -615,13 +486,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ActionNewsroom/Attribute:recipients+' => 'An OQL query returning Contact objects~~',
 	'Class:ActionNewsroom/Attribute:url' => 'URL~~',
 	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.~~',
-]);
-
-//
-// Class: Trigger
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Trigger' => 'Spúštač',
 	'Class:Trigger+' => 'Custom event handler~~',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
@@ -640,13 +504,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow complete unsubscription~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel (News or Email)~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Deny unsubscription~~',
-]);
-
-//
-// Class: TriggerOnObject
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:TriggerOnObject' => 'Spúštač (pre danú triedu)',
 	'Class:TriggerOnObject+' => 'Trigger on a given class of objects~~',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Cieľová trieda',
@@ -655,116 +512,39 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
 	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class "%1$s"~~',
-]);
-
-//
-// Class: TriggerOnPortalUpdate
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:TriggerOnPortalUpdate' => 'Spúštač (pri aktualizácií z portálu)',
 	'Class:TriggerOnPortalUpdate+' => 'Trigger on an end-user\'s update from the portal~',
-]);
-
-//
-// Class: TriggerOnStateChange
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:TriggerOnStateChange' => 'Spúšťač (pri zmene stavu)',
 	'Class:TriggerOnStateChange+' => 'Trigger on object state change~~',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Stav',
 	'Class:TriggerOnStateChange/Attribute:state+' => '~~',
-]);
-
-//
-// Class: TriggerOnStateEnter
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:TriggerOnStateEnter' => 'Spúštač (pri vstupe do stavu)',
 	'Class:TriggerOnStateEnter+' => 'Trigger on object state change - entering~~',
-]);
-
-//
-// Class: TriggerOnStateLeave
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:TriggerOnStateLeave' => 'Spúštač (pri opustení stavu)',
 	'Class:TriggerOnStateLeave+' => 'Trigger on object state change - leaving~~',
-]);
-
-//
-// Class: TriggerOnObjectCreate
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:TriggerOnObjectCreate' => 'Spúštač (pri vytvoreni objektu)',
 	'Class:TriggerOnObjectCreate+' => 'Trigger on object creation of [a child class of] the given class~~',
-]);
-
-//
-// Class: TriggerOnObjectDelete
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)~~',
 	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
-]);
-
-//
-// Class: TriggerOnObjectUpdate
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'This filter is computed after the object update in database. It restricts the objects which can trigger the actions~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
-]);
-
-//
-// Class: TriggerOnObjectMention
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
 	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
-]);
-
-//
-// Class: TriggerOnAttributeBlobDownload
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
-]);
-
-//
-// Class: TriggerOnThresholdReached
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:TriggerOnThresholdReached' => 'Spúštač (pri prekročení hranice)',
 	'Class:TriggerOnThresholdReached+' => 'Trigger on Stop-Watch threshold reached~~',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stopky',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '~~',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Hranica',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '~~',
-]);
-
-//
-// Class: lnkTriggerAction
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkTriggerAction' => 'Akcia/Spúštač',
 	'Class:lnkTriggerAction+' => 'Link between a trigger and an action~~',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Akcia',
@@ -777,12 +557,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkTriggerAction/Attribute:trigger_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:order' => 'Príkaz',
 	'Class:lnkTriggerAction/Attribute:order+' => 'Actions execution order~~',
-]);
-
-//
-// Synchro Data Source
-//
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:SynchroDataSource' => 'Synchronizovaný zdroj dát',
 	'Class:SynchroDataSource/Attribute:name' => 'Názov',
 	'Class:SynchroDataSource/Attribute:name+' => '~~',
@@ -993,39 +767,37 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Class:SynchroReplica/Attribute:status_last_warning' => 'Upozornenia',
 	'Class:SynchroReplica/Attribute:info_creation_date' => 'Dátum vytvorenia',
 	'Class:SynchroReplica/Attribute:info_last_modified' => 'Dátum poslednej úpravy',
-	'Class:SynchroReplica/Action:delete+'        => 'Delete the replica but not the destination object. If the raw data corresponding to this replica is still part of the source, it will be recreated during the next synchronization import.~~',
-	'Class:SynchroReplica/Action:unlink'         => 'Unlink~~',
-	'Class:SynchroReplica/Action:unlink+'        => 'Unlink replica from destination object. It will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
-	'Class:SynchroReplica/Action:unlinksynchro'  => 'Unlink & Synchronize~~',
+	'Class:SynchroReplica/Action:delete+' => 'Delete the replica but not the destination object. If the raw data corresponding to this replica is still part of the source, it will be recreated during the next synchronization import.~~',
+	'Class:SynchroReplica/Action:unlink' => 'Unlink~~',
+	'Class:SynchroReplica/Action:unlink+' => 'Unlink replica from destination object. It will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
+	'Class:SynchroReplica/Action:unlinksynchro' => 'Unlink & Synchronize~~',
 	'Class:SynchroReplica/Action:unlinksynchro+' => 'Force immediate resynchronization of the replica. This can change the destination id. Required after a Data Synchro change on attribute reconciliation flag or if reconciliation attributes were not locked, and you wish to retain the iTop objects modified since then, while recovering or recreating objects aligned with the source.~~',
-	'Class:SynchroReplica/Action:synchro'       => 'Synchronize~~',
-	'Class:SynchroReplica/Action:synchro+'      => 'Force immediate synchronization of the replica. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
-	'Class:SynchroReplica/Action:allowdelete'   => 'Allow deletion of destination~~',
-	'Class:SynchroReplica/Action:allowdelete+'  => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:denydelete'    => 'Deny deletion of destination~~',
-	'Class:SynchroReplica/Action:denydelete+'   => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:unlink_all'    => 'Unlink Replicas~~',
-	'Class:SynchroReplica/Action:unlink_all+'   => 'Unlink Replicas from their destination object. They will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
+	'Class:SynchroReplica/Action:synchro' => 'Synchronize~~',
+	'Class:SynchroReplica/Action:synchro+' => 'Force immediate synchronization of the replica. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
+	'Class:SynchroReplica/Action:allowdelete' => 'Allow deletion of destination~~',
+	'Class:SynchroReplica/Action:allowdelete+' => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
+	'Class:SynchroReplica/Action:denydelete' => 'Deny deletion of destination~~',
+	'Class:SynchroReplica/Action:denydelete+' => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
+	'Class:SynchroReplica/Action:unlink_all' => 'Unlink Replicas~~',
+	'Class:SynchroReplica/Action:unlink_all+' => 'Unlink Replicas from their destination object. They will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
 	'Class:SynchroReplica/Action:unlinksynchro_all' => 'Unlink & Synchronize Replicas~~',
 	'Class:SynchroReplica/Action:unlinksynchro_all+' => 'Force immediate resynchronization of the replicas. This can change their destination id. Required after a Data Synchro change on attribute reconciliation flag or if reconciliation attributes were not locked, and you wish to retain the iTop objects modified since then, while recovering or recreating objects aligned with the source.~~',
-	'Class:SynchroReplica/Action:synchro_all'      => 'Synchronize Replicas~~',
-	'Class:SynchroReplica/Action:synchro_all+'     => 'Force immediate synchronization of the replicas. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
-	'Class:SynchroReplica/Action:allowdelete_all'  => 'Allow deletion of destination objects~~',
+	'Class:SynchroReplica/Action:synchro_all' => 'Synchronize Replicas~~',
+	'Class:SynchroReplica/Action:synchro_all+' => 'Force immediate synchronization of the replicas. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
+	'Class:SynchroReplica/Action:allowdelete_all' => 'Allow deletion of destination objects~~',
 	'Class:SynchroReplica/Action:allowdelete_all+' => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:denydelete_all'   => 'Deny deletion of destination objects~~',
-	'Class:SynchroReplica/Action:denydelete_all+'  => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
-
-	'UI:UnlinkAllTabTitle'         => 'Unlink Replicas~~',
-	'UI:UnlinkAllPageTitle'        => 'Unlink Replicas from their destination object~~',
-	'UI:UnlinkSynchroAllTabTitle'  => 'Unlink & Synchronize Replicas~~',
+	'Class:SynchroReplica/Action:denydelete_all' => 'Deny deletion of destination objects~~',
+	'Class:SynchroReplica/Action:denydelete_all+' => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
+	'UI:UnlinkAllTabTitle' => 'Unlink Replicas~~',
+	'UI:UnlinkAllPageTitle' => 'Unlink Replicas from their destination object~~',
+	'UI:UnlinkSynchroAllTabTitle' => 'Unlink & Synchronize Replicas~~',
 	'UI:UnlinkSynchroAllPageTitle' => 'Unlink Replicas from their destination object & Synchronize them again~~',
-	'UI:SynchroAllTabTitle'        => 'Synchronize Replicas~~',
-	'UI:SynchroAllPageTitle'       => 'Synchronize Replicas: leading to a destination object creation, mapping or an error~~',
-	'UI:AllowDeleteAllTabTitle'    => 'Allow deletion of synchronized object~~',
-	'UI:AllowDeleteAllPageTitle'   => 'Allow propagation of Replica deletion to their destination object~~',
-	'UI:DenyDeleteAllTabTitle'     => 'Deny deletion of synchronized object~~',
-	'UI:DenyDeleteAllPageTitle'    => 'Deny propagation of Replica deletion to their destination object~~',
-
+	'UI:SynchroAllTabTitle' => 'Synchronize Replicas~~',
+	'UI:SynchroAllPageTitle' => 'Synchronize Replicas: leading to a destination object creation, mapping or an error~~',
+	'UI:AllowDeleteAllTabTitle' => 'Allow deletion of synchronized object~~',
+	'UI:AllowDeleteAllPageTitle' => 'Allow propagation of Replica deletion to their destination object~~',
+	'UI:DenyDeleteAllTabTitle' => 'Deny deletion of synchronized object~~',
+	'UI:DenyDeleteAllPageTitle' => 'Deny propagation of Replica deletion to their destination object~~',
 	'Class:appUserPreferences' => 'Užívateľské preferencie',
 	'Class:appUserPreferences/Attribute:userid' => 'Užívateľ',
 	'Class:appUserPreferences/Attribute:preferences' => 'Preferencie',
@@ -1107,12 +879,6 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Core:Validator:Mandatory' => 'Please, fill this field~~',
 	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
 	'Core:Validator:MustSelectOne' => 'Please, select one~~',
-]);
-
-//
-// Class: TagSetFieldData
-//
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
 	'Class:TagSetFieldData+' => '~~',
 	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
@@ -1134,12 +900,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
 	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
-]);
-
-//
-// Class: DBProperty
-//
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DBProperty' => 'DB property~~',
 	'Class:DBProperty+' => '~~',
 	'Class:DBProperty/Attribute:name' => 'Name~~',
@@ -1152,12 +912,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DBProperty/Attribute:change_date+' => '~~',
 	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
 	'Class:DBProperty/Attribute:change_comment+' => '~~',
-]);
-
-//
-// Class: BackgroundTask
-//
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:BackgroundTask' => 'Background task~~',
 	'Class:BackgroundTask+' => '~~',
 	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
@@ -1182,12 +936,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:BackgroundTask/Attribute:running+' => '~~',
 	'Class:BackgroundTask/Attribute:status' => 'Status~~',
 	'Class:BackgroundTask/Attribute:status+' => '~~',
-]);
-
-//
-// Class: AsyncTask
-//
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:AsyncTask' => 'Async. task~~',
 	'Class:AsyncTask+' => '~~',
 	'Class:AsyncTask/Attribute:created' => 'Created~~',
@@ -1212,44 +960,12 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
-]);
-
-//
-// Class: AbstractResource
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:AbstractResource' => 'Abstract Resource~~',
 	'Class:AbstractResource+' => '~~',
-]);
-
-//
-// Class: ResourceAdminMenu
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
 	'Class:ResourceAdminMenu+' => '~~',
-]);
-
-//
-// Class: ResourceRunQueriesMenu
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '~~',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
 	'Class:ResourceSystemMenu+' => '~~',
-	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
-	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
-	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
-	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 ]);

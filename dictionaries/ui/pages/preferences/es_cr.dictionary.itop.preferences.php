@@ -1,12 +1,14 @@
 <?php
-
 /**
- * Spanish Localized data
+ * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
+ *
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Preferences:Title' => 'Preferencias',
@@ -44,5 +46,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Imagen de marcador de posición se ha actualizado correctamente.',
 	'UI:Preferences:Notifications' => 'Notificaciones',
 	'UI:Preferences:Notifications+' => 'Configure las notificaciones que desea recibir <a href="%1$s">en esta página</a>.',
-
 ]);

@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -46,25 +45,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:UserRequest:MyWorkOrders+' => 'All work orders assigned to me~~',
 	'Class:Problem:KnownProblemList' => 'Známe problémy',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: UserRequest
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'Class:UserRequest/Method:UpdateChildTicketWith:public_log' => '<i><u>Public log automatic copy from parent User Request %2$s:</u></i><br><br>~~',
+	'Class:UserRequest/Method:UpdateChildTicketWith:private_log' => '<i>Private log automatic copy from parent User Request [[UserRequest:%1$s]]:</i><br><br>~~',
 	'Class:UserRequest' => 'Požiadavka užívateľa',
-	'Class:UserRequest+' => '~~',
+	'Class:UserRequest+' => 'Ticket type that covers incidents and service requests.~~',
 	'Class:UserRequest/Attribute:status' => 'Stav',
 	'Class:UserRequest/Attribute:status+' => '~~',
 	'Class:UserRequest/Attribute:status/Value:new' => 'Nová',
@@ -148,7 +132,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:UserRequest/Attribute:servicesubcategory_name' => 'Názov subkategórie služieb',
 	'Class:UserRequest/Attribute:servicesubcategory_name+' => '~~',
 	'Class:UserRequest/Attribute:escalation_flag' => 'Eskalačný príznak',
-	'Class:UserRequest/Attribute:escalation_flag+' => '~~',
+	'Class:UserRequest/Attribute:escalation_flag+' => 'When set, the Ticket is added to the "Under escalation" menu~~',
 	'Class:UserRequest/Attribute:escalation_flag/Value:no' => 'Nie',
 	'Class:UserRequest/Attribute:escalation_flag/Value:no+' => '~~',
 	'Class:UserRequest/Attribute:escalation_flag/Value:yes' => 'Áno',
@@ -260,9 +244,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Počkať na schválenie',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '~~',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself~~',
-]);
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Portal:TitleDetailsFor_Request' => 'Detaily pre požiadavky',
 	'Portal:ButtonUpdate' => 'Aktualizácia',
 	'Portal:ButtonClose' => 'Zatvoriť',
@@ -287,9 +268,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Portal:ChooseYourFavoriteLanguage' => 'Vyberte si svoj obľúbený jazyk',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
-]);
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
 	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
 	'Organization:Overview:Tickets' => 'Tickets for this organization~~',

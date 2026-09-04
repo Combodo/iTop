@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -32,45 +31,38 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Problemi non assegnati',
 	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard per la gestione dei problemi',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard per la gestione dei problemi',
-
-]);
-//
-// Class: Problem
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Problem' => 'Problema',
-	'Class:Problem+' => '',
+	'Class:Problem+' => 'An incident becomes a Problem when it is not resolved in a timely manner or when it recurs frequently~~',
 	'Class:Problem/Attribute:status' => 'Stato',
-	'Class:Problem/Attribute:status+' => '',
+	'Class:Problem/Attribute:status+' => '~~',
 	'Class:Problem/Attribute:status/Value:new' => 'Nuovo',
-	'Class:Problem/Attribute:status/Value:new+' => '',
+	'Class:Problem/Attribute:status/Value:new+' => '~~',
 	'Class:Problem/Attribute:status/Value:assigned' => 'Assegnato',
-	'Class:Problem/Attribute:status/Value:assigned+' => '',
+	'Class:Problem/Attribute:status/Value:assigned+' => '~~',
 	'Class:Problem/Attribute:status/Value:resolved' => 'Risolto',
-	'Class:Problem/Attribute:status/Value:resolved+' => '',
+	'Class:Problem/Attribute:status/Value:resolved+' => '~~',
 	'Class:Problem/Attribute:status/Value:closed' => 'Chiuso',
-	'Class:Problem/Attribute:status/Value:closed+' => '',
+	'Class:Problem/Attribute:status/Value:closed+' => '~~',
 	'Class:Problem/Attribute:service_id' => 'Servizio',
-	'Class:Problem/Attribute:service_id+' => '',
+	'Class:Problem/Attribute:service_id+' => '~~',
 	'Class:Problem/Attribute:service_name' => 'Nome',
-	'Class:Problem/Attribute:service_name+' => '',
+	'Class:Problem/Attribute:service_name+' => '~~',
 	'Class:Problem/Attribute:servicesubcategory_id' => 'Categoria di servizio',
-	'Class:Problem/Attribute:servicesubcategory_id+' => '',
+	'Class:Problem/Attribute:servicesubcategory_id+' => '~~',
 	'Class:Problem/Attribute:servicesubcategory_name' => 'Nome',
-	'Class:Problem/Attribute:servicesubcategory_name+' => '',
+	'Class:Problem/Attribute:servicesubcategory_name+' => '~~',
 	'Class:Problem/Attribute:product' => 'Prodotto',
-	'Class:Problem/Attribute:product+' => '',
+	'Class:Problem/Attribute:product+' => '~~',
 	'Class:Problem/Attribute:impact' => 'Impatto',
-	'Class:Problem/Attribute:impact+' => '',
+	'Class:Problem/Attribute:impact+' => 'Impact is the severity of the problem, how many end users are affected~~',
 	'Class:Problem/Attribute:impact/Value:1' => 'Una persona',
-	'Class:Problem/Attribute:impact/Value:1+' => '',
+	'Class:Problem/Attribute:impact/Value:1+' => '~~',
 	'Class:Problem/Attribute:impact/Value:2' => 'Un servizio',
-	'Class:Problem/Attribute:impact/Value:2+' => '',
+	'Class:Problem/Attribute:impact/Value:2+' => '~~',
 	'Class:Problem/Attribute:impact/Value:3' => 'Un dipartimento',
-	'Class:Problem/Attribute:impact/Value:3+' => '',
+	'Class:Problem/Attribute:impact/Value:3+' => '~~',
 	'Class:Problem/Attribute:urgency' => 'Urgenza',
-	'Class:Problem/Attribute:urgency+' => '',
+	'Class:Problem/Attribute:urgency+' => 'How quickly the problem needs to be resolved~~',
 	'Class:Problem/Attribute:urgency/Value:1' => 'Bassa',
 	'Class:Problem/Attribute:urgency/Value:1+' => 'Bassa',
 	'Class:Problem/Attribute:urgency/Value:2' => 'Media',
@@ -80,23 +72,23 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Problem/Attribute:urgency/Value:4' => 'Bassa',
 	'Class:Problem/Attribute:urgency/Value:4+' => 'Bassa',
 	'Class:Problem/Attribute:priority' => 'Priorità',
-	'Class:Problem/Attribute:priority+' => '',
+	'Class:Problem/Attribute:priority+' => 'Order in which problems need to be handled~~',
 	'Class:Problem/Attribute:priority/Value:1' => 'Bassa',
-	'Class:Problem/Attribute:priority/Value:1+' => '',
+	'Class:Problem/Attribute:priority/Value:1+' => '~~',
 	'Class:Problem/Attribute:priority/Value:2' => 'Media',
-	'Class:Problem/Attribute:priority/Value:2+' => '',
+	'Class:Problem/Attribute:priority/Value:2+' => '~~',
 	'Class:Problem/Attribute:priority/Value:3' => 'Alta',
-	'Class:Problem/Attribute:priority/Value:3+' => '',
+	'Class:Problem/Attribute:priority/Value:3+' => '~~',
 	'Class:Problem/Attribute:priority/Value:4' => 'Bassa',
 	'Class:Problem/Attribute:priority/Value:4+' => 'Bassa',
 	'Class:Problem/Attribute:related_change_id' => 'Cambi Correlati',
-	'Class:Problem/Attribute:related_change_id+' => '',
+	'Class:Problem/Attribute:related_change_id+' => '~~',
 	'Class:Problem/Attribute:related_change_ref' => 'Ref',
-	'Class:Problem/Attribute:related_change_ref+' => '',
+	'Class:Problem/Attribute:related_change_ref+' => '~~',
 	'Class:Problem/Attribute:assignment_date' => 'Data di assegnazione',
-	'Class:Problem/Attribute:assignment_date+' => '',
+	'Class:Problem/Attribute:assignment_date+' => '~~',
 	'Class:Problem/Attribute:resolution_date' => 'Data di risoluzione',
-	'Class:Problem/Attribute:resolution_date+' => '',
+	'Class:Problem/Attribute:resolution_date+' => '~~',
 	'Class:Problem/Attribute:knownerrors_list' => 'Errori conosciuti',
 	'Class:Problem/Attribute:knownerrors_list+' => 'Tutti gli errori conosciuti collegati a questo problema',
 	'Class:Problem/Attribute:related_request_list' => 'Richiesta collegata',
@@ -104,11 +96,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Problem/Attribute:related_incident_list' => 'Incidenti collegati',
 	'Class:Problem/Attribute:related_incident_list+' => 'Tutti gli incidenti collegati a questo problema',
 	'Class:Problem/Stimulus:ev_assign' => 'Assegnare',
-	'Class:Problem/Stimulus:ev_assign+' => '',
+	'Class:Problem/Stimulus:ev_assign+' => '~~',
 	'Class:Problem/Stimulus:ev_reassign' => 'Riassegnare',
-	'Class:Problem/Stimulus:ev_reassign+' => '',
+	'Class:Problem/Stimulus:ev_reassign+' => '~~',
 	'Class:Problem/Stimulus:ev_resolve' => 'Risolvere',
-	'Class:Problem/Stimulus:ev_resolve+' => '',
+	'Class:Problem/Stimulus:ev_resolve+' => '~~',
 	'Class:Problem/Stimulus:ev_close' => 'Chiudere',
-	'Class:Problem/Stimulus:ev_close+' => '',
+	'Class:Problem/Stimulus:ev_close+' => '~~',
 ]);

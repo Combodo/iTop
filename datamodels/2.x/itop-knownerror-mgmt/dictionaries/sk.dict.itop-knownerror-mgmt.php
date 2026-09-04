@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -36,13 +35,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:KnownError/Attribute:domain' => 'Domain~~',
 	'Class:KnownError/Attribute:domain+' => 'Choose the technical domain related to this known error?~~',
 	'Class:KnownError/Attribute:domain/Value:Application' => 'Application~~',
-	'Class:KnownError/Attribute:domain/Value:Application+' => '',
+	'Class:KnownError/Attribute:domain/Value:Application+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Desktop' => 'Desktop~~',
-	'Class:KnownError/Attribute:domain/Value:Desktop+' => '',
+	'Class:KnownError/Attribute:domain/Value:Desktop+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Network' => 'Network~~',
-	'Class:KnownError/Attribute:domain/Value:Network+' => '',
+	'Class:KnownError/Attribute:domain/Value:Network+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Server' => 'Server~~',
-	'Class:KnownError/Attribute:domain/Value:Server+' => '',
+	'Class:KnownError/Attribute:domain/Value:Server+' => '~~',
 	'Class:KnownError/Attribute:vendor' => 'Vendor~~',
 	'Class:KnownError/Attribute:vendor+' => 'A free text field to identify the vendor of the CI(s) concerned by this known error~~',
 	'Class:KnownError/Attribute:model' => 'Model~~',
@@ -53,13 +52,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:KnownError/Attribute:ci_list+' => 'The configuration items that are potentially impacted by this known error~~',
 	'Class:KnownError/Attribute:document_list' => 'Documents~~',
 	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
-]);
-
-//
-// Class: lnkErrorToFunctionalCI
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkErrorToFunctionalCI' => 'Link KnownError / FunctionalCI~~',
 	'Class:lnkErrorToFunctionalCI+' => 'Infra related to a known error~~',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -73,13 +65,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Reason~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '~~',
-]);
-
-//
-// Class: lnkDocumentToError
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkDocumentToError' => 'Link Document / Known Error~~',
 	'Class:lnkDocumentToError+' => 'Used when a Document is pertinent for a Known Error~~',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
@@ -93,9 +78,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkDocumentToError/Attribute:error_name+' => '~~',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type~~',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '~~',
-]);
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:ProblemManagement' => 'Problem Management~~',
 	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Shortcuts~~',

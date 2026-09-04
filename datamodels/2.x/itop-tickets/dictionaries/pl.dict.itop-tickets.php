@@ -1,50 +1,49 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
  */
 Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Ticket' => 'Zgłoszenie',
-	'Class:Ticket+' => '',
+	'Class:Ticket+' => 'Abstract class~~',
 	'Class:Ticket/Attribute:ref' => 'Powiązanie',
-	'Class:Ticket/Attribute:ref+' => '',
+	'Class:Ticket/Attribute:ref+' => '~~',
 	'Class:Ticket/Attribute:org_id' => 'Organizacja',
-	'Class:Ticket/Attribute:org_id+' => '',
+	'Class:Ticket/Attribute:org_id+' => '~~',
 	'Class:Ticket/Attribute:org_name' => 'Nazwa organizacji',
-	'Class:Ticket/Attribute:org_name+' => '',
+	'Class:Ticket/Attribute:org_name+' => '~~',
 	'Class:Ticket/Attribute:caller_id' => 'Zgłaszający',
-	'Class:Ticket/Attribute:caller_id+' => '',
+	'Class:Ticket/Attribute:caller_id+' => '~~',
 	'Class:Ticket/Attribute:caller_name' => 'Nazwa zgłaszającego',
-	'Class:Ticket/Attribute:caller_name+' => '',
+	'Class:Ticket/Attribute:caller_name+' => '~~',
 	'Class:Ticket/Attribute:team_id' => 'Zespół',
-	'Class:Ticket/Attribute:team_id+' => '',
+	'Class:Ticket/Attribute:team_id+' => '~~',
 	'Class:Ticket/Attribute:team_name' => 'Nazwa zespołu',
-	'Class:Ticket/Attribute:team_name+' => '',
+	'Class:Ticket/Attribute:team_name+' => '~~',
 	'Class:Ticket/Attribute:agent_id' => 'Agent',
-	'Class:Ticket/Attribute:agent_id+' => '',
+	'Class:Ticket/Attribute:agent_id+' => '~~',
 	'Class:Ticket/Attribute:agent_name' => 'Nazwa agenta',
-	'Class:Ticket/Attribute:agent_name+' => '',
+	'Class:Ticket/Attribute:agent_name+' => '~~',
 	'Class:Ticket/Attribute:title' => 'Tytuł',
-	'Class:Ticket/Attribute:title+' => '',
+	'Class:Ticket/Attribute:title+' => '~~',
 	'Class:Ticket/Attribute:description' => 'Opis',
-	'Class:Ticket/Attribute:description+' => '',
+	'Class:Ticket/Attribute:description+' => '~~',
 	'Class:Ticket/Attribute:start_date' => 'Data rozpoczęcia',
-	'Class:Ticket/Attribute:start_date+' => '',
+	'Class:Ticket/Attribute:start_date+' => '~~',
 	'Class:Ticket/Attribute:end_date' => 'Data zakończenia',
-	'Class:Ticket/Attribute:end_date+' => '',
+	'Class:Ticket/Attribute:end_date+' => '~~',
 	'Class:Ticket/Attribute:last_update' => 'Ostatnia data',
-	'Class:Ticket/Attribute:last_update+' => '',
+	'Class:Ticket/Attribute:last_update+' => '~~',
 	'Class:Ticket/Attribute:close_date' => 'Data zamknięcia',
-	'Class:Ticket/Attribute:close_date+' => '',
+	'Class:Ticket/Attribute:close_date+' => '~~',
 	'Class:Ticket/Attribute:private_log' => 'Dziennik prywatny',
-	'Class:Ticket/Attribute:private_log+' => '',
+	'Class:Ticket/Attribute:private_log+' => '~~',
 	'Class:Ticket/Attribute:contacts_list' => 'Kontakty',
 	'Class:Ticket/Attribute:contacts_list+' => 'Wszystkie kontakty powiązane z tym zgłoszeniem',
 	'Class:Ticket/Attribute:functionalcis_list' => 'Konfiguracje',
@@ -58,79 +57,61 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Ticket/Attribute:operational_status/Value:ongoing' => 'Trwający',
 	'Class:Ticket/Attribute:operational_status/Value:ongoing+' => 'Praca w toku',
 	'Class:Ticket/Attribute:operational_status/Value:resolved' => 'Rozwiązany',
-	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '',
+	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '~~',
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Zamknięty',
-	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
+	'Class:Ticket/Attribute:operational_status/Value:closed+' => '~~',
 	'Ticket:ImpactAnalysis' => 'Analiza wpływu',
-]);
-
-//
-// Class: lnkContactToTicket
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkContactToTicket' => 'Połączenie Kontakt / Zgłoszenie',
-	'Class:lnkContactToTicket+' => '',
+	'Class:lnkContactToTicket+' => 'Allows linking several Contacts to notify them about the progress of Tickets, in addition to the requester and the agent.~~',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Zgłoszenie',
-	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
+	'Class:lnkContactToTicket/Attribute:ticket_id+' => '~~',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'Powiązanie',
-	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '',
+	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_name' => 'Kontakt',
-	'Class:lnkContactToTicket/Attribute:contact_name+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_name+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_email' => 'E-mail kontaktu',
-	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_email+' => '~~',
 	'Class:lnkContactToTicket/Attribute:role' => 'Rola (tekst)',
-	'Class:lnkContactToTicket/Attribute:role+' => '',
+	'Class:lnkContactToTicket/Attribute:role+' => '~~',
 	'Class:lnkContactToTicket/Attribute:role_code' => 'Rola',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Dodane ręcznie',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Obliczone',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Nie powiadamiaj',
-]);
-
-//
-// Class: WorkOrder
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:WorkOrder' => 'Porządek pracy',
-	'Class:WorkOrder+' => '',
+	'Class:WorkOrder+' => 'A task required for the resolution of a Ticket, assigned to a Team or even an agent.~~',
 	'Class:WorkOrder/Attribute:name' => 'Nazwa',
-	'Class:WorkOrder/Attribute:name+' => '',
+	'Class:WorkOrder/Attribute:name+' => '~~',
 	'Class:WorkOrder/Attribute:status' => 'Status',
-	'Class:WorkOrder/Attribute:status+' => '',
+	'Class:WorkOrder/Attribute:status+' => '~~',
 	'Class:WorkOrder/Attribute:status/Value:open' => 'otwarty',
-	'Class:WorkOrder/Attribute:status/Value:open+' => '',
+	'Class:WorkOrder/Attribute:status/Value:open+' => '~~',
 	'Class:WorkOrder/Attribute:status/Value:closed' => 'zamknięty',
-	'Class:WorkOrder/Attribute:status/Value:closed+' => '',
+	'Class:WorkOrder/Attribute:status/Value:closed+' => '~~',
 	'Class:WorkOrder/Attribute:description' => 'Opis',
-	'Class:WorkOrder/Attribute:description+' => '',
+	'Class:WorkOrder/Attribute:description+' => '~~',
 	'Class:WorkOrder/Attribute:ticket_id' => 'Zgłoszenie',
-	'Class:WorkOrder/Attribute:ticket_id+' => '',
+	'Class:WorkOrder/Attribute:ticket_id+' => '~~',
 	'Class:WorkOrder/Attribute:ticket_ref' => 'Powiązanie zgłoszenia',
-	'Class:WorkOrder/Attribute:ticket_ref+' => '',
+	'Class:WorkOrder/Attribute:ticket_ref+' => '~~',
 	'Class:WorkOrder/Attribute:team_id' => 'Zespół',
-	'Class:WorkOrder/Attribute:team_id+' => '',
+	'Class:WorkOrder/Attribute:team_id+' => '~~',
 	'Class:WorkOrder/Attribute:team_name' => 'Nazwa zespołu',
-	'Class:WorkOrder/Attribute:team_name+' => '',
+	'Class:WorkOrder/Attribute:team_name+' => '~~',
 	'Class:WorkOrder/Attribute:agent_id' => 'Agent',
-	'Class:WorkOrder/Attribute:agent_id+' => '',
+	'Class:WorkOrder/Attribute:agent_id+' => '~~',
 	'Class:WorkOrder/Attribute:agent_email' => 'E-mail Agenta',
-	'Class:WorkOrder/Attribute:agent_email+' => '',
+	'Class:WorkOrder/Attribute:agent_email+' => '~~',
 	'Class:WorkOrder/Attribute:start_date' => 'Data rozpoczęcia',
-	'Class:WorkOrder/Attribute:start_date+' => '',
+	'Class:WorkOrder/Attribute:start_date+' => '~~',
 	'Class:WorkOrder/Attribute:end_date' => 'Data zakończenia',
-	'Class:WorkOrder/Attribute:end_date+' => '',
+	'Class:WorkOrder/Attribute:end_date+' => '~~',
 	'Class:WorkOrder/Attribute:log' => 'Dziennik',
-	'Class:WorkOrder/Attribute:log+' => '',
+	'Class:WorkOrder/Attribute:log+' => '~~',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Zamknij',
-	'Class:WorkOrder/Stimulus:ev_close+' => '',
-]);
-
-// Fieldset translation
-Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Class:WorkOrder/Stimulus:ev_close+' => '~~',
 	'Ticket:baseinfo' => 'Informacje ogólne',
 	'Ticket:date' => 'Daty',
 	'Ticket:contact' => 'Kontakty',
@@ -220,13 +201,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Cel oparty na SLT typu TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Czas na rozwiązanie TTR',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Cel oparty na SLT typu TTR',
-]);
-
-//
-// Class: Ticket
-//
-
-Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
 ]);

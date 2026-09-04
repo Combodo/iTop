@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Izzet Sirin <izzet.sirin@htr.com.tr>
@@ -15,7 +14,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:ServiceManagement' => 'Hizmet yönetimi',
 	'Menu:ServiceManagement+' => 'Hizmet yönetimi',
 	'Menu:Service:Overview' => 'Özet',
-	'Menu:Service:Overview+' => '',
+	'Menu:Service:Overview+' => '~~',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Hizmet seviyesine göre sözleşmeler',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Durumuna göre sözleşmeler',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30 gün çinde biten sözleşmeler',
@@ -45,43 +44,21 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
 	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
 	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
-
 	'Menu:Procedure' => 'Prosedür kataloğu',
 	'Menu:Procedure+' => 'Tüm prosedürler kataloğu',
 	'Contract:baseinfo' => 'General information~~',
 	'Contract:moreinfo' => 'Contractual information~~',
 	'Contract:cost' => 'Cost information~~',
-]);
-
-//
-// Class: Organization
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Teslimat Modeli',
 	'Class:Organization/Attribute:deliverymodel_id+' => 'This is required for Tickets handling.
 The delivery model specifies the teams to which tickets can be assigned.~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Teslimat Modeli Adı',
-]);
-
-//
-// Class: ContractType
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ContractType' => 'Sözleşme Tipi',
-	'Class:ContractType+' => '~~',
-]);
-
-//
-// Class: Contract
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:ContractType+' => 'Typology for categorizing Customer and Provider Contracts.~~',
 	'Class:Contract' => 'Sözleşme',
-	'Class:Contract+' => '',
+	'Class:Contract+' => 'Abstract class to handle fields common to the different contract sub-classes.~~',
 	'Class:Contract/Attribute:name' => 'Adı',
-	'Class:Contract/Attribute:name+' => '',
+	'Class:Contract/Attribute:name+' => '~~',
 	'Class:Contract/Attribute:org_id' => 'Müşteri',
 	'Class:Contract/Attribute:org_id+' => '~~',
 	'Class:Contract/Attribute:organization_name' => 'Müşteri Adı',
@@ -91,33 +68,33 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Contract/Attribute:documents_list' => 'Belgeler',
 	'Class:Contract/Attribute:documents_list+' => 'Bu müşteri sözleşmesi için tüm belgeler',
 	'Class:Contract/Attribute:description' => 'Tanımlama',
-	'Class:Contract/Attribute:description+' => '',
+	'Class:Contract/Attribute:description+' => '~~',
 	'Class:Contract/Attribute:start_date' => 'Başlangıç Tarihi',
-	'Class:Contract/Attribute:start_date+' => '',
+	'Class:Contract/Attribute:start_date+' => '~~',
 	'Class:Contract/Attribute:end_date' => 'Bitiş Tarihi',
-	'Class:Contract/Attribute:end_date+' => '',
+	'Class:Contract/Attribute:end_date+' => '~~',
 	'Class:Contract/Attribute:cost' => 'Maliyet',
-	'Class:Contract/Attribute:cost+' => '',
+	'Class:Contract/Attribute:cost+' => '~~',
 	'Class:Contract/Attribute:cost_currency' => 'Para Birimi',
-	'Class:Contract/Attribute:cost_currency+' => '',
+	'Class:Contract/Attribute:cost_currency+' => '~~',
 	'Class:Contract/Attribute:cost_currency/Value:dollars' => 'ABD Doları',
-	'Class:Contract/Attribute:cost_currency/Value:dollars+' => '',
+	'Class:Contract/Attribute:cost_currency/Value:dollars+' => '~~',
 	'Class:Contract/Attribute:cost_currency/Value:euros' => 'Avro',
-	'Class:Contract/Attribute:cost_currency/Value:euros+' => '',
+	'Class:Contract/Attribute:cost_currency/Value:euros+' => '~~',
 	'Class:Contract/Attribute:contracttype_id' => 'Sözleşme Tipi',
 	'Class:Contract/Attribute:contracttype_id+' => '~~',
 	'Class:Contract/Attribute:contracttype_name' => 'Sözleşme Tip Adı',
 	'Class:Contract/Attribute:contracttype_name+' => '~~',
 	'Class:Contract/Attribute:billing_frequency' => 'Faturlandırma dönemleri',
-	'Class:Contract/Attribute:billing_frequency+' => '',
+	'Class:Contract/Attribute:billing_frequency+' => '~~',
 	'Class:Contract/Attribute:cost_unit' => 'Cost unit',
-	'Class:Contract/Attribute:cost_unit+' => '',
+	'Class:Contract/Attribute:cost_unit+' => '~~',
 	'Class:Contract/Attribute:provider_id' => 'Sağlayıcı',
-	'Class:Contract/Attribute:provider_id+' => '~~',
+	'Class:Contract/Attribute:provider_id+' => 'Provider organization for this contract. Can be different from the provider of the associated services.~~',
 	'Class:Contract/Attribute:provider_name' => 'Sağlayıcı Adı',
 	'Class:Contract/Attribute:provider_name+' => 'Yaygın Adı',
 	'Class:Contract/Attribute:status' => 'Durum',
-	'Class:Contract/Attribute:status+' => '~~',
+	'Class:Contract/Attribute:status+' => 'The status is not computed based on start and end dates. It must be set manually.~~',
 	'Class:Contract/Attribute:status/Value:implementation' => 'Uygulama',
 	'Class:Contract/Attribute:status/Value:implementation+' => 'Uygulama',
 	'Class:Contract/Attribute:status/Value:obsolete' => 'Kullanım dışı',
@@ -125,47 +102,27 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Contract/Attribute:status/Value:production' => 'Kullanımda',
 	'Class:Contract/Attribute:status/Value:production+' => 'Kullanımda',
 	'Class:Contract/Attribute:finalclass' => 'Tip',
-	'Class:Contract/Attribute:finalclass+' => '',
-]);
-//
-// Class: CustomerContract
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:Contract/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:CustomerContract' => 'Müşteri Sözleşmesi',
-	'Class:CustomerContract+' => '',
+	'Class:CustomerContract+' => 'Agreement between a client and a provider for the delivery of services with an optional level of commitment (SLA, Coverage Window).~~',
 	'Class:CustomerContract/Attribute:services_list' => 'Hizmetler',
 	'Class:CustomerContract/Attribute:services_list+' => 'Bu sözleşme için satın alınan tüm hizmetler',
-]);
-
-//
-// Class: ProviderContract
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ProviderContract' => 'Tedarikçi Sözleşmesi',
-	'Class:ProviderContract+' => '',
+	'Class:ProviderContract+' => 'Agreement between an external provider and an internal organization.~~',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CI\'lar',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'Bu sağlayıcı sözleşmesi tarafından kapsanan tüm yapılandırma öğeleri',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Service Level Agreement~~',
 	'Class:ProviderContract/Attribute:coverage' => 'Service hours~~',
-	'Class:ProviderContract/Attribute:coverage+' => '',
+	'Class:ProviderContract/Attribute:coverage+' => 'Temporal coverage of the contract, e.g. 24x7, 9x5, etc.~~',
 	'Class:ProviderContract/Attribute:contracttype_id' => 'Sözleşme Tipi',
 	'Class:ProviderContract/Attribute:contracttype_id+' => '~~',
 	'Class:ProviderContract/Attribute:contracttype_name' => 'Sözleşme Tip Adı',
 	'Class:ProviderContract/Attribute:contracttype_name+' => '~~',
 	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
 	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
-]);
-
-//
-// Class: lnkContactToContract
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContactToContract' => 'İletişim / Sözleşme bağla',
-	'Class:lnkContactToContract+' => '~~',
+	'Class:lnkContactToContract+' => 'Manages key contacts on each customer or provider contract.~~',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Sözleşme',
 	'Class:lnkContactToContract/Attribute:contract_id+' => '~~',
@@ -175,15 +132,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContactToContract/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Kişi Adı',
 	'Class:lnkContactToContract/Attribute:contact_name+' => '~~',
-]);
-
-//
-// Class: lnkContractToDocument
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContractToDocument' => 'Sözleşmesi / Belge bağla',
-	'Class:lnkContractToDocument+' => '~~',
+	'Class:lnkContractToDocument+' => 'Link used when a Document is applicable to a Contract.~~',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Sözleşme',
 	'Class:lnkContractToDocument/Attribute:contract_id+' => '~~',
@@ -193,35 +143,21 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContractToDocument/Attribute:document_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Belge Adı',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: ServiceFamily
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ServiceFamily' => 'Servis Ailesi',
-	'Class:ServiceFamily+' => '~~',
+	'Class:ServiceFamily+' => 'Top level of Service hierarchy. Required for Services to be proposed in User Portal.~~',
 	'Class:ServiceFamily/Attribute:name' => 'İsim',
 	'Class:ServiceFamily/Attribute:name+' => '~~',
 	'Class:ServiceFamily/Attribute:icon' => 'Simgesi',
 	'Class:ServiceFamily/Attribute:icon+' => '~~',
 	'Class:ServiceFamily/Attribute:services_list' => 'Hizmetler',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Bu kategorideki tüm hizmetler',
-]);
-
-//
-// Class: Service
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Service' => 'Hizmet',
-	'Class:Service+' => '',
+	'Class:Service+' => 'A Service is delivered by an organization and subscribed to through a Contract Client. It must contain at least one Service Subcategory.~~',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Service/Attribute:name' => 'Adı',
-	'Class:Service/Attribute:name+' => '',
+	'Class:Service/Attribute:name+' => '~~',
 	'Class:Service/Attribute:org_id' => 'Hizmet Sağlayıcı',
-	'Class:Service/Attribute:org_id+' => '',
+	'Class:Service/Attribute:org_id+' => '~~',
 	'Class:Service/Attribute:organization_name' => 'Sağlayıcı Adı',
 	'Class:Service/Attribute:organization_name+' => '~~',
 	'Class:Service/Attribute:servicefamily_id' => 'Servis Ailesi',
@@ -229,7 +165,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Service/Attribute:servicefamily_name' => 'Servis Aile Adı',
 	'Class:Service/Attribute:servicefamily_name+' => '~~',
 	'Class:Service/Attribute:description' => 'Tanımlama',
-	'Class:Service/Attribute:description+' => '',
+	'Class:Service/Attribute:description+' => '~~',
 	'Class:Service/Attribute:documents_list' => 'Belgeler',
 	'Class:Service/Attribute:documents_list+' => 'Hizmetle bağlantılı tüm belgeler',
 	'Class:Service/Attribute:contacts_list' => 'İletişim',
@@ -239,9 +175,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Service/Attribute:status/Value:implementation' => 'Uygulama',
 	'Class:Service/Attribute:status/Value:implementation+' => 'Uygulama',
 	'Class:Service/Attribute:status/Value:obsolete' => 'Üretimden Kalkan',
-	'Class:Service/Attribute:status/Value:obsolete+' => '',
+	'Class:Service/Attribute:status/Value:obsolete+' => '~~',
 	'Class:Service/Attribute:status/Value:production' => 'Kullanımda',
-	'Class:Service/Attribute:status/Value:production+' => '',
+	'Class:Service/Attribute:status/Value:production+' => '~~',
 	'Class:Service/Attribute:icon' => 'Simgesi',
 	'Class:Service/Attribute:icon+' => '~~',
 	'Class:Service/Attribute:customercontracts_list' => 'Müşteri Sözleşmeleri',
@@ -252,15 +188,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Service/Attribute:functionalcis_list+' => 'Bu hizmeti sağlamak için kullanılan tüm yapılandırma öğeleri',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Servis alt kategorileri',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'Bu hizmet için tüm alt kategoriler',
-]);
-
-//
-// Class: lnkDocumentToService
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDocumentToService' => 'Belge / servis bağla',
-	'Class:lnkDocumentToService+' => '~~',
+	'Class:lnkDocumentToService+' => 'Link used when a Document is applicable to a Service.~~',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Servis',
 	'Class:lnkDocumentToService/Attribute:service_id+' => '~~',
@@ -270,15 +199,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDocumentToService/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Belge Adı',
 	'Class:lnkDocumentToService/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: lnkContactToService
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContactToService' => 'Kişi / Servis bağla',
-	'Class:lnkContactToService+' => '~~',
+	'Class:lnkContactToService+' => 'Ideal for defining the team to which Tickets created on the related Service will be assigned (automatically or manually).~~',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToService/Attribute:service_id' => 'Servis',
 	'Class:lnkContactToService/Attribute:service_id+' => '~~',
@@ -288,24 +210,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContactToService/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Kişi Adı',
 	'Class:lnkContactToService/Attribute:contact_name+' => '~~',
-]);
-
-//
-// Class: ServiceSubcategory
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ServiceSubcategory' => 'Hizmet alt kategorisi',
-	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory+' => 'Lowest level in Service hierarchy. User Request are usually associated to one Service Subcategory.~~',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ServiceSubcategory/Attribute:name' => 'Adı',
-	'Class:ServiceSubcategory/Attribute:name+' => '',
+	'Class:ServiceSubcategory/Attribute:name+' => '~~',
 	'Class:ServiceSubcategory/Attribute:description' => 'Tanımlama',
-	'Class:ServiceSubcategory/Attribute:description+' => '',
+	'Class:ServiceSubcategory/Attribute:description+' => '~~',
 	'Class:ServiceSubcategory/Attribute:service_id' => 'Hizmet',
-	'Class:ServiceSubcategory/Attribute:service_id+' => '',
+	'Class:ServiceSubcategory/Attribute:service_id+' => '~~',
 	'Class:ServiceSubcategory/Attribute:service_name' => 'Hizmet',
-	'Class:ServiceSubcategory/Attribute:service_name+' => '',
+	'Class:ServiceSubcategory/Attribute:service_name+' => '~~',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'İstek türü',
 	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user selects this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Olay',
@@ -313,24 +228,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Servis İsteği',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'Servis İsteği',
 	'Class:ServiceSubcategory/Attribute:status' => 'Durum',
-	'Class:ServiceSubcategory/Attribute:status+' => '~~',
+	'Class:ServiceSubcategory/Attribute:status+' => 'Service subcategory status has usually an impact on User Portal visibility.~~',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation' => 'Uygulama',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation+' => 'Uygulama',
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete' => 'Kullanım dışı',
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => 'Kullanım dışı',
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Kullanımda',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'Kullanımda',
-]);
-
-//
-// Class: SLA
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:SLA' => 'SLA',
 	'Class:SLA+' => 'Hizmet Seviyesi Anlaşması',
 	'Class:SLA/Attribute:name' => 'Adı',
-	'Class:SLA/Attribute:name+' => '',
+	'Class:SLA/Attribute:name+' => '~~',
 	'Class:SLA/Attribute:description' => 'Açıklama',
 	'Class:SLA/Attribute:description+' => '~~',
 	'Class:SLA/Attribute:org_id' => 'Sağlayıcı',
@@ -342,19 +250,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:SLA/Attribute:customercontracts_list' => 'Müşteri Sözleşmeleri',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Bu SLA\'yı kullanan tüm müşterilerin sözleşmeleri',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
-]);
-
-//
-// Class: SLT
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:SLT' => 'SLT',
 	'Class:SLT+' => 'Hizmet Seviyesi Taahütler',
 	'Class:SLT/Attribute:name' => 'Adı',
-	'Class:SLT/Attribute:name+' => '',
+	'Class:SLT/Attribute:name+' => '~~',
 	'Class:SLT/Attribute:priority' => 'Öncelik',
-	'Class:SLT/Attribute:priority+' => '~~',
+	'Class:SLT/Attribute:priority+' => 'Ticket priority to which this SLT applies. Only tickets with this priority must comply with this SLT.~~',
 	'Class:SLT/Attribute:priority/Value:1' => 'kritik',
 	'Class:SLT/Attribute:priority/Value:1+' => 'kritik',
 	'Class:SLT/Attribute:priority/Value:2' => 'yüksek',
@@ -364,36 +265,29 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:SLT/Attribute:priority/Value:4' => 'düşük',
 	'Class:SLT/Attribute:priority/Value:4+' => 'düşük',
 	'Class:SLT/Attribute:request_type' => 'İstek türü',
-	'Class:SLT/Attribute:request_type+' => '~~',
+	'Class:SLT/Attribute:request_type+' => 'Request type to which this SLT applies. Only tickets with this request type must comply with this SLT.~~',
 	'Class:SLT/Attribute:request_type/Value:incident' => 'Olay',
 	'Class:SLT/Attribute:request_type/Value:incident+' => 'Olay',
 	'Class:SLT/Attribute:request_type/Value:service_request' => 'Servis İsteği',
 	'Class:SLT/Attribute:request_type/Value:service_request+' => 'Servis İsteği',
 	'Class:SLT/Attribute:metric' => 'Metrik',
-	'Class:SLT/Attribute:metric+' => '',
+	'Class:SLT/Attribute:metric+' => 'Delay type to which this SLT applies. TTO (Time To Own) or TTR (Time To Resolve).~~',
 	'Class:SLT/Attribute:metric/Value:tto' => 'TTO',
 	'Class:SLT/Attribute:metric/Value:tto+' => 'TTO',
 	'Class:SLT/Attribute:metric/Value:ttr' => 'TTR',
 	'Class:SLT/Attribute:metric/Value:ttr+' => 'TTR',
 	'Class:SLT/Attribute:value' => 'Değer',
-	'Class:SLT/Attribute:value+' => '',
+	'Class:SLT/Attribute:value+' => 'Delay value which must not be exceeded to be compliant with the target. The unit is defined in the "unit" attribute.~~',
 	'Class:SLT/Attribute:unit' => 'Birim',
-	'Class:SLT/Attribute:unit+' => '~~',
+	'Class:SLT/Attribute:unit+' => 'Unit for the delay value.~~',
 	'Class:SLT/Attribute:unit/Value:hours' => 'saatler',
 	'Class:SLT/Attribute:unit/Value:hours+' => 'saatler',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'dakikalar',
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'dakikalar',
 	'Class:SLT/Attribute:slas_list' => 'SLAs~~',
 	'Class:SLT/Attribute:slas_list+' => 'All the service level agreements using this SLT~~',
-]);
-
-//
-// Class: lnkSLAToSLT
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkSLAToSLT' => 'SLA / SLT bağla',
-	'Class:lnkSLAToSLT+' => '~~',
+	'Class:lnkSLAToSLT+' => 'This link indicates that an SLT is included in the Service Level Agreement (SLA). An SLA usually contains several SLTs. An SLT can be reused as is by several SLAs (seldom).~~',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
 	'Class:lnkSLAToSLT/Attribute:sla_id+' => '~~',
@@ -413,37 +307,25 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Slt value unit~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkCustomerContractToService' => 'Müşteri Sözleşmesi / Servis bağla',
-	'Class:lnkCustomerContractToService+' => '~~',
+	'Class:lnkCustomerContractToService+' => 'A single line of a customer contract, specifying the Service provided and, for this service, the subscribed commitment levels (Service Level Aggrement and Coverage Window).~~',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Müşteri Sözleşmesi',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Müşteri Sözleşmesi Adı',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:service_id' => 'Servis',
-	'Class:lnkCustomerContractToService/Attribute:service_id+' => '~~',
+	'Class:lnkCustomerContractToService/Attribute:service_id+' => 'All service subcategories linked to this service are also included by the contract.~~',
 	'Class:lnkCustomerContractToService/Attribute:service_name' => 'Servis Adı',
 	'Class:lnkCustomerContractToService/Attribute:service_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_id' => 'SLA',
-	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '~~',
+	'Class:lnkCustomerContractToService/Attribute:sla_id+' => 'Service Level Agreement applicable to this service for this customer contract.~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA Adı',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '~~',
-]);
-
-//
-// Class: lnkProviderContractToService
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 	'Class:lnkProviderContractToService' => 'Sağlayıcı Sözleşmesi / Servis bağla',
-	'Class:lnkProviderContractToService+' => '~~',
+	'Class:lnkProviderContractToService+' => 'This link can model that a provider contract enables the delivery of a Service.~~',
 	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkProviderContractToService/Attribute:service_id' => 'Servis',
 	'Class:lnkProviderContractToService/Attribute:service_id+' => '~~',
@@ -453,15 +335,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '~~',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Sağlayıcı Sözleşme Adı',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '~~',
-]);
-
-//
-// Class: DeliveryModel
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:lnkProviderContractToService/Attribute:provider_id' => 'Provider id~~',
+	'Class:lnkProviderContractToService/Attribute:provider_id+' => '~~',
 	'Class:DeliveryModel' => 'Teslimat Modeli',
-	'Class:DeliveryModel+' => '~~',
+	'Class:DeliveryModel+' => 'The Delivery Model specifies the Teams that can be assigned to Tickets; it must contain at least one Team in the Contacts tab.
+Each client Organization must have a defined Delivery Model.~~',
 	'Class:DeliveryModel/Attribute:name' => 'İsim',
 	'Class:DeliveryModel/Attribute:name+' => 'Don\'t forget to add teams to this delivery model~~',
 	'Class:DeliveryModel/Attribute:org_id' => 'Organizasyon',
@@ -474,15 +352,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'Bu teslimat modeli için tüm temaslar (birimler ve kişi)',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Müşteriler',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'Bu teslimat modeline sahip tüm müşteriler',
-]);
-
-//
-// Class: lnkDeliveryModelToContact
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDeliveryModelToContact' => 'Teslimatı Modeli / Kişi bağla',
-	'Class:lnkDeliveryModelToContact+' => '~~',
+	'Class:lnkDeliveryModelToContact+' => 'This link specifies the role of a Team (more rarely a Person) within a Delivery Model.~~',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Teslimat Modeli',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '~~',
@@ -496,44 +367,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Rol Adı',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '~~',
-]);
-
-//
-// Class: lnkContactToContract
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkContractToDocument
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkProviderContractToService
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:lnkProviderContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkProviderContractToService/Attribute:provider_id+' => '~~',
 ]);

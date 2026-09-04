@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Izzet Sirin <izzet.sirin@htr.com.tr>
@@ -29,21 +28,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:FAQ/Attribute:key_words' => 'Anahtar Kelimeler',
 	'Class:FAQ/Attribute:key_words+' => '~~',
 	'Class:FAQ/Attribute:domains' => 'Domains~~',
-]);
-
-//
-// Class: FAQCategory
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:FAQCategory' => 'SSS Kategori',
 	'Class:FAQCategory+' => 'SSS için kategori',
 	'Class:FAQCategory/Attribute:name' => 'İsim',
 	'Class:FAQCategory/Attribute:name+' => '~~',
 	'Class:FAQCategory/Attribute:faq_list' => 'SSS',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Bu kategoriyle ilgili tüm sık sorulan sorular',
-]);
-Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:ProblemManagement' => 'Problem yönetimi',
 	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Kısayollar',

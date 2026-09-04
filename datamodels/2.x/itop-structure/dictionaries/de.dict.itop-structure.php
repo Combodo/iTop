@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
@@ -20,7 +19,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Organization/Attribute:code' => 'Kennziffer',
 	'Class:Organization/Attribute:code+' => 'Organisationskennziffer (D-U-N-S, Siret)',
 	'Class:Organization/Attribute:status' => 'Status',
-	'Class:Organization/Attribute:status+' => '',
+	'Class:Organization/Attribute:status+' => '~~',
 	'Class:Organization/Attribute:status/Value:active' => 'Aktiv',
 	'Class:Organization/Attribute:status/Value:active+' => 'Aktiv',
 	'Class:Organization/Attribute:status/Value:inactive' => 'Inaktiv',
@@ -30,74 +29,60 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Organization/Attribute:parent_name' => 'Name der Mutterfirma',
 	'Class:Organization/Attribute:parent_name+' => 'Name der Mutterfirma',
 	'Class:Organization/Attribute:deliverymodel_id' => 'Delivery-Modell',
-	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery-Modell-Name',
-	'Class:Organization/Attribute:deliverymodel_name+' => '',
+	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Parent',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Übergeordnete Organisation',
 	'Class:Organization/Attribute:overview' => 'Überblick',
 	'Organization:Overview:FunctionalCIs' => 'Konfigurationselemente dieser Organisation',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'nach Typ',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Benutzer innerhalb dieser Organisation',
-]);
-
-//
-// Class: Location
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Location' => 'Standort',
 	'Class:Location+' => 'Jeder Typ von Standort: Region, Land, Stadt, Seite, Gebäude, Flur, Raum, Rack,...',
 	'Class:Location/Attribute:name' => 'Name',
-	'Class:Location/Attribute:name+' => '',
+	'Class:Location/Attribute:name+' => '~~',
 	'Class:Location/Attribute:status' => 'Status',
-	'Class:Location/Attribute:status+' => '',
+	'Class:Location/Attribute:status+' => '~~',
 	'Class:Location/Attribute:status/Value:active' => 'Aktiv',
 	'Class:Location/Attribute:status/Value:active+' => 'Aktiv',
 	'Class:Location/Attribute:status/Value:inactive' => 'Inaktiv',
 	'Class:Location/Attribute:status/Value:inactive+' => 'Inaktiv',
 	'Class:Location/Attribute:org_id' => 'Organisation',
-	'Class:Location/Attribute:org_id+' => '',
+	'Class:Location/Attribute:org_id+' => '~~',
 	'Class:Location/Attribute:org_name' => 'Name der Organisation',
-	'Class:Location/Attribute:org_name+' => '',
+	'Class:Location/Attribute:org_name+' => '~~',
 	'Class:Location/Attribute:address' => 'Adresse',
 	'Class:Location/Attribute:address+' => 'Postanschrift',
 	'Class:Location/Attribute:postal_code' => 'Postleitzahl',
 	'Class:Location/Attribute:postal_code+' => 'Postleitzahl',
 	'Class:Location/Attribute:city' => 'Stadt',
-	'Class:Location/Attribute:city+' => '',
+	'Class:Location/Attribute:city+' => '~~',
 	'Class:Location/Attribute:country' => 'Land',
-	'Class:Location/Attribute:country+' => '',
+	'Class:Location/Attribute:country+' => '~~',
 	'Class:Location/Attribute:physicaldevice_list' => 'Geräte',
 	'Class:Location/Attribute:physicaldevice_list+' => 'Alle Geräte an diesem Standort',
 	'Class:Location/Attribute:person_list' => 'Kontakte',
 	'Class:Location/Attribute:person_list+' => 'Alle Kontakte, die sich an diesem Standort befinden',
-]);
-
-//
-// Class: Contact
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Contact' => 'Kontakt',
 	'Class:Contact+' => 'Abstrakte Klasse. Ein Kontakt kann zu verschiedenen Zwecken mit Tickets und funktionalen CIs verknüpft werden, etwa für die Ticketverteilung und für Benachrichtigungen.',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
 	'Class:Contact/Attribute:name' => 'Name',
-	'Class:Contact/Attribute:name+' => '',
+	'Class:Contact/Attribute:name+' => '~~',
 	'Class:Contact/Attribute:status' => 'Status',
-	'Class:Contact/Attribute:status+' => '',
+	'Class:Contact/Attribute:status+' => '~~',
 	'Class:Contact/Attribute:status/Value:active' => 'Aktiv',
 	'Class:Contact/Attribute:status/Value:active+' => 'Aktiv',
 	'Class:Contact/Attribute:status/Value:inactive' => 'Inaktiv',
 	'Class:Contact/Attribute:status/Value:inactive+' => 'Inaktiv',
 	'Class:Contact/Attribute:org_id' => 'Organisation',
-	'Class:Contact/Attribute:org_id+' => '',
+	'Class:Contact/Attribute:org_id+' => '~~',
 	'Class:Contact/Attribute:org_name' => 'Organisation',
-	'Class:Contact/Attribute:org_name+' => '',
+	'Class:Contact/Attribute:org_name+' => '~~',
 	'Class:Contact/Attribute:email' => 'E-Mail',
-	'Class:Contact/Attribute:email+' => '',
+	'Class:Contact/Attribute:email+' => '~~',
 	'Class:Contact/Attribute:phone' => 'Telefonnummer',
-	'Class:Contact/Attribute:phone+' => '',
+	'Class:Contact/Attribute:phone+' => '~~',
 	'Class:Contact/Attribute:notify' => 'Benachrichtigung',
 	'Class:Contact/Attribute:notify+' => 'Attribut, das bei der Suche nach Empfängern von Benachrichtigungen verwendet werden kann',
 	'Class:Contact/Attribute:notify/Value:no' => 'Nein',
@@ -105,60 +90,47 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Contact/Attribute:notify/Value:yes' => 'Ja',
 	'Class:Contact/Attribute:notify/Value:yes+' => 'Ja',
 	'Class:Contact/Attribute:function' => 'Funktion',
-	'Class:Contact/Attribute:function+' => '',
+	'Class:Contact/Attribute:function+' => '~~',
 	'Class:Contact/Attribute:cis_list' => 'CIs',
 	'Class:Contact/Attribute:cis_list+' => 'Alle mit diesem Kontakt verknüpften CIs',
 	'Class:Contact/Attribute:finalclass' => 'Typ',
 	'Class:Contact/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
-]);
-
-//
-// Class: Person
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Person' => 'Person',
 	'Class:Person+' => 'Eine Art von Kontakt zur Beschreibung natürlicher Personen. Personen können zu Teams zusammengefasst und mit anderen Konfigurationselementen verknüpft werden (etwa um zu dokumentieren, wer bei einer Störung einer Anwendung zu kontaktieren ist).
 Weitere Verwendung: Der Melder einer Benutzeranfrage ist ebenso eine Person wie der Bearbeiter, der sie lösen soll.',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => 'Name',
-	'Class:Person/Attribute:name+' => '',
+	'Class:Person/Attribute:name+' => '~~',
 	'Class:Person/Attribute:first_name' => 'Vorname',
-	'Class:Person/Attribute:first_name+' => '',
+	'Class:Person/Attribute:first_name+' => '~~',
 	'Class:Person/Attribute:employee_number' => 'Personalnummer',
-	'Class:Person/Attribute:employee_number+' => '',
+	'Class:Person/Attribute:employee_number+' => '~~',
 	'Class:Person/Attribute:mobile_phone' => 'Mobiltelefon',
-	'Class:Person/Attribute:mobile_phone+' => '',
+	'Class:Person/Attribute:mobile_phone+' => '~~',
 	'Class:Person/Attribute:location_id' => 'Standort',
-	'Class:Person/Attribute:location_id+' => '',
+	'Class:Person/Attribute:location_id+' => '~~',
 	'Class:Person/Attribute:location_name' => 'Standortname',
-	'Class:Person/Attribute:location_name+' => '',
+	'Class:Person/Attribute:location_name+' => '~~',
 	'Class:Person/Attribute:manager_id' => 'Manager',
-	'Class:Person/Attribute:manager_id+' => '',
+	'Class:Person/Attribute:manager_id+' => '~~',
 	'Class:Person/Attribute:manager_name' => 'Manager-Name',
-	'Class:Person/Attribute:manager_name+' => '',
+	'Class:Person/Attribute:manager_name+' => '~~',
 	'Class:Person/Attribute:team_list' => 'Teams',
 	'Class:Person/Attribute:team_list+' => 'Alle Teams, denen diese Person angehört',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
 	'Class:Person/Attribute:tickets_list+' => 'Alle Tickets, bei denen diese Person der Melder ist',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => '%4$s für %2$s anlegen',
 	'Class:Person/Attribute:user_list' => 'Benutzer',
 	'Class:Person/Attribute:user_list+' => 'Alle Benutzer, die mit dieser Person verbunden sind',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager-Name (lesbar)',
-	'Class:Person/Attribute:manager_id_friendlyname+' => '',
+	'Class:Person/Attribute:manager_id_friendlyname+' => '~~',
 	'Class:Person/Attribute:picture' => 'Bild',
-	'Class:Person/Attribute:picture+' => '',
+	'Class:Person/Attribute:picture+' => '~~',
 	'Class:Person/UniquenessRule:employee_number+' => 'Die Personalnummer muss innerhalb dieser Organisation eindeutig sein.',
 	'Class:Person/UniquenessRule:employee_number' => 'In der Organisation \'$this->org_name$\' existiert bereits eine Person mit der gleichen Personalnummer',
 	'Class:Person/UniquenessRule:name+' => 'Innerhalb einer Organisation muss der Name einer Person eindeutig sein',
 	'Class:Person/UniquenessRule:name' => 'In der Organisation \'$this->org_name$\' existiert bereits eine Person mit dem gleichen Namen',
 	'Class:Person/Error:ChangingOrgDenied' => 'Es ist nicht möglich, dieser Person der Organisation \'%1$s\' zuzuordnen, da dies seinen Zugang zum Benutzerportal unterbinden würde, da sein zugehöriger Benutzer nicht für diese Organisation zugelassen ist.',
-]);
-
-//
-// Class: Team
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Team' => 'Team',
 	'Class:Team+' => 'Eine Art von Kontakt. Häufig, aber nicht nur, zur Gruppierung von Personen verwendet. Von Teams wird erwartet, dass sie die ihnen zugewiesenen Tickets im Blick behalten und einem Bearbeiter zuweisen, üblicherweise einem Mitglied des Teams.',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s',
@@ -173,136 +145,73 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Team:Overview:UserRequest-ClosedByAgent' => 'In den letzten 12 Monaten je Bearbeiter geschlossene Benutzeranfragen',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
 	'Class:Team/Attribute:tickets_list+' => 'Alle diesem Team zugewiesenen Tickets',
-]);
-
-//
-// Class: Document
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Document' => 'Dokument',
 	'Class:Document+' => 'Abstrakte Klasse. Ein Dokument, das mehreren Objekten gemeinsam zugeordnet werden kann und dadurch von allen relevanten Stellen aus schnell zu finden ist.',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Document/Attribute:name' => 'Name',
-	'Class:Document/Attribute:name+' => '',
+	'Class:Document/Attribute:name+' => '~~',
 	'Class:Document/Attribute:org_id' => 'Organisation',
-	'Class:Document/Attribute:org_id+' => '',
+	'Class:Document/Attribute:org_id+' => '~~',
 	'Class:Document/Attribute:org_name' => 'Organisationsname',
-	'Class:Document/Attribute:org_name+' => '',
+	'Class:Document/Attribute:org_name+' => '~~',
 	'Class:Document/Attribute:documenttype_id' => 'Dokumenttyp',
-	'Class:Document/Attribute:documenttype_id+' => '',
+	'Class:Document/Attribute:documenttype_id+' => '~~',
 	'Class:Document/Attribute:documenttype_name' => 'Dokumenttypname',
-	'Class:Document/Attribute:documenttype_name+' => '',
+	'Class:Document/Attribute:documenttype_name+' => '~~',
 	'Class:Document/Attribute:version' => 'Version',
-	'Class:Document/Attribute:version+' => '',
+	'Class:Document/Attribute:version+' => '~~',
 	'Class:Document/Attribute:description' => 'Beschreibung',
-	'Class:Document/Attribute:description+' => '',
+	'Class:Document/Attribute:description+' => '~~',
 	'Class:Document/Attribute:status' => 'Status',
-	'Class:Document/Attribute:status+' => '',
+	'Class:Document/Attribute:status+' => '~~',
 	'Class:Document/Attribute:status/Value:draft' => 'Entwurf',
-	'Class:Document/Attribute:status/Value:draft+' => '',
+	'Class:Document/Attribute:status/Value:draft+' => '~~',
 	'Class:Document/Attribute:status/Value:obsolete' => 'Obsolet (Veraltet)',
-	'Class:Document/Attribute:status/Value:obsolete+' => '',
+	'Class:Document/Attribute:status/Value:obsolete+' => '~~',
 	'Class:Document/Attribute:status/Value:published' => 'Veröffentlicht',
-	'Class:Document/Attribute:status/Value:published+' => '',
+	'Class:Document/Attribute:status/Value:published+' => '~~',
 	'Class:Document/Attribute:cis_list' => 'CIs',
 	'Class:Document/Attribute:cis_list+' => 'Alle mit diesem Dokument verknüpften CIs',
 	'Class:Document/Attribute:finalclass' => 'Unterklasse von Dokument',
 	'Class:Document/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
-]);
-
-//
-// Class: DocumentFile
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:DocumentFile' => 'Dokument (Datei)',
 	'Class:DocumentFile+' => 'Eine Art von Dokument, die eine hochgeladene Datei enthält – in beliebigem Format: Word, PDF, Tabelle usw.',
 	'Class:DocumentFile/Attribute:file' => 'Datei',
-	'Class:DocumentFile/Attribute:file+' => '',
-]);
-
-//
-// Class: DocumentNote
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:DocumentFile/Attribute:file+' => '~~',
 	'Class:DocumentNote' => 'Dokument (Notiz)',
 	'Class:DocumentNote+' => 'Dient zum Speichern eines Textdokuments. HTML-Formatierung wird über den WYSIWYG-Editor unterstützt. Der Inhalt ist durchsuchbar.',
 	'Class:DocumentNote/Attribute:text' => 'Text',
-	'Class:DocumentNote/Attribute:text+' => '',
-]);
-
-//
-// Class: DocumentWeb
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:DocumentNote/Attribute:text+' => '~~',
 	'Class:DocumentWeb' => 'Dokument (Web)',
 	'Class:DocumentWeb+' => 'Hyperlinks auf externe Anwendungen oder Dokumente, die als Verweise auf externe Ressourcen dienen. In ihrem Inhalt kann nicht gesucht werden.',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
-	'Class:DocumentWeb/Attribute:url+' => '',
-]);
-
-//
-// Class: Typology
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:DocumentWeb/Attribute:url+' => '~~',
 	'Class:Typology' => 'Typologie',
 	'Class:Typology+' => 'Abstrakte Klasse. Externe Schlüssel auf eine Unterklasse von Typologie werden anstelle eines Enum-Attributs verwendet, um dynamischere Werte zu ermöglichen.',
 	'Class:Typology/Attribute:name' => 'Name',
-	'Class:Typology/Attribute:name+' => '',
+	'Class:Typology/Attribute:name+' => '~~',
 	'Class:Typology/Attribute:finalclass' => 'Typ',
 	'Class:Typology/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
-]);
-
-//
-// Class: DocumentType
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:DocumentType' => 'Dokumenttyp',
 	'Class:DocumentType+' => 'Typologie. Ein Klassifikationssystem, um Dokumente zu ordnen und logisch zu gruppieren',
-]);
-
-//
-// Class: ContactType
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ContactType' => 'Kontakttyp',
 	'Class:ContactType+' => 'Typologie, um Ihre Kontakte zu ordnen und für Sie logisch zu gruppieren.',
-]);
-
-//
-// Class: lnkPersonToTeam
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkPersonToTeam' => 'Verknüpfung Person/Team',
 	'Class:lnkPersonToTeam+' => 'Diese Verknüpfung gibt an, dass eine Person Mitglied eines Teams ist.',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
-	'Class:lnkPersonToTeam/Name+' => '',
+	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Team',
 	'Class:lnkPersonToTeam/Attribute:team_id+' => 'Ein Team, dem die Person angehört',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Teamname',
-	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:person_id' => 'Person',
 	'Class:lnkPersonToTeam/Attribute:person_id+' => 'Ein Mitglied des Teams',
 	'Class:lnkPersonToTeam/Attribute:person_name' => 'Personenname',
-	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:role_id' => 'Rolle',
 	'Class:lnkPersonToTeam/Attribute:role_id+' => 'Eine Rolle aus einer Typologie möglicher Rollen',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Rollenname',
-	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkPersonToTeam/Attribute:role_name+' => '~~',
 	'Menu:DataAdministration' => 'Data Management',
 	'Menu:DataAdministration+' => 'Data Management',
 	'Menu:Catalogs' => 'Kataloge',
@@ -340,21 +249,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:Typology+' => 'Typologie-Konfiguration',
 	'UI_WelcomeMenu_AllConfigItems' => 'Zusammenfassung',
 	'Menu:ConfigManagement:Typology' => 'Typologie-Konfiguration',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Person:info' => 'Allgemeine Informationen',
 	'User:info' => 'Allgemeine Informationen',
 	'User:profiles' => 'Profile (mindestens eines)',
 	'Person:personal_info' => 'Persönliche Informationen',
 	'Person:notifiy' => 'Benachrichtigungen',
-]);
-
-// Themes
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'theme:fullmoon' => 'Full Moon',
 	'theme:test-red' => 'Test Red (Testinstanz)',
-	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => '%4$s für %2$s anlegen',
 ]);

@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
@@ -13,13 +12,13 @@
  */
 Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Organization' => '組織',
-	'Class:Organization+' => '',
+	'Class:Organization+' => 'It can be a customer, a provider, your company or departments within your company. Organizations can be structured hierarchically. Users can be limited to objects belonging to some organizations only.~~',
 	'Class:Organization/Attribute:name' => '名前',
 	'Class:Organization/Attribute:name+' => '共通名',
 	'Class:Organization/Attribute:code' => 'コード',
 	'Class:Organization/Attribute:code+' => '組織コード(Siret, DUNS, ...)',
 	'Class:Organization/Attribute:status' => '状態',
-	'Class:Organization/Attribute:status+' => '',
+	'Class:Organization/Attribute:status+' => '~~',
 	'Class:Organization/Attribute:status/Value:active' => 'アクティブ',
 	'Class:Organization/Attribute:status/Value:active+' => 'アクティブ',
 	'Class:Organization/Attribute:status/Value:inactive' => '非アクティブ',
@@ -29,120 +28,101 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Organization/Attribute:parent_name' => '親名前',
 	'Class:Organization/Attribute:parent_name+' => '親組織の名前',
 	'Class:Organization/Attribute:deliverymodel_id' => '提供モデル',
-	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
 	'Class:Organization/Attribute:deliverymodel_name' => '提供モデル名',
-	'Class:Organization/Attribute:deliverymodel_name+' => '',
+	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
 	'Class:Organization/Attribute:parent_id_friendlyname' => '親',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => '親組織',
 	'Class:Organization/Attribute:overview' => 'Overview~~',
 	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Users within this organization~~',
-]);
-
-//
-// Class: Location
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Location' => '場所',
 	'Class:Location+' => '任意の場所のタイプ: リージョン、国、都市、サイト、ビル、フロア、部屋、ラック、...',
 	'Class:Location/Attribute:name' => '名前',
-	'Class:Location/Attribute:name+' => '',
+	'Class:Location/Attribute:name+' => '~~',
 	'Class:Location/Attribute:status' => '状態',
-	'Class:Location/Attribute:status+' => '',
+	'Class:Location/Attribute:status+' => '~~',
 	'Class:Location/Attribute:status/Value:active' => 'アクティブ',
 	'Class:Location/Attribute:status/Value:active+' => 'アクティブ',
 	'Class:Location/Attribute:status/Value:inactive' => '非アクティブ',
 	'Class:Location/Attribute:status/Value:inactive+' => '非アクティブ',
 	'Class:Location/Attribute:org_id' => 'オーナー組織',
-	'Class:Location/Attribute:org_id+' => '',
+	'Class:Location/Attribute:org_id+' => '~~',
 	'Class:Location/Attribute:org_name' => 'オーナー組織名前',
-	'Class:Location/Attribute:org_name+' => '',
+	'Class:Location/Attribute:org_name+' => '~~',
 	'Class:Location/Attribute:address' => '住所',
 	'Class:Location/Attribute:address+' => '住所',
 	'Class:Location/Attribute:postal_code' => '郵便番号',
 	'Class:Location/Attribute:postal_code+' => 'ZIP/郵便番号',
 	'Class:Location/Attribute:city' => '都市',
-	'Class:Location/Attribute:city+' => '',
+	'Class:Location/Attribute:city+' => '~~',
 	'Class:Location/Attribute:country' => '国',
-	'Class:Location/Attribute:country+' => '',
+	'Class:Location/Attribute:country+' => '~~',
 	'Class:Location/Attribute:physicaldevice_list' => 'デバイス',
 	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location~~',
 	'Class:Location/Attribute:person_list' => '連絡先',
 	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location~~',
-]);
-
-//
-// Class: Contact
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Contact' => '連絡先',
-	'Class:Contact+' => '',
+	'Class:Contact+' => 'Abstract class. A Contact can be linked to Tickets and FunctionalCIs for different purposes, such as incident dispatching and notifications.~~',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => '名前',
-	'Class:Contact/Attribute:name+' => '',
+	'Class:Contact/Attribute:name+' => '~~',
 	'Class:Contact/Attribute:status' => '状態',
-	'Class:Contact/Attribute:status+' => '',
+	'Class:Contact/Attribute:status+' => '~~',
 	'Class:Contact/Attribute:status/Value:active' => 'アクティブ',
 	'Class:Contact/Attribute:status/Value:active+' => 'アクティブ',
 	'Class:Contact/Attribute:status/Value:inactive' => '非アクティブ',
 	'Class:Contact/Attribute:status/Value:inactive+' => '非アクティブ',
 	'Class:Contact/Attribute:org_id' => '組織',
-	'Class:Contact/Attribute:org_id+' => '',
+	'Class:Contact/Attribute:org_id+' => '~~',
 	'Class:Contact/Attribute:org_name' => '組織',
-	'Class:Contact/Attribute:org_name+' => '',
+	'Class:Contact/Attribute:org_name+' => '~~',
 	'Class:Contact/Attribute:email' => 'Eメール',
-	'Class:Contact/Attribute:email+' => '',
+	'Class:Contact/Attribute:email+' => '~~',
 	'Class:Contact/Attribute:phone' => '電話',
-	'Class:Contact/Attribute:phone+' => '',
+	'Class:Contact/Attribute:phone+' => '~~',
 	'Class:Contact/Attribute:notify' => '通知',
-	'Class:Contact/Attribute:notify+' => '',
+	'Class:Contact/Attribute:notify+' => 'Flag which can be used by each notification~~',
 	'Class:Contact/Attribute:notify/Value:no' => 'いいえ',
 	'Class:Contact/Attribute:notify/Value:no+' => 'いいえ',
 	'Class:Contact/Attribute:notify/Value:yes' => 'はい',
 	'Class:Contact/Attribute:notify/Value:yes+' => 'はい',
 	'Class:Contact/Attribute:function' => '機能',
-	'Class:Contact/Attribute:function+' => '',
+	'Class:Contact/Attribute:function+' => '~~',
 	'Class:Contact/Attribute:cis_list' => 'CI',
 	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact~~',
 	'Class:Contact/Attribute:finalclass' => '連絡先タイプ',
-	'Class:Contact/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: Person
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:Contact/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Person' => '人物',
-	'Class:Person+' => '',
+	'Class:Person+' => 'A type of Contact used to describe physical persons. Persons can be grouped into Teams. Persons can be linked to other configuration items (eg. to describe who to contact in case of incident with an application).
+Other usage: the caller of a User request is a Person as well as the agent assigned to resolve it.~~',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => '姓',
 	'Class:Person/Attribute:name+' => '~~',
 	'Class:Person/Attribute:first_name' => 'ファーストネーム',
-	'Class:Person/Attribute:first_name+' => '',
+	'Class:Person/Attribute:first_name+' => '~~',
 	'Class:Person/Attribute:employee_number' => '社員番号',
-	'Class:Person/Attribute:employee_number+' => '',
+	'Class:Person/Attribute:employee_number+' => '~~',
 	'Class:Person/Attribute:mobile_phone' => '携帯電話',
-	'Class:Person/Attribute:mobile_phone+' => '',
+	'Class:Person/Attribute:mobile_phone+' => '~~',
 	'Class:Person/Attribute:location_id' => '場所',
-	'Class:Person/Attribute:location_id+' => '',
+	'Class:Person/Attribute:location_id+' => '~~',
 	'Class:Person/Attribute:location_name' => '場所名',
-	'Class:Person/Attribute:location_name+' => '',
+	'Class:Person/Attribute:location_name+' => '~~',
 	'Class:Person/Attribute:manager_id' => 'マネージャ',
-	'Class:Person/Attribute:manager_id+' => '',
+	'Class:Person/Attribute:manager_id+' => '~~',
 	'Class:Person/Attribute:manager_name' => 'マネージャ名',
-	'Class:Person/Attribute:manager_name+' => '',
+	'Class:Person/Attribute:manager_name+' => '~~',
 	'Class:Person/Attribute:team_list' => 'チーム',
 	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to~~',
 	'Class:Person/Attribute:tickets_list' => 'チケット',
 	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller~~',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Create a %4$s for %2$s~~',
 	'Class:Person/Attribute:user_list' => 'Users~~',
 	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'マネージャーフレンドリ名',
-	'Class:Person/Attribute:manager_id_friendlyname+' => '',
+	'Class:Person/Attribute:manager_id_friendlyname+' => '~~',
 	'Class:Person/Attribute:picture' => 'Picture~~',
 	'Class:Person/Attribute:picture+' => '~~',
 	'Class:Person/UniquenessRule:employee_number+' => 'The employee number must be unique in the organization~~',
@@ -150,15 +130,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
 	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-]);
-
-//
-// Class: Team
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Team' => 'チーム',
-	'Class:Team+' => '',
+	'Class:Team+' => 'A type of Contact. Often used to group Persons, but not only. Teams are expected to watch Tickets dispatched to them, and assign it to an agent, usually a member of that team.~~',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'メンバー',
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
@@ -171,136 +144,73 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months~~',
 	'Class:Team/Attribute:tickets_list' => 'チケット',
 	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
-]);
-
-//
-// Class: Document
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Document' => '文書',
-	'Class:Document+' => '',
+	'Class:Document+' => 'Abstract class. A document that can be shared across multiple objects, making it easy and quick to retrieve from all relevant locations.~~',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => '名前',
-	'Class:Document/Attribute:name+' => '',
+	'Class:Document/Attribute:name+' => '~~',
 	'Class:Document/Attribute:org_id' => '組織',
-	'Class:Document/Attribute:org_id+' => '',
+	'Class:Document/Attribute:org_id+' => '~~',
 	'Class:Document/Attribute:org_name' => '組織名',
-	'Class:Document/Attribute:org_name+' => '',
+	'Class:Document/Attribute:org_name+' => '~~',
 	'Class:Document/Attribute:documenttype_id' => '文書タイプ',
-	'Class:Document/Attribute:documenttype_id+' => '',
+	'Class:Document/Attribute:documenttype_id+' => '~~',
 	'Class:Document/Attribute:documenttype_name' => '文書タイプ名',
-	'Class:Document/Attribute:documenttype_name+' => '',
+	'Class:Document/Attribute:documenttype_name+' => '~~',
 	'Class:Document/Attribute:version' => 'Version~~',
 	'Class:Document/Attribute:version+' => '~~',
 	'Class:Document/Attribute:description' => '説明',
-	'Class:Document/Attribute:description+' => '',
+	'Class:Document/Attribute:description+' => '~~',
 	'Class:Document/Attribute:status' => '状態',
-	'Class:Document/Attribute:status+' => '',
+	'Class:Document/Attribute:status+' => '~~',
 	'Class:Document/Attribute:status/Value:draft' => '下書き',
-	'Class:Document/Attribute:status/Value:draft+' => '',
+	'Class:Document/Attribute:status/Value:draft+' => '~~',
 	'Class:Document/Attribute:status/Value:obsolete' => '廃止',
-	'Class:Document/Attribute:status/Value:obsolete+' => '',
+	'Class:Document/Attribute:status/Value:obsolete+' => '~~',
 	'Class:Document/Attribute:status/Value:published' => '公開済み',
-	'Class:Document/Attribute:status/Value:published+' => '',
+	'Class:Document/Attribute:status/Value:published+' => '~~',
 	'Class:Document/Attribute:cis_list' => 'CI',
 	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
 	'Class:Document/Attribute:finalclass' => '文書タイプ',
-	'Class:Document/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: DocumentFile
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:Document/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:DocumentFile' => '文書ファイル',
-	'Class:DocumentFile+' => '',
+	'Class:DocumentFile+' => 'It\'s a type of Document which includes an uploaded file (in any format: Word, PDF, Spreadsheet, etc.).~~',
 	'Class:DocumentFile/Attribute:file' => 'ファイル',
-	'Class:DocumentFile/Attribute:file+' => '',
-]);
-
-//
-// Class: DocumentNote
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:DocumentFile/Attribute:file+' => '~~',
 	'Class:DocumentNote' => '文書ノート',
-	'Class:DocumentNote+' => '',
+	'Class:DocumentNote+' => 'Used to store a text document. HTML formatting is supported using the WYSIWYG editor. Search can be performed on its content.~~',
 	'Class:DocumentNote/Attribute:text' => 'テキスト',
-	'Class:DocumentNote/Attribute:text+' => '',
-]);
-
-//
-// Class: DocumentWeb
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:DocumentNote/Attribute:text+' => '~~',
 	'Class:DocumentWeb' => '文書Web',
-	'Class:DocumentWeb+' => '',
+	'Class:DocumentWeb+' => 'Hyperlinks to external applications or documents, acting as pointers to external resources. You cannot search in their content from '.ITOP_APPLICATION_SHORT.'~~',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
-	'Class:DocumentWeb/Attribute:url+' => '',
-]);
-
-//
-// Class: Typology
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:DocumentWeb/Attribute:url+' => '~~',
 	'Class:Typology' => '分類',
-	'Class:Typology+' => '',
+	'Class:Typology+' => 'Abstract class. ExternalKeyAttribute to a Typology subclass are used in place of an EnumAttribute, to have more dynamic values.~~',
 	'Class:Typology/Attribute:name' => '名前',
-	'Class:Typology/Attribute:name+' => '',
+	'Class:Typology/Attribute:name+' => '~~',
 	'Class:Typology/Attribute:finalclass' => 'タイプ',
-	'Class:Typology/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: DocumentType
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:Typology/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:DocumentType' => '文書タイプ',
-	'Class:DocumentType+' => '',
-]);
-
-//
-// Class: ContactType
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:DocumentType+' => 'Typology. A classification system used to organize and logically group documents~~',
 	'Class:ContactType' => '問い合せ先タイプ',
-	'Class:ContactType+' => '',
-]);
-
-//
-// Class: lnkPersonToTeam
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:ContactType+' => 'Typology to organize your Contacts and group them logically for you.~~',
 	'Class:lnkPersonToTeam' => 'リンク 人物/チーム',
-	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam+' => 'This link indicates when a Person is a member of a Team.~~',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
 	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'チーム',
-	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_id+' => 'A team to which the person belongs~~',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'チーム名',
-	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:person_id' => '人物',
-	'Class:lnkPersonToTeam/Attribute:person_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_id+' => 'A member of the team~~',
 	'Class:lnkPersonToTeam/Attribute:person_name' => '名前',
-	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:role_id' => '役割',
-	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:role_id+' => 'To select within a typology of possible roles~~',
 	'Class:lnkPersonToTeam/Attribute:role_name' => '役割名',
-	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:lnkPersonToTeam/Attribute:role_name+' => '~~',
 	'Menu:DataAdministration' => 'データ管理',
 	'Menu:DataAdministration+' => 'データ管理',
 	'Menu:Catalogs' => 'カタログ',
@@ -338,20 +248,11 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:Typology+' => 'トポロジー構成',
 	'UI_WelcomeMenu_AllConfigItems' => 'サマリー',
 	'Menu:ConfigManagement:Typology' => '分類構成',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Person:info' => '情報',
 	'User:info' => '情報',
 	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => '通知',
-]);
-
-// Themes
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ]);

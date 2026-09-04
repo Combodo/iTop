@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
@@ -45,94 +44,65 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI-ServiceCatalogMenu-SLTBySLA' => 'Anzahl SLTs je SLA',
 	'UI-ServiceCatalogMenu-ContractByService' => 'Anzahl Verträge je Service',
 	'UI-ServiceCatalogMenu-ContractBySLA' => 'Anzahl Verträge je SLA',
-
 	'Contract:baseinfo' => 'Allgemeine Informationen',
 	'Contract:moreinfo' => 'Vertragliche Informationen',
 	'Contract:cost' => 'Kosteninformation',
-]);
-
-//
-// Class: Organization
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Delivery-Modell',
 	'Class:Organization/Attribute:deliverymodel_id+' => 'Dies wird für die Ticketbearbeitung benötigt.
 Das Delivery-Modell legt fest, welchen Teams Tickets zugewiesen werden können.',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery-Modell-Name',
 	'Class:Organization/Attribute:deliverymodel_name+' => 'Dies wird für die Ticketbearbeitung benötigt.
 Das Delivery-Modell legt fest, welchen Teams Tickets zugewiesen werden können.',
-]);
-
-//
-// Class: ContractType
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ContractType' => 'Vertrags-Typ',
 	'Class:ContractType+' => 'Typologie zur Kategorisierung von Kunden- und Provider-Verträgen.',
-]);
-
-//
-// Class: Contract
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Contract' => 'Vertrag',
 	'Class:Contract+' => 'Abstrakte Klasse für die Felder, die den verschiedenen Vertragsarten gemeinsam sind.',
 	'Class:Contract/Attribute:name' => 'Name',
-	'Class:Contract/Attribute:name+' => '',
+	'Class:Contract/Attribute:name+' => '~~',
 	'Class:Contract/Attribute:org_id' => 'Organisation',
-	'Class:Contract/Attribute:org_id+' => '',
+	'Class:Contract/Attribute:org_id+' => '~~',
 	'Class:Contract/Attribute:organization_name' => 'Organizations-Name',
-	'Class:Contract/Attribute:organization_name+' => '',
+	'Class:Contract/Attribute:organization_name+' => 'Common name~~',
 	'Class:Contract/Attribute:contacts_list' => 'Kontakte',
 	'Class:Contract/Attribute:contacts_list+' => 'Alle Kontakte, die mit diesen Kundenvertrag verknüpft sind',
 	'Class:Contract/Attribute:documents_list' => 'Dokumente',
 	'Class:Contract/Attribute:documents_list+' => 'Alle Dokumente, die mit diesen Kundenvertrag verknüpft sind',
 	'Class:Contract/Attribute:description' => 'Beschreibung',
-	'Class:Contract/Attribute:description+' => '',
+	'Class:Contract/Attribute:description+' => '~~',
 	'Class:Contract/Attribute:start_date' => 'Startdatum',
-	'Class:Contract/Attribute:start_date+' => '',
+	'Class:Contract/Attribute:start_date+' => '~~',
 	'Class:Contract/Attribute:end_date' => 'Enddatum',
-	'Class:Contract/Attribute:end_date+' => '',
+	'Class:Contract/Attribute:end_date+' => '~~',
 	'Class:Contract/Attribute:cost' => 'Kosten',
-	'Class:Contract/Attribute:cost+' => '',
+	'Class:Contract/Attribute:cost+' => '~~',
 	'Class:Contract/Attribute:cost_currency' => 'Währung',
-	'Class:Contract/Attribute:cost_currency+' => '',
+	'Class:Contract/Attribute:cost_currency+' => '~~',
 	'Class:Contract/Attribute:cost_currency/Value:dollars' => 'Dollar',
-	'Class:Contract/Attribute:cost_currency/Value:dollars+' => '',
+	'Class:Contract/Attribute:cost_currency/Value:dollars+' => '~~',
 	'Class:Contract/Attribute:cost_currency/Value:euros' => 'Euro',
-	'Class:Contract/Attribute:cost_currency/Value:euros+' => '',
+	'Class:Contract/Attribute:cost_currency/Value:euros+' => '~~',
 	'Class:Contract/Attribute:contracttype_id' => 'Vertragstyp',
-	'Class:Contract/Attribute:contracttype_id+' => '',
+	'Class:Contract/Attribute:contracttype_id+' => '~~',
 	'Class:Contract/Attribute:contracttype_name' => 'Vertragstyp-Name',
-	'Class:Contract/Attribute:contracttype_name+' => '',
+	'Class:Contract/Attribute:contracttype_name+' => '~~',
 	'Class:Contract/Attribute:billing_frequency' => 'Abrechnungshäufigkeit',
-	'Class:Contract/Attribute:billing_frequency+' => '',
+	'Class:Contract/Attribute:billing_frequency+' => '~~',
 	'Class:Contract/Attribute:cost_unit' => 'Kosteneinheit',
-	'Class:Contract/Attribute:cost_unit+' => '',
+	'Class:Contract/Attribute:cost_unit+' => '~~',
 	'Class:Contract/Attribute:provider_id' => 'Provider',
 	'Class:Contract/Attribute:provider_id+' => 'Provider-Organisation für diesen Vertrag. Kann vom Provider der zugehörigen Services abweichen.',
 	'Class:Contract/Attribute:provider_name' => 'Provider-Name',
-	'Class:Contract/Attribute:provider_name+' => '',
+	'Class:Contract/Attribute:provider_name+' => '~~',
 	'Class:Contract/Attribute:status' => 'Status',
 	'Class:Contract/Attribute:status+' => 'Der Status wird nicht aus Anfangs- und Ablaufdatum berechnet, sondern muss manuell gesetzt werden.',
 	'Class:Contract/Attribute:status/Value:implementation' => 'Implementierung',
 	'Class:Contract/Attribute:status/Value:implementation+' => 'Implementierung',
 	'Class:Contract/Attribute:status/Value:obsolete' => 'Obsolet (Veraltet)',
-	'Class:Contract/Attribute:status/Value:obsolete+' => '',
+	'Class:Contract/Attribute:status/Value:obsolete+' => 'obsolete~~',
 	'Class:Contract/Attribute:status/Value:production' => 'Produktion',
-	'Class:Contract/Attribute:status/Value:production+' => '',
+	'Class:Contract/Attribute:status/Value:production+' => 'production~~',
 	'Class:Contract/Attribute:finalclass' => 'Vertragstyp',
 	'Class:Contract/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
-]);
-
-//
-// Class: CustomerContract
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CustomerContract' => 'Kundenvertrag',
 	'Class:CustomerContract+' => 'Vereinbarung zwischen einem Kunden und einem Provider über die Erbringung von Services, optional mit einem zugesagten Niveau (SLA, Servicezeit).',
 	'Class:CustomerContract/Attribute:services_list' => 'Services',
@@ -141,13 +111,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CustomerContract/Attribute:functionalcis_list+' => 'Alle unter diesen Vertrag fallenden CIs',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Provider-Verträge',
 	'Class:CustomerContract/Attribute:providercontracts_list+' => 'Alle Provider-Verträge zur Erbringung der Dienstleistungen für diesen Vertrag (Underpinning Contracts)',
-]);
-
-//
-// Class: ProviderContract
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ProviderContract' => 'Provider-Vertrag',
 	'Class:ProviderContract+' => 'Vereinbarung zwischen einem externen Provider und einer internen Organisation.',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CIs',
@@ -156,97 +119,62 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ProviderContract/Attribute:sla+' => 'Service Level Agreement',
 	'Class:ProviderContract/Attribute:coverage' => 'Servicezeiten',
 	'Class:ProviderContract/Attribute:coverage+' => 'Zeitliche Abdeckung des Vertrags, zum Beispiel 24x7, 9x5 usw.',
-]);
-
-//
-// Class: lnkContactToContract
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkContactToContract' => 'Verknüpfung Kontakt/Vertrag',
 	'Class:lnkContactToContract+' => 'Verwaltet die zentralen Ansprechpartner je Kunden- oder Provider-Vertrag.',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s',
 	'Class:lnkContactToContract/Attribute:contract_id' => 'Vertrag',
-	'Class:lnkContactToContract/Attribute:contract_id+' => '',
+	'Class:lnkContactToContract/Attribute:contract_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contract_name' => 'Vertragsname',
-	'Class:lnkContactToContract/Attribute:contract_name+' => '',
+	'Class:lnkContactToContract/Attribute:contract_name+' => '~~',
 	'Class:lnkContactToContract/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkContactToContract/Attribute:contact_id+' => '',
+	'Class:lnkContactToContract/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Kontakt-Name',
-	'Class:lnkContactToContract/Attribute:contact_name+' => '',
-]);
-
-//
-// Class: lnkContractToDocument
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkContactToContract/Attribute:contact_name+' => '~~',
 	'Class:lnkContractToDocument' => 'Verknüpfung Vertrag/Dokument',
 	'Class:lnkContractToDocument+' => 'Verknüpfung, die verwendet wird, wenn ein Dokument für einen Vertrag relevant ist.',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s',
 	'Class:lnkContractToDocument/Attribute:contract_id' => 'Vertrag',
-	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
+	'Class:lnkContractToDocument/Attribute:contract_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:contract_name' => 'Vertragsname',
-	'Class:lnkContractToDocument/Attribute:contract_name+' => '',
+	'Class:lnkContractToDocument/Attribute:contract_name+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_id' => 'Dokument',
-	'Class:lnkContractToDocument/Attribute:document_id+' => '',
+	'Class:lnkContractToDocument/Attribute:document_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Dokument-Name',
-	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-]);
-
-//
-// Class: lnkFunctionalCIToProviderContract
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkContractToDocument/Attribute:document_name+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract' => 'Verknüpfung FunctionalCI/Provider-Vertrag',
 	'Class:lnkFunctionalCIToProviderContract+' => 'Diese Verknüpfung bildet ab, welche funktionalen CIs über einen Provider-Vertrag von einem externen Unternehmen betreut werden.',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Provider-Vertrag',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Provider-Vertrags-Name',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'CI',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI-Name',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
-]);
-
-//
-// Class: ServiceFamily
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '~~',
 	'Class:ServiceFamily' => 'Service-Familie',
 	'Class:ServiceFamily+' => 'Oberste Ebene der Service-Hierarchie. Erforderlich, damit Services im Benutzerportal angeboten werden.',
 	'Class:ServiceFamily/Attribute:name' => 'Name',
-	'Class:ServiceFamily/Attribute:name+' => '',
+	'Class:ServiceFamily/Attribute:name+' => '~~',
 	'Class:ServiceFamily/Attribute:icon' => 'Icon',
-	'Class:ServiceFamily/Attribute:icon+' => '',
+	'Class:ServiceFamily/Attribute:icon+' => '~~',
 	'Class:ServiceFamily/Attribute:services_list' => 'Services',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Alle Services dieser Kategorie',
-]);
-
-//
-// Class: Service
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Service' => 'Service',
 	'Class:Service+' => 'Ein Service wird von einer Organisation erbracht und über einen Kundenvertrag bezogen. Er muss mindestens eine Service-Unterkategorie enthalten.',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s',
 	'Class:Service/Attribute:name' => 'Name',
-	'Class:Service/Attribute:name+' => '',
+	'Class:Service/Attribute:name+' => '~~',
 	'Class:Service/Attribute:org_id' => 'Provider',
-	'Class:Service/Attribute:org_id+' => '',
+	'Class:Service/Attribute:org_id+' => '~~',
 	'Class:Service/Attribute:organization_name' => 'Provider Name',
-	'Class:Service/Attribute:organization_name+' => '',
+	'Class:Service/Attribute:organization_name+' => '~~',
 	'Class:Service/Attribute:description' => 'Beschreibung',
-	'Class:Service/Attribute:description+' => '',
+	'Class:Service/Attribute:description+' => '~~',
 	'Class:Service/Attribute:servicefamily_id' => 'Service-Familie',
 	'Class:Service/Attribute:servicefamily_id+' => 'Erforderlich, damit dieser Service im Benutzerportal sichtbar ist',
 	'Class:Service/Attribute:servicefamily_name' => 'Service-Familien-Name',
-	'Class:Service/Attribute:servicefamily_name+' => '',
+	'Class:Service/Attribute:servicefamily_name+' => '~~',
 	'Class:Service/Attribute:documents_list' => 'Dokumente',
 	'Class:Service/Attribute:documents_list+' => 'Alle mit dem Service verknüpften Dokumente',
 	'Class:Service/Attribute:contacts_list' => 'Kontakte',
@@ -256,166 +184,124 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Service/Attribute:status/Value:implementation' => 'Implementierung',
 	'Class:Service/Attribute:status/Value:implementation+' => 'Implementierung',
 	'Class:Service/Attribute:status/Value:obsolete' => 'Obsolet (Veraltet)',
-	'Class:Service/Attribute:status/Value:obsolete+' => '',
+	'Class:Service/Attribute:status/Value:obsolete+' => '~~',
 	'Class:Service/Attribute:status/Value:production' => 'Produktion',
-	'Class:Service/Attribute:status/Value:production+' => '',
+	'Class:Service/Attribute:status/Value:production+' => '~~',
 	'Class:Service/Attribute:icon' => 'Icon',
-	'Class:Service/Attribute:icon+' => '',
+	'Class:Service/Attribute:icon+' => '~~',
 	'Class:Service/Attribute:customercontracts_list' => 'Kunden-Verträge',
 	'Class:Service/Attribute:customercontracts_list+' => 'Alle Kundenverträge, die diesen Service erworben haben',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Service-Unterkategorien',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'Alle Service-Unterkategorien für diesen Service',
-]);
-
-//
-// Class: lnkDocumentToService
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkDocumentToService' => 'Verknüpfung Dokument/Service',
 	'Class:lnkDocumentToService+' => 'Verknüpfung, die verwendet wird, wenn ein Dokument für einen Service relevant ist.',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'Service',
-	'Class:lnkDocumentToService/Attribute:service_id+' => '',
+	'Class:lnkDocumentToService/Attribute:service_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'Service-Name',
-	'Class:lnkDocumentToService/Attribute:service_name+' => '',
+	'Class:lnkDocumentToService/Attribute:service_name+' => '~~',
 	'Class:lnkDocumentToService/Attribute:document_id' => 'Dokument',
-	'Class:lnkDocumentToService/Attribute:document_id+' => '',
+	'Class:lnkDocumentToService/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Dokument-Name',
-	'Class:lnkDocumentToService/Attribute:document_name+' => '',
-]);
-
-//
-// Class: lnkContactToService
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkDocumentToService/Attribute:document_name+' => '~~',
 	'Class:lnkContactToService' => 'Verknüpfung Kontakt/Service',
 	'Class:lnkContactToService+' => 'Ideal, um das Team festzulegen, dem Tickets zu diesem Service zugewiesen werden – automatisch oder manuell.',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s',
 	'Class:lnkContactToService/Attribute:service_id' => 'Service',
-	'Class:lnkContactToService/Attribute:service_id+' => '',
+	'Class:lnkContactToService/Attribute:service_id+' => '~~',
 	'Class:lnkContactToService/Attribute:service_name' => 'Service-Name',
-	'Class:lnkContactToService/Attribute:service_name+' => '',
+	'Class:lnkContactToService/Attribute:service_name+' => '~~',
 	'Class:lnkContactToService/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkContactToService/Attribute:contact_id+' => '',
+	'Class:lnkContactToService/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Kontakt-Name',
-	'Class:lnkContactToService/Attribute:contact_name+' => '',
-]);
-
-//
-// Class: ServiceSubcategory
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkContactToService/Attribute:contact_name+' => '~~',
 	'Class:ServiceSubcategory' => 'Service-Unterkategorie',
 	'Class:ServiceSubcategory+' => 'Unterste Ebene der Service-Hierarchie. Benutzeranfragen sind üblicherweise genau einer Service-Unterkategorie zugeordnet.',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
 	'Class:ServiceSubcategory/Attribute:name' => 'Name',
-	'Class:ServiceSubcategory/Attribute:name+' => '',
+	'Class:ServiceSubcategory/Attribute:name+' => '~~',
 	'Class:ServiceSubcategory/Attribute:description' => 'Beschreibung',
-	'Class:ServiceSubcategory/Attribute:description+' => '',
+	'Class:ServiceSubcategory/Attribute:description+' => '~~',
 	'Class:ServiceSubcategory/Attribute:service_id' => 'Service',
-	'Class:ServiceSubcategory/Attribute:service_id+' => '',
+	'Class:ServiceSubcategory/Attribute:service_id+' => '~~',
 	'Class:ServiceSubcategory/Attribute:service_name' => 'Service-Name',
-	'Class:ServiceSubcategory/Attribute:service_name+' => '',
+	'Class:ServiceSubcategory/Attribute:service_name+' => '~~',
 	'Class:ServiceSubcategory/Attribute:status' => 'Status',
 	'Class:ServiceSubcategory/Attribute:status+' => 'Der Status einer Service-Unterkategorie wirkt sich in der Regel auf die Sichtbarkeit im Benutzerportal aus.',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation' => 'Implementierung',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation+' => 'Implementierung',
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete' => 'Obsolet (Veraltet)',
-	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => '',
+	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => 'obsolete~~',
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Produktion',
-	'Class:ServiceSubcategory/Attribute:status/Value:production+' => '',
+	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'production~~',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Request-Typ',
 	'Class:ServiceSubcategory/Attribute:request_type+' => 'Legt fest, welche Art von Ticket (Incident oder Service Request) angelegt wird, wenn ein Portalbenutzer diese Service-Unterkategorie auswählt.',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Incident',
-	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'incident~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Service-Request',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'Service-Anfrage',
 	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider-Name',
 	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider',
-]);
-
-//
-// Class: SLA
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:SLA' => 'SLA',
 	'Class:SLA+' => 'Service Level Agreement (SLA) für einen von einem Kunden bezogenen Service, gemessen über SLTs.',
 	'Class:SLA/Attribute:name' => 'Name',
-	'Class:SLA/Attribute:name+' => '',
+	'Class:SLA/Attribute:name+' => '~~',
 	'Class:SLA/Attribute:description' => 'Beschreibung',
-	'Class:SLA/Attribute:description+' => '',
+	'Class:SLA/Attribute:description+' => '~~',
 	'Class:SLA/Attribute:org_id' => 'Organisation',
-	'Class:SLA/Attribute:org_id+' => '',
+	'Class:SLA/Attribute:org_id+' => '~~',
 	'Class:SLA/Attribute:organization_name' => 'Organisations-Name',
-	'Class:SLA/Attribute:organization_name+' => '',
+	'Class:SLA/Attribute:organization_name+' => '~~',
 	'Class:SLA/Attribute:slts_list' => 'SLTs',
 	'Class:SLA/Attribute:slts_list+' => 'Alle Service Level Tagrget für dieses SLA',
 	'Class:SLA/Attribute:customercontracts_list' => 'Kundenverträge',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Alle Kundenverträge, die diese SLA verwenden',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Die Verknüpfung zwischen Kundenvertrag %1$s und Service %2$s konnte nicht gespeichert werden: SLA existiert bereits',
-]);
-
-//
-// Class: SLT
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:SLT' => 'SLT',
 	'Class:SLT+' => 'Service Level Target innerhalb eines Service Level Agreements (SLA). Legt eine Maximalzeit für eine Kennzahl (TTO oder TTR), einen Anfragetyp (Incident oder Anfrage) und eine Priorität fest.',
 	'Class:SLT/Attribute:name' => 'Name',
-	'Class:SLT/Attribute:name+' => '',
+	'Class:SLT/Attribute:name+' => '~~',
 	'Class:SLT/Attribute:priority' => 'Priorität',
 	'Class:SLT/Attribute:priority+' => 'Ticket-Priorität, für die dieses SLT gilt. Nur Tickets mit dieser Priorität müssen dieses SLT einhalten.',
 	'Class:SLT/Attribute:priority/Value:1' => 'Kritisch',
-	'Class:SLT/Attribute:priority/Value:1+' => '',
+	'Class:SLT/Attribute:priority/Value:1+' => 'critical~~',
 	'Class:SLT/Attribute:priority/Value:2' => 'Hoch',
-	'Class:SLT/Attribute:priority/Value:2+' => '',
+	'Class:SLT/Attribute:priority/Value:2+' => 'high~~',
 	'Class:SLT/Attribute:priority/Value:3' => 'Mittel',
-	'Class:SLT/Attribute:priority/Value:3+' => '',
+	'Class:SLT/Attribute:priority/Value:3+' => 'medium~~',
 	'Class:SLT/Attribute:priority/Value:4' => 'Niedrig',
-	'Class:SLT/Attribute:priority/Value:4+' => '',
+	'Class:SLT/Attribute:priority/Value:4+' => 'low~~',
 	'Class:SLT/Attribute:request_type' => 'Request-Typ',
 	'Class:SLT/Attribute:request_type+' => 'Anfragetyp, für den dieses SLT gilt. Nur Tickets mit diesem Anfragetyp müssen dieses SLT einhalten.',
 	'Class:SLT/Attribute:request_type/Value:incident' => 'Incident',
-	'Class:SLT/Attribute:request_type/Value:incident+' => '',
+	'Class:SLT/Attribute:request_type/Value:incident+' => 'incident~~',
 	'Class:SLT/Attribute:request_type/Value:service_request' => 'Service-Request',
 	'Class:SLT/Attribute:request_type/Value:service_request+' => 'Service-Anfrage',
 	'Class:SLT/Attribute:metric' => 'Metrik',
 	'Class:SLT/Attribute:metric+' => 'Art der Frist, für die dieses SLT gilt: TTO (Time To Own) oder TTR (Time To Resolve).',
 	'Class:SLT/Attribute:metric/Value:tto' => 'TTO (Time To Own)',
-	'Class:SLT/Attribute:metric/Value:tto+' => '',
+	'Class:SLT/Attribute:metric/Value:tto+' => 'TTO~~',
 	'Class:SLT/Attribute:metric/Value:ttr' => 'TTR (Time To Resolve)',
-	'Class:SLT/Attribute:metric/Value:ttr+' => '',
+	'Class:SLT/Attribute:metric/Value:ttr+' => 'TTR~~',
 	'Class:SLT/Attribute:value' => 'Wert',
 	'Class:SLT/Attribute:value+' => 'Fristwert, der nicht überschritten werden darf, um das Ziel einzuhalten. Die Einheit wird im Attribut "Einheit" festgelegt.',
 	'Class:SLT/Attribute:unit' => 'Einheit',
 	'Class:SLT/Attribute:unit+' => 'Einheit des Fristwerts.',
 	'Class:SLT/Attribute:unit/Value:hours' => 'Stunden',
-	'Class:SLT/Attribute:unit/Value:hours+' => '',
+	'Class:SLT/Attribute:unit/Value:hours+' => 'hours~~',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'Minuten',
-	'Class:SLT/Attribute:unit/Value:minutes+' => '',
-]);
-
-//
-// Class: lnkSLAToSLT
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:SLT/Attribute:unit/Value:minutes+' => 'minutes~~',
 	'Class:lnkSLAToSLT' => 'Verknüpfung SLA/SLT',
 	'Class:lnkSLAToSLT+' => 'Diese Verknüpfung gibt an, dass ein SLT Teil des Service Level Agreements (SLA) ist. Ein SLA enthält üblicherweise mehrere SLTs. Ein SLT kann – selten – unverändert von mehreren SLAs genutzt werden.',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
-	'Class:lnkSLAToSLT/Attribute:sla_id+' => '',
+	'Class:lnkSLAToSLT/Attribute:sla_id+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'SLA-Name',
-	'Class:lnkSLAToSLT/Attribute:sla_name+' => '',
+	'Class:lnkSLAToSLT/Attribute:sla_name+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_id' => 'SLT',
-	'Class:lnkSLAToSLT/Attribute:slt_id+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_id+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_name' => 'SLT-Name',
-	'Class:lnkSLAToSLT/Attribute:slt_name+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_name+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'SLT Metrik',
 	'Class:lnkSLAToSLT/Attribute:slt_metric+' => 'Welche Zeit soll gemessen werden?',
 	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'SLT Request Typ',
@@ -425,74 +311,46 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkSLAToSLT/Attribute:slt_value' => 'SLT Wert',
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => 'Zeit, nach der das SLT abläuft.',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'SLT Einheit',
-	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
 	'Class:lnkCustomerContractToService' => 'Verknüpfung Kundenvertrag/Service',
 	'Class:lnkCustomerContractToService+' => 'Eine einzelne Zeile eines Kundenvertrags. Sie legt den erbrachten Service fest und für diesen Service die vereinbarten Zusagen (Service Level Agreement und Servicezeit).',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => 'Kundenvertrag',
-	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Kunden-Vertrags-Name',
-	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:service_id' => 'Service',
 	'Class:lnkCustomerContractToService/Attribute:service_id+' => 'Alle mit diesem Service verknüpften Service-Unterkategorien sind ebenfalls Teil des Vertrags.',
 	'Class:lnkCustomerContractToService/Attribute:service_name' => 'Service-Name',
-	'Class:lnkCustomerContractToService/Attribute:service_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:service_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_id' => 'SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => 'Service Level Agreement, das für diesen Service in diesem Kundenvertrag gilt.',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA-Name',
-	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '',
-]);
-
-//
-// Class: lnkCustomerContractToProviderContract
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 	'Class:lnkCustomerContractToProviderContract' => 'Verknüpfung Kunden-Vertrag/Provider-Vertrag',
 	'Class:lnkCustomerContractToProviderContract+' => 'Diese Verknüpfung bildet ab, dass ein Provider-Vertrag zur Erfüllung eines Kundenvertrags beiträgt.',
 	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id' => 'Kunden-Vertrag',
-	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name' => 'Kundenvertrags-Name',
-	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name+' => '~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id' => 'Provider-Vertrag',
-	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => '~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name' => 'Providervertrags-Name',
-	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => '',
-]);
-
-//
-// Class: lnkCustomerContractToFunctionalCI
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI' => 'Verknüpfung Kunden-Vertrag/FunctionalCI',
 	'Class:lnkCustomerContractToFunctionalCI+' => 'Diese Verknüpfung bildet die Geräte (funktionale CIs) ab, die von einem Kundenvertrag abgedeckt sind.',
 	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id' => 'Kunden-Vertrag',
-	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name' => 'Kundenvertrags-Name',
-	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id' => 'CI',
-	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name' => 'CI-Name',
-	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => '',
-]);
-
-//
-// Class: DeliveryModel
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => '~~',
 	'Class:DeliveryModel' => 'Delivery-Modell',
 	'Class:DeliveryModel+' => 'Das Delivery-Modell legt fest, welche Teams Tickets zugewiesen werden können; es muss im Reiter Kontakte mindestens ein Team enthalten.
 Jede Kundenorganisation muss ein definiertes Delivery-Modell haben.',
@@ -501,55 +359,34 @@ Jede Kundenorganisation muss ein definiertes Delivery-Modell haben.',
 	'Class:DeliveryModel/Attribute:org_id' => 'Organisation',
 	'Class:DeliveryModel/Attribute:org_id+' => 'In der Regel die Organisation, die die Services erbringt',
 	'Class:DeliveryModel/Attribute:organization_name' => 'Organisations-Name',
-	'Class:DeliveryModel/Attribute:organization_name+' => '',
+	'Class:DeliveryModel/Attribute:organization_name+' => '~~',
 	'Class:DeliveryModel/Attribute:description' => 'Beschreibung',
-	'Class:DeliveryModel/Attribute:description+' => '',
+	'Class:DeliveryModel/Attribute:description+' => '~~',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Kontakte',
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'Alle Kontakte (Teams and Person) für dieses Delivery-Modell',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Kunden',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'Alle Kunden mit diesem Delivery-Modell',
-]);
-
-//
-// Class: lnkDeliveryModelToContact
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkDeliveryModelToContact' => 'Verknüpfung Delivery-Modell/Kontakt',
 	'Class:lnkDeliveryModelToContact+' => 'Diese Verknüpfung legt die Rolle eines Teams – seltener einer Person – innerhalb eines Delivery-Modells fest.',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => 'Delivery-Modell',
-	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => 'Delivery-Modell-Name',
-	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkDeliveryModelToContact/Attribute:contact_id+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:contact_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:contact_name' => 'Kontakt-Name',
-	'Class:lnkDeliveryModelToContact/Attribute:contact_name+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:contact_name+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:role_id' => 'Rolle',
-	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Rollenname',
-	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
-]);
-
-//
-// Class: lnkContactToContract
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '~~',
 	'Class:lnkContactToContract/Attribute:customer_id' => 'Kunde',
-	'Class:lnkContactToContract/Attribute:customer_id+' => '',
+	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider',
-	'Class:lnkContactToContract/Attribute:provider_id+' => '',
-]);
-
-//
-// Class: lnkContractToDocument
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:customer_id' => 'Kunde',
-	'Class:lnkContractToDocument/Attribute:customer_id+' => '',
+	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider',
-	'Class:lnkContractToDocument/Attribute:provider_id+' => '',
+	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
 ]);

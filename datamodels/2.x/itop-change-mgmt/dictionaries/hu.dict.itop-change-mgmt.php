@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -34,25 +33,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Változások állapotuk szerint az elmúlt 7 napban',
 	'Tickets:Related:OpenChanges' => 'Nyitott változások',
 	'Tickets:Related:RecentChanges' => 'Legutóbbi változások (72h)',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Change
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Change' => 'Változás',
-	'Class:Change+' => '~~',
+	'Class:Change+' => 'A type of Ticket to handle Change which has an effect on delivered Services.~~',
 	'Class:Change/Attribute:status' => 'Állapot',
 	'Class:Change/Attribute:status+' => '~~',
 	'Class:Change/Attribute:status/Value:new' => 'Új',
@@ -70,17 +52,17 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Change/Attribute:category' => 'Kategória',
 	'Class:Change/Attribute:category+' => '~~',
 	'Class:Change/Attribute:category/Value:application' => 'Alkalmazás',
-	'Class:Change/Attribute:category/Value:application+' => '',
+	'Class:Change/Attribute:category/Value:application+' => 'application~~',
 	'Class:Change/Attribute:category/Value:hardware' => 'Hardver',
-	'Class:Change/Attribute:category/Value:hardware+' => '',
+	'Class:Change/Attribute:category/Value:hardware+' => 'hardware~~',
 	'Class:Change/Attribute:category/Value:network' => 'Hálózat',
-	'Class:Change/Attribute:category/Value:network+' => '',
+	'Class:Change/Attribute:category/Value:network+' => 'network~~',
 	'Class:Change/Attribute:category/Value:other' => 'Egyéb',
-	'Class:Change/Attribute:category/Value:other+' => '',
+	'Class:Change/Attribute:category/Value:other+' => 'other~~',
 	'Class:Change/Attribute:category/Value:software' => 'Szoftver',
-	'Class:Change/Attribute:category/Value:software+' => '',
+	'Class:Change/Attribute:category/Value:software+' => 'software~~',
 	'Class:Change/Attribute:category/Value:system' => 'Rendszer',
-	'Class:Change/Attribute:category/Value:system+' => '',
+	'Class:Change/Attribute:category/Value:system+' => 'system~~',
 	'Class:Change/Attribute:reject_reason' => 'Elutasítás oka',
 	'Class:Change/Attribute:reject_reason+' => '~~',
 	'Class:Change/Attribute:changemanager_id' => 'Változás menedzser',

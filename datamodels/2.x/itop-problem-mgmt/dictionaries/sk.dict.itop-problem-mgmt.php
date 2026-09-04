@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -32,15 +31,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Unassigned problems~~',
 	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard for Problem Management~~',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard for Problem Management~~',
-
-]);
-//
-// Class: Problem
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Problem' => 'Problem~~',
-	'Class:Problem+' => '~~',
+	'Class:Problem+' => 'An incident becomes a Problem when it is not resolved in a timely manner or when it recurs frequently~~',
 	'Class:Problem/Attribute:status' => 'Status~~',
 	'Class:Problem/Attribute:status+' => '~~',
 	'Class:Problem/Attribute:status/Value:new' => 'New~~',

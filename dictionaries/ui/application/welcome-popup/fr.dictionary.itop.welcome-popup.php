@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -14,10 +13,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:WelcomePopup:Button:RemindLater' => 'Me le rappeler plus tard',
 	'UI:WelcomePopup:Button:AcknowledgeAndNext' => 'Suivant',
 	'UI:WelcomePopup:Button:AcknowledgeAndClose' => 'Fermer',
-]);
-
-// Message
-Dict::Add('FR FR', 'French', 'Français', [
 	'UI:WelcomePopup:Message:330_01_Welcome:Title' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT.' 3.3',
 	'UI:WelcomePopup:Message:330_01_Welcome:Description' => '<div>Nous sommes ravis de vous présenter cette nouvelle version, qui vous apporte une série de mises à jour et d’améliorations !</div>
 <br>

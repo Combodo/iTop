@@ -1,76 +1,68 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Ticket' => 'Hibajegy',
-	'Class:Ticket+' => '',
+	'Class:Ticket+' => 'Abstract class~~',
 	'Class:Ticket/Attribute:ref' => 'Referenciaszám',
-	'Class:Ticket/Attribute:ref+' => '',
+	'Class:Ticket/Attribute:ref+' => '~~',
 	'Class:Ticket/Attribute:org_id' => 'Szervezeti egység',
-	'Class:Ticket/Attribute:org_id+' => '',
+	'Class:Ticket/Attribute:org_id+' => '~~',
 	'Class:Ticket/Attribute:org_name' => 'Szervezeti egység név',
-	'Class:Ticket/Attribute:org_name+' => '',
+	'Class:Ticket/Attribute:org_name+' => '~~',
 	'Class:Ticket/Attribute:caller_id' => 'Kérelmező',
-	'Class:Ticket/Attribute:caller_id+' => '',
+	'Class:Ticket/Attribute:caller_id+' => '~~',
 	'Class:Ticket/Attribute:caller_name' => 'Kérelmező név',
-	'Class:Ticket/Attribute:caller_name+' => '',
+	'Class:Ticket/Attribute:caller_name+' => '~~',
 	'Class:Ticket/Attribute:team_id' => 'Csapat',
-	'Class:Ticket/Attribute:team_id+' => '',
+	'Class:Ticket/Attribute:team_id+' => '~~',
 	'Class:Ticket/Attribute:team_name' => 'Csapat név',
-	'Class:Ticket/Attribute:team_name+' => '',
+	'Class:Ticket/Attribute:team_name+' => '~~',
 	'Class:Ticket/Attribute:agent_id' => 'Ügyintéző',
-	'Class:Ticket/Attribute:agent_id+' => '',
+	'Class:Ticket/Attribute:agent_id+' => '~~',
 	'Class:Ticket/Attribute:agent_name' => 'Ügyintéző név',
-	'Class:Ticket/Attribute:agent_name+' => '',
+	'Class:Ticket/Attribute:agent_name+' => '~~',
 	'Class:Ticket/Attribute:title' => 'Tárgy',
-	'Class:Ticket/Attribute:title+' => '',
+	'Class:Ticket/Attribute:title+' => '~~',
 	'Class:Ticket/Attribute:description' => 'Leírás',
-	'Class:Ticket/Attribute:description+' => '',
+	'Class:Ticket/Attribute:description+' => '~~',
 	'Class:Ticket/Attribute:start_date' => 'Megbízási dátum',
-	'Class:Ticket/Attribute:start_date+' => '',
+	'Class:Ticket/Attribute:start_date+' => '~~',
 	'Class:Ticket/Attribute:end_date' => 'Megoldási dátum dátum',
-	'Class:Ticket/Attribute:end_date+' => '',
+	'Class:Ticket/Attribute:end_date+' => '~~',
 	'Class:Ticket/Attribute:last_update' => 'Utoljára frissítve',
-	'Class:Ticket/Attribute:last_update+' => '',
+	'Class:Ticket/Attribute:last_update+' => '~~',
 	'Class:Ticket/Attribute:close_date' => 'Lezárási dátum',
-	'Class:Ticket/Attribute:close_date+' => '',
+	'Class:Ticket/Attribute:close_date+' => '~~',
 	'Class:Ticket/Attribute:private_log' => 'Privát napló',
-	'Class:Ticket/Attribute:private_log+' => '',
+	'Class:Ticket/Attribute:private_log+' => '~~',
 	'Class:Ticket/Attribute:contacts_list' => 'Kapcsolattartók',
-	'Class:Ticket/Attribute:contacts_list+' => '',
+	'Class:Ticket/Attribute:contacts_list+' => 'All the contacts linked to this ticket~~',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CI-k',
-	'Class:Ticket/Attribute:functionalcis_list+' => '',
+	'Class:Ticket/Attribute:functionalcis_list+' => 'All the configuration items impacted by this ticket. Items marked as "Computed" have been automatically marked as impacted. Items marked as "Not impacted" are excluded from the impact.~~',
 	'Class:Ticket/Attribute:workorders_list' => 'Munkaelrendelők',
 	'Class:Ticket/Attribute:workorders_list+' => 'Munkaelrendelő ehhez a hibajegyhez',
 	'Class:Ticket/Attribute:finalclass' => 'Hibajegy típus',
 	'Class:Ticket/Attribute:finalclass+' => 'A részletes állapot után számítja',
 	'Class:Ticket/Attribute:operational_status' => 'Műveleti állapot',
-	'Class:Ticket/Attribute:operational_status+' => '',
+	'Class:Ticket/Attribute:operational_status+' => 'Computed after the detailed status~~',
 	'Class:Ticket/Attribute:operational_status/Value:ongoing' => 'Folyamatban',
 	'Class:Ticket/Attribute:operational_status/Value:ongoing+' => 'Munka folyamatban',
 	'Class:Ticket/Attribute:operational_status/Value:resolved' => 'Megoldva',
-	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '',
+	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '~~',
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Lezárva',
-	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
+	'Class:Ticket/Attribute:operational_status/Value:closed+' => '~~',
 	'Ticket:ImpactAnalysis' => 'Hatáselemzés',
-]);
-
-//
-// Class: lnkContactToTicket
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkContactToTicket' => 'Kapcsolattartó / Hibajegy',
-	'Class:lnkContactToTicket+' => '~~',
+	'Class:lnkContactToTicket+' => 'Allows linking several Contacts to notify them about the progress of Tickets, in addition to the requester and the agent.~~',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Hibajegy',
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => '~~',
@@ -88,15 +80,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Kézzel hozzáadva',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Számított',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Ne értesítsen',
-]);
-
-//
-// Class: WorkOrder
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:WorkOrder' => 'Munkaelrendelő',
-	'Class:WorkOrder+' => '~~',
+	'Class:WorkOrder+' => 'A task required for the resolution of a Ticket, assigned to a Team or even an agent.~~',
 	'Class:WorkOrder/Attribute:name' => 'Név',
 	'Class:WorkOrder/Attribute:name+' => '~~',
 	'Class:WorkOrder/Attribute:status' => 'Állapot',
@@ -127,10 +112,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:WorkOrder/Attribute:log+' => '~~',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Bezárás',
 	'Class:WorkOrder/Stimulus:ev_close+' => '~~',
-]);
-
-// Fieldset translation
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Ticket:baseinfo' => 'Általános információk',
 	'Ticket:date' => 'Dátum',
 	'Ticket:contact' => 'Kapcsolattartók',
@@ -220,13 +201,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Megoldási idő',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
-]);
-
-//
-// Class: Ticket
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
 ]);

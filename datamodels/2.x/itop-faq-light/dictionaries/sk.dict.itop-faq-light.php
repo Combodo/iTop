@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -28,21 +27,12 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:FAQ/Attribute:key_words' => 'Key words~~',
 	'Class:FAQ/Attribute:key_words+' => '~~',
 	'Class:FAQ/Attribute:domains' => 'Domains~~',
-]);
-
-//
-// Class: FAQCategory
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:FAQCategory' => 'FAQ Category~~',
 	'Class:FAQCategory+' => 'Typology for Frequently Asked Questions (FAQ)~~',
 	'Class:FAQCategory/Attribute:name' => 'Name~~',
 	'Class:FAQCategory/Attribute:name+' => '~~',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs~~',
 	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category~~',
-]);
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:ProblemManagement' => 'Problem management~~',
 	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Shortcuts~~',

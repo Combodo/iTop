@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -14,7 +13,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:UserLocal' => ITOP_APPLICATION_SHORT.' felhasználó',
 	'Class:UserLocal+' => 'Rendszeren belül létrehozott felhasználó',
 	'Class:UserLocal/Attribute:password' => 'Jelszó',
-	'Class:UserLocal/Attribute:password+' => '',
+	'Class:UserLocal/Attribute:password+' => 'User authentication string~~',
 	'Class:UserLocal/Attribute:expiration' => 'Jelszó lejárati ideje',
 	'Class:UserLocal/Attribute:expiration+' => 'Jelszó lejárati státusz (bővítmény szükséges hozzá)',
 	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'Lejár',

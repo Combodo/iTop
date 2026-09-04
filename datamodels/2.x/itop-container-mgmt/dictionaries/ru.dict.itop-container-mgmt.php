@@ -1,41 +1,29 @@
 <?php
-
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2013 XXXXX
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-
-//
-// Fieldsets for Container classes
-//
-
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Container:baseinfo' => 'Общее',
 	'Container:moreinfo' => 'Особенности контейнеризации',
 	'Container:otherinfo' => 'Даты и описание',
-]);
-
-//
-// Class Container Image
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ContainerImage/Name' => '%1$s %2$s',
 	'Class:ContainerImage/ComplementaryName' => '%1$s - %2$s',
 	'Class:ContainerImage' => 'Образ контейнера',
 	'Class:ContainerImage+' => 'Образ ПО, готового к запуску в контейнере',
 	'Class:ContainerImage/Attribute:name' => 'Название',
-	'Class:ContainerImage/Attribute:name+' => '',
+	'Class:ContainerImage/Attribute:name+' => '~~',
 	'Class:ContainerImage/Attribute:version' => 'Версия',
-	'Class:ContainerImage/Attribute:version+' => '',
+	'Class:ContainerImage/Attribute:version+' => '~~',
 	'Class:ContainerImage/Attribute:description' => 'Описание',
-	'Class:ContainerImage/Attribute:description+' => '',
+	'Class:ContainerImage/Attribute:description+' => '~~',
 	'Class:ContainerImage/Attribute:publisher' => 'Издатель',
 	'Class:ContainerImage/Attribute:publisher+' => 'Издатель образа, например php, nginx и т. д.',
 	'Class:ContainerImage/Attribute:image' => 'Образ',
@@ -43,16 +31,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ContainerImage/Attribute:type_id' => 'Тип',
 	'Class:ContainerImage/Attribute:type_id+' => 'Тип образа',
 	'Class:ContainerImage/Attribute:software_id' => 'ПО',
-	'Class:ContainerImage/Attribute:software_id+' => '',
+	'Class:ContainerImage/Attribute:software_id+' => '~~',
 	'Class:ContainerImage/Attribute:containerapplications_list' => 'Контейнерные приложения',
 	'Class:ContainerImage/Attribute:containerapplications_list+' => 'Приложения, для которых используется этот образ',
-]);
-
-//
-// Class Container Application
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ContainerApplication/Name' => '%1$s',
 	'Class:ContainerApplication/ComplementaryName' => '%1$s',
 	'Class:ContainerApplication' => 'Контейнерное приложение',
@@ -67,31 +48,16 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ContainerApplication/Attribute:containertype_id+' => 'Технология, используемая для контейнеризации',
 	'Class:ContainerApplication/Attribute:containerimages_list' => 'Образы контейнеров',
 	'Class:ContainerApplication/Attribute:containerimages_list+' => 'Образы ПО, используемые для сборки контейнерного приложения',
-
-]);
-
-//
-// Class: lnkContainerApplicationToImage
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkContainerApplicationToImage' => 'Связь Контейнерное приложение / Образ',
-	'Class:lnkContainerApplicationToImage+' => '',
+	'Class:lnkContainerApplicationToImage+' => '~~',
 	'Class:lnkContainerApplicationToImage/Name' => '%1$s / %2$s',
-	'Class:lnkContainerApplicationToImage/Name+' => '',
+	'Class:lnkContainerApplicationToImage/Name+' => '~~',
 	'Class:lnkContainerApplicationToImage/Attribute:containerapplication_id' => 'Контейнерное приложение',
 	'Class:lnkContainerApplicationToImage/Attribute:containerapplication_id+' => 'Приложение, использующее этот образ',
 	'Class:lnkContainerApplicationToImage/Attribute:containerimage_id' => 'Образ контейнера',
 	'Class:lnkContainerApplicationToImage/Attribute:containerimage_id+' => 'Образ ПО, используемый для сборки контейнерного приложения',
-]);
-
-//
-// Class Container Virtual Host
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ContainerVirtualHost/Name' => '%1$s',
-	'Class:ContainerVirtualHost/ComplementaryName' => '',
+	'Class:ContainerVirtualHost/ComplementaryName' => '~~',
 	'Class:ContainerVirtualHost' => 'Платформа контейнеризации',
 	'Class:ContainerVirtualHost+' => 'Платформа, на которой приложения выполняются в виде контейнеров',
 	'Class:ContainerVirtualHost/Attribute:containertype_id' => 'Тип контейнеризации',
@@ -100,19 +66,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ContainerVirtualHost/Attribute:status+' => 'Статус платформы контейнеризации',
 	'Class:ContainerVirtualHost/Attribute:containerapplications_list' => 'Приложения',
 	'Class:ContainerVirtualHost/Attribute:containerapplications_list+' => 'Приложения, выполняющиеся в этом контейнерном окружении',
-]);
-
-//
-// Class Container Host
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ContainerHost/Name' => '%1$s',
 	'Class:ContainerHost/ComplementaryName' => '%1$s-%2$s',
 	'Class:ContainerHost' => 'Хост контейнеров',
 	'Class:ContainerHost+' => 'Хост, выделенный под контейнеры. Базовый элемент платформы контейнеризации',
 	'Class:ContainerHost/Attribute:containercluster_id' => 'Кластер контейнеров',
-	'Class:ContainerHost/Attribute:containercluster_id+' => '',
+	'Class:ContainerHost/Attribute:containercluster_id+' => '~~',
 	'Class:ContainerHost/Attribute:role' => 'Роль',
 	'Class:ContainerHost/Attribute:role+' => 'Роль хоста в кластере: master или worker. Standalone, если хост не входит в кластер.',
 	'Class:ContainerHost/Attribute:system_id' => 'Система',
@@ -120,15 +79,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ContainerHost/Attribute:role/Value:master' => 'Мастер',
 	'Class:ContainerHost/Attribute:role/Value:worker' => 'Воркер',
 	'Class:ContainerHost/Attribute:role/Value:standalone' => 'Автономный',
-]);
-
-//
-// Class Container Cluster
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ContainerCluster/Name' => '%1$s',
-	'Class:ContainerCluster/ComplementaryName' => '',
+	'Class:ContainerCluster/ComplementaryName' => '~~',
 	'Class:ContainerCluster' => 'Кластер контейнеров',
 	'Class:ContainerCluster+' => 'Платформа контейнеризации, состоящая из кластера хостов контейнеров',
 	'Class:ContainerCluster/Attribute:redundancy' => 'Конфигурация резервирования',
@@ -137,35 +89,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ContainerCluster/Attribute:redundancy/percent' => 'Кластер в работе, если по крайней мере %1$s %% хостов в работе',
 	'Class:ContainerCluster/Attribute:containerhosts_list' => 'Хосты контейнеров',
 	'Class:ContainerCluster/Attribute:containerhosts_list+' => 'Хосты, входящие в этот кластер',
-]);
-
-//
-// Class Container Type
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ContainerType/Name' => '%1$s',
-	'Class:ContainerType/ComplementaryName' => '',
+	'Class:ContainerType/ComplementaryName' => '~~',
 	'Class:ContainerType' => 'Тип контейнеризации',
 	'Class:ContainerType+' => 'Технология, обеспечивающая контейнеризацию',
-]);
-
-//
-// Class Container Type
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ContainerImageType/Name' => '%1$s',
-	'Class:ContainerImageType/ComplementaryName' => '',
+	'Class:ContainerImageType/ComplementaryName' => '~~',
 	'Class:ContainerImageType' => 'Тип образа контейнера',
 	'Class:ContainerImageType+' => 'Типология образов контейнеров',
-]);
-
-//
-// Class Cloud, Server and Virtual Machine
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Cloud/Attribute:containerhosts_list' => 'Хосты контейнеров',
 	'Class:Cloud/Attribute:containerhosts_list+' => 'Список хостов контейнеров, работающих в этом облаке',
 	'Class:Server/Attribute:containerhosts_list' => 'Хосты контейнеров',

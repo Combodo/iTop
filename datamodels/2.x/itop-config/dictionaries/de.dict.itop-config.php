@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
@@ -15,7 +14,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:ConfigFileEditor' => 'Texteditor',
 	'itop-config/Operation:Edit/Title' => 'Konfigurations-Editor',
 	'config-edit-intro' => 'Achtung: Eine falsche Konfiguration kann dazu führen, dass '.ITOP_APPLICATION_SHORT.' für alle Benutzer unbenutzbar ist!',
-	'Menu:ConfigEditor' => 'Konfiguration',
 	'config-apply' => 'Anwenden (Ctrl+S)',
 	'config-apply-title' => 'Anwenden (Ctrl+S)',
 	'config-cancel' => 'Zurücksetzen',

@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -19,7 +18,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:SearchChanges' => 'Cerca per cambi',
 	'Menu:SearchChanges+' => 'Cerca i cambi per tickets',
 	'Menu:Change:Shortcuts' => 'Scorciatoie',
-	'Menu:Change:Shortcuts+' => '~~',
+	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => 'Modifiche in attesa di accettazione',
 	'Menu:WaitingAcceptance+' => '~~',
 	'Menu:WaitingApproval' => 'Modifiche in attesa di approvazione',
@@ -34,39 +33,22 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Cambiamenti per stato negli ultimi 7 giorni',
 	'Tickets:Related:OpenChanges' => 'Cambiamenti aperti',
 	'Tickets:Related:RecentChanges' => 'Cambiamenti recenti (72h)',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Change
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Change' => 'Cambio',
-	'Class:Change+' => '~~',
+	'Class:Change+' => 'A type of Ticket to handle Change which has an effect on delivered Services.~~',
 	'Class:Change/Attribute:status' => 'Stato',
 	'Class:Change/Attribute:status+' => '~~',
 	'Class:Change/Attribute:status/Value:new' => 'Nuovo',
-	'Class:Change/Attribute:status/Value:new+' => '',
+	'Class:Change/Attribute:status/Value:new+' => '~~',
 	'Class:Change/Attribute:status/Value:assigned' => 'Assegnato',
-	'Class:Change/Attribute:status/Value:assigned+' => '',
+	'Class:Change/Attribute:status/Value:assigned+' => '~~',
 	'Class:Change/Attribute:status/Value:planned' => 'Pianificato',
-	'Class:Change/Attribute:status/Value:planned+' => '',
+	'Class:Change/Attribute:status/Value:planned+' => '~~',
 	'Class:Change/Attribute:status/Value:rejected' => 'Rifiutato',
-	'Class:Change/Attribute:status/Value:rejected+' => '',
+	'Class:Change/Attribute:status/Value:rejected+' => '~~',
 	'Class:Change/Attribute:status/Value:approved' => 'Approvato',
-	'Class:Change/Attribute:status/Value:approved+' => '',
+	'Class:Change/Attribute:status/Value:approved+' => '~~',
 	'Class:Change/Attribute:status/Value:closed' => 'Chiuso',
-	'Class:Change/Attribute:status/Value:closed+' => '',
+	'Class:Change/Attribute:status/Value:closed+' => '~~',
 	'Class:Change/Attribute:category' => 'Category~~',
 	'Class:Change/Attribute:category+' => '~~',
 	'Class:Change/Attribute:category/Value:application' => 'applicazione',

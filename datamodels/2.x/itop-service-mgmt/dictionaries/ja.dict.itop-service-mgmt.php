@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -14,7 +13,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:ServiceManagement' => 'サービス管理',
 	'Menu:ServiceManagement+' => 'サービス管理概要',
 	'Menu:Service:Overview' => '概要',
-	'Menu:Service:Overview+' => '',
+	'Menu:Service:Overview+' => '~~',
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'サービスレベル別契約',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'ステータス別契約',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30日以内に終了する契約',
@@ -44,45 +43,23 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
 	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
 	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
-
 	'Menu:Procedure' => '手順カタログ',
 	'Menu:Procedure+' => '全ての手順カタログ',
 	'Contract:baseinfo' => 'General information~~',
 	'Contract:moreinfo' => 'Contractual information~~',
 	'Contract:cost' => 'Cost information~~',
-]);
-
-//
-// Class: Organization
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Organization/Attribute:deliverymodel_id' => '提供モデル',
 	'Class:Organization/Attribute:deliverymodel_id+' => 'This is required for Tickets handling.
 The delivery model specifies the teams to which tickets can be assigned.~~',
 	'Class:Organization/Attribute:deliverymodel_name' => '提供モデル名',
-]);
-
-//
-// Class: ContractType
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ContractType' => '契約タイプ',
-	'Class:ContractType+' => '',
-]);
-
-//
-// Class: Contract
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:ContractType+' => 'Typology for categorizing Customer and Provider Contracts.~~',
 	'Class:Contract' => '契約',
-	'Class:Contract+' => '',
+	'Class:Contract+' => 'Abstract class to handle fields common to the different contract sub-classes.~~',
 	'Class:Contract/Attribute:name' => '名前',
-	'Class:Contract/Attribute:name+' => '',
+	'Class:Contract/Attribute:name+' => '~~',
 	'Class:Contract/Attribute:org_id' => '顧客',
-	'Class:Contract/Attribute:org_id+' => '',
+	'Class:Contract/Attribute:org_id+' => '~~',
 	'Class:Contract/Attribute:organization_name' => '顧客名',
 	'Class:Contract/Attribute:organization_name+' => '共通の名前',
 	'Class:Contract/Attribute:contacts_list' => '連絡先',
@@ -90,33 +67,33 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Contract/Attribute:documents_list' => '文書',
 	'Class:Contract/Attribute:documents_list+' => 'All the documents for this customer contract~~',
 	'Class:Contract/Attribute:description' => '説明',
-	'Class:Contract/Attribute:description+' => '',
+	'Class:Contract/Attribute:description+' => '~~',
 	'Class:Contract/Attribute:start_date' => '開始日',
-	'Class:Contract/Attribute:start_date+' => '',
+	'Class:Contract/Attribute:start_date+' => '~~',
 	'Class:Contract/Attribute:end_date' => '終了日',
-	'Class:Contract/Attribute:end_date+' => '',
+	'Class:Contract/Attribute:end_date+' => '~~',
 	'Class:Contract/Attribute:cost' => '費用',
-	'Class:Contract/Attribute:cost+' => '',
+	'Class:Contract/Attribute:cost+' => '~~',
 	'Class:Contract/Attribute:cost_currency' => '費用通貨',
-	'Class:Contract/Attribute:cost_currency+' => '',
+	'Class:Contract/Attribute:cost_currency+' => '~~',
 	'Class:Contract/Attribute:cost_currency/Value:dollars' => '米ドル',
-	'Class:Contract/Attribute:cost_currency/Value:dollars+' => '',
+	'Class:Contract/Attribute:cost_currency/Value:dollars+' => '~~',
 	'Class:Contract/Attribute:cost_currency/Value:euros' => 'ユーロ',
-	'Class:Contract/Attribute:cost_currency/Value:euros+' => '',
+	'Class:Contract/Attribute:cost_currency/Value:euros+' => '~~',
 	'Class:Contract/Attribute:contracttype_id' => '契約タイプ',
-	'Class:Contract/Attribute:contracttype_id+' => '',
+	'Class:Contract/Attribute:contracttype_id+' => '~~',
 	'Class:Contract/Attribute:contracttype_name' => '契約タイプ名',
-	'Class:Contract/Attribute:contracttype_name+' => '',
+	'Class:Contract/Attribute:contracttype_name+' => '~~',
 	'Class:Contract/Attribute:billing_frequency' => '課金頻度',
-	'Class:Contract/Attribute:billing_frequency+' => '',
+	'Class:Contract/Attribute:billing_frequency+' => '~~',
 	'Class:Contract/Attribute:cost_unit' => '費用単位',
-	'Class:Contract/Attribute:cost_unit+' => '',
+	'Class:Contract/Attribute:cost_unit+' => '~~',
 	'Class:Contract/Attribute:provider_id' => 'プロバイダー',
-	'Class:Contract/Attribute:provider_id+' => '',
+	'Class:Contract/Attribute:provider_id+' => 'Provider organization for this contract. Can be different from the provider of the associated services.~~',
 	'Class:Contract/Attribute:provider_name' => 'プロバイダー名',
 	'Class:Contract/Attribute:provider_name+' => '共通名',
 	'Class:Contract/Attribute:status' => '状態',
-	'Class:Contract/Attribute:status+' => '',
+	'Class:Contract/Attribute:status+' => 'The status is not computed based on start and end dates. It must be set manually.~~',
 	'Class:Contract/Attribute:status/Value:implementation' => '実装',
 	'Class:Contract/Attribute:status/Value:implementation+' => '実装',
 	'Class:Contract/Attribute:status/Value:obsolete' => '廃止',
@@ -124,111 +101,70 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Contract/Attribute:status/Value:production' => '稼働',
 	'Class:Contract/Attribute:status/Value:production+' => '稼働',
 	'Class:Contract/Attribute:finalclass' => 'タイプ',
-	'Class:Contract/Attribute:finalclass+' => '',
-]);
-//
-// Class: CustomerContract
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:Contract/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:CustomerContract' => '顧客契約',
-	'Class:CustomerContract+' => '',
+	'Class:CustomerContract+' => 'Agreement between a client and a provider for the delivery of services with an optional level of commitment (SLA, Coverage Window).~~',
 	'Class:CustomerContract/Attribute:services_list' => 'サービス',
 	'Class:CustomerContract/Attribute:services_list+' => 'All the services purchased for this contract~~',
-]);
-
-//
-// Class: ProviderContract
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ProviderContract' => 'プロバイダー契約',
-	'Class:ProviderContract+' => '',
+	'Class:ProviderContract+' => 'Agreement between an external provider and an internal organization.~~',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CI',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this provider contract~~',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'サービスレベルアグリーメント',
 	'Class:ProviderContract/Attribute:coverage' => 'サービス時間帯',
-	'Class:ProviderContract/Attribute:coverage+' => '',
+	'Class:ProviderContract/Attribute:coverage+' => 'Temporal coverage of the contract, e.g. 24x7, 9x5, etc.~~',
 	'Class:ProviderContract/Attribute:contracttype_id' => '契約タイプ',
-	'Class:ProviderContract/Attribute:contracttype_id+' => '',
+	'Class:ProviderContract/Attribute:contracttype_id+' => '~~',
 	'Class:ProviderContract/Attribute:contracttype_name' => '契約タイプ名',
-	'Class:ProviderContract/Attribute:contracttype_name+' => '',
+	'Class:ProviderContract/Attribute:contracttype_name+' => '~~',
 	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
 	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
-]);
-
-//
-// Class: lnkContactToContract
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkContactToContract' => 'リンク 連絡先/契約',
-	'Class:lnkContactToContract+' => '',
+	'Class:lnkContactToContract+' => 'Manages key contacts on each customer or provider contract.~~',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToContract/Attribute:contract_id' => '契約',
-	'Class:lnkContactToContract/Attribute:contract_id+' => '',
+	'Class:lnkContactToContract/Attribute:contract_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contract_name' => '契約名',
-	'Class:lnkContactToContract/Attribute:contract_name+' => '',
+	'Class:lnkContactToContract/Attribute:contract_name+' => '~~',
 	'Class:lnkContactToContract/Attribute:contact_id' => '連絡先',
-	'Class:lnkContactToContract/Attribute:contact_id+' => '',
+	'Class:lnkContactToContract/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contact_name' => '連絡先名',
-	'Class:lnkContactToContract/Attribute:contact_name+' => '',
-]);
-
-//
-// Class: lnkContractToDocument
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:lnkContactToContract/Attribute:contact_name+' => '~~',
 	'Class:lnkContractToDocument' => 'リンク 契約/文書',
-	'Class:lnkContractToDocument+' => '',
+	'Class:lnkContractToDocument+' => 'Link used when a Document is applicable to a Contract.~~',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
 	'Class:lnkContractToDocument/Attribute:contract_id' => '契約',
-	'Class:lnkContractToDocument/Attribute:contract_id+' => '',
+	'Class:lnkContractToDocument/Attribute:contract_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:contract_name' => '契約名',
-	'Class:lnkContractToDocument/Attribute:contract_name+' => '',
+	'Class:lnkContractToDocument/Attribute:contract_name+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_id' => '文書',
-	'Class:lnkContractToDocument/Attribute:document_id+' => '',
+	'Class:lnkContractToDocument/Attribute:document_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_name' => '文書名',
-	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-]);
-
-//
-// Class: ServiceFamily
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:lnkContractToDocument/Attribute:document_name+' => '~~',
 	'Class:ServiceFamily' => 'サービスファミリ',
-	'Class:ServiceFamily+' => '',
+	'Class:ServiceFamily+' => 'Top level of Service hierarchy. Required for Services to be proposed in User Portal.~~',
 	'Class:ServiceFamily/Attribute:name' => '名前',
-	'Class:ServiceFamily/Attribute:name+' => '',
+	'Class:ServiceFamily/Attribute:name+' => '~~',
 	'Class:ServiceFamily/Attribute:icon' => 'Icon~~',
-	'Class:ServiceFamily/Attribute:icon+' => '',
+	'Class:ServiceFamily/Attribute:icon+' => '~~',
 	'Class:ServiceFamily/Attribute:services_list' => 'サービス',
 	'Class:ServiceFamily/Attribute:services_list+' => 'All the services in this category~~',
-]);
-
-//
-// Class: Service
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Service' => 'サービス',
-	'Class:Service+' => '',
+	'Class:Service+' => 'A Service is delivered by an organization and subscribed to through a Contract Client. It must contain at least one Service Subcategory.~~',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Service/Attribute:name' => '名前',
-	'Class:Service/Attribute:name+' => '',
+	'Class:Service/Attribute:name+' => '~~',
 	'Class:Service/Attribute:org_id' => 'プロバイダー',
-	'Class:Service/Attribute:org_id+' => '',
+	'Class:Service/Attribute:org_id+' => '~~',
 	'Class:Service/Attribute:organization_name' => 'プロバイダー名',
-	'Class:Service/Attribute:organization_name+' => '',
+	'Class:Service/Attribute:organization_name+' => '~~',
 	'Class:Service/Attribute:servicefamily_id' => 'サービスファミリ',
 	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'サービスファミリ名',
-	'Class:Service/Attribute:servicefamily_name+' => '',
+	'Class:Service/Attribute:servicefamily_name+' => '~~',
 	'Class:Service/Attribute:description' => '説明',
-	'Class:Service/Attribute:description+' => '',
+	'Class:Service/Attribute:description+' => '~~',
 	'Class:Service/Attribute:documents_list' => '文書',
 	'Class:Service/Attribute:documents_list+' => 'All the documents linked to the service~~',
 	'Class:Service/Attribute:contacts_list' => '連絡先',
@@ -238,9 +174,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Service/Attribute:status/Value:implementation' => '実装中',
 	'Class:Service/Attribute:status/Value:implementation+' => '実装中',
 	'Class:Service/Attribute:status/Value:obsolete' => '廃止済み',
-	'Class:Service/Attribute:status/Value:obsolete+' => '',
+	'Class:Service/Attribute:status/Value:obsolete+' => '~~',
 	'Class:Service/Attribute:status/Value:production' => '稼働中',
-	'Class:Service/Attribute:status/Value:production+' => '',
+	'Class:Service/Attribute:status/Value:production+' => '~~',
 	'Class:Service/Attribute:icon' => 'Icon~~',
 	'Class:Service/Attribute:icon+' => '~~',
 	'Class:Service/Attribute:customercontracts_list' => '顧客契約',
@@ -251,60 +187,39 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Service/Attribute:functionalcis_list+' => 'All the configuration items that are used to provide this service~~',
 	'Class:Service/Attribute:servicesubcategories_list' => 'サービスサブカテゴリ',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'All the sub categories for this service~~',
-]);
-
-//
-// Class: lnkDocumentToService
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkDocumentToService' => 'リンク 文書/サービス',
-	'Class:lnkDocumentToService+' => '',
+	'Class:lnkDocumentToService+' => 'Link used when a Document is applicable to a Service.~~',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToService/Attribute:service_id' => 'サービス',
-	'Class:lnkDocumentToService/Attribute:service_id+' => '',
+	'Class:lnkDocumentToService/Attribute:service_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'サービス名',
-	'Class:lnkDocumentToService/Attribute:service_name+' => '',
+	'Class:lnkDocumentToService/Attribute:service_name+' => '~~',
 	'Class:lnkDocumentToService/Attribute:document_id' => '文書',
-	'Class:lnkDocumentToService/Attribute:document_id+' => '',
+	'Class:lnkDocumentToService/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:document_name' => '文書名',
-	'Class:lnkDocumentToService/Attribute:document_name+' => '',
-]);
-
-//
-// Class: lnkContactToService
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:lnkDocumentToService/Attribute:document_name+' => '~~',
 	'Class:lnkContactToService' => 'リンク 連絡先/サービス',
-	'Class:lnkContactToService+' => '',
+	'Class:lnkContactToService+' => 'Ideal for defining the team to which Tickets created on the related Service will be assigned (automatically or manually).~~',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToService/Attribute:service_id' => 'サービス',
-	'Class:lnkContactToService/Attribute:service_id+' => '',
+	'Class:lnkContactToService/Attribute:service_id+' => '~~',
 	'Class:lnkContactToService/Attribute:service_name' => 'サービス名',
-	'Class:lnkContactToService/Attribute:service_name+' => '',
+	'Class:lnkContactToService/Attribute:service_name+' => '~~',
 	'Class:lnkContactToService/Attribute:contact_id' => '連絡先',
-	'Class:lnkContactToService/Attribute:contact_id+' => '',
+	'Class:lnkContactToService/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToService/Attribute:contact_name' => '連絡先名',
-	'Class:lnkContactToService/Attribute:contact_name+' => '',
-]);
-
-//
-// Class: ServiceSubcategory
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:lnkContactToService/Attribute:contact_name+' => '~~',
 	'Class:ServiceSubcategory' => 'サービスサブカテゴリ',
-	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory+' => 'Lowest level in Service hierarchy. User Request are usually associated to one Service Subcategory.~~',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ServiceSubcategory/Attribute:name' => '名前',
-	'Class:ServiceSubcategory/Attribute:name+' => '',
+	'Class:ServiceSubcategory/Attribute:name+' => '~~',
 	'Class:ServiceSubcategory/Attribute:description' => '説明',
-	'Class:ServiceSubcategory/Attribute:description+' => '',
+	'Class:ServiceSubcategory/Attribute:description+' => '~~',
 	'Class:ServiceSubcategory/Attribute:service_id' => 'サービス',
-	'Class:ServiceSubcategory/Attribute:service_id+' => '',
+	'Class:ServiceSubcategory/Attribute:service_id+' => '~~',
 	'Class:ServiceSubcategory/Attribute:service_name' => 'サービス名',
-	'Class:ServiceSubcategory/Attribute:service_name+' => '',
+	'Class:ServiceSubcategory/Attribute:service_name+' => '~~',
 	'Class:ServiceSubcategory/Attribute:request_type' => '要求タイプ',
 	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user selects this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'インシデント',
@@ -312,28 +227,21 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'サービス要求',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'サービス要求',
 	'Class:ServiceSubcategory/Attribute:status' => '状態',
-	'Class:ServiceSubcategory/Attribute:status+' => '',
+	'Class:ServiceSubcategory/Attribute:status+' => 'Service subcategory status has usually an impact on User Portal visibility.~~',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation' => '実装中',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation+' => '実装中',
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete' => '廃止済み',
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => '廃止済み',
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => '稼働中',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => '稼働中',
-]);
-
-//
-// Class: SLA
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:SLA' => 'SLA',
-	'Class:SLA+' => '',
+	'Class:SLA+' => 'Service Level Agreement (SLA) applicable to a Service subscribed by a customer and measured using SLTs.~~',
 	'Class:SLA/Attribute:name' => '名前',
-	'Class:SLA/Attribute:name+' => '',
+	'Class:SLA/Attribute:name+' => '~~',
 	'Class:SLA/Attribute:description' => '説明',
-	'Class:SLA/Attribute:description+' => '',
+	'Class:SLA/Attribute:description+' => '~~',
 	'Class:SLA/Attribute:org_id' => 'プロバイダ',
-	'Class:SLA/Attribute:org_id+' => '',
+	'Class:SLA/Attribute:org_id+' => '~~',
 	'Class:SLA/Attribute:organization_name' => 'プロバイダ名',
 	'Class:SLA/Attribute:organization_name+' => '共通名',
 	'Class:SLA/Attribute:slts_list' => 'SLT',
@@ -341,19 +249,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:SLA/Attribute:customercontracts_list' => '顧客連絡先',
 	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracted services using this SLA~~',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
-]);
-
-//
-// Class: SLT
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:SLT' => 'SLT',
-	'Class:SLT+' => '',
+	'Class:SLT+' => 'Service Level Target under a Service Level Agreement (SLA). Defines a maximum time for a metric (TTO or TTR), a request type (Incident or Request) and a priority.~~',
 	'Class:SLT/Attribute:name' => '名前',
-	'Class:SLT/Attribute:name+' => '',
+	'Class:SLT/Attribute:name+' => '~~',
 	'Class:SLT/Attribute:priority' => '優先度',
-	'Class:SLT/Attribute:priority+' => '',
+	'Class:SLT/Attribute:priority+' => 'Ticket priority to which this SLT applies. Only tickets with this priority must comply with this SLT.~~',
 	'Class:SLT/Attribute:priority/Value:1' => '最優先',
 	'Class:SLT/Attribute:priority/Value:1+' => '最優先',
 	'Class:SLT/Attribute:priority/Value:2' => '高',
@@ -363,45 +264,38 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:SLT/Attribute:priority/Value:4' => '低',
 	'Class:SLT/Attribute:priority/Value:4+' => '低',
 	'Class:SLT/Attribute:request_type' => '要求タイプ',
-	'Class:SLT/Attribute:request_type+' => '',
+	'Class:SLT/Attribute:request_type+' => 'Request type to which this SLT applies. Only tickets with this request type must comply with this SLT.~~',
 	'Class:SLT/Attribute:request_type/Value:incident' => 'インシデント',
 	'Class:SLT/Attribute:request_type/Value:incident+' => 'インシデント',
 	'Class:SLT/Attribute:request_type/Value:service_request' => 'サービス要求',
 	'Class:SLT/Attribute:request_type/Value:service_request+' => 'サービス要求',
 	'Class:SLT/Attribute:metric' => 'メトリック',
-	'Class:SLT/Attribute:metric+' => '',
+	'Class:SLT/Attribute:metric+' => 'Delay type to which this SLT applies. TTO (Time To Own) or TTR (Time To Resolve).~~',
 	'Class:SLT/Attribute:metric/Value:tto' => 'TTO',
 	'Class:SLT/Attribute:metric/Value:tto+' => 'TTO',
 	'Class:SLT/Attribute:metric/Value:ttr' => 'TTR',
 	'Class:SLT/Attribute:metric/Value:ttr+' => 'TTR',
 	'Class:SLT/Attribute:value' => '値',
-	'Class:SLT/Attribute:value+' => '',
+	'Class:SLT/Attribute:value+' => 'Delay value which must not be exceeded to be compliant with the target. The unit is defined in the "unit" attribute.~~',
 	'Class:SLT/Attribute:unit' => '単位',
-	'Class:SLT/Attribute:unit+' => '',
+	'Class:SLT/Attribute:unit+' => 'Unit for the delay value.~~',
 	'Class:SLT/Attribute:unit/Value:hours' => '時間',
 	'Class:SLT/Attribute:unit/Value:hours+' => '時間',
 	'Class:SLT/Attribute:unit/Value:minutes' => '分',
 	'Class:SLT/Attribute:unit/Value:minutes+' => '分',
 	'Class:SLT/Attribute:slas_list' => 'SLAs~~',
 	'Class:SLT/Attribute:slas_list+' => 'All the service level agreements using this SLT~~',
-]);
-
-//
-// Class: lnkSLAToSLT
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkSLAToSLT' => 'リンク SLA / SLT',
-	'Class:lnkSLAToSLT+' => '',
+	'Class:lnkSLAToSLT+' => 'This link indicates that an SLT is included in the Service Level Agreement (SLA). An SLA usually contains several SLTs. An SLT can be reused as is by several SLAs (seldom).~~',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
 	'Class:lnkSLAToSLT/Attribute:sla_id' => 'SLA',
-	'Class:lnkSLAToSLT/Attribute:sla_id+' => '',
+	'Class:lnkSLAToSLT/Attribute:sla_id+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:sla_name' => 'SLA名',
-	'Class:lnkSLAToSLT/Attribute:sla_name+' => '',
+	'Class:lnkSLAToSLT/Attribute:sla_name+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_id' => 'SLT',
-	'Class:lnkSLAToSLT/Attribute:slt_id+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_id+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_name' => 'SLT名',
-	'Class:lnkSLAToSLT/Attribute:slt_name+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_name+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Slt metric~~',
 	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Slt request type~~',
@@ -412,55 +306,39 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Slt value unit~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkCustomerContractToService' => 'リンク 顧客契約/サービス',
-	'Class:lnkCustomerContractToService+' => '',
+	'Class:lnkCustomerContractToService+' => 'A single line of a customer contract, specifying the Service provided and, for this service, the subscribed commitment levels (Service Level Aggrement and Coverage Window).~~',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id' => '顧客契約',
-	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => '顧客契約名',
-	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:service_id' => 'サービス',
-	'Class:lnkCustomerContractToService/Attribute:service_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:service_id+' => 'All service subcategories linked to this service are also included by the contract.~~',
 	'Class:lnkCustomerContractToService/Attribute:service_name' => 'サービス名',
-	'Class:lnkCustomerContractToService/Attribute:service_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:service_name+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_id' => 'SLA',
-	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:sla_id+' => 'Service Level Agreement applicable to this service for this customer contract.~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA名',
-	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
-]);
-
-//
-// Class: lnkProviderContractToService
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 	'Class:lnkProviderContractToService' => 'リンク プロバイダ契約/サービス',
-	'Class:lnkProviderContractToService+' => '',
+	'Class:lnkProviderContractToService+' => 'This link can model that a provider contract enables the delivery of a Service.~~',
 	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s~~',
 	'Class:lnkProviderContractToService/Attribute:service_id' => 'サービス',
-	'Class:lnkProviderContractToService/Attribute:service_id+' => '',
+	'Class:lnkProviderContractToService/Attribute:service_id+' => '~~',
 	'Class:lnkProviderContractToService/Attribute:service_name' => 'サービス名',
-	'Class:lnkProviderContractToService/Attribute:service_name+' => '',
+	'Class:lnkProviderContractToService/Attribute:service_name+' => '~~',
 	'Class:lnkProviderContractToService/Attribute:providercontract_id' => 'プロバイダ契約',
-	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '',
+	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '~~',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'プロバイダ契約名',
-	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '',
-]);
-
-//
-// Class: DeliveryModel
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '~~',
+	'Class:lnkProviderContractToService/Attribute:provider_id' => 'Provider id~~',
+	'Class:lnkProviderContractToService/Attribute:provider_id+' => '~~',
 	'Class:DeliveryModel' => '提供モデル',
-	'Class:DeliveryModel+' => '',
+	'Class:DeliveryModel+' => 'The Delivery Model specifies the Teams that can be assigned to Tickets; it must contain at least one Team in the Contacts tab.
+Each client Organization must have a defined Delivery Model.~~',
 	'Class:DeliveryModel/Attribute:name' => '名前',
 	'Class:DeliveryModel/Attribute:name+' => 'Don\'t forget to add teams to this delivery model~~',
 	'Class:DeliveryModel/Attribute:org_id' => '組織',
@@ -468,71 +346,32 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:DeliveryModel/Attribute:organization_name' => '組織名',
 	'Class:DeliveryModel/Attribute:organization_name+' => '共通名',
 	'Class:DeliveryModel/Attribute:description' => '説明',
-	'Class:DeliveryModel/Attribute:description+' => '',
+	'Class:DeliveryModel/Attribute:description+' => '~~',
 	'Class:DeliveryModel/Attribute:contacts_list' => '連絡先',
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'There must be at least one team to enable Ticket assignment~~',
 	'Class:DeliveryModel/Attribute:customers_list' => '顧客',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
-]);
-
-//
-// Class: lnkDeliveryModelToContact
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkDeliveryModelToContact' => 'Link 提供モデル/連絡先',
-	'Class:lnkDeliveryModelToContact+' => '',
+	'Class:lnkDeliveryModelToContact+' => 'This link specifies the role of a Team (more rarely a Person) within a Delivery Model.~~',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id' => '提供モデル',
-	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name' => '提供モデル名',
-	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:deliverymodel_name+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:contact_id' => '連絡先',
-	'Class:lnkDeliveryModelToContact/Attribute:contact_id+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:contact_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:contact_name' => '連絡先名',
-	'Class:lnkDeliveryModelToContact/Attribute:contact_name+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:contact_name+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:role_id' => '役割',
-	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '',
+	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => '役割名',
-	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
-]);
-
-//
-// Class: lnkContactToContract
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '~~',
 	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkContractToDocument
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkProviderContractToService
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
-	'Class:lnkProviderContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkProviderContractToService/Attribute:provider_id+' => '~~',
 ]);

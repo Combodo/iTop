@@ -1,12 +1,14 @@
 <?php
-
 /**
- * Spanish Localized data
+ * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
+ *
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Ticket' => 'Ticket',
@@ -60,13 +62,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Cerrado',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => 'Cerrado',
 	'Ticket:ImpactAnalysis' => 'Análisis de Impacto',
-]);
-
-//
-// Class: lnkContactToTicket
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:lnkContactToTicket' => 'Relación Contacto y Ticket',
 	'Class:lnkContactToTicket+' => 'Relación Contacto y Ticket',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
@@ -86,13 +81,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Agregado Manualmente',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Calculado',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'No notificar',
-]);
-
-//
-// Class: WorkOrder
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:WorkOrder' => 'Orden de Trabajo',
 	'Class:WorkOrder+' => 'Orden de Trabajo',
 	'Class:WorkOrder/Attribute:name' => 'Nombre',
@@ -125,10 +113,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:WorkOrder/Attribute:log+' => 'Bitácora',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Cerrar',
 	'Class:WorkOrder/Stimulus:ev_close+' => 'Cerrar',
-]);
-
-// Fieldset translation
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Ticket:baseinfo' => 'Información General',
 	'Ticket:date' => 'Fechas',
 	'Ticket:contact' => 'Contactos',
@@ -218,13 +202,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Objetivo basado en SLT de tipo TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Tiempo a Resolución',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Objetivo basado en SLT de tipo TTR',
-]);
-
-//
-// Class: Ticket
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
 ]);

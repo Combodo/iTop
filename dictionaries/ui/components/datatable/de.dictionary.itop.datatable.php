@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -21,8 +20,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Datatables:Language:DisplayLength:All' => 'Alle',
 	'UI:Datatables:Language:Sort:Ascending' => 'Aktivieren für aufsteigende Sortierung',
 	'UI:Datatables:Language:Sort:Descending' => 'Aktivieren für absteigende Sortierung',
-	'UI:Datatables:Column:RowActions:Label' => '',
-	'UI:Datatables:Column:RowActions:Description' => '',
+	'UI:Datatables:Column:RowActions:Label' => '~~',
+	'UI:Datatables:Column:RowActions:Description' => '~~',
 	'UI:Datatables:RowActions:ConfirmationDialog' => 'Aktion bestätigen',
 	'UI:Datatables:RowActions:ConfirmationMessage' => 'Möchten Sie diese Aktion ausführen?',
 ]);

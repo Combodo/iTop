@@ -1,27 +1,17 @@
 <?php
-
-/*
- * @copyright   Copyright (C) 2024 Combodo SAS
- * @license     http://opensource.org/licenses/AGPL-3.0
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'gui'
-//////////////////////////////////////////////////////////////////////
-//
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'application'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: AuditCategory
-//
-
+/**
+ *
+ */
 Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:AuditCategory' => 'Audit Category',
-	'Class:AuditCategory+'                                   => 'Audit category defines a scope of objects which needs to be audited.
+	'Class:AuditCategory+' => 'Audit category defines a scope of objects which needs to be audited.
 It groups all audit rules applying to that object scope',
 	'Class:AuditCategory/Attribute:name' => 'Category Name',
 	'Class:AuditCategory/Attribute:name+' => 'Identify a scope of objects to audit',
@@ -37,15 +27,8 @@ It groups all audit rules applying to that object scope',
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category',
-]);
-
-//
-// Class: AuditRule
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:AuditRule' => 'Audit Rule',
-	'Class:AuditRule+'                                  => 'An audit rule corresponds a single check within an audit category.
+	'Class:AuditRule+' => 'An audit rule corresponds a single check within an audit category.
 It is applied on the scope of objects defined by the audit category',
 	'Class:AuditRule/Attribute:name' => 'Rule name',
 	'Class:AuditRule/Attribute:name+' => 'Short name for this rule',
@@ -56,7 +39,7 @@ It is applied on the scope of objects defined by the audit category',
 	'Class:AuditRule/Attribute:query' => 'Query to run',
 	'Class:AuditRule/Attribute:query+' => 'The OQL expression to run. Returned classes must be aligned with those of the category\'s scope',
 	'Class:AuditRule/Attribute:valid_flag' => 'Returned objects: ',
-	'Class:AuditRule/Attribute:valid_flag+'             => 'Does the query to run returns valid or invalid objects?
+	'Class:AuditRule/Attribute:valid_flag+' => 'Does the query to run returns valid or invalid objects?
 "Valid objects": then objects in error are those part of the scope and not in the list of valid objects,
 "Invalid objects": then objects in error are the invalid objects which are part of the scope',
 	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'Valid objects',
@@ -69,33 +52,19 @@ It is applied on the scope of objects defined by the audit category',
 	'Class:AuditRule/Attribute:category_name+' => 'Name of the category of this rule',
 	'Class:AuditRule/Attribute:contact_id' => 'Owner',
 	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule',
-]);
-
-//
-// Class: AuditDomain
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:AuditDomain' => 'Audit Domain',
-	'Class:AuditDomain+'                           => 'Audit domains allow to group the audit categories.
+	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors',
 	'Class:AuditDomain/Attribute:name' => 'Name',
 	'Class:AuditDomain/Attribute:name+' => 'It\'s a segmentation of the Audit by who is in charge of fixing it or just interested.',
 	'Class:AuditDomain/Attribute:description' => 'Description',
-	'Class:AuditDomain/Attribute:description+' => '',
+	'Class:AuditDomain/Attribute:description+' => '~~',
 	'Class:AuditDomain/Attribute:icon' => 'Icon',
-	'Class:AuditDomain/Attribute:icon+' => '',
+	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categories',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.',
-]);
-
-//
-// Class: lnkAuditCategoryToAuditDomain
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain',
-	'Class:lnkAuditCategoryToAuditDomain+' => '',
+	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id+' => 'Audit Category',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_name' => 'Category name',
@@ -104,13 +73,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name',
-]);
-
-//
-// Class: QueryOQL
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Query' => 'Query',
 	'Class:Query+' => 'A query is a data set defined in a dynamic way',
 	'Class:Query/Attribute:name' => 'Name',
@@ -130,7 +92,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Query/Attribute:export_last_user_contact' => 'Contact',
 	'Class:Query/Attribute:export_last_user_contact+' => 'The contact who executed the last export',
 	'Class:Query/Attribute:usages' => 'Usages',
-		'Class:Query/Attribute:usages+' => 'Specify the possible usages for this query.
+	'Class:Query/Attribute:usages+' => 'Specify the possible usages for this query.
  - The "Reference for AI" tag assumes the description is very explicit and compliant with OQL. It may be used as an example for building OQL queries by AI.
  - The "Notification" tag implies the class of returned objects has one and only one field of type email.
  - The "Dashlet" tag assumes the OQL returns a single class of objects.',
@@ -149,18 +111,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:QueryOQL+' => 'A query based on the Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => 'Expression',
 	'Class:QueryOQL/Attribute:oql+' => 'OQL Expression',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'addon/userrights'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: User
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:User' => 'User',
 	'Class:User+' => 'User login',
 	'Class:User/Attribute:finalclass' => 'Type of account',
@@ -176,9 +126,9 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:User/Attribute:email' => 'Email',
 	'Class:User/Attribute:email+' => 'Email of the corresponding contact',
 	'Class:User/Attribute:login' => 'Login',
-	'Class:User/Attribute:login+'                => 'Account identification string, must be unique within '.ITOP_APPLICATION_SHORT,
+	'Class:User/Attribute:login+' => 'Account identification string, must be unique within '.ITOP_APPLICATION_SHORT,
 	'Class:User/Attribute:language' => 'Language',
-	'Class:User/Attribute:language+'             => 'Default '.ITOP_APPLICATION_SHORT.' language for this user, to choose amoungst languages in which '.ITOP_APPLICATION_SHORT.' was localised . ',
+	'Class:User/Attribute:language+' => 'Default '.ITOP_APPLICATION_SHORT.' language for this user, to choose amoungst languages in which '.ITOP_APPLICATION_SHORT.' was localised . ',
 	'Class:User/Attribute:language/Value:EN US' => 'English',
 	'Class:User/Attribute:language/Value:EN US+' => 'English (U.S.)',
 	'Class:User/Attribute:language/Value:FR FR' => 'French',
@@ -191,7 +141,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:User/Attribute:status+' => 'Whether the user account is enabled or disabled.',
 	'Class:User/Attribute:status/Value:enabled' => 'Enabled',
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled',
-
 	'Class:User/Error:LoginMustBeUnique' => 'Login must be unique - "%1$s" is already being used.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'At least one profile must be assigned to this user.',
 	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)',
@@ -209,43 +158,22 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office',
 	'Class:UserInternal' => 'User Internal',
 	'Class:UserInternal+' => 'User defined within '.ITOP_APPLICATION_SHORT,
-]);
-
-//
-// Class: URP_Profiles
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:URP_Profiles' => 'Profile',
 	'Class:URP_Profiles+' => 'User profile',
 	'Class:URP_Profiles/Attribute:name' => 'Name',
-	'Class:URP_Profiles/Attribute:name+' => '',
+	'Class:URP_Profiles/Attribute:name+' => '~~',
 	'Class:URP_Profiles/Attribute:description' => 'Description',
 	'Class:URP_Profiles/Attribute:description+' => 'one line description',
 	'Class:URP_Profiles/Attribute:user_list' => 'Users',
 	'Class:URP_Profiles/Attribute:user_list+' => 'persons having this role',
-]);
-
-//
-// Class: URP_Dimensions
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:URP_Dimensions' => 'dimension',
 	'Class:URP_Dimensions+' => 'application dimension (defining silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Name',
-	'Class:URP_Dimensions/Attribute:name+' => '',
+	'Class:URP_Dimensions/Attribute:name+' => '~~',
 	'Class:URP_Dimensions/Attribute:description' => 'Description',
 	'Class:URP_Dimensions/Attribute:description+' => 'one line description',
 	'Class:URP_Dimensions/Attribute:type' => 'Type',
 	'Class:URP_Dimensions/Attribute:type+' => 'class name or data type (projection unit)',
-]);
-
-//
-// Class: URP_UserProfile
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:URP_UserProfile' => 'User to profile',
 	'Class:URP_UserProfile+' => 'user profiles',
 	'Class:URP_UserProfile/Name' => 'Link between %1$s and %2$s',
@@ -259,13 +187,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:URP_UserProfile/Attribute:profile+' => 'Profile name',
 	'Class:URP_UserProfile/Attribute:reason' => 'Reason',
 	'Class:URP_UserProfile/Attribute:reason+' => 'explain why this person may have this role',
-]);
-
-//
-// Class: URP_UserOrg
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:URP_UserOrg' => 'User organisations',
 	'Class:URP_UserOrg+' => 'Allowed organisations',
 	'Class:URP_UserOrg/Name' => 'Link between %1$s and %2$s',
@@ -279,13 +200,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Allowed organisation',
 	'Class:URP_UserOrg/Attribute:reason' => 'Reason',
 	'Class:URP_UserOrg/Attribute:reason+' => 'explain why this person is allowed to see the data belonging to this organisation',
-]);
-
-//
-// Class: URP_ProfileProjection
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:URP_ProfileProjection' => 'profile_projection',
 	'Class:URP_ProfileProjection+' => 'profile projections',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimension',
@@ -300,13 +214,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL expression (using $user) | constant |  | +attribute code',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Target attribute code (optional)',
-]);
-
-//
-// Class: URP_ClassProjection
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:URP_ClassProjection' => 'class_projection',
 	'Class:URP_ClassProjection+' => 'class projections',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimension',
@@ -319,13 +226,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL expression (using $this) | constant |  | +attribute code',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Target attribute code (optional)',
-]);
-
-//
-// Class: URP_ActionGrant
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:URP_ActionGrant' => 'action_permission',
 	'Class:URP_ActionGrant+' => 'permissions on classes',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profile',
@@ -342,13 +242,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'no',
 	'Class:URP_ActionGrant/Attribute:action' => 'Action',
 	'Class:URP_ActionGrant/Attribute:action+' => 'operations to perform on the given class',
-]);
-
-//
-// Class: URP_StimulusGrant
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:URP_StimulusGrant' => 'stimulus_permission',
 	'Class:URP_StimulusGrant+' => 'permissions on stimulus in the life cycle of the object',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profile',
@@ -365,39 +258,20 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'no',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'stimulus code',
-]);
-
-//
-// Class: URP_AttributeGrant
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:URP_AttributeGrant' => 'attribute_permission',
 	'Class:URP_AttributeGrant+' => 'permissions at the attributes level',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Action grant',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'action grant',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribute',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'attribute code',
-]);
-
-//
-// Class: UserDashboard
-//
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:UserDashboard' => 'User dashboard',
-	'Class:UserDashboard+' => '',
+	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'User',
-	'Class:UserDashboard/Attribute:user_id+' => '',
+	'Class:UserDashboard/Attribute:user_id+' => '~~',
 	'Class:UserDashboard/Attribute:menu_code' => 'Menu code',
-	'Class:UserDashboard/Attribute:menu_code+' => '',
+	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Contents',
-	'Class:UserDashboard/Attribute:contents+' => '',
-]);
-
-//
-// Duplicated into itop-welcome-itil ( will be removed from here...)
-//
-Dict::Add('EN GB', 'British English', 'British English', [
+	'Class:UserDashboard/Attribute:contents+' => '~~',
 	'Menu:WelcomeMenu' => 'Welcome',
 	'Menu:WelcomeMenu+' => 'Welcome to '.ITOP_APPLICATION_SHORT,
 	'Menu:WelcomeMenuPage' => 'Welcome',
@@ -415,14 +289,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:NotificationsMenu+' => 'Configuration of the Notifications',
 	'Menu:MyShortcuts' => 'My Shortcuts',
 	'Menu:DataAdministration' => 'Data administration',
-	'Menu:DataAdministration+' => '',
-]);
-
-//
-// String from the User Interface: menu, messages, buttons, etc...
-//
-
-Dict::Add('EN GB', 'British English', 'British English', [
+	'Menu:DataAdministration+' => '~~',
 	'BooleanLabel:yes' => 'yes',
 	'BooleanLabel:no' => 'no',
 	'UI:WelcomeMenu:Title' => 'Welcome to '.ITOP_APPLICATION_SHORT,
@@ -480,7 +347,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:UserPref:DoNotShowAgain' => 'Do not show again',
 	'UI:InputFile:NoFileSelected' => 'No File Selected',
 	'UI:InputFile:SelectFile' => 'Select a file',
-
 	'UI:SearchToggle' => 'Search',
 	'UI:ClickToCreateNew' => 'Create a %1$s',
 	'UI:SearchFor_Class' => 'Search for %1$s objects',
@@ -494,13 +360,12 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'Incorrect link definition: the class of objects to manage: %1$s was not found as an external key in the class %2$s',
 	'UI:Error:Object_Class_Id_NotFound' => 'Object: %1$s:%2$d not found.',
 	'UI:Error:WizardCircularReferenceInDependencies' => 'Error: Circular reference in the dependencies between the fields, check the data model.',
-	'UI:Error:UploadedFileTooBig'                        => 'The uploaded file is too big. (Max allowed size is %1$s). To modify this limit, contact your '.ITOP_APPLICATION_SHORT.' administrator. (Check the PHP configuration for upload_max_filesize and post_max_size on the server).',
+	'UI:Error:UploadedFileTooBig' => 'The uploaded file is too big. (Max allowed size is %1$s). To modify this limit, contact your '.ITOP_APPLICATION_SHORT.' administrator. (Check the PHP configuration for upload_max_filesize and post_max_size on the server).',
 	'UI:Error:UploadedFileTruncated.' => 'Uploaded file has been truncated !',
 	'UI:Error:NoTmpDir' => 'The temporary directory is not defined.',
 	'UI:Error:CannotWriteToTmp_Dir' => 'Unable to write the temporary file to the disk. upload_tmp_dir = "%1$s".',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Upload stopped by extension. (Original file name = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'File upload failed, unknown cause. (Error code = "%1$s").',
-
 	'UI:Error:1ParametersMissing' => 'Error: the following parameter must be specified for this operation: %1$s.',
 	'UI:Error:2ParametersMissing' => 'Error: the following parameters must be specified for this operation: %1$s and %2$s.',
 	'UI:Error:3ParametersMissing' => 'Error: the following parameters must be specified for this operation: %1$s, %2$s and %3$s.',
@@ -522,9 +387,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance',
 	'UI:Error:MaintenanceTitle' => 'Maintenance',
 	'UI:Error:InvalidToken' => 'The current session is invalid. Please refresh the page and try again. If the problem persists, please log out and log in again.',
-
+	'UI:Error:TwigController' => 'Internal error in form controller~~',
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)',
-
 	'UI:GroupBy:Count' => 'Count',
 	'UI:GroupBy:Count+' => 'Number of elements',
 	'UI:CountOfObjects' => '%1$d objects matching the criteria.',
@@ -587,8 +451,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:SearchValue:CheckAll' => 'Check All',
 	'UI:SearchValue:UncheckAll' => 'Uncheck All',
 	'UI:SelectOne' => '-- select one --',
-	'UI:AccessRO-All'                              => ITOP_APPLICATION.' is read-only',
-	'UI:AccessRO-Users'                            => ITOP_APPLICATION.' is read-only for end-users',
+	'UI:AccessRO-All' => ITOP_APPLICATION.' is read-only',
+	'UI:AccessRO-Users' => ITOP_APPLICATION.' is read-only for end-users',
 	'UI:ApplicationEnvironment' => 'Application environment: %1$s',
 	'UI:CSVImport:MappingSelectOne' => '-- select one --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignore this field --',
@@ -599,7 +463,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:CSVImport:DataLine1' => 'Data Line 1',
 	'UI:CSVImport:DataLine2' => 'Data Line 2',
 	'UI:CSVImport:idField' => 'id (Primary Key)',
-	'UI:Title:BulkImport'                          => ITOP_APPLICATION_SHORT.' - Bulk import',
+	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - Bulk import',
 	'UI:Title:BulkImport+' => 'CSV Import Wizard',
 	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronisation of %1$d objects of class %2$s',
 	'UI:CSVImport:ClassesSelectOne' => '-- select one --',
@@ -640,8 +504,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:CSVImport:CommentsAndHeader' => 'Comments and header',
 	'UI:CSVImport:SelectClass' => 'Select the class to import:',
 	'UI:CSVImport:AdvancedMode' => 'Advanced mode',
-	'UI:CSVImport:AdvancedMode+'              => 'In advanced mode the "id" (primary key) of the objects can be used to update and rename objects.'.
-		'However the column "id" (if present) can only be used as a search criteria and can not be combined with any other search criteria.',
+	'UI:CSVImport:AdvancedMode+' => 'In advanced mode the "id" (primary key) of the objects can be used to update and rename objects.However the column "id" (if present) can only be used as a search criteria and can not be combined with any other search criteria.',
 	'UI:CSVImport:SelectAClassFirst' => 'To configure the mapping, select a class first.',
 	'UI:CSVImport:HeaderFields' => 'Fields',
 	'UI:CSVImport:HeaderMappings' => 'Mappings',
@@ -652,10 +515,9 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:CSVImport:Encoding' => 'Character encoding',
 	'UI:CSVImport:ViewAllPossibleValues' => 'View all possible values',
 	'UI:CSVImport:ViewAllAmbiguousValues' => 'View all ambiguous values',
-	'UI:UniversalSearchTitle'                 => ITOP_APPLICATION_SHORT.' - Universal Search',
+	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - Universal Search',
 	'UI:UniversalSearch:Error' => 'Error: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Select the class to search: ',
-
 	'UI:CSVReport-Value-Modified' => 'Modified',
 	'UI:CSVReport-Value-SetIssue' => 'Invalid value for attribute',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value',
@@ -664,7 +526,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:CSVReport-Value-NoMatch-NoObject' => 'There are no \'%1$s\' objects',
 	'UI:CSVReport-Value-NoMatch-NoObject-ForCurrentUser' => 'There are no \'%1$s\' objects found with your current profile',
 	'UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser' => 'There are some \'%1$s\' objects not visible with your current profile',
-
 	'UI:CSVReport-Value-Missing' => 'Missing mandatory value',
 	'UI:CSVReport-Value-Ambiguous' => 'Ambiguous: found %1$s objects',
 	'UI:CSVReport-Row-Unchanged' => 'unchanged',
@@ -688,7 +549,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:CSVReport-Row-Issue-Reconciliation' => 'failed to reconcile',
 	'UI:CSVReport-Row-Issue-Ambiguous' => 'ambiguous reconciliation',
 	'UI:CSVReport-Row-Issue-Internal' => 'Internal error: %1$s, %2$s',
-
+	'UI:CSVReport-Value-Issue-NoValue' => 'No value~~',
+	'UI:CSVReport-Row-Issue-NbField' => 'Not the expected number of columns (found: %1$s, expected: %2$s)~~',
 	'UI:CSVReport-Icon-Unchanged' => 'Unchanged',
 	'UI:CSVReport-Icon-Modified' => 'Modified',
 	'UI:CSVReport-Icon-Missing' => 'Missing',
@@ -703,14 +565,11 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:CSVReport-Stats-Errors' => '%1$.0f %% of the loaded objects have errors and will be ignored.',
 	'UI:CSVReport-Stats-Created' => '%1$.0f %% of the loaded objects will be created.',
 	'UI:CSVReport-Stats-Modified' => '%1$.0f %% of the loaded objects will be modified.',
-
 	'UI:CSVExport:AdvancedMode' => 'Advanced mode',
 	'UI:CSVExport:AdvancedMode+' => 'In advanced mode, several columns are added to the export: the id of the object, the id of external keys and their reconciliation attributes.',
 	'UI:CSVExport:LostChars' => 'Encoding issue',
-	'UI:CSVExport:LostChars+'    => 'The downloaded file will be encoded into %1$s. '.ITOP_APPLICATION_SHORT.' has detected some characters that are not compatible with this format. Those characters will either be replaced by a substitute (e.g. accentuated chars losing the accent), or they will be discarded. You can copy/paste the data from your web browser. Alternatively, you can contact your administrator to change the encoding (See parameter \'csv_file_default_charset\').',
-
+	'UI:CSVExport:LostChars+' => 'The downloaded file will be encoded into %1$s. '.ITOP_APPLICATION_SHORT.' has detected some characters that are not compatible with this format. Those characters will either be replaced by a substitute (e.g. accentuated chars losing the accent), or they will be discarded. You can copy/paste the data from your web browser. Alternatively, you can contact your administrator to change the encoding (See parameter \'csv_file_default_charset\').',
 	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB Audit',
-
 	'UI:Audit:Interactive:All:Title' => 'Audit results',
 	'UI:Audit:Interactive:All:SubTitle' => 'Full audit: includes all rules, all categories, all domains',
 	'UI:Audit:Interactive:All:BreadCrumb' => 'Full audit',
@@ -730,7 +589,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:Audit:Interactive:Selection:BadgeAll' => 'All categories',
 	'UI:Audit:Interactive:Button:Back' => 'Back to the audit',
 	'UI:Audit:Interactive:Button:Configuration' => 'Audit configuration',
-
 	'UI:Audit:ViewRules' => 'Check the rules',
 	'UI:Audit:HeaderAuditRule' => 'Audit Rule',
 	'UI:Audit:HeaderNbObjects' => '# Objects',
@@ -747,8 +605,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated',
 	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors out of %2$s - %3$s%% of the object are valid',
-
-	'UI:RunQuery:Title'                => ITOP_APPLICATION_SHORT.' - OQL Query Evaluation',
+	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - OQL Query Evaluation',
 	'UI:RunQuery:QueryExamples' => 'Query Examples',
 	'UI:RunQuery:QueryResults' => 'Query Results',
 	'UI:RunQuery:HeaderPurpose' => 'Purpose',
@@ -766,8 +623,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:RunQuery:ResultSQL' => 'Resulting SQL',
 	'UI:RunQuery:Error' => 'An error occurred while running the query',
 	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries',
-	'UI:Query:UrlV1'                   => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. <br/>Should you want to guarantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.',
-	'UI:Schema:Title'                  => ITOP_APPLICATION_SHORT.' objects schema',
+	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. <br/>Should you want to guarantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.',
+	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' objects schema',
 	'UI:Schema:TitleForClass' => '%1$s schema',
 	'UI:Schema:NoClassSelected' => 'No class selected, please choose one',
 	'UI:Schema:CategoryMenuItem' => 'Category <b>%1$s</b>',
@@ -787,7 +644,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:Schema:Label' => 'Label',
 	'UI:Schema:Label+' => 'Label of the attribute',
 	'UI:Schema:Type' => 'Type',
-
 	'UI:Schema:Type+' => 'Data type of the attribute',
 	'UI:Schema:Origin' => 'Origin',
 	'UI:Schema:Origin+' => 'The base class in which this attribute is defined',
@@ -920,9 +776,9 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d object(s) of class %2$s found.',
 	'UI:Search:NoObjectFound' => 'No object found.',
 	'UI:ModificationPageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s modification',
-	'UI:ModificationTitle_Class_Object' => 'Modification of %1$s: <span class=\"hilite\">%2$s</span>',
+	'UI:ModificationTitle_Class_Object' => 'Modification of %1$s: <span class=\\"hilite\\">%2$s</span>',
 	'UI:ClonePageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - Clone %1$s - %2$s modification',
-	'UI:CloneTitle_Class_Object' => 'Clone of %1$s: <span class=\"hilite\">%2$s</span>',
+	'UI:CloneTitle_Class_Object' => 'Clone of %1$s: <span class=\\"hilite\\">%2$s</span>',
 	'UI:CreationPageTitle_Class' => ITOP_APPLICATION_SHORT.' - Creation of a new %1$s ',
 	'UI:CreationTitle_Class' => 'Creation of a new %1$s',
 	'UI:SelectTheTypeOf_Class_ToCreate' => 'Select the type of %1$s to create:',
@@ -938,7 +794,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:SystemIntrusion' => 'Access denied. You have requested an operation that is not allowed for you.',
 	'UI:FatalErrorMessage' => 'Fatal error, '.ITOP_APPLICATION_SHORT.' cannot continue.',
 	'UI:Error_Details' => 'Error: %1$s.',
-
 	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' user management - profile projections',
 	'UI:UserManagement:Class' => 'Class',
 	'UI:UserManagement:Class+' => 'Class of objects',
@@ -973,52 +828,42 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'No lifecycle has been defined for this class',
 	'UI:UserManagement:GrantMatrix' => 'Grant Matrix',
-
 	'Menu:SystemTools' => 'System',
-
 	'UI:ChangeManagementMenu' => 'Change Management',
 	'UI:ChangeManagementMenu+' => 'Change Management',
 	'UI:ChangeManagementMenu:Title' => 'Changes Overview',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Changes by type',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes by status',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changes not yet assigned',
-
 	'UI:ConfigurationManagementMenu' => 'Configuration Management',
 	'UI:ConfigurationManagementMenu+' => 'Configuration Management',
 	'UI:ConfigurationManagementMenu:Title' => 'Infrastructure Overview',
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Infrastructure objects by type',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Infrastructure objects by status',
-
 	'UI:ConfigMgmtMenuOverview:Title' => 'Dashboard for Configuration Management',
 	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Configuration Items by status',
 	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Configuration Items by type',
-
 	'UI:RequestMgmtMenuOverview:Title' => 'Dashboard for Request Management',
 	'UI-RequestManagementOverview-RequestByService' => 'User Requests by service',
 	'UI-RequestManagementOverview-RequestByPriority' => 'User Requests by priority',
 	'UI-RequestManagementOverview-RequestUnassigned' => 'User Requests not yet assigned to an agent',
-
 	'UI:IncidentMgmtMenuOverview:Title' => 'Dashboard for Incident Management',
 	'UI-IncidentManagementOverview-IncidentByService' => 'Incidents by service',
 	'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidents by priority',
 	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidents not yet assigned to an agent',
-
 	'UI:ChangeMgmtMenuOverview:Title' => 'Dashboard for Change Management',
 	'UI-ChangeManagementOverview-ChangeByType' => 'Changes by type',
 	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Changes not yet assigned to an agent',
 	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Outages due to changes',
-
 	'UI:ServiceMgmtMenuOverview:Title' => 'Dashboard for Service Management',
 	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Customer contracts to be renewed in 30 days',
 	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Provider contracts to be renewed in 30 days',
-
 	'UI:ContactsMenu' => 'Contacts',
 	'UI:ContactsMenu+' => 'Contacts',
 	'UI:ContactsMenu:Title' => 'Contacts Overview',
 	'UI-ContactsMenu-ContactsByLocation' => 'Contacts by location',
 	'UI-ContactsMenu-ContactsByType' => 'Contacts by type',
 	'UI-ContactsMenu-ContactsByStatus' => 'Contacts by status',
-
 	'UI:NotificationsMenu:Title' => 'Configuration of the Notifications',
 	'UI:NotificationsMenu:Help' => 'Help',
 	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' the notifications are fully customisable. They are based on two sets of objects: <i>triggers and actions</i>.</p>
@@ -1050,22 +895,18 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)',
 	'UI:NotificationsMenu:Actions:Action' => 'Other actions',
 	'UI:NotificationsMenu:AvailableActions' => 'Available actions',
-
 	'Menu:TagAdminMenu' => 'Tags configuration',
 	'Menu:TagAdminMenu+' => 'Tags values management',
 	'UI:TagAdminMenu:Title' => 'Tags configuration',
 	'UI:TagAdminMenu:NoTags' => 'No Tag field configured',
 	'UI:TagSetFieldData:Error' => 'Error: %1$s',
-
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s built on %4$s',
 	'UI:PropertiesTab' => 'Properties',
-
 	'UI:OpenDocumentInNewWindow_' => 'Open',
 	'UI:DownloadDocument_' => 'Download',
 	'UI:Document:NoPreview' => 'No preview is available for this type of document',
 	'UI:Download-CSV' => 'Download %1$s',
-
 	'UI:DeadlineMissedBy_duration' => 'Missed by %1$s',
 	'UI:Deadline_LessThan1Min' => '< 1 min',
 	'UI:Deadline_Minutes' => '%1$d min',
@@ -1187,8 +1028,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ArchiveMode:Banner' => 'Archive mode',
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed',
 	'UI:FavoriteOrganizations' => 'Favourite Organisations',
-	'UI:FavoriteOrganizations+' => 'Check in the list below the organisations that you want to see in the drop-down menu for a quick access. '.
-		'Note that this is not a security setting, objects from any organisation are still visible and can be accessed by selecting "All Organisations" in the drop-down list.',
+	'UI:FavoriteOrganizations+' => 'Check in the list below the organisations that you want to see in the drop-down menu for a quick access. Note that this is not a security setting, objects from any organisation are still visible and can be accessed by selecting "All Organisations" in the drop-down list.',
 	'UI:FavoriteLanguage' => 'Favourite language',
 	'UI:Favorites:SelectYourLanguage' => 'Select your preferred language',
 	'UI:FavoriteOtherSettings' => 'Other Settings',
@@ -1211,7 +1051,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape',
 	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard',
 	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard',
-
 	'UI:ConfigureThisList' => 'Configure This List...',
 	'UI:ListConfigurationTitle' => 'List Configuration',
 	'UI:ColumnsAndSortOrder' => 'Columns and sort order:',
@@ -1227,10 +1066,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)',
 	'UI:Button:MoveUp' => 'Move Up',
 	'UI:Button:MoveDown' => 'Move Down',
-
 	'UI:OQL:UnknownClassAndFix' => 'Unknown class "%1$s". You may try "%2$s" instead.',
 	'UI:OQL:UnknownClassNoFix' => 'Unknown class "%1$s"',
-
 	'UI:Dashboard:EditCustom' => 'Edit custom version...',
 	'UI:Dashboard:CreateCustom' => 'Create a custom version...',
 	'UI:Dashboard:DeleteCustom' => 'Delete custom version...',
@@ -1241,12 +1078,10 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ImportDashboardText' => 'Select a dashboard file to import:',
 	'UI:Dashboard:Actions' => 'Dashboard actions',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the ongoing changes.',
-
 	'UI:DashletCreation:Title' => 'Create a new Dashlet',
 	'UI:DashletCreation:Dashboard' => 'Dashboard',
 	'UI:DashletCreation:DashletType' => 'Dashlet Type',
 	'UI:DashletCreation:EditNow' => 'Edit the Dashboard',
-
 	'UI:DashboardEdit:Title' => 'Dashboard Editor',
 	'UI:DashboardEdit:DashboardTitle' => 'Title',
 	'UI:DashboardEdit:AutoReload' => 'Automatic refresh',
@@ -1254,38 +1089,31 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:DashboardEdit:AutoReloadSec+' => 'The minimum allowed is %1$d seconds',
 	'UI:DashboardEdit:Revert' => 'Revert',
 	'UI:DashboardEdit:Apply' => 'Apply',
-
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Dashboard Properties',
 	'UI:DashboardEdit:Dashlets' => 'Available Dashlets',
 	'UI:DashboardEdit:DashletProperties' => 'Dashlet Properties',
-
 	'UI:Form:Property' => 'Property',
 	'UI:Form:Value' => 'Value',
-
 	'UI:DashletUnknown:Label' => 'Unknown',
 	'UI:DashletUnknown:Description' => 'Unknown dashlet (might have been uninstalled)',
 	'UI:DashletUnknown:RenderText:View' => 'Unable to render this dashlet.',
 	'UI:DashletUnknown:RenderText:Edit' => 'Unable to render this dashlet (class "%1$s"). Check with your administrator if it is still available.',
 	'UI:DashletUnknown:RenderNoDataText:Edit' => 'No preview available for this dashlet (class "%1$s").',
 	'UI:DashletUnknown:Prop-XMLConfiguration' => 'Configuration (shown as raw XML)',
-
 	'UI:DashletProxy:Label' => 'Proxy',
 	'UI:DashletProxy:Description' => 'Proxy dashlet',
 	'UI:DashletProxy:RenderNoDataText:Edit' => 'No preview available for this third-party dashlet (class "%1$s").',
 	'UI:DashletProxy:Prop-XMLConfiguration' => 'Configuration (shown as raw XML)',
-
 	'UI:DashletPlainText:Label' => 'Text',
 	'UI:DashletPlainText:Description' => 'Plain text (no formatting)',
 	'UI:DashletPlainText:Prop-Text' => 'Text',
 	'UI:DashletPlainText:Prop-Text:Default' => 'Please enter some text here...',
-
 	'UI:DashletObjectList:Label' => 'Object list',
 	'UI:DashletObjectList:Description' => 'Object list dashlet',
 	'UI:DashletObjectList:Prop-Title' => 'Title',
 	'UI:DashletObjectList:Prop-Query' => 'Query',
 	'UI:DashletObjectList:Prop-Menu' => 'Menu',
-
 	'UI:DashletGroupBy:Prop-Title' => 'Title',
 	'UI:DashletGroupBy:Prop-Query' => 'Query',
 	'UI:DashletGroupBy:Prop-Style' => 'Style',
@@ -1296,27 +1124,23 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth' => 'Day of month for %1$s',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (hour)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (month)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-Year' => '%1$s (year)~~',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (day of week)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (day of month)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Please select the field on which the objects will be grouped together',
-
 	'UI:DashletGroupByPie:Label' => 'Pie Chart',
 	'UI:DashletGroupByPie:Description' => 'Pie Chart',
 	'UI:DashletGroupByBars:Label' => 'Bar Chart',
 	'UI:DashletGroupByBars:Description' => 'Bar Chart',
 	'UI:DashletGroupByTable:Label' => 'Group By (table)',
 	'UI:DashletGroupByTable:Description' => 'List (Grouped by a field)',
-
-	// New in 2.5
 	'UI:DashletGroupBy:Prop-Function' => 'Aggregation function',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Function attribute',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Direction',
 	'UI:DashletGroupBy:Prop-OrderField' => 'Order by',
 	'UI:DashletGroupBy:Prop-Limit' => 'Limit',
-
 	'UI:DashletGroupBy:Order:asc' => 'Ascending',
 	'UI:DashletGroupBy:Order:desc' => 'Descending',
-
 	'UI:GroupBy:count' => 'Count',
 	'UI:GroupBy:count+' => 'Number of elements',
 	'UI:GroupBy:sum' => 'Sum',
@@ -1327,15 +1151,12 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:GroupBy:min+' => 'Minimum of %1$s',
 	'UI:GroupBy:max' => 'Maximum',
 	'UI:GroupBy:max+' => 'Maximum of %1$s',
-	// ---
-
 	'UI:DashletHeaderStatic:Label' => 'Header',
 	'UI:DashletHeaderStatic:Description' => 'Displays a horizontal separator',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Title',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Contacts',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Icon',
 	'UI:DashletIcon:None' => 'None~',
-
 	'UI:DashletHeaderDynamic:Label' => 'Header with statistics',
 	'UI:DashletHeaderDynamic:Description' => 'Header with stats (grouped by...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Title',
@@ -1346,11 +1167,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:DashletHeaderDynamic:Prop-Query' => 'Query',
 	'UI:DashletHeaderDynamic:Prop-GroupBy' => 'Group by',
 	'UI:DashletHeaderDynamic:Prop-Values' => 'Values',
-
 	'UI:DashletBadge:Label' => 'Badge',
 	'UI:DashletBadge:Description' => 'Object Icon with new/search',
 	'UI:DashletBadge:Prop-Class' => 'Class',
-
 	'DayOfWeek-Sunday' => 'Sunday',
 	'DayOfWeek-Monday' => 'Monday',
 	'DayOfWeek-Tuesday' => 'Tuesday',
@@ -1370,8 +1189,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Month-10' => 'October',
 	'Month-11' => 'November',
 	'Month-12' => 'December',
-
-	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Su',
 	'DayOfWeek-Monday-Min' => 'Mo',
 	'DayOfWeek-Tuesday-Min' => 'Tu',
@@ -1392,8 +1209,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Month-11-Short' => 'Nov',
 	'Month-12-Short' => 'Dec',
 	'Calendar-FirstDayOfWeek' => '0',
-	// 0 = Sunday, 1 = Monday, etc...
-
 	'UI:Menu:ShortcutList' => 'Create a Shortcut...',
 	'UI:Menu:FilterList' => 'Display list with search criteria',
 	'UI:ShortcutRenameDlg:Title' => 'Rename the shortcut',
@@ -1401,11 +1216,11 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ShortcutDelete:Confirm' => 'Please confirm that you wish to delete the shortcut(s).',
 	'UI:ObjectShortcutInsert' => 'Insert Object Shortcut',
 	'Class:Shortcut' => 'Shortcut',
-	'Class:Shortcut+' => '',
+	'Class:Shortcut+' => '~~',
 	'Class:Shortcut/Attribute:name' => 'Name',
 	'Class:Shortcut/Attribute:name+' => 'Label used in the menu and page title',
 	'Class:ShortcutOQL' => 'Search result shortcut',
-	'Class:ShortcutOQL+' => '',
+	'Class:ShortcutOQL+' => '~~',
 	'Class:ShortcutOQL/Attribute:oql' => 'Query',
 	'Class:ShortcutOQL/Attribute:oql+' => 'OQL defining the list of objects to search for',
 	'Class:ShortcutOQL/Attribute:auto_reload' => 'Automatic refresh',
@@ -1413,12 +1228,10 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Custom rate',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Automatic refresh interval (seconds)',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'The minimum allowed is %1$d seconds',
-
 	'UI:FillAllMandatoryFields' => 'Please fill all mandatory fields.',
 	'UI:ValueMustBeSet' => 'Please specify a value',
 	'UI:ValueMustBeChanged' => 'Please change the value',
 	'UI:ValueInvalidFormat' => 'Invalid format',
-
 	'UI:CSVImportConfirmTitle' => 'Please confirm the operation',
 	'UI:CSVImportConfirmMessage' => 'Are you sure you want to do this?',
 	'UI:CSVImportError_items' => 'Errors: %1$d',
@@ -1444,11 +1257,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 <tr><td>i</td><td>minutes (2 digits, e.g. 00..59)</td></tr>
 <tr><td>s</td><td>seconds (2 digits, e.g. 00..59)</td></tr>
 </table>',
-
 	'UI:Button:Remove' => 'Remove',
 	'UI:AddAnExisting_Class' => 'Add objects of type %1$s...',
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s',
-
 	'UI:AboutBox' => 'About '.ITOP_APPLICATION_SHORT.'...',
 	'UI:About:Title' => 'About '.ITOP_APPLICATION_SHORT,
 	'UI:About:DataModel' => 'Data model',
@@ -1458,12 +1269,10 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:About:ManualExtensionSource' => 'Extension',
 	'UI:About:Extension_Version' => 'Version: %1$s',
 	'UI:About:RemoteExtensionSource' => 'Data',
-
 	'UI:DisconnectedDlgMessage' => 'You are disconnected. You must identify yourself to continue using the application.',
 	'UI:DisconnectedDlgTitle' => 'Warning!',
 	'UI:LoginAgain' => 'Login again',
 	'UI:StayOnThePage' => 'Stay on this page',
-
 	'ExcelExporter:ExportMenu' => 'Excel Export...',
 	'ExcelExporter:ExportDialogTitle' => 'Excel Export',
 	'ExcelExporter:ExportButton' => 'Export',
@@ -1476,7 +1285,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'ExcelExport:Statistics' => 'Statistics',
 	'portal:legacy_portal' => 'End-User Portal',
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Back-Office User Interface',
-
 	'UI:CurrentObjectIsLockedBy_User' => 'The object is locked since it is currently being modified by %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'The object is currently being modified by %1$s. Your modifications cannot be submitted since they would be overwritten.',
 	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they have finished.',
@@ -1484,44 +1292,32 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.',
 	'UI:Menu:KillConcurrentLock' => 'Kill the Concurrent Modification Lock !',
-
 	'UI:Menu:ExportPDF' => 'Export as PDF...',
 	'UI:Menu:PrintableVersion' => 'Printer friendly version',
-
 	'UI:BrowseInlineImages' => 'Browse images...',
 	'UI:UploadInlineImageLegend' => 'Upload a new image',
 	'UI:SelectInlineImageToUpload' => 'Select the image to upload',
 	'UI:AvailableInlineImagesLegend' => 'Available images',
 	'UI:NoInlineImage' => 'There is no image available on the server. Use the "Browse" button above to select an image from your computer and upload it to the server.',
 	'UI:MissingInlineImage' => 'Missing image',
-
 	'UI:ToggleFullScreen' => 'Toggle Maximise / Minimise',
 	'UI:Button:ResetImage' => 'Recover the previous image',
 	'UI:Button:RemoveImage' => 'Remove the image',
 	'UI:Button:UploadImage' => 'Upload an image from the disk',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.',
-
 	'UI:Button:RemoveDocument' => 'Remove the document',
-
-	// Search form
 	'UI:Search:Toggle' => 'Minimise / Expand',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class',
 	'UI:Search:Obsolescence:DisabledHint' => 'Based on your preferences, obsolete data are hidden',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria',
-	// - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recently used',
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Most popular',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Others',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.',
-
-	// - Criteria header actions
 	'UI:Search:Criteria:Toggle' => 'Minimise / Expand',
 	'UI:Search:Criteria:Remove' => 'Remove',
 	'UI:Search:Criteria:Locked' => 'Locked',
-
-	// - Criteria titles
-	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Any',
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s is not empty',
@@ -1543,53 +1339,38 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Any',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s from %2$s',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s up to %2$s',
-	//   - Numeric widget
-	//   None yet
-	//   - DateTime widget
 	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= %1$s <= %3$s',
-	//   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any',
-	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
-	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any',
-	//   - Hierarchical key widget
 	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined',
 	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
 	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any',
-
-	// - Criteria operators
-	//   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals',
 	'UI:Search:Criteria:Operator:Default:Between' => 'Between',
-	//   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contains',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.',
-	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals',// => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater',// => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals',// > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less',// => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals',// > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different',// => '≠',
-	//   - Tag Set Widget
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different',
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches',
-
-	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...',
 	'UI:Search:Value:Search:Placeholder' => 'Search...',
 	'UI:Search:Value:Autocomplete:StartTyping' => 'Start typing for possible values.',
@@ -1597,8 +1378,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Value:Autocomplete:NoResult' => 'No result.',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none',
 	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Check all / none visibles',
-
-	// - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'From',
 	'UI:Search:Criteria:Numeric:Until' => 'To',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Any',
@@ -1612,38 +1391,22 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:DateTime:PlaceholderUntil' => 'Any date',
 	'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => 'Any date',
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Children of the selected objects will be included.',
-
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s',
-
 	'UI:StateChanged' => 'State changed',
-]);
-
-//
-// Expression to Natural language
-//
-Dict::Add('EN GB', 'British English', 'British English', [
+	'UI:AddSubTree' => 'Add entry~~',
 	'Expression:Operator:AND' => ' AND ',
 	'Expression:Operator:OR' => ' OR ',
 	'Expression:Operator:=' => ': ',
-
 	'Expression:Unit:Short:DAY' => 'd',
 	'Expression:Unit:Short:WEEK' => 'w',
 	'Expression:Unit:Short:MONTH' => 'm',
 	'Expression:Unit:Short:YEAR' => 'y',
-
 	'Expression:Unit:Long:DAY' => 'day(s)',
 	'Expression:Unit:Long:HOUR' => 'hour(s)',
 	'Expression:Unit:Long:MINUTE' => 'minute(s)',
-
 	'Expression:Verb:NOW' => 'now',
 	'Expression:Verb:ISNULL' => ': undefined',
-]);
-
-//
-// iTop Newsroom menu
-//
-Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:Newsroom:NoNewMessage' => 'No new message',
 	'UI:Newsroom:XNewMessage' => '%1$s new message(s)',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read',
@@ -1658,13 +1421,10 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Important',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normal',
-]);
-
-Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:DataSources' => 'Synchronisation Data Sources',
 	'Menu:DataSources+' => 'Data synchronisation used for batch import of external data',
 	'Menu:AuditCategories' => 'Audit configuration',
-	'Menu:AuditCategories+'       => 'Define rules to audit the quality of '.ITOP_APPLICATION_SHORT.' data',
+	'Menu:AuditCategories+' => 'Define rules to audit the quality of '.ITOP_APPLICATION_SHORT.' data',
 	'Menu:AuditCategories:Title' => 'Audit configuration',
 	'Menu:RunQueriesMenu' => 'Run queries',
 	'Menu:RunQueriesMenu+' => 'Write and execute any OQL query',
@@ -1673,12 +1433,12 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:UniversalSearchMenu' => 'Universal search',
 	'Menu:UniversalSearchMenu+' => 'Search objects of any class including abstract',
 	'Menu:UserManagementMenu' => 'User management',
-	'Menu:UserManagementMenu+'    => 'Who can connect to '.ITOP_APPLICATION_SHORT.' and what can they do?',
+	'Menu:UserManagementMenu+' => 'Who can connect to '.ITOP_APPLICATION_SHORT.' and what can they do?',
 	'Menu:ProfilesMenu' => 'Profiles',
 	'Menu:ProfilesMenu+' => 'View existing Profiles',
 	'Menu:ProfilesMenu:Title' => 'Profiles',
 	'Menu:UserAccountsMenu' => 'User accounts',
-	'Menu:UserAccountsMenu+'      => 'Handling '.ITOP_APPLICATION_SHORT.' users and their access rights',
+	'Menu:UserAccountsMenu+' => 'Handling '.ITOP_APPLICATION_SHORT.' users and their access rights',
 	'Menu:UserAccountsMenu:Title' => 'User accounts',
 	'Menu:UserManagement' => 'User management',
 	'Menu:Queries' => 'Queries',
@@ -1686,6 +1446,5 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:ConfigEditor' => 'General configuration',
 	'Menu:ConfigEditor+' => 'Configuration File editor',
 	'Menu:Integrations' => 'Integrations',
-	'Menu:Integrations+' => '',
-
+	'Menu:Integrations+' => '~~',
 ]);

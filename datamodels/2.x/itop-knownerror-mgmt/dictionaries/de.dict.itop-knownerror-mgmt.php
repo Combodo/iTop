@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
@@ -19,11 +18,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:KnownError/Attribute:org_id' => 'Kunde',
 	'Class:KnownError/Attribute:org_id+' => 'Verknüpft den Known Error mit dem zuständigen Service-Provider oder mit einer Kundenorganisation, falls der Fehler nur dort auftritt',
 	'Class:KnownError/Attribute:cust_name' => 'Kundenname',
-	'Class:KnownError/Attribute:cust_name+' => '',
+	'Class:KnownError/Attribute:cust_name+' => '~~',
 	'Class:KnownError/Attribute:problem_id' => 'Zugehöriges Problem',
 	'Class:KnownError/Attribute:problem_id+' => 'Das Problem, das nicht sofort gelöst werden konnte und zur Anlage dieses Known Errors geführt hat',
 	'Class:KnownError/Attribute:problem_ref' => 'Referenz des zugehörigen Problems',
-	'Class:KnownError/Attribute:problem_ref+' => '',
+	'Class:KnownError/Attribute:problem_ref+' => '~~',
 	'Class:KnownError/Attribute:symptom' => 'Symptom',
 	'Class:KnownError/Attribute:symptom+' => 'Welche Auswirkungen dieses Fehlers sind beobachtbar?',
 	'Class:KnownError/Attribute:root_cause' => 'Grundursache',
@@ -37,13 +36,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:KnownError/Attribute:domain' => 'Bereich',
 	'Class:KnownError/Attribute:domain+' => 'Wählen Sie den technischen Bereich, zu dem dieser Known Error gehört',
 	'Class:KnownError/Attribute:domain/Value:Application' => 'Anwendung',
-	'Class:KnownError/Attribute:domain/Value:Application+' => '',
+	'Class:KnownError/Attribute:domain/Value:Application+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Desktop' => 'Desktop',
-	'Class:KnownError/Attribute:domain/Value:Desktop+' => '',
+	'Class:KnownError/Attribute:domain/Value:Desktop+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Network' => 'Netzwerk',
-	'Class:KnownError/Attribute:domain/Value:Network+' => '',
+	'Class:KnownError/Attribute:domain/Value:Network+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Server' => 'Server',
-	'Class:KnownError/Attribute:domain/Value:Server+' => '',
+	'Class:KnownError/Attribute:domain/Value:Server+' => '~~',
 	'Class:KnownError/Attribute:vendor' => 'Anbieter',
 	'Class:KnownError/Attribute:vendor+' => 'Ein Freitextfeld zur Angabe des Herstellers der von diesem Known Error betroffenen CIs',
 	'Class:KnownError/Attribute:model' => 'Modell',
@@ -54,49 +53,32 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:KnownError/Attribute:ci_list+' => 'Alle CIs, die mit diesem Known Error verknüpft sind',
 	'Class:KnownError/Attribute:document_list' => 'Dokumente',
 	'Class:KnownError/Attribute:document_list+' => 'Alle Dokumente, die mit diesem Known Error verknüpft sind',
-]);
-
-//
-// Class: lnkErrorToFunctionalCI
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkErrorToFunctionalCI' => 'Verknüpfung KnownError/FunctionalCI',
 	'Class:lnkErrorToFunctionalCI+' => 'Infrastruktur, die zu einem Known Error gehört',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI-Name',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Fehler',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Known Error-Name',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Begründung',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-]);
-
-//
-// Class: lnkDocumentToError
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '~~',
 	'Class:lnkDocumentToError' => 'Verknüpfung Dokumente/KnownError',
 	'Class:lnkDocumentToError+' => 'Wird verwendet, wenn ein Dokument für einen Known Error relevant ist',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Dokument',
-	'Class:lnkDocumentToError/Attribute:document_id+' => '',
+	'Class:lnkDocumentToError/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToError/Attribute:document_name' => 'Dokumentname',
-	'Class:lnkDocumentToError/Attribute:document_name+' => '',
+	'Class:lnkDocumentToError/Attribute:document_name+' => '~~',
 	'Class:lnkDocumentToError/Attribute:error_id' => 'Known Error',
-	'Class:lnkDocumentToError/Attribute:error_id+' => '',
+	'Class:lnkDocumentToError/Attribute:error_id+' => '~~',
 	'Class:lnkDocumentToError/Attribute:error_name' => 'Known Error-Name',
-	'Class:lnkDocumentToError/Attribute:error_name+' => '',
+	'Class:lnkDocumentToError/Attribute:error_name+' => '~~',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'Verknüpfungstyp',
-	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-]);
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:lnkDocumentToError/Attribute:link_type+' => '~~',
 	'Menu:ProblemManagement' => 'Problem Management',
 	'Menu:ProblemManagement+' => 'Ein ITIL-Prozess, der die Ursachen von Incidents ermittelt sowie Known Errors und FAQs dokumentiert, um die Auslastung des Helpdesks zu verringern',
 	'Menu:Problem:Shortcuts' => 'Shortcuts',

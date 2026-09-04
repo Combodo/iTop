@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -13,90 +12,73 @@
 Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:ChangeManagement' => '変更管理',
 	'Menu:Change:Overview' => '概要',
-	'Menu:Change:Overview+' => '',
+	'Menu:Change:Overview+' => '~~',
 	'Menu:NewChange' => '新規変更',
-	'Menu:NewChange+' => '',
+	'Menu:NewChange+' => 'Create a new change ticket~~',
 	'Menu:SearchChanges' => '変更検索',
-	'Menu:SearchChanges+' => '',
+	'Menu:SearchChanges+' => 'Search for change tickets~~',
 	'Menu:Change:Shortcuts' => 'ショートカット',
 	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => '受け付け待ちの変更',
-	'Menu:WaitingAcceptance+' => '',
+	'Menu:WaitingAcceptance+' => '~~',
 	'Menu:WaitingApproval' => '承認待ちの変更',
 	'Menu:WaitingApproval+' => 'Changes in planned status~~',
 	'Menu:Changes' => 'オープンな変更',
 	'Menu:Changes+' => 'All changes which are not in closed status~~',
 	'Menu:MyChanges' => '私に割り当てられた変更',
-	'Menu:MyChanges+' => '',
+	'Menu:MyChanges+' => 'Non-closed changes assigned to me (as an Agent)~~',
 	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => '最近7日間のカテゴリ別の変更',
 	'UI-ChangeManagementOverview-Last-7-days' => '最近7日間の変更数',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => '最近7日間のドメイン別変更',
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => '最近7日間の状態別変更',
 	'Tickets:Related:OpenChanges' => 'Open changes~~',
 	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Change
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Change' => '変更',
-	'Class:Change+' => '',
+	'Class:Change+' => 'A type of Ticket to handle Change which has an effect on delivered Services.~~',
 	'Class:Change/Attribute:status' => '状態',
-	'Class:Change/Attribute:status+' => '',
+	'Class:Change/Attribute:status+' => '~~',
 	'Class:Change/Attribute:status/Value:new' => '新規',
-	'Class:Change/Attribute:status/Value:new+' => '',
+	'Class:Change/Attribute:status/Value:new+' => '~~',
 	'Class:Change/Attribute:status/Value:assigned' => '割り当て済み',
-	'Class:Change/Attribute:status/Value:assigned+' => '',
+	'Class:Change/Attribute:status/Value:assigned+' => '~~',
 	'Class:Change/Attribute:status/Value:planned' => '計画済み',
-	'Class:Change/Attribute:status/Value:planned+' => '',
+	'Class:Change/Attribute:status/Value:planned+' => '~~',
 	'Class:Change/Attribute:status/Value:rejected' => '却下',
-	'Class:Change/Attribute:status/Value:rejected+' => '',
+	'Class:Change/Attribute:status/Value:rejected+' => '~~',
 	'Class:Change/Attribute:status/Value:approved' => '承認済み',
-	'Class:Change/Attribute:status/Value:approved+' => '',
+	'Class:Change/Attribute:status/Value:approved+' => '~~',
 	'Class:Change/Attribute:status/Value:closed' => 'クローズ',
-	'Class:Change/Attribute:status/Value:closed+' => '',
+	'Class:Change/Attribute:status/Value:closed+' => '~~',
 	'Class:Change/Attribute:category' => 'カテゴリ',
-	'Class:Change/Attribute:category+' => '',
+	'Class:Change/Attribute:category+' => '~~',
 	'Class:Change/Attribute:category/Value:application' => 'アプリケーション',
-	'Class:Change/Attribute:category/Value:application+' => '',
+	'Class:Change/Attribute:category/Value:application+' => 'application~~',
 	'Class:Change/Attribute:category/Value:hardware' => 'ハードウエア',
-	'Class:Change/Attribute:category/Value:hardware+' => '',
+	'Class:Change/Attribute:category/Value:hardware+' => 'hardware~~',
 	'Class:Change/Attribute:category/Value:network' => 'ネットワーク',
-	'Class:Change/Attribute:category/Value:network+' => '',
+	'Class:Change/Attribute:category/Value:network+' => 'network~~',
 	'Class:Change/Attribute:category/Value:other' => 'その他',
-	'Class:Change/Attribute:category/Value:other+' => '',
+	'Class:Change/Attribute:category/Value:other+' => 'other~~',
 	'Class:Change/Attribute:category/Value:software' => 'ソフトウエア',
-	'Class:Change/Attribute:category/Value:software+' => '',
+	'Class:Change/Attribute:category/Value:software+' => 'software~~',
 	'Class:Change/Attribute:category/Value:system' => 'システム',
-	'Class:Change/Attribute:category/Value:system+' => '',
+	'Class:Change/Attribute:category/Value:system+' => 'system~~',
 	'Class:Change/Attribute:reject_reason' => '却下理由',
-	'Class:Change/Attribute:reject_reason+' => '',
+	'Class:Change/Attribute:reject_reason+' => '~~',
 	'Class:Change/Attribute:changemanager_id' => '変更管理者',
-	'Class:Change/Attribute:changemanager_id+' => '',
+	'Class:Change/Attribute:changemanager_id+' => '~~',
 	'Class:Change/Attribute:changemanager_email' => '変更管理者電子メール',
-	'Class:Change/Attribute:changemanager_email+' => '',
+	'Class:Change/Attribute:changemanager_email+' => '~~',
 	'Class:Change/Attribute:parent_id' => '親変更',
-	'Class:Change/Attribute:parent_id+' => '',
+	'Class:Change/Attribute:parent_id+' => '~~',
 	'Class:Change/Attribute:parent_name' => '親変更参照',
-	'Class:Change/Attribute:parent_name+' => '',
+	'Class:Change/Attribute:parent_name+' => '~~',
 	'Class:Change/Attribute:creation_date' => '作成日',
-	'Class:Change/Attribute:creation_date+' => '',
+	'Class:Change/Attribute:creation_date+' => '~~',
 	'Class:Change/Attribute:approval_date' => '承認日',
-	'Class:Change/Attribute:approval_date+' => '',
+	'Class:Change/Attribute:approval_date+' => '~~',
 	'Class:Change/Attribute:fallback_plan' => 'フォールバック計画',
-	'Class:Change/Attribute:fallback_plan+' => '',
+	'Class:Change/Attribute:fallback_plan+' => '~~',
 	'Class:Change/Attribute:related_request_list' => '関連要求',
 	'Class:Change/Attribute:related_request_list+' => 'All the user requests linked to this change~~',
 	'Class:Change/Attribute:related_incident_list' => '関連インシデント',
@@ -106,19 +88,19 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Change/Attribute:child_changes_list' => '子変更',
 	'Class:Change/Attribute:child_changes_list+' => 'All the sub changes linked to this change~~',
 	'Class:Change/Attribute:parent_id_friendlyname' => '親変更フレンドリー名',
-	'Class:Change/Attribute:parent_id_friendlyname+' => '',
+	'Class:Change/Attribute:parent_id_friendlyname+' => '~~',
 	'Class:Change/Stimulus:ev_assign' => '割り当て',
-	'Class:Change/Stimulus:ev_assign+' => '',
+	'Class:Change/Stimulus:ev_assign+' => '~~',
 	'Class:Change/Stimulus:ev_plan' => '計画',
-	'Class:Change/Stimulus:ev_plan+' => '',
+	'Class:Change/Stimulus:ev_plan+' => '~~',
 	'Class:Change/Stimulus:ev_reject' => '却下',
-	'Class:Change/Stimulus:ev_reject+' => '',
+	'Class:Change/Stimulus:ev_reject+' => '~~',
 	'Class:Change/Stimulus:ev_reopen' => '再オープン',
-	'Class:Change/Stimulus:ev_reopen+' => '',
+	'Class:Change/Stimulus:ev_reopen+' => '~~',
 	'Class:Change/Stimulus:ev_approve' => '承認',
-	'Class:Change/Stimulus:ev_approve+' => '',
+	'Class:Change/Stimulus:ev_approve+' => '~~',
 	'Class:Change/Stimulus:ev_finish' => 'クローズ',
-	'Class:Change/Stimulus:ev_finish+' => '',
+	'Class:Change/Stimulus:ev_finish+' => '~~',
 	'Class:Change/Attribute:outage' => '停止',
 	'Class:Change/Attribute:outage+' => '~~',
 	'Class:Change/Attribute:outage/Value:no' => 'いいえ',

@@ -1,12 +1,14 @@
 <?php
-
 /**
- * Spanish Localized data
+ * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
+ *
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:lnkFunctionalCIToProviderContract' => 'Relación EC Funcional y Contrato con Proveedor',
@@ -20,13 +22,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => 'Elemento de Configuración',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Elemento de Configuración',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => 'Elemento de Configuración',
-]);
-
-//
-// Class: lnkFunctionalCIToService
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:lnkFunctionalCIToService' => 'Relación EC Funcional y Servicio',
 	'Class:lnkFunctionalCIToService+' => 'Relación EC Funcional y Servicio',
 	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s',
@@ -38,24 +33,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => 'Elemento de Configuración',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'EC',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => 'Elemento de Configuración',
-]);
-
-//
-// Class: FunctionalCI
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Contratos',
 	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Contratos',
 	'Class:FunctionalCI/Attribute:services_list' => 'Servicios',
 	'Class:FunctionalCI/Attribute:services_list+' => 'Servicios',
-]);
-
-//
-// Class: Document
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Document/Attribute:contracts_list' => 'Contratos',
 	'Class:Document/Attribute:contracts_list+' => 'Contratos Referenciados con este Documento',
 	'Class:Document/Attribute:services_list' => 'Servicios',

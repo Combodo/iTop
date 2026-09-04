@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -21,8 +20,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Datatables:Language:DisplayLength:All' => 'Все',
 	'UI:Datatables:Language:Sort:Ascending' => 'Включить для сортировки по возрастанию',
 	'UI:Datatables:Language:Sort:Descending' => 'Включить для сортировки по убыванию',
-	'UI:Datatables:Column:RowActions:Label' => '',
-	'UI:Datatables:Column:RowActions:Description' => '',
+	'UI:Datatables:Column:RowActions:Label' => '~~',
+	'UI:Datatables:Column:RowActions:Description' => '~~',
 	'UI:Datatables:RowActions:ConfirmationDialog' => 'Подтверждение действия',
 	'UI:Datatables:RowActions:ConfirmationMessage' => 'Подтверждаете действие?',
 ]);

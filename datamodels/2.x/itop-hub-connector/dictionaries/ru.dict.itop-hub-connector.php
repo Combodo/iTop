@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
@@ -47,7 +46,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'iTopHub:ExtensionNotInstalled' => 'Не установлено',
 	'iTopHub:GetMoreExtensions' => 'Получить расширения из iTop Hub…',
 	'iTopHub:LandingWelcome' => 'Поздравляем! Следующие расширения были загружены из iTop Hub и развёрнуты в вашем '.ITOP_APPLICATION_SHORT.'.',
-	'iTopHub:GoBackToITopBtn' => 'Вернуться в '.ITOP_APPLICATION_SHORT.'',
+	'iTopHub:GoBackToITopBtn' => 'Вернуться в '.ITOP_APPLICATION_SHORT,
 	'iTopHub:Uncompressing' => 'Распаковка расширений…',
 	'iTopHub:InstallationWelcome' => 'Установка расширений, загруженных из iTop Hub',
 	'iTopHub:DBBackupLabel' => 'Резервная копия инстанса',

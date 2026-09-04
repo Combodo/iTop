@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author LinProfs <info@linprofs.com>
@@ -35,45 +34,38 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Niet toegewezen problemen',
 	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard voor Probleem Management',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard voor Probleem Management',
-
-]);
-//
-// Class: Problem
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Problem' => 'Probleem',
-	'Class:Problem+' => '',
+	'Class:Problem+' => 'An incident becomes a Problem when it is not resolved in a timely manner or when it recurs frequently~~',
 	'Class:Problem/Attribute:status' => 'Status',
-	'Class:Problem/Attribute:status+' => '',
+	'Class:Problem/Attribute:status+' => '~~',
 	'Class:Problem/Attribute:status/Value:new' => 'Nieuw',
-	'Class:Problem/Attribute:status/Value:new+' => '',
+	'Class:Problem/Attribute:status/Value:new+' => '~~',
 	'Class:Problem/Attribute:status/Value:assigned' => 'Toegewezen',
-	'Class:Problem/Attribute:status/Value:assigned+' => '',
+	'Class:Problem/Attribute:status/Value:assigned+' => '~~',
 	'Class:Problem/Attribute:status/Value:resolved' => 'Opgelost',
-	'Class:Problem/Attribute:status/Value:resolved+' => '',
+	'Class:Problem/Attribute:status/Value:resolved+' => '~~',
 	'Class:Problem/Attribute:status/Value:closed' => 'Gesloten',
-	'Class:Problem/Attribute:status/Value:closed+' => '',
+	'Class:Problem/Attribute:status/Value:closed+' => '~~',
 	'Class:Problem/Attribute:service_id' => 'Service',
-	'Class:Problem/Attribute:service_id+' => '',
+	'Class:Problem/Attribute:service_id+' => '~~',
 	'Class:Problem/Attribute:service_name' => 'Naam service',
-	'Class:Problem/Attribute:service_name+' => '',
+	'Class:Problem/Attribute:service_name+' => '~~',
 	'Class:Problem/Attribute:servicesubcategory_id' => 'Subcategorie service',
-	'Class:Problem/Attribute:servicesubcategory_id+' => '',
+	'Class:Problem/Attribute:servicesubcategory_id+' => '~~',
 	'Class:Problem/Attribute:servicesubcategory_name' => 'Naam subcategorie service',
-	'Class:Problem/Attribute:servicesubcategory_name+' => '',
+	'Class:Problem/Attribute:servicesubcategory_name+' => '~~',
 	'Class:Problem/Attribute:product' => 'Product',
-	'Class:Problem/Attribute:product+' => '',
+	'Class:Problem/Attribute:product+' => '~~',
 	'Class:Problem/Attribute:impact' => 'Impact',
-	'Class:Problem/Attribute:impact+' => '',
+	'Class:Problem/Attribute:impact+' => 'Impact is the severity of the problem, how many end users are affected~~',
 	'Class:Problem/Attribute:impact/Value:1' => 'Afdeling',
-	'Class:Problem/Attribute:impact/Value:1+' => '',
+	'Class:Problem/Attribute:impact/Value:1+' => '~~',
 	'Class:Problem/Attribute:impact/Value:2' => 'Service',
-	'Class:Problem/Attribute:impact/Value:2+' => '',
+	'Class:Problem/Attribute:impact/Value:2+' => '~~',
 	'Class:Problem/Attribute:impact/Value:3' => 'Persoon',
-	'Class:Problem/Attribute:impact/Value:3+' => '',
+	'Class:Problem/Attribute:impact/Value:3+' => '~~',
 	'Class:Problem/Attribute:urgency' => 'Urgentie',
-	'Class:Problem/Attribute:urgency+' => '',
+	'Class:Problem/Attribute:urgency+' => 'How quickly the problem needs to be resolved~~',
 	'Class:Problem/Attribute:urgency/Value:1' => 'Kritiek',
 	'Class:Problem/Attribute:urgency/Value:1+' => 'Kritiek',
 	'Class:Problem/Attribute:urgency/Value:2' => 'Hoog',
@@ -83,7 +75,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Problem/Attribute:urgency/Value:4' => 'Laag',
 	'Class:Problem/Attribute:urgency/Value:4+' => 'Laag',
 	'Class:Problem/Attribute:priority' => 'Prioriteit',
-	'Class:Problem/Attribute:priority+' => '',
+	'Class:Problem/Attribute:priority+' => 'Order in which problems need to be handled~~',
 	'Class:Problem/Attribute:priority/Value:1' => 'Kritisch',
 	'Class:Problem/Attribute:priority/Value:1+' => 'Kritisch',
 	'Class:Problem/Attribute:priority/Value:2' => 'Hoog',
@@ -93,13 +85,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Problem/Attribute:priority/Value:4' => 'Laag',
 	'Class:Problem/Attribute:priority/Value:4+' => 'Laag',
 	'Class:Problem/Attribute:related_change_id' => 'Gerelateerde change',
-	'Class:Problem/Attribute:related_change_id+' => '',
+	'Class:Problem/Attribute:related_change_id+' => '~~',
 	'Class:Problem/Attribute:related_change_ref' => 'Ref. gerelateerde change',
-	'Class:Problem/Attribute:related_change_ref+' => '',
+	'Class:Problem/Attribute:related_change_ref+' => '~~',
 	'Class:Problem/Attribute:assignment_date' => 'Toegewezen op',
-	'Class:Problem/Attribute:assignment_date+' => '',
+	'Class:Problem/Attribute:assignment_date+' => '~~',
 	'Class:Problem/Attribute:resolution_date' => 'Opgelost sinds',
-	'Class:Problem/Attribute:resolution_date+' => '',
+	'Class:Problem/Attribute:resolution_date+' => '~~',
 	'Class:Problem/Attribute:knownerrors_list' => 'Gekende fouten',
 	'Class:Problem/Attribute:knownerrors_list+' => 'Alle gekende fouten gerelateerd aan dit probleem',
 	'Class:Problem/Attribute:related_request_list' => 'Gelinkte verzoeken',
@@ -107,11 +99,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Problem/Attribute:related_incident_list' => 'Gelinkte incidenten',
 	'Class:Problem/Attribute:related_incident_list+' => 'Alle incidenten gerelateerd aan dit probleem',
 	'Class:Problem/Stimulus:ev_assign' => 'Wijs toe',
-	'Class:Problem/Stimulus:ev_assign+' => '',
+	'Class:Problem/Stimulus:ev_assign+' => '~~',
 	'Class:Problem/Stimulus:ev_reassign' => 'Wijs opnieuw toe',
-	'Class:Problem/Stimulus:ev_reassign+' => '',
+	'Class:Problem/Stimulus:ev_reassign+' => '~~',
 	'Class:Problem/Stimulus:ev_resolve' => 'Los het op',
-	'Class:Problem/Stimulus:ev_resolve+' => '',
+	'Class:Problem/Stimulus:ev_resolve+' => '~~',
 	'Class:Problem/Stimulus:ev_close' => 'Sluit',
-	'Class:Problem/Stimulus:ev_close+' => '',
+	'Class:Problem/Stimulus:ev_close+' => '~~',
 ]);

@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
@@ -32,9 +31,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'bkp-table-file' => 'Soubor',
 	'bkp-table-file+' => 'Pouze soubory s příponou .zip jsou považovány za soubory zálohy.',
 	'bkp-table-size' => 'Velikost',
-	'bkp-table-size+' => '',
+	'bkp-table-size+' => '~~',
 	'bkp-table-actions' => 'Akce',
-	'bkp-table-actions+' => '',
+	'bkp-table-actions+' => '~~',
 	'bkp-status-backups-auto' => 'Automatické zálohy',
 	'bkp-status-backups-manual' => 'Manuální zálohy',
 	'bkp-status-backups-none' => 'Žádné zálohy',

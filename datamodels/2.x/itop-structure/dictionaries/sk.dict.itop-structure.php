@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
@@ -13,7 +12,7 @@
  */
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Organization' => 'Organizácia',
-	'Class:Organization+' => '~~',
+	'Class:Organization+' => 'It can be a customer, a provider, your company or departments within your company. Organizations can be structured hierarchically. Users can be limited to objects belonging to some organizations only.~~',
 	'Class:Organization/Attribute:name' => 'Názov',
 	'Class:Organization/Attribute:name+' => 'Common name~~',
 	'Class:Organization/Attribute:code' => 'Kód',
@@ -38,13 +37,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Users within this organization~~',
-]);
-
-//
-// Class: Location
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Location' => 'Poloha',
 	'Class:Location+' => 'Any type of location: Region, Country, City, Site, Building, Floor, Room,...~~',
 	'Class:Location/Attribute:name' => 'Názov',
@@ -71,15 +63,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location~~',
 	'Class:Location/Attribute:person_list' => 'Kontakty',
 	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location~~',
-]);
-
-//
-// Class: Contact
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Contact' => 'Kontakt',
-	'Class:Contact+' => '~~',
+	'Class:Contact+' => 'Abstract class. A Contact can be linked to Tickets and FunctionalCIs for different purposes, such as incident dispatching and notifications.~~',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => 'Meno',
 	'Class:Contact/Attribute:name+' => '~~',
@@ -109,15 +94,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact~~',
 	'Class:Contact/Attribute:finalclass' => 'Typ kontaktu',
 	'Class:Contact/Attribute:finalclass+' => 'Name of the final class~~',
-]);
-
-//
-// Class: Person
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Person' => 'Osoba',
-	'Class:Person+' => '~~',
+	'Class:Person+' => 'A type of Contact used to describe physical persons. Persons can be grouped into Teams. Persons can be linked to other configuration items (eg. to describe who to contact in case of incident with an application).
+Other usage: the caller of a User request is a Person as well as the agent assigned to resolve it.~~',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => 'Priezvisko',
 	'Class:Person/Attribute:name+' => '~~',
@@ -139,6 +118,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Person/Attribute:team_list+' => 'All the teams this person belongs to~~',
 	'Class:Person/Attribute:tickets_list' => 'Tickety',
 	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller~~',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Create a %4$s for %2$s~~',
 	'Class:Person/Attribute:user_list' => 'Users~~',
 	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Ľahko čitateľné meno manažéra',
@@ -150,15 +130,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
 	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-]);
-
-//
-// Class: Team
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Team' => 'Tím',
-	'Class:Team+' => '~~',
+	'Class:Team+' => 'A type of Contact. Often used to group Persons, but not only. Teams are expected to watch Tickets dispatched to them, and assign it to an agent, usually a member of that team.~~',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Osoby',
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
@@ -171,15 +144,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months~~',
 	'Class:Team/Attribute:tickets_list' => 'Tickety',
 	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
-]);
-
-//
-// Class: Document
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Document' => 'Dokument',
-	'Class:Document+' => '~~',
+	'Class:Document+' => 'Abstract class. A document that can be shared across multiple objects, making it easy and quick to retrieve from all relevant locations.~~',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => 'Názov',
 	'Class:Document/Attribute:name+' => '~~',
@@ -207,79 +173,30 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
 	'Class:Document/Attribute:finalclass' => 'Typ dokumentu',
 	'Class:Document/Attribute:finalclass+' => 'Name of the final class~~',
-]);
-
-//
-// Class: DocumentFile
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DocumentFile' => 'Dokumentový súbor',
-	'Class:DocumentFile+' => '~~',
+	'Class:DocumentFile+' => 'It\'s a type of Document which includes an uploaded file (in any format: Word, PDF, Spreadsheet, etc.).~~',
 	'Class:DocumentFile/Attribute:file' => 'Súbor',
 	'Class:DocumentFile/Attribute:file+' => '~~',
-]);
-
-//
-// Class: DocumentNote
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DocumentNote' => 'Poznámka dokumentu',
-	'Class:DocumentNote+' => '~~',
+	'Class:DocumentNote+' => 'Used to store a text document. HTML formatting is supported using the WYSIWYG editor. Search can be performed on its content.~~',
 	'Class:DocumentNote/Attribute:text' => 'Text',
 	'Class:DocumentNote/Attribute:text+' => '~~',
-]);
-
-//
-// Class: DocumentWeb
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DocumentWeb' => 'Web stránka dokumentu',
-	'Class:DocumentWeb+' => '~~',
+	'Class:DocumentWeb+' => 'Hyperlinks to external applications or documents, acting as pointers to external resources. You cannot search in their content from '.ITOP_APPLICATION_SHORT.'~~',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '~~',
-]);
-
-//
-// Class: Typology
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Typology' => 'Typológia',
-	'Class:Typology+' => '~~',
+	'Class:Typology+' => 'Abstract class. ExternalKeyAttribute to a Typology subclass are used in place of an EnumAttribute, to have more dynamic values.~~',
 	'Class:Typology/Attribute:name' => 'Názov',
 	'Class:Typology/Attribute:name+' => '~~',
 	'Class:Typology/Attribute:finalclass' => 'Typ',
 	'Class:Typology/Attribute:finalclass+' => 'Name of the final class~~',
-]);
-
-//
-// Class: DocumentType
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DocumentType' => 'Typ dokumentu',
-	'Class:DocumentType+' => '~~',
-]);
-
-//
-// Class: ContactType
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'Class:DocumentType+' => 'Typology. A classification system used to organize and logically group documents~~',
 	'Class:ContactType' => 'Typ kontaktu',
-	'Class:ContactType+' => '~~',
-]);
-
-//
-// Class: lnkPersonToTeam
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'Class:ContactType+' => 'Typology to organize your Contacts and group them logically for you.~~',
 	'Class:lnkPersonToTeam' => 'väzba - Osoba / Tím',
-	'Class:lnkPersonToTeam+' => '~~',
+	'Class:lnkPersonToTeam+' => 'This link indicates when a Person is a member of a Team.~~',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
 	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Tím',
@@ -294,13 +211,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkPersonToTeam/Attribute:role_id+' => 'To select within a typology of possible roles~~',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Názov role',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '~~',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:DataAdministration' => 'Dátová administrácia',
 	'Menu:DataAdministration+' => 'Data administration~~',
 	'Menu:Catalogs' => 'Katalógy',
@@ -338,20 +248,11 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:Typology+' => 'Typology configuration~~',
 	'UI_WelcomeMenu_AllConfigItems' => 'Zhrnutie',
 	'Menu:ConfigManagement:Typology' => 'Konfiguračná typológia',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Person:info' => 'Všeobecné informácie',
 	'User:info' => 'Všeobecné informácie',
 	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Upozornenie',
-]);
-
-// Themes
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ]);

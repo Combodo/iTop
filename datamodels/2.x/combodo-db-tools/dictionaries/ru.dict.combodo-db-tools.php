@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
@@ -45,17 +44,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'DBAnalyzer-Fetch-Count-Error' => 'Ошибка количества выборки в `%1$s`: получено записей %2$d / посчитано %3$d',
 	'DBAnalyzer-Integrity-FinalClass' => 'Поле `%2$s`.`%1$s` должно иметь то же значение, что и `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Поле `%2$s`.`%1$s` должно содержать допустимый класс',
-]);
-
-// Database Info
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'DBTools:DatabaseInfo' => 'Информация о базе данных',
 	'DBTools:Base' => 'База',
 	'DBTools:Size' => 'Размер',
-]);
-
-// Lost attachments
-Dict::Add('RU RU', 'Russian', 'Русский', [
 	'DBTools:LostAttachments' => 'Потерянные вложения',
 	'DBTools:LostAttachments:Disclaimer' => 'Здесь вы можете найти потерянные или ошибочно перемещённые вложения в вашей базе данных. Это не инструмент восстановления данных, он не восстанавливает удаленные данные.',
 	'DBTools:LostAttachments:Button:Analyze' => 'Анализировать',

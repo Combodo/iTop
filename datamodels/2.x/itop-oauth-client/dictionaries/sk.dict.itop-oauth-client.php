@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -13,7 +12,7 @@
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:CreateMailbox' => 'Create a mailbox...~~',
 	'Menu:OAuthClient' => 'OAuth Mail Access~~',
-	'Menu:OAuthClient+' => '~~',
+	'Menu:OAuthClient+' => 'Oauth for email access~~',
 	'Menu:GenerateTokens' => 'Generate access token...~~',
 	'Menu:RegenerateTokens' => 'Regenerate access token...~~',
 	'itop-oauth-client/Operation:CreateMailBox/Title' => 'Mailbox creation~~',
@@ -28,13 +27,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'OAuthClient:Name/UseForSMTPMustBeUnique' => 'The combination Login (%1$s) and Use for SMTP (%2$s) has already been used for OAuth Client~~',
 	'OAuthClient:baseinfo' => 'Base Information~~',
 	'OAuthClient:scope' => 'Scope~~',
-]);
-
-//
-// Class: OAuthClient
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:OAuthClient' => 'OAuth Mail Access~~',
 	'Class:OAuthClient/Attribute:provider' => 'Provider~~',
 	'Class:OAuthClient/Attribute:provider+' => '~~',
@@ -60,17 +52,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:OAuthClient/Attribute:token_expiration+' => '~~',
 	'Class:OAuthClient/Attribute:redirect_url' => 'Redirect url~~',
 	'Class:OAuthClient/Attribute:redirect_url+' => 'This url must be copied in the OAuth2 configuration of the provider
-Erase the field to recalculate default value~~'
-,
+Erase the field to recalculate default value~~',
 	'Class:OAuthClient/Attribute:mailbox_list' => 'Mailbox list~~',
 	'Class:OAuthClient/Attribute:mailbox_list+' => '~~',
-]);
-
-//
-// Class: OAuthClientAzure
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:OAuthClientAzure' => 'OAuth Mail Access for Microsoft Azure~~',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)~~',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Scope~~',
@@ -93,13 +77,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'No~~',
 	'Class:OAuthClientAzure/Attribute:tenant' => 'Tenant~~',
 	'Class:OAuthClientAzure/Attribute:tenant+' => 'Tenant ID of the configured application. For multi-tenant application, use "common".~~',
-]);
-
-//
-// Class: OAuthClientGoogle
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:OAuthClientGoogle' => 'OAuth Mail Access for Google~~',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)~~',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Scope~~',

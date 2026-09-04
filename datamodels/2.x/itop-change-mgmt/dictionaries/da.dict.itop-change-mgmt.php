@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
@@ -14,90 +13,73 @@
 Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:ChangeManagement' => 'Change Management',
 	'Menu:Change:Overview' => 'Oversigt',
-	'Menu:Change:Overview+' => '',
+	'Menu:Change:Overview+' => '~~',
 	'Menu:NewChange' => 'Ny Change',
-	'Menu:NewChange+' => '',
+	'Menu:NewChange+' => 'Create a new change ticket~~',
 	'Menu:SearchChanges' => 'Søg efter Changes',
-	'Menu:SearchChanges+' => '',
+	'Menu:SearchChanges+' => 'Search for change tickets~~',
 	'Menu:Change:Shortcuts' => 'Genveje',
 	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => 'Changes der afventer accept',
-	'Menu:WaitingAcceptance+' => '',
+	'Menu:WaitingAcceptance+' => '~~',
 	'Menu:WaitingApproval' => 'Changes der afventer godkendelse',
 	'Menu:WaitingApproval+' => 'Changes in planned status~~',
 	'Menu:Changes' => 'Åbne Changes',
 	'Menu:Changes+' => 'All changes which are not in closed status~~',
 	'Menu:MyChanges' => 'Changes tildelt til mig',
-	'Menu:MyChanges+' => '',
+	'Menu:MyChanges+' => 'Non-closed changes assigned to me (as an Agent)~~',
 	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes de sidste 7 dage efter kategori',
 	'UI-ChangeManagementOverview-Last-7-days' => 'Antal Changes i de sidste 7 dage',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes de sidste 7 dage efter type',
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes de sidste 7 dage efter status',
 	'Tickets:Related:OpenChanges' => 'Open changes~~',
 	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Change
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Change' => 'Change',
-	'Class:Change+' => '',
+	'Class:Change+' => 'A type of Ticket to handle Change which has an effect on delivered Services.~~',
 	'Class:Change/Attribute:status' => 'Status',
 	'Class:Change/Attribute:status+' => 'Status for emnet',
 	'Class:Change/Attribute:status/Value:new' => 'Ny',
 	'Class:Change/Attribute:status/Value:new+' => 'Opret ny',
 	'Class:Change/Attribute:status/Value:assigned' => 'Tildelt',
-	'Class:Change/Attribute:status/Value:assigned+' => '',
+	'Class:Change/Attribute:status/Value:assigned+' => '~~',
 	'Class:Change/Attribute:status/Value:planned' => 'Planlagt',
-	'Class:Change/Attribute:status/Value:planned+' => '',
+	'Class:Change/Attribute:status/Value:planned+' => '~~',
 	'Class:Change/Attribute:status/Value:rejected' => 'Afslået',
-	'Class:Change/Attribute:status/Value:rejected+' => '',
+	'Class:Change/Attribute:status/Value:rejected+' => '~~',
 	'Class:Change/Attribute:status/Value:approved' => 'Godkendt',
-	'Class:Change/Attribute:status/Value:approved+' => '',
+	'Class:Change/Attribute:status/Value:approved+' => '~~',
 	'Class:Change/Attribute:status/Value:closed' => 'Lukket',
-	'Class:Change/Attribute:status/Value:closed+' => '',
+	'Class:Change/Attribute:status/Value:closed+' => '~~',
 	'Class:Change/Attribute:category' => 'Kategori',
-	'Class:Change/Attribute:category+' => '',
+	'Class:Change/Attribute:category+' => '~~',
 	'Class:Change/Attribute:category/Value:application' => 'Applikation',
-	'Class:Change/Attribute:category/Value:application+' => '',
+	'Class:Change/Attribute:category/Value:application+' => 'application~~',
 	'Class:Change/Attribute:category/Value:hardware' => 'Hardware',
-	'Class:Change/Attribute:category/Value:hardware+' => '',
+	'Class:Change/Attribute:category/Value:hardware+' => 'hardware~~',
 	'Class:Change/Attribute:category/Value:network' => 'Netværk',
-	'Class:Change/Attribute:category/Value:network+' => '',
+	'Class:Change/Attribute:category/Value:network+' => 'network~~',
 	'Class:Change/Attribute:category/Value:other' => 'Andet',
-	'Class:Change/Attribute:category/Value:other+' => '',
+	'Class:Change/Attribute:category/Value:other+' => 'other~~',
 	'Class:Change/Attribute:category/Value:software' => 'Software',
-	'Class:Change/Attribute:category/Value:software+' => '',
+	'Class:Change/Attribute:category/Value:software+' => 'software~~',
 	'Class:Change/Attribute:category/Value:system' => 'System',
-	'Class:Change/Attribute:category/Value:system+' => '',
+	'Class:Change/Attribute:category/Value:system+' => 'system~~',
 	'Class:Change/Attribute:reject_reason' => 'Årsag til afslag',
-	'Class:Change/Attribute:reject_reason+' => '',
+	'Class:Change/Attribute:reject_reason+' => '~~',
 	'Class:Change/Attribute:changemanager_id' => 'Change Manager',
-	'Class:Change/Attribute:changemanager_id+' => '',
+	'Class:Change/Attribute:changemanager_id+' => '~~',
 	'Class:Change/Attribute:changemanager_email' => 'Change Manager Email',
-	'Class:Change/Attribute:changemanager_email+' => '',
+	'Class:Change/Attribute:changemanager_email+' => '~~',
 	'Class:Change/Attribute:parent_id' => 'Parent Change',
-	'Class:Change/Attribute:parent_id+' => '',
+	'Class:Change/Attribute:parent_id+' => '~~',
 	'Class:Change/Attribute:parent_name' => 'Parent Change ref',
-	'Class:Change/Attribute:parent_name+' => '',
+	'Class:Change/Attribute:parent_name+' => '~~',
 	'Class:Change/Attribute:creation_date' => 'Oprettelsesdato',
-	'Class:Change/Attribute:creation_date+' => '',
+	'Class:Change/Attribute:creation_date+' => '~~',
 	'Class:Change/Attribute:approval_date' => 'Godkendelsesdato',
-	'Class:Change/Attribute:approval_date+' => '',
+	'Class:Change/Attribute:approval_date+' => '~~',
 	'Class:Change/Attribute:fallback_plan' => 'Fallback-Plan',
-	'Class:Change/Attribute:fallback_plan+' => '',
+	'Class:Change/Attribute:fallback_plan+' => '~~',
 	'Class:Change/Attribute:related_request_list' => 'Relaterede Requests',
 	'Class:Change/Attribute:related_request_list+' => 'All the user requests linked to this change~~',
 	'Class:Change/Attribute:related_incident_list' => 'Relaterede Incidents',
@@ -107,19 +89,19 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Change/Attribute:child_changes_list' => 'Afledte Changes',
 	'Class:Change/Attribute:child_changes_list+' => 'All the sub changes linked to this change~~',
 	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Change Friendly Name',
-	'Class:Change/Attribute:parent_id_friendlyname+' => '',
+	'Class:Change/Attribute:parent_id_friendlyname+' => '~~',
 	'Class:Change/Stimulus:ev_assign' => 'Tildel',
-	'Class:Change/Stimulus:ev_assign+' => '',
+	'Class:Change/Stimulus:ev_assign+' => '~~',
 	'Class:Change/Stimulus:ev_plan' => 'Planlæg',
-	'Class:Change/Stimulus:ev_plan+' => '',
+	'Class:Change/Stimulus:ev_plan+' => '~~',
 	'Class:Change/Stimulus:ev_reject' => 'Afslåp',
-	'Class:Change/Stimulus:ev_reject+' => '',
+	'Class:Change/Stimulus:ev_reject+' => '~~',
 	'Class:Change/Stimulus:ev_reopen' => 'Genåben',
-	'Class:Change/Stimulus:ev_reopen+' => '',
+	'Class:Change/Stimulus:ev_reopen+' => '~~',
 	'Class:Change/Stimulus:ev_approve' => 'Godkend',
-	'Class:Change/Stimulus:ev_approve+' => '',
+	'Class:Change/Stimulus:ev_approve+' => '~~',
 	'Class:Change/Stimulus:ev_finish' => 'Luk',
-	'Class:Change/Stimulus:ev_finish+' => '',
+	'Class:Change/Stimulus:ev_finish+' => '~~',
 	'Class:Change/Attribute:outage' => 'Nedetid',
 	'Class:Change/Attribute:outage+' => '~~',
 	'Class:Change/Attribute:outage/Value:no' => 'Nej',

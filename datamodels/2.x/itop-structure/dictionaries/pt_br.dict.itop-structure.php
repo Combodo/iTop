@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
@@ -13,152 +12,126 @@
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Organization' => 'Organização',
-	'Class:Organization+' => '',
+	'Class:Organization+' => 'It can be a customer, a provider, your company or departments within your company. Organizations can be structured hierarchically. Users can be limited to objects belonging to some organizations only.~~',
 	'Class:Organization/Attribute:name' => 'Nome',
 	'Class:Organization/Attribute:name+' => 'Nome comum',
 	'Class:Organization/Attribute:code' => 'Código',
 	'Class:Organization/Attribute:code+' => 'Código da organização (CNPJ, Siret, DUNS, ...)',
 	'Class:Organization/Attribute:status' => 'Status',
-	'Class:Organization/Attribute:status+' => '',
+	'Class:Organization/Attribute:status+' => '~~',
 	'Class:Organization/Attribute:status/Value:active' => 'Ativo',
-	'Class:Organization/Attribute:status/Value:active+' => '',
+	'Class:Organization/Attribute:status/Value:active+' => 'Active~~',
 	'Class:Organization/Attribute:status/Value:inactive' => 'Inativo',
-	'Class:Organization/Attribute:status/Value:inactive+' => '',
+	'Class:Organization/Attribute:status/Value:inactive+' => 'Inactive~~',
 	'Class:Organization/Attribute:parent_id' => 'Organização pai',
 	'Class:Organization/Attribute:parent_id+' => 'Organização pai',
 	'Class:Organization/Attribute:parent_name' => 'Organização pai',
 	'Class:Organization/Attribute:parent_name+' => 'Nome da organização pai',
 	'Class:Organization/Attribute:deliverymodel_id' => 'Modelo de entrega',
-	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Nome do modelo de entrega',
-	'Class:Organization/Attribute:deliverymodel_name+' => '',
+	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Organização pai (nome amigável)',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Nome amigável da organização pai',
 	'Class:Organization/Attribute:overview' => 'Visão geral',
 	'Organization:Overview:FunctionalCIs' => 'Itens de Configuração (ICs) associados à esta Organização',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'por tipo',
 	'Organization:Overview:Users' => 'Usuários do '.ITOP_APPLICATION_SHORT.' associados à esta Organização',
-]);
-
-//
-// Class: Location
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Location' => 'Localização',
 	'Class:Location+' => 'Qualquer tipo de localização: Região, País, Cidade, Lugar, Edifício, Andar, Sala, Rack, etc.',
 	'Class:Location/Attribute:name' => 'Nome',
-	'Class:Location/Attribute:name+' => '',
+	'Class:Location/Attribute:name+' => '~~',
 	'Class:Location/Attribute:status' => 'Status',
-	'Class:Location/Attribute:status+' => '',
+	'Class:Location/Attribute:status+' => '~~',
 	'Class:Location/Attribute:status/Value:active' => 'Ativo',
-	'Class:Location/Attribute:status/Value:active+' => '',
+	'Class:Location/Attribute:status/Value:active+' => 'Active~~',
 	'Class:Location/Attribute:status/Value:inactive' => 'Inativo',
-	'Class:Location/Attribute:status/Value:inactive+' => '',
+	'Class:Location/Attribute:status/Value:inactive+' => 'Inactive~~',
 	'Class:Location/Attribute:org_id' => 'Organização',
-	'Class:Location/Attribute:org_id+' => '',
+	'Class:Location/Attribute:org_id+' => '~~',
 	'Class:Location/Attribute:org_name' => 'Nome da organização',
-	'Class:Location/Attribute:org_name+' => '',
+	'Class:Location/Attribute:org_name+' => '~~',
 	'Class:Location/Attribute:address' => 'Endereço',
-	'Class:Location/Attribute:address+' => '',
+	'Class:Location/Attribute:address+' => 'Postal address~~',
 	'Class:Location/Attribute:postal_code' => 'CEP',
-	'Class:Location/Attribute:postal_code+' => '',
+	'Class:Location/Attribute:postal_code+' => 'ZIP/Postal code~~',
 	'Class:Location/Attribute:city' => 'Cidade',
-	'Class:Location/Attribute:city+' => '',
+	'Class:Location/Attribute:city+' => '~~',
 	'Class:Location/Attribute:country' => 'País',
-	'Class:Location/Attribute:country+' => '',
+	'Class:Location/Attribute:country+' => '~~',
 	'Class:Location/Attribute:physicaldevice_list' => 'Dispositivos',
 	'Class:Location/Attribute:physicaldevice_list+' => 'Todos os Dispositivos associados à esta Localização',
 	'Class:Location/Attribute:person_list' => 'Contatos',
 	'Class:Location/Attribute:person_list+' => 'Todos os Contatos associados à esta Localização',
-]);
-
-//
-// Class: Contact
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Contact' => 'Contato',
-	'Class:Contact+' => '',
+	'Class:Contact+' => 'Abstract class. A Contact can be linked to Tickets and FunctionalCIs for different purposes, such as incident dispatching and notifications.~~',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Contact/Attribute:name' => 'Nome',
-	'Class:Contact/Attribute:name+' => '',
+	'Class:Contact/Attribute:name+' => '~~',
 	'Class:Contact/Attribute:status' => 'Status',
-	'Class:Contact/Attribute:status+' => '',
+	'Class:Contact/Attribute:status+' => '~~',
 	'Class:Contact/Attribute:status/Value:active' => 'Ativo',
-	'Class:Contact/Attribute:status/Value:active+' => '',
+	'Class:Contact/Attribute:status/Value:active+' => 'Active~~',
 	'Class:Contact/Attribute:status/Value:inactive' => 'Inativo',
-	'Class:Contact/Attribute:status/Value:inactive+' => '',
+	'Class:Contact/Attribute:status/Value:inactive+' => 'Inactive~~',
 	'Class:Contact/Attribute:org_id' => 'Organização',
-	'Class:Contact/Attribute:org_id+' => '',
+	'Class:Contact/Attribute:org_id+' => '~~',
 	'Class:Contact/Attribute:org_name' => 'Nome da organização',
-	'Class:Contact/Attribute:org_name+' => '',
+	'Class:Contact/Attribute:org_name+' => '~~',
 	'Class:Contact/Attribute:email' => 'E-mail',
-	'Class:Contact/Attribute:email+' => '',
+	'Class:Contact/Attribute:email+' => '~~',
 	'Class:Contact/Attribute:phone' => 'Telefone',
-	'Class:Contact/Attribute:phone+' => '',
+	'Class:Contact/Attribute:phone+' => '~~',
 	'Class:Contact/Attribute:notify' => 'Notificações',
-	'Class:Contact/Attribute:notify+' => '',
+	'Class:Contact/Attribute:notify+' => 'Flag which can be used by each notification~~',
 	'Class:Contact/Attribute:notify/Value:no' => 'Não',
-	'Class:Contact/Attribute:notify/Value:no+' => '',
+	'Class:Contact/Attribute:notify/Value:no+' => 'no~~',
 	'Class:Contact/Attribute:notify/Value:yes' => 'Sim',
-	'Class:Contact/Attribute:notify/Value:yes+' => '',
+	'Class:Contact/Attribute:notify/Value:yes+' => 'yes~~',
 	'Class:Contact/Attribute:function' => 'Função',
-	'Class:Contact/Attribute:function+' => '',
+	'Class:Contact/Attribute:function+' => '~~',
 	'Class:Contact/Attribute:cis_list' => 'ICs',
 	'Class:Contact/Attribute:cis_list+' => 'Todos os Itens de Configuração (ICs) associados à este Contato',
 	'Class:Contact/Attribute:finalclass' => 'Tipo de contato',
-	'Class:Contact/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: Person
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:Contact/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Person' => 'Pessoa',
-	'Class:Person+' => '',
+	'Class:Person+' => 'A type of Contact used to describe physical persons. Persons can be grouped into Teams. Persons can be linked to other configuration items (eg. to describe who to contact in case of incident with an application).
+Other usage: the caller of a User request is a Person as well as the agent assigned to resolve it.~~',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Person/Attribute:name' => 'Sobrenome',
-	'Class:Person/Attribute:name+' => '',
+	'Class:Person/Attribute:name+' => '~~',
 	'Class:Person/Attribute:first_name' => 'Nome',
-	'Class:Person/Attribute:first_name+' => '',
+	'Class:Person/Attribute:first_name+' => '~~',
 	'Class:Person/Attribute:employee_number' => 'Matrícula do colaborador',
-	'Class:Person/Attribute:employee_number+' => '',
+	'Class:Person/Attribute:employee_number+' => '~~',
 	'Class:Person/Attribute:mobile_phone' => 'Celular',
-	'Class:Person/Attribute:mobile_phone+' => '',
+	'Class:Person/Attribute:mobile_phone+' => '~~',
 	'Class:Person/Attribute:location_id' => 'Localização',
-	'Class:Person/Attribute:location_id+' => '',
+	'Class:Person/Attribute:location_id+' => '~~',
 	'Class:Person/Attribute:location_name' => 'Nome da localização',
-	'Class:Person/Attribute:location_name+' => '',
+	'Class:Person/Attribute:location_name+' => '~~',
 	'Class:Person/Attribute:manager_id' => 'Gerente',
-	'Class:Person/Attribute:manager_id+' => '',
+	'Class:Person/Attribute:manager_id+' => '~~',
 	'Class:Person/Attribute:manager_name' => 'Nome do gerente',
-	'Class:Person/Attribute:manager_name+' => '',
+	'Class:Person/Attribute:manager_name+' => '~~',
 	'Class:Person/Attribute:team_list' => 'Equipes',
 	'Class:Person/Attribute:team_list+' => 'Todas as Equipes que esta Pessoa pertence',
 	'Class:Person/Attribute:tickets_list' => 'Solicitações',
 	'Class:Person/Attribute:tickets_list+' => 'Todas as Solicitações que esta Pessoa solicitou',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Create a %4$s for %2$s~~',
 	'Class:Person/Attribute:user_list' => 'Users~~',
 	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Nome amigável do gerente',
 	'Class:Person/Attribute:manager_id_friendlyname+' => 'Nome amigável do gerente do usuário correspondente',
 	'Class:Person/Attribute:picture' => 'Imagem',
-	'Class:Person/Attribute:picture+' => '',
+	'Class:Person/Attribute:picture+' => '~~',
 	'Class:Person/UniquenessRule:employee_number+' => 'O número do colaborador deve ser único na organização',
 	'Class:Person/UniquenessRule:employee_number' => 'Já existe uma pessoa na organização \'$this->org_name$\' com o mesmo número de colaborador',
 	'Class:Person/UniquenessRule:name+' => 'O nome do colaborador deve ser único dentro de sua organização',
 	'Class:Person/UniquenessRule:name' => 'Já existe uma pessoa na organização \'$this->org_name$\' com o mesmo nome',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-]);
-
-//
-// Class: Team
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Team' => 'Equipe',
-	'Class:Team+' => '',
+	'Class:Team+' => 'A type of Contact. Often used to group Persons, but not only. Teams are expected to watch Tickets dispatched to them, and assign it to an agent, usually a member of that team.~~',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Membros',
 	'Class:Team/Attribute:persons_list+' => 'Todas as pessoas que pertencem a essa equipe',
@@ -171,152 +144,89 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months~~',
 	'Class:Team/Attribute:tickets_list' => 'Solicitações',
 	'Class:Team/Attribute:tickets_list+' => 'Todas as solicitações atribuídas a essa equipe',
-]);
-
-//
-// Class: Document
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Document' => 'Documento',
-	'Class:Document+' => '',
+	'Class:Document+' => 'Abstract class. A document that can be shared across multiple objects, making it easy and quick to retrieve from all relevant locations.~~',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Document/Attribute:name' => 'Nome',
-	'Class:Document/Attribute:name+' => '',
+	'Class:Document/Attribute:name+' => '~~',
 	'Class:Document/Attribute:org_id' => 'Organização',
-	'Class:Document/Attribute:org_id+' => '',
+	'Class:Document/Attribute:org_id+' => '~~',
 	'Class:Document/Attribute:org_name' => 'Nome da organização',
-	'Class:Document/Attribute:org_name+' => '',
+	'Class:Document/Attribute:org_name+' => '~~',
 	'Class:Document/Attribute:documenttype_id' => 'Tipo de documento',
-	'Class:Document/Attribute:documenttype_id+' => '',
+	'Class:Document/Attribute:documenttype_id+' => '~~',
 	'Class:Document/Attribute:documenttype_name' => 'Nome do tipo de documento',
-	'Class:Document/Attribute:documenttype_name+' => '',
+	'Class:Document/Attribute:documenttype_name+' => '~~',
 	'Class:Document/Attribute:version' => 'Versão',
-	'Class:Document/Attribute:version+' => '',
+	'Class:Document/Attribute:version+' => '~~',
 	'Class:Document/Attribute:description' => 'Descrição',
-	'Class:Document/Attribute:description+' => '',
+	'Class:Document/Attribute:description+' => '~~',
 	'Class:Document/Attribute:status' => 'Status',
-	'Class:Document/Attribute:status+' => '',
+	'Class:Document/Attribute:status+' => '~~',
 	'Class:Document/Attribute:status/Value:draft' => 'Rascunho',
-	'Class:Document/Attribute:status/Value:draft+' => '',
+	'Class:Document/Attribute:status/Value:draft+' => '~~',
 	'Class:Document/Attribute:status/Value:obsolete' => 'Obsoleto',
-	'Class:Document/Attribute:status/Value:obsolete+' => '',
+	'Class:Document/Attribute:status/Value:obsolete+' => '~~',
 	'Class:Document/Attribute:status/Value:published' => 'Publicado',
-	'Class:Document/Attribute:status/Value:published+' => '',
+	'Class:Document/Attribute:status/Value:published+' => '~~',
 	'Class:Document/Attribute:cis_list' => 'ICs',
 	'Class:Document/Attribute:cis_list+' => 'Todos os Itens de Configuração (IC) associados à este Documento',
 	'Class:Document/Attribute:finalclass' => 'Tipo de documento',
-	'Class:Document/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: DocumentFile
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:Document/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:DocumentFile' => 'Arquivo',
-	'Class:DocumentFile+' => '',
+	'Class:DocumentFile+' => 'It\'s a type of Document which includes an uploaded file (in any format: Word, PDF, Spreadsheet, etc.).~~',
 	'Class:DocumentFile/Attribute:file' => 'Arquivo',
-	'Class:DocumentFile/Attribute:file+' => '',
-]);
-
-//
-// Class: DocumentNote
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:DocumentFile/Attribute:file+' => '~~',
 	'Class:DocumentNote' => 'Texto',
-	'Class:DocumentNote+' => '',
+	'Class:DocumentNote+' => 'Used to store a text document. HTML formatting is supported using the WYSIWYG editor. Search can be performed on its content.~~',
 	'Class:DocumentNote/Attribute:text' => 'Texto',
-	'Class:DocumentNote/Attribute:text+' => '',
-]);
-
-//
-// Class: DocumentWeb
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:DocumentNote/Attribute:text+' => '~~',
 	'Class:DocumentWeb' => 'Web',
-	'Class:DocumentWeb+' => '',
+	'Class:DocumentWeb+' => 'Hyperlinks to external applications or documents, acting as pointers to external resources. You cannot search in their content from '.ITOP_APPLICATION_SHORT.'~~',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
-	'Class:DocumentWeb/Attribute:url+' => '',
-]);
-
-//
-// Class: Typology
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:DocumentWeb/Attribute:url+' => '~~',
 	'Class:Typology' => 'Tipologia',
-	'Class:Typology+' => '',
+	'Class:Typology+' => 'Abstract class. ExternalKeyAttribute to a Typology subclass are used in place of an EnumAttribute, to have more dynamic values.~~',
 	'Class:Typology/Attribute:name' => 'Nome',
-	'Class:Typology/Attribute:name+' => '',
+	'Class:Typology/Attribute:name+' => '~~',
 	'Class:Typology/Attribute:finalclass' => 'Tipo',
-	'Class:Typology/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: DocumentType
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:Typology/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:DocumentType' => 'Tipo de documento',
-	'Class:DocumentType+' => '',
-]);
-
-//
-// Class: ContactType
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:DocumentType+' => 'Typology. A classification system used to organize and logically group documents~~',
 	'Class:ContactType' => 'Tipo de contato',
-	'Class:ContactType+' => '',
-]);
-
-//
-// Class: lnkPersonToTeam
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:ContactType+' => 'Typology to organize your Contacts and group them logically for you.~~',
 	'Class:lnkPersonToTeam' => 'Relação entre Pessoa / Equipe',
-	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam+' => 'This link indicates when a Person is a member of a Team.~~',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
 	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Equipe',
-	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_id+' => 'A team to which the person belongs~~',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Nome da equipe',
-	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:person_id' => 'Pessoa',
-	'Class:lnkPersonToTeam/Attribute:person_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_id+' => 'A member of the team~~',
 	'Class:lnkPersonToTeam/Attribute:person_name' => 'Nome da pessoa',
-	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:role_id' => 'Função',
 	'Class:lnkPersonToTeam/Attribute:role_id+' => 'Define a função da Pessoa na Equipe (Líder de Equipe, Gerente...).',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Nome da função',
-	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:lnkPersonToTeam/Attribute:role_name+' => '~~',
 	'Menu:DataAdministration' => 'Administração de dados',
-	'Menu:DataAdministration+' => '',
+	'Menu:DataAdministration+' => 'Data administration~~',
 	'Menu:Catalogs' => 'Catálogos',
 	'Menu:Catalogs+' => 'Tipos de dados',
 	'Menu:Audit' => 'Auditoria',
-	'Menu:Audit+' => '',
+	'Menu:Audit+' => 'Audit~~',
 	'Menu:CSVImport' => 'Importar CSV',
 	'Menu:CSVImport+' => 'Criação ou atualização em massa',
 	'Menu:Organization' => 'Organizações',
 	'Menu:Organization+' => 'Lista de Organizações',
 	'Menu:ConfigManagement' => 'Gerenciamento configuração',
-	'Menu:ConfigManagement+' => '',
+	'Menu:ConfigManagement+' => 'Configuration management~~',
 	'Menu:ConfigManagementCI' => 'Itens de Configuração (ICs)',
 	'Menu:ConfigManagementCI+' => 'Lista de Itens de Configuração (ICs)',
 	'Menu:ConfigManagementOverview' => 'Visão geral',
-	'Menu:ConfigManagementOverview+' => '',
+	'Menu:ConfigManagementOverview+' => 'Overview~~',
 	'Menu:Contact' => 'Contatos',
 	'Menu:Contact+' => 'Lista de Contatos',
 	'Menu:Contact:Count' => '%1$d contato(s)',
@@ -329,29 +239,20 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:Location' => 'Localizações',
 	'Menu:Location+' => 'Lista de Localizações',
 	'Menu:NewContact' => 'Novo contato',
-	'Menu:NewContact+' => '',
+	'Menu:NewContact+' => 'New contact~~',
 	'Menu:SearchContacts' => 'Pesquisar por contatos',
-	'Menu:SearchContacts+' => '',
+	'Menu:SearchContacts+' => 'Search for contacts~~',
 	'Menu:ConfigManagement:Shortcuts' => 'Atalhos',
 	'Menu:ConfigManagement:AllContacts' => 'Todos os contatos: %1$d',
 	'Menu:Typology' => 'Configuração de tipologias',
 	'Menu:Typology+' => 'Lista de tipologias',
 	'UI_WelcomeMenu_AllConfigItems' => 'Índice',
 	'Menu:ConfigManagement:Typology' => 'Configuração de tipologias',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Person:info' => 'Informações gerais',
 	'User:info' => 'Informações gerais',
 	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Informações pessoais',
 	'Person:notifiy' => 'Notificações',
-]);
-
-// Themes
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'theme:fullmoon' => 'Full moon',
 	'theme:test-red' => 'Test instance (Red)',
 ]);

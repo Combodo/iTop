@@ -1,19 +1,19 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
+ *
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:CreateMailbox' => 'Create a mailbox...~~',
 	'Menu:OAuthClient' => 'OAuth Mail Access~~',
-	'Menu:OAuthClient+' => '',
+	'Menu:OAuthClient+' => 'Oauth for email access~~',
 	'Menu:GenerateTokens' => 'Generate access token...~~',
 	'Menu:RegenerateTokens' => 'Regenerate access token...~~',
 	'itop-oauth-client/Operation:CreateMailBox/Title' => 'Mailbox creation~~',
@@ -28,16 +28,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'OAuthClient:Name/UseForSMTPMustBeUnique' => 'The combination Login (%1$s) and Use for SMTP (%2$s) has already been used for OAuth Client~~',
 	'OAuthClient:baseinfo' => 'Base Information~~',
 	'OAuthClient:scope' => 'Scope~~',
-]);
-
-//
-// Class: OAuthClient
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:OAuthClient' => 'OAuth Mail Access~~',
 	'Class:OAuthClient/Attribute:provider' => 'Provider',
-	'Class:OAuthClient/Attribute:provider+' => '',
+	'Class:OAuthClient/Attribute:provider+' => '~~',
 	'Class:OAuthClient/Attribute:name' => 'Login~~',
 	'Class:OAuthClient/Attribute:name+' => 'In general, this is your email address~~',
 	'Class:OAuthClient/Attribute:status' => 'Status',
@@ -45,78 +38,62 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:OAuthClient/Attribute:status/Value:active' => 'Access token generated~~',
 	'Class:OAuthClient/Attribute:status/Value:inactive' => 'No Access token~~',
 	'Class:OAuthClient/Attribute:description' => 'Beschrijving',
-	'Class:OAuthClient/Attribute:description+' => '',
+	'Class:OAuthClient/Attribute:description+' => '~~',
 	'Class:OAuthClient/Attribute:client_id' => 'Client id~~',
 	'Class:OAuthClient/Attribute:client_id+' => 'A long string of characters provided by your OAuth2 provider~~',
 	'Class:OAuthClient/Attribute:client_secret' => 'Client secret~~',
 	'Class:OAuthClient/Attribute:client_secret+' => 'Another long string of characters provided by your OAuth2 provider~~',
 	'Class:OAuthClient/Attribute:refresh_token' => 'Refresh token~~',
-	'Class:OAuthClient/Attribute:refresh_token+' => '',
+	'Class:OAuthClient/Attribute:refresh_token+' => '~~',
 	'Class:OAuthClient/Attribute:refresh_token_expiration' => 'Refresh token expiration~~',
-	'Class:OAuthClient/Attribute:refresh_token_expiration+' => '',
-	'Class:OAuthClient/Attribute:scope' => 'Scope~~',
-	'Class:OAuthClient/Attribute:scope+' => '',
+	'Class:OAuthClient/Attribute:refresh_token_expiration+' => '~~',
 	'Class:OAuthClient/Attribute:token' => 'Access token~~',
-	'Class:OAuthClient/Attribute:token+' => '',
+	'Class:OAuthClient/Attribute:token+' => '~~',
 	'Class:OAuthClient/Attribute:token_expiration' => 'Access token expiration~~',
-	'Class:OAuthClient/Attribute:token_expiration+' => '',
+	'Class:OAuthClient/Attribute:token_expiration+' => '~~',
 	'Class:OAuthClient/Attribute:redirect_url' => 'Redirect url~~',
 	'Class:OAuthClient/Attribute:redirect_url+' => 'This url must be copied in the OAuth2 configuration of the provider
 Erase the field to recalculate default value~~',
 	'Class:OAuthClient/Attribute:mailbox_list' => 'Mailbox list~~',
-	'Class:OAuthClient/Attribute:mailbox_list+' => '',
-]);
-
-//
-// Class: OAuthClientAzure
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:OAuthClient/Attribute:mailbox_list+' => '~~',
 	'Class:OAuthClientAzure' => 'OAuth Mail Access for Microsoft Azure~~',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Scope~~',
 	'Class:OAuthClientAzure/Attribute:scope+' => 'Usually default selection is appropriate~~',
 	'Class:OAuthClientAzure/Attribute:scope/Value:SMTP' => 'SMTP',
-	'Class:OAuthClientAzure/Attribute:scope/Value:SMTP+' => '',
+	'Class:OAuthClientAzure/Attribute:scope/Value:SMTP+' => '~~',
 	'Class:OAuthClientAzure/Attribute:scope/Value:IMAP' => 'IMAP',
-	'Class:OAuthClientAzure/Attribute:scope/Value:IMAP+' => '',
+	'Class:OAuthClientAzure/Attribute:scope/Value:IMAP+' => '~~',
 	'Class:OAuthClientAzure/Attribute:advanced_scope' => 'Advanced scope~~',
 	'Class:OAuthClientAzure/Attribute:advanced_scope+' => 'As soon as you enter something here it takes precedence over the “Scope” selection which is then ignored~~',
 	'Class:OAuthClientAzure/Attribute:used_scope' => 'Used scope~~',
-	'Class:OAuthClientAzure/Attribute:used_scope+' => '',
+	'Class:OAuthClientAzure/Attribute:used_scope+' => '~~',
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple' => 'Eenvoudig',
-	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple+' => '',
+	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple+' => '~~',
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:advanced' => 'Geavanceerd',
-	'Class:OAuthClientAzure/Attribute:used_scope/Value:advanced+' => '',
+	'Class:OAuthClientAzure/Attribute:used_scope/Value:advanced+' => '~~',
 	'Class:OAuthClientAzure/Attribute:used_for_smtp' => 'Used for SMTP~~',
 	'Class:OAuthClientAzure/Attribute:used_for_smtp+' => 'At least one OAuth client must have this flag to “Yes”, if you want iTop to use it for sending mails~~',
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:yes' => 'Ja',
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'Nee',
 	'Class:OAuthClientAzure/Attribute:tenant' => 'Tenant~~',
 	'Class:OAuthClientAzure/Attribute:tenant+' => 'Tenant ID of the configured application. For multi-tenant application, use "common".~~',
-]);
-
-//
-// Class: OAuthClientGoogle
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:OAuthClientGoogle' => 'OAuth Mail Access for Google~~',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Scope~~',
 	'Class:OAuthClientGoogle/Attribute:scope+' => 'Usually default selection is appropriate~~',
 	'Class:OAuthClientGoogle/Attribute:scope/Value:SMTP' => 'SMTP',
-	'Class:OAuthClientGoogle/Attribute:scope/Value:SMTP+' => '',
+	'Class:OAuthClientGoogle/Attribute:scope/Value:SMTP+' => '~~',
 	'Class:OAuthClientGoogle/Attribute:scope/Value:IMAP' => 'IMAP',
-	'Class:OAuthClientGoogle/Attribute:scope/Value:IMAP+' => '',
+	'Class:OAuthClientGoogle/Attribute:scope/Value:IMAP+' => '~~',
 	'Class:OAuthClientGoogle/Attribute:advanced_scope' => 'Advanced scope~~',
 	'Class:OAuthClientGoogle/Attribute:advanced_scope+' => 'As soon as you enter something here it takes precedence over the “Scope” selection which is then ignored~~',
 	'Class:OAuthClientGoogle/Attribute:used_scope' => 'Used scope~~',
-	'Class:OAuthClientGoogle/Attribute:used_scope+' => '',
+	'Class:OAuthClientGoogle/Attribute:used_scope+' => '~~',
 	'Class:OAuthClientGoogle/Attribute:used_scope/Value:simple' => 'Eenvoudig',
-	'Class:OAuthClientGoogle/Attribute:used_scope/Value:simple+' => '',
+	'Class:OAuthClientGoogle/Attribute:used_scope/Value:simple+' => '~~',
 	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced' => 'Geavanceerd',
-	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced+' => '',
+	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced+' => '~~',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp' => 'Used for SMTP~~',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp+' => 'At least one OAuth client must have this flag to “Yes”, if you want iTop to use it for sending mails~~',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:yes' => 'Ja',

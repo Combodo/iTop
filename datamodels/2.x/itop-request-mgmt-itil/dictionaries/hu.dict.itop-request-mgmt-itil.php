@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -16,7 +15,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:RequestManagementProvider' => 'Helpdesk szolgáltató',
 	'Menu:RequestManagementProvider+' => 'Helpdesk szolgáltató',
 	'Menu:UserRequest:Provider' => 'Szolgáltatónak továbbított nyitott kérelem',
-	'Menu:UserRequest:Provider+' => '',
+	'Menu:UserRequest:Provider+' => '~~',
 	'Menu:UserRequest:Overview' => 'Áttekintő',
 	'Menu:UserRequest:Overview+' => 'Áttekintő oldal',
 	'Menu:NewUserRequest' => 'Új felhasználói kérelem',
@@ -42,25 +41,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Nyitott kérelmek ügyfelenként',
 	'Class:UserRequest:KnownErrorList' => 'Ismert hibák',
 	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: UserRequest
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:UserRequest/Method:UpdateChildTicketWith:public_log' => '<i><u>Public log automatic copy from parent User Request %2$s:</u></i><br><br>~~',
+	'Class:UserRequest/Method:UpdateChildTicketWith:private_log' => '<i>Private log automatic copy from parent User Request [[UserRequest:%1$s]]:</i><br><br>~~',
 	'Class:UserRequest' => 'Felhasználói kérelem',
-	'Class:UserRequest+' => '~~',
+	'Class:UserRequest+' => 'Ticket type to handle only service requests and not Incidents.~~',
 	'Class:UserRequest/Attribute:status' => 'Állapot',
 	'Class:UserRequest/Attribute:status+' => '~~',
 	'Class:UserRequest/Attribute:status/Value:new' => 'Új',
@@ -86,7 +70,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:UserRequest/Attribute:request_type' => 'Kérelem típus',
 	'Class:UserRequest/Attribute:request_type+' => '~~',
 	'Class:UserRequest/Attribute:request_type/Value:service_request' => 'Szolgáltatáskérés',
-	'Class:UserRequest/Attribute:request_type/Value:service_request+' => '',
+	'Class:UserRequest/Attribute:request_type/Value:service_request+' => '~~',
 	'Class:UserRequest/Attribute:impact' => 'Hatása',
 	'Class:UserRequest/Attribute:impact+' => 'Impact is the severity of the fault, how many end users are affected.~~',
 	'Class:UserRequest/Attribute:impact/Value:1' => 'Részlegre',
@@ -98,23 +82,23 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:UserRequest/Attribute:priority' => 'Prioritás',
 	'Class:UserRequest/Attribute:priority+' => 'Order in which tickets need to be handled~~',
 	'Class:UserRequest/Attribute:priority/Value:1' => 'Kritikus',
-	'Class:UserRequest/Attribute:priority/Value:1+' => '',
+	'Class:UserRequest/Attribute:priority/Value:1+' => 'Highest priority~~',
 	'Class:UserRequest/Attribute:priority/Value:2' => 'Magas',
-	'Class:UserRequest/Attribute:priority/Value:2+' => '',
+	'Class:UserRequest/Attribute:priority/Value:2+' => '~~',
 	'Class:UserRequest/Attribute:priority/Value:3' => 'Közepes',
-	'Class:UserRequest/Attribute:priority/Value:3+' => '',
+	'Class:UserRequest/Attribute:priority/Value:3+' => '~~',
 	'Class:UserRequest/Attribute:priority/Value:4' => 'Alacsony',
-	'Class:UserRequest/Attribute:priority/Value:4+' => '',
+	'Class:UserRequest/Attribute:priority/Value:4+' => 'Lowest priority~~',
 	'Class:UserRequest/Attribute:urgency' => 'Sürgősség',
 	'Class:UserRequest/Attribute:urgency+' => 'How quickly the fault needs to be resolved~~',
 	'Class:UserRequest/Attribute:urgency/Value:1' => 'Nem várhat',
-	'Class:UserRequest/Attribute:urgency/Value:1+' => '',
+	'Class:UserRequest/Attribute:urgency/Value:1+' => 'Most urgent~~',
 	'Class:UserRequest/Attribute:urgency/Value:2' => 'Nagyon sürgős',
-	'Class:UserRequest/Attribute:urgency/Value:2+' => '',
+	'Class:UserRequest/Attribute:urgency/Value:2+' => '~~',
 	'Class:UserRequest/Attribute:urgency/Value:3' => 'Sürgős',
-	'Class:UserRequest/Attribute:urgency/Value:3+' => '',
+	'Class:UserRequest/Attribute:urgency/Value:3+' => '~~',
 	'Class:UserRequest/Attribute:urgency/Value:4' => 'Nem sürgős',
-	'Class:UserRequest/Attribute:urgency/Value:4+' => '',
+	'Class:UserRequest/Attribute:urgency/Value:4+' => 'Lowest urgency level~~',
 	'Class:UserRequest/Attribute:origin' => 'Eredet',
 	'Class:UserRequest/Attribute:origin+' => 'What\'s the trigger of this request ticket creation~~',
 	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
@@ -122,13 +106,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
 	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'Email',
-	'Class:UserRequest/Attribute:origin/Value:mail+' => '',
+	'Class:UserRequest/Attribute:origin/Value:mail+' => 'Request created on an email reception~~',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Felügyelet',
-	'Class:UserRequest/Attribute:origin/Value:monitoring+' => '',
+	'Class:UserRequest/Attribute:origin/Value:monitoring+' => 'Request created on a monitoring alert~~',
 	'Class:UserRequest/Attribute:origin/Value:phone' => 'Telefon',
-	'Class:UserRequest/Attribute:origin/Value:phone+' => '',
+	'Class:UserRequest/Attribute:origin/Value:phone+' => 'Request created following a phone call~~',
 	'Class:UserRequest/Attribute:origin/Value:portal' => 'Portál',
-	'Class:UserRequest/Attribute:origin/Value:portal+' => '',
+	'Class:UserRequest/Attribute:origin/Value:portal+' => 'Request created on the user portal~~',
 	'Class:UserRequest/Attribute:approver_id' => 'Jóváhagyó',
 	'Class:UserRequest/Attribute:approver_id+' => '~~',
 	'Class:UserRequest/Attribute:approver_email' => 'Jóváhagyó email címe',
@@ -142,11 +126,11 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:UserRequest/Attribute:servicesubcategory_name' => 'Szolgáltatás alkategória név',
 	'Class:UserRequest/Attribute:servicesubcategory_name+' => '~~',
 	'Class:UserRequest/Attribute:escalation_flag' => 'Sürgős jelzés',
-	'Class:UserRequest/Attribute:escalation_flag+' => '~~',
+	'Class:UserRequest/Attribute:escalation_flag+' => 'When set, the Ticket is added to the "Under escalation" menu~~',
 	'Class:UserRequest/Attribute:escalation_flag/Value:no' => 'Nem',
-	'Class:UserRequest/Attribute:escalation_flag/Value:no+' => '',
+	'Class:UserRequest/Attribute:escalation_flag/Value:no+' => '~~',
 	'Class:UserRequest/Attribute:escalation_flag/Value:yes' => 'Igen',
-	'Class:UserRequest/Attribute:escalation_flag/Value:yes+' => '',
+	'Class:UserRequest/Attribute:escalation_flag/Value:yes+' => '~~',
 	'Class:UserRequest/Attribute:escalation_reason' => 'Sürgősségi ok',
 	'Class:UserRequest/Attribute:escalation_reason+' => '~~',
 	'Class:UserRequest/Attribute:assignment_date' => 'Megbízási dátum',
@@ -182,19 +166,19 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:UserRequest/Attribute:resolution_code' => 'Megoldás kód',
 	'Class:UserRequest/Attribute:resolution_code+' => 'What was done to resolve the request?~~',
 	'Class:UserRequest/Attribute:resolution_code/Value:assistance' => 'Támogatás',
-	'Class:UserRequest/Attribute:resolution_code/Value:assistance+' => '',
+	'Class:UserRequest/Attribute:resolution_code/Value:assistance+' => '~~',
 	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed' => 'Programhiba javítás',
-	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed+' => '',
+	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed+' => '~~',
 	'Class:UserRequest/Attribute:resolution_code/Value:hardware repair' => 'Hardver javítás',
-	'Class:UserRequest/Attribute:resolution_code/Value:hardware repair+' => '',
+	'Class:UserRequest/Attribute:resolution_code/Value:hardware repair+' => '~~',
 	'Class:UserRequest/Attribute:resolution_code/Value:other' => 'Egyéb',
-	'Class:UserRequest/Attribute:resolution_code/Value:other+' => '',
+	'Class:UserRequest/Attribute:resolution_code/Value:other+' => '~~',
 	'Class:UserRequest/Attribute:resolution_code/Value:software patch' => 'Szoftverfrissítés',
-	'Class:UserRequest/Attribute:resolution_code/Value:software patch+' => '',
+	'Class:UserRequest/Attribute:resolution_code/Value:software patch+' => '~~',
 	'Class:UserRequest/Attribute:resolution_code/Value:system update' => 'Rendszerfrissítés',
-	'Class:UserRequest/Attribute:resolution_code/Value:system update+' => '',
+	'Class:UserRequest/Attribute:resolution_code/Value:system update+' => '~~',
 	'Class:UserRequest/Attribute:resolution_code/Value:training' => 'Oktatás',
-	'Class:UserRequest/Attribute:resolution_code/Value:training+' => '',
+	'Class:UserRequest/Attribute:resolution_code/Value:training+' => '~~',
 	'Class:UserRequest/Attribute:solution' => 'Megoldás',
 	'Class:UserRequest/Attribute:solution+' => '~~',
 	'Class:UserRequest/Attribute:pending_reason' => 'Függőben lévőség ok',
@@ -224,13 +208,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:UserRequest/Attribute:user_satisfaction' => 'Felhasználói elégedettség',
 	'Class:UserRequest/Attribute:user_satisfaction+' => '~~',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:1' => 'Nagyon elégedett',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:1+' => '',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:1+' => '~~',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:2' => 'Viszonylag elégedett',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:2+' => '',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:2+' => '~~',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:3' => 'Inkább elégedetlen',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:3+' => '',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:3+' => '~~',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:4' => 'Nagyon elégedetlen',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => '',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => '~~',
 	'Class:UserRequest/Attribute:user_comment' => 'Felhasználói megjegyzés',
 	'Class:UserRequest/Attribute:user_comment+' => '~~',
 	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => 'parent_request_id_friendlyname',
@@ -262,9 +246,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Nem lehet hozzárendelni a Fölérendelt kérelmet magához a kérelemhez',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'A megoldás kaszkádosítása a kapcsolódó kérésekhez (ev_autoresolve), és a kérés következő jellemzőinek összehangolása: szolgáltatás, csapat, ügyintéző, megoldási információ.',
-]);
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Organization:Overview:UserRequests' => 'Felhasználói kérelmek ebből a szervezeti egységből',
 	'Organization:Overview:MyUserRequests' => 'Hozzám rendelt kérelmek ebből a szervezeti egységből',
 	'Organization:Overview:Tickets' => 'Hibajegyek ebből a szervezeti egységből',

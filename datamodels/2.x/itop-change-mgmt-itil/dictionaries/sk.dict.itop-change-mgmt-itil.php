@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -19,7 +18,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:SearchChanges' => 'Vyhľadať zmeny',
 	'Menu:SearchChanges+' => 'Search for change tickets~~',
 	'Menu:Change:Shortcuts' => 'Skratky',
-	'Menu:Change:Shortcuts+' => '~~',
+	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => 'Zmeny očakávajúce prijatie',
 	'Menu:WaitingAcceptance+' => '~~',
 	'Menu:WaitingApproval' => 'Zmeny očakávajúce schválenie',
@@ -34,25 +33,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Zmeny podľa stavu za posledných 7 dní',
 	'Tickets:Related:OpenChanges' => 'Open changes~~',
 	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Change
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Change' => 'Zmena',
-	'Class:Change+' => '~~',
+	'Class:Change+' => 'Abstract class. A type of Ticket to handle Change which has an effect on delivered Services.~~',
 	'Class:Change/Attribute:status' => 'Stav',
 	'Class:Change/Attribute:status+' => '~~',
 	'Class:Change/Attribute:status/Value:new' => 'Nová',
@@ -147,15 +129,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Change/Stimulus:ev_monitor+' => '~~',
 	'Class:Change/Stimulus:ev_finish' => 'Zatvoriť',
 	'Class:Change/Stimulus:ev_finish+' => '~~',
-]);
-
-//
-// Class: RoutineChange
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:RoutineChange' => 'Routine Change~~',
-	'Class:RoutineChange+' => '~~',
+	'Class:RoutineChange+' => 'Standard change with low risk, without the need for additional authorization, and for which a validated procedure exists and must be applied.~~',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Validate~~',
 	'Class:RoutineChange/Stimulus:ev_validate+' => '~~',
 	'Class:RoutineChange/Stimulus:ev_reject' => 'Reject~~',
@@ -178,15 +153,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '~~',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Finish~~',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '~~',
-]);
-
-//
-// Class: ApprovedChange
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ApprovedChange' => 'Change To Approve~~',
-	'Class:ApprovedChange+' => '~~',
+	'Class:ApprovedChange+' => 'Abstract class. Normal Change and Emergency Change which requires an approval.~~',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Approval Date~~',
 	'Class:ApprovedChange/Attribute:approval_date+' => '~~',
 	'Class:ApprovedChange/Attribute:approval_comment' => 'Approval comment~~',
@@ -213,15 +181,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '~~',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Finish~~',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '~~',
-]);
-
-//
-// Class: NormalChange
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:NormalChange' => 'Normal Change~~',
-	'Class:NormalChange+' => '~~',
+	'Class:NormalChange+' => 'Type of Change~~',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Acceptance date~~',
 	'Class:NormalChange/Attribute:acceptance_date+' => '~~',
 	'Class:NormalChange/Attribute:acceptance_comment' => 'Acceptance comment~~',
@@ -248,15 +209,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:NormalChange/Stimulus:ev_monitor+' => '~~',
 	'Class:NormalChange/Stimulus:ev_finish' => 'Finish~~',
 	'Class:NormalChange/Stimulus:ev_finish+' => '~~',
-]);
-
-//
-// Class: EmergencyChange
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:EmergencyChange' => 'Emergency Change~~',
-	'Class:EmergencyChange+' => '~~',
+	'Class:EmergencyChange+' => 'Change Ticket to manage emergency situations (malfunctions, security). The approval process is accelerated. The Emergency Change is implemented as soon as possible.~~',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Validate~~',
 	'Class:EmergencyChange/Stimulus:ev_validate+' => '~~',
 	'Class:EmergencyChange/Stimulus:ev_reject' => 'Reject~~',

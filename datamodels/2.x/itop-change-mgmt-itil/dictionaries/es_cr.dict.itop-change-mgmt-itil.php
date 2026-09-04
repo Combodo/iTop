@@ -1,12 +1,14 @@
 <?php
-
 /**
- * Spanish Localized data
+ * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
+ *
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:ChangeManagement' => 'Administración de Cambios',
@@ -32,23 +34,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Cambios por estatus de los últimos 7 días',
 	'Tickets:Related:OpenChanges' => 'Cambios abiertos',
 	'Tickets:Related:RecentChanges' => 'Cambios recientes (72 hrs)',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Change
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Change' => 'Cambio',
 	'Class:Change+' => 'Cambio',
 	'Class:Change/Attribute:status' => 'Estatus',
@@ -145,13 +130,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Change/Stimulus:ev_monitor+' => 'Monitorear',
 	'Class:Change/Stimulus:ev_finish' => 'Finalizar',
 	'Class:Change/Stimulus:ev_finish+' => 'Finalizar',
-]);
-
-//
-// Class: RoutineChange
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:RoutineChange' => 'Cambio Rutinario',
 	'Class:RoutineChange+' => 'Cambio Rutinario',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Validar',
@@ -176,13 +154,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:RoutineChange/Stimulus:ev_monitor+' => 'Monitorear',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Finalizar',
 	'Class:RoutineChange/Stimulus:ev_finish+' => 'Finalizar',
-]);
-
-//
-// Class: ApprovedChange
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:ApprovedChange' => 'Cambios Aprobados',
 	'Class:ApprovedChange+' => 'Cambios Aprobados',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Fecha de Aprobación',
@@ -211,13 +182,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => 'Monitorear',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Finalizar',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => 'Finalizar',
-]);
-
-//
-// Class: NormalChange
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:NormalChange' => 'Cambio Normal',
 	'Class:NormalChange+' => 'Cambio Normal',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Fecha de Aceptación',
@@ -246,13 +210,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:NormalChange/Stimulus:ev_monitor+' => 'Monitorear',
 	'Class:NormalChange/Stimulus:ev_finish' => 'Finalizar',
 	'Class:NormalChange/Stimulus:ev_finish+' => 'Finalizar',
-]);
-
-//
-// Class: EmergencyChange
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:EmergencyChange' => 'Cambio de Emergencia',
 	'Class:EmergencyChange+' => 'Cambio de Emergencia',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Validar',

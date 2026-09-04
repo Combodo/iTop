@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
@@ -15,7 +14,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:ConfigFileEditor' => 'Текстовый редактор',
 	'itop-config/Operation:Edit/Title' => 'Редактор файла конфигурации',
 	'config-edit-intro' => 'Будьте очень осторожны при редактировании файла конфигурации. В частности, отредактированы могут быть только глобальная конфигурация и настройки модулей.',
-	'Menu:ConfigEditor' => 'Основные настройки',
 	'config-apply' => 'Применить',
 	'config-apply-title' => 'Применить (Ctrl+S)',
 	'config-cancel' => 'Сбросить',

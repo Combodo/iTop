@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
@@ -15,7 +14,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:ProblemManagement' => 'Problem Management',
 	'Menu:ProblemManagement+' => 'Ein ITIL-Prozess, der die Ursachen von Incidents ermittelt sowie Known Errors und FAQs dokumentiert, um die Auslastung des Helpdesks zu verringern',
 	'Menu:Problem:Overview' => 'Übersicht',
-	'Menu:Problem:Overview+' => '',
+	'Menu:Problem:Overview+' => 'Overview~~',
 	'Menu:NewProblem' => 'Neues Problem',
 	'Menu:NewProblem+' => 'Ein neues Problem-Ticket anlegen',
 	'Menu:SearchProblems' => 'Nach Problemen suchen',
@@ -33,43 +32,36 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Nicht zugewiesene Probleme',
 	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard für das Problem Management',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard für das Problem Management',
-
-]);
-//
-// Class: Problem
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Problem' => 'Problem',
 	'Class:Problem+' => 'Ein Incident wird zum Problem, wenn er nicht zeitnah gelöst wird oder häufig wiederkehrt',
 	'Class:Problem/Attribute:status' => 'Status',
-	'Class:Problem/Attribute:status+' => '',
+	'Class:Problem/Attribute:status+' => '~~',
 	'Class:Problem/Attribute:status/Value:new' => 'Neu',
-	'Class:Problem/Attribute:status/Value:new+' => '',
+	'Class:Problem/Attribute:status/Value:new+' => '~~',
 	'Class:Problem/Attribute:status/Value:assigned' => 'Zugewiesen',
-	'Class:Problem/Attribute:status/Value:assigned+' => '',
+	'Class:Problem/Attribute:status/Value:assigned+' => '~~',
 	'Class:Problem/Attribute:status/Value:resolved' => 'Gelöst',
-	'Class:Problem/Attribute:status/Value:resolved+' => '',
+	'Class:Problem/Attribute:status/Value:resolved+' => '~~',
 	'Class:Problem/Attribute:status/Value:closed' => 'Geschlossen',
-	'Class:Problem/Attribute:status/Value:closed+' => '',
+	'Class:Problem/Attribute:status/Value:closed+' => '~~',
 	'Class:Problem/Attribute:service_id' => 'Service',
-	'Class:Problem/Attribute:service_id+' => '',
+	'Class:Problem/Attribute:service_id+' => '~~',
 	'Class:Problem/Attribute:service_name' => 'Service-Name',
-	'Class:Problem/Attribute:service_name+' => '',
+	'Class:Problem/Attribute:service_name+' => '~~',
 	'Class:Problem/Attribute:servicesubcategory_id' => 'Service-Kategorie',
-	'Class:Problem/Attribute:servicesubcategory_id+' => '',
+	'Class:Problem/Attribute:servicesubcategory_id+' => '~~',
 	'Class:Problem/Attribute:servicesubcategory_name' => 'Service-Unterkategorie',
-	'Class:Problem/Attribute:servicesubcategory_name+' => '',
+	'Class:Problem/Attribute:servicesubcategory_name+' => '~~',
 	'Class:Problem/Attribute:product' => 'Produkt',
-	'Class:Problem/Attribute:product+' => '',
+	'Class:Problem/Attribute:product+' => '~~',
 	'Class:Problem/Attribute:impact' => 'Auswirkung',
 	'Class:Problem/Attribute:impact+' => 'Die Auswirkung gibt die Schwere des Problems an, also wie viele Endanwender betroffen sind',
 	'Class:Problem/Attribute:impact/Value:1' => 'Eine Abteilung',
-	'Class:Problem/Attribute:impact/Value:1+' => '',
+	'Class:Problem/Attribute:impact/Value:1+' => '~~',
 	'Class:Problem/Attribute:impact/Value:2' => 'Einen Service',
-	'Class:Problem/Attribute:impact/Value:2+' => '',
+	'Class:Problem/Attribute:impact/Value:2+' => '~~',
 	'Class:Problem/Attribute:impact/Value:3' => 'Eine Person',
-	'Class:Problem/Attribute:impact/Value:3+' => '',
+	'Class:Problem/Attribute:impact/Value:3+' => '~~',
 	'Class:Problem/Attribute:urgency' => 'Dringlichkeit',
 	'Class:Problem/Attribute:urgency+' => 'Wie schnell das Problem gelöst werden muss',
 	'Class:Problem/Attribute:urgency/Value:1' => 'Kritisch',
@@ -83,21 +75,21 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Problem/Attribute:priority' => 'Priorität',
 	'Class:Problem/Attribute:priority+' => 'Reihenfolge, in der Probleme zu bearbeiten sind',
 	'Class:Problem/Attribute:priority/Value:1' => 'Kritisch',
-	'Class:Problem/Attribute:priority/Value:1+' => '',
+	'Class:Problem/Attribute:priority/Value:1+' => '~~',
 	'Class:Problem/Attribute:priority/Value:2' => 'Hoch',
-	'Class:Problem/Attribute:priority/Value:2+' => '',
+	'Class:Problem/Attribute:priority/Value:2+' => '~~',
 	'Class:Problem/Attribute:priority/Value:3' => 'Mittel',
-	'Class:Problem/Attribute:priority/Value:3+' => '',
+	'Class:Problem/Attribute:priority/Value:3+' => '~~',
 	'Class:Problem/Attribute:priority/Value:4' => 'Niedrig',
-	'Class:Problem/Attribute:priority/Value:4+' => '',
+	'Class:Problem/Attribute:priority/Value:4+' => '~~',
 	'Class:Problem/Attribute:related_change_id' => 'Zusammenhängender Change',
-	'Class:Problem/Attribute:related_change_id+' => '',
+	'Class:Problem/Attribute:related_change_id+' => '~~',
 	'Class:Problem/Attribute:related_change_ref' => 'Referenz des zugehörigen Changes',
-	'Class:Problem/Attribute:related_change_ref+' => '',
+	'Class:Problem/Attribute:related_change_ref+' => '~~',
 	'Class:Problem/Attribute:assignment_date' => 'Datum der Zuordnung',
-	'Class:Problem/Attribute:assignment_date+' => '',
+	'Class:Problem/Attribute:assignment_date+' => '~~',
 	'Class:Problem/Attribute:resolution_date' => 'Datum der Lösung',
-	'Class:Problem/Attribute:resolution_date+' => '',
+	'Class:Problem/Attribute:resolution_date+' => '~~',
 	'Class:Problem/Attribute:knownerrors_list' => 'Bekannte Fehler',
 	'Class:Problem/Attribute:knownerrors_list+' => 'Alle bekannten Fehler verknüpft mit diesem Problem',
 	'Class:Problem/Attribute:related_request_list' => 'Verwandte Requests',
@@ -105,11 +97,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Problem/Attribute:related_incident_list' => 'Verknüpfte Incidents',
 	'Class:Problem/Attribute:related_incident_list+' => 'Alle Incidents verknüpft mit diesem Problem',
 	'Class:Problem/Stimulus:ev_assign' => 'Zuweisen',
-	'Class:Problem/Stimulus:ev_assign+' => '',
+	'Class:Problem/Stimulus:ev_assign+' => '~~',
 	'Class:Problem/Stimulus:ev_reassign' => 'Neu zuweisen',
-	'Class:Problem/Stimulus:ev_reassign+' => '',
+	'Class:Problem/Stimulus:ev_reassign+' => '~~',
 	'Class:Problem/Stimulus:ev_resolve' => 'Lösen',
-	'Class:Problem/Stimulus:ev_resolve+' => '',
+	'Class:Problem/Stimulus:ev_resolve+' => '~~',
 	'Class:Problem/Stimulus:ev_close' => 'Schließen',
-	'Class:Problem/Stimulus:ev_close+' => '',
+	'Class:Problem/Stimulus:ev_close+' => '~~',
 ]);

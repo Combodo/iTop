@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -53,20 +52,12 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Portal:File:None' => 'Nincs fájl',
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Megnyitás</a> / <a href="%4$s" class="file_download_link">Letöltés</a>',
-	'Portal:Calendar-FirstDayOfWeek' => 'hu', //work with moment.js locales
-]);
-
-// Object form
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Portal:Calendar-FirstDayOfWeek' => 'hu',
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Bejegyzés bezárása',
 	'Portal:Form:Close:Warning' => 'Szeretné elhagyni ezt az űrlapot? A megadott adatok elveszhetnek',
 	'Portal:Error:ObjectCannotBeCreated' => 'Hiba: az objektum nem hozható létre. Ellenőrizze a kapcsolódó objektumokat és mellékleteket, mielőtt újra elküldi ezt az űrlapot.',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Hiba: az objektum nem frissíthető. Ellenőrizze a kapcsolódó objektumokat és mellékleteket, mielőtt újra elküldi ezt az űrlapot.',
 	'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
-]);
-
-// UserProfile brick
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Brick:Portal:UserProfile:Name' => 'Felhasználói profil',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'Saját profil',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Kijelentkezés',
@@ -77,15 +68,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Nem tudja megváltoztatni a jelszót, lépjen kapcsolatba a %1$s rendszergazdával',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Személyi adatok',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Fénykép',
-]);
-
-// AggregatePageBrick
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Brick:Portal:AggregatePage:DefaultTitle' => 'Műszerfal',
-]);
-
-// BrowseBrick brick
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Brick:Portal:Browse:Name' => 'Böngésszen az elemek között',
 	'Brick:Portal:Browse:Mode:List' => 'Lista',
 	'Brick:Portal:Browse:Mode:Tree' => 'Fa',
@@ -99,10 +82,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Összecsukás',
 	'Brick:Portal:Browse:Filter:NoData' => 'Nincs elem',
 	'Brick:Portal:Browse:Mosaic:Back' => 'Vissza',
-]);
-
-// ManageBrick brick
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Brick:Portal:Manage:Name' => 'Elemek kezelése',
 	'Brick:Portal:Manage:Table:NoData' => 'Nincs elem',
 	'Brick:Portal:Manage:Table:ItemActions' => 'Műveletek',
@@ -117,10 +96,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Brick:Portal:Manage:fct:avg' => 'Átlag',
 	'Brick:Portal:Manage:fct:min' => 'Minimum',
 	'Brick:Portal:Manage:fct:max' => 'Maximum',
-]);
-
-// ObjectBrick brick
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Brick:Portal:Object:Name' => 'Objektum',
 	'Brick:Portal:Object:Form:Create:Title' => 'Új %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => '%1$s frissítése',
@@ -133,16 +108,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Objektum hivatkozás másolása',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Másolva',
-]);
-
-// CreateBrick brick
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Brick:Portal:Create:Name' => 'Gyors létrehozás',
 	'Brick:Portal:Create:ChooseType' => 'Válasszon típust',
-]);
-
-// Filter brick
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Brick:Portal:Filter:Name' => 'Tégla előszűrése',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'pl. wifi kapcsolat',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Keresés',

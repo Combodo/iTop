@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
@@ -31,9 +30,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'bkp-table-file' => 'Файл',
 	'bkp-table-file+' => 'Только файлы с расширением .zip считаются файлами резервных копий.',
 	'bkp-table-size' => 'Размер',
-	'bkp-table-size+' => '',
+	'bkp-table-size+' => '~~',
 	'bkp-table-actions' => 'Действия',
-	'bkp-table-actions+' => '',
+	'bkp-table-actions+' => '~~',
 	'bkp-status-backups-auto' => 'Резервное копирование по расписанию',
 	'bkp-status-backups-manual' => 'Резервное копирование вручную',
 	'bkp-status-backups-none' => 'Резервных копий ещё нет',

@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -14,7 +13,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:ConfigFileEditor' => 'Configurações',
 	'itop-config/Operation:Edit/Title' => 'Editor do arquivo de configuração',
 	'config-edit-intro' => 'Tenha cuidado ao editar o arquivo de configuração',
-	'Menu:ConfigEditor' => 'Configurações',
 	'config-apply' => 'Aplicar',
 	'config-apply-title' => 'Aplicar (Ctrl+S)',
 	'config-cancel' => 'Descartar alterações',

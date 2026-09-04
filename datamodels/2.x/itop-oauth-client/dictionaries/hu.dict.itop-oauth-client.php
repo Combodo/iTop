@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -13,7 +12,7 @@
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:CreateMailbox' => 'Postafiók létrehozása...',
 	'Menu:OAuthClient' => 'OAuth Mail Access~~',
-	'Menu:OAuthClient+' => '~~',
+	'Menu:OAuthClient+' => 'Oauth for email access~~',
 	'Menu:GenerateTokens' => 'Hozzáférési tokenek generálása...',
 	'Menu:RegenerateTokens' => 'Hozzáférési tokenek újragenerálása...',
 	'itop-oauth-client/Operation:CreateMailBox/Title' => 'Postafiók létrehozás',
@@ -28,13 +27,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'OAuthClient:Name/UseForSMTPMustBeUnique' => 'The combination Login (%1$s) and Use for SMTP (%2$s) has already been used for OAuth Client~~',
 	'OAuthClient:baseinfo' => 'Base Information~~',
 	'OAuthClient:scope' => 'Scope~~',
-]);
-
-//
-// Class: OAuthClient
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OAuthClient' => 'OAuth Mail Access~~',
 	'Class:OAuthClient/Attribute:provider' => 'Szolgáltató',
 	'Class:OAuthClient/Attribute:provider+' => '~~',
@@ -54,8 +46,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OAuthClient/Attribute:refresh_token+' => '~~',
 	'Class:OAuthClient/Attribute:refresh_token_expiration' => 'A token lejáratának frissítése',
 	'Class:OAuthClient/Attribute:refresh_token_expiration+' => '~~',
-	'Class:OAuthClient/Attribute:scope' => 'Hatókör',
-	'Class:OAuthClient/Attribute:scope+' => '~~',
 	'Class:OAuthClient/Attribute:token' => 'Hozzáférési token',
 	'Class:OAuthClient/Attribute:token+' => '~~',
 	'Class:OAuthClient/Attribute:token_expiration' => 'Hozzáférési token lejárata',
@@ -65,13 +55,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 Erase the field to recalculate default value~~',
 	'Class:OAuthClient/Attribute:mailbox_list' => 'Postafiók lista',
 	'Class:OAuthClient/Attribute:mailbox_list+' => '~~',
-]);
-
-//
-// Class: OAuthClientAzure
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OAuthClientAzure' => 'OAuth Mail Access for Microsoft Azure~~',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Scope~~',
@@ -94,13 +77,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'No~~',
 	'Class:OAuthClientAzure/Attribute:tenant' => 'Tenant~~',
 	'Class:OAuthClientAzure/Attribute:tenant+' => 'Tenant ID of the configured application. For multi-tenant application, use "common".~~',
-]);
-
-//
-// Class: OAuthClientGoogle
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OAuthClientGoogle' => 'OAuth Mail Access for Google~~',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Scope~~',

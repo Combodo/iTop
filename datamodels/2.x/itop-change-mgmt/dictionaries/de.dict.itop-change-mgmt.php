@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
@@ -14,7 +13,7 @@
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:ChangeManagement' => 'Change Management',
 	'Menu:Change:Overview' => 'Übersicht',
-	'Menu:Change:Overview+' => '',
+	'Menu:Change:Overview+' => '~~',
 	'Menu:NewChange' => 'Neuer Change',
 	'Menu:NewChange+' => 'Einen neuen Change erstellen',
 	'Menu:SearchChanges' => 'Suche nach Changes',
@@ -35,41 +34,24 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes der letzten sieben Tage nach Status',
 	'Tickets:Related:OpenChanges' => 'Offene Changes',
 	'Tickets:Related:RecentChanges' => 'Kürzlich erfolgte Changes (72h)',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Change
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Change' => 'Change',
 	'Class:Change+' => 'Ein Ticket-Typ zur Behandlung von Changes, die sich auf erbrachte Services auswirken.',
 	'Class:Change/Attribute:status' => 'Status',
-	'Class:Change/Attribute:status+' => '',
+	'Class:Change/Attribute:status+' => '~~',
 	'Class:Change/Attribute:status/Value:new' => 'Neu',
-	'Class:Change/Attribute:status/Value:new+' => '',
+	'Class:Change/Attribute:status/Value:new+' => '~~',
 	'Class:Change/Attribute:status/Value:assigned' => 'Zugewiesen',
-	'Class:Change/Attribute:status/Value:assigned+' => '',
+	'Class:Change/Attribute:status/Value:assigned+' => '~~',
 	'Class:Change/Attribute:status/Value:planned' => 'Geplant',
-	'Class:Change/Attribute:status/Value:planned+' => '',
+	'Class:Change/Attribute:status/Value:planned+' => '~~',
 	'Class:Change/Attribute:status/Value:rejected' => 'Abgelehnt',
-	'Class:Change/Attribute:status/Value:rejected+' => '',
+	'Class:Change/Attribute:status/Value:rejected+' => '~~',
 	'Class:Change/Attribute:status/Value:approved' => 'Genehmigt',
-	'Class:Change/Attribute:status/Value:approved+' => '',
+	'Class:Change/Attribute:status/Value:approved+' => '~~',
 	'Class:Change/Attribute:status/Value:closed' => 'Geschlossen',
-	'Class:Change/Attribute:status/Value:closed+' => '',
+	'Class:Change/Attribute:status/Value:closed+' => '~~',
 	'Class:Change/Attribute:category' => 'Kategorie',
-	'Class:Change/Attribute:category+' => '',
+	'Class:Change/Attribute:category+' => '~~',
 	'Class:Change/Attribute:category/Value:application' => 'Applikation',
 	'Class:Change/Attribute:category/Value:application+' => 'Applikation',
 	'Class:Change/Attribute:category/Value:hardware' => 'Hardware',
@@ -83,21 +65,21 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Change/Attribute:category/Value:system' => 'System',
 	'Class:Change/Attribute:category/Value:system+' => 'System',
 	'Class:Change/Attribute:reject_reason' => 'Ablehnungsgrund',
-	'Class:Change/Attribute:reject_reason+' => '',
+	'Class:Change/Attribute:reject_reason+' => '~~',
 	'Class:Change/Attribute:changemanager_id' => 'Change Manager',
-	'Class:Change/Attribute:changemanager_id+' => '',
+	'Class:Change/Attribute:changemanager_id+' => '~~',
 	'Class:Change/Attribute:changemanager_email' => 'Change Manager E-Mail',
-	'Class:Change/Attribute:changemanager_email+' => '',
+	'Class:Change/Attribute:changemanager_email+' => '~~',
 	'Class:Change/Attribute:parent_id' => 'Parent Change',
-	'Class:Change/Attribute:parent_id+' => '',
+	'Class:Change/Attribute:parent_id+' => '~~',
 	'Class:Change/Attribute:parent_name' => 'Parent Change Referenz',
-	'Class:Change/Attribute:parent_name+' => '',
+	'Class:Change/Attribute:parent_name+' => '~~',
 	'Class:Change/Attribute:creation_date' => 'Erstellungsdatum',
-	'Class:Change/Attribute:creation_date+' => '',
+	'Class:Change/Attribute:creation_date+' => '~~',
 	'Class:Change/Attribute:approval_date' => 'Genehmigungsdatum',
-	'Class:Change/Attribute:approval_date+' => '',
+	'Class:Change/Attribute:approval_date+' => '~~',
 	'Class:Change/Attribute:fallback_plan' => 'Fallback-Plan',
-	'Class:Change/Attribute:fallback_plan+' => '',
+	'Class:Change/Attribute:fallback_plan+' => '~~',
 	'Class:Change/Attribute:related_request_list' => 'Verwandte Requests',
 	'Class:Change/Attribute:related_request_list+' => 'Alle Benutzeranfragen, die mit diesem Change verknüpft sind',
 	'Class:Change/Attribute:related_incident_list' => 'Verwandte Incidents',
@@ -107,23 +89,23 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Change/Attribute:child_changes_list' => 'Abgeleitete Changes',
 	'Class:Change/Attribute:child_changes_list+' => 'Alle abgeleiteten Changes, die mit diesem Change verknüpft sind',
 	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Change Anzeigename',
-	'Class:Change/Attribute:parent_id_friendlyname+' => '',
+	'Class:Change/Attribute:parent_id_friendlyname+' => '~~',
 	'Class:Change/Stimulus:ev_assign' => 'Zuweisen',
-	'Class:Change/Stimulus:ev_assign+' => '',
+	'Class:Change/Stimulus:ev_assign+' => '~~',
 	'Class:Change/Stimulus:ev_plan' => 'Planen',
-	'Class:Change/Stimulus:ev_plan+' => '',
+	'Class:Change/Stimulus:ev_plan+' => '~~',
 	'Class:Change/Stimulus:ev_reject' => 'Zurückweisen',
-	'Class:Change/Stimulus:ev_reject+' => '',
+	'Class:Change/Stimulus:ev_reject+' => '~~',
 	'Class:Change/Stimulus:ev_reopen' => 'Wiedereröffnen',
-	'Class:Change/Stimulus:ev_reopen+' => '',
+	'Class:Change/Stimulus:ev_reopen+' => '~~',
 	'Class:Change/Stimulus:ev_approve' => 'Genehmigen',
-	'Class:Change/Stimulus:ev_approve+' => '',
+	'Class:Change/Stimulus:ev_approve+' => '~~',
 	'Class:Change/Stimulus:ev_finish' => 'Schließen',
-	'Class:Change/Stimulus:ev_finish+' => '',
+	'Class:Change/Stimulus:ev_finish+' => '~~',
 	'Class:Change/Attribute:outage' => 'Ausfall',
-	'Class:Change/Attribute:outage+' => '',
+	'Class:Change/Attribute:outage+' => '~~',
 	'Class:Change/Attribute:outage/Value:no' => 'Nein',
-	'Class:Change/Attribute:outage/Value:no+' => '',
+	'Class:Change/Attribute:outage/Value:no+' => '~~',
 	'Class:Change/Attribute:outage/Value:yes' => 'Ja',
-	'Class:Change/Attribute:outage/Value:yes+' => '',
+	'Class:Change/Attribute:outage/Value:yes+' => '~~',
 ]);

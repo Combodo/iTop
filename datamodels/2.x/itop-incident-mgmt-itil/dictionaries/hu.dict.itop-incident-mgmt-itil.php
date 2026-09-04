@@ -1,18 +1,17 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:IncidentManagement' => 'Incidenskezelés',
-	'Menu:IncidentManagement+' => '',
+	'Menu:IncidentManagement+' => '~~',
 	'Menu:Incident:Overview' => 'Áttekintő',
 	'Menu:Incident:Overview+' => 'Áttekintő oldal',
 	'Menu:NewIncident' => 'Új incidens',
@@ -34,25 +33,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Nyitott incidensek állapotuk szerint',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Nyitott incidensek ügyintézőnként',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Nyitott incidensek ügyfelenként',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Incident
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:Incident/Method:UpdateChildTicketWith:public_log' => '<i><u>Public log entry from parent Incident %2$s:</u></i><br><br>~~',
+	'Class:Incident/Method:UpdateChildTicketWith:private_log' => '<i>Private log entry from parent Incident [[Incident:%1$s]]:</i><br><br>~~',
 	'Class:Incident' => 'Incidens',
-	'Class:Incident+' => '~~',
+	'Class:Incident+' => 'Ticket type for managing malfunctions of a service or configuration elements~~',
 	'Class:Incident/Attribute:status' => 'Állapot',
 	'Class:Incident/Attribute:status+' => '~~',
 	'Class:Incident/Attribute:status/Value:new' => 'Új',
@@ -82,23 +66,23 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Incident/Attribute:priority' => 'Prioritás',
 	'Class:Incident/Attribute:priority+' => 'Order in which tickets need to be handled~~',
 	'Class:Incident/Attribute:priority/Value:1' => 'Kritikus',
-	'Class:Incident/Attribute:priority/Value:1+' => '',
+	'Class:Incident/Attribute:priority/Value:1+' => '~~',
 	'Class:Incident/Attribute:priority/Value:2' => 'Magas',
-	'Class:Incident/Attribute:priority/Value:2+' => '',
+	'Class:Incident/Attribute:priority/Value:2+' => '~~',
 	'Class:Incident/Attribute:priority/Value:3' => 'Közepes',
-	'Class:Incident/Attribute:priority/Value:3+' => '',
+	'Class:Incident/Attribute:priority/Value:3+' => '~~',
 	'Class:Incident/Attribute:priority/Value:4' => 'Alacsony',
-	'Class:Incident/Attribute:priority/Value:4+' => '',
+	'Class:Incident/Attribute:priority/Value:4+' => '~~',
 	'Class:Incident/Attribute:urgency' => 'Sürgősség',
 	'Class:Incident/Attribute:urgency+' => 'How quickly the fault needs to be resolved~~',
 	'Class:Incident/Attribute:urgency/Value:1' => 'Nem várhat',
-	'Class:Incident/Attribute:urgency/Value:1+' => '',
+	'Class:Incident/Attribute:urgency/Value:1+' => '~~',
 	'Class:Incident/Attribute:urgency/Value:2' => 'Nagyon sürgős',
-	'Class:Incident/Attribute:urgency/Value:2+' => '',
+	'Class:Incident/Attribute:urgency/Value:2+' => '~~',
 	'Class:Incident/Attribute:urgency/Value:3' => 'Sürgős',
 	'Class:Incident/Attribute:urgency/Value:3+' => 'sürgős',
 	'Class:Incident/Attribute:urgency/Value:4' => 'Nem sürgős',
-	'Class:Incident/Attribute:urgency/Value:4+' => '',
+	'Class:Incident/Attribute:urgency/Value:4+' => '~~',
 	'Class:Incident/Attribute:origin' => 'Eredet',
 	'Class:Incident/Attribute:origin+' => 'What\'s the trigger of this incident ticket creation~~',
 	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
@@ -122,11 +106,11 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Incident/Attribute:servicesubcategory_name' => 'Szolgáltatás alkategória név',
 	'Class:Incident/Attribute:servicesubcategory_name+' => '~~',
 	'Class:Incident/Attribute:escalation_flag' => 'Sürgősség jelzés',
-	'Class:Incident/Attribute:escalation_flag+' => '~~',
+	'Class:Incident/Attribute:escalation_flag+' => 'When set, the Ticket is added to the "Under escalation" menu~~',
 	'Class:Incident/Attribute:escalation_flag/Value:no' => 'Nem',
-	'Class:Incident/Attribute:escalation_flag/Value:no+' => '',
+	'Class:Incident/Attribute:escalation_flag/Value:no+' => '~~',
 	'Class:Incident/Attribute:escalation_flag/Value:yes' => 'Igen',
-	'Class:Incident/Attribute:escalation_flag/Value:yes+' => '',
+	'Class:Incident/Attribute:escalation_flag/Value:yes+' => '~~',
 	'Class:Incident/Attribute:escalation_reason' => 'Sürgősségi ok',
 	'Class:Incident/Attribute:escalation_reason+' => '~~',
 	'Class:Incident/Attribute:assignment_date' => 'Megbízás dátuma',
@@ -162,19 +146,19 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Incident/Attribute:resolution_code' => 'Megoldás kód',
 	'Class:Incident/Attribute:resolution_code+' => 'What was done to resolve the incident?~~',
 	'Class:Incident/Attribute:resolution_code/Value:assistance' => 'Támogatás',
-	'Class:Incident/Attribute:resolution_code/Value:assistance+' => '',
+	'Class:Incident/Attribute:resolution_code/Value:assistance+' => '~~',
 	'Class:Incident/Attribute:resolution_code/Value:bug fixed' => 'Programiba javítás',
-	'Class:Incident/Attribute:resolution_code/Value:bug fixed+' => '',
+	'Class:Incident/Attribute:resolution_code/Value:bug fixed+' => '~~',
 	'Class:Incident/Attribute:resolution_code/Value:hardware repair' => 'Hardver javítás',
-	'Class:Incident/Attribute:resolution_code/Value:hardware repair+' => '',
+	'Class:Incident/Attribute:resolution_code/Value:hardware repair+' => '~~',
 	'Class:Incident/Attribute:resolution_code/Value:other' => 'Egyéb',
-	'Class:Incident/Attribute:resolution_code/Value:other+' => '',
+	'Class:Incident/Attribute:resolution_code/Value:other+' => '~~',
 	'Class:Incident/Attribute:resolution_code/Value:software patch' => 'Szoftverfrissítés',
-	'Class:Incident/Attribute:resolution_code/Value:software patch+' => '',
+	'Class:Incident/Attribute:resolution_code/Value:software patch+' => '~~',
 	'Class:Incident/Attribute:resolution_code/Value:system update' => 'Rendszerfrissítés',
-	'Class:Incident/Attribute:resolution_code/Value:system update+' => '',
+	'Class:Incident/Attribute:resolution_code/Value:system update+' => '~~',
 	'Class:Incident/Attribute:resolution_code/Value:training' => 'Oktatás',
-	'Class:Incident/Attribute:resolution_code/Value:training+' => '',
+	'Class:Incident/Attribute:resolution_code/Value:training+' => '~~',
 	'Class:Incident/Attribute:solution' => 'Megoldás',
 	'Class:Incident/Attribute:solution+' => '~~',
 	'Class:Incident/Attribute:pending_reason' => 'Függőben lévőség oka',
@@ -183,6 +167,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Incident/Attribute:parent_incident_id+' => '~~',
 	'Class:Incident/Attribute:parent_incident_ref' => 'Referenciaszám',
 	'Class:Incident/Attribute:parent_incident_ref+' => '~~',
+	'Class:Incident/Attribute:parent_request_id' => 'Parent request~~',
+	'Class:Incident/Attribute:parent_request_id+' => '~~',
+	'Class:Incident/Attribute:parent_request_ref' => 'Parent request ref~~',
+	'Class:Incident/Attribute:parent_request_ref+' => '~~',
 	'Class:Incident/Attribute:parent_change_id' => 'Fölérendelt változás',
 	'Class:Incident/Attribute:parent_change_id+' => '~~',
 	'Class:Incident/Attribute:parent_change_ref' => 'Referenciaszám',
@@ -200,13 +188,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Incident/Attribute:user_satisfaction' => 'Felhasználói elégedettség',
 	'Class:Incident/Attribute:user_satisfaction+' => '~~',
 	'Class:Incident/Attribute:user_satisfaction/Value:1' => 'Nagyon elégedett',
-	'Class:Incident/Attribute:user_satisfaction/Value:1+' => '',
+	'Class:Incident/Attribute:user_satisfaction/Value:1+' => '~~',
 	'Class:Incident/Attribute:user_satisfaction/Value:2' => 'Viszonylag elégedett',
-	'Class:Incident/Attribute:user_satisfaction/Value:2+' => '',
+	'Class:Incident/Attribute:user_satisfaction/Value:2+' => '~~',
 	'Class:Incident/Attribute:user_satisfaction/Value:3' => 'Inkább elégedetlen',
-	'Class:Incident/Attribute:user_satisfaction/Value:3+' => '',
+	'Class:Incident/Attribute:user_satisfaction/Value:3+' => '~~',
 	'Class:Incident/Attribute:user_satisfaction/Value:4' => 'Nagyon elégedetlen',
-	'Class:Incident/Attribute:user_satisfaction/Value:4+' => '',
+	'Class:Incident/Attribute:user_satisfaction/Value:4+' => '~~',
 	'Class:Incident/Attribute:user_comment' => 'Felhasználói megjegyzés',
 	'Class:Incident/Attribute:user_comment+' => '~~',
 	'Class:Incident/Attribute:parent_incident_id_friendlyname' => 'parent_incident_id_friendlyname',

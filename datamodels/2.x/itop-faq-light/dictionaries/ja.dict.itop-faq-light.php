@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -14,35 +13,26 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'よくある質問',
 	'Class:FAQ/Attribute:title' => 'タイトル',
-	'Class:FAQ/Attribute:title+' => '',
+	'Class:FAQ/Attribute:title+' => '~~',
 	'Class:FAQ/Attribute:summary' => '要約',
-	'Class:FAQ/Attribute:summary+' => '',
+	'Class:FAQ/Attribute:summary+' => '~~',
 	'Class:FAQ/Attribute:description' => '説明',
-	'Class:FAQ/Attribute:description+' => '',
+	'Class:FAQ/Attribute:description+' => '~~',
 	'Class:FAQ/Attribute:category_id' => 'カテゴリ',
-	'Class:FAQ/Attribute:category_id+' => '',
+	'Class:FAQ/Attribute:category_id+' => '~~',
 	'Class:FAQ/Attribute:category_name' => 'カテゴリ名',
-	'Class:FAQ/Attribute:category_name+' => '',
+	'Class:FAQ/Attribute:category_name+' => '~~',
 	'Class:FAQ/Attribute:error_code' => 'エラーコード',
-	'Class:FAQ/Attribute:error_code+' => '',
+	'Class:FAQ/Attribute:error_code+' => '~~',
 	'Class:FAQ/Attribute:key_words' => 'キーワード',
-	'Class:FAQ/Attribute:key_words+' => '',
+	'Class:FAQ/Attribute:key_words+' => '~~',
 	'Class:FAQ/Attribute:domains' => 'Domains~~',
-]);
-
-//
-// Class: FAQCategory
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:FAQCategory' => 'FAQカテゴリ',
 	'Class:FAQCategory+' => 'FAQのためのカテゴリ',
 	'Class:FAQCategory/Attribute:name' => '名前',
-	'Class:FAQCategory/Attribute:name+' => '',
+	'Class:FAQCategory/Attribute:name+' => '~~',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
 	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category~~',
-]);
-Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:ProblemManagement' => '問題管理',
 	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'ショートカット',

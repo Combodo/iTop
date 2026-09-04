@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author LinProfs <info@linprofs.com>
@@ -15,7 +14,7 @@
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:ChangeManagement' => 'Change Management',
 	'Menu:Change:Overview' => 'Overzicht',
-	'Menu:Change:Overview+' => '',
+	'Menu:Change:Overview+' => '~~',
 	'Menu:NewChange' => 'Nieuwe change',
 	'Menu:NewChange+' => 'Maak een nieuwe change aan',
 	'Menu:SearchChanges' => 'Zoek naar changes',
@@ -23,7 +22,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:Change:Shortcuts' => 'Snelkoppelingen',
 	'Menu:Change:Shortcuts+' => 'Shortcuts to predefined sets of Changes~~',
 	'Menu:WaitingAcceptance' => 'Changes die acceptatie vereisen',
-	'Menu:WaitingAcceptance+' => '',
+	'Menu:WaitingAcceptance+' => '~~',
 	'Menu:WaitingApproval' => 'Changes die goedkeuring vereisen',
 	'Menu:WaitingApproval+' => 'Changes in planned status~~',
 	'Menu:Changes' => 'Open changes',
@@ -36,41 +35,24 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes per status van de afgelopen 7 dagen',
 	'Tickets:Related:OpenChanges' => 'Open changes',
 	'Tickets:Related:RecentChanges' => 'Recente changes (72u)',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Change
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Change' => 'Change',
-	'Class:Change+' => '',
+	'Class:Change+' => 'A type of Ticket to handle Change which has an effect on delivered Services.~~',
 	'Class:Change/Attribute:status' => 'Status',
-	'Class:Change/Attribute:status+' => '',
+	'Class:Change/Attribute:status+' => '~~',
 	'Class:Change/Attribute:status/Value:new' => 'Nieuw',
-	'Class:Change/Attribute:status/Value:new+' => '',
+	'Class:Change/Attribute:status/Value:new+' => '~~',
 	'Class:Change/Attribute:status/Value:assigned' => 'Toegewezen',
-	'Class:Change/Attribute:status/Value:assigned+' => '',
+	'Class:Change/Attribute:status/Value:assigned+' => '~~',
 	'Class:Change/Attribute:status/Value:planned' => 'Gepland',
-	'Class:Change/Attribute:status/Value:planned+' => '',
+	'Class:Change/Attribute:status/Value:planned+' => '~~',
 	'Class:Change/Attribute:status/Value:rejected' => 'Afgekeurd',
-	'Class:Change/Attribute:status/Value:rejected+' => '',
+	'Class:Change/Attribute:status/Value:rejected+' => '~~',
 	'Class:Change/Attribute:status/Value:approved' => 'Goedgekeurd',
-	'Class:Change/Attribute:status/Value:approved+' => '',
+	'Class:Change/Attribute:status/Value:approved+' => '~~',
 	'Class:Change/Attribute:status/Value:closed' => 'Gesloten',
-	'Class:Change/Attribute:status/Value:closed+' => '',
+	'Class:Change/Attribute:status/Value:closed+' => '~~',
 	'Class:Change/Attribute:category' => 'Categorie',
-	'Class:Change/Attribute:category+' => '',
+	'Class:Change/Attribute:category+' => '~~',
 	'Class:Change/Attribute:category/Value:application' => 'Applicatie',
 	'Class:Change/Attribute:category/Value:application+' => 'Applicatie',
 	'Class:Change/Attribute:category/Value:hardware' => 'Hardware',
@@ -84,21 +66,21 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Change/Attribute:category/Value:system' => 'Systeem',
 	'Class:Change/Attribute:category/Value:system+' => 'Systeem',
 	'Class:Change/Attribute:reject_reason' => 'Reden van afwijzing',
-	'Class:Change/Attribute:reject_reason+' => '',
+	'Class:Change/Attribute:reject_reason+' => '~~',
 	'Class:Change/Attribute:changemanager_id' => 'Change manager',
-	'Class:Change/Attribute:changemanager_id+' => '',
+	'Class:Change/Attribute:changemanager_id+' => '~~',
 	'Class:Change/Attribute:changemanager_email' => 'E-mailadres change manager',
-	'Class:Change/Attribute:changemanager_email+' => '',
+	'Class:Change/Attribute:changemanager_email+' => '~~',
 	'Class:Change/Attribute:parent_id' => 'Hoofdchange',
-	'Class:Change/Attribute:parent_id+' => '',
+	'Class:Change/Attribute:parent_id+' => '~~',
 	'Class:Change/Attribute:parent_name' => 'Ref. hoofdchange',
-	'Class:Change/Attribute:parent_name+' => '',
+	'Class:Change/Attribute:parent_name+' => '~~',
 	'Class:Change/Attribute:creation_date' => 'Aangemaakt op',
-	'Class:Change/Attribute:creation_date+' => '',
+	'Class:Change/Attribute:creation_date+' => '~~',
 	'Class:Change/Attribute:approval_date' => 'Goedgekeurd op',
-	'Class:Change/Attribute:approval_date+' => '',
+	'Class:Change/Attribute:approval_date+' => '~~',
 	'Class:Change/Attribute:fallback_plan' => 'Backupplan',
-	'Class:Change/Attribute:fallback_plan+' => '',
+	'Class:Change/Attribute:fallback_plan+' => '~~',
 	'Class:Change/Attribute:related_request_list' => 'Gerelateerde verzoeken',
 	'Class:Change/Attribute:related_request_list+' => 'Alle gebruikersverzoeken gerelateerd aan deze change',
 	'Class:Change/Attribute:related_incident_list' => 'Gerelateerde incidenten',
@@ -108,23 +90,23 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Change/Attribute:child_changes_list' => 'Subchanges',
 	'Class:Change/Attribute:child_changes_list+' => 'Alle subchanges gerelateerd aan deze change',
 	'Class:Change/Attribute:parent_id_friendlyname' => 'Hoofdchange herkenbare naam',
-	'Class:Change/Attribute:parent_id_friendlyname+' => '',
+	'Class:Change/Attribute:parent_id_friendlyname+' => '~~',
 	'Class:Change/Stimulus:ev_assign' => 'Wijs toe',
-	'Class:Change/Stimulus:ev_assign+' => '',
+	'Class:Change/Stimulus:ev_assign+' => '~~',
 	'Class:Change/Stimulus:ev_plan' => 'Plan in',
-	'Class:Change/Stimulus:ev_plan+' => '',
+	'Class:Change/Stimulus:ev_plan+' => '~~',
 	'Class:Change/Stimulus:ev_reject' => 'Weiger',
-	'Class:Change/Stimulus:ev_reject+' => '',
+	'Class:Change/Stimulus:ev_reject+' => '~~',
 	'Class:Change/Stimulus:ev_reopen' => 'Heropen',
-	'Class:Change/Stimulus:ev_reopen+' => '',
+	'Class:Change/Stimulus:ev_reopen+' => '~~',
 	'Class:Change/Stimulus:ev_approve' => 'Keur goed',
-	'Class:Change/Stimulus:ev_approve+' => '',
+	'Class:Change/Stimulus:ev_approve+' => '~~',
 	'Class:Change/Stimulus:ev_finish' => 'Sluit af',
-	'Class:Change/Stimulus:ev_finish+' => '',
+	'Class:Change/Stimulus:ev_finish+' => '~~',
 	'Class:Change/Attribute:outage' => 'Onderbreking',
-	'Class:Change/Attribute:outage+' => '',
+	'Class:Change/Attribute:outage+' => '~~',
 	'Class:Change/Attribute:outage/Value:no' => 'Nee',
-	'Class:Change/Attribute:outage/Value:no+' => '',
+	'Class:Change/Attribute:outage/Value:no+' => '~~',
 	'Class:Change/Attribute:outage/Value:yes' => 'Ja',
-	'Class:Change/Attribute:outage/Value:yes+' => '',
+	'Class:Change/Attribute:outage/Value:yes+' => '~~',
 ]);

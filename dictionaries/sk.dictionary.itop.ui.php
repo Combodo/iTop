@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -28,13 +27,6 @@ It groups all audit rules applying to that object scope~~',
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
-]);
-
-//
-// Class: AuditRule
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:AuditRule' => 'Pravidlo auditu',
 	'Class:AuditRule+' => 'An audit rule corresponds a single check within an audit category.
 It is applied on the scope of objects defined by the audit category~~',
@@ -60,13 +52,6 @@ It is applied on the scope of objects defined by the audit category~~',
 	'Class:AuditRule/Attribute:category_name+' => 'Name of the category of this rule~~',
 	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
 	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
-]);
-
-//
-// Class: AuditDomain
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:AuditDomain' => 'Audit Domain~~',
 	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors~~',
@@ -78,13 +63,6 @@ Domain usually correspond to who is responsible for checking and fixing errors~~
 	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
-]);
-
-//
-// Class: lnkAuditCategoryToAuditDomain
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
 	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
@@ -95,13 +73,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
-]);
-
-//
-// Class: QueryOQL
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Query' => 'Dopyt',
 	'Class:Query+' => 'A query is a data set defined in a dynamic way~~',
 	'Class:Query/Attribute:name' => 'Názov',
@@ -121,7 +92,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Query/Attribute:export_last_user_contact' => 'Contact~~',
 	'Class:Query/Attribute:export_last_user_contact+' => 'The contact who executed the last export~~',
 	'Class:Query/Attribute:usages' => 'Usages~~',
-		'Class:Query/Attribute:usages+' => 'Specify the possible usages for this query.
+	'Class:Query/Attribute:usages+' => 'Specify the possible usages for this query.
  - The "Reference for AI" tag assumes the description is very explicit and compliant with OQL. It may be used as an example for building OQL queries by AI.
  - The "Notification" tag implies the class of returned objects has one and only one field of type email.
  - The "Dashlet" tag assumes the OQL returns a single class of objects.~~',
@@ -140,18 +111,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:QueryOQL+' => 'A query based on the Object Query Language~~',
 	'Class:QueryOQL/Attribute:oql' => 'Výraz',
 	'Class:QueryOQL/Attribute:oql+' => 'OQL Expression~~',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'addon/userrights'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: User
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:User' => 'Užívateľ',
 	'Class:User+' => 'User login~~',
 	'Class:User/Attribute:finalclass' => 'Typ účtu',
@@ -199,13 +158,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => 'User Internal~~',
 	'Class:UserInternal+' => 'User defined within '.ITOP_APPLICATION_SHORT.'~~',
-]);
-
-//
-// Class: URP_Profiles
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_Profiles' => 'Profily',
 	'Class:URP_Profiles+' => 'User profile~~',
 	'Class:URP_Profiles/Attribute:name' => 'Názov',
@@ -214,13 +166,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_Profiles/Attribute:description+' => 'one line description~~',
 	'Class:URP_Profiles/Attribute:user_list' => 'Užívatelia',
 	'Class:URP_Profiles/Attribute:user_list+' => 'persons having this role~~',
-]);
-
-//
-// Class: URP_Dimensions
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_Dimensions' => 'Rozmery',
 	'Class:URP_Dimensions+' => 'application dimension (defining silos)~~',
 	'Class:URP_Dimensions/Attribute:name' => 'Názov rozmeru',
@@ -229,13 +174,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_Dimensions/Attribute:description+' => 'one line description~~',
 	'Class:URP_Dimensions/Attribute:type' => 'Typ rozmeru',
 	'Class:URP_Dimensions/Attribute:type+' => 'class name or data type (projection unit)~~',
-]);
-
-//
-// Class: URP_UserProfile
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_UserProfile' => 'Z užívateľa na profil',
 	'Class:URP_UserProfile+' => 'user profiles~~',
 	'Class:URP_UserProfile/Name' => 'Spojenie medzi %1$s a %2$s',
@@ -249,13 +187,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_UserProfile/Attribute:profile+' => 'Profile name~~',
 	'Class:URP_UserProfile/Attribute:reason' => 'Dôvod',
 	'Class:URP_UserProfile/Attribute:reason+' => 'explain why this person may have this role~~',
-]);
-
-//
-// Class: URP_UserOrg
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_UserOrg' => 'Užívateľské organizácie',
 	'Class:URP_UserOrg+' => 'Allowed organizations~~',
 	'Class:URP_UserOrg/Name' => 'Spojenie medzi %1$s a %2$s',
@@ -269,13 +200,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Allowed organization~~',
 	'Class:URP_UserOrg/Attribute:reason' => 'Dôvod',
 	'Class:URP_UserOrg/Attribute:reason+' => 'explain why this person is allowed to see the data belonging to this organization~~',
-]);
-
-//
-// Class: URP_ProfileProjection
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_ProfileProjection' => 'Projekcia profilu',
 	'Class:URP_ProfileProjection+' => 'profile projections~~',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'ID rozmeru',
@@ -290,13 +214,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL expression (using $user) | constant |  | +attribute code~~',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Atribút',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Target attribute code (optional)~~',
-]);
-
-//
-// Class: URP_ClassProjection
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_ClassProjection' => 'Projekcia triedy',
 	'Class:URP_ClassProjection+' => 'class projections~~',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'ID rozmeru',
@@ -309,13 +226,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL expression (using $this) | constant |  | +attribute code~~',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Atribút',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Target attribute code (optional)~~',
-]);
-
-//
-// Class: URP_ActionGrant
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_ActionGrant' => 'Povolenia akcie',
 	'Class:URP_ActionGrant+' => 'permissions on classes~~',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profil',
@@ -332,13 +242,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'no~~',
 	'Class:URP_ActionGrant/Attribute:action' => 'Akcia',
 	'Class:URP_ActionGrant/Attribute:action+' => 'operations to perform on the given class~~',
-]);
-
-//
-// Class: URP_StimulusGrant
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_StimulusGrant' => 'Povolenia stimulu',
 	'Class:URP_StimulusGrant+' => 'permissions on stimulus in the life cycle of the object~~',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'ID Profilu',
@@ -355,25 +258,12 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'no~~',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Podnet',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'stimulus code~~',
-]);
-
-//
-// Class: URP_AttributeGrant
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_AttributeGrant' => 'Udelenie atribútu',
 	'Class:URP_AttributeGrant+' => 'permissions at the attributes level~~',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Udelenie akcie',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'action grant~~',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Kód atribútu',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'attribute code~~',
-]);
-
-//
-// Class: UserDashboard
-//
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:UserDashboard' => 'User dashboard~~',
 	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'User~~',
@@ -382,12 +272,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Contents~~',
 	'Class:UserDashboard/Attribute:contents+' => '~~',
-]);
-
-//
-// Duplicated into itop-welcome-itil ( will be removed from here...)
-//
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:WelcomeMenu' => 'Vitajte',
 	'Menu:WelcomeMenu+' => 'Welcome to '.ITOP_APPLICATION_SHORT.'~~',
 	'Menu:WelcomeMenuPage' => 'Vitajte',
@@ -406,13 +290,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:MyShortcuts' => 'Moje skratky',
 	'Menu:DataAdministration' => 'Dátová administrácia',
 	'Menu:DataAdministration+' => '~~',
-]);
-
-//
-// String from the User Interface: menu, messages, buttons, etc...
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'BooleanLabel:yes' => 'yes~~',
 	'BooleanLabel:no' => 'no~~',
 	'UI:WelcomeMenu:Title' => 'Vitajte v '.ITOP_APPLICATION_SHORT,
@@ -510,6 +387,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 	'UI:Error:InvalidToken' => 'Aktuálna relácia je neplatná. Obnovte stránku a skúste to znova. Ak problém pretrváva, odhláste sa a znova sa prihláste.',
+	'UI:Error:TwigController' => 'Internal error in form controller~~',
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 	'UI:GroupBy:Count' => 'Počet',
 	'UI:GroupBy:Count+' => 'Number of elements~~',
@@ -671,6 +549,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'UI:CSVReport-Row-Issue-Reconciliation' => 'Zlyhalo schválenie',
 	'UI:CSVReport-Row-Issue-Ambiguous' => 'Nejednoznačné schválenie',
 	'UI:CSVReport-Row-Issue-Internal' => 'Interná chyba: %1$s, %2$s',
+	'UI:CSVReport-Value-Issue-NoValue' => 'No value~~',
+	'UI:CSVReport-Row-Issue-NbField' => 'Not the expected number of columns (found: %1$s, expected: %2$s)~~',
 	'UI:CSVReport-Icon-Unchanged' => 'Nezmené',
 	'UI:CSVReport-Icon-Modified' => 'Upravené',
 	'UI:CSVReport-Icon-Missing' => 'Chýbajúce',
@@ -1246,6 +1126,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth' => 'Deň v mesiaci pre %1$s',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (hodina)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (mesiac)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-Year' => '%1$s (year)~~',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (deň v týžni)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (deň v mesiaci)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Prosím zvoľte pole na ktorom objekty budú zoskupené spolu',
@@ -1485,7 +1366,13 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with~~',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with~~',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.~~',
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~','UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~','UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~','UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~','UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~','UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~','UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',
+	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...~~',
 	'UI:Search:Value:Search:Placeholder' => 'Search...~~',
 	'UI:Search:Value:Autocomplete:StartTyping' => 'Start typing for possible values.~~',
@@ -1509,12 +1396,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
 	'UI:StateChanged' => 'State changed~~',
-]);
-
-//
-// Expression to Natural language
-//
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'UI:AddSubTree' => 'Add entry~~',
 	'Expression:Operator:AND' => ' AND ~~',
 	'Expression:Operator:OR' => ' OR ~~',
 	'Expression:Operator:=' => ': ~~',
@@ -1527,12 +1409,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Expression:Unit:Long:MINUTE' => 'minute(s)~~',
 	'Expression:Verb:NOW' => 'now~~',
 	'Expression:Verb:ISNULL' => ': undefined~~',
-]);
-
-//
-// iTop Newsroom menu
-//
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
 	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
@@ -1547,9 +1423,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
-]);
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:DataSources' => 'Synchronizované zdroje dát',
 	'Menu:DataSources+' => 'Data synchro used for batch import of external data~~',
 	'Menu:AuditCategories' => 'Kategórie auditu',
@@ -1576,5 +1449,4 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:ConfigEditor+' => 'Configuration File editor~~',
 	'Menu:Integrations' => 'Integrations~~',
 	'Menu:Integrations+' => '~~',
-
 ]);

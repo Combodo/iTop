@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -34,25 +33,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Incidenti aperti per stato',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Incidenti aperti per agente',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Incidenti aperti per cliente',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: Incident
-//
-
-Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Class:Incident/Method:UpdateChildTicketWith:public_log' => '<i><u>Public log entry from parent Incident %2$s:</u></i><br><br>~~',
+	'Class:Incident/Method:UpdateChildTicketWith:private_log' => '<i>Private log entry from parent Incident [[Incident:%1$s]]:</i><br><br>~~',
 	'Class:Incident' => 'Incidente',
-	'Class:Incident+' => '~~',
+	'Class:Incident+' => 'Ticket type for managing malfunctions of a service or configuration elements~~',
 	'Class:Incident/Attribute:status' => 'Stato',
 	'Class:Incident/Attribute:status+' => '~~',
 	'Class:Incident/Attribute:status/Value:new' => 'Nuovo',
@@ -122,7 +106,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Incident/Attribute:servicesubcategory_name' => 'Nome del Servizio sottocategoria',
 	'Class:Incident/Attribute:servicesubcategory_name+' => '~~',
 	'Class:Incident/Attribute:escalation_flag' => 'Spunta importante',
-	'Class:Incident/Attribute:escalation_flag+' => '~~',
+	'Class:Incident/Attribute:escalation_flag+' => 'When set, the Ticket is added to the "Under escalation" menu~~',
 	'Class:Incident/Attribute:escalation_flag/Value:no' => 'No',
 	'Class:Incident/Attribute:escalation_flag/Value:no+' => 'No',
 	'Class:Incident/Attribute:escalation_flag/Value:yes' => 'Si',
@@ -183,6 +167,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Incident/Attribute:parent_incident_id+' => 'Ref.',
 	'Class:Incident/Attribute:parent_incident_ref' => 'Ref Indicente padre',
 	'Class:Incident/Attribute:parent_incident_ref+' => 'Ref.',
+	'Class:Incident/Attribute:parent_request_id' => 'Parent request~~',
+	'Class:Incident/Attribute:parent_request_id+' => '~~',
+	'Class:Incident/Attribute:parent_request_ref' => 'Parent request ref~~',
+	'Class:Incident/Attribute:parent_request_ref+' => '~~',
 	'Class:Incident/Attribute:parent_change_id' => 'Richiesta evoluzione padre',
 	'Class:Incident/Attribute:parent_change_id+' => 'Richiesta figlia',
 	'Class:Incident/Attribute:parent_change_ref' => 'ref evoluzione',

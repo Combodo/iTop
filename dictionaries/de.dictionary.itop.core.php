@@ -1,10 +1,12 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  * @author Stephan Rosenke <stephan.rosenke@itomig.de>
  * @author Martin Raenker <martin.raenker@itomig.de>
  * @author Attila Baroti <attila.baroti@itomig.de>
@@ -22,9 +24,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Core:AttributeLinkedSet+' => 'Beliebige Art von Objekten der [subclass] der selben Klasse',
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Dubletten im \'%1$s\' Feld: %2$s',
 	'Core:AttributeDashboard' => 'Dashboard',
-	'Core:AttributeDashboard+' => '',
+	'Core:AttributeDashboard+' => '~~',
 	'Core:AttributePhoneNumber' => 'Telefonnummer',
-	'Core:AttributePhoneNumber+' => '',
+	'Core:AttributePhoneNumber+' => '~~',
 	'Core:AttributeObsolescenceDate' => 'Obsolet seit',
 	'Core:AttributeObsolescenceDate+' => 'Datum, an dem das Objekt auf "obsolet" gesetzt wurde',
 	'Core:AttributeTagSet' => 'Liste von Tags',
@@ -35,7 +37,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s von %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s von Kindklassen)',
 	'Core:AttributeCaseLog' => 'Log',
-	'Core:AttributeCaseLog+' => '',
+	'Core:AttributeCaseLog+' => '~~',
 	'Core:AttributeMetaEnum' => 'Berechnetes Enum',
 	'Core:AttributeMetaEnum+' => 'Liste berechneter alphanumerischer Strings',
 	'Core:AttributeLinkedSetIndirect' => 'Array von Objekten (N-N)',
@@ -46,7 +48,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Core:AttributeDecimal+' => 'Dezimaler Wert (kann negativ sein)',
 	'Core:AttributeBoolean' => 'Boolean',
 	'Core:AttributeBoolean+' => 'Boolscher Wert',
-	'Core:AttributeBoolean/Value:null' => '',
+	'Core:AttributeBoolean/Value:null' => '~~',
 	'Core:AttributeBoolean/Value:yes' => 'Ja',
 	'Core:AttributeBoolean/Value:no' => 'Nein',
 	'Core:AttributeArchiveFlag' => 'Archiv Flag',
@@ -54,9 +56,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Core:AttributeArchiveFlag/Value:yes+' => 'Dieses Objekt ist nur im Archiv Modus sichtbar',
 	'Core:AttributeArchiveFlag/Value:no' => 'Nein',
 	'Core:AttributeArchiveFlag/Label' => 'Archiviert',
-	'Core:AttributeArchiveFlag/Label+' => '',
+	'Core:AttributeArchiveFlag/Label+' => '~~',
 	'Core:AttributeArchiveDate/Label' => 'Archivierungsdatum',
-	'Core:AttributeArchiveDate/Label+' => '',
+	'Core:AttributeArchiveDate/Label+' => '~~',
 	'Core:AttributeObsolescenceFlag' => 'Obsoleszenz-Flag',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Ja',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Dieses Objekt wird aus der Impact Analyse ausgeschlossen und in den Suchergebnissen versteckt',
@@ -68,7 +70,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Core:AttributeString' => 'String',
 	'Core:AttributeString+' => 'Alphanumerischer String',
 	'Core:AttributeClass' => 'Class',
-	'Core:AttributeClass+' => '',
+	'Core:AttributeClass+' => '~~',
 	'Core:AttributeApplicationLanguage' => 'Benutzersprache',
 	'Core:AttributeApplicationLanguage+' => 'Sprache und Land (DE DE)',
 	'Core:AttributeFinalClass' => 'Class (auto)',
@@ -151,25 +153,13 @@ Operatoren:<br/>
 	'Core:FriendlyName-Label' => 'Voller Name (Friendly Name)',
 	'Core:FriendlyName-Description' => 'Friendly name',
 	'Core:AttributeTag' => 'Tags',
-	'Core:AttributeTag+' => '',
+	'Core:AttributeTag+' => '~~',
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
 	'Core:Context=GUI:Console' => 'Konsole',
 	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'core/cmdb'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: CMDBChange
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChange' => 'Change',
 	'Class:CMDBChange+' => 'Protokollierung der Änderungen',
 	'Class:CMDBChange/Attribute:date' => 'Datum',
@@ -184,17 +174,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON Webservices',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP Webservices',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Durch eine Extension',
-]);
-
-//
-// Class: CMDBChangeOp
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChangeOp' => 'Change-Operation',
 	'Class:CMDBChangeOp+' => 'Änderung, die von einer Person zu einem Zeitpunkt an einem einzelnen Objekt vorgenommen wurde',
 	'Class:CMDBChangeOp/Attribute:change' => 'Change',
-	'Class:CMDBChangeOp/Attribute:change+' => '',
+	'Class:CMDBChangeOp/Attribute:change+' => '~~',
 	'Class:CMDBChangeOp/Attribute:date' => 'Datum',
 	'Class:CMDBChangeOp/Attribute:date+' => 'Datum und Uhrzeit der Änderungen',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'Benutzer',
@@ -205,51 +188,20 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChangeOp/Attribute:objkey+' => 'ID des Objekts, an dem die Änderung vorgenommen wurde',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Typ',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => 'Art der durchgeführten Änderung',
-]);
-
-//
-// Class: CMDBChangeOpCreate
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChangeOpCreate' => 'Objekterstellung',
 	'Class:CMDBChangeOpCreate+' => 'Protokoll der Objekterstellung',
-]);
-
-//
-// Class: CMDBChangeOpDelete
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChangeOpDelete' => 'Objektlöschung',
 	'Class:CMDBChangeOpDelete+' => 'Protokoll der Objektlöschung',
-]);
-
-//
-// Class: CMDBChangeOpSetAttribute
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChangeOpSetAttribute' => 'Objektänderung',
 	'Class:CMDBChangeOpSetAttribute+' => 'Protokoll der Objektänderungen',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Attribut',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'Code der geänderten Eigenschaft',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeScalar
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'Eigenschaften ändern',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Aufzeichnen der Änderungen am Objekt',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Vorheriger Wert',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'Vorheriger Wert des Attributes',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Neuer Wert',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'Neuer Wert des Attributes',
-]);
-// Used by CMDBChangeOp... & derived classes
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Change:ObjectCreated' => 'Objekt erstellt',
 	'Change:ObjectDeleted' => 'Objekt gelöscht',
 	'Change:ObjectModified' => 'Objekt geändert',
@@ -266,35 +218,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Change:LinkSet:Added' => 'hinzugefügt: %1$s',
 	'Change:LinkSet:Removed' => 'entfernt: %1$s',
 	'Change:LinkSet:Modified' => 'modifizert: %1$s',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeBlob
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'Daten ändern',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'Aufzeichnen der Datenänderung',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Vorherige Daten',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'Vorherige Inhalte des Attributes',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeText
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChangeOpSetAttributeText' => 'Text ändern',
 	'Class:CMDBChangeOpSetAttributeText+' => 'Aufzeichnen der Textänderung',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Vorherige Daten',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'Vorherige Inhalte des Attributes',
-]);
-
-//
-// Class: Event
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Event' => 'Log Event',
 	'Class:Event+' => 'Ein anwendungsinternes Event',
 	'Class:Event/Attribute:message' => 'Nachricht',
@@ -305,51 +236,32 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Event/Attribute:userinfo+' => 'Identifikation des Benutzers, der die Aktion ausführte, die dieses Event ausgelöst hat',
 	'Class:Event/Attribute:finalclass' => 'Typ',
 	'Class:Event/Attribute:finalclass+' => 'Name der instanziierbaren Klasse: gibt an, welche Art von Event aufgetreten ist',
-]);
-
-//
-// Class: EventNotification
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventNotification' => 'Gesendete Benachrichtigung',
 	'Class:EventNotification+' => 'Protokollierung der gesendeten Benachrichtigungen',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
-	'Class:EventNotification/Attribute:trigger_id+' => '',
+	'Class:EventNotification/Attribute:trigger_id+' => '~~',
 	'Class:EventNotification/Attribute:action_id' => 'Aktion',
-	'Class:EventNotification/Attribute:action_id+' => '',
+	'Class:EventNotification/Attribute:action_id+' => '~~',
 	'Class:EventNotification/Attribute:object_id' => 'Objekt-ID',
 	'Class:EventNotification/Attribute:object_id+' => 'Objekt-ID (Klasse wird durch den Trigger bestimmt)',
-]);
-
-//
-// Class: EventNotificationEmail
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:EventNotification/Attribute:object_class' => 'Objektklasse',
+	'Class:EventNotification/Attribute:object_class+' => 'Objektklasse (identisch mit dem Trigger)',
 	'Class:EventNotificationEmail' => 'E-Mail Emission Event',
 	'Class:EventNotificationEmail+' => 'Verfolgung einer E-Mail, die gesendet wurde',
 	'Class:EventNotificationEmail/Attribute:to' => 'An',
-	'Class:EventNotificationEmail/Attribute:to+' => '',
+	'Class:EventNotificationEmail/Attribute:to+' => '~~',
 	'Class:EventNotificationEmail/Attribute:cc' => 'Kopie an',
-	'Class:EventNotificationEmail/Attribute:cc+' => '',
+	'Class:EventNotificationEmail/Attribute:cc+' => '~~',
 	'Class:EventNotificationEmail/Attribute:bcc' => 'Blindkopie (BCC)',
-	'Class:EventNotificationEmail/Attribute:bcc+' => '',
+	'Class:EventNotificationEmail/Attribute:bcc+' => '~~',
 	'Class:EventNotificationEmail/Attribute:from' => 'Von',
 	'Class:EventNotificationEmail/Attribute:from+' => 'Absender der Nachricht',
 	'Class:EventNotificationEmail/Attribute:subject' => 'Betreff',
-	'Class:EventNotificationEmail/Attribute:subject+' => '',
+	'Class:EventNotificationEmail/Attribute:subject+' => '~~',
 	'Class:EventNotificationEmail/Attribute:body' => 'Inhalt der Nachricht',
-	'Class:EventNotificationEmail/Attribute:body+' => '',
+	'Class:EventNotificationEmail/Attribute:body+' => '~~',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Anhänge',
 	'Class:EventNotificationEmail/Attribute:attachments+' => 'Anhänge in der Nachricht',
-]);
-
-//
-// Class: EventIssue
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventIssue' => 'Issue Event',
 	'Class:EventIssue+' => 'Protokollierung eines Issues (Warnungen, Fehler, etc.)',
 	'Class:EventIssue/Attribute:issue' => 'Issue',
@@ -366,13 +278,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventIssue/Attribute:callstack+' => 'Call stack',
 	'Class:EventIssue/Attribute:data' => 'Daten',
 	'Class:EventIssue/Attribute:data+' => 'Mehr Informationen',
-]);
-
-//
-// Class: EventWebService
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventWebService' => 'Web Service Event',
 	'Class:EventWebService+' => 'Protokollierung eines Web Service Calls',
 	'Class:EventWebService/Attribute:verb' => 'Verb',
@@ -387,9 +292,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventWebService/Attribute:log_error+' => 'Ergebnis der Fehlerprotokollierung',
 	'Class:EventWebService/Attribute:data' => 'Daten',
 	'Class:EventWebService/Attribute:data+' => 'Ergebnisdaten',
-]);
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventRestService' => 'REST/JSON Call',
 	'Class:EventRestService+' => 'Trace eines REST/JSON-Calls',
 	'Class:EventRestService/Attribute:operation' => 'Operation',
@@ -404,36 +306,22 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP Antwort (JSON)',
 	'Class:EventRestService/Attribute:provider' => 'Provider',
 	'Class:EventRestService/Attribute:provider+' => 'PHP-Klasse, die die erwartete Operation implementiert',
-]);
-
-//
-// Class: EventLoginUsage
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventLoginUsage' => 'Login Verwendung',
 	'Class:EventLoginUsage+' => 'Anmeldung an der Anwendung',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
-	'Class:EventLoginUsage/Attribute:user_id+' => '',
+	'Class:EventLoginUsage/Attribute:user_id+' => '~~',
 	'Class:EventLoginUsage/Attribute:contact_name' => 'Benutzername',
-	'Class:EventLoginUsage/Attribute:contact_name+' => '',
+	'Class:EventLoginUsage/Attribute:contact_name+' => '~~',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'Benutzer-Mailadresse',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'E-Mail-Adresse des Benutzers',
-]);
-
-//
-// Class: EventNotificationNewsroom
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventNotificationNewsroom' => 'Gesendete Newsroom-Benachrichtigung',
-	'Class:EventNotificationNewsroom+' => '',
+	'Class:EventNotificationNewsroom+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:title' => 'Titel',
-	'Class:EventNotificationNewsroom/Attribute:title+' => '',
+	'Class:EventNotificationNewsroom/Attribute:title+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:icon' => 'Icon',
-	'Class:EventNotificationNewsroom/Attribute:icon+' => '',
+	'Class:EventNotificationNewsroom/Attribute:icon+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:priority' => 'Priorität',
-	'Class:EventNotificationNewsroom/Attribute:priority+' => '',
+	'Class:EventNotificationNewsroom/Attribute:priority+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:1' => 'Kritisch',
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:1+' => 'Kritisch',
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:2' => 'Dringend',
@@ -443,24 +331,19 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:4' => 'Standard',
 	'Class:EventNotificationNewsroom/Attribute:priority/Value:4+' => 'Standard',
 	'Class:EventNotificationNewsroom/Attribute:url' => 'URL',
-	'Class:EventNotificationNewsroom/Attribute:url+' => '',
+	'Class:EventNotificationNewsroom/Attribute:url+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:read' => 'Lesen',
-	'Class:EventNotificationNewsroom/Attribute:read+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:read/Value:no' => 'Nein',
 	'Class:EventNotificationNewsroom/Attribute:read/Value:no+' => 'Nein',
 	'Class:EventNotificationNewsroom/Attribute:read/Value:yes' => 'Ja',
 	'Class:EventNotificationNewsroom/Attribute:read/Value:yes+' => 'Ja',
 	'Class:EventNotificationNewsroom/Attribute:read_date' => 'Lese Datum',
-	'Class:EventNotificationNewsroom/Attribute:read_date+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read_date+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Kontakt',
-	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '~~',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Benachrichtigung nicht versendet',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'Beim Speichern der Benachrichtigung ist ein Fehler aufgetreten',
 	'Class:Action' => 'Benutzerdefinierte Aktion',
 	'Class:Action+' => 'Benutzerdefinierte Aktionen',
 	'Class:Action/ComplementaryName' => '%1$s: %2$s',
@@ -471,11 +354,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Action/Attribute:status' => 'Status',
 	'Class:Action/Attribute:status+' => 'Dieser Status steuert das Verhalten der Aktion',
 	'Class:Action/Attribute:status/Value:test' => 'Wird getestet',
-	'Class:Action/Attribute:status/Value:test+' => '',
+	'Class:Action/Attribute:status/Value:test+' => '~~',
 	'Class:Action/Attribute:status/Value:enabled' => 'Im Einsatz',
-	'Class:Action/Attribute:status/Value:enabled+' => '',
+	'Class:Action/Attribute:status/Value:enabled+' => '~~',
 	'Class:Action/Attribute:status/Value:disabled' => 'Inaktiv',
-	'Class:Action/Attribute:status/Value:disabled+' => '',
+	'Class:Action/Attribute:status/Value:disabled+' => '~~',
 	'Class:Action/Attribute:trigger_list' => 'Zugehörige Trigger',
 	'Class:Action/Attribute:trigger_list+' => 'Trigger, die mit dieser Aktion verknüpft sind',
 	'Class:Action/Attribute:asynchronous' => 'Asynchron',
@@ -490,24 +373,22 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Action:last_executions_tab_panel_title' => 'Ausführungen dieser Aktion (%1$s)',
 	'Action:last_executions_tab_limit_days' => 'die letzten %1$s Tage',
 	'Action:last_executions_tab_limit_none' => 'keine Einschränkung',
-]);
-
-//
-// Class: ActionNotification
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ActionNotification' => 'Benachrichtigung',
 	'Class:ActionNotification+' => 'Benachrichtigung (Kurzbeschreibung)',
-]);
-
-//
-// Class: ActionEmail
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:ActionNotification/Attribute:language' => 'Sprache',
+	'Class:ActionNotification/Attribute:language+' => 'Sprache, die für Platzhalter ($xxx$) innerhalb der Nachricht verwendet wird (Status, Bedeutung, Priorität usw.)',
+	'Class:lnkActionNotificationToContact' => 'Verknüpfung Benachrichtigungsaktion/Kontakt',
+	'Class:lnkActionNotificationToContact+' => 'Abonnement eines Kontakts für eine Benachrichtigungsaktion',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Kontakt',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Kontakt, der die Benachrichtigung abonniert hat (oder nicht)',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Aktion',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'Die Benachrichtigung, die der Kontakt mindestens einmal erhalten hat und die er abonnieren oder abbestellen kann',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Trigger',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'Der Trigger, der die Benachrichtigung ausgelöst hat',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Abonniert',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'Gibt an, ob der Kontakt die Benachrichtigung abbestellt hat (nein) oder abonniert hat (ja, Standard)',
 	'Class:ActionEmail' => 'Benachrichtigung via E-mail',
-	'Class:ActionEmail+' => '',
+	'Class:ActionEmail+' => '~~',
 	'Class:ActionEmail/Attribute:status+' => 'Dieser Zustand entscheidet, wer benachrichtigt werden soll: nur der Testempfänger, alle (To, cc und Bcc) oder niemand',
 	'Class:ActionEmail/Attribute:status/Value:test+' => 'Nur der Testempfänger wird benachrichtigt',
 	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Alle (To, Cc and Bcc) Empfänger werden benachrichtigt',
@@ -545,11 +426,11 @@ Klicken Sie beim Bearbeiten auf die Lupe, um passende Beispiele zu erhalten',
 	'Class:ActionEmail/Attribute:importance' => 'Priorität',
 	'Class:ActionEmail/Attribute:importance+' => 'Wichtigkeits-Kennzeichen, das in der erzeugten E-Mail gesetzt wird',
 	'Class:ActionEmail/Attribute:importance/Value:low' => 'niedrig',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '~~',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'normal',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '~~',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'hoch',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '~~',
 	'Class:ActionEmail/Attribute:language' => 'Sprache',
 	'Class:ActionEmail/Attribute:language+' => 'Sprache, die für die Platzhalter ($xxx$) in der Nachricht verwendet wird (Status, Dringlichkeit, Priorität, etc.)',
 	'Class:ActionEmail/Attribute:html_template' => 'HTML-Template',
@@ -566,18 +447,11 @@ Klicken Sie beim Bearbeiten auf die Lupe, um passende Beispiele zu erhalten',
 	'ActionEmail:preview_warning' => 'Die tatsächliche E-Mail kann im E-Mail-Client anders aussehen als diese Vorschau in Ihrem Browser.',
 	'ActionEmail:preview_more_info' => 'Weitere Informationen zu den CSS-Funktionen, die von den verschiedenen E-Mail-Clients unterstützt werden, finden Sie unter %1$s',
 	'ActionEmail:content_placeholder_missing' => 'Der Platzhalter "%1$s" wurde in der HTML-Vorlage nicht gefunden. Der Inhalt des Feldes "%2$s" wird nicht in den generierten E-Mails enthalten sein.',
-]);
-
-//
-// Class: ActionNewsroom
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'ActionNewsroom:trigger' => 'Trigger',
 	'ActionNewsroom:content' => 'Nachricht',
 	'ActionNewsroom:settings' => 'Einstellungen',
 	'Class:ActionNewsroom' => 'Benachrichtigung durch Newsroom',
-	'Class:ActionNewsroom+' => '',
+	'Class:ActionNewsroom+' => '~~',
 	'Class:ActionNewsroom/Attribute:title' => 'Titel',
 	'Class:ActionNewsroom/Attribute:title+' => 'Titel der Nachricht. Kann Platzhalter wie $this->attribute_code$ enthalten',
 	'Class:ActionNewsroom/Attribute:message' => 'Nachricht',
@@ -609,13 +483,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ActionNewsroom/Attribute:recipients+' => 'Eine OQL-Abfrage, die Kontakt-Objekte zurückgibt',
 	'Class:ActionNewsroom/Attribute:url' => 'URL',
 	'Class:ActionNewsroom/Attribute:url+' => 'Wenn leer, verweist die URL auf das Objekt, das die Benachrichtigung ausgelöst hat. Sie können jedoch auch eine benutzerdefinierte URL angeben.',
-]);
-
-//
-// Class: Trigger
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Trigger' => 'Trigger',
 	'Class:Trigger+' => 'Custom event handler',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
@@ -634,13 +501,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Vollständige Abmeldung erlauben',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Mindestens einen Kanal erzwingen (Nachricht oder E-Mail)',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Abmeldung verweigern',
-]);
-
-//
-// Class: TriggerOnObject
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnObject' => 'Trigger (klassenunabhängig)',
 	'Class:TriggerOnObject+' => 'Trigger einer gegebenen Klasse an Objekten',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Zielklasse',
@@ -649,137 +509,54 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnObject/Attribute:filter+' => 'Einschränkung der Objekte (der Zielklasse) welche den Trigger aktivieren.',
 	'TriggerOnObject:WrongFilterQuery' => 'Fehlerhafter Filter-Query: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Der Filter muss Objekte vom Typ \\"%1$s\\" zurückgeben.',
-]);
-
-//
-// Class: TriggerOnPortalUpdate
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnPortalUpdate' => 'Trigger (bei Update aus dem Portal)',
 	'Class:TriggerOnPortalUpdate+' => 'Trigger bei einer Aktualisierung durch einen Endanwender im Portal',
-]);
-
-//
-// Class: TriggerOnStateChange
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnStateChange' => 'Trigger (bei Statusänderung)',
 	'Class:TriggerOnStateChange+' => 'Trigger bei Änderung des Objektstatus',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Status',
-	'Class:TriggerOnStateChange/Attribute:state+' => '',
-]);
-
-//
-// Class: TriggerOnStateEnter
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:TriggerOnStateChange/Attribute:state+' => '~~',
 	'Class:TriggerOnStateEnter' => 'Trigger (beim Eintritt eines Status)',
 	'Class:TriggerOnStateEnter+' => 'Trigger bei Eintritt einer Objektstatusänderung',
-]);
-
-//
-// Class: TriggerOnStateLeave
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnStateLeave' => 'Trigger (beim Verlassen eines Status)',
 	'Class:TriggerOnStateLeave+' => 'Trigger beim Verlassen einer Objektstatusänderung',
-]);
-
-//
-// Class: TriggerOnObjectCreate
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnObjectCreate' => 'Trigger (bei Objekterstellung)',
 	'Class:TriggerOnObjectCreate+' => 'Trigger bei Objekterstellung (einer Kindklasse) einer gegebenen Klasse',
-]);
-
-//
-// Class: TriggerOnObjectDelete
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnObjectDelete' => 'Trigger (bei Objektlöschung)',
 	'Class:TriggerOnObjectDelete+' => 'Trigger bei Objektlöschung einer gegebenen Klasse oder Kindklasse',
-]);
-
-//
-// Class: TriggerOnObjectUpdate
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnObjectUpdate' => 'Trigger (bei Objektanpassung)',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger bei Objektanpassung einer gegebenen Klasse oder Kindklasse',
 	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'Dieser Filter wird nach der Aktualisierung des Objekts in der Datenbank ausgewertet. Er schränkt ein, welche Objekte die Aktionen auslösen können',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Ziel-Felder',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
-]);
-
-//
-// Class: TriggerOnObjectMention
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
 	'Class:TriggerOnObjectMention' => 'Trigger (bei Objekterwähnung)',
 	'Class:TriggerOnObjectMention+' => 'Trigger bei Objekterwähnung (@xxx) einer Objekt mit [eine Kinderklasse von] eine gegebene Klasse in ein Log-Attribut',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Filter für Objekterwähnung',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Einschränkung der Objekte welche diesen Trigger aktivieren. Wenn leer, wird er von jedem Objekt (beliebige Klasse) aktiviert.',
-]);
-
-//
-// Class: TriggerOnAttributeBlobDownload
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (beim Herunterladen einer Datei eines Objekts)',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger für das Herunterladen einer Datei (Blob) der angegebenen Klasse oder einer Unterklasse',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Ziel-Felder',
-	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
-]);
-
-//
-// Class: TriggerOnThresholdReached
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
 	'Class:TriggerOnThresholdReached' => 'Trigger (bei Schwellenwert)',
 	'Class:TriggerOnThresholdReached+' => 'Trigger beim Erreichen eines Stoppuhr-Schwellwerts',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Uhr stoppen',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '~~',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Schwellenwert',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-]);
-
-//
-// Class: lnkTriggerAction
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '~~',
 	'Class:lnkTriggerAction' => 'Aktion/Trigger',
 	'Class:lnkTriggerAction+' => 'Verknüpfung zwischen einem Trigger und einer Aktion',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Aktion',
 	'Class:lnkTriggerAction/Attribute:action_id+' => 'Die auszuführende Aktion',
 	'Class:lnkTriggerAction/Attribute:action_name' => 'Aktion',
-	'Class:lnkTriggerAction/Attribute:action_name+' => '',
+	'Class:lnkTriggerAction/Attribute:action_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_id' => 'Trigger',
-	'Class:lnkTriggerAction/Attribute:trigger_id+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_id+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_name' => 'Trigger',
-	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:order' => 'Reihenfolge',
 	'Class:lnkTriggerAction/Attribute:order+' => 'Reihenfolge der Aktionsausführungen',
-]);
-
-//
-// Synchro Data Source
-//
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:SynchroDataSource' => 'Synchronisations-Datenquelle',
 	'Class:SynchroDataSource/Attribute:name' => 'Name',
-	'Class:SynchroDataSource/Attribute:name+' => '',
+	'Class:SynchroDataSource/Attribute:name+' => '~~',
 	'Class:SynchroDataSource/Attribute:description' => 'Beschreibung',
 	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Ziel-Klasse',
@@ -983,39 +760,37 @@ Dieses Symbol wird im Tooltip des Schloss-Symbols an synchronisierten '.ITOP_APP
 	'Class:SynchroReplica/Attribute:status_last_warning' => 'Letzte Warnung',
 	'Class:SynchroReplica/Attribute:info_creation_date' => 'Erzeugungs-Datum',
 	'Class:SynchroReplica/Attribute:info_last_modified' => 'Datum der letzten Modifikation',
-	'Class:SynchroReplica/Action:delete+'        => 'Löscht die Replica, nicht aber das Zielobjekt. Sind die zugehörigen Rohdaten weiterhin in der Quelle vorhanden, wird die Replica beim nächsten Synchronisationsimport neu angelegt.',
-	'Class:SynchroReplica/Action:unlink'         => 'Verknüpfung aufheben',
-	'Class:SynchroReplica/Action:unlink+'        => 'Hebt die Verknüpfung der Replica zum Zielobjekt auf. Die Änderung wird beim nächsten Lauf der Datensynchronisation verarbeitet; alternativ können Sie sie über "Synchronisieren" erzwingen.',
-	'Class:SynchroReplica/Action:unlinksynchro'  => 'Verknüpfung aufheben & synchronisieren',
+	'Class:SynchroReplica/Action:delete+' => 'Löscht die Replica, nicht aber das Zielobjekt. Sind die zugehörigen Rohdaten weiterhin in der Quelle vorhanden, wird die Replica beim nächsten Synchronisationsimport neu angelegt.',
+	'Class:SynchroReplica/Action:unlink' => 'Verknüpfung aufheben',
+	'Class:SynchroReplica/Action:unlink+' => 'Hebt die Verknüpfung der Replica zum Zielobjekt auf. Die Änderung wird beim nächsten Lauf der Datensynchronisation verarbeitet; alternativ können Sie sie über "Synchronisieren" erzwingen.',
+	'Class:SynchroReplica/Action:unlinksynchro' => 'Verknüpfung aufheben & synchronisieren',
 	'Class:SynchroReplica/Action:unlinksynchro+' => 'Erzwingt die sofortige Neusynchronisation der Replica. Dabei kann sich die Ziel-ID ändern. Erforderlich nach einer Änderung des Abgleich-Kennzeichens eines Attributs in der Datensynchronisation oder wenn die Abgleichattribute nicht gesperrt waren und Sie die seither geänderten iTop-Objekte behalten und zugleich an der Quelle ausgerichtete Objekte wiederherstellen oder neu anlegen möchten.',
-	'Class:SynchroReplica/Action:synchro'       => 'Synchronisieren',
-	'Class:SynchroReplica/Action:synchro+'      => 'Erzwingt die sofortige Synchronisation der Replica. Nützlich nach einer Änderung des Aktualisierungs-Kennzeichens eines Attributs in der Datensynchronisation oder wenn die Abgleichattribute nicht gesperrt waren und Sie die iTop-Objekte wieder an der Quelle ausrichten möchten.',
-	'Class:SynchroReplica/Action:allowdelete'   => 'Löschen des Zielobjekts erlauben',
-	'Class:SynchroReplica/Action:allowdelete+'  => 'Erlaubt, dass das Löschen der Replica auch das Zielobjekt löscht, sofern die Löschrichtlinie der Datensynchronisation dies vorsieht.',
-	'Class:SynchroReplica/Action:denydelete'    => 'Löschen des Zielobjekts verhindern',
-	'Class:SynchroReplica/Action:denydelete+'   => 'Verhindert, dass das Löschen der Replica auch das Zielobjekt löscht, selbst wenn die Löschrichtlinie der Datensynchronisation dies vorsieht.',
-	'Class:SynchroReplica/Action:unlink_all'    => 'Verknüpfung der Replica aufheben',
-	'Class:SynchroReplica/Action:unlink_all+'   => 'Hebt die Verknüpfung der Replica zu ihren Zielobjekten auf. Die Änderung wird beim nächsten Lauf der Datensynchronisation verarbeitet; alternativ können Sie sie über "Synchronisieren" erzwingen.',
+	'Class:SynchroReplica/Action:synchro' => 'Synchronisieren',
+	'Class:SynchroReplica/Action:synchro+' => 'Erzwingt die sofortige Synchronisation der Replica. Nützlich nach einer Änderung des Aktualisierungs-Kennzeichens eines Attributs in der Datensynchronisation oder wenn die Abgleichattribute nicht gesperrt waren und Sie die iTop-Objekte wieder an der Quelle ausrichten möchten.',
+	'Class:SynchroReplica/Action:allowdelete' => 'Löschen des Zielobjekts erlauben',
+	'Class:SynchroReplica/Action:allowdelete+' => 'Erlaubt, dass das Löschen der Replica auch das Zielobjekt löscht, sofern die Löschrichtlinie der Datensynchronisation dies vorsieht.',
+	'Class:SynchroReplica/Action:denydelete' => 'Löschen des Zielobjekts verhindern',
+	'Class:SynchroReplica/Action:denydelete+' => 'Verhindert, dass das Löschen der Replica auch das Zielobjekt löscht, selbst wenn die Löschrichtlinie der Datensynchronisation dies vorsieht.',
+	'Class:SynchroReplica/Action:unlink_all' => 'Verknüpfung der Replica aufheben',
+	'Class:SynchroReplica/Action:unlink_all+' => 'Hebt die Verknüpfung der Replica zu ihren Zielobjekten auf. Die Änderung wird beim nächsten Lauf der Datensynchronisation verarbeitet; alternativ können Sie sie über "Synchronisieren" erzwingen.',
 	'Class:SynchroReplica/Action:unlinksynchro_all' => 'Verknüpfung aufheben & Replica synchronisieren',
 	'Class:SynchroReplica/Action:unlinksynchro_all+' => 'Erzwingt die sofortige Neusynchronisation der Replica. Dabei können sich deren Ziel-IDs ändern. Erforderlich nach einer Änderung des Abgleich-Kennzeichens eines Attributs in der Datensynchronisation oder wenn die Abgleichattribute nicht gesperrt waren und Sie die seither geänderten iTop-Objekte behalten und zugleich an der Quelle ausgerichtete Objekte wiederherstellen oder neu anlegen möchten.',
-	'Class:SynchroReplica/Action:synchro_all'      => 'Replica synchronisieren',
-	'Class:SynchroReplica/Action:synchro_all+'     => 'Erzwingt die sofortige Synchronisation der Replica. Nützlich nach einer Änderung des Aktualisierungs-Kennzeichens eines Attributs in der Datensynchronisation oder wenn die Abgleichattribute nicht gesperrt waren und Sie die iTop-Objekte wieder an der Quelle ausrichten möchten.',
-	'Class:SynchroReplica/Action:allowdelete_all'  => 'Löschen der Zielobjekte erlauben',
+	'Class:SynchroReplica/Action:synchro_all' => 'Replica synchronisieren',
+	'Class:SynchroReplica/Action:synchro_all+' => 'Erzwingt die sofortige Synchronisation der Replica. Nützlich nach einer Änderung des Aktualisierungs-Kennzeichens eines Attributs in der Datensynchronisation oder wenn die Abgleichattribute nicht gesperrt waren und Sie die iTop-Objekte wieder an der Quelle ausrichten möchten.',
+	'Class:SynchroReplica/Action:allowdelete_all' => 'Löschen der Zielobjekte erlauben',
 	'Class:SynchroReplica/Action:allowdelete_all+' => 'Erlaubt, dass das Löschen der Replica auch die Zielobjekte löscht, sofern die Löschrichtlinie der Datensynchronisation dies vorsieht.',
-	'Class:SynchroReplica/Action:denydelete_all'   => 'Löschen der Zielobjekte verhindern',
-	'Class:SynchroReplica/Action:denydelete_all+'  => 'Verhindert, dass das Löschen der Replica auch die Zielobjekte löscht, selbst wenn die Löschrichtlinie der Datensynchronisation dies vorsieht.',
-
-	'UI:UnlinkAllTabTitle'         => 'Verknüpfung der Replica aufheben',
-	'UI:UnlinkAllPageTitle'        => 'Verknüpfung der Replica zu ihren Zielobjekten aufheben',
-	'UI:UnlinkSynchroAllTabTitle'  => 'Verknüpfung aufheben & Replica synchronisieren',
+	'Class:SynchroReplica/Action:denydelete_all' => 'Löschen der Zielobjekte verhindern',
+	'Class:SynchroReplica/Action:denydelete_all+' => 'Verhindert, dass das Löschen der Replica auch die Zielobjekte löscht, selbst wenn die Löschrichtlinie der Datensynchronisation dies vorsieht.',
+	'UI:UnlinkAllTabTitle' => 'Verknüpfung der Replica aufheben',
+	'UI:UnlinkAllPageTitle' => 'Verknüpfung der Replica zu ihren Zielobjekten aufheben',
+	'UI:UnlinkSynchroAllTabTitle' => 'Verknüpfung aufheben & Replica synchronisieren',
 	'UI:UnlinkSynchroAllPageTitle' => 'Verknüpfung der Replica zu ihren Zielobjekten aufheben und sie erneut synchronisieren',
-	'UI:SynchroAllTabTitle'        => 'Replica synchronisieren',
-	'UI:SynchroAllPageTitle'       => 'Replica synchronisieren: führt zur Anlage oder Zuordnung eines Zielobjekts oder zu einem Fehler',
-	'UI:AllowDeleteAllTabTitle'    => 'Löschen des synchronisierten Objekts erlauben',
-	'UI:AllowDeleteAllPageTitle'   => 'Weitergabe des Replica-Löschvorgangs an das Zielobjekt erlauben',
-	'UI:DenyDeleteAllTabTitle'     => 'Löschen des synchronisierten Objekts verhindern',
-	'UI:DenyDeleteAllPageTitle'    => 'Weitergabe des Replica-Löschvorgangs an das Zielobjekt verhindern',
-
+	'UI:SynchroAllTabTitle' => 'Replica synchronisieren',
+	'UI:SynchroAllPageTitle' => 'Replica synchronisieren: führt zur Anlage oder Zuordnung eines Zielobjekts oder zu einem Fehler',
+	'UI:AllowDeleteAllTabTitle' => 'Löschen des synchronisierten Objekts erlauben',
+	'UI:AllowDeleteAllPageTitle' => 'Weitergabe des Replica-Löschvorgangs an das Zielobjekt erlauben',
+	'UI:DenyDeleteAllTabTitle' => 'Löschen des synchronisierten Objekts verhindern',
+	'UI:DenyDeleteAllPageTitle' => 'Weitergabe des Replica-Löschvorgangs an das Zielobjekt verhindern',
 	'Class:appUserPreferences' => 'Benutzer-Voreinstellungen',
 	'Class:appUserPreferences/Attribute:userid' => 'Benutzer',
 	'Class:appUserPreferences/Attribute:preferences' => 'Voreinstellungen',
@@ -1097,22 +872,14 @@ Dieses Symbol wird im Tooltip des Schloss-Symbols an synchronisierten '.ITOP_APP
 	'Core:Validator:Mandatory' => 'Bitte dieses Feld ausfüllen',
 	'Core:Validator:MustBeInteger' => 'Muss ein Integer sein',
 	'Core:Validator:MustSelectOne' => 'Min. ein Eintrag muss ausgewählt sein',
-	'Menu:DataSources' => 'Datenquellen für die Synchronisation',
-	'Menu:DataSources+' => 'Alle Datenquellen für die Synchronisation',
-]);
-
-//
-// Class: TagSetFieldData
-//
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TagSetFieldData' => '%2$s für die Klasse %1$s',
-	'Class:TagSetFieldData+' => '',
+	'Class:TagSetFieldData+' => '~~',
 	'Class:TagSetFieldData/Attribute:code' => 'Code',
 	'Class:TagSetFieldData/Attribute:code+' => 'Interner code. Muss mindestens 3 alphanumerische Zeichen enthalten',
 	'Class:TagSetFieldData/Attribute:label' => 'Label',
 	'Class:TagSetFieldData/Attribute:label+' => 'Anzeigelabel',
 	'Class:TagSetFieldData/Attribute:description' => 'Beschreibung',
-	'Class:TagSetFieldData/Attribute:description+' => '',
+	'Class:TagSetFieldData/Attribute:description+' => '~~',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag-Klasse',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Objekt-Klasse',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Attributscode',
@@ -1126,134 +893,72 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tag "Attribute Code" kann nicht geändert werden',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag Verwendung (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => 'Kein Eintrag für dieses Tag gefunden',
-]);
-
-//
-// Class: DBProperty
-//
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:DBProperty' => 'DB Eigenschaft',
-	'Class:DBProperty+' => '',
+	'Class:DBProperty+' => '~~',
 	'Class:DBProperty/Attribute:name' => 'Name',
-	'Class:DBProperty/Attribute:name+' => '',
+	'Class:DBProperty/Attribute:name+' => '~~',
 	'Class:DBProperty/Attribute:description' => 'Beschreibung',
-	'Class:DBProperty/Attribute:description+' => '',
+	'Class:DBProperty/Attribute:description+' => '~~',
 	'Class:DBProperty/Attribute:value' => 'Wert',
-	'Class:DBProperty/Attribute:value+' => '',
+	'Class:DBProperty/Attribute:value+' => '~~',
 	'Class:DBProperty/Attribute:change_date' => 'Änderungsdatum',
-	'Class:DBProperty/Attribute:change_date+' => '',
+	'Class:DBProperty/Attribute:change_date+' => '~~',
 	'Class:DBProperty/Attribute:change_comment' => 'Änderungskommentar',
-	'Class:DBProperty/Attribute:change_comment+' => '',
-]);
-
-//
-// Class: BackgroundTask
-//
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:DBProperty/Attribute:change_comment+' => '~~',
 	'Class:BackgroundTask' => 'Hintergrund-Task',
-	'Class:BackgroundTask+' => '',
+	'Class:BackgroundTask+' => '~~',
 	'Class:BackgroundTask/Attribute:class_name' => 'Klassenname',
-	'Class:BackgroundTask/Attribute:class_name+' => '',
+	'Class:BackgroundTask/Attribute:class_name+' => '~~',
 	'Class:BackgroundTask/Attribute:first_run_date' => 'Erster Lauf',
-	'Class:BackgroundTask/Attribute:first_run_date+' => '',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:latest_run_date' => 'Letzter Lauf',
-	'Class:BackgroundTask/Attribute:latest_run_date+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:next_run_date' => 'Nächster Lauf',
-	'Class:BackgroundTask/Attribute:next_run_date+' => '',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:total_exec_count' => 'Anzahl der Läufe',
-	'Class:BackgroundTask/Attribute:total_exec_count+' => '',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
 	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Dauer des letzten Laufs',
-	'Class:BackgroundTask/Attribute:latest_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:min_run_duration' => 'Minimal Laufzeit',
-	'Class:BackgroundTask/Attribute:min_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:max_run_duration' => 'Maximale Laufzeit',
-	'Class:BackgroundTask/Attribute:max_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:average_run_duration' => 'Durchschnittliche Laufzeit',
-	'Class:BackgroundTask/Attribute:average_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:running' => 'Laufend',
-	'Class:BackgroundTask/Attribute:running+' => '',
+	'Class:BackgroundTask/Attribute:running+' => '~~',
 	'Class:BackgroundTask/Attribute:status' => 'Status',
-	'Class:BackgroundTask/Attribute:status+' => '',
-]);
-
-//
-// Class: AsyncTask
-//
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:BackgroundTask/Attribute:status+' => '~~',
 	'Class:AsyncTask' => 'Async. Task',
-	'Class:AsyncTask+' => '',
+	'Class:AsyncTask+' => '~~',
 	'Class:AsyncTask/Attribute:created' => 'Erstellt',
-	'Class:AsyncTask/Attribute:created+' => '',
+	'Class:AsyncTask/Attribute:created+' => '~~',
 	'Class:AsyncTask/Attribute:started' => 'Gestartet',
-	'Class:AsyncTask/Attribute:started+' => '',
+	'Class:AsyncTask/Attribute:started+' => '~~',
 	'Class:AsyncTask/Attribute:planned' => 'Geplant',
-	'Class:AsyncTask/Attribute:planned+' => '',
+	'Class:AsyncTask/Attribute:planned+' => '~~',
 	'Class:AsyncTask/Attribute:event_id' => 'Event',
-	'Class:AsyncTask/Attribute:event_id+' => '',
+	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final Class',
-	'Class:AsyncTask/Attribute:finalclass+' => '',
+	'Class:AsyncTask/Attribute:finalclass+' => '~~',
 	'Class:AsyncTask/Attribute:status' => 'Status',
-	'Class:AsyncTask/Attribute:status+' => '',
+	'Class:AsyncTask/Attribute:status+' => '~~',
 	'Class:AsyncTask/Attribute:remaining_retries' => 'Verbleibende Versuche',
-	'Class:AsyncTask/Attribute:remaining_retries+' => '',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
 	'Class:AsyncTask/Attribute:last_error_code' => 'Letzter Fehlercode',
-	'Class:AsyncTask/Attribute:last_error_code+' => '',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
 	'Class:AsyncTask/Attribute:last_error' => 'Letzte Fehler',
-	'Class:AsyncTask/Attribute:last_error+' => '',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Letzter Versuch',
-	'Class:AsyncTask/Attribute:last_attempt+' => '',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Ungültiges Format der Konfiguration für "async_task_retries[%1$s]". Erwartet wird ein Array mit den Schlüsseln: %2$s',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Ungültiges Format der Konfiguration für "async_task_retries[%1$s]": unerwarteter Schlüssel "%2$s". Erwartet werden nur die Schlüssel: %3$s',
-]);
-
-//
-// Class: AbstractResource
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:AbstractResource' => 'Abstrakte Ressource',
-	'Class:AbstractResource+' => '',
-]);
-
-//
-// Class: ResourceAdminMenu
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:AbstractResource+' => '~~',
 	'Class:ResourceAdminMenu' => 'Ressource "Admin Menü"',
-	'Class:ResourceAdminMenu+' => '',
-]);
-
-//
-// Class: ResourceRunQueriesMenu
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:ResourceAdminMenu+' => '~~',
 	'Class:ResourceRunQueriesMenu' => 'Ressource "Abfrage Ausführen Menü"',
-	'Class:ResourceRunQueriesMenu+' => '',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:ResourceRunQueriesMenu+' => '~~',
 	'Class:ResourceSystemMenu' => 'Ressource "System Menü"',
-	'Class:ResourceSystemMenu+' => '',
-	'Class:EventNotification/Attribute:object_class' => 'Objektklasse',
-	'Class:EventNotification/Attribute:object_class+' => 'Objektklasse (identisch mit dem Trigger)',
-	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Benachrichtigung nicht versendet',
-	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'Beim Speichern der Benachrichtigung ist ein Fehler aufgetreten',
-	'Class:ActionNotification/Attribute:language' => 'Sprache',
-	'Class:ActionNotification/Attribute:language+' => 'Sprache, die für Platzhalter ($xxx$) innerhalb der Nachricht verwendet wird (Status, Bedeutung, Priorität usw.)',
-	'Class:lnkActionNotificationToContact' => 'Verknüpfung Benachrichtigungsaktion/Kontakt',
-	'Class:lnkActionNotificationToContact+' => 'Abonnement eines Kontakts für eine Benachrichtigungsaktion',
-	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Kontakt, der die Benachrichtigung abonniert hat (oder nicht)',
-	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Aktion',
-	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'Die Benachrichtigung, die der Kontakt mindestens einmal erhalten hat und die er abonnieren oder abbestellen kann',
-	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Trigger',
-	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'Der Trigger, der die Benachrichtigung ausgelöst hat',
-	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Abonniert',
-	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'Gibt an, ob der Kontakt die Benachrichtigung abbestellt hat (nein) oder abonniert hat (ja, Standard)',
+	'Class:ResourceSystemMenu+' => '~~',
 ]);

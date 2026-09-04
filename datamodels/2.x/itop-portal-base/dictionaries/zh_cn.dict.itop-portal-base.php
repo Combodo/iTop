@@ -1,24 +1,14 @@
 <?php
-
 /**
- * Copyright (C) 2013-2024 Combodo SAS
+ * Localized data
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
  */
-
-// Portal
+/**
+ *
+ */
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Page:DefaultTitle' => '%1$s 用户门户',
 	'Page:PleaseWait' => '请稍候...',
@@ -62,20 +52,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Portal:File:None' => '没有文件',
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">打开</a> / <a href="%4$s" class="file_download_link">下载</a>',
-	'Portal:Calendar-FirstDayOfWeek' => 'zh-cn', //work with moment.js locales
-]);
-
-// Object form
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Portal:Calendar-FirstDayOfWeek' => 'zh-cn',
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => '关闭此条目',
 	'Portal:Form:Close:Warning' => '确定要离开表单吗? 已输入数据会丢失',
 	'Portal:Error:ObjectCannotBeCreated' => '错误: 无法创建对象. 请在再次提交表单前检查相关对象和附件.',
 	'Portal:Error:ObjectCannotBeUpdated' => '错误: 无法更新对象. 请在再次提交表单前检查相关对象和附件.',
 	'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
-]);
-
-// UserProfile brick
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:UserProfile:Name' => '用户资料',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => '我的资料',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => '注销',
@@ -86,15 +68,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => '无法修改密码, 请联系管理员',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => '个体信息',
 	'Brick:Portal:UserProfile:Photo:Title' => '头像',
-]);
-
-// AggregatePageBrick
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:AggregatePage:DefaultTitle' => '仪表盘',
-]);
-
-// BrowseBrick brick
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:Browse:Name' => '浏览项目',
 	'Brick:Portal:Browse:Mode:List' => '列表',
 	'Brick:Portal:Browse:Mode:Tree' => '树形',
@@ -108,10 +82,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:Browse:Tree:CollapseAll' => '全部收起',
 	'Brick:Portal:Browse:Filter:NoData' => '没有数据',
 	'Brick:Portal:Browse:Mosaic:Back' => '返回',
-]);
-
-// ManageBrick brick
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:Manage:Name' => '管理项目',
 	'Brick:Portal:Manage:Table:NoData' => '没有数据.',
 	'Brick:Portal:Manage:Table:ItemActions' => '操作',
@@ -126,10 +96,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:Manage:fct:avg' => '平均',
 	'Brick:Portal:Manage:fct:min' => '最小',
 	'Brick:Portal:Manage:fct:max' => '最大',
-]);
-
-// ObjectBrick brick
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:Object:Name' => '对象',
 	'Brick:Portal:Object:Form:Create:Title' => '新建 %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => '正在更新 %1$s',
@@ -142,16 +108,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => '复制对象链接',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => '已复制',
-]);
-
-// CreateBrick brick
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:Create:Name' => '快速创建',
 	'Brick:Portal:Create:ChooseType' => '请选择类型',
-]);
-
-// Filter brick
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Brick:Portal:Filter:Name' => '预筛选组件',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => '例如. 连接wifi',
 	'Brick:Portal:Filter:SearchInput:Submit' => '搜索',

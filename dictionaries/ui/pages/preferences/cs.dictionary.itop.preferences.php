@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -46,5 +45,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Váš zástupný obrázek byl úspěšně aktualizován',
 	'UI:Preferences:Notifications' => 'Upozornění',
 	'UI:Preferences:Notifications+' => 'Nastavení upozornění, která chcete dostávat <a href="%1$s">na této stránce</a>.',
-
 ]);

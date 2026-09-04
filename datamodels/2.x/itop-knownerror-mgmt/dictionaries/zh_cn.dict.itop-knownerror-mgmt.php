@@ -1,56 +1,14 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ * 
  */
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: KnownError
-//
-
+/**
+ *
+ */
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:KnownError' => '已知错误',
 	'Class:KnownError+' => '记录一个已知错误',
@@ -59,11 +17,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:KnownError/Attribute:org_id' => '客户',
 	'Class:KnownError/Attribute:org_id+' => '将已知问题关联至负责处理该问题的服务提供商. 若问题仅针对特定客户，则也可关联至对应的客户组织',
 	'Class:KnownError/Attribute:cust_name' => '客户名称',
-	'Class:KnownError/Attribute:cust_name+' => '',
+	'Class:KnownError/Attribute:cust_name+' => '~~',
 	'Class:KnownError/Attribute:problem_id' => '相关问题',
 	'Class:KnownError/Attribute:problem_id+' => '由于问题无法立即解决,于是才导致了这个已知错误的创建',
 	'Class:KnownError/Attribute:problem_ref' => '问题编号',
-	'Class:KnownError/Attribute:problem_ref+' => '',
+	'Class:KnownError/Attribute:problem_ref+' => '~~',
 	'Class:KnownError/Attribute:symptom' => '现象',
 	'Class:KnownError/Attribute:symptom+' => '该错误的可见的影响是什么？',
 	'Class:KnownError/Attribute:root_cause' => '问题根源',
@@ -77,13 +35,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:KnownError/Attribute:domain' => '类型',
 	'Class:KnownError/Attribute:domain+' => '请选择该错误相关的技术领域',
 	'Class:KnownError/Attribute:domain/Value:Application' => '应用',
-	'Class:KnownError/Attribute:domain/Value:Application+' => '',
+	'Class:KnownError/Attribute:domain/Value:Application+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Desktop' => '桌面',
-	'Class:KnownError/Attribute:domain/Value:Desktop+' => '',
+	'Class:KnownError/Attribute:domain/Value:Desktop+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Network' => '网络',
-	'Class:KnownError/Attribute:domain/Value:Network+' => '',
+	'Class:KnownError/Attribute:domain/Value:Network+' => '~~',
 	'Class:KnownError/Attribute:domain/Value:Server' => '服务器',
-	'Class:KnownError/Attribute:domain/Value:Server+' => '',
+	'Class:KnownError/Attribute:domain/Value:Server+' => '~~',
 	'Class:KnownError/Attribute:vendor' => '厂商',
 	'Class:KnownError/Attribute:vendor+' => '这个已知错误相关的厂商',
 	'Class:KnownError/Attribute:model' => '型号',
@@ -94,49 +52,32 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:KnownError/Attribute:ci_list+' => '这个已知错误相关的所有配置项',
 	'Class:KnownError/Attribute:document_list' => '文档',
 	'Class:KnownError/Attribute:document_list+' => '这个已知错误相关的所有文档',
-]);
-
-//
-// Class: lnkErrorToFunctionalCI
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkErrorToFunctionalCI' => '链接 已知问题/功能配置项',
 	'Class:lnkErrorToFunctionalCI+' => '已知问题和功能配置项之间的链接',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => '配置项',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => '配置项名称',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => '已知问题',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => '已知问题名称',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => '原因',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-]);
-
-//
-// Class: lnkDocumentToError
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '~~',
 	'Class:lnkDocumentToError' => '链接 文档/已知问题',
 	'Class:lnkDocumentToError+' => '文档和已知问题之间的链接',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToError/Attribute:document_id' => '文档',
-	'Class:lnkDocumentToError/Attribute:document_id+' => '',
+	'Class:lnkDocumentToError/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToError/Attribute:document_name' => '文档名称',
-	'Class:lnkDocumentToError/Attribute:document_name+' => '',
+	'Class:lnkDocumentToError/Attribute:document_name+' => '~~',
 	'Class:lnkDocumentToError/Attribute:error_id' => '已知问题',
-	'Class:lnkDocumentToError/Attribute:error_id+' => '',
+	'Class:lnkDocumentToError/Attribute:error_id+' => '~~',
 	'Class:lnkDocumentToError/Attribute:error_name' => '已知问题名称',
-	'Class:lnkDocumentToError/Attribute:error_name+' => '',
+	'Class:lnkDocumentToError/Attribute:error_name+' => '~~',
 	'Class:lnkDocumentToError/Attribute:link_type' => '链接类型',
-	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-]);
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:lnkDocumentToError/Attribute:link_type+' => '~~',
 	'Menu:ProblemManagement' => '问题管理',
 	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => '快捷方式',

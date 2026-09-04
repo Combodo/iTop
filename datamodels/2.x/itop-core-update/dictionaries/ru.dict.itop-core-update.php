@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
@@ -42,7 +41,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'Во время обновления приложение будет доступно только для чтения.',
 	'iTopUpdate:UI:Status' => 'Статус',
 	'iTopUpdate:UI:Action' => 'Обновление',
-	'iTopUpdate:UI:Setup' => 'Установка '.ITOP_APPLICATION_SHORT.'',
+	'iTopUpdate:UI:Setup' => 'Установка '.ITOP_APPLICATION_SHORT,
 	'iTopUpdate:UI:History' => 'История версий',
 	'iTopUpdate:UI:Progress' => 'Ход обновления',
 	'iTopUpdate:UI:Backup:Label' => 'Создать резервную копию базы данных',
@@ -62,7 +61,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Внимание: обновление приложения может завершиться неудачей: %1$s',
 	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Обнаружены изменённые файлы</b>, частичное обновление невозможно.</br>Следуйте <a target="_blank" href="%2$s">инструкции</a>, чтобы обновить iTop вручную. Для обновления приложения нужно использовать <a href="%1$s">установщик</a>.',
 	'iTopUpdate:UI:CheckInProgress' => 'Пожалуйста, подождите, идёт проверка целостности',
-	'iTopUpdate:UI:SetupLaunch' => 'Запустить установщик '.ITOP_APPLICATION_SHORT.'',
+	'iTopUpdate:UI:SetupLaunch' => 'Запустить установщик '.ITOP_APPLICATION_SHORT,
 	'iTopUpdate:UI:SetupLaunchConfirm' => 'Это запустит установщик '.ITOP_APPLICATION_SHORT.', вы уверены?',
 	'iTopUpdate:UI:FastSetupLaunch' => 'Быстрая установка',
 	'iTopUpdate:UI:SetupMessage:Ready' => 'Всё готово к началу',

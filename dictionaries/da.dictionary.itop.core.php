@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
@@ -20,34 +19,34 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Core:CheckConsistencyError' => 'Consistency rules not followed: %1$s~~',
 	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
 	'Core:AttributeLinkedSet' => 'Array af objekter',
-	'Core:AttributeLinkedSet+' => '',
+	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass~~',
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
 	'Core:AttributeDashboard' => 'Dashboard~~',
-	'Core:AttributeDashboard+' => '',
+	'Core:AttributeDashboard+' => '~~',
 	'Core:AttributePhoneNumber' => 'Phone number~~',
-	'Core:AttributePhoneNumber+' => '',
+	'Core:AttributePhoneNumber+' => '~~',
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
-	'Core:AttributeObsolescenceDate+' => '',
+	'Core:AttributeObsolescenceDate+' => '~~',
 	'Core:AttributeTagSet' => 'List of tags~~',
-	'Core:AttributeTagSet+' => '',
+	'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
 	'Core:Placeholder:CannotBeResolved' => '(%1$s : cannot be resolved)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 	'Core:AttributeCaseLog' => 'Log~~',
-	'Core:AttributeCaseLog+' => '',
+	'Core:AttributeCaseLog+' => '~~',
 	'Core:AttributeMetaEnum' => 'Computed enum~~',
-	'Core:AttributeMetaEnum+' => '',
+	'Core:AttributeMetaEnum+' => '~~',
 	'Core:AttributeLinkedSetIndirect' => 'Array af objekter (N-N)',
-	'Core:AttributeLinkedSetIndirect+' => '',
+	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class~~',
 	'Core:AttributeInteger' => 'Integer',
-	'Core:AttributeInteger+' => '',
+	'Core:AttributeInteger+' => 'Numeric value (could be negative)~~',
 	'Core:AttributeDecimal' => 'Decimal',
-	'Core:AttributeDecimal+' => '',
+	'Core:AttributeDecimal+' => 'Decimal value (could be negative)~~',
 	'Core:AttributeBoolean' => 'Boolean',
-	'Core:AttributeBoolean+' => '',
-	'Core:AttributeBoolean/Value:null' => '',
+	'Core:AttributeBoolean+' => '~~',
+	'Core:AttributeBoolean/Value:null' => '~~',
 	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
 	'Core:AttributeBoolean/Value:no' => 'No~~',
 	'Core:AttributeArchiveFlag' => 'Archive flag~~',
@@ -55,9 +54,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
 	'Core:AttributeArchiveFlag/Value:no' => 'No~~',
 	'Core:AttributeArchiveFlag/Label' => 'Archived~~',
-	'Core:AttributeArchiveFlag/Label+' => '',
+	'Core:AttributeArchiveFlag/Label+' => '~~',
 	'Core:AttributeArchiveDate/Label' => 'Archive date~~',
-	'Core:AttributeArchiveDate/Label+' => '',
+	'Core:AttributeArchiveDate/Label+' => '~~',
 	'Core:AttributeObsolescenceFlag' => 'Obsolescence flag~~',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Yes~~',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'This object is excluded from the impact analysis, and hidden from search results~~',
@@ -67,39 +66,39 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Core:AttributeObsolescenceDate/Label' => 'Obsolescence date~~',
 	'Core:AttributeObsolescenceDate/Label+' => 'Approximative date at which the object has been considered obsolete~~',
 	'Core:AttributeString' => 'String',
-	'Core:AttributeString+' => '',
+	'Core:AttributeString+' => 'Alphanumeric string~~',
 	'Core:AttributeClass' => 'Class',
-	'Core:AttributeClass+' => '',
+	'Core:AttributeClass+' => '~~',
 	'Core:AttributeApplicationLanguage' => 'Bruger sprog',
-	'Core:AttributeApplicationLanguage+' => '',
+	'Core:AttributeApplicationLanguage+' => 'Language and country (EN US)~~',
 	'Core:AttributeFinalClass' => 'Klasse (auto)',
-	'Core:AttributeFinalClass+' => '',
+	'Core:AttributeFinalClass+' => 'Real class of the object (automatically created by the core)~~',
 	'Core:AttributePassword' => 'Password',
-	'Core:AttributePassword+' => '',
+	'Core:AttributePassword+' => 'Password of an external device~~',
 	'Core:AttributeEncryptedString' => 'Krypteret streng',
-	'Core:AttributeEncryptedString+' => '',
+	'Core:AttributeEncryptedString+' => 'String encrypted with a local key~~',
 	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
 	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
 	'Core:AttributeText' => 'Tekst',
-	'Core:AttributeText+' => '',
+	'Core:AttributeText+' => 'Multiline character string~~',
 	'Core:AttributeHTML' => 'HTML',
-	'Core:AttributeHTML+' => '',
+	'Core:AttributeHTML+' => 'HTML string~~',
 	'Core:AttributeEmailAddress' => 'Email adresse',
-	'Core:AttributeEmailAddress+' => '',
+	'Core:AttributeEmailAddress+' => 'Email address~~',
 	'Core:AttributeIPAddress' => 'IP adresse',
-	'Core:AttributeIPAddress+' => '',
+	'Core:AttributeIPAddress+' => 'IP address~~',
 	'Core:AttributeOQL' => 'OQL',
-	'Core:AttributeOQL+' => '',
+	'Core:AttributeOQL+' => 'Object Query Language expression~~',
 	'Core:AttributeEnum' => 'Enum',
-	'Core:AttributeEnum+' => '',
+	'Core:AttributeEnum+' => 'List of predefined alphanumeric strings~~',
 	'Core:AttributeTemplateString' => 'Template streng',
-	'Core:AttributeTemplateString+' => '',
+	'Core:AttributeTemplateString+' => 'String containing placeholders~~',
 	'Core:AttributeTemplateText' => 'Template tekst',
-	'Core:AttributeTemplateText+' => '',
+	'Core:AttributeTemplateText+' => 'Text containing placeholders~~',
 	'Core:AttributeTemplateHTML' => 'Template HTML',
-	'Core:AttributeTemplateHTML+' => '',
+	'Core:AttributeTemplateHTML+' => 'HTML containing placeholders~~',
 	'Core:AttributeDateTime' => 'Dato/tid',
-	'Core:AttributeDateTime+' => '',
+	'Core:AttributeDateTime+' => 'Date and time (year-month-day hh:mm:ss)~~',
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	Date format:<br/>
@@ -116,7 +115,7 @@ Operators:<br/>
 If the time is omitted, it defaults to 00:00:00
 </p>~~',
 	'Core:AttributeDate' => 'Dato',
-	'Core:AttributeDate+' => '',
+	'Core:AttributeDate+' => 'Date (year-month-day)~~',
 	'Core:AttributeDate?SmartSearch' => '
 <p>
 	Date format:<br/>
@@ -130,53 +129,41 @@ Operators:<br/>
 	<b>[</b><em>date</em>,<em>date</em><b>]</b>
 </p>',
 	'Core:AttributeDeadline' => 'Deadline',
-	'Core:AttributeDeadline+' => '',
+	'Core:AttributeDeadline+' => 'Date, displayed relatively to the current time~~',
 	'Core:AttributeExternalKey' => 'Ekstern nøgle',
-	'Core:AttributeExternalKey+' => '',
+	'Core:AttributeExternalKey+' => 'External (or foreign) key~~',
 	'Core:AttributeHierarchicalKey' => 'Hierarchical Nøgle',
-	'Core:AttributeHierarchicalKey+' => '',
+	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent~~',
 	'Core:AttributeExternalField' => 'Eksternt felt',
-	'Core:AttributeExternalField+' => '',
+	'Core:AttributeExternalField+' => 'Field mapped to an external key~~',
 	'Core:AttributeURL' => 'URL',
-	'Core:AttributeURL+' => '',
+	'Core:AttributeURL+' => 'Absolute or relative URL as a text string~~',
 	'Core:AttributeBlob' => 'Blob',
-	'Core:AttributeBlob+' => '',
+	'Core:AttributeBlob+' => 'Any binary content (document)~~',
 	'Core:AttributeOneWayPassword' => 'En vejs password',
-	'Core:AttributeOneWayPassword+' => '',
+	'Core:AttributeOneWayPassword+' => 'One way encrypted (hashed) password~~',
 	'Core:AttributeTable' => 'Tabel',
-	'Core:AttributeTable+' => '',
+	'Core:AttributeTable+' => 'Indexed array having two dimensions~~',
 	'Core:AttributePropertySet' => 'Egenskaber',
-	'Core:AttributePropertySet+' => '',
+	'Core:AttributePropertySet+' => 'List of untyped properties (name and value)~~',
 	'Core:AttributeFriendlyName' => 'Friendly navn',
-	'Core:AttributeFriendlyName+' => '',
+	'Core:AttributeFriendlyName+' => 'Attribute created automatically ; the friendly name is computed after several attributes~~',
 	'Core:FriendlyName-Label' => 'Friendly navn',
 	'Core:FriendlyName-Description' => 'Friendly navn',
 	'Core:AttributeTag' => 'Tags~~',
-	'Core:AttributeTag+' => '',
+	'Core:AttributeTag+' => '~~',
 	'Core:Context=REST/JSON' => 'REST~~',
 	'Core:Context=Synchro' => 'Synchro~~',
 	'Core:Context=Setup' => 'Setup~~',
 	'Core:Context=GUI:Console' => 'Console~~',
 	'Core:Context=CRON' => 'cron~~',
 	'Core:Context=GUI:Portal' => 'Portal~~',
-]);
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'core/cmdb'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: CMDBChange
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:CMDBChange' => 'Change',
-	'Class:CMDBChange+' => '',
+	'Class:CMDBChange+' => 'Changes tracking~~',
 	'Class:CMDBChange/Attribute:date' => 'Dato',
-	'Class:CMDBChange/Attribute:date+' => '',
+	'Class:CMDBChange/Attribute:date+' => 'date and time at which the changes have been recorded~~',
 	'Class:CMDBChange/Attribute:userinfo' => 'Forskellig info',
-	'Class:CMDBChange/Attribute:userinfo+' => '',
+	'Class:CMDBChange/Attribute:userinfo+' => 'caller\'s defined information~~',
 	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
 	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
 	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
@@ -185,72 +172,34 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
-]);
-
-//
-// Class: CMDBChangeOp
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:CMDBChangeOp' => 'Change Operation',
-	'Class:CMDBChangeOp+' => '',
+	'Class:CMDBChangeOp+' => 'Change made by one person, at a single time, on a single object~~',
 	'Class:CMDBChangeOp/Attribute:change' => 'Change',
-	'Class:CMDBChangeOp/Attribute:change+' => '',
+	'Class:CMDBChangeOp/Attribute:change+' => '~~',
 	'Class:CMDBChangeOp/Attribute:date' => 'dato',
-	'Class:CMDBChangeOp/Attribute:date+' => '',
+	'Class:CMDBChangeOp/Attribute:date+' => 'date and time of the change~~',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'bruger',
-	'Class:CMDBChangeOp/Attribute:userinfo+' => '',
+	'Class:CMDBChangeOp/Attribute:userinfo+' => 'who made this change~~',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'Objekt klasse',
-	'Class:CMDBChangeOp/Attribute:objclass+' => '',
+	'Class:CMDBChangeOp/Attribute:objclass+' => 'class name of the object on which the change was made~~',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'Objekt id',
-	'Class:CMDBChangeOp/Attribute:objkey+' => '',
+	'Class:CMDBChangeOp/Attribute:objkey+' => 'id of the object on which the change was made~~',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Type',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: CMDBChangeOpCreate
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:CMDBChangeOp/Attribute:finalclass+' => 'type of change which was performed~~',
 	'Class:CMDBChangeOpCreate' => 'Object oprettelse',
-	'Class:CMDBChangeOpCreate+' => '',
-]);
-
-//
-// Class: CMDBChangeOpDelete
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:CMDBChangeOpCreate+' => 'Object creation tracking~~',
 	'Class:CMDBChangeOpDelete' => 'Object sletning',
-	'Class:CMDBChangeOpDelete+' => '',
-]);
-
-//
-// Class: CMDBChangeOpSetAttribute
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:CMDBChangeOpDelete+' => 'Object deletion tracking~~',
 	'Class:CMDBChangeOpSetAttribute' => 'Object ændring',
-	'Class:CMDBChangeOpSetAttribute+' => '',
+	'Class:CMDBChangeOpSetAttribute+' => 'Object properties change tracking~~',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Attribut',
-	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => '',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeScalar
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'code of the modified property~~',
 	'Class:CMDBChangeOpSetAttributeScalar' => 'Property ændring',
-	'Class:CMDBChangeOpSetAttributeScalar+' => '',
+	'Class:CMDBChangeOpSetAttributeScalar+' => 'Object scalar properties change tracking~~',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Tidligere værdi',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '',
+	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'previous value of the attribute~~',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Ny værdi',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => '',
-]);
-// Used by CMDBChangeOp... & derived classes
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'new value of the attribute~~',
 	'Change:ObjectCreated' => 'Objekt oprettet',
 	'Change:ObjectDeleted' => 'Objekt slettet',
 	'Change:ObjectModified' => 'Objekt ændret',
@@ -267,130 +216,80 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Change:LinkSet:Added' => 'tilføjet %1$s',
 	'Change:LinkSet:Removed' => 'fjernet %1$s',
 	'Change:LinkSet:Modified' => 'ændret %1$s',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeBlob
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'Data ændring',
-	'Class:CMDBChangeOpSetAttributeBlob+' => '',
+	'Class:CMDBChangeOpSetAttributeBlob+' => 'data change tracking~~',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Tidligere data',
-	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => '',
-]);
-
-//
-// Class: CMDBChangeOpSetAttributeText
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'previous contents of the attribute~~',
 	'Class:CMDBChangeOpSetAttributeText' => 'Tekst ændring',
-	'Class:CMDBChangeOpSetAttributeText+' => '',
+	'Class:CMDBChangeOpSetAttributeText+' => 'text change tracking~~',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Tidligere data',
-	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => '',
-]);
-
-//
-// Class: Event
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'previous contents of the attribute~~',
 	'Class:Event' => 'Log Hændelse',
-	'Class:Event+' => '',
+	'Class:Event+' => 'An application internal event~~',
 	'Class:Event/Attribute:message' => 'Besked',
-	'Class:Event/Attribute:message+' => '',
+	'Class:Event/Attribute:message+' => 'short description of the event~~',
 	'Class:Event/Attribute:date' => 'Dato',
-	'Class:Event/Attribute:date+' => '',
+	'Class:Event/Attribute:date+' => 'date and time at which the changes have been recorded~~',
 	'Class:Event/Attribute:userinfo' => 'Bruger info',
-	'Class:Event/Attribute:userinfo+' => '',
+	'Class:Event/Attribute:userinfo+' => 'identification of the user that was doing the action that triggered this event~~',
 	'Class:Event/Attribute:finalclass' => 'Type',
-	'Class:Event/Attribute:finalclass+' => '',
-]);
-
-//
-// Class: EventNotification
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:Event/Attribute:finalclass+' => 'Name of the final class: specifies the sort of event which occurred~~',
 	'Class:EventNotification' => 'Notifikation hændelse',
-	'Class:EventNotification+' => '',
+	'Class:EventNotification+' => 'Trace of a notification that has been sent~~',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
-	'Class:EventNotification/Attribute:trigger_id+' => '',
+	'Class:EventNotification/Attribute:trigger_id+' => '~~',
 	'Class:EventNotification/Attribute:action_id' => 'Bruger',
-	'Class:EventNotification/Attribute:action_id+' => '',
+	'Class:EventNotification/Attribute:action_id+' => '~~',
 	'Class:EventNotification/Attribute:object_id' => 'Object id',
-	'Class:EventNotification/Attribute:object_id+' => '',
-]);
-
-//
-// Class: EventNotificationEmail
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:EventNotification/Attribute:object_id+' => 'object id (class defined by the trigger ?)~~',
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Class:EventNotificationEmail' => 'Email emission hændelse',
-	'Class:EventNotificationEmail+' => '',
+	'Class:EventNotificationEmail+' => 'Trace of an email that has been sent~~',
 	'Class:EventNotificationEmail/Attribute:to' => 'Til',
-	'Class:EventNotificationEmail/Attribute:to+' => '',
+	'Class:EventNotificationEmail/Attribute:to+' => '~~',
 	'Class:EventNotificationEmail/Attribute:cc' => 'CC',
-	'Class:EventNotificationEmail/Attribute:cc+' => '',
+	'Class:EventNotificationEmail/Attribute:cc+' => '~~',
 	'Class:EventNotificationEmail/Attribute:bcc' => 'BCC',
-	'Class:EventNotificationEmail/Attribute:bcc+' => '',
+	'Class:EventNotificationEmail/Attribute:bcc+' => '~~',
 	'Class:EventNotificationEmail/Attribute:from' => 'Fra',
-	'Class:EventNotificationEmail/Attribute:from+' => '',
+	'Class:EventNotificationEmail/Attribute:from+' => 'Sender of the message~~',
 	'Class:EventNotificationEmail/Attribute:subject' => 'Emne',
-	'Class:EventNotificationEmail/Attribute:subject+' => '',
+	'Class:EventNotificationEmail/Attribute:subject+' => '~~',
 	'Class:EventNotificationEmail/Attribute:body' => 'Indhold',
-	'Class:EventNotificationEmail/Attribute:body+' => '',
+	'Class:EventNotificationEmail/Attribute:body+' => '~~',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Vedhæftning(er)',
-	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-]);
-
-//
-// Class: EventIssue
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:EventNotificationEmail/Attribute:attachments+' => '~~',
 	'Class:EventIssue' => 'Hændelses emne',
-	'Class:EventIssue+' => '',
+	'Class:EventIssue+' => 'Trace of an issue (warning, error, etc.)~~',
 	'Class:EventIssue/Attribute:issue' => 'Emne',
-	'Class:EventIssue/Attribute:issue+' => '',
+	'Class:EventIssue/Attribute:issue+' => 'What happened~~',
 	'Class:EventIssue/Attribute:impact' => 'Påvirkning',
-	'Class:EventIssue/Attribute:impact+' => '',
+	'Class:EventIssue/Attribute:impact+' => 'What are the consequences~~',
 	'Class:EventIssue/Attribute:page' => 'Side',
-	'Class:EventIssue/Attribute:page+' => '',
+	'Class:EventIssue/Attribute:page+' => 'HTTP entry point~~',
 	'Class:EventIssue/Attribute:arguments_post' => 'Postede argumenter',
-	'Class:EventIssue/Attribute:arguments_post+' => '',
+	'Class:EventIssue/Attribute:arguments_post+' => 'HTTP POST arguments~~',
 	'Class:EventIssue/Attribute:arguments_get' => 'URL argumenter',
-	'Class:EventIssue/Attribute:arguments_get+' => '',
+	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET arguments~~',
 	'Class:EventIssue/Attribute:callstack' => 'Callstack',
-	'Class:EventIssue/Attribute:callstack+' => '',
+	'Class:EventIssue/Attribute:callstack+' => '~~',
 	'Class:EventIssue/Attribute:data' => 'Data',
-	'Class:EventIssue/Attribute:data+' => '',
-]);
-
-//
-// Class: EventWebService
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:EventIssue/Attribute:data+' => 'More information~~',
 	'Class:EventWebService' => 'Web service hændelse',
-	'Class:EventWebService+' => '',
+	'Class:EventWebService+' => 'Trace of a web service call~~',
 	'Class:EventWebService/Attribute:verb' => 'Verb',
-	'Class:EventWebService/Attribute:verb+' => '',
+	'Class:EventWebService/Attribute:verb+' => 'Name of the operation~~',
 	'Class:EventWebService/Attribute:result' => 'Resultat',
-	'Class:EventWebService/Attribute:result+' => '',
+	'Class:EventWebService/Attribute:result+' => 'Overall success/failure~~',
 	'Class:EventWebService/Attribute:log_info' => 'Info log',
-	'Class:EventWebService/Attribute:log_info+' => '',
+	'Class:EventWebService/Attribute:log_info+' => 'Result info log~~',
 	'Class:EventWebService/Attribute:log_warning' => 'Advarsels log',
-	'Class:EventWebService/Attribute:log_warning+' => '',
+	'Class:EventWebService/Attribute:log_warning+' => 'Result warning log~~',
 	'Class:EventWebService/Attribute:log_error' => 'Fejl log',
-	'Class:EventWebService/Attribute:log_error+' => '',
+	'Class:EventWebService/Attribute:log_error+' => 'Result error log~~',
 	'Class:EventWebService/Attribute:data' => 'Data',
-	'Class:EventWebService/Attribute:data+' => '',
-]);
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:EventWebService/Attribute:data+' => 'Result data~~',
 	'Class:EventRestService' => 'REST/JSON call~~',
 	'Class:EventRestService+' => 'Trace of a REST/JSON service call~~',
 	'Class:EventRestService/Attribute:operation' => 'Operation~~',
@@ -405,28 +304,14 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP response (json)~~',
 	'Class:EventRestService/Attribute:provider' => 'Provider~~',
 	'Class:EventRestService/Attribute:provider+' => 'PHP class implementing the expected operation~~',
-]);
-
-//
-// Class: EventLoginUsage
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:EventLoginUsage' => 'Login Usage',
-	'Class:EventLoginUsage+' => '',
+	'Class:EventLoginUsage+' => 'Connection to the application~~',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
-	'Class:EventLoginUsage/Attribute:user_id+' => '',
+	'Class:EventLoginUsage/Attribute:user_id+' => '~~',
 	'Class:EventLoginUsage/Attribute:contact_name' => 'Bruger navn',
-	'Class:EventLoginUsage/Attribute:contact_name+' => '',
+	'Class:EventLoginUsage/Attribute:contact_name+' => '~~',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'Bruger Email',
-	'Class:EventLoginUsage/Attribute:contact_email+' => '',
-]);
-
-//
-// Class: EventNotificationNewsroom
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:EventLoginUsage/Attribute:contact_email+' => 'Email Address of the User~~',
 	'Class:EventNotificationNewsroom' => 'News sent~~',
 	'Class:EventNotificationNewsroom+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:title' => 'Title~~',
@@ -455,28 +340,23 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:EventNotificationNewsroom/Attribute:read_date+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contact~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '~~',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
 	'Class:Action' => 'Brugerdefineret handling',
-	'Class:Action+' => '',
+	'Class:Action+' => 'User defined action~~',
 	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
 	'Class:Action/Attribute:name' => 'Navn',
-	'Class:Action/Attribute:name+' => '',
+	'Class:Action/Attribute:name+' => 'Any value that is meaningful to distinguish this action from the others~~',
 	'Class:Action/Attribute:description' => 'Beskrivelse',
-	'Class:Action/Attribute:description+' => '',
+	'Class:Action/Attribute:description+' => 'A longer explanation about the purpose of this action. For information only.~~',
 	'Class:Action/Attribute:status' => 'Status',
-	'Class:Action/Attribute:status+' => '',
+	'Class:Action/Attribute:status+' => 'This status drives the action behavior~~',
 	'Class:Action/Attribute:status/Value:test' => 'Bliver testet',
-	'Class:Action/Attribute:status/Value:test+' => '',
+	'Class:Action/Attribute:status/Value:test+' => '~~',
 	'Class:Action/Attribute:status/Value:enabled' => 'I produktion',
-	'Class:Action/Attribute:status/Value:enabled+' => '',
+	'Class:Action/Attribute:status/Value:enabled+' => '~~',
 	'Class:Action/Attribute:status/Value:disabled' => 'Inaktiv',
-	'Class:Action/Attribute:status/Value:disabled+' => '',
+	'Class:Action/Attribute:status/Value:disabled+' => '~~',
 	'Class:Action/Attribute:trigger_list' => 'Relaterede Triggere',
 	'Class:Action/Attribute:trigger_list+' => 'Triggers linked to this action~~',
 	'Class:Action/Attribute:asynchronous' => 'Asynchronous~~',
@@ -485,30 +365,28 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Action/Attribute:asynchronous/Value:yes' => 'Yes~~',
 	'Class:Action/Attribute:asynchronous/Value:no' => 'No~~',
 	'Class:Action/Attribute:finalclass' => 'Type',
-	'Class:Action/Attribute:finalclass+' => '',
+	'Class:Action/Attribute:finalclass+' => 'Name of the final class~~',
 	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 	'Action:last_executions_tab' => 'Last executions~~',
 	'Action:last_executions_tab_panel_title' => 'Executions of this action (%1$s)~~',
 	'Action:last_executions_tab_limit_days' => 'past %1$s days~~',
 	'Action:last_executions_tab_limit_none' => 'no limit~~',
-]);
-
-//
-// Class: ActionNotification
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ActionNotification' => 'Notifikation',
-	'Class:ActionNotification+' => '',
-]);
-
-//
-// Class: ActionEmail
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:ActionNotification+' => 'Notification Action (abstract)~~',
+	'Class:ActionNotification/Attribute:language' => 'Language~~',
+	'Class:ActionNotification/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
+	'Class:lnkActionNotificationToContact' => 'Link ActionNotification / Contact~~',
+	'Class:lnkActionNotificationToContact+' => 'Contact subscription to Notification Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Contact~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Contact who subscribed (or not) to the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'The notification that the contact received at least once, and to which he can subscribe or unsubscribe~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Trigger~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'The trigger that fired the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Subscribed~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification~~',
 	'Class:ActionEmail' => 'Email besked',
-	'Class:ActionEmail+' => '',
+	'Class:ActionEmail+' => '~~',
 	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: 
 - Being tested: just the Test recipient, 
 - In production: all (To, cc and Bcc) 
@@ -517,7 +395,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
 	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Test modtager',
-	'Class:ActionEmail/Attribute:test_recipient+' => '',
+	'Class:ActionEmail/Attribute:test_recipient+' => 'Destination email address used instead of To, Cc and Bcc when notification is being tested~~',
 	'Class:ActionEmail/Attribute:from' => 'Fra',
 	'Class:ActionEmail/Attribute:from+' => 'Afsender af emailen',
 	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
@@ -540,11 +418,11 @@ If omitted the From (label) is used.~~',
 	'Class:ActionEmail/Attribute:importance' => 'Vigtighed',
 	'Class:ActionEmail/Attribute:importance+' => 'Hvilken prioritet skal emailen sendes med',
 	'Class:ActionEmail/Attribute:importance/Value:low' => 'Lav',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '~~',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'Normal',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '~~',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'Høj',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '~~',
 	'Class:ActionEmail/Attribute:language' => 'Language~~',
 	'Class:ActionEmail/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
 	'Class:ActionEmail/Attribute:html_template' => 'HTML template~~',
@@ -561,13 +439,6 @@ If omitted the From (label) is used.~~',
 	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
 	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
 	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
-]);
-
-//
-// Class: ActionNewsroom
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'ActionNewsroom:trigger' => 'Trigger~~',
 	'ActionNewsroom:content' => 'Message~~',
 	'ActionNewsroom:settings' => 'Settings~~',
@@ -602,22 +473,15 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ActionNewsroom/Attribute:recipients+' => 'An OQL query returning Contact objects~~',
 	'Class:ActionNewsroom/Attribute:url' => 'URL~~',
 	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.~~',
-]);
-
-//
-// Class: Trigger
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Trigger' => 'Triggere',
-	'Class:Trigger+' => '',
+	'Class:Trigger+' => 'Custom event handler~~',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Beskrivelse',
-	'Class:Trigger/Attribute:description+' => '',
+	'Class:Trigger/Attribute:description+' => 'Be precise as your users will base their potential unsubscription on this information~~',
 	'Class:Trigger/Attribute:action_list' => 'Triggerede handlinger',
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated~~',
 	'Class:Trigger/Attribute:finalclass' => 'Type',
-	'Class:Trigger/Attribute:finalclass+' => '',
+	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Trigger/Attribute:context' => 'Context~~',
 	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 	'Class:Trigger/Attribute:complement' => 'Additional information~~',
@@ -627,185 +491,100 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow complete unsubscription~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel (News or Email)~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Deny unsubscription~~',
-]);
-
-//
-// Class: TriggerOnObject
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnObject' => 'Trigger (klasse afhængig)',
-	'Class:TriggerOnObject+' => '',
+	'Class:TriggerOnObject+' => 'Trigger on a given class of objects~~',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Target klasse',
-	'Class:TriggerOnObject/Attribute:target_class+' => '',
+	'Class:TriggerOnObject/Attribute:target_class+' => 'Objects in this class will activate the trigger~~',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
 	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
 	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class "%1$s"~~',
-]);
-
-//
-// Class: TriggerOnPortalUpdate
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnPortalUpdate' => 'Trigger (Når opdateret fra portalen)',
-	'Class:TriggerOnPortalUpdate+' => '',
-]);
-
-//
-// Class: TriggerOnStateChange
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:TriggerOnPortalUpdate+' => 'Trigger on an end-user\'s update from the portal~~',
 	'Class:TriggerOnStateChange' => 'Trigger (i tilstand ændring)',
-	'Class:TriggerOnStateChange+' => '',
+	'Class:TriggerOnStateChange+' => 'Trigger on object state change~~',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Tilstand',
-	'Class:TriggerOnStateChange/Attribute:state+' => '',
-]);
-
-//
-// Class: TriggerOnStateEnter
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:TriggerOnStateChange/Attribute:state+' => '~~',
 	'Class:TriggerOnStateEnter' => 'Trigger (ved indtræden i en tilstand)',
-	'Class:TriggerOnStateEnter+' => '',
-]);
-
-//
-// Class: TriggerOnStateLeave
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:TriggerOnStateEnter+' => 'Trigger on object state change - entering~~',
 	'Class:TriggerOnStateLeave' => 'Trigger (når en tilstand forlades)',
-	'Class:TriggerOnStateLeave+' => '',
-]);
-
-//
-// Class: TriggerOnObjectCreate
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:TriggerOnStateLeave+' => 'Trigger on object state change - leaving~~',
 	'Class:TriggerOnObjectCreate' => 'Trigger (ved oprettelse af objekt)',
-	'Class:TriggerOnObjectCreate+' => '',
-]);
-
-//
-// Class: TriggerOnObjectDelete
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:TriggerOnObjectCreate+' => 'Trigger on object creation of [a child class of] the given class~~',
 	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)~~',
 	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
-]);
-
-//
-// Class: TriggerOnObjectUpdate
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'This filter is computed after the object update in database. It restricts the objects which can trigger the actions~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
-]);
-
-//
-// Class: TriggerOnObjectMention
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
 	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
 	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
-]);
-
-//
-// Class: TriggerOnAttributeBlobDownload
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
-]);
-
-//
-// Class: TriggerOnThresholdReached
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnThresholdReached' => 'Trigger (grænseværdi)',
-	'Class:TriggerOnThresholdReached+' => '',
+	'Class:TriggerOnThresholdReached+' => 'Trigger on Stop-Watch threshold reached~~',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stopur',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '~~',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Grænse',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-]);
-
-//
-// Class: lnkTriggerAction
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '~~',
 	'Class:lnkTriggerAction' => 'Handling/Trigger',
-	'Class:lnkTriggerAction+' => '',
+	'Class:lnkTriggerAction+' => 'Link between a trigger and an action~~',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Handling',
-	'Class:lnkTriggerAction/Attribute:action_id+' => '',
+	'Class:lnkTriggerAction/Attribute:action_id+' => 'The action to be executed~~',
 	'Class:lnkTriggerAction/Attribute:action_name' => 'Handling',
-	'Class:lnkTriggerAction/Attribute:action_name+' => '',
+	'Class:lnkTriggerAction/Attribute:action_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_id' => 'Trigger',
-	'Class:lnkTriggerAction/Attribute:trigger_id+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_id+' => '~~',
 	'Class:lnkTriggerAction/Attribute:trigger_name' => 'Trigger',
-	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
+	'Class:lnkTriggerAction/Attribute:trigger_name+' => '~~',
 	'Class:lnkTriggerAction/Attribute:order' => 'Rækkefølge',
-	'Class:lnkTriggerAction/Attribute:order+' => '',
-]);
-
-//
-// Synchro Data Source
-//
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:lnkTriggerAction/Attribute:order+' => 'Actions execution order~~',
 	'Class:SynchroDataSource' => 'Synchro Data Kilde',
 	'Class:SynchroDataSource/Attribute:name' => 'Navn',
-	'Class:SynchroDataSource/Attribute:name+' => '',
+	'Class:SynchroDataSource/Attribute:name+' => '~~',
 	'Class:SynchroDataSource/Attribute:description' => 'Beskrivelse',
 	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Target klasse',
 	'Class:SynchroDataSource/Attribute:scope_class+' => 'A Synchro Data Source can only populate a single '.ITOP_APPLICATION_SHORT.' class~~',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Bruger',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Kontakt som skal adviseres',
-	'Class:SynchroDataSource/Attribute:notify_contact_id+' => '',
+	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contact to notify in case of error~~',
 	'Class:SynchroDataSource/Attribute:url_icon' => 'Icon\'s hyperlink',
-	'Class:SynchroDataSource/Attribute:url_icon+' => '',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink a (small) image representing the application with which '.ITOP_APPLICATION_SHORT.' is synchronized.
+This icon is shown in the tooltip of the “Lock” symbol on '.ITOP_APPLICATION_SHORT.' synchronized object~~',
 	'Class:SynchroDataSource/Attribute:url_application' => 'Applikation\'s hyperlink',
-	'Class:SynchroDataSource/Attribute:url_application+' => '',
+	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink to the object in the external application corresponding to a synchronized '.ITOP_APPLICATION_SHORT.' object. 
+Possible placeholders: $this->attribute$ and $replica->primary_key$.
+The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of any synchronized '.ITOP_APPLICATION_SHORT.' object~~',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Afstemnings politik',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy+' => '"Use the attributes": '.ITOP_APPLICATION_SHORT.' object matches replica values for each Synchro attributes flagged for Reconciliation.
 "Use primary_key": the column primary_key of the replica is expected to contain the identifier of the '.ITOP_APPLICATION_SHORT.' object~~',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Full load interval',
-	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => '',
+	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'A complete reload of all data must occur at least as often as specified here~~',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Handling på nul',
-	'Class:SynchroDataSource/Attribute:action_on_zero+' => '',
+	'Class:SynchroDataSource/Attribute:action_on_zero+' => 'Action taken when the search returns no object~~',
 	'Class:SynchroDataSource/Attribute:action_on_one' => 'Handling på en',
-	'Class:SynchroDataSource/Attribute:action_on_one+' => '',
+	'Class:SynchroDataSource/Attribute:action_on_one+' => 'Action taken when the search returns exactly one object~~',
 	'Class:SynchroDataSource/Attribute:action_on_multiple' => 'Handling på mange',
-	'Class:SynchroDataSource/Attribute:action_on_multiple+' => '',
+	'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Action taken when the search returns more than one object~~',
 	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Tilladte brugere',
-	'Class:SynchroDataSource/Attribute:user_delete_policy+' => '',
+	'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Who is allowed to delete synchronized objects~~',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Ingen',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => 'Kun Administratorer',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => 'Alle tilladte brugere',
 	'Class:SynchroDataSource/Attribute:delete_policy_update' => 'Opdater regler',
-	'Class:SynchroDataSource/Attribute:delete_policy_update+' => '',
+	'Class:SynchroDataSource/Attribute:delete_policy_update+' => 'A list of "field_name:value;":
+"field_name" must be a valid field of the Target class.
+"value" must be an authorised value for that field.~~',
 	'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Fastholdelses varighed',
-	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => '',
+	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'How much time an obsolete object is kept before being deleted~~',
 	'Class:SynchroDataSource/Attribute:database_table_name' => 'Data table',
-	'Class:SynchroDataSource/Attribute:database_table_name+' => '',
+	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Name of the table to store the synchronization data. If left empty, a default name will be computed.~~',
 	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Implementering',
 	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Forældet',
 	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Produktion',
@@ -885,15 +664,15 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Core:SynchroReplica:ListOfReplicas' => 'Liste over Replica',
 	'Core:SynchroAttExtKey:ReconciliationById' => 'id (Primær Nøgle)',
 	'Core:SynchroAtt:attcode' => 'Attribut',
-	'Core:SynchroAtt:attcode+' => '',
+	'Core:SynchroAtt:attcode+' => 'Field of the object~~',
 	'Core:SynchroAtt:reconciliation' => 'Afstem ?',
-	'Core:SynchroAtt:reconciliation+' => '',
+	'Core:SynchroAtt:reconciliation+' => 'Used for searching~~',
 	'Core:SynchroAtt:update' => 'Opdater ?',
-	'Core:SynchroAtt:update+' => '',
+	'Core:SynchroAtt:update+' => 'Used to update the object~~',
 	'Core:SynchroAtt:update_policy' => 'Opdater Politik',
-	'Core:SynchroAtt:update_policy+' => '',
+	'Core:SynchroAtt:update_policy+' => 'Behavior of the updated field~~',
 	'Core:SynchroAtt:reconciliation_attcode' => 'Afstemnings Nøgle',
-	'Core:SynchroAtt:reconciliation_attcode+' => '',
+	'Core:SynchroAtt:reconciliation_attcode+' => 'Attribute Code for the External Key Reconciliation~~',
 	'Core:SyncDataExchangeComment' => '(Data Synchro)',
 	'Core:Synchro:ListOfDataSources' => 'Liste over data kilder:',
 	'Core:Synchro:LastSynchro' => 'Sidste synkronisering:',
@@ -975,39 +754,37 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:SynchroReplica/Attribute:status_last_warning' => 'Advarsler',
 	'Class:SynchroReplica/Attribute:info_creation_date' => 'Oprettelses Dato',
 	'Class:SynchroReplica/Attribute:info_last_modified' => 'Sidste Ændrings Dato',
-	'Class:SynchroReplica/Action:delete+'        => 'Delete the replica but not the destination object. If the raw data corresponding to this replica is still part of the source, it will be recreated during the next synchronization import.~~',
-	'Class:SynchroReplica/Action:unlink'         => 'Unlink~~',
-	'Class:SynchroReplica/Action:unlink+'        => 'Unlink replica from destination object. It will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
-	'Class:SynchroReplica/Action:unlinksynchro'  => 'Unlink & Synchronize~~',
+	'Class:SynchroReplica/Action:delete+' => 'Delete the replica but not the destination object. If the raw data corresponding to this replica is still part of the source, it will be recreated during the next synchronization import.~~',
+	'Class:SynchroReplica/Action:unlink' => 'Unlink~~',
+	'Class:SynchroReplica/Action:unlink+' => 'Unlink replica from destination object. It will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
+	'Class:SynchroReplica/Action:unlinksynchro' => 'Unlink & Synchronize~~',
 	'Class:SynchroReplica/Action:unlinksynchro+' => 'Force immediate resynchronization of the replica. This can change the destination id. Required after a Data Synchro change on attribute reconciliation flag or if reconciliation attributes were not locked, and you wish to retain the iTop objects modified since then, while recovering or recreating objects aligned with the source.~~',
-	'Class:SynchroReplica/Action:synchro'       => 'Synchronize~~',
-	'Class:SynchroReplica/Action:synchro+'      => 'Force immediate synchronization of the replica. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
-	'Class:SynchroReplica/Action:allowdelete'   => 'Allow deletion of destination~~',
-	'Class:SynchroReplica/Action:allowdelete+'  => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:denydelete'    => 'Deny deletion of destination~~',
-	'Class:SynchroReplica/Action:denydelete+'   => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:unlink_all'    => 'Unlink Replicas~~',
-	'Class:SynchroReplica/Action:unlink_all+'   => 'Unlink Replicas from their destination object. They will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
+	'Class:SynchroReplica/Action:synchro' => 'Synchronize~~',
+	'Class:SynchroReplica/Action:synchro+' => 'Force immediate synchronization of the replica. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
+	'Class:SynchroReplica/Action:allowdelete' => 'Allow deletion of destination~~',
+	'Class:SynchroReplica/Action:allowdelete+' => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
+	'Class:SynchroReplica/Action:denydelete' => 'Deny deletion of destination~~',
+	'Class:SynchroReplica/Action:denydelete+' => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
+	'Class:SynchroReplica/Action:unlink_all' => 'Unlink Replicas~~',
+	'Class:SynchroReplica/Action:unlink_all+' => 'Unlink Replicas from their destination object. They will be processed during the next run of the Data Synchro or you can force it with "Synchronize".~~',
 	'Class:SynchroReplica/Action:unlinksynchro_all' => 'Unlink & Synchronize Replicas~~',
 	'Class:SynchroReplica/Action:unlinksynchro_all+' => 'Force immediate resynchronization of the replicas. This can change their destination id. Required after a Data Synchro change on attribute reconciliation flag or if reconciliation attributes were not locked, and you wish to retain the iTop objects modified since then, while recovering or recreating objects aligned with the source.~~',
-	'Class:SynchroReplica/Action:synchro_all'      => 'Synchronize Replicas~~',
-	'Class:SynchroReplica/Action:synchro_all+'     => 'Force immediate synchronization of the replicas. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
-	'Class:SynchroReplica/Action:allowdelete_all'  => 'Allow deletion of destination objects~~',
+	'Class:SynchroReplica/Action:synchro_all' => 'Synchronize Replicas~~',
+	'Class:SynchroReplica/Action:synchro_all+' => 'Force immediate synchronization of the replicas. Useful after a Data Synchro change on an attribute update flag, or if reconciliation attributes were not locked, and you wish to realign the iTop objects with the source.~~',
+	'Class:SynchroReplica/Action:allowdelete_all' => 'Allow deletion of destination objects~~',
 	'Class:SynchroReplica/Action:allowdelete_all+' => 'Allow the replica deletion to lead to the destination object deletion, if the Data Synchro deletion policy requires so.~~',
-	'Class:SynchroReplica/Action:denydelete_all'   => 'Deny deletion of destination objects~~',
-	'Class:SynchroReplica/Action:denydelete_all+'  => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
-
-	'UI:UnlinkAllTabTitle'         => 'Unlink Replicas~~',
-	'UI:UnlinkAllPageTitle'        => 'Unlink Replicas from their destination object~~',
-	'UI:UnlinkSynchroAllTabTitle'  => 'Unlink & Synchronize Replicas~~',
+	'Class:SynchroReplica/Action:denydelete_all' => 'Deny deletion of destination objects~~',
+	'Class:SynchroReplica/Action:denydelete_all+' => 'Prevent the Replica deletion to lead to the destination object deletion, even if the Data Synchro deletion policy requires so.~~',
+	'UI:UnlinkAllTabTitle' => 'Unlink Replicas~~',
+	'UI:UnlinkAllPageTitle' => 'Unlink Replicas from their destination object~~',
+	'UI:UnlinkSynchroAllTabTitle' => 'Unlink & Synchronize Replicas~~',
 	'UI:UnlinkSynchroAllPageTitle' => 'Unlink Replicas from their destination object & Synchronize them again~~',
-	'UI:SynchroAllTabTitle'        => 'Synchronize Replicas~~',
-	'UI:SynchroAllPageTitle'       => 'Synchronize Replicas: leading to a destination object creation, mapping or an error~~',
-	'UI:AllowDeleteAllTabTitle'    => 'Allow deletion of synchronized object~~',
-	'UI:AllowDeleteAllPageTitle'   => 'Allow propagation of Replica deletion to their destination object~~',
-	'UI:DenyDeleteAllTabTitle'     => 'Deny deletion of synchronized object~~',
-	'UI:DenyDeleteAllPageTitle'    => 'Deny propagation of Replica deletion to their destination object~~',
-
+	'UI:SynchroAllTabTitle' => 'Synchronize Replicas~~',
+	'UI:SynchroAllPageTitle' => 'Synchronize Replicas: leading to a destination object creation, mapping or an error~~',
+	'UI:AllowDeleteAllTabTitle' => 'Allow deletion of synchronized object~~',
+	'UI:AllowDeleteAllPageTitle' => 'Allow propagation of Replica deletion to their destination object~~',
+	'UI:DenyDeleteAllTabTitle' => 'Deny deletion of synchronized object~~',
+	'UI:DenyDeleteAllPageTitle' => 'Deny propagation of Replica deletion to their destination object~~',
 	'Class:appUserPreferences' => 'Bruger Indstillinger',
 	'Class:appUserPreferences/Attribute:userid' => 'Bruger',
 	'Class:appUserPreferences/Attribute:preferences' => 'Inst.',
@@ -1089,22 +866,14 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Core:Validator:Mandatory' => 'Please, fill this field~~',
 	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
 	'Core:Validator:MustSelectOne' => 'Please, select one~~',
-	'Menu:DataSources' => 'Synkroniserings Data Kilder',
-	'Menu:DataSources+' => '',
-]);
-
-//
-// Class: TagSetFieldData
-//
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
-	'Class:TagSetFieldData+' => '',
+	'Class:TagSetFieldData+' => '~~',
 	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
 	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
 	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
 	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
 	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
-	'Class:TagSetFieldData/Attribute:description+' => '',
+	'Class:TagSetFieldData/Attribute:description+' => '~~',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
@@ -1118,122 +887,72 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
 	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
-]);
-
-//
-// Class: DBProperty
-//
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:DBProperty' => 'DB property~~',
-	'Class:DBProperty+' => '',
+	'Class:DBProperty+' => '~~',
 	'Class:DBProperty/Attribute:name' => 'Name~~',
-	'Class:DBProperty/Attribute:name+' => '',
+	'Class:DBProperty/Attribute:name+' => '~~',
 	'Class:DBProperty/Attribute:description' => 'Description~~',
-	'Class:DBProperty/Attribute:description+' => '',
+	'Class:DBProperty/Attribute:description+' => '~~',
 	'Class:DBProperty/Attribute:value' => 'Value~~',
-	'Class:DBProperty/Attribute:value+' => '',
+	'Class:DBProperty/Attribute:value+' => '~~',
 	'Class:DBProperty/Attribute:change_date' => 'Change date~~',
-	'Class:DBProperty/Attribute:change_date+' => '',
+	'Class:DBProperty/Attribute:change_date+' => '~~',
 	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
-	'Class:DBProperty/Attribute:change_comment+' => '',
-]);
-
-//
-// Class: BackgroundTask
-//
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:DBProperty/Attribute:change_comment+' => '~~',
 	'Class:BackgroundTask' => 'Background task~~',
-	'Class:BackgroundTask+' => '',
+	'Class:BackgroundTask+' => '~~',
 	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
-	'Class:BackgroundTask/Attribute:class_name+' => '',
+	'Class:BackgroundTask/Attribute:class_name+' => '~~',
 	'Class:BackgroundTask/Attribute:first_run_date' => 'First run date~~',
-	'Class:BackgroundTask/Attribute:first_run_date+' => '',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:latest_run_date' => 'Latest run date~~',
-	'Class:BackgroundTask/Attribute:latest_run_date+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:next_run_date' => 'Next run date~~',
-	'Class:BackgroundTask/Attribute:next_run_date+' => '',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total exec. count~~',
-	'Class:BackgroundTask/Attribute:total_exec_count+' => '',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
 	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Latest run duration~~',
-	'Class:BackgroundTask/Attribute:latest_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:min_run_duration' => 'Min. run duration~~',
-	'Class:BackgroundTask/Attribute:min_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:max_run_duration' => 'Max. run duration~~',
-	'Class:BackgroundTask/Attribute:max_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:average_run_duration' => 'Average run duration~~',
-	'Class:BackgroundTask/Attribute:average_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
 	'Class:BackgroundTask/Attribute:running' => 'Running~~',
-	'Class:BackgroundTask/Attribute:running+' => '',
+	'Class:BackgroundTask/Attribute:running+' => '~~',
 	'Class:BackgroundTask/Attribute:status' => 'Status~~',
-	'Class:BackgroundTask/Attribute:status+' => '',
-]);
-
-//
-// Class: AsyncTask
-//
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:BackgroundTask/Attribute:status+' => '~~',
 	'Class:AsyncTask' => 'Async. task~~',
-	'Class:AsyncTask+' => '',
+	'Class:AsyncTask+' => '~~',
 	'Class:AsyncTask/Attribute:created' => 'Created~~',
-	'Class:AsyncTask/Attribute:created+' => '',
+	'Class:AsyncTask/Attribute:created+' => '~~',
 	'Class:AsyncTask/Attribute:started' => 'Started~~',
-	'Class:AsyncTask/Attribute:started+' => '',
+	'Class:AsyncTask/Attribute:started+' => '~~',
 	'Class:AsyncTask/Attribute:planned' => 'Planned~~',
-	'Class:AsyncTask/Attribute:planned+' => '',
+	'Class:AsyncTask/Attribute:planned+' => '~~',
 	'Class:AsyncTask/Attribute:event_id' => 'Event~~',
-	'Class:AsyncTask/Attribute:event_id+' => '',
+	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
-	'Class:AsyncTask/Attribute:finalclass+' => '',
+	'Class:AsyncTask/Attribute:finalclass+' => '~~',
 	'Class:AsyncTask/Attribute:status' => 'Status~~',
-	'Class:AsyncTask/Attribute:status+' => '',
+	'Class:AsyncTask/Attribute:status+' => '~~',
 	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
-	'Class:AsyncTask/Attribute:remaining_retries+' => '',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
 	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
-	'Class:AsyncTask/Attribute:last_error_code+' => '',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
 	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
-	'Class:AsyncTask/Attribute:last_error+' => '',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
-	'Class:AsyncTask/Attribute:last_attempt+' => '',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
-]);
-
-//
-// Class: AbstractResource
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:AbstractResource' => 'Abstract Resource~~',
-	'Class:AbstractResource+' => '',
-]);
-
-//
-// Class: ResourceAdminMenu
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:AbstractResource+' => '~~',
 	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
-	'Class:ResourceAdminMenu+' => '',
-]);
-
-//
-// Class: ResourceRunQueriesMenu
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:ResourceAdminMenu+' => '~~',
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
-	'Class:ResourceRunQueriesMenu+' => '',
-]);
-
-//
-// Class: Action
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:ResourceRunQueriesMenu+' => '~~',
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
-	'Class:ResourceSystemMenu+' => '',
-	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
-	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
-	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
-	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ]);

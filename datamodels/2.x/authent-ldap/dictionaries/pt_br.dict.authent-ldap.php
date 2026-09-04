@@ -1,26 +1,18 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:UserLDAP' => 'Usuário externo via LDAP',
-	'Class:UserLDAP+' => '',
+	'Class:UserLDAP+' => 'User authenticated by LDAP~~',
 	'UserLDAP:server' => 'LDAP specifics~~',
-]);
-
-//
-// Class: UserLDAP
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server~~',
 	'Class:UserLDAP/Attribute:ldap_server+' => '~~',
 ]);

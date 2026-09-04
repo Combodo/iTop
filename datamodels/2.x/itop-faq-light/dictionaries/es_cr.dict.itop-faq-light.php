@@ -1,12 +1,14 @@
 <?php
-
 /**
- * Spanish Localized data
+ * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
+ * 
+ */
+/**
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
+ *
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:FAQ' => 'Preguntas y Respuestas Frecuentes',
@@ -26,21 +28,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:FAQ/Attribute:key_words' => 'Palabras Clave',
 	'Class:FAQ/Attribute:key_words+' => 'Palabras Clave',
 	'Class:FAQ/Attribute:domains' => 'Ámbito',
-]);
-
-//
-// Class: FAQCategory
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:FAQCategory' => 'Categoría de Preguntas y Respuesta Frecuentes',
 	'Class:FAQCategory+' => 'Categoría de Preguntas y Respuesta Frecuentes',
 	'Class:FAQCategory/Attribute:name' => 'Nombre',
 	'Class:FAQCategory/Attribute:name+' => 'Nombre de Categoría de Preguntas y Respuestas Frecuentes',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => 'FAQs',
-]);
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:ProblemManagement' => 'Administración de Problemas',
 	'Menu:ProblemManagement+' => 'An ITIL process that identifies root causes of incidents, documents Known Errors and FAQs, in order to reduce helpdesk workload~~',
 	'Menu:Problem:Shortcuts' => 'Acceso Rápido',

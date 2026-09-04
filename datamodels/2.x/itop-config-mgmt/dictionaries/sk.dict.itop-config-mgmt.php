@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- *
+ * 
  */
 /**
  *
@@ -22,52 +21,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Relation:impacts/LoadData' => 'Load data~~',
 	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
 	'Relation:impacts/FilteredData' => 'Filtered data~~',
-]);
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-//
-// Class: lnkContactToFunctionalCI
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkContactToFunctionalCI' => 'väzba - Kontakt / Komponent',
-	'Class:lnkContactToFunctionalCI+' => '~~',
+	'Class:lnkContactToFunctionalCI+' => 'Manages Contacts linked to Functional CIs. This can be a team responsible for the equipment, to assign related Tickets, or the person to whom an individual device such as a PC or phone is assigned, to manage the inventory.~~',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'Komponent',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '~~',
@@ -77,15 +32,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Názov kontaktu',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '~~',
-]);
-
-//
-// Class: FunctionalCI
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:FunctionalCI' => 'Komponent',
-	'Class:FunctionalCI+' => '~~',
+	'Class:FunctionalCI+' => 'Abstract class grouping most Configuration Items types used for CMDB.~~',
 	'Class:FunctionalCI/Attribute:name' => 'Názov',
 	'Class:FunctionalCI/Attribute:name+' => '~~',
 	'Class:FunctionalCI/Attribute:description' => 'Popis',
@@ -104,6 +52,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => 'medium~~',
 	'Class:FunctionalCI/Attribute:move2production' => 'Dátum presunu do produkcie',
 	'Class:FunctionalCI/Attribute:move2production+' => '~~',
+	'Class:FunctionalCI/Attribute:groups_list' => 'Groups~~',
+	'Class:FunctionalCI/Attribute:groups_list+' => 'Groups can be used as tags, to document environment, projects (migration, upgrade, security), etc…~~',
 	'Class:FunctionalCI/Attribute:contacts_list' => 'Kontakty',
 	'Class:FunctionalCI/Attribute:contacts_list+' => 'All the contacts for this configuration item~~',
 	'Class:FunctionalCI/Attribute:documents_list' => 'Zoznam dokumentov',
@@ -116,15 +66,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets~~',
 	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Active Tickets which are impacting this functional CI~~',
-]);
-
-//
-// Class: PhysicalDevice
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:PhysicalDevice' => 'Fyzické zariadenie',
-	'Class:PhysicalDevice+' => '~~',
+	'Class:PhysicalDevice+' => 'Abstract class grouping physical types of Configuration Items. A Physical Device can be located. It has usually a Brand and Model.~~',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'Sériové číslo',
 	'Class:PhysicalDevice/Attribute:serialnumber+' => '~~',
@@ -148,6 +91,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:PhysicalDevice/Attribute:brand_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:model_id' => 'Model',
 	'Class:PhysicalDevice/Attribute:model_id+' => '~~',
+	'Class:PhysicalDevice/Attribute:model_end_of_support' => 'Model end of support~~',
+	'Class:PhysicalDevice/Attribute:model_end_of_support+' => 'When the hardware model is no more supported by the manufacturer, if this information is documented on the Model.~~',
 	'Class:PhysicalDevice/Attribute:model_name' => 'Názov modelu',
 	'Class:PhysicalDevice/Attribute:model_name+' => '~~',
 	'Class:PhysicalDevice/Attribute:asset_number' => 'Číslo položky',
@@ -156,15 +101,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:PhysicalDevice/Attribute:purchase_date+' => '~~',
 	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Koniec záruky',
 	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '~~',
-]);
-
-//
-// Class: Rack
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Rack' => 'stojan (Rack)',
-	'Class:Rack+' => '~~',
+	'Class:Rack+' => 'A physical cabinet for Datacenter Devices and Enclosures.~~',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Rack/Attribute:nb_u' => 'NB U',
 	'Class:Rack/Attribute:nb_u+' => '~~',
@@ -172,64 +110,22 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Rack/Attribute:device_list+' => 'All the physical devices racked into this rack~~',
 	'Class:Rack/Attribute:enclosure_list' => 'Kryt',
 	'Class:Rack/Attribute:enclosure_list+' => 'All the enclosures in this rack~~',
-]);
-
-//
-// Class: TelephonyCI
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:TelephonyCI' => 'Telefónne zariadenie',
-	'Class:TelephonyCI+' => '~~',
+	'Class:TelephonyCI+' => 'Abstract class grouping telephony devices~~',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Telefónne číslo',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '~~',
-]);
-
-//
-// Class: Phone
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Phone' => 'Telefón',
-	'Class:Phone+' => '~~',
-]);
-
-//
-// Class: MobilePhone
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'Class:Phone+' => 'End User device. Plain wired phone~~',
 	'Class:MobilePhone' => 'Mobilný telefón',
-	'Class:MobilePhone+' => '~~',
+	'Class:MobilePhone+' => 'End User device. Wireless phone~~',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
 	'Class:MobilePhone/Attribute:imei+' => '~~',
 	'Class:MobilePhone/Attribute:hw_pin' => 'HW PIN',
 	'Class:MobilePhone/Attribute:hw_pin+' => '~~',
-]);
-
-//
-// Class: IPPhone
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:IPPhone' => 'IP telefón',
-	'Class:IPPhone+' => '~~',
-]);
-
-//
-// Class: Tablet
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'Class:IPPhone+' => 'Physical device dedicated to phone calls, connected to a network~~',
 	'Class:Tablet' => 'Tablet',
-	'Class:Tablet+' => '~~',
-]);
-
-//
-// Class: ConnectableCI
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'Class:Tablet+' => 'End User device. For example iPad, Galaxy Note/Tab Nexus, Kindle...~~',
 	'Class:ConnectableCI' => 'Pripojiteľné zariadenie',
 	'Class:ConnectableCI+' => 'Physical Device which can be connected to a network.~~',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s~~',
@@ -237,15 +133,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'All network devices connected to this device~~',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Sieťové rozhrania',
 	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'All the physical network interfaces~~',
-]);
-
-//
-// Class: DatacenterDevice
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DatacenterDevice' => 'Zariadenie dátového centra',
-	'Class:DatacenterDevice+' => '~~',
+	'Class:DatacenterDevice+' => 'A physical equipment, connected to the network and installed in a data center, usually in a Rack or an Enclosure. This can include Servers, Network Devices, Storage Systems, SAN Switches, Tape Libraries, NAS Devices, etc.~~',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'stojan (Rack)',
 	'Class:DatacenterDevice/Attribute:rack_id+' => '~~',
@@ -275,15 +164,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'The device %2$s is up if at least one power connection (A or B) is up~~',
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'The device %2$s is up if all its power connections are up~~',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'The device %2$s is up if at least %1$s %% of its power connections are up~~',
-]);
-
-//
-// Class: NetworkDevice
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:NetworkDevice' => 'Sieťové zariadenie',
-	'Class:NetworkDevice+' => '~~',
+	'Class:NetworkDevice+' => 'Any type of network device: router, switch, hub, load balancer, firewall…~~',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Typ sieťového zariadenia',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '~~',
@@ -295,17 +177,12 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:NetworkDevice/Attribute:iosversion_id+' => '~~',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'Názov IOS verzie',
 	'Class:NetworkDevice/Attribute:iosversion_name+' => '~~',
+	'Class:NetworkDevice/Attribute:ios_end_of_support' => 'IOS end of support~~',
+	'Class:NetworkDevice/Attribute:ios_end_of_support+' => 'The date after which the editor no longer provides fixes for this IOS version.~~',
 	'Class:NetworkDevice/Attribute:ram' => 'Operačná pamäť',
 	'Class:NetworkDevice/Attribute:ram+' => '~~',
-]);
-
-//
-// Class: Server
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Server' => 'Server',
-	'Class:Server+' => '~~',
+	'Class:Server+' => 'Datacenter Device managing access to centralized resources or services. It contains an OS Version executing Software Instances.~~',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Server/Attribute:osfamily_id' => 'Kategória OS',
 	'Class:Server/Attribute:osfamily_id+' => '~~',
@@ -315,6 +192,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Server/Attribute:osversion_id+' => '~~',
 	'Class:Server/Attribute:osversion_name' => 'Názov verzie OS',
 	'Class:Server/Attribute:osversion_name+' => '~~',
+	'Class:Server/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:Server/Attribute:os_end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
 	'Class:Server/Attribute:oslicence_id' => 'Licencia OS',
 	'Class:Server/Attribute:oslicence_id+' => '~~',
 	'Class:Server/Attribute:oslicence_name' => 'Názov licence OS',
@@ -325,63 +204,28 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Server/Attribute:ram+' => '~~',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Logické disky',
 	'Class:Server/Attribute:logicalvolumes_list+' => 'All the logical volumes connected to this server~~',
-]);
-
-//
-// Class: StorageSystem
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:StorageSystem' => 'Úložiskový systém',
-	'Class:StorageSystem+' => '~~',
+	'Class:StorageSystem+' => 'Storage system that can be attached either to a SAN or to an Ethernet network. The logical unit of storage managed by a Storage System is a Logical Volume.~~',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logické disky',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'All the logical volumes in this storage system~~',
-]);
-
-//
-// Class: SANSwitch
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:SANSwitch' => 'SAN prepínač',
-	'Class:SANSwitch+' => '~~',
+	'Class:SANSwitch+' => 'A SAN Switch is a network switch compatible with the Fibre Channel protocol used by storage networks. It is a Datacenter Device.~~',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Zariadenia',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'All the devices connected to this SAN switch~~',
-]);
-
-//
-// Class: TapeLibrary
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:TapeLibrary' => 'Pásková knižnica',
-	'Class:TapeLibrary+' => '~~',
+	'Class:TapeLibrary+' => 'Datacenter Device which hosts multiple magnetic Tapes (or cartridge). Tape Libraries are used for data backup or archiving.~~',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Pásky',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'All the tapes in the tape library~~',
-]);
-
-//
-// Class: NAS
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:NAS' => 'NAS',
-	'Class:NAS+' => '~~',
+	'Class:NAS+' => 'High-capacity storage device racked in a datacenter and connected to a network. In '.ITOP_APPLICATION_SHORT.' a NAS (Network-attached storage) is hosting NAS File Systems.~~',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Súborové systémy',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'All the file systems in this NAS~~',
-]);
-
-//
-// Class: PC
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:PC' => 'PC',
-	'Class:PC+' => '~~',
+	'Class:PC+' => 'Connectable CI. A Personal Computer (PC) is a Physical Device, Desktop or Laptop, running an operating system and designed to execute Software Instances.~~',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PC/Attribute:osfamily_id' => 'Kategória OS',
 	'Class:PC/Attribute:osfamily_id+' => '~~',
@@ -391,6 +235,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:PC/Attribute:osversion_id+' => '~~',
 	'Class:PC/Attribute:osversion_name' => 'Názov verzie OS',
 	'Class:PC/Attribute:osversion_name+' => '~~',
+	'Class:PC/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:PC/Attribute:os_end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
 	'Class:PC/Attribute:cpu' => 'Procesor',
 	'Class:PC/Attribute:cpu+' => '~~',
 	'Class:PC/Attribute:ram' => 'Operačná pamäť',
@@ -401,47 +247,19 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:PC/Attribute:type/Value:desktop+' => 'desktop~~',
 	'Class:PC/Attribute:type/Value:laptop' => 'Laptop',
 	'Class:PC/Attribute:type/Value:laptop+' => 'laptop~~',
-]);
-
-//
-// Class: Printer
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Printer' => 'Tlačiareň',
-	'Class:Printer+' => '~~',
+	'Class:Printer+' => 'Connectable CI. Physical Device connected either to the network or to a PC.~~',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s~~',
-]);
-
-//
-// Class: PowerConnection
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:PowerConnection' => 'Elektrická prípojka',
-	'Class:PowerConnection+' => '~~',
+	'Class:PowerConnection+' => 'Abstract class grouping physical devices used for electrical power supply.~~',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s~~',
-]);
-
-//
-// Class: PowerSource
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:PowerSource' => 'Napájací zdroj',
-	'Class:PowerSource+' => '~~',
+	'Class:PowerSource+' => 'Physical Power Connection. Used in a datacenter to document any kind of power source (main power inlet, breaker…) that is not a PDU.~~',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PowerSource/Attribute:pdus_list' => 'Napäťové distribučné jednotky (PDU)',
 	'Class:PowerSource/Attribute:pdus_list+' => 'All the PDUs using this power source~~',
-]);
-
-//
-// Class: PDU
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:PDU' => 'Napäťová distribučná jednotka (PDU)',
-	'Class:PDU+' => '~~',
+	'Class:PDU+' => 'Power Connection. PDU (Power Distribution Unit) is a device fitted with multiple outputs designed to distribute electric power, especially to racks of computers and networking equipment located within a datacenter.~~',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s~~',
 	'Class:PDU/Attribute:rack_id' => 'stojan (Rack)',
 	'Class:PDU/Attribute:rack_id+' => '~~',
@@ -451,25 +269,12 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:PDU/Attribute:powerstart_id+' => '~~',
 	'Class:PDU/Attribute:powerstart_name' => 'Názov Power start-u',
 	'Class:PDU/Attribute:powerstart_name+' => '~~',
-]);
-
-//
-// Class: Peripheral
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Peripheral' => 'Periférie',
-	'Class:Peripheral+' => '~~',
+	'Class:Peripheral+' => 'Physical device, used to document any kind of computer peripheral.
+For example: external hard drives, scanners, input devices (trackballs, bar code scanners), etc…~~',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s~~',
-]);
-
-//
-// Class: Enclosure
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Enclosure' => 'Kryt (enclosure)',
-	'Class:Enclosure+' => '~~',
+	'Class:Enclosure+' => 'An open-frame chassis mounted inside a Rack, in which to mount IT equipment such as Blade Servers, Network Device...~~',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s~~',
 	'Class:Enclosure/Attribute:rack_id' => 'stojan (Rack)',
 	'Class:Enclosure/Attribute:rack_id+' => '~~',
@@ -479,15 +284,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Enclosure/Attribute:nb_u+' => '~~',
 	'Class:Enclosure/Attribute:device_list' => 'Zariadenia',
 	'Class:Enclosure/Attribute:device_list+' => 'All the devices in this enclosure~~',
-]);
-
-//
-// Class: ApplicationSolution
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ApplicationSolution' => 'Aplikačné riešenie',
-	'Class:ApplicationSolution+' => '~~',
+	'Class:ApplicationSolution+' => 'Application Solutions describe complex applications that are made of (or depend on) several basic components. The main information conveyed by an Application Solution is its list of relationships.~~',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'Komponenty',
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'All the configuration items that compose this application solution~~',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Biznis procesy',
@@ -504,15 +302,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'The solution is up if all CIs are up~~',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'The solution is up if at least %1$s CI(s) is(are) up~~',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'The solution is up if at least %1$s %% of the CIs are up~~',
-]);
-
-//
-// Class: BusinessProcess
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:BusinessProcess' => 'Biznis proces',
-	'Class:BusinessProcess+' => '~~',
+	'Class:BusinessProcess+' => 'A Business Process is used to document a high-level process or an important application for the operations. It is quite similar to an Application Solution but for describing higher level applications or whole processes in the organization.~~',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Aplikačné riešenia',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'All the application solutions that impact this business process~~',
 	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
@@ -523,370 +314,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:BusinessProcess/Attribute:status/Value:active+' => 'active~~',
 	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'Neaktívny',
 	'Class:BusinessProcess/Attribute:status/Value:inactive+' => 'inactive~~',
-]);
-
-//
-// Class: SoftwareInstance
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:SoftwareInstance' => 'Softvérová inštancia',
-	'Class:SoftwareInstance+' => '~~',
-	'Class:SoftwareInstance/Attribute:system_id' => 'Systém',
-	'Class:SoftwareInstance/Attribute:system_id+' => 'The system can be a Server, a Virtual Machine, a PC, ...~~',
-	'Class:SoftwareInstance/Attribute:system_name' => 'Názov systému',
-	'Class:SoftwareInstance/Attribute:system_name+' => '~~',
-	'Class:SoftwareInstance/Attribute:software_id' => 'Softvér',
-	'Class:SoftwareInstance/Attribute:software_id+' => '~~',
-	'Class:SoftwareInstance/Attribute:software_name' => 'Názov softvéru',
-	'Class:SoftwareInstance/Attribute:software_name+' => '~~',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Softvérová licencia',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '~~',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Názov softvérovej licencie',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '~~',
-	'Class:SoftwareInstance/Attribute:path' => 'Cesta',
-	'Class:SoftwareInstance/Attribute:path+' => '~~',
-	'Class:SoftwareInstance/Attribute:status' => 'Stav',
-	'Class:SoftwareInstance/Attribute:status+' => '~~',
-	'Class:SoftwareInstance/Attribute:status/Value:active' => 'aktívna',
-	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'active~~',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'neaktívna',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'inactive~~',
-]);
-
-//
-// Class: Middleware
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:Middleware' => 'Middleware',
-	'Class:Middleware+' => '~~',
-	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware inštancie',
-	'Class:Middleware/Attribute:middlewareinstance_list+' => 'All the middleware instances provided by this middleware~~',
-]);
-
-//
-// Class: DBServer
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:DBServer' => 'DB Server',
-	'Class:DBServer+' => '~~',
-	'Class:DBServer/Attribute:dbschema_list' => 'DB schémy',
-	'Class:DBServer/Attribute:dbschema_list+' => 'All the database schemas for this DB server~~',
-]);
-
-//
-// Class: WebServer
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:WebServer' => 'Web Server',
-	'Class:WebServer+' => '~~',
-	'Class:WebServer/Attribute:webapp_list' => 'Webové aplikácie',
-	'Class:WebServer/Attribute:webapp_list+' => 'All the web applications available on this web server~~',
-]);
-
-//
-// Class: PCSoftware
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:PCSoftware' => 'PC softvér',
-	'Class:PCSoftware+' => '~~',
-]);
-
-//
-// Class: OtherSoftware
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:OtherSoftware' => 'Iný softvér',
-	'Class:OtherSoftware+' => '~~',
-]);
-
-//
-// Class: MiddlewareInstance
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:MiddlewareInstance' => 'Middleware inštancia',
-	'Class:MiddlewareInstance+' => '~~',
-	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
-	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
-	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
-	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
-	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Názov Middleware-u',
-	'Class:MiddlewareInstance/Attribute:middleware_name+' => '~~',
-]);
-
-//
-// Class: DatabaseSchema
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:DatabaseSchema' => 'Databázová schéma',
-	'Class:DatabaseSchema+' => '~~',
-	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:DatabaseSchema/Attribute:dbserver_id' => 'DB server',
-	'Class:DatabaseSchema/Attribute:dbserver_id+' => '~~',
-	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Názov DB serveru',
-	'Class:DatabaseSchema/Attribute:dbserver_name+' => '~~',
-]);
-
-//
-// Class: WebApplication
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:WebApplication' => 'Webová Aplikácia',
-	'Class:WebApplication+' => '~~',
-	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:WebApplication/Attribute:webserver_id' => 'Web server',
-	'Class:WebApplication/Attribute:webserver_id+' => '~~',
-	'Class:WebApplication/Attribute:webserver_name' => 'Názov Web serveru',
-	'Class:WebApplication/Attribute:webserver_name+' => '~~',
-	'Class:WebApplication/Attribute:logo' => 'Logo~~',
-	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
-	'Class:WebApplication/Attribute:url' => 'URL',
-	'Class:WebApplication/Attribute:url+' => '~~',
-]);
-
-//
-// Class: VirtualDevice
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:VirtualDevice' => 'Virtuálne zariadenie',
-	'Class:VirtualDevice+' => '~~',
-	'Class:VirtualDevice/Attribute:status' => 'Stav',
-	'Class:VirtualDevice/Attribute:status+' => '~~',
-	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Implementácia',
-	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'implementation~~',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Vyradené',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'obsolete~~',
-	'Class:VirtualDevice/Attribute:status/Value:production' => 'Produkcia',
-	'Class:VirtualDevice/Attribute:status/Value:production+' => 'production~~',
-	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Zásoby',
-	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'stock~~',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Zoznam logických dielov',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'All the logical volumes used by this device~~',
-]);
-
-//
-// Class: VirtualHost
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:VirtualHost' => 'Virtuálny host',
-	'Class:VirtualHost+' => '~~',
-	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Zoznam virtuálnych strojov',
-	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'All the virtual machines hosted by this host~~',
-]);
-
-//
-// Class: Hypervisor
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:Hypervisor' => 'Hypervisor',
-	'Class:Hypervisor+' => '~~',
-	'Class:Hypervisor/Attribute:farm_id' => 'Farma',
-	'Class:Hypervisor/Attribute:farm_id+' => '~~',
-	'Class:Hypervisor/Attribute:farm_name' => 'Názov farmy',
-	'Class:Hypervisor/Attribute:farm_name+' => '~~',
-	'Class:Hypervisor/Attribute:server_id' => 'Server',
-	'Class:Hypervisor/Attribute:server_id+' => '~~',
-	'Class:Hypervisor/Attribute:server_name' => 'Názov serveru',
-	'Class:Hypervisor/Attribute:server_name+' => '~~',
-]);
-
-//
-// Class: Farm
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:Farm' => 'Farma',
-	'Class:Farm+' => '~~',
-	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisori',
-	'Class:Farm/Attribute:hypervisor_list+' => 'All the hypervisors that compose this farm~~',
-	'Class:Farm/Attribute:redundancy' => 'High availability~~',
-	'Class:Farm/Attribute:redundancy/disabled' => 'The farm is up if all the hypervisors are up~~',
-	'Class:Farm/Attribute:redundancy/count' => 'The farm is up if at least %1$s hypervisor(s) is(are) up~~',
-	'Class:Farm/Attribute:redundancy/percent' => 'The farm is up if at least %1$s %% of the hypervisors are up~~',
-]);
-
-//
-// Class: VirtualMachine
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:VirtualMachine' => 'Virtuálne zariadenie',
-	'Class:VirtualMachine+' => '~~',
-	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Virtuálny host',
-	'Class:VirtualMachine/Attribute:virtualhost_id+' => '~~',
-	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Názov virtuálneho hosta',
-	'Class:VirtualMachine/Attribute:virtualhost_name+' => '~~',
-	'Class:VirtualMachine/Attribute:osfamily_id' => 'Kategória OS',
-	'Class:VirtualMachine/Attribute:osfamily_id+' => '~~',
-	'Class:VirtualMachine/Attribute:osfamily_name' => 'Názov kategórie OS',
-	'Class:VirtualMachine/Attribute:osfamily_name+' => '~~',
-	'Class:VirtualMachine/Attribute:osversion_id' => 'Verzia OS',
-	'Class:VirtualMachine/Attribute:osversion_id+' => '~~',
-	'Class:VirtualMachine/Attribute:osversion_name' => 'Názov OS verzie',
-	'Class:VirtualMachine/Attribute:osversion_name+' => '~~',
-	'Class:VirtualMachine/Attribute:oslicence_id' => 'Licencia OS',
-	'Class:VirtualMachine/Attribute:oslicence_id+' => '~~',
-	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS licence Názov',
-	'Class:VirtualMachine/Attribute:oslicence_name+' => '~~',
-	'Class:VirtualMachine/Attribute:cpu' => 'Procesor',
-	'Class:VirtualMachine/Attribute:cpu+' => '~~',
-	'Class:VirtualMachine/Attribute:ram' => 'Operačná pamäť',
-	'Class:VirtualMachine/Attribute:ram+' => '~~',
-	'Class:VirtualMachine/Attribute:managementip' => 'IP~~',
-	'Class:VirtualMachine/Attribute:managementip+' => '~~',
-	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Zoznam sieťových rozhraní',
-	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'All the logical network interfaces~~',
-]);
-
-//
-// Class: LogicalVolume
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:LogicalVolume' => 'Logické disky',
-	'Class:LogicalVolume+' => '~~',
-	'Class:LogicalVolume/Attribute:name' => 'Názov',
-	'Class:LogicalVolume/Attribute:name+' => '~~',
-	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
-	'Class:LogicalVolume/Attribute:lun_id+' => '~~',
-	'Class:LogicalVolume/Attribute:description' => 'Popis',
-	'Class:LogicalVolume/Attribute:description+' => '~~',
-	'Class:LogicalVolume/Attribute:raid_level' => 'Raid úroveň',
-	'Class:LogicalVolume/Attribute:raid_level+' => '~~',
-	'Class:LogicalVolume/Attribute:size' => 'Veľkosť',
-	'Class:LogicalVolume/Attribute:size+' => '~~',
-	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Úložiskový systém',
-	'Class:LogicalVolume/Attribute:storagesystem_id+' => '~~',
-	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Názov úložného systému',
-	'Class:LogicalVolume/Attribute:storagesystem_name+' => '~~',
-	'Class:LogicalVolume/Attribute:servers_list' => 'Servery',
-	'Class:LogicalVolume/Attribute:servers_list+' => 'All the servers using this volume~~',
-	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtuálne zariadenia',
-	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'All the virtual devices using this volume~~',
-]);
-
-//
-// Class: lnkServerToVolume
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:lnkServerToVolume' => 'väzba - Server / Logický Disk',
-	'Class:lnkServerToVolume+' => '~~',
-	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
-	'Class:lnkServerToVolume/Attribute:volume_id' => 'Logický Disk',
-	'Class:lnkServerToVolume/Attribute:volume_id+' => '~~',
-	'Class:lnkServerToVolume/Attribute:volume_name' => 'Názov dielu',
-	'Class:lnkServerToVolume/Attribute:volume_name+' => '~~',
-	'Class:lnkServerToVolume/Attribute:server_id' => 'Server',
-	'Class:lnkServerToVolume/Attribute:server_id+' => '~~',
-	'Class:lnkServerToVolume/Attribute:server_name' => 'Názov serveru',
-	'Class:lnkServerToVolume/Attribute:server_name+' => '~~',
-	'Class:lnkServerToVolume/Attribute:size_used' => 'Použité miesto',
-	'Class:lnkServerToVolume/Attribute:size_used+' => '~~',
-]);
-
-//
-// Class: lnkVirtualDeviceToVolume
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:lnkVirtualDeviceToVolume' => 'väzba Virtuálne zariadenie / Logický disk',
-	'Class:lnkVirtualDeviceToVolume+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Logický disk',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Názov dielu',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Virtuálne zariadenie',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Názov virtuálneho zariadenia',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Použité miesto',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '~~',
-]);
-
-//
-// Class: lnkSanToDatacenterDevice
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:lnkSanToDatacenterDevice' => 'väzba - SAN / Zariadenie',
-	'Class:lnkSanToDatacenterDevice+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN prepínač',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'Názov SAN prepínaču',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Zariadenie',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Názov zariadenia',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'SAN port',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => '(FC) Port zariadenia',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '~~',
-]);
-
-//
-// Class: Tape
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:Tape' => 'Páska',
-	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
-	'Class:Tape/Attribute:name' => 'Názov',
-	'Class:Tape/Attribute:name+' => '~~',
-	'Class:Tape/Attribute:description' => 'Popis',
-	'Class:Tape/Attribute:description+' => '~~',
-	'Class:Tape/Attribute:size' => 'Veľkosť',
-	'Class:Tape/Attribute:size+' => '~~',
-	'Class:Tape/Attribute:tapelibrary_id' => 'Pásková knižnica',
-	'Class:Tape/Attribute:tapelibrary_id+' => '~~',
-	'Class:Tape/Attribute:tapelibrary_name' => 'Názov knižnice pásiek',
-	'Class:Tape/Attribute:tapelibrary_name+' => '~~',
-]);
-
-//
-// Class: NASFileSystem
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:NASFileSystem' => 'NAS Súborový systém',
-	'Class:NASFileSystem+' => '~~',
-	'Class:NASFileSystem/Attribute:name' => 'Názov',
-	'Class:NASFileSystem/Attribute:name+' => '~~',
-	'Class:NASFileSystem/Attribute:description' => 'Popis',
-	'Class:NASFileSystem/Attribute:description+' => '~~',
-	'Class:NASFileSystem/Attribute:raid_level' => 'Raid úroveň',
-	'Class:NASFileSystem/Attribute:raid_level+' => '~~',
-	'Class:NASFileSystem/Attribute:size' => 'Veľkosť',
-	'Class:NASFileSystem/Attribute:size+' => '~~',
-	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
-	'Class:NASFileSystem/Attribute:nas_id+' => '~~',
-	'Class:NASFileSystem/Attribute:nas_name' => 'Názov NAS',
-	'Class:NASFileSystem/Attribute:nas_name+' => '~~',
-]);
-
-//
-// Class: Software
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Software' => 'Softvér',
-	'Class:Software+' => '~~',
+	'Class:Software+' => 'Software is a generic item in the software catalog. It has a particular version. In '.ITOP_APPLICATION_SHORT.' a Software has a category amongst: DB Server, Middleware, PC Software, Web Server and Other Software.~~',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Software/Attribute:name' => 'Názov',
 	'Class:Software/Attribute:name+' => '~~',
@@ -894,6 +323,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Software/Attribute:vendor+' => '~~',
 	'Class:Software/Attribute:version' => 'Verzia',
 	'Class:Software/Attribute:version+' => '~~',
+	'Class:Software/Attribute:end_of_support' => 'End of support~~',
+	'Class:Software/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this software version.~~',
 	'Class:Software/Attribute:documents_list' => 'Dokumenty',
 	'Class:Software/Attribute:documents_list+' => 'All the documents linked to this software~~',
 	'Class:Software/Attribute:logo' => 'Logo~~',
@@ -916,15 +347,227 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Software/Attribute:softwarepatch_list+' => 'All the patchs for this software~~',
 	'Class:Software/Attribute:softwarelicence_list' => 'Softvérové licencie',
 	'Class:Software/Attribute:softwarelicence_list+' => 'All the licenses for this software~~',
-]);
-
-//
-// Class: Patch
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'Class:SoftwareInstance' => 'Softvérová inštancia',
+	'Class:SoftwareInstance+' => 'Abstract class representing the deployment of a Software on a device (Server, PC, VirtualMachine). In '.ITOP_APPLICATION_SHORT.' there are different types of Software Instance: DB Server, Middleware, PC Software, Web Server and Other Software~~',
+	'Class:SoftwareInstance/Attribute:system_id' => 'Systém',
+	'Class:SoftwareInstance/Attribute:system_id+' => 'The system can be a Server, a Virtual Machine, a PC, ...~~',
+	'Class:SoftwareInstance/Attribute:system_name' => 'Názov systému',
+	'Class:SoftwareInstance/Attribute:system_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_id' => 'Softvér',
+	'Class:SoftwareInstance/Attribute:software_id+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_name' => 'Názov softvéru',
+	'Class:SoftwareInstance/Attribute:software_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:software_end_of_support' => 'Software end of support~~',
+	'Class:SoftwareInstance/Attribute:software_end_of_support+' => 'The date after which the editor ceases to provide patches for this software version.~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Softvérová licencia',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Názov softvérovej licencie',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '~~',
+	'Class:SoftwareInstance/Attribute:path' => 'Cesta',
+	'Class:SoftwareInstance/Attribute:path+' => '~~',
+	'Class:SoftwareInstance/Attribute:status' => 'Stav',
+	'Class:SoftwareInstance/Attribute:status+' => '~~',
+	'Class:SoftwareInstance/Attribute:status/Value:active' => 'aktívna',
+	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'active~~',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'neaktívna',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'inactive~~',
+	'Class:Middleware' => 'Middleware',
+	'Class:Middleware+' => 'Software Instance offering services to other software (like: Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere or Lotus Domino) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware inštancie',
+	'Class:Middleware/Attribute:middlewareinstance_list+' => 'All the middleware instances provided by this middleware~~',
+	'Class:DBServer' => 'DB Server',
+	'Class:DBServer+' => 'Software Instance offering database services (MySQL 8.0, Oracle, SQL Server, DB2…) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:DBServer/Attribute:dbschema_list' => 'DB schémy',
+	'Class:DBServer/Attribute:dbschema_list+' => 'All the database schemas for this DB server~~',
+	'Class:WebServer' => 'Web Server',
+	'Class:WebServer+' => 'It is a Software Instance, offering Web services (like Apache 2.4, Nginx 1.29.4, IIS 7.0) installed on a specific system (PC, Server or Virtual Machine).~~',
+	'Class:WebServer/Attribute:webapp_list' => 'Webové aplikácie',
+	'Class:WebServer/Attribute:webapp_list+' => 'All the web applications available on this web server~~',
+	'Class:PCSoftware' => 'PC softvér',
+	'Class:PCSoftware+' => 'Software Instance for software (like MS Office, Adobe Photoshop or Filezilla) installed on a PC.~~',
+	'Class:OtherSoftware' => 'Iný softvér',
+	'Class:OtherSoftware+' => 'Any type of Software Instance that do not fit in the other categories: PC Software, Middleware, DB server or Web Server.~~',
+	'Class:MiddlewareInstance' => 'Middleware inštancia',
+	'Class:MiddlewareInstance+' => 'Functional CI representing a service delivered by a Middleware.~~',
+	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
+	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
+	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Názov Middleware-u',
+	'Class:MiddlewareInstance/Attribute:middleware_name+' => '~~',
+	'Class:DatabaseSchema' => 'Databázová schéma',
+	'Class:DatabaseSchema+' => 'Dabatase instance running of a specific DB server.~~',
+	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:DatabaseSchema/Attribute:dbserver_id' => 'DB server',
+	'Class:DatabaseSchema/Attribute:dbserver_id+' => '~~',
+	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Názov DB serveru',
+	'Class:DatabaseSchema/Attribute:dbserver_name+' => '~~',
+	'Class:WebApplication' => 'Webová Aplikácia',
+	'Class:WebApplication+' => 'Instance of an application accessible using a web browser and that runs on a given Web Server instance. For eg. this iTop that you\'re looking at.~~',
+	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:WebApplication/Attribute:webserver_id' => 'Web server',
+	'Class:WebApplication/Attribute:webserver_id+' => '~~',
+	'Class:WebApplication/Attribute:webserver_name' => 'Názov Web serveru',
+	'Class:WebApplication/Attribute:webserver_name+' => '~~',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
+	'Class:WebApplication/Attribute:url' => 'URL',
+	'Class:WebApplication/Attribute:url+' => '~~',
+	'Class:VirtualDevice' => 'Virtuálne zariadenie',
+	'Class:VirtualDevice+' => 'Abstract class used for server virtualization (Virtual Host and Virtual Machine).~~',
+	'Class:VirtualDevice/Attribute:status' => 'Stav',
+	'Class:VirtualDevice/Attribute:status+' => '~~',
+	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Implementácia',
+	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'implementation~~',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Vyradené',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'obsolete~~',
+	'Class:VirtualDevice/Attribute:status/Value:production' => 'Produkcia',
+	'Class:VirtualDevice/Attribute:status/Value:production+' => 'production~~',
+	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Zásoby',
+	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'stock~~',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Zoznam logických dielov',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'All the logical volumes used by this device~~',
+	'Class:VirtualHost' => 'Virtuálny host',
+	'Class:VirtualHost+' => 'Abstract class used for Virtual Devices (Hypervisor, Farm,...) hosting Virtual Machines.~~',
+	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Zoznam virtuálnych strojov',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'All the virtual machines hosted by this host~~',
+	'Class:Hypervisor' => 'Hypervisor',
+	'Class:Hypervisor+' => 'Virtual Host. Virtualization software (MS Hyper-V, VMWare ESX, Xen, etc.), running on a physical Server and supporting the creation of Virtual Machines.~~',
+	'Class:Hypervisor/Attribute:farm_id' => 'Farma',
+	'Class:Hypervisor/Attribute:farm_id+' => '~~',
+	'Class:Hypervisor/Attribute:farm_name' => 'Názov farmy',
+	'Class:Hypervisor/Attribute:farm_name+' => '~~',
+	'Class:Hypervisor/Attribute:server_id' => 'Server',
+	'Class:Hypervisor/Attribute:server_id+' => '~~',
+	'Class:Hypervisor/Attribute:server_name' => 'Názov serveru',
+	'Class:Hypervisor/Attribute:server_name+' => '~~',
+	'Class:Farm' => 'Farma',
+	'Class:Farm+' => 'Virtual Host. A Farm (or cluster) is a group of Hypervisors pooled together and sharing storage resources to provide an overall fault tolerant system for hosting Virtual Machines.~~',
+	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisori',
+	'Class:Farm/Attribute:hypervisor_list+' => 'All the hypervisors that compose this farm~~',
+	'Class:Farm/Attribute:redundancy' => 'High availability~~',
+	'Class:Farm/Attribute:redundancy/disabled' => 'The farm is up if all the hypervisors are up~~',
+	'Class:Farm/Attribute:redundancy/count' => 'The farm is up if at least %1$s hypervisor(s) is(are) up~~',
+	'Class:Farm/Attribute:redundancy/percent' => 'The farm is up if at least %1$s %% of the hypervisors are up~~',
+	'Class:VirtualMachine' => 'Virtuálne zariadenie',
+	'Class:VirtualMachine+' => 'Virtual Device equivalent to a Server, it is hosted either on an Hypervisor or on a Farm.~~',
+	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Virtuálny host',
+	'Class:VirtualMachine/Attribute:virtualhost_id+' => '~~',
+	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Názov virtuálneho hosta',
+	'Class:VirtualMachine/Attribute:virtualhost_name+' => '~~',
+	'Class:VirtualMachine/Attribute:osfamily_id' => 'Kategória OS',
+	'Class:VirtualMachine/Attribute:osfamily_id+' => '~~',
+	'Class:VirtualMachine/Attribute:osfamily_name' => 'Názov kategórie OS',
+	'Class:VirtualMachine/Attribute:osfamily_name+' => '~~',
+	'Class:VirtualMachine/Attribute:osversion_id' => 'Verzia OS',
+	'Class:VirtualMachine/Attribute:osversion_id+' => '~~',
+	'Class:VirtualMachine/Attribute:osversion_name' => 'Názov OS verzie',
+	'Class:VirtualMachine/Attribute:osversion_name+' => '~~',
+	'Class:VirtualMachine/Attribute:os_end_of_support' => 'OS end of support~~',
+	'Class:VirtualMachine/Attribute:os_end_of_support+' => 'When the OS version is no more supported by the vendor, if this information is documented on the OS Version.~~',
+	'Class:VirtualMachine/Attribute:oslicence_id' => 'Licencia OS',
+	'Class:VirtualMachine/Attribute:oslicence_id+' => '~~',
+	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS licence Názov',
+	'Class:VirtualMachine/Attribute:oslicence_name+' => '~~',
+	'Class:VirtualMachine/Attribute:cpu' => 'Procesor',
+	'Class:VirtualMachine/Attribute:cpu+' => '~~',
+	'Class:VirtualMachine/Attribute:ram' => 'Operačná pamäť',
+	'Class:VirtualMachine/Attribute:ram+' => '~~',
+	'Class:VirtualMachine/Attribute:managementip' => 'IP~~',
+	'Class:VirtualMachine/Attribute:managementip+' => '~~',
+	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Zoznam sieťových rozhraní',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'All the logical network interfaces~~',
+	'Class:LogicalVolume' => 'Logické disky',
+	'Class:LogicalVolume+' => 'The unit of storage managed inside a Storage System. It can be accessed by multiple Servers and Virtual Devices.~~',
+	'Class:LogicalVolume/Attribute:name' => 'Názov',
+	'Class:LogicalVolume/Attribute:name+' => '~~',
+	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
+	'Class:LogicalVolume/Attribute:lun_id+' => '~~',
+	'Class:LogicalVolume/Attribute:description' => 'Popis',
+	'Class:LogicalVolume/Attribute:description+' => '~~',
+	'Class:LogicalVolume/Attribute:raid_level' => 'Raid úroveň',
+	'Class:LogicalVolume/Attribute:raid_level+' => '~~',
+	'Class:LogicalVolume/Attribute:size' => 'Veľkosť',
+	'Class:LogicalVolume/Attribute:size+' => '~~',
+	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Úložiskový systém',
+	'Class:LogicalVolume/Attribute:storagesystem_id+' => '~~',
+	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Názov úložného systému',
+	'Class:LogicalVolume/Attribute:storagesystem_name+' => '~~',
+	'Class:LogicalVolume/Attribute:servers_list' => 'Servery',
+	'Class:LogicalVolume/Attribute:servers_list+' => 'All the servers using this volume~~',
+	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtuálne zariadenia',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'All the virtual devices using this volume~~',
+	'Class:lnkServerToVolume' => 'väzba - Server / Logický Disk',
+	'Class:lnkServerToVolume+' => 'This many-to-many link indicates that a Server uses a Logical Volume (a storage unit managed inside a Storage System). Several Servers can use the same Logical Volume.~~',
+	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
+	'Class:lnkServerToVolume/Attribute:volume_id' => 'Logický Disk',
+	'Class:lnkServerToVolume/Attribute:volume_id+' => '~~',
+	'Class:lnkServerToVolume/Attribute:volume_name' => 'Názov dielu',
+	'Class:lnkServerToVolume/Attribute:volume_name+' => '~~',
+	'Class:lnkServerToVolume/Attribute:server_id' => 'Server',
+	'Class:lnkServerToVolume/Attribute:server_id+' => '~~',
+	'Class:lnkServerToVolume/Attribute:server_name' => 'Názov serveru',
+	'Class:lnkServerToVolume/Attribute:server_name+' => '~~',
+	'Class:lnkServerToVolume/Attribute:size_used' => 'Použité miesto',
+	'Class:lnkServerToVolume/Attribute:size_used+' => '~~',
+	'Class:lnkVirtualDeviceToVolume' => 'väzba Virtuálne zariadenie / Logický disk',
+	'Class:lnkVirtualDeviceToVolume+' => 'This many-to-many link indicates that a Virtual Device uses a Logical Volume (a storage unit managed inside a Storage System). Several Virtual Devices can use the same Logical Volume.~~',
+	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Logický disk',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Názov dielu',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Virtuálne zariadenie',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Názov virtuálneho zariadenia',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Použité miesto',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '~~',
+	'Class:lnkSanToDatacenterDevice' => 'väzba - SAN / Zariadenie',
+	'Class:lnkSanToDatacenterDevice+' => 'This many-to-many link models the network connection between a SAN Switch and a Datacenter Device (a Server, a Network Device, etc.).~~',
+	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN prepínač',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'Názov SAN prepínaču',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Zariadenie',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Názov zariadenia',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'SAN port',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => '(FC) Port zariadenia',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '~~',
+	'Class:Tape' => 'Páska',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is a removable piece of storage part of a Tape Library~~',
+	'Class:Tape/Attribute:name' => 'Názov',
+	'Class:Tape/Attribute:name+' => '~~',
+	'Class:Tape/Attribute:description' => 'Popis',
+	'Class:Tape/Attribute:description+' => '~~',
+	'Class:Tape/Attribute:size' => 'Veľkosť',
+	'Class:Tape/Attribute:size+' => '~~',
+	'Class:Tape/Attribute:tapelibrary_id' => 'Pásková knižnica',
+	'Class:Tape/Attribute:tapelibrary_id+' => '~~',
+	'Class:Tape/Attribute:tapelibrary_name' => 'Názov knižnice pásiek',
+	'Class:Tape/Attribute:tapelibrary_name+' => '~~',
+	'Class:NASFileSystem' => 'NAS Súborový systém',
+	'Class:NASFileSystem+' => 'Represents a shared file system hosted inside a given NAS (Network Attached Storage).~~',
+	'Class:NASFileSystem/Attribute:name' => 'Názov',
+	'Class:NASFileSystem/Attribute:name+' => '~~',
+	'Class:NASFileSystem/Attribute:description' => 'Popis',
+	'Class:NASFileSystem/Attribute:description+' => '~~',
+	'Class:NASFileSystem/Attribute:raid_level' => 'Raid úroveň',
+	'Class:NASFileSystem/Attribute:raid_level+' => '~~',
+	'Class:NASFileSystem/Attribute:size' => 'Veľkosť',
+	'Class:NASFileSystem/Attribute:size+' => '~~',
+	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
+	'Class:NASFileSystem/Attribute:nas_id+' => '~~',
+	'Class:NASFileSystem/Attribute:nas_name' => 'Názov NAS',
+	'Class:NASFileSystem/Attribute:nas_name+' => '~~',
 	'Class:Patch' => 'Záplata',
-	'Class:Patch+' => '~~',
+	'Class:Patch+' => 'Abstract class, for patch, hotfix, security fix or service pack for an OS or a Software.~~',
 	'Class:Patch/Attribute:name' => 'Názov',
 	'Class:Patch/Attribute:name+' => '~~',
 	'Class:Patch/Attribute:documents_list' => 'Zoznam dokumentov',
@@ -933,15 +576,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Patch/Attribute:description+' => '~~',
 	'Class:Patch/Attribute:finalclass' => 'Typ',
 	'Class:Patch/Attribute:finalclass+' => 'Name of the final class~~',
-]);
-
-//
-// Class: OSPatch
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:OSPatch' => 'Záplata OS',
-	'Class:OSPatch+' => '~~',
+	'Class:OSPatch+' => 'Patch, hotfix, security fix or service pack for a given operating system.~~',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Zariadenia',
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'All the systems where this patch is installed~~',
 	'Class:OSPatch/Attribute:osversion_id' => 'Verzia OS',
@@ -950,30 +586,16 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:OSPatch/Attribute:osfamily_id+' => '~~',
 	'Class:OSPatch/Attribute:osversion_name' => 'Názov OS verzie',
 	'Class:OSPatch/Attribute:osversion_name+' => '~~',
-]);
-
-//
-// Class: SoftwarePatch
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:SoftwarePatch' => 'Softvérová záplata',
-	'Class:SoftwarePatch+' => '~~',
+	'Class:SoftwarePatch+' => 'Patch, hotfix, security fix or service pack for a given software.~~',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Softvér',
 	'Class:SoftwarePatch/Attribute:software_id+' => '~~',
 	'Class:SoftwarePatch/Attribute:software_name' => 'Názov softvéru',
 	'Class:SoftwarePatch/Attribute:software_name+' => '~~',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Inštancie softvéru',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'All the systems where this software patch is installed~~',
-]);
-
-//
-// Class: Licence
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Licence' => 'Licencia',
-	'Class:Licence+' => '~~',
+	'Class:Licence+' => 'Abstract class. A license contract for a particular OS version or Software~~',
 	'Class:Licence/Attribute:name' => 'Názov',
 	'Class:Licence/Attribute:name+' => '~~',
 	'Class:Licence/Attribute:documents_list' => 'Zoznam dokumentov',
@@ -1000,15 +622,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'yes~~',
 	'Class:Licence/Attribute:finalclass' => 'Typ',
 	'Class:Licence/Attribute:finalclass+' => 'Name of the final class~~',
-]);
-
-//
-// Class: OSLicence
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:OSLicence' => 'Licencia OS',
-	'Class:OSLicence+' => '~~',
+	'Class:OSLicence+' => 'A license contract for a particular operating system. The license is related to one operating system (for example Windows 2008 R2) and can be associated with several servers or virtual machines.~~',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:OSLicence/Attribute:osversion_id' => 'Verzia OS',
 	'Class:OSLicence/Attribute:osversion_id+' => '~~',
@@ -1020,15 +635,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this license is used~~',
 	'Class:OSLicence/Attribute:servers_list' => 'Servery',
 	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this license is used~~',
-]);
-
-//
-// Class: SoftwareLicence
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:SoftwareLicence' => 'Softvérová licencia',
-	'Class:SoftwareLicence+' => '~~',
+	'Class:SoftwareLicence+' => 'A license contract for a particular software. The license is related to one software (for example MS Office 2010) and can be associated with several instances of this software.~~',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Softvér',
 	'Class:SoftwareLicence/Attribute:software_id+' => '~~',
@@ -1036,15 +644,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:SoftwareLicence/Attribute:software_name+' => '~~',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Inštancie softvéru',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this license is used~~',
-]);
-
-//
-// Class: lnkDocumentToLicence
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkDocumentToLicence' => 'väzba Dokument/Licencia',
-	'Class:lnkDocumentToLicence+' => '~~',
+	'Class:lnkDocumentToLicence+' => 'Link used when a Document is applicable to a License.~~',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licencia',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '~~',
@@ -1054,56 +655,38 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Názov dokumentu',
 	'Class:lnkDocumentToLicence/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: OSVersion
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:OSVersion' => 'Verzia OS',
-	'Class:OSVersion+' => '~~',
+	'Class:OSVersion+' => 'Typology. List of the possible values for the "OS Version" of a computer (Server, Virtual Machine or PC). The OS Versions are organized per OS Family.~~',
 	'Class:OSVersion/Attribute:osfamily_id' => 'Kategória OS',
 	'Class:OSVersion/Attribute:osfamily_id+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Názov kategórie OS',
 	'Class:OSVersion/Attribute:osfamily_name+' => '~~',
+	'Class:OSVersion/Attribute:end_of_support' => 'End of support~~',
+	'Class:OSVersion/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this OS version.~~',
+	'Class:OSVersion/Attribute:ospatches_list' => 'OS patches~~',
+	'Class:OSVersion/Attribute:ospatches_list+' => 'All the OS patches for this OS version~~',
 	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
 	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
-]);
-
-//
-// Class: OSFamily
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:OSFamily' => 'Kategória OS',
-	'Class:OSFamily+' => '~~',
+	'Class:OSFamily+' => 'Typology. List of the possible values for the "OS Family" attribute of Servers, Virtual Machines and PCs.~~',
+	'Class:OSFamily/Attribute:osversions_list' => 'OS versions~~',
+	'Class:OSFamily/Attribute:osversions_list+' => 'All the OS versions for this OS family~~',
 	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
 	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
-]);
-
-//
-// Class: Brand
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Brand' => 'Značka',
-	'Class:Brand+' => '~~',
+	'Class:Brand+' => 'Typology. List of the possible values for the "Brand" attribute of Physical Device.~~',
+	'Class:Brand/Attribute:iosversions_list' => 'IOS versions~~',
+	'Class:Brand/Attribute:iosversions_list+' => 'All the IOS versions from this brand~~',
 	'Class:Brand/Attribute:logo' => 'Logo~~',
 	'Class:Brand/Attribute:logo+' => '~~',
+	'Class:Brand/Attribute:models_list' => 'Models~~',
+	'Class:Brand/Attribute:models_list+' => 'All models for this brand~~',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Zariadenia',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this brand~~',
 	'Class:Brand/UniquenessRule:name+' => 'The name must be unique~~',
 	'Class:Brand/UniquenessRule:name' => 'This brand already exists~~',
-]);
-
-//
-// Class: Model
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Model' => 'Model',
-	'Class:Model+' => '~~',
+	'Class:Model+' => 'Typology. List the possible values for the Model attribute of a Physical Device. Each Model belongs to a single Brand, and usually applies to a single type of Physical Device.~~',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Model/Attribute:brand_id' => 'Značka',
 	'Class:Model/Attribute:brand_id+' => '~~',
@@ -1113,6 +696,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Model/Attribute:picture+' => '~~',
 	'Class:Model/Attribute:type' => 'Typ zariadena',
 	'Class:Model/Attribute:type+' => '~~',
+	'Class:Model/Attribute:end_of_support' => 'End of support~~',
+	'Class:Model/Attribute:end_of_support+' => 'The date after which the manufacturer ceases to provide patches and support for this model.~~',
 	'Class:Model/Attribute:type/Value:PowerSource' => 'Zdroj napájania',
 	'Class:Model/Attribute:type/Value:PowerSource+' => 'Power Source~~',
 	'Class:Model/Attribute:type/Value:DiskArray' => 'Diskové pole',
@@ -1153,43 +738,26 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Model/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this model~~',
 	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
 	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand~~',
-]);
-
-//
-// Class: NetworkDeviceType
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:NetworkDeviceType' => 'Typ sieťového zariadenia',
-	'Class:NetworkDeviceType+' => '~~',
+	'Class:NetworkDeviceType+' => 'Typology. The possible values for the "Type" of a Network Device (e.g. Router, Switch, Firewall, etc.).~~',
 	'Class:NetworkDeviceType/Attribute:logo' => 'Logo~~',
 	'Class:NetworkDeviceType/Attribute:logo+' => 'Used as icon for all Network Device of this type, when displayed in console (details, summary card and impact analysis graphs)~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Sieťové zariadenia',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'All the network devices corresponding to this type~~',
-]);
-
-//
-// Class: IOSVersion
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:IOSVersion' => 'Verzia IOSu',
-	'Class:IOSVersion+' => '~~',
+	'Class:IOSVersion+' => 'Typology. Possible values for the versions of operating system for network devices (IOS from Cisco\'s Internetwork Operating System).~~',
 	'Class:IOSVersion/Attribute:brand_id' => 'Značka',
 	'Class:IOSVersion/Attribute:brand_id+' => '~~',
 	'Class:IOSVersion/Attribute:brand_name' => 'Názov značky',
 	'Class:IOSVersion/Attribute:brand_name+' => '~~',
+	'Class:IOSVersion/Attribute:end_of_support' => 'End of support~~',
+	'Class:IOSVersion/Attribute:end_of_support+' => 'The date after which the editor ceases to provide patches for this IOS version.~~',
+	'Class:IOSVersion/Attribute:networkdevices_list' => 'Network devices~~',
+	'Class:IOSVersion/Attribute:networkdevices_list+' => 'All the network devices running this IOS version~~',
 	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
 	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
-]);
-
-//
-// Class: lnkDocumentToPatch
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkDocumentToPatch' => 'väzba - Dokument / Záplata',
-	'Class:lnkDocumentToPatch+' => '~~',
+	'Class:lnkDocumentToPatch+' => 'Link used when a Document is applicable to a Patch.~~',
 	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Záplata',
 	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '~~',
@@ -1199,15 +767,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkDocumentToPatch/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Názov dokumentu',
 	'Class:lnkDocumentToPatch/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: lnkSoftwareInstanceToSoftwarePatch
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'väzba - Softvérová inštancia / Softvérová záplata',
-	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '~~',
+	'Class:lnkSoftwareInstanceToSoftwarePatch+' => 'This link indicates that a software patch has been applied to a software instance.~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Softvérová záplata',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '~~',
@@ -1217,15 +778,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Názov softvérovej inštancie',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '~~',
-]);
-
-//
-// Class: lnkFunctionalCIToOSPatch
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkFunctionalCIToOSPatch' => 'väzba - Komponent / Záplata OS',
-	'Class:lnkFunctionalCIToOSPatch+' => '~~',
+	'Class:lnkFunctionalCIToOSPatch+' => 'Models the deployment of an OS Patch on a device.~~',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'Záplata OS',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '~~',
@@ -1235,15 +789,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'Názov funkčných CI',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '~~',
-]);
-
-//
-// Class: lnkDocumentToSoftware
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkDocumentToSoftware' => 'väzba Dokument / Softvér',
-	'Class:lnkDocumentToSoftware+' => '~~',
+	'Class:lnkDocumentToSoftware+' => 'Link used when a Document is applicable to Software.~~',
 	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Softvér',
 	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '~~',
@@ -1253,15 +800,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Názov dokumentu',
 	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '~~',
-]);
-
-//
-// Class: Subnet
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Subnet' => 'Podsieť',
-	'Class:Subnet+' => '~~',
+	'Class:Subnet+' => 'Segment of an IP network, defined by an IP address and a mask~~',
 	'Class:Subnet/Name' => '%1$s/%2$s~~',
 	'Class:Subnet/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Subnet/Attribute:description' => 'Popis',
@@ -1278,15 +818,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Subnet/Attribute:ip_mask+' => '~~',
 	'Class:Subnet/Attribute:vlans_list' => 'VLANs~~',
 	'Class:Subnet/Attribute:vlans_list+' => '~~',
-]);
-
-//
-// Class: VLAN
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:VLAN' => 'VLAN~~',
-	'Class:VLAN+' => '~~',
+	'Class:VLAN+' => 'A Virtual LAN is used to group together in a logical way networks Subnets and Physical Interfaces that participate in the same VLAN.~~',
 	'Class:VLAN/Attribute:vlan_tag' => 'VLAN Tag~~',
 	'Class:VLAN/Attribute:vlan_tag+' => '~~',
 	'Class:VLAN/Attribute:description' => 'Description~~',
@@ -1299,15 +832,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:VLAN/Attribute:subnets_list+' => '~~',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Physical network interfaces~~',
 	'Class:VLAN/Attribute:physicalinterfaces_list+' => '~~',
-]);
-
-//
-// Class: lnkSubnetToVLAN
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkSubnetToVLAN' => 'Link Subnet / VLAN~~',
-	'Class:lnkSubnetToVLAN+' => '~~',
+	'Class:lnkSubnetToVLAN+' => 'This many-to-many link indicates that a VLAN is present on a Subnet. Several VLANs can be present on the same Subnet and a VLAN can span several Subnets.~~',
 	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Subnet~~',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '~~',
@@ -1319,28 +845,14 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN Tag~~',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '~~',
-]);
-
-//
-// Class: NetworkInterface
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:NetworkInterface' => 'Sieťové rozhranie',
-	'Class:NetworkInterface+' => '~~',
+	'Class:NetworkInterface+' => 'Abstract class for all types of network interfaces.~~',
 	'Class:NetworkInterface/Attribute:name' => 'Názov',
 	'Class:NetworkInterface/Attribute:name+' => '~~',
 	'Class:NetworkInterface/Attribute:finalclass' => 'Typ',
 	'Class:NetworkInterface/Attribute:finalclass+' => 'Name of the final class~~',
-]);
-
-//
-// Class: IPInterface
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:IPInterface' => 'IP rozhranie',
-	'Class:IPInterface+' => '~~',
+	'Class:IPInterface+' => 'Abstract class. A type of Network Interface with an IP address~~',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP Adresa',
 	'Class:IPInterface/Attribute:ipaddress+' => '~~',
 	'Class:IPInterface/Attribute:macaddress' => 'MAC Adresa',
@@ -1353,31 +865,21 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:IPInterface/Attribute:ipmask+' => '~~',
 	'Class:IPInterface/Attribute:speed' => 'Rýchlosť',
 	'Class:IPInterface/Attribute:speed+' => '~~',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:PhysicalInterface' => 'Fyzické rozhranie',
-	'Class:PhysicalInterface+' => '~~',
+	'Class:PhysicalInterface+' => 'A type of IP Interface that represents a physical network interface (e.g. an Ethernet card).~~',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s~~',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Pripojitelné Zariadenie',
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Názov zariadenia',
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
+	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
+	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLANs~~',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '~~',
-]);
-
-//
-// Class: lnkPhysicalInterfaceToVLAN
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Link PhysicalInterface / VLAN~~',
-	'Class:lnkPhysicalInterfaceToVLAN+' => '~~',
+	'Class:lnkPhysicalInterfaceToVLAN+' => 'This link indicates when a network interface is part of a VLAN (Virtual Local Area Network).~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Physical Interface~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '~~',
@@ -1391,28 +893,14 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN Tag~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '~~',
-]);
-
-//
-// Class: LogicalInterface
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:LogicalInterface' => 'Logické rozhranie',
-	'Class:LogicalInterface+' => '~~',
+	'Class:LogicalInterface+' => 'IP Interface which is not associated permanently with a particular physical port, the association is dynamic. It can be used for Virtual Machine.~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Virtuálne zariadenie',
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Názov virtuálneho stroja',
 	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '~~',
-]);
-
-//
-// Class: FiberChannelInterface
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:FiberChannelInterface' => 'Optické rozhranie',
-	'Class:FiberChannelInterface+' => '~~',
+	'Class:FiberChannelInterface+' => 'Network Interface to a high-speed network technology primarily used for connecting Storage Systems.~~',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Rýchlosť',
 	'Class:FiberChannelInterface/Attribute:speed+' => '~~',
 	'Class:FiberChannelInterface/Attribute:topology' => 'Topológia',
@@ -1423,15 +911,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '~~',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Názov zariadenia',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '~~',
-]);
-
-//
-// Class: lnkConnectableCIToNetworkDevice
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkConnectableCIToNetworkDevice' => 'väzba - Komponent / Sieťové zariadenie',
-	'Class:lnkConnectableCIToNetworkDevice+' => '~~',
+	'Class:lnkConnectableCIToNetworkDevice+' => 'Defines on which network equipment a device is connected.~~',
 	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Sieťové zariadenie',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '~~',
@@ -1451,15 +932,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'down link~~',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'uplink',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'up link~~',
-]);
-
-//
-// Class: lnkApplicationSolutionToFunctionalCI
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'väzba - Aplikačné riešenie / Komponent',
-	'Class:lnkApplicationSolutionToFunctionalCI+' => '~~',
+	'Class:lnkApplicationSolutionToFunctionalCI+' => 'Models the membership of a device to an Application Solution. The meaning of this relationship varies depending on the types of Application Solution.~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Aplikačné riešenie',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '~~',
@@ -1469,15 +943,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'Názov funkčných CI',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '~~',
-]);
-
-//
-// Class: lnkApplicationSolutionToBusinessProcess
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'väzba - Aplikačné riešenie / Biznis proces',
-	'Class:lnkApplicationSolutionToBusinessProcess+' => '~~',
+	'Class:lnkApplicationSolutionToBusinessProcess+' => 'Models the relationship between an Application Solution and a Business Process.~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Biznis proces',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '~~',
@@ -1487,15 +954,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Názov aplikačného riešenia',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '~~',
-]);
-
-//
-// Class: Group
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Group' => 'Skupina',
-	'Class:Group+' => '~~',
+	'Class:Group+' => 'Group is designed to define explicit sets of configurations items for any project purpose. In contrast to Application Solution, a Group is not impacted by any of its component and does not impact them. For example when doing an OS migration, Group can be convenient to gather “Servers to be migrated”. Migrated servers being removed from the group as the migration progresses.~~',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Group/Attribute:name' => 'Názov',
 	'Class:Group/Attribute:name+' => '~~',
@@ -1523,15 +983,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Group/Attribute:ci_list+' => 'All the configuration items linked to this group~~',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Priateľské meno rodičovskej skupiny',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '~~',
-]);
-
-//
-// Class: lnkGroupToCI
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkGroupToCI' => 'väzba - Skupina / Zariadenie',
-	'Class:lnkGroupToCI+' => '~~',
+	'Class:lnkGroupToCI+' => 'This link indicates when a Functional CI is part of a Group.~~',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkGroupToCI/Attribute:group_id' => 'Skupina',
 	'Class:lnkGroupToCI/Attribute:group_id+' => '~~',
@@ -1543,39 +996,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkGroupToCI/Attribute:ci_name+' => '~~',
 	'Class:lnkGroupToCI/Attribute:reason' => 'Dôvod',
 	'Class:lnkGroupToCI/Attribute:reason+' => '~~',
-]);
-
-// Add translation for Fieldsets
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'ConfigMgmt:baseinfo' => 'General~~',
-	'ConfigMgmt:moreinfo' => 'CI specifics~~',
-	'Storage:moreinfo' => 'Storage specifics~~',
-	'ConfigMgmt:otherinfo' => 'Description~~',
-	'ConfigMgmt:dates' => 'Dates~~',
-	'Software:moreinfo' => 'Software specifics~~',
-	'Phone:moreinfo' => 'Phone specifics~~',
-	'Server:baseinfo' => 'Všeobecné informácie',
-	'Server:Date' => 'Dátum',
-	'Server:moreinfo' => 'Viac informácií',
-	'Server:otherinfo' => 'Iné informácie',
-	'Server:power' => 'Power supply~~',
-	'Class:Subnet/Tab:IPUsage' => 'Využívanosť IP adries',
-	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not~~',
-	'Class:Subnet/Tab:IPUsage-explain' => 'Rozhrania majúce IP adresu v rozsahu: <em>%1$s</em> do <em>%2$s</em>',
-	'Class:Subnet/Tab:FreeIPs' => 'Voľné IP adresy',
-	'Class:Subnet/Tab:FreeIPs-count' => 'Voľných IP adries: %1$s',
-	'Class:Subnet/Tab:FreeIPs-explain' => 'Tu je extrakt 10 voľných IP adries',
-	'Class:Document:PreviewTab' => 'Preview~~',
-]);
-
-//
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkDocumentToFunctionalCI' => 'väzba - Dokument / Komponent',
-	'Class:lnkDocumentToFunctionalCI+' => '~~',
+	'Class:lnkDocumentToFunctionalCI+' => 'Link used when a Document is applicable to a Functional CI.~~',
 	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s~~',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Komponent',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '~~',
@@ -1585,13 +1007,25 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Názov dokumentu',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
-]);
-
-//
-// Application Menu
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'ConfigMgmt:otherinfo' => 'Description~~',
+	'ConfigMgmt:dates' => 'Dates~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
+	'Server:baseinfo' => 'Všeobecné informácie',
+	'Server:moreinfo' => 'Viac informácií',
+	'Server:Date' => 'Dátum',
+	'Server:otherinfo' => 'Iné informácie',
+	'Server:power' => 'Power supply~~',
+	'Class:Subnet/Tab:IPUsage' => 'Využívanosť IP adries',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not~~',
+	'Class:Subnet/Tab:IPUsage-explain' => 'Rozhrania majúce IP adresu v rozsahu: <em>%1$s</em> do <em>%2$s</em>',
+	'Class:Subnet/Tab:FreeIPs' => 'Voľné IP adresy',
+	'Class:Subnet/Tab:FreeIPs-count' => 'Voľných IP adries: %1$s',
+	'Class:Subnet/Tab:FreeIPs-explain' => 'Tu je extrakt 10 voľných IP adries',
+	'Class:Document:PreviewTab' => 'Preview~~',
 	'Menu:Application' => 'Aplikácie',
 	'Menu:Application+' => 'All applications~~',
 	'Menu:DBServer' => 'Databázové servery',
@@ -1636,15 +1070,4 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:OSVersion+' => '~~',
 	'Menu:Software' => 'Katalóg softvéru',
 	'Menu:Software+' => 'Software catalog~~',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
-	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
-	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 ]);
