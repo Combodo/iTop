@@ -793,8 +793,9 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100% !default;
 			color: $ibo-navigation-menu--user--text-color;
 		}
 
-		.ibo-navigation-menu--user-notifications--toggler--icon {
-			padding-left: $ibo-navigation-menu--user-notifications--toggler--icon--padding-left;
+      .ibo-navigation-menu--user-notifications--toggler--icon {
+        position: relative;
+        padding-left: $ibo-navigation-menu--user-notifications--toggler--icon--padding-left;
 		}
 	}
 
