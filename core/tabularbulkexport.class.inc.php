@@ -363,13 +363,13 @@ EOF
 			}
 		}
 		foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
-			foreach (MetaModel::GetZListItems($sClassName, 'details') as $sAttCode) {
-				//$oAttDef = Metamodel::GetAttributeDef($sClassName, $sAttCode);
-				if (utils::IsNullOrEmptyString($sAlias)) {
-					$aFields[] = "$sAttCode";
-				} else {
-					$aFields[] = "$sAlias.$sAttCode";
+			foreach (MetaModel::ListAttributeDefs($sClassName) as $oAttribute) {
+				$sAttCode = $oAttribute->GetCode();
+				if (! $this->IsExportableField($sClassName, $sAttCode, $oAttribute)) {
+					continue;
 				}
+				$sCurrentAlias = utils::IsNullOrEmptyString($sAlias) ? "" : "$sAlias.";
+				$aFields[] = "{$sCurrentAlias}{$sAttCode}";
 			}
 		}
 
