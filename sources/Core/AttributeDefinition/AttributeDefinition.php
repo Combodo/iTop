@@ -389,9 +389,11 @@ abstract class AttributeDefinition
 	 *
 	 * @return bool
 	 * @since 3.1.0 N°3190
-	 *
+	 * @since 3.3.x Changed from static to non-static so that subclasses can decide
+	 *              based on instance-level configuration (e.g. display_style on LinkedSets).
+	 *              Overriding implementations in extensions must drop the `static` modifier.
 	 */
-	public static function IsBulkModifyCompatible(): bool
+	public function IsBulkModifyCompatible(): bool
 	{
 		return static::IsScalar();
 	}

@@ -100,10 +100,18 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 		return $oRet;
 	}
 
-	/** @inheritDoc */
-	public static function IsBulkModifyCompatible(): bool
+	/**
+	 * Bulk modify is only meaningful for the property-style (tagset-like) widget.
+	 * The tab-style widget cannot be rendered inside the bulk modify form, and
+	 * eagerly materialising large indirect link sets for every selected object
+	 * caused timeouts.
+	 *
+	 * @inheritDoc
+	 * @since 3.3.x
+	 */
+	public function IsBulkModifyCompatible(): bool
 	{
-		return true;
+		return $this->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_PROPERTY;
 	}
 
 }
