@@ -56,7 +56,7 @@ HEADER;
 		$sOutput = $this->performExportTesting($aParams, $this->sLogin);
 
 		$sExpectedHeader = <<<HEADER
-"Person","Organization","Email","Login","Language","Status","Profiles","Allowed Organizations","log"
+"Person","Last name","First name","Email","Organization","Login","Language","Status","log","Type of account","Full name","Person","Person->Obsolete","Person->Organization","Person->Organization->Obsolete"
 
 HEADER;
 
@@ -85,14 +85,20 @@ HEADER;
 
 		$sExpectedHeader = <<<HEADER
 <td>Person</td>
-<td>Organization</td>
+<td>Last name</td>
+<td>First name</td>
 <td>Email</td>
+<td>Organization</td>
 <td>Login</td>
 <td>Language</td>
 <td>Status</td>
-<td>Profiles</td>
-<td>Allowed Organizations</td>
 <td>log</td>
+<td>Type of account</td>
+<td>Full name</td>
+<td>Person</td>
+<td>Person->Obsolete</td>
+<td>Person->Organization</td>
+<td>Person->Organization->Obsolete</td>
 HEADER;
 		$this->assertStringContainsString("$sExpectedHeader", $sOutput, "Header ($sExpectedHeader)\n should be in export-v2 answer: \n$sOutput");
 
