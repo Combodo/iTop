@@ -13,8 +13,8 @@ use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
-use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use Exception;
+use MetaModel;
 
 /**
  * A block to choose some values from attribute of a given class.
@@ -58,7 +58,7 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 
 		try {
 			/** @var \ModelReflection $oModelReflection */
-			$oModelReflection = ServiceLocator::GetInstance()->get('ModelReflection');
+			$oModelReflection = MetaModel::GetServiceLocator()->get('ModelReflection');
 			$aValues = $oModelReflection->GetAllowedValues_att($sClass, $sAttCode);
 
 			$oOptionsRegister->SetOption('choices', array_flip($aValues ?? []));

@@ -563,6 +563,17 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
         </event_datum>
       </event_data>
     </event>
+    <event id="EVENT_SERVICE_LOCATOR_INITIALIZED" _delta="define">
+    <name>Service Locator Initialized</name>
+    <internal>true</internal>
+    <description><![CDATA[Inform the listeners that Service Locator has been (re)initialized]]></description>
+    <event_data>
+      <event_datum id="file_name">
+        <description>The configuration file used to initialize Service Locator</description>
+        <type>string</type>
+      </event_datum>
+    </event_data>
+  </event>
   </events>
   <meta>
     <classes>

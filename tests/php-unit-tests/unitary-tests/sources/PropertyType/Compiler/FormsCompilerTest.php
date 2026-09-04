@@ -6,7 +6,6 @@
  */
 
 use Combodo\iTop\PropertyType\Compiler\PropertyTypeCompiler;
-use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 class FormsCompilerTest extends ItopDataTestCase
@@ -24,7 +23,7 @@ class FormsCompilerTest extends ItopDataTestCase
 	 */
 	public function testCompileFormFromXML(string $sXMLContent, string $sExpectedPHP)
 	{
-		ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
+		MetaModel::GetServiceLocator()->RegisterService('ModelReflection', new ModelReflectionRuntime());
 
 		$sProducedPHP = PropertyTypeCompiler::GetInstance()->CompileFormFromXML($sXMLContent);
 

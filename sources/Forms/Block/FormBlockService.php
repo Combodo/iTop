@@ -8,13 +8,10 @@
 namespace Combodo\iTop\Forms\Block;
 
 use Combodo\iTop\Forms\Block\Base\FormBlock;
-use Combodo\iTop\PropertyType\Compiler\PropertyTypeCompiler;
 use Combodo\iTop\PropertyType\PropertyTypeService;
-use Combodo\iTop\Service\Cache\DataModelDependantCache;
-use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
+use MetaModel;
 use ModelReflection;
 use ModelReflectionRuntime;
-use utils;
 
 class FormBlockService
 {
@@ -22,7 +19,7 @@ class FormBlockService
 
 	protected function __construct(?ModelReflection $oModelReflection = null)
 	{
-		ServiceLocator::GetInstance()->RegisterService('ModelReflection', $oModelReflection ?? new ModelReflectionRuntime());
+		MetaModel::GetServiceLocator()->RegisterService('ModelReflection', $oModelReflection ?? new ModelReflectionRuntime());
 	}
 
 	final public static function GetInstance(?ModelReflection $oModelReflection = null): FormBlockService

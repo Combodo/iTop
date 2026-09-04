@@ -189,7 +189,7 @@ class DataModelDependantCache
 	protected function GetStorageRootDir(): string
 	{
 		// Could be forced by tests
-		return $this->sStorageRootDir ?? utils::GetCachePath();
+		return $this->sStorageRootDir ?? utils::GetCachePath().DIRECTORY_SEPARATOR.'DataModelDependantCache';
 	}
 
 	/**

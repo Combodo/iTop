@@ -5,9 +5,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\PropertyType\Compiler\PropertyTypeCompiler;
 use Combodo\iTop\PropertyType\PropertyTypeDesign;
-use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 class XMLSerializerTest extends ItopDataTestCase
@@ -24,7 +22,7 @@ class XMLSerializerTest extends ItopDataTestCase
 	 */
 	public function testSerializeXML($inputContent, string $sPropertyTypeXML, string $sExpectedXMLContent)
 	{
-		ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
+		MetaModel::GetServiceLocator()->RegisterService('ModelReflection', new ModelReflectionRuntime());
 
 		$oDOMDocument = new PropertyTypeDesign();
 		$oDOMDocument->preserveWhiteSpace = false;
@@ -184,7 +182,7 @@ XML,
 	 */
 	public function testUnserializeXML($sInputXMLContent, string $sPropertyTypeXML, $expectedValue)
 	{
-		ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
+		MetaModel::GetServiceLocator()->RegisterService('ModelReflection', new ModelReflectionRuntime());
 
 		$oDoc = new PropertyTypeDesign();
 		$oDoc->loadXML($sInputXMLContent);

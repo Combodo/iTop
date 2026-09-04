@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<service_locator>
+  <services>
+    <service id="DataFeatureRemoverExtension">
+      <class id="Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService"/>
+    </service>
+  </services>
+</service_locator>

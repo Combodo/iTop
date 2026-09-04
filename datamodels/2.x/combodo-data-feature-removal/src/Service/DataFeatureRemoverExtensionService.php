@@ -13,34 +13,19 @@ use MetaModel;
 
 class DataFeatureRemoverExtensionService
 {
-	private static DataFeatureRemoverExtensionService $oInstance;
 	private ?iTopExtensionsMap $oMap = null;
 	private array $aItopExtensions = [];
 	private array $aIncludingExtensionsByModuleName = [];
 
-	protected function __construct()
+	public function __construct()
 	{
-	}
-
-	final public static function GetInstance(): DataFeatureRemoverExtensionService
-	{
-		if (!isset(self::$oInstance)) {
-			self::$oInstance = new DataFeatureRemoverExtensionService();
-		}
-
-		return self::$oInstance;
-	}
-
-	final public static function SetInstance(?DataFeatureRemoverExtensionService $oInstance): void
-	{
-		self::$oInstance = $oInstance;
 	}
 
 	/**
 	 * @param string $sModuleName
 	 *
 	 * @return array
-	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
+	 * @throws \Exception
 	 */
 	public function GetIncludingExtensions(string $sModuleName): array
 	{
@@ -62,6 +47,7 @@ class DataFeatureRemoverExtensionService
 
 	/**
 	 * @return \iTopExtensionsMap
+	 * @throws \Exception
 	 */
 	public function GetExtensionMap(): iTopExtensionsMap
 	{
@@ -74,6 +60,7 @@ class DataFeatureRemoverExtensionService
 
 	/**
 	 * @return iTopExtension[]
+	 * @throws \Exception
 	 */
 	public function ReadItopExtensions(): array
 	{

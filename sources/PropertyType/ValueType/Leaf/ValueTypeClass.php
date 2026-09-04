@@ -10,8 +10,7 @@ namespace Combodo\iTop\PropertyType\ValueType\Leaf;
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\PropertyType\ValueType\Branch\AbstractBranchValueType;
-use Combodo\iTop\PropertyType\ValueType\Branch\ValueTypePropertyTree;
-use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
+use MetaModel;
 use utils;
 
 /**
@@ -32,7 +31,7 @@ class ValueTypeClass extends AbstractLeafValueType
 
 		$sCategories = $oDomNode->GetChildText('categories-csv', '');
 		/** @var \ModelReflection $oModelReflection */
-		$oModelReflection = ServiceLocator::GetInstance()->get('ModelReflection');
+		$oModelReflection = MetaModel::GetServiceLocator()->get('ModelReflection');
 
 		$sChoices = "[\n";
 		$aClasses = $oModelReflection->GetClasses($sCategories, true);

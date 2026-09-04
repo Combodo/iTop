@@ -56,7 +56,6 @@ use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Twig\Error\SyntaxError;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use utils;
-use ZipArchive;
 
 abstract class Controller extends AbstractController
 {
@@ -129,6 +128,9 @@ abstract class Controller extends AbstractController
 	 */
 	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [], array $aThemes = ['application/forms/itop_console_layout.html.twig', 'application/forms/wip_form_demonstrator.html.twig'])
 	{
+		if (is_null(MetaModel::GetServiceLocator())) {
+			MetaModel::InitServiceLocator();
+		}
 		IssueLog::Enable(APPROOT.'log/error.log');
 		$this->aLinkedScripts = [];
 		$this->aLinkedStylesheets = [];

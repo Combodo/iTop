@@ -7,24 +7,89 @@
 
 namespace Combodo\iTop\Service\DependencyInjection;
 
+use Combodo\iTop\PropertyType\Compiler\PropertyTypeCompilerException;
+use Combodo\iTop\Service\Events\EventData;
+use Combodo\iTop\Service\Events\EventService;
+use Config;
+use DOMDocument;
 use Psr\Container\ContainerInterface;
 
 class ServiceLocator implements ContainerInterface
 {
-	private static ServiceLocator $oInstance;
 	private array $aServices = [];
+	private array $aClasses = [];
 
-	protected function __construct()
+	public const DEFAULT_PRODUCTION_SERVICES = __DIR__.DIRECTORY_SEPARATOR.'ServiceLocator.xml';
+
+	public function __construct()
 	{
 	}
 
-	final public static function GetInstance(): ServiceLocator
+	final public function InitFromConfig(Config $oConfig): void
 	{
-		if (!isset(static::$oInstance)) {
-			static::$oInstance = new ServiceLocator();
-		}
+		$this->InitFromFile($oConfig->Get('service_locator.services.production') ?? self::DEFAULT_PRODUCTION_SERVICES);
+	}
 
-		return static::$oInstance;
+	/**
+	 * Init ServiceLocator from an XML file
+	 *
+	 * @param string $sFileName
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	final public function InitFromFile(string $sFileName): void
+	{
+		$this->aServices = [];
+		$this->aClasses = [];
+
+		$this->AddClassesFromFile($sFileName);
+
+		// Service locator has been (re)initialized
+		EventService::FireEvent(new EventData(sEvent: \EVENT_SERVICE_LOCATOR_INITIALIZED, aEventData: ['file_name' => $sFileName]));
+	}
+
+	/**
+	 * Add or replace classes from an XML file
+	 *
+	 * @param string $sFileName
+	 *
+	 * @return void
+	 */
+	final public function AddClassesFromFile(string $sFileName): void
+	{
+		$oDoc = new DOMDocument();
+		libxml_clear_errors();
+		$oDoc->loadXML(file_get_contents($sFileName));
+		$aErrors = libxml_get_errors();
+		if (count($aErrors) > 0) {
+			throw new PropertyTypeCompilerException('Property types definition not correctly formatted!');
+		}
+		$oNode = $oDoc->firstChild;
+		$oNode = $oNode->getElementsByTagName('services')->item(0);
+		foreach ($oNode->getElementsByTagName('service') as $oServiceElement) {
+			$sServiceName = $oServiceElement->getAttribute('id');
+			$oClassNode = $oNode->getElementsByTagName('class')->item(0);
+			if (!$oClassNode) {
+				continue;
+			}
+			$sClassName = $oClassNode->getAttribute('id');
+
+			$this->RegisterClass($sServiceName, $sClassName);
+		}
+	}
+
+	/**
+	 * Register a Service with the instance of the service
+	 *
+	 * @param string $sServiceName
+	 * @param string $sClassName
+	 *
+	 * @return void
+	 */
+	final public function RegisterClass(string $sServiceName, string $sClassName): void
+	{
+		$this->aClasses[$sServiceName] = $sClassName;
 	}
 
 	/**
@@ -50,15 +115,22 @@ class ServiceLocator implements ContainerInterface
 	 */
 	public function get(string $id): mixed
 	{
-		if (!isset($this->aServices[$id])) {
-			throw new DIException("Service ".json_encode($id)." not found");
+		if (isset($this->aServices[$id])) {
+			return $this->aServices[$id];
 		}
 
-		return $this->aServices[$id];
+		// Search in classes
+		if (!isset($this->aClasses[$id])) {
+			throw new DIException("Service ".json_encode($id)." not found");
+		}
+		$oService = new $this->aClasses[$id]();
+		$this->RegisterService($id, $oService);
+
+		return $oService;
 	}
 
 	public function has(string $id): bool
 	{
-		return isset($this->aServices[$id]);
+		return isset($this->aServices[$id]) || isset($this->aClasses[$id]);
 	}
 }

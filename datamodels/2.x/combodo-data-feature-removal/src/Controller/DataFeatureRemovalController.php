@@ -16,7 +16,6 @@ use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalLog;
 use Combodo\iTop\DataFeatureRemoval\Service\DataCleanupService;
-use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
 use Combodo\iTop\DataFeatureRemoval\Service\StaticDeletionPlan;
 use Combodo\iTop\Service\Session\SessionParameters;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
@@ -77,7 +76,7 @@ class DataFeatureRemovalController extends Controller
 		$this->iCount = 0;
 		foreach ($this->aCountClassesToCleanup as $sClass => $iCount) {
 			$sModuleName = MetaModel::GetModuleName($sClass);
-			$aExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetIncludingExtensions($sModuleName);
+			$aExtensions = Metamodel::GetServiceLocator()->Get('DataFeatureRemoverExtension')->GetIncludingExtensions($sModuleName);
 			$sExtensions = implode(' ', $aExtensions);
 			$aColumns = ['ClassName','FeatureName','Module','Occurrence'];
 			$aData[] = [$sClass,$sExtensions,$sModuleName,$iCount];
@@ -190,7 +189,7 @@ class DataFeatureRemovalController extends Controller
 			);
 
 			if (count($aSelectedModules) === 0) {
-				$aSelectedExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
+				$aSelectedExtensions = Metamodel::GetServiceLocator()->Get('DataFeatureRemoverExtension')->GetExtensionMap()->GetSelectedExtensions($oConfig, array_keys($aAddedExtensions), array_keys($aRemovedExtensions));
 				$oParameters->SetParameter('selected_extensions', $this->ConvertIntoSetupFormat($aSelectedExtensions));
 			}
 
@@ -364,9 +363,9 @@ class DataFeatureRemovalController extends Controller
 	{
 		$aExtensionsData = [];
 		if ($bIncludePackageExtensions) {
-			$aExtensionsRef = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetAllExtensionsWithPreviouslyInstalled();
+			$aExtensionsRef = Metamodel::GetServiceLocator()->Get('DataFeatureRemoverExtension')->GetExtensionMap()->GetAllExtensionsWithPreviouslyInstalled();
 		} else {
-			$aExtensionsRef = DataFeatureRemoverExtensionService::GetInstance()->ReadItopExtensions();
+			$aExtensionsRef = Metamodel::GetServiceLocator()->Get('DataFeatureRemoverExtension')->ReadItopExtensions();
 		}
 
 		foreach ($aExtensionsRef as $oExtension) {

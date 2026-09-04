@@ -20,6 +20,7 @@
 
 use Combodo\iTop\Application\EventRegister\ApplicationEvents;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
@@ -130,6 +131,8 @@ abstract class MetaModel
 	private static $m_aClassToFile = [];
 	/** @var string */
 	protected static $m_sEnvironment = ITOP_DEFAULT_ENV;
+	/** @var \Combodo\iTop\Service\DependencyInjection\ServiceLocator  */
+	private static ?ServiceLocator $oServiceLocator = null;
 
 	/**
 	 * Objects currently created/updated.
@@ -5778,6 +5781,7 @@ abstract class MetaModel
 				// Event service must be initialized after the MetaModel startup, otherwise it cannot discover classes implementing the iEventServiceSetup interface
 				EventService::InitService();
 				EventService::FireEvent(new EventData(ApplicationEvents::APPLICATION_EVENT_METAMODEL_STARTED));
+				self::$oServiceLocator = new ServiceLocator(self::GetConfig());
 				return;
 			}
 		}
@@ -5793,6 +5797,8 @@ abstract class MetaModel
 		// Event service must be initialized after the MetaModel startup, otherwise it cannot discover classes implementing the iEventServiceSetup interface
 		EventService::InitService();
 		EventService::FireEvent(new EventData(ApplicationEvents::APPLICATION_EVENT_METAMODEL_STARTED));
+		self::$oServiceLocator = new ServiceLocator();
+		self::$oServiceLocator->InitFromConfig(self::GetConfig());
 	}
 
 	/**
@@ -7084,6 +7090,11 @@ abstract class MetaModel
 				}
 			}
 		}
+	}
+
+	public static function GetServiceLocator(): ?ServiceLocator
+	{
+		return self::$oServiceLocator;
 	}
 }
 
