@@ -8,6 +8,7 @@ body:
         Please explain why you're creating this issue :
         - Please describe what's your improvement proposition.
         - Then tell us if you're willing to create a PR for this enhancement ? If so, we'll indicate in the issue if we're interested in it.
+        - The more users are affected and the greater is the impact, the more likely this improvement will be accepted. If you identified a bug and have an improvement proposition, please use the 'Bug report' template instead."
 
   - type: textarea
     id: enhancement_details

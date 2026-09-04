@@ -1,6 +1,7 @@
 <!--
 IMPORTANT: Before creating your PR, please create an issue first to know if Combodo is interested in your contribution (not needed for translations PR).
 Since we may refuse a PR, it's preferable to create an issue first, to avoid spending time coding something that won't be accepted.
+PR that will benefit the most users and has a greater impact on the product are more likely to be accepted, so please explain your use case and why you think it would be useful for the community.
 
 Once you've done it, and we confirmed we're interested in it, please follow the guidelines within this PR template before submitting it, it will greatly help us process your PR. 🙏
 
@@ -9,10 +10,10 @@ Any PRs not following the guidelines or with missing information will not be con
 
 ## Base information
 
-| Question                                                                        | Answer                               |
-|---------------------------------------------------------------------------------|--------------------------------------|
-| Related to a SourceForge thread / Another PR / A GitHub Issue / Combodo ticket? | <!-- Put the URL -->                 |
-| Type of change?                                                                 | Bug fix / Enhancement / Translations |
+| Question                                                                        | Answer                                |
+|---------------------------------------------------------------------------------|---------------------------------------|
+| Related to a SourceForge thread / Another PR / A GitHub Issue / Combodo ticket? | <!-- Put the URL or ticket number --> |
+| Type of change?                                                                 | Bug fix / Enhancement / Translations  |
 
 ## Symptom (bug) / Objective (enhancement)
 
@@ -70,6 +71,7 @@ Explain in details how you are proposing to solve this:
 Don't remove these lines, check them once done.
 -->
 
+- [ ] If my PR is a bug fix or an enhancement, I opened an issue that got reviewed and approved by Combodo
 - [ ] I have performed a self-review of my code
 - [ ] I have tested all changes I made on an iTop instance
 - [ ] I have added a unit test, otherwise I have explained why I couldn't
