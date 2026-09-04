@@ -95,7 +95,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Casteleyn, Thomas (a.k.a [@Hipska](https://www.github.com/Hipska))
 - Castro, Randall Badilla
 - Colantoni, Maria Laura
-- Couronné, Guy
+- Couronné, Guy [@GurneyHallack](https://github.com/GurneyHallack)
 - Dejin, Bie (a.k.a [@bdejin](https://github.com/bdejin))
 - Delicado, Elodie
 - Dvořák, Lukáš
@@ -110,7 +110,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Khamit, Shamil
 - Kincel, Martin
 - Konečný, Kamil
-- Kunin, Vladimir
+- Kunin, Vladimir (a.k.a [@vbkunin](https://github.com/vbkunin)
 - Lassiter, Denis (a.k.a [@delassiter](https://github.com/delassiter))
 - Lazcano, Federico
 - Lucas, Jonathan
@@ -128,6 +128,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Šafránek, Jaroslav (a.k.a [jkcinik](https://sourceforge.net/u/jkcinik/profile/) on SourceForge)
 - Seki, Shoji
 - Shilov, Vladimir
+- Srivastava, Vaibhav (a.k.a [@vaibhav8a](https://github.com/vaibhav8a))
 - Stetina, Pavel (a.k.a [@Stetinac](https://github.com/Stetinac))
 - Stukalov, Ilya (a.k.a [@ilya](https://www.github.com/ilya-stukalov))
 - Tarjányi, Csaba (a.k.a [@tacsaby](https://github.com/tacsaby))
