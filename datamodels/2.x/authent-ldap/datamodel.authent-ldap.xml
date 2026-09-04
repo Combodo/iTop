@@ -104,6 +104,16 @@
 			$this->LogInfo($bDebug, "ldap_set_option('LDAP_OPT_DEBUG_LEVEL', '{$aOptions[LDAP_OPT_DEBUG_LEVEL]}') returned ".($bRet ? 'true' : 'false'));
 		}
 
+		// Set TLS options globally BEFORE ldap_connect() - required for ldaps:// with client certificates
+		// (e.g. Google Workspace Secure LDAP). OpenLDAP requires TLS context options (LDAP_OPT_X_TLS_CACERTFILE,
+		// LDAP_OPT_X_TLS_CERTFILE, LDAP_OPT_X_TLS_KEYFILE) to be set on the global context (null) before
+		// ldap_connect() is called, otherwise the TLS handshake fails on the first attempt per PHP-FPM worker.
+		foreach ($aOptions as $name => $value)
+		{
+			ldap_set_option(null, $name, $value);
+			$this->LogInfo($bDebug, "ldap_set_option(null, '$name', '$value')");
+		}
+    
 		$hDS = @ldap_connect($sURI);
 		if ($hDS === false)
 		{
