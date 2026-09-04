@@ -20,6 +20,7 @@
 
 namespace Combodo\iTop\Portal\Helper;
 
+use CoreException;
 use LogChannels;
 use UserRights;
 use IssueLog;
@@ -161,6 +162,123 @@ class SecurityHelper
 		}
 
 		return true;
+	}
+
+
+	/**
+	 * Returns object if the current user is allowed to do the $sAction on an $sObjectClass object (with $sObjectId id)
+	 * Checks are:
+	 * - Has a scope query for the $sObjectClass /$sObjectId/ $sAction
+	 * - Is allowed by datamodel for $sObjectClass / $sAction
+	 *
+	 * @param string $sAction Must be in UR_ACTION_READ|UR_ACTION_MODIFY|UR_ACTION_CREATE
+	 * @param string $sObjectClass
+	 * @param string $sObjectId
+	 * @param bool $bMustBeFound
+	 *
+	 * @throws \CoreExceptionif no result found and $bMustBeFound=true
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function GetObjectForAction($sAction, $sObjectClass, $sObjectId, $bMustBeFound)
+	{
+		$sDebugTracePrefix = __CLASS__.' / '.__METHOD__.' : Returned object for action '.$sAction.' on '.$sObjectClass.'::'.$sObjectId;
+
+		// Forcing allowed writing on the object if necessary. This is used in some particular cases.
+		$bObjectIsCurrentUser = ($sObjectClass === 'Person' && $sObjectId == UserRights::GetContactId());
+		if(in_array($sAction , array(UR_ACTION_MODIFY, UR_ACTION_READ)) && $bObjectIsCurrentUser){
+			return MetaModel::GetObject($sObjectClass, $sObjectId, true,true);
+		}
+
+		// Checking the scopes layer
+		// - Transforming scope action as there is only 2 values
+		$sScopeAction = ($sAction === UR_ACTION_READ) ? UR_ACTION_READ : UR_ACTION_MODIFY;
+		// - Retrieving the query. If user has no scope, it can't access that kind of objects
+		$oScopeQuery = $this->oScopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sObjectClass, $sScopeAction);
+		if ($oScopeQuery === null)
+		{
+			IssueLog::Debug($sDebugTracePrefix.' as there was no scope defined for action '.$sScopeAction.' and profiles '.implode('/', UserRights::ListProfiles()), LogChannels::PORTAL);
+			if ($bMustBeFound)
+			{
+				$sNotFoundErrorMessage = "No result for the single row query";
+				IssueLog::Info($sNotFoundErrorMessage, LogChannels::CMDB_SOURCE, [
+					'class' => $sObjectClass,
+					'key' => $sObjectId
+				]);
+				throw new CoreException($sNotFoundErrorMessage);
+			}
+			return null;
+		}
+
+		// Checking if object status is in cache (to avoid unnecessary query)
+		if (isset(static::$aAllowedScopeObjectsCache[$sScopeAction][$sObjectClass][$sObjectId])) {
+			if (static::$aAllowedScopeObjectsCache[$sScopeAction][$sObjectClass][$sObjectId] === false)
+			{
+				IssueLog::Debug($sDebugTracePrefix.' as it was denied in the scope objects cache', LogChannels::PORTAL);
+				if ($bMustBeFound)
+				{
+					$sNotFoundErrorMessage = "No result for the single row query";
+					IssueLog::Info($sNotFoundErrorMessage, LogChannels::CMDB_SOURCE, [
+						'class' => $sObjectClass,
+						'key' => $sObjectId
+					]);
+					throw new CoreException($sNotFoundErrorMessage);
+				}
+				return null;
+			} else {
+				return MetaModel::GetObject($sObjectClass, $sObjectId, true,true);
+			}
+		}
+		else
+		{
+
+			// Modifying query to filter on the ID
+			// - Adding expression
+			$sObjectKeyAtt = MetaModel::DBGetKey($sObjectClass);
+			$oFieldExp = new FieldExpression($sObjectKeyAtt, $oScopeQuery->GetClassAlias());
+			$oBinExp = new BinaryExpression($oFieldExp, '=', new VariableExpression('object_id'));
+			$oScopeQuery->AddConditionExpression($oBinExp);
+			// - Setting value
+			$aQueryParams = $oScopeQuery->GetInternalParams();
+			$aQueryParams['object_id'] = $sObjectId;
+			$oScopeQuery->SetInternalParams($aQueryParams);
+			unset($aQueryParams);
+			IssueLog::Error('requete:'.$oScopeQuery->ToOQL(true));
+			// - Checking if query result is null (which means that the user has no right to view this specific object)
+			$oSet = new DBObjectSet($oScopeQuery);
+			$oObject = $oSet->Fetch();
+			if ($oObject === null)
+			{
+				// Updating cache
+				static::$aAllowedScopeObjectsCache[$sScopeAction][$sObjectClass][$sObjectId] = false;
+				IssueLog::Debug($sDebugTracePrefix.' as there was no result for the following scope query : '.$oScopeQuery->ToOQL(true), LogChannels::PORTAL);
+			} else {
+				// Updating cache
+				static::$aAllowedScopeObjectsCache[$sScopeAction][$sObjectClass][$sObjectId] = true;
+			}
+		}
+
+		// Checking reading security layer. The object could be listed, check if it is actually allowed to view it
+		if (UserRights::IsActionAllowed($sObjectClass, $sAction) == UR_ALLOWED_NO)	{
+			// For security reasons, we don't want to give the user too many information on why he cannot access the object.
+			//throw new SecurityException('User not allowed to view this object', array('class' => $sObjectClass, 'id' => $sObjectId));
+			IssueLog::Debug($sDebugTracePrefix.' as the user is not allowed to access this object according to the datamodel security (cf. Console settings)', LogChannels::PORTAL);
+			$oObject = null;
+		}
+
+		if ($bMustBeFound && $oObject === null )
+		{
+			$sNotFoundErrorMessage = "No result for the single row query";
+			IssueLog::Info($sNotFoundErrorMessage, LogChannels::CMDB_SOURCE, [
+				'class' => $sObjectClass,
+				'key' => $sObjectId
+			]);
+			throw new CoreException($sNotFoundErrorMessage);
+		}
+
+		return $oObject;
 	}
 
 	/**
