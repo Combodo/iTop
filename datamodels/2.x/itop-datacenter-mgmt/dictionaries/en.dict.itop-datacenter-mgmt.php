@@ -3,7 +3,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @copyright Copyright (C) 2010-2026 Combodo SAS
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -22,6 +22,13 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
+//
+// Class: PowerConnection
+//
+
 Dict::Add('EN US', 'English', 'English', [
-	// Dictionary entries go here
+	'Class:PowerConnection/Attribute:datacenterdevices_list+' => 'All the datacenter devices using this power connection',
+	'Class:PowerConnection/Attribute:pdus_list+' => 'All the PDUs using this power connection',
+	'Class:PowerConnection/Attribute:powered_devices' => 'Powered Devices',
+	'Class:PowerConnection/Attribute:powered_devices+' => '',
 ]);
