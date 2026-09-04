@@ -8,6 +8,7 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Exception;
 use IssueLog;
 use LogChannels;
+use MetaModel;
 use utils;
 
 /**
@@ -23,6 +24,10 @@ class CMDBSourceTest extends ItopTestCase
 
 		parent::setUp();
 		$this->RequireOnceItopFile('/core/cmdbsource.class.inc.php');
+		$sEnv = 'production';
+		$sConfigFile = APPCONF.$sEnv.'/config-itop.php';
+
+		MetaModel::Startup($sConfigFile, false, true, false, $sEnv);
 	}
 
 	protected function tearDown(): void
@@ -119,6 +124,34 @@ class CMDBSourceTest extends ItopTestCase
 				"ENUM('value 1 (with parenthesis)','value 2') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
 				"enum('value 1 (with parenthesis)','value 3') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
 			],
+		];
+	}
+
+	/**
+	 * @covers       CMDBSource::GetFieldSpec
+	 * @dataProvider fieldSpecsProvider
+	 */
+	public function testGetFieldSpec(string $sTable, string $sField, false|string $expected): void
+	{
+		$this->assertEquals($expected, CMDBSource::getFieldSpec($sTable, $sField));
+	}
+
+	public function fieldSpecsProvider(): array
+	{
+		return [
+			'Unknown table' => ['unknown', 'unknown', false],
+			'Unknown field' => ['ticket', 'unknown', false],
+			'Primary key' => ['ticket', 'id', 'int(11) NOT NULL'],
+			'External key' => ['ticket', 'org_id', 'int(11) DEFAULT 0'],
+			'Integer nullable' => ['datacenterdevice' , 'nb_u', 'int(11) DEFAULT NULL'],
+			'String empty default' => ['ticket', 'ref', "varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT ''"],
+			'String simple default' => ['ticket', 'finalclass', "varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'Ticket'"],
+			'String numeric default' => ['datacenterdevice', 'redundancy', "varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '1'"],
+//			'String required' => ['', '', "varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''"], // does not seem to exist in iTop model?
+			'Text nullable' => ['ticket', 'private_log', 'longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL'],
+			'Enum simple' => ['physicaldevice', 'status', "enum('stock','implementation','production','obsolete') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'production'"],
+			'Enum numbers' => ['ticket_request', 'priority', "enum('1','2','3','4') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '4'"],
+			'Datetime nullable' => ['ticket', 'last_update', "datetime DEFAULT NULL"],
 		];
 	}
 
