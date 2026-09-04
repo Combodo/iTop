@@ -117,7 +117,7 @@
           <count_max>0</count_max>
           <duplicates>false</duplicates>
           <filter>SELECT Group WHERE status != 'obsolete'</filter>
-          <display_style>property</display_style>
+          <display_style>tab</display_style>
         </field>
       </fields>
       <presentation>
