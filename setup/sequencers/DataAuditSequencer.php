@@ -67,7 +67,6 @@ class DataAuditSequencer extends StepSequencer
 					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', []);
 					$aSelectedExtensionCodes = $this->oParams->Get('selected_extensions', []);
 					$bUseSymbolicLinks = $this->oParams->Get('use_symbolic_links', null) === 'on';
-					MetaModel::ResetAllCaches($this->oRunTimeEnvironment->GetBuildEnv());
 
 					$this->oRunTimeEnvironment->DoCompile(
 						$aSelectedExtensionCodes,
