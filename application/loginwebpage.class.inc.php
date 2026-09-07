@@ -187,6 +187,11 @@ class LoginWebPage extends NiceWebPage
 			}
 		}
 
+		$sReferer = $_SERVER['HTTP_REFERER'] ?? null;
+		if (!is_null($sReferer)) {
+			$aPreviousPostedVars['HTTP_REFERER'] = $sReferer;
+		}
+
 		$aVars = [
 			'bFailedLogin' => $bFailedLogin,
 			'sMessage' => $sMessage,
