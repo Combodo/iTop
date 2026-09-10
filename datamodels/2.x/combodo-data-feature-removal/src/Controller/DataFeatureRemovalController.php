@@ -419,7 +419,7 @@ class DataFeatureRemovalController extends Controller
 		$oRuntimeEnvironment = new RunTimeEnvironment($sSourceEnv, false);
 		$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromSelectedExtensions($oConfig, $aSelectedExtensions);
 
-		$this->aBasePackageModules = aSelectedModules;
+		$this->aBasePackageModules = $aSelectedModules;
 		return $aSelectedModules;
 	}
 
