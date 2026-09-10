@@ -172,7 +172,8 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 
 	protected ?array $aSelectedModules = null;
 
-	public function GetAllSelectedModulesUntilNow(): array {
+	public function GetAllSelectedModulesUntilNow(): array
+	{
 		if (!is_null($this->aSelectedModules)) {
 			return $this->aSelectedModules;
 		}
@@ -181,7 +182,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 		$aSelectedChoices = json_decode($this->oWizard->GetParameter('selected_components', '{}'), true);
 		$iNextStep = $this->GetStepIndex();
 		$index = $iNextStep;
-		while(isset($aSelectedChoices[$iNextStep])){
+		while (isset($aSelectedChoices[$iNextStep])) {
 			//Let's empty the next steps, we only want what has been chosen before
 			$aSelectedChoices[$iNextStep] = [];
 			$iNextStep++;
@@ -191,7 +192,7 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 		for ($i = 0; $i < $index; $i++) {
 
 			$aStepInfo = $this->GetStepInfo($i);
-			$this->GetSelectedModules($aStepInfo, $aSelectedChoices[$i], $this->aSelectedModules );
+			$this->GetSelectedModules($aStepInfo, $aSelectedChoices[$i], $this->aSelectedModules);
 
 			$aPreviousSteps = array_merge($aPreviousSteps, $this->aSelectedModules);
 		}
@@ -752,7 +753,7 @@ EOF
 	{
 		$index = $idx ?? $this->GetStepIndex();
 		if (is_null($this->aSteps)) {
-		$bRemoteExtensionsShouldBeMandatory = !$this->oWizard->GetParameter('force-uninstall', false);
+			$bRemoteExtensionsShouldBeMandatory = !$this->oWizard->GetParameter('force-uninstall', false);
 			$this->oWizard->SetParameter('additional_extensions_modules', json_encode([])); // Default value, no additional extensions
 
 			if (@file_exists($this->GetSourceFilePath())) {
@@ -794,13 +795,12 @@ EOF
 	public function ExtensionIsAlreadyIncludedInPreviousChoices(?iTopExtension $oITopExtension): bool
 	{
 
-
-		if(is_null($oITopExtension) || empty($oITopExtension->aModules)){
+		if (is_null($oITopExtension) || empty($oITopExtension->aModules)) {
 			return false;
 		}
 		$aAllPreviousChoicesModules = $this->GetAllSelectedModulesUntilNow();
 
-		foreach($oITopExtension->aModules as $sModuleId) {
+		foreach ($oITopExtension->aModules as $sModuleId) {
 			if (!isset($aAllPreviousChoicesModules[$sModuleId])) {
 				return false;
 			}
@@ -836,36 +836,36 @@ EOF
 		} elseif ($bMandatory && $bIsPackageExtension) {
 			$bDisabled = true;
 			$bChecked = true;
-		} elseif($bAlreadyIncluded){
+		} elseif ($bAlreadyIncluded) {
 			$bDisabled = true;
 			$bChecked = true;
-		}else {
+		} else {
 			if ($bDependencyIssue) {
 				// If the extension has a dependency issue, it cannot be checked and must be unchecked using the "force-uninstall" option
 				$bDisabled = !$bInstalled || !$bDisableUninstallCheck;
 			} elseif ($bInstalled && $bDoNotUninstall) {
 				// If the extension is not uninstallable, it must be unchecked using the "force-uninstall" option
-			$bDisabled = !$bDisableUninstallCheck;
-		}
+				$bDisabled = !$bDisableUninstallCheck;
+			}
 
 			if ($bDisabled) {
 				$bChecked = $bInstalled;
-		}
+			}
 
-		if (isset($aChoice['sub_options'])) {
-			$aOptions = $aChoice['sub_options']['options'] ?? [];
-			foreach ($aOptions as $index => $aSubChoice) {
-				$sSubChoiceId = $sChoiceId.self::$SEP.$index;
+			if (isset($aChoice['sub_options'])) {
+				$aOptions = $aChoice['sub_options']['options'] ?? [];
+				foreach ($aOptions as $index => $aSubChoice) {
+					$sSubChoiceId = $sChoiceId.self::$SEP.$index;
 					$aSubFlags = $this->ComputeChoiceFlags($aSubChoice, $sSubChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck);
-				if ($aSubFlags['checked']) {
-					$bChecked = true;
-					if ($aSubFlags['disabled']) {
+					if ($aSubFlags['checked']) {
+						$bChecked = true;
+						if ($aSubFlags['disabled']) {
 							// If some sub options are checked and cannot be unchecked, this choice also cannot be unchecked since it would uncheck all its sub options
-						$bDisabled = true;
+							$bDisabled = true;
+						}
 					}
 				}
 			}
-		}
 		}
 
 		if ($bAllDisabled) {
@@ -1046,7 +1046,6 @@ EOF
 		$sSourceDir = $this->oWizard->GetParameter('source_dir');
 		return $sSourceDir.'/installation.xml';
 	}
-
 
 	public function CanMoveForward()
 	{
