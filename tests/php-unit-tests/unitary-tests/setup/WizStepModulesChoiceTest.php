@@ -672,7 +672,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'already_included' => false,
 				],
 			],
-			'#node16 - A non installed non uninstallable sub extension should not force its parent flags' => [
+			'#node16 - A non installed sub extension should not force its parent flags' => [
 				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => true,
@@ -805,6 +805,52 @@ class WizStepModulesChoiceTest extends ItopTestCase
 	{
 		$this->oWizStepModulesChoiceFake->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
 		$aFlags = $this->oWizStepModulesChoiceFake->ComputeChoiceFlags($aWizardStepDefinition, '_0', $aSelectedComponents, false, $bDisableUninstallChecks);
+		$this->assertEquals($aExpectedFlags, $aFlags);
+	}
+
+	/**
+	 * #node17 an extension with all of its modules already selected in previous steps should be checked and disabled, with the "already_included" flag set to true
+	 */
+	public function testComputeChoiceFlagsShouldReturnAlreadyIncludedWhenAllModulesAreInPreviousSteps(): void
+	{
+		$this->oWizard->SetParameter('source_dir', __DIR__.'/ressources');
+		$this->oWizard->SetParameter('selected_components', json_encode([
+			['_0' => '_0'],//Selecting itop-config-mgmt-core
+		]));
+
+		$oWizStepModulesChoice = new WizStepModulesChoiceFake($this->oWizard, '1');
+		$oWizStepModulesChoice->setExtensionMap(iTopExtensionsMapFake::createFromArray([
+			'itop-ext1' => [
+				'installed' => false,
+				'modules' => [
+					'itop-config-mgmt',
+					'itop-attachments',
+				],
+			],
+		]));
+
+		$aFlags = $oWizStepModulesChoice->ComputeChoiceFlags(
+			[
+				'extension_code' => 'itop-ext1',
+				'uninstallable' => true,
+			],
+			'_0',
+			[],
+			false,
+			false
+		);
+
+		$aExpectedFlags = [
+			'uninstallable' => true,
+			'missing' => false,
+			'installed' => false,
+			'disabled' => true,
+			'checked' => true,
+			'dependency_issue' => false,
+			'mandatory' => false,
+			'remote' => false,
+			'already_included' => true,
+		];
 		$this->assertEquals($aExpectedFlags, $aFlags);
 	}
 
