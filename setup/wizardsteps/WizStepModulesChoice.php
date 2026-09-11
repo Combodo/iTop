@@ -49,7 +49,6 @@ class WizStepModulesChoice extends AbstractWizStepInstall
 	protected bool $bChoicesFromDatabase;
 
 	private array $aAnalyzeInstallationModules = [];
-	private ?array $aBasePackageModules = null;
 	private ?MissingDependencyException $oMissingDependencyException = null;
 
 	private array $aFlagsByChoiceId = [];
