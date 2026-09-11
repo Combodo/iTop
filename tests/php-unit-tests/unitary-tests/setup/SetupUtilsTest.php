@@ -237,10 +237,8 @@ OUTPUT;
 		SetupUtils::builddir($sExtraModuleDir);
 		$this->aFileToClean[] = $sExtraDir;
 
-		$sExtraModuleFile = $sExtraModuleDir.'/module.'.$sExtraModuleName.'.php';
-
 		file_put_contents(
-			$sExtraModuleFile,
+			$sExtraModuleDir.'/module.'.$sExtraModuleName.'.php',
 			<<<'PHP'
 <?php
 SetupWebPage::AddModule(
