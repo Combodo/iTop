@@ -2,9 +2,12 @@
 
 namespace Combodo\iTop\Test\UnitTest\Setup;
 
+use AnalyzeInstallation;
 use CheckResult;
 use Combodo\iTop\Setup\FeatureRemoval\ModelReflectionSerializer;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Config;
+use WizardController;
 use SetupUtils;
 
 /**
@@ -28,6 +31,7 @@ class SetupUtilsTest extends ItopTestCase
 
 		$this->RequireOnceItopFile('setup/setuputils.class.inc.php');
 		$this->RequireOnceItopFile('setup/setuppage.class.inc.php');
+		$this->RequireOnceItopFile('setup/wizardcontroller.class.inc.php');
 	}
 
 	/**
@@ -217,6 +221,53 @@ OUTPUT;
 			sprintf('Error: The current PHP Version (1.0) is lower than the minimum version required to run %s, which is (%s)', ITOP_APPLICATION, SetupUtils::PHP_MIN_VERSION),
 		];
 		$this->ValidateCheckResults($expected, $aRes);
+	}
+
+	/**
+	 * Bug N°10045
+	 */
+	public function testAnalyzeInstallationDoesNotAutomaticallySetModulesInProductionModulesVisibilityToFalse()
+	{
+		$this->RequireOnceItopFile('setup/moduleinstallation/AnalyzeInstallation.php');
+
+		$sRemoteDir = 'production-temp';
+		$sExtraDir = \utils::GetDataPath().''.$sRemoteDir.'-modules/';
+		$sExtraModuleName = 'extra-module';
+		$sExtraModuleDir = $sExtraDir.$sExtraModuleName;
+		SetupUtils::builddir($sExtraModuleDir);
+		$this->aFileToClean[] = $sExtraDir;
+
+		$sExtraModuleFile = $sExtraModuleDir.'/module.'.$sExtraModuleName.'.php';
+
+		file_put_contents(
+			$sExtraModuleFile,
+			<<<'PHP'
+<?php
+SetupWebPage::AddModule(
+	__FILE__,
+	'extra-module/1.0.0',
+	[
+		'label' => 'Extra module',
+		'dependencies' => [],
+		'mandatory' => false,
+		'visible' => true,
+		'datamodel' => [],
+		'data.struct' => [],
+		'data.sample' => [],
+		'doc.manual_setup' => '',
+		'doc.more_information' => '',
+	]
+);
+PHP
+		);
+		$oWizard = new WizardController('WizStepWelcome');
+		$oWizard->SetParameter('source_dir', APPROOT.'datamodels/2.x');
+		$oWizard->SetParameter('remote_env', $sRemoteDir);
+
+		$aModules = SetupUtils::AnalyzeInstallation($oWizard);
+
+		$this->assertContains($sExtraModuleName, array_keys($aModules), 'Module discovery should have found the extra module');
+		$this->assertTrue($aModules[$sExtraModuleName]['visible'], 'AnalyzeInstallation should not have automatically set the extra module visibility to false');
 	}
 
 	private function ValidateCheckResults(array $expected, array $aActualCheckResults)
