@@ -2,8 +2,11 @@
 IMPORTANT: Before creating your PR, please create an issue first to know if Combodo is interested in your contribution (not needed for translations PR).
 Since we may refuse a PR, it's preferable to create an issue first, to avoid spending time coding something that won't be accepted.
 PR that will benefit the most users and has a greater impact on the product are more likely to be accepted, so please explain your use case and why you think it would be useful for the community.
+We're not willing to receive PR concerning codes improvements (e.g. code refactoring), except if it's part of a code that brings/corrects a feature for users. 
+Please note that we're working with sprints, so we reserve the right to decline a PR if we do not plan to work on that subject in the 6 coming months.
+Thank you for your comprehension 😊
 
-Once you've done it, and we confirmed we're interested in it, please follow the guidelines within this PR template before submitting it, it will greatly help us process your PR. 🙏
+Once you've created the issue, and we confirmed we're interested in it, please follow the guidelines within this PR template before submitting it, it will greatly help us process your PR. 🙏
 
 Any PRs not following the guidelines or with missing information will not be considered.
 -->
