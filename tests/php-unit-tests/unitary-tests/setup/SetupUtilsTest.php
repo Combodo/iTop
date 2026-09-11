@@ -231,7 +231,7 @@ OUTPUT;
 		$this->RequireOnceItopFile('setup/moduleinstallation/AnalyzeInstallation.php');
 
 		$sRemoteDir = 'production-temp';
-		$sExtraDir = \utils::GetDataPath().''.$sRemoteDir.'-modules/';
+		$sExtraDir = \utils::GetDataPath().$sRemoteDir.'-modules/';
 		$sExtraModuleName = 'extra-module';
 		$sExtraModuleDir = $sExtraDir.$sExtraModuleName;
 		SetupUtils::builddir($sExtraModuleDir);
