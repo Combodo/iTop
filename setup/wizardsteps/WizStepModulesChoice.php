@@ -1000,7 +1000,7 @@ EOF
 			$sTooltip .= '<div id="badge--'.$sId.'--cannot-be-installed" class="ibo-badge ibo-block ibo-is-orange" title="This extension cannot be installed because one or more dependencies are not satisfied." >cannot be installed</div>';
 		}
 		if ($aFlags['already_included']) {
-			$sTooltip .= '<div id="badge--'.$sId.'--already-part-of-itop" class="ibo-badge ibo-block ibo-is-yellow" title="All the modules included in this extension are already part of iTop package choices. To uninstall this extension, you have to delete its folder." >already part of iTop</div>';
+			$sTooltip .= '<div id="badge--'.$sId.'--already-part-of-itop" class="ibo-badge ibo-block ibo-is-yellow" title="All modules in this extension are already part of the iTop package. To uninstall this extension, you have to delete its folder." >already part of iTop</div>';
 		}
 
 		$sMetadata = '';

@@ -364,10 +364,8 @@ class DataFeatureRemovalController extends Controller
 	private function GetAvailableExtensions(bool $bIncludePackageExtensions = false): array
 	{
 		$aExtensionsData = [];
-		$oExtensionMap = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap();
-		$aBasePackageModules = $this->GetBasePackageModules();
 		if ($bIncludePackageExtensions) {
-			$aExtensionsRef = $oExtensionMap->GetAllExtensionsWithPreviouslyInstalled();
+			$aExtensionsRef = DataFeatureRemoverExtensionService::GetInstance()->GetExtensionMap()->GetAllExtensionsWithPreviouslyInstalled();
 		} else {
 			$aExtensionsRef = DataFeatureRemoverExtensionService::GetInstance()->ReadItopExtensions();
 		}
@@ -375,7 +373,7 @@ class DataFeatureRemovalController extends Controller
 		foreach ($aExtensionsRef as $oExtension) {
 			/** @var \iTopExtension $oExtension */
 			$aMetaData = [$oExtension->sVersion, $oExtension->GetExtensionSourceLabel(), $oExtension->sCode];
-			$bIsPackageExtension = SetupUtils::IsIncludedInPackage($oExtension, $aBasePackageModules);
+			$bIsPackageExtension = $this->IsIncludedInPackage($oExtension);
 
 			$aExtensionsData[$oExtension->sCode] = [
 				'version' => $oExtension->sVersion,
@@ -399,6 +397,29 @@ class DataFeatureRemovalController extends Controller
 		return $aExtensionsData;
 	}
 
+	/**
+	 * Returns true when all modules of a non-package extension are already included in base package modules.
+	 */
+	public function IsIncludedInPackage(iTopExtension $oExtension): bool
+	{
+		if ($oExtension->sSource === iTopExtension::SOURCE_WIZARD) {
+			return false;
+		}
+
+		$aModules = $oExtension->aModules ?? [];
+		if (!is_array($aModules) || empty($aModules)) {
+			return false;
+		}
+
+		$aBasePackageModules = $this->GetBasePackageModules();
+		foreach ($aModules as $sModuleId) {
+			if (!in_array($sModuleId, $aBasePackageModules)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	private function GetBasePackageModules(): array
 	{
 		if ($this->aBasePackageModules !== null) {
@@ -417,10 +438,9 @@ class DataFeatureRemovalController extends Controller
 
 		$sSourceEnv = MetaModel::GetEnvironment();
 		$oRuntimeEnvironment = new RunTimeEnvironment($sSourceEnv, false);
-		$aSelectedModules = $oRuntimeEnvironment->GetModulesToLoadFromSelectedExtensions($oConfig, $aSelectedExtensions);
 
-		$this->aBasePackageModules = $aSelectedModules;
-		return $aSelectedModules;
+		$this->aBasePackageModules = $oRuntimeEnvironment->GetModulesToLoadFromSelectedExtensions($oConfig, $aSelectedExtensions);
+		return $this->aBasePackageModules;
 	}
 
 	private function GetExtensionsDiff(array $aAddedExtensions, array $aRemovedExtensions): array
