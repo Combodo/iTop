@@ -2,9 +2,13 @@
 
 namespace Combodo\iTop\Test\UnitTest\Setup;
 
+use AnalyzeInstallation;
 use CheckResult;
 use Combodo\iTop\Setup\FeatureRemoval\ModelReflectionSerializer;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Config;
+use ModuleDiscovery;
+use WizardController;
 use SetupUtils;
 
 /**
@@ -28,6 +32,13 @@ class SetupUtilsTest extends ItopTestCase
 
 		$this->RequireOnceItopFile('setup/setuputils.class.inc.php');
 		$this->RequireOnceItopFile('setup/setuppage.class.inc.php');
+		$this->RequireOnceItopFile('setup/wizardcontroller.class.inc.php');
+	}
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		ModuleDiscovery::ResetCache();
 	}
 
 	/**
@@ -219,6 +230,30 @@ OUTPUT;
 		$this->ValidateCheckResults($expected, $aRes);
 	}
 
+	/**
+	 * Bug N°10045
+	 */
+	public function testAnalyzeInstallationDoesNotAutomaticallySetModulesInProductionModulesVisibilityToFalse()
+	{
+		$this->RequireOnceItopFile('setup/moduleinstallation/AnalyzeInstallation.php');
+		$this->SetNonPublicProperty(AnalyzeInstallation::GetInstance(), 'aAvailableModules', null);
+
+		$sRemoteEnv = 'production-temp';
+		$sExtraDir = \utils::GetDataPath().$sRemoteEnv.'-modules/';
+		$sExtraModuleName = 'extra-module';
+
+		$this->createModule($sExtraDir, $sExtraModuleName, '1.0.0');
+
+		$oWizard = new WizardController('WizStepWelcome');
+		$oWizard->SetParameter('source_dir', APPROOT.'datamodels/2.x');
+		$oWizard->SetParameter('remote_env', $sRemoteEnv);
+
+		$aModules = SetupUtils::AnalyzeInstallation($oWizard);
+
+		$this->assertContains($sExtraModuleName, array_keys($aModules), 'Module discovery should have found the extra module');
+		$this->assertTrue($aModules[$sExtraModuleName]['visible'], 'AnalyzeInstallation should not have automatically set the extra module visibility to false');
+	}
+
 	private function ValidateCheckResults(array $expected, array $aActualCheckResults)
 	{
 		$aActual = [];
@@ -230,6 +265,39 @@ OUTPUT;
 		}
 
 		self::assertEquals($expected, $aActual);
+	}
+
+	protected function createModule($sDirectory, $sModuleName, $sModuleVersion, $bMandatory = false, $bVisible = true)
+	{
+		$sModuleDir = $sDirectory.'/'.$sModuleName;
+		SetupUtils::builddir($sModuleDir);
+		$this->aFileToClean[] = $sDirectory;
+
+		$sModuleFileName = $sModuleDir.'/module.'.$sModuleName.'.php';
+
+		$sMandatory = var_export($bMandatory, true);
+		$sVisible = var_export($bVisible, true);
+		file_put_contents(
+			$sModuleFileName,
+			<<<PHP
+<?php
+SetupWebPage::AddModule(
+	__FILE__,
+	"$sModuleName/$sModuleVersion",
+	[
+		'label' => "$sModuleName",
+		'dependencies' => [],
+		'mandatory' => $sMandatory,
+		'visible' => $sVisible,
+		'datamodel' => [],
+		'data.struct' => [],
+		'data.sample' => [],
+		'doc.manual_setup' => '',
+		'doc.more_information' => '',
+	]
+);
+PHP
+		);
 	}
 
 }

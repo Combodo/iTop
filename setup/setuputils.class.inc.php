@@ -1670,20 +1670,7 @@ JS
 		$oExtensionsMap = iTopExtensionsMap::GetExtensionsMap($oWizard->GetParameter('target_env', ITOP_DEFAULT_ENV));
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
-		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aDirsToScan, $bAbortOnMissingDependency, $aModulesToLoad);
-
-		$bRemoteExtensionsShouldBeMandatory = !$oWizard->GetParameter('force-uninstall', false);
-		if ($bRemoteExtensionsShouldBeMandatory) {
-			foreach ($aAvailableModules as $key => $aModule) {
-				$bIsExtra = (array_key_exists('root_dir', $aModule) && (strpos($aModule['root_dir'], $sExtraDir) !== false)); // Some modules (root, datamodel) have no 'root_dir'
-				if ($bIsExtra) {
-					// Modules in data/production-modules/ are considered as mandatory and always installed
-					$aAvailableModules[$key]['visible'] = false;
-				}
-			}
-		}
-
-		return $aAvailableModules;
+		return $oProductionEnv->AnalyzeInstallation($oConfig, $aDirsToScan, $bAbortOnMissingDependency, $aModulesToLoad);
 	}
 
 	/**
