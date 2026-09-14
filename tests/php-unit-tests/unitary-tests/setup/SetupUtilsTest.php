@@ -230,37 +230,15 @@ OUTPUT;
 	{
 		$this->RequireOnceItopFile('setup/moduleinstallation/AnalyzeInstallation.php');
 
-		$sRemoteDir = 'production-temp';
-		$sExtraDir = \utils::GetDataPath().$sRemoteDir.'-modules/';
+		$sRemoteEnv = 'production-temp';
+		$sExtraDir = \utils::GetDataPath().$sRemoteEnv.'-modules/';
 		$sExtraModuleName = 'extra-module';
-		$sExtraModuleDir = $sExtraDir.$sExtraModuleName;
-		SetupUtils::builddir($sExtraModuleDir);
-		$this->aFileToClean[] = $sExtraDir;
 
-		file_put_contents(
-			$sExtraModuleDir.'/module.'.$sExtraModuleName.'.php',
-			<<<'PHP'
-<?php
-SetupWebPage::AddModule(
-	__FILE__,
-	'extra-module/1.0.0',
-	[
-		'label' => 'Extra module',
-		'dependencies' => [],
-		'mandatory' => false,
-		'visible' => true,
-		'datamodel' => [],
-		'data.struct' => [],
-		'data.sample' => [],
-		'doc.manual_setup' => '',
-		'doc.more_information' => '',
-	]
-);
-PHP
-		);
+		$this->createModule($sExtraDir, $sExtraModuleName, '1.0.0');
+
 		$oWizard = new WizardController('WizStepWelcome');
 		$oWizard->SetParameter('source_dir', APPROOT.'datamodels/2.x');
-		$oWizard->SetParameter('remote_env', $sRemoteDir);
+		$oWizard->SetParameter('remote_env', $sRemoteEnv);
 
 		$aModules = SetupUtils::AnalyzeInstallation($oWizard);
 
@@ -279,6 +257,39 @@ PHP
 		}
 
 		self::assertEquals($expected, $aActual);
+	}
+
+	protected function createModule($sDirectory, $sModuleName, $sModuleVersion, $bMandatory = false, $bVisible = true)
+	{
+		$sModuleDir = $sDirectory.'/'.$sModuleName;
+		SetupUtils::builddir($sModuleDir);
+		$this->aFileToClean[] = $sDirectory;
+
+		$sModuleFileName = $sModuleDir.'/module.'.$sModuleName.'.php';
+
+		$sMandatory = var_export($bMandatory, true);
+		$sVisible = var_export($bVisible, true);
+		file_put_contents(
+			$sModuleFileName,
+			<<<PHP
+<?php
+SetupWebPage::AddModule(
+	__FILE__,
+	"$sModuleName/$sModuleVersion",
+	[
+		'label' => "$sModuleName",
+		'dependencies' => [],
+		'mandatory' => $sMandatory,
+		'visible' => $sVisible,
+		'datamodel' => [],
+		'data.struct' => [],
+		'data.sample' => [],
+		'doc.manual_setup' => '',
+		'doc.more_information' => '',
+	]
+);
+PHP
+		);
 	}
 
 }
