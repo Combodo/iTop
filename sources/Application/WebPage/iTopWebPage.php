@@ -209,6 +209,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->LinkScriptFromAppRoot('js/pages/backoffice/keyboard-shortcuts.js');
 
 		// Used throughout the app.
+		$this->LinkScriptFromAppRoot('js/pages/backoffice/dialog.js');
 		$this->LinkScriptFromAppRoot('js/pages/backoffice/toolbox.js');
 		$this->LinkScriptFromAppRoot('js/pages/backoffice/on-ready.js');
 
