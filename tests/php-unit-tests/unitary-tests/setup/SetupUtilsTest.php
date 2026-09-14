@@ -7,6 +7,7 @@ use CheckResult;
 use Combodo\iTop\Setup\FeatureRemoval\ModelReflectionSerializer;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Config;
+use ModuleDiscovery;
 use WizardController;
 use SetupUtils;
 
@@ -32,6 +33,12 @@ class SetupUtilsTest extends ItopTestCase
 		$this->RequireOnceItopFile('setup/setuputils.class.inc.php');
 		$this->RequireOnceItopFile('setup/setuppage.class.inc.php');
 		$this->RequireOnceItopFile('setup/wizardcontroller.class.inc.php');
+	}
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		ModuleDiscovery::ResetCache();
 	}
 
 	/**
@@ -229,6 +236,7 @@ OUTPUT;
 	public function testAnalyzeInstallationDoesNotAutomaticallySetModulesInProductionModulesVisibilityToFalse()
 	{
 		$this->RequireOnceItopFile('setup/moduleinstallation/AnalyzeInstallation.php');
+		$this->SetNonPublicProperty(AnalyzeInstallation::GetInstance(), 'aAvailableModules', null);
 
 		$sRemoteEnv = 'production-temp';
 		$sExtraDir = \utils::GetDataPath().$sRemoteEnv.'-modules/';
