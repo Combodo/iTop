@@ -109,10 +109,18 @@ $('#shortcut_rename_dlg').dialog({
 	modal: true,
 	title: '$sDialogTitle',
 	buttons: [
-	{ text: "$sOkButtonLabel", click: ShortcutRenameOK},
-	{ text: "$sCancelButtonLabel", click: function() {
-		$(this).dialog( "close" ); $(this).remove();
-	} },
+        { 
+            text: "$sCancelButtonLabel",
+            click: function() {
+                $(this).dialog( "close" ); $(this).remove();
+            },
+            'class': 'ibo-button ibo-is-alternative ibo-is-neutral action cancel'
+        },
+        { 
+            text: "$sOkButtonLabel",
+             click: ShortcutRenameOK,
+            'class': 'ibo-is-regular ibo-is-primary'
+        },
 	],
 	close: function() { $(this).remove(); }
 });
