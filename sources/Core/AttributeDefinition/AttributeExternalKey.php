@@ -153,7 +153,13 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 		return $oValSetDef;
 	}
-
+	public function RemoveLoaded()
+	{
+		$oValSetDef = $this->Get("allowed_values");
+		if ($oValSetDef) {
+			$oValSetDef->RemoveLoaded();
+		}
+	}
 	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		//throw new Exception("GetAllowedValues on ext key has been deprecated");
