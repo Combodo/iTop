@@ -106,10 +106,21 @@ try {
 			break;
 
 		case 'remove':
+			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
+			if (utils::IsTransactionValid($sTempId)) {
+				throw new SecurityException(Dict::S('UI:Error:InvalidToken'));
+			}
 			$iAttachmentId = utils::ReadParam('att_id', '');
 			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE id = :id");
 			$oSet = new DBObjectSet($oSearch, [], ['id' => $iAttachmentId]);
+			// get host object related to attachment
 			while ($oAttachment = $oSet->Fetch()) {
+				$sHostClass = $oAttachment->Get('item_class');
+				if (!UserRights::IsActionAllowed($sHostClass, UR_ACTION_MODIFY)) {
+					throw new SecurityException('Caller is not allowed to delete the host.'); // TODO translate
+				}
+			}
+			while ($oAttachment = $oSet->Fetch()) { // if no exception happened
 				$oAttachment->DBDelete();
 			}
 			break;
