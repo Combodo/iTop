@@ -420,7 +420,7 @@ class DataFeatureRemovalController extends Controller
 		return true;
 	}
 
-	private function GetBasePackageModules(): array
+	public function GetBasePackageModules(): array
 	{
 		if ($this->aBasePackageModules !== null) {
 			return $this->aBasePackageModules;
