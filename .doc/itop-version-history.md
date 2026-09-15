@@ -110,11 +110,11 @@ gitGraph
     commit id: "2025-09-25" tag: "2.7.13"
     checkout support/3.2
     commit id: "2026-04-27 " tag: "3.2.3"
-    checkout support/3.2.3
     commit id: "2026-05-25 " tag: "3.2.3-1"
     commit id: "2026-07-17 " tag: "3.2.3-2"
     checkout develop
     commit id: "2026-07-23" tag: "3.3.0-beta1"
+    commit id: "2026-09-15" tag: "3.3.0"
 ```
 
 To learn more, check the [iTop community versions history on the official wiki](https://www.itophub.io/wiki/page?id=latest:release:start).
