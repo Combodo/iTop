@@ -19,9 +19,9 @@
     {% endif %}
     <span class="ibo-object-details--object-class" data-role="ibo-object-details--object-class">
         {% if is_backoffice_menu_enabled('DataModelMenu') %}
-            <a href="{{ get_absolute_url_app_root() }}pages/schema.php?operation=details_class&class={{ oUIBlock.GetClassName() }}" target="_blank" data-tooltip-content="{{ 'UI:Layout:ObjectDetails:DatamodelSchemaLink:Tooltip' | dict_s }}" data-tooltip-html-enabled="true">{{ oUIBlock.GetClassLabel() }}</a>
+            <a class="ibo-object-details--object-class--label" href="{{ get_absolute_url_app_root() }}pages/schema.php?operation=details_class&class={{ oUIBlock.GetClassName() }}" target="_blank" data-tooltip-content="{{ 'UI:Layout:ObjectDetails:DatamodelSchemaLink:Tooltip' | dict_s }}" data-tooltip-html-enabled="true">{{ oUIBlock.GetClassLabel() }}</a>
         {% else %}
-            {{ oUIBlock.GetClassLabel() }}
+            <span class="ibo-object-details--object-class--label">{{ oUIBlock.GetClassLabel() }}</span>
         {% endif %}
     </span>
     {{ parent() }}
