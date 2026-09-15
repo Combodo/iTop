@@ -61,7 +61,7 @@ foreach ($aTcpdfFontsDirContent as $sTcpdfFontResourceName) {
  * 2) Then adding the DroidSansFallback font (useful for CJK data for example)
  */
 echo $sCurrentScriptFileName.": ---2) Copying font files to TCPDF ($sTcPdfFontsFolder)...\n";
-$aFontFilesToCopy = glob(__DIR__.'\droidsansfallback.*');
+$aFontFilesToCopy = glob(__DIR__.DIRECTORY_SEPARATOR.'droidsansfallback.*');
 foreach ($aFontFilesToCopy as $sFontFileToCopy) {
 	$sFontFileName = basename($sFontFileToCopy);
 	echo $sCurrentScriptFileName.': copying '.$sFontFileName."\n";
