@@ -39,7 +39,7 @@ function DisplayStatus(WebPage $oPage)
 			$oPage->add('<div class="choice">');
 			$sCode = $oExtension->sCode;
 			$sDir = basename($oExtension->sSourceDir);
-			$oPage->add('<input type="checkbox" data-extension-code="'.$sCode.'" data-extension-dir="'.$sDir.'" checked disabled>&nbsp;');
+			$oPage->add('<input type="checkbox" data-extension-code="'.$sCode.'" data-extension-dir="'.$sDir.'" '.($oExtension->bInstalled ? 'checked' : '').' disabled>&nbsp;');
 			$oPage->add('<label><b>'.utils::EscapeHtml($oExtension->sLabel).'</b> '.$sInstallation.'</label>');
 			$oPage->add('<div class="description">');
 			$oPage->add('<p>');
