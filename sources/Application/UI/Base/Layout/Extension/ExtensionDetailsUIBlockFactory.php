@@ -54,6 +54,7 @@ class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 			$oExtensionDetails->GetToggler()->SetIsToggled(false);
 			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
 		} elseif ($bAlreadyPartOfITop) {
+			$bSelected = true;
 			$oExtensionDetails->GetToggler()->SetIsToggled(true);
 			$oExtensionDetails->GetToggler()->SetIsDisabled(true);
 		} elseif ((!$bUninstallable || $bRemote) && !$bDisabled) {
