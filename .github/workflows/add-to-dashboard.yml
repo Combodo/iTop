@@ -1,0 +1,13 @@
+name: Add issue/PR to Combodo dashboard
+
+on:
+  pull_request:
+    types: [opened]
+  issues:
+    types: [opened]
+
+jobs:
+  route-to-project:
+    uses: Combodo/.github/.github/workflows/action.yml@master
+    secrets:
+      PR_AUTOMATICALLY_ADD_TO_PROJECT: ${{ secrets.PR_AUTOMATICALLY_ADD_TO_PROJECT }}
