@@ -1243,11 +1243,12 @@ JS
 				$oShortcutSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
 				$oShortcutSearch->AddCondition('id', $iShortcut, '=');
 				$oShortcutSet = new CMDBObjectSet($oShortcutSearch);
-				if ($oShortcutSet->Count() === 0) {
-					throw new SecurityException(Dict::S('UI:ObjectDoesNotExist'));
-				}
 
 				$oShortcut = $oShortcutSet->Fetch();
+
+				if ($oShortcut === null) {
+					throw new SecurityException(Dict::S('UI:ObjectDoesNotExist'));
+				}
 
 				$oShortcut->StartRenameDialog($oPage);
 				break;
@@ -1259,11 +1260,11 @@ JS
 				$oShortcutSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
 				$oShortcutSearch->AddCondition('id', $iShortcut, '=');
 				$oShortcutSet = new CMDBObjectSet($oShortcutSearch);
-				if ($oShortcutSet->Count() === 0) {
+				$oShortcut = $oShortcutSet->Fetch();
+
+				if ($oShortcut === null) {
 					throw new SecurityException(Dict::S('UI:ObjectDoesNotExist'));
 				}
-
-				$oShortcut = $oShortcutSet->Fetch();
 
 				$sName = utils::ReadParam('attr_name', '', false, 'raw_data');
 				if (strlen($sName) > 0) {
