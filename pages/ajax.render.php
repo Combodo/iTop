@@ -1423,12 +1423,19 @@ EOF;
 						}
 					} else {
 						if (array_key_exists($sClassName, $aAccelerators)) {
-							$oPage->add("<div class=\"search-class-result search-class-$sClassName\">\n");
-							$oPage->add("<div class=\"page_header\">\n");
-							$oPage->add('<h2 class="ibo-global-search--result--title">'.MetaModel::GetClassIcon($sClassName).Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', 0, Metamodel::GetName($sClassName)).$sEnlargeButton."</h2>\n");
-							$oPage->add("</div>\n");
-							$oPage->add("</div>\n");
-							$oPage->p('&nbsp;'); // Some space ?
+							// Skip the empty result section when enlarge is disabled:
+							// the block has no actionable content (no Enlarge button) and only
+							// adds visual clutter on instances with many accelerators.
+							$bEnlargeEnabled = !array_key_exists('enable_enlarge', $aAccelerators[$sClassName])
+								|| $aAccelerators[$sClassName]['enable_enlarge'] !== false;
+							if ($bEnlargeEnabled) {
+								$oPage->add("<div class=\"search-class-result search-class-$sClassName\">\n");
+								$oPage->add("<div class=\"page_header\">\n");
+								$oPage->add('<h2 class="ibo-global-search--result--title">'.MetaModel::GetClassIcon($sClassName).Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', 0, Metamodel::GetName($sClassName)).$sEnlargeButton."</h2>\n");
+								$oPage->add("</div>\n");
+								$oPage->add("</div>\n");
+								$oPage->p('&nbsp;'); // Some space ?
+							}
 						}
 					}
 					if ($iTune > 0) {
