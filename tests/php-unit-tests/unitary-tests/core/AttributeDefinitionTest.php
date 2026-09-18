@@ -340,4 +340,45 @@ PHP
 		return $oAttribute;
 	}
 
+	/**
+	 * @dataProvider IsBulkModifyCompatibleProvider
+	 * @covers       \AttributeDefinition::IsBulkModifyCompatible
+	 * @covers       \Combodo\iTop\Core\AttributeDefinition\AttributeLinkedSet::IsBulkModifyCompatible
+	 * @covers       \Combodo\iTop\Core\AttributeDefinition\AttributeLinkedSetIndirect::IsBulkModifyCompatible
+	 *
+	 * Regression test for the bulk modify timeout caused by N°3190: indirect link sets
+	 * displayed as a tab (the default) used to declare themselves bulk-modify-compatible,
+	 * triggering eager materialisation of every link for every selected object. The
+	 * predicate must now depend on the instance-level display_style.
+	 */
+	public function testIsBulkModifyCompatible(string $sClass, string $sAttCode, bool $bExpected): void
+	{
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$this->assertSame(
+			$bExpected,
+			$oAttDef->IsBulkModifyCompatible(),
+			"IsBulkModifyCompatible() mismatch for $sClass::$sAttCode"
+		);
+	}
+
+	public static function IsBulkModifyCompatibleProvider(): array
+	{
+		return [
+			'Scalar attribute (AttributeString)' => [
+				'UserRequest', 'title', true,
+			],
+			'AttributeLinkedSet (1:n) is never bulk compatible' => [
+				'UserRequest', 'workorders_list', false,
+			],
+			'AttributeLinkedSetIndirect with default (tab) display_style' => [
+				// Regression: must be false to avoid the bulk modify timeout
+				'UserRequest', 'contacts_list', false,
+			],
+			'AttributeLinkedSetIndirect with property display_style' => [
+				// Preserves the N°3190 feature (tagset-like inline editor in bulk form)
+				'FunctionalCI', 'groups_list', true,
+			],
+		];
+	}
+
 }
