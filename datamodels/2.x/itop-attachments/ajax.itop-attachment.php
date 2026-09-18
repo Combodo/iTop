@@ -56,7 +56,7 @@ function RenderAttachments(AjaxPage $oPage, $iTransactionId)
 try {
 	require_once APPROOT.'/application/startup.inc.php';
 	require_once APPROOT.'/application/loginwebpage.class.inc.php';
-	LoginWebPage::DoLoginEx(null /* any portal */, false);
+	LoginWebPage::DoLogin(); // No user portal should access this endpoint.
 
 	$oPage = new AjaxPage("");
 
@@ -103,15 +103,6 @@ try {
 				}
 			}
 			$oPage->SetData($aResult);
-			break;
-
-		case 'remove':
-			$iAttachmentId = utils::ReadParam('att_id', '');
-			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE id = :id");
-			$oSet = new DBObjectSet($oSearch, [], ['id' => $iAttachmentId]);
-			while ($oAttachment = $oSet->Fetch()) {
-				$oAttachment->DBDelete();
-			}
 			break;
 
 		case 'refresh_attachments_render':
