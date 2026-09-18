@@ -105,15 +105,6 @@ try {
 			$oPage->SetData($aResult);
 			break;
 
-		case 'remove':
-			$iAttachmentId = utils::ReadParam('att_id', '');
-			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE id = :id");
-			$oSet = new DBObjectSet($oSearch, [], ['id' => $iAttachmentId]);
-			while ($oAttachment = $oSet->Fetch()) {
-				$oAttachment->DBDelete();
-			}
-			break;
-
 		case 'refresh_attachments_render':
 			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			RenderAttachments($oPage, $sTempId);
