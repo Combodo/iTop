@@ -2430,24 +2430,25 @@ class ListExpression extends Expression
 
 class NestedQueryExpression extends Expression
 {
-	/** @var DBSearch */
+	/** @var OQLQuery */
 	protected $m_oNestedQuery;
 
-	/*$m_oNestedQuery is an DBSearch object*/
+	/**
+	 * @param OQLQuery $oNestedQuery
+	 */
 	public function __construct($oNestedQuery)
 	{
 		$this->m_oNestedQuery = $oNestedQuery;
 	}
 
 	/**
-	 * @param OQLObjectQuery $oObjQuery
+	 * @param OQLQuery $oObjQuery
 	 *
 	 * @return \NestedQueryExpression
 	 */
 	public static function FromOQLObjectQuery($oObjQuery)
 	{
-		$oExpressions = $oObjQuery->ToDBSearch("");
-		return new NestedQueryExpression($oExpressions);
+		return new NestedQueryExpression($oObjQuery);
 	}
 
 	public function IsTrue()
@@ -2472,19 +2473,22 @@ class NestedQueryExpression extends Expression
 	 */
 	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
-		if ($bForSQL)
-		{
-			$aAttToLoad = array();
-			foreach ($this->m_oNestedQuery->GetSelectedClasses() as $sClassAlias => $sClass)
-			{
-				$aAttToLoad[$sClassAlias] = array();
-			}
-			return  '('.$this->m_oNestedQuery->MakeSelectQuery(array(), $aArgs, $aAttToLoad).')';
-		}
-		else
-		{
-			return '('.$this->m_oNestedQuery->ToOQL(false, null, false).')';
-		}
+		// TODO implement in OQLQuery
+		throw new Exception('a nested query cannot be rendered');
+
+//		if ($bForSQL)
+//		{
+//			$aAttToLoad = array();
+//			foreach ($this->m_oNestedQuery->GetSelectedClasses() as $sClassAlias => $sClass)
+//			{
+//				$aAttToLoad[$sClassAlias] = array();
+//			}
+//			return  '('.$this->m_oNestedQuery->MakeSelectQuery(array(), $aArgs, $aAttToLoad).')';
+//		}
+//		else
+//		{
+//			return '('.$this->m_oNestedQuery->ToOQL(false, null, false).')';
+//		}
 	}
 
 	/**
@@ -2504,6 +2508,7 @@ class NestedQueryExpression extends Expression
 
 	/**/
 	public function ApplyParameters($aArgs) {
+		// TODO implement in OQLQuery
 		$this->m_oNestedQuery->ApplyParameters($aArgs);
 	}
 
@@ -2514,6 +2519,7 @@ class NestedQueryExpression extends Expression
 	/**/
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true) {
 		// Check and prepare the select information
+		// TODO implement in OQLQuery
 		$this->m_oNestedQuery->TranslateConditions($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 
 		return clone $this;
@@ -2527,18 +2533,22 @@ class NestedQueryExpression extends Expression
 	}
 
 	public function ListConstantFields() {
+		// TODO implement in OQLQuery
 		return $this->m_oNestedQuery->ListConstantFields();
 	}
 
 	public function ListParameters() {
+		// TODO implement in OQLQuery
 		return $this->m_oNestedQuery->GetExpectedArguments();
 	}
 
 	public function RenameParam($sOldName, $sNewName) {
+		// TODO implement in OQLQuery
 		$this->m_oNestedQuery->RenameParam($sOldName, $sNewName);
 	}
 
 	public function RenameAlias($sOldName, $sNewName) {
+		// TODO implement in OQLQuery
 		$this->m_oNestedQuery->RenameAlias($sOldName, $sNewName);
 	}
 
@@ -2546,6 +2556,7 @@ class NestedQueryExpression extends Expression
 	 * @inheritDoc
 	 */
 	public function ToJSON(&$aArgs = null, $bRetrofitParams = false) {
+		// TODO implement in OQLQuery
 		return $this->m_oNestedQuery->ToJSON();
 	}
 
@@ -2557,6 +2568,7 @@ class NestedQueryExpression extends Expression
 	 * @uses \DBSearch::AllowAllData()
 	 */
 	public function AllowAllData($bAllowAllData = true) {
+		// TODO implement in OQLQuery
 		$this->m_oNestedQuery->AllowAllData($bAllowAllData);
 	}
 }

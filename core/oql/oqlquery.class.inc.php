@@ -193,18 +193,15 @@ class ScalarOqlExpression extends ScalarExpression implements CheckableExpressio
 
 class NestedQueryOqlExpression extends NestedQueryExpression implements CheckableExpression
 {
-	/** @var OQLObjectQuery */
-	private $m_oOQLObjectQuery;
 
 	/**
 	 * NestedQueryOqlExpression constructor.
 	 *
-	 * @param OQLObjectQuery $oOQLObjectQuery
+	 * @param OQLQuery $oOQLObjectQuery
 	 */
-	public function __construct($oOQLObjectQuery)
+	public function __construct(OQLQuery $oOQLObjectQuery)
 	{
-		parent::__construct($oOQLObjectQuery->ToDBSearch(""));
-		$this->m_oOQLObjectQuery = $oOQLObjectQuery;
+		parent::__construct($oOQLObjectQuery);
 	}
 
 	/**
@@ -219,12 +216,12 @@ class NestedQueryOqlExpression extends NestedQueryExpression implements Checkabl
 	 */
 	public function Check(ModelReflection $oModelReflection, $aAliases, $sSourceQuery)
 	{
-		$this->m_oOQLObjectQuery->Check($oModelReflection, "", $aAliases);
+		$this->m_oNestedQuery->Check($oModelReflection, "", $aAliases);
 	}
 
 	public function GetOQLObjectQuery()
 	{
-		return $this->m_oOQLObjectQuery;
+		return $this->m_oNestedQuery;
 	}
 }
 
