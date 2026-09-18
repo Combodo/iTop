@@ -56,7 +56,7 @@ function RenderAttachments(AjaxPage $oPage, $iTransactionId)
 try {
 	require_once APPROOT.'/application/startup.inc.php';
 	require_once APPROOT.'/application/loginwebpage.class.inc.php';
-	LoginWebPage::DoLoginEx(null /* any portal */, false);
+	LoginWebPage::DoLogin(); // no user portal should this
 
 	$oPage = new AjaxPage("");
 
