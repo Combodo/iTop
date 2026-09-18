@@ -507,7 +507,49 @@
           </attributes>
         </reconciliation>
       </properties>
-      <fields/>
+      <fields>
+        <field id="powered_devices" xsi:type="AttributeDashboard">
+          <is_user_editable>false</is_user_editable>
+          <definition>
+            <title>Class:PowerConnection/Attribute:powered_devices+</title>
+            <layout>DashboardLayoutOneCol</layout>
+            <cells>
+              <cell id="pdu">
+                <rank>10</rank>
+                <dashlets>
+                  <dashlet id="pdu_header" xsi:type="DashletHeaderStatic">
+                    <rank>10</rank>
+                    <title>Class:PDU</title>
+                    <icon>../images/icons/icons8-plug-socket.svg</icon>
+                  </dashlet>
+                  <dashlet id="pdu_list" xsi:type="DashletObjectList">
+                    <rank>20</rank>
+                    <title>Class:PowerConnection/Attribute:pdus_list+</title>
+                    <query>SELECT PDU WHERE powerstart_id = :this-&gt;id</query>
+                    <menu>false</menu>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="datacenterdevice">
+                <rank>20</rank>
+                <dashlets>
+                  <dashlet id="datacenterdevice_header" xsi:type="DashletHeaderStatic">
+                    <rank>0</rank>
+                    <title>Class:DatacenterDevice</title>
+                    <icon>../images/icons/icons8-server.svg</icon>
+                  </dashlet>
+                  <dashlet id="datacenterdevice_list" xsi:type="DashletObjectList">
+                    <rank>1</rank>
+                    <title>Class:PowerConnection/Attribute:datacenterdevices_list+</title>
+                    <query>SELECT DatacenterDevice WHERE powerA_id = :this->id OR powerB_id = :this->id</query>
+                    <menu>false</menu>
+                  </dashlet>
+                </dashlets>
+              </cell>
+            </cells>
+          </definition>
+        </field>0
+      </fields>
       <methods/>
       <presentation>
         <details>
@@ -583,6 +625,9 @@
                   </items>
                 </item>
               </items>
+            </item>
+            <item id="powered_devices">
+              <rank>100</rank>
             </item>
             <item id="contacts_list">
               <rank>140</rank>
@@ -793,8 +838,8 @@
                 </item>
               </items>
             </item>
-            <item id="pdus_list">
-              <rank>140</rank>
+            <item id="powered_devices">
+              <rank>100</rank>
             </item>
             <item id="contacts_list">
               <rank>150</rank>
@@ -1027,6 +1072,9 @@
                   </items>
                 </item>
               </items>
+            </item>
+            <item id="powered_devices">
+              <rank>100</rank>
             </item>
             <item id="contacts_list">
               <rank>160</rank>
