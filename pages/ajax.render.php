@@ -1239,13 +1239,32 @@ JS
 				$oSearch = new DBObjectSearch('Shortcut');
 				$aShortcuts = utils::ReadMultipleSelection($oSearch);
 				$iShortcut = $aShortcuts[0];
-				$oShortcut = MetaModel::GetObject('Shortcut', $iShortcut);
+				$oShortcutSearch = new DBObjectSearch('Shortcut');
+				$oShortcutSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
+				$oShortcutSearch->AddCondition('id', $iShortcut, '=');
+				$oShortcutSet = new CMDBObjectSet($oShortcutSearch);
+
+				$oShortcut = $oShortcutSet->Fetch();
+
+				if ($oShortcut === null) {
+					throw new SecurityException(Dict::S('UI:ObjectDoesNotExist'));
+				}
+
 				$oShortcut->StartRenameDialog($oPage);
 				break;
 
 			case 'shortcut_rename_go':
 				$iShortcut = utils::ReadParam('id', 0);
-				$oShortcut = MetaModel::GetObject('Shortcut', $iShortcut);
+
+				$oShortcutSearch = new DBObjectSearch('Shortcut');
+				$oShortcutSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
+				$oShortcutSearch->AddCondition('id', $iShortcut, '=');
+				$oShortcutSet = new CMDBObjectSet($oShortcutSearch);
+				$oShortcut = $oShortcutSet->Fetch();
+
+				if ($oShortcut === null) {
+					throw new SecurityException(Dict::S('UI:ObjectDoesNotExist'));
+				}
 
 				$sName = utils::ReadParam('attr_name', '', false, 'raw_data');
 				if (strlen($sName) > 0) {
