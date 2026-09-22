@@ -6,6 +6,7 @@
 /* SCSS variables (can be overloaded) */
 $ipb-object-brick--url-to-clipboard--opacity: 0.5 !default;
 $ipb-object-brick--url-to-clipboard-tooltip-copied--margin-right: $common-spacing-200!default;
+$ipb-object-brick--padding-small-horizontal: 10px!default;
 
 
 .url-to-clipboard{
@@ -21,4 +22,16 @@ $ipb-object-brick--url-to-clipboard-tooltip-copied--margin-right: $common-spacin
 // Used for clipboard's tooltip, which is not part of .url-to-clipboard element
 .url-to-clipboard-tooltip-copied {
   margin-right: $ipb-object-brick--url-to-clipboard-tooltip-copied--margin-right;
+}
+
+.form_filter_container{
+  position: relative;
+  height: 2.5em;
+  width: 100%;
+}
+
+.form_filter_class{
+  position: absolute;
+  right: 0;
+  padding-right: $ipb-object-brick--padding-small-horizontal;
 }
