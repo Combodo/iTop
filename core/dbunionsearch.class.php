@@ -683,7 +683,7 @@ class DBUnionSearch extends DBSearch
 			return $this;
 		}
 
-		// Opt-in for joined classes filtering, otherwise fallback on DBSearch filtering
+		// Joined classes filtering can be disabled through the configuration.
 		if (MetaModel::GetConfig()->Get('security.disable_joined_classes_filter') === true) {
 			return parent::ApplyDataFilters();
 		}
