@@ -208,9 +208,7 @@ abstract class ItopTestCase extends KernelTestCase
 			return APPROOT;
 		}
 
-		$sAppRootPath = static::GetFirstDirUpContainingFile(__DIR__, 'approot.inc.php');
-
-		return $sAppRootPath.'/';
+		return static::GetFirstDirUpContainingFile(__DIR__, 'approot.inc.php');
 	}
 
 	private static function GetFirstDirUpContainingFile(string $sSearchPath, string $sFileToFindGlobPattern): ?string
