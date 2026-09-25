@@ -116,7 +116,7 @@ class DataSynchroTest extends ItopDataTestCase
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function RunDataSynchroTest($aUserLoginUsecase)
+	public function RunDataSynchroTest($aUserLoginUsecase, array $aAdditionalImportParams = [])
 	{
 		$sDescription = $aUserLoginUsecase['desc'];
 		$sTargetClass = $aUserLoginUsecase['target_class'];
@@ -273,13 +273,13 @@ class DataSynchroTest extends ItopDataTestCase
 				$sCSVTmpFile = tempnam(sys_get_temp_dir(), "CSV");
 				file_put_contents($sCSVTmpFile, $sCsvData);
 
-				$aParams = [
+				$aParams = array_merge($aAdditionalImportParams, [
 					'csvfile' => $sCSVTmpFile,
 					'data_source_id' => $iDataSourceId,
 					'separator' => ';',
 					'simulate' => 0,
 					'output' => 'details',
-				];
+				]);
 				list($iRetCode, $aOutputLines) = static::ExecSynchroImport($aParams, $bSynchroByHttp);
 
 				unlink($sCSVTmpFile);
@@ -388,6 +388,11 @@ class DataSynchroTest extends ItopDataTestCase
 	public function testDataSynchroByCli()
 	{
 		$this->RunDataSynchroTest($this->GetNominalUsecaseData());
+	}
+
+	public function testDataSynchroByCliWithMaxChunkSize()
+	{
+		$this->RunDataSynchroTest($this->GetNominalUsecaseData(), ['max_chunk_size' => 1 ]);
 	}
 
 	public function testDataSynchroByHttp()
