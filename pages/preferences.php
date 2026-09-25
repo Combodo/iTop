@@ -244,7 +244,7 @@ JS
 		);
 		$oShortcutsToolBar->AddSubBlock($oShortcutsRenameButton);
 		// - Delete button
-		$oShortcutsDeleteButton = ButtonUIBlockFactory::MakeForSecondaryAction(
+		$oShortcutsDeleteButton = ButtonUIBlockFactory::MakeForDestructiveAction(
 			Dict::S('UI:Button:Delete'),
 			null,
 			null,
