@@ -11,7 +11,7 @@ define('APPCONF', APPROOT.'conf/');
  *
  * @see ITOP_CORE_VERSION to get full iTop core version
  */
-define('ITOP_DESIGN_LATEST_VERSION', '3.3');
+define('ITOP_DESIGN_LATEST_VERSION', '3.4');
 
 /**
  * Constant containing the iTop core version, whatever application was built
@@ -23,7 +23,7 @@ define('ITOP_DESIGN_LATEST_VERSION', '3.3');
  * @used-by utils::GetItopVersionWikiSyntax()
  * @used-by iTopModulesPhpVersionIntegrationTest
  */
-define('ITOP_CORE_VERSION', '3.3.1');
+define('ITOP_CORE_VERSION', '3.4.0');
 
 /**
  * @var string

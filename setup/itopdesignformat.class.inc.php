@@ -121,6 +121,12 @@ class iTopDesignFormat
 		'3.3' => [
 			'previous' => '3.2',
 			'go_to_previous' => 'From33To32',
+			'next' => '3.4',
+			'go_to_next' => 'from33To34',
+		],
+		'3.4' => [
+			'previous' => '3.3',
+			'go_to_previous' => 'From34To33',
 			'next' => null,
 			'go_to_next' => null,
 		],
@@ -1094,6 +1100,26 @@ class iTopDesignFormat
 	 * @return void (Errors are logged)
 	 */
 	protected function From33To32($oFactory)
+	{
+		// Nothing for now...
+	}
+
+	/**
+	 * Upgrade the format from version 3.3 to 3.4
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From33To34($oFactory)
+	{
+		// Nothing for now
+	}
+
+	/**
+	 * Downgrade the format from version 3.4 to 3.3
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From34To33($oFactory)
 	{
 		// Nothing for now...
 	}

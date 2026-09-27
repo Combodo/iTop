@@ -21,7 +21,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-portal-base/3.3.1',
+	'itop-portal-base/3.4.0',
 	[
 	// Identification
 	'label' => 'Portal Development Library',
