@@ -897,7 +897,7 @@ class DashletObjectList extends Dashlet
 
 	/**
 	 * Return all attribute codes allowed for tree grouping for the class targeted by $sOql.
-	 * Which means any external / hierarchical keys of the same class (or child classes)
+	 * Which means any hierarchical keys of the same class (or child classes)
 	 *
 	 * @param string $sOql
 	 * @return array  [attcode => label]
@@ -909,12 +909,12 @@ class DashletObjectList extends Dashlet
 			$oQuery = $this->oModelReflection->GetQuery($sOql);
 			$sClass = $oQuery->GetClass();
 			foreach ($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType) {
-				// Ignore non-external key attributes
-				if (false === is_a($sAttType, AttributeExternalKey::class, true)) {
+				// Ignore non-hierarchical key attributes
+				if (false === is_a($sAttType, AttributeHierarchicalKey::class, true)) {
 					continue;
 				}
 
-				// Ignore external that do not point to the same class
+				// Ignore hierarchical that do not point to the same class
 				$sExtKeyTargetClass = $this->oModelReflection->GetAttributeProperty($sClass, $sAttCode, 'targetclass', '');
 				if (false === is_a($sExtKeyTargetClass, $sClass, true)) {
 					continue;
