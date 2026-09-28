@@ -6,6 +6,7 @@ namespace Combodo\iTop\Test\UnitTest\Application;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Config;
+use Exception;
 use MetaModel;
 
 class LoginWebPageTest extends ItopDataTestCase
