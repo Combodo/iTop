@@ -6,7 +6,6 @@ namespace Combodo\iTop\Test\UnitTest\Application;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Config;
-use Exception;
 use MetaModel;
 
 class LoginWebPageTest extends ItopDataTestCase
@@ -111,7 +110,7 @@ class LoginWebPageTest extends ItopDataTestCase
 		$this->assertStringContainsString('<title>iTop login</title>', $sPageContent, 'if itop is configured to force login when no there is no delegated authentication endpoints list, then login should be required.');
 	}
 
-	public function testWithoutDelegatedAuthenticationEndpointsListWithDefaultConfiguration()
+	public function testWithoutDelegatedAuthenticationEndpointsListRequiresLoginByDefault()
 	{
 		$sPageContent = $this->CallItopUri(
 			"pages/exec.php?exec_module=extension-without-delegated-authentication-endpoints-list&exec_page=src/Controller/File.php",
@@ -120,7 +119,7 @@ class LoginWebPageTest extends ItopDataTestCase
 			true
 		);
 
-		$this->assertStringContainsString('Yo', $sPageContent, 'by default (until N°9343) if no delegated authentication endpoints list is defined, not logged in persons should access pages');
+		$this->assertStringContainsString('<title>iTop login</title>', $sPageContent, 'by default, login should be required when no delegated authentication endpoints list is defined');
 	}
 
 	public function testNotInDelegatedAuthenticationEndpointsList()
