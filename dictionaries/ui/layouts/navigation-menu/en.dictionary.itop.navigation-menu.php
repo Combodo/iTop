@@ -31,6 +31,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Hi %1$s!',
 	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s contact picture',
 	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Open user menu',
+	'UI:Layout:NavigationMenu:ResetSidebar' => 'Reset sidebar',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu entries',
 
 ]);

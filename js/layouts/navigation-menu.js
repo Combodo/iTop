@@ -27,7 +27,20 @@ $(function()
 					active_menu_group: null,
 					display_counts: false,
 					filter_keyup_throttle: 200,             // In milliseconds
-					org_id: ''
+					org_id: '',
+					resizer_storage_key: 'itop.navigationMenuWidth',
+					resizer_css_custom_property: '--ibo-navigation-menu--custom-width',
+					resizer_reveal_css_custom_property: '--ibo-navigation-menu--content-reveal',
+					resizer_hit_area_width: 12, // Keep in sync with _navigation-menu.scss
+					responsive_collapse_breakpoint: 740, // Keep in sync with layout.html.twig
+					resizer_collapsed_width: 60,
+					resizer_min_width: 240,
+					resizer_snap_threshold: 150, // Keep in sync with _navigation-menu.scss
+					resizer_max_viewport_ratio: 0.5,
+					resizer_keyboard_step: 20,
+					silo_selection_width_css_custom_property: '--ibo-navigation-menu--silo-selection-width',
+					silo_selection_min_width: 150,
+					silo_selection_max_width: 280,
 				},
 			css_classes:
 				{
@@ -36,11 +49,16 @@ $(function()
 					menu_active: 'ibo-is-active',
 					menu_filtered: 'ibo-is-filtered',
 					menu_group_active: 'ibo-is-active',
-					menu_nodes_active: 'ibo-is-active'
+					menu_nodes_active: 'ibo-is-active',
+					is_resizing: 'ibo-is-user-resizing',
+					is_resizer_initializing: 'ibo-is-resizer-initializing',
+					has_custom_width: 'ibo-has-custom-width',
 				},
 			js_selectors:
 				{
 					menu_toggler: '[data-role="ibo-navigation-menu--toggler"]',
+					menu_body: '.ibo-navigation-menu--body',
+					menu_resizer: '[data-role="ibo-navigation-menu--resizer"]',
 					menu_group: '[data-role="ibo-navigation-menu--menu-group"]',
 					menu_drawer: '[data-role="ibo-navigation-menu--drawer"]',
 					menu_filter_placeholder: '[data-role="ibo-navigation-menu--menu--placeholder"]',
@@ -55,15 +73,30 @@ $(function()
 					menu_node_label: '[data-role="ibo-navigation-menu--menu-node-label"]',
 				},
 			filter_throttle_timeout: null,
+			menu_resize_state: null,
+			user_prefers_expanded: null,
+			responsive_is_narrow: null,
 
 			// the constructor
 			_create: function () {
 				this.element.addClass('ibo-navigation-menu');
+				this.user_prefers_expanded = this.element[0].dataset.preferredExpanded === 'true';
+				this.responsive_is_narrow = window.innerWidth < this.options.responsive_collapse_breakpoint;
 				this._bindEvents();
+				this._SyncMenuResizeState();
+				this.element.removeClass(this.css_classes.is_resizer_initializing);
+				this._SyncSiloSelectionWidth();
 			},
 			// events bound via _bind are removed automatically
 			// revert other modifications here
 			_destroy: function () {
+				this._FinishMenuResize();
+				$(document).off(this.eventNamespace);
+				$(window).off(this.eventNamespace);
+				this.element.find(this.js_selectors.menu_resizer).off(this.eventNamespace);
+				this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
+				this.element[0].style.removeProperty(this.options.resizer_reveal_css_custom_property);
+				this.element[0].style.removeProperty(this.options.silo_selection_width_css_custom_property);
 				this.element.removeClass('ibo-navigation-menu');
 			},
 			_bindEvents: function () {
@@ -73,6 +106,31 @@ $(function()
 				// Click on collapse/expand toggler
 				this.element.find(this.js_selectors.menu_toggler).on('click', function (oEvent) {
 					me._onTogglerClick(oEvent);
+				});
+				const oMenuResizerElem = this.element.find(this.js_selectors.menu_resizer);
+				oMenuResizerElem.on('pointerdown'+this.eventNamespace, function (oEvent) {
+					me._onMenuResizePointerDown(oEvent);
+				});
+				oMenuResizerElem.on('dblclick'+this.eventNamespace, function (oEvent) {
+					me._onTogglerClick(oEvent);
+				});
+				oMenuResizerElem.on('keydown'+this.eventNamespace, function (oEvent) {
+					me._onMenuResizeKeyDown(oEvent);
+				});
+				oMenuResizerElem.on('lostpointercapture'+this.eventNamespace, function () {
+					me._FinishMenuResize();
+				});
+				$(window).on('pointermove'+this.eventNamespace, function (oEvent) {
+					me._onMenuResizePointerMove(oEvent);
+				});
+				$(window).on('pointerup'+this.eventNamespace+' pointercancel'+this.eventNamespace, function (oEvent) {
+					me._FinishMenuResize(me._GetPointerEvent(oEvent).pointerId);
+				});
+				$(window).on('resize'+this.eventNamespace, function () {
+					me._onWindowResize();
+				});
+				$(document).on('keydown'+this.eventNamespace, function (oEvent) {
+					me._onMenuToggleShortcut(oEvent);
 				});
 				// Click on menu group
 				this.element.find(this.js_selectors.menu_group).on('click', function (oEvent) {
@@ -115,13 +173,97 @@ $(function()
 			{
 				// Avoid anchor glitch
 				oEvent.preventDefault();
-
-				// Toggle menu
+				this._ToggleMenu();
+			},
+			_ToggleMenu: function () {
 				this.element.toggleClass(this.css_classes.menu_expanded);
+				this._SyncMenuResizeState();
+				this._SaveMenuExpandedPreference(this.element.hasClass(this.css_classes.menu_expanded));
+			},
+			_onMenuToggleShortcut: function (oEvent) {
+				if (oEvent.key.toLowerCase() !== 'b' || oEvent.ctrlKey === oEvent.metaKey || oEvent.altKey || oEvent.shiftKey || oEvent.repeat || this.menu_resize_state !== null ||
+					$(oEvent.target).closest('input, textarea, select, [contenteditable]').length > 0) {
+					return;
+				}
 
-				// Save state in user preferences
-				const sPrefValue = this.element.hasClass(this.css_classes.menu_expanded) ? 'expanded' : 'collapsed';
-				SetUserPreference('navigation_menu.expanded', sPrefValue, true);
+				oEvent.preventDefault();
+				this._ToggleMenu();
+			},
+			_onWindowResize: function () {
+				const bNarrow = window.innerWidth < this.options.responsive_collapse_breakpoint;
+				if (bNarrow !== this.responsive_is_narrow) {
+					this._FinishMenuResize();
+					this.responsive_is_narrow = bNarrow;
+					this.element.toggleClass(this.css_classes.menu_expanded, !bNarrow && this.user_prefers_expanded);
+				}
+				this._SyncMenuResizeState();
+			},
+			_onMenuResizePointerDown: function (oEvent) {
+				const oPointerEvent = this._GetPointerEvent(oEvent);
+				if (oPointerEvent.button !== 0) {
+					return;
+				}
+
+				oEvent.preventDefault();
+				const iStartWidth = this.element.find(this.js_selectors.menu_body)[0].getBoundingClientRect().width;
+				this._SetMenuWidth(iStartWidth, false, true);
+				this._SetMenuContentReveal(iStartWidth);
+				this.menu_resize_state = {
+					pointer_id: oPointerEvent.pointerId,
+					start_x: oPointerEvent.clientX,
+					start_width: iStartWidth,
+				};
+				oEvent.currentTarget.setPointerCapture(oPointerEvent.pointerId);
+				this.element.addClass(this.css_classes.is_resizing);
+				$('body').addClass('ibo-is-resizing-navigation-menu');
+			},
+			_onMenuResizePointerMove: function (oEvent) {
+				if (this.menu_resize_state === null) {
+					return;
+				}
+
+				const oPointerEvent = this._GetPointerEvent(oEvent);
+				if (oPointerEvent.pointerId !== this.menu_resize_state.pointer_id) {
+					return;
+				}
+
+				oEvent.preventDefault();
+				const iWidth = this.menu_resize_state.start_width + oPointerEvent.clientX - this.menu_resize_state.start_x;
+				const iNextWidth = this._SetMenuWidth(iWidth, false, true);
+				this._SetMenuContentReveal(iNextWidth);
+			},
+			_onMenuResizeKeyDown: function (oEvent) {
+				const bExpanded = this.element.hasClass(this.css_classes.menu_expanded);
+				const iCurrentWidth = this.element.find(this.js_selectors.menu_body)[0].getBoundingClientRect().width;
+				let iNextWidth = null;
+
+				if (oEvent.key === 'ArrowRight') {
+					iNextWidth = bExpanded ? iCurrentWidth + this.options.resizer_keyboard_step : this.options.resizer_min_width;
+				} else if (oEvent.key === 'ArrowLeft') {
+					if (!bExpanded) {
+						return;
+					}
+					if (iCurrentWidth <= this.options.resizer_min_width) {
+						oEvent.preventDefault();
+						this._CollapseMenuFromResize();
+						return;
+					}
+					iNextWidth = iCurrentWidth - this.options.resizer_keyboard_step;
+				} else if (oEvent.key === 'Home') {
+					oEvent.preventDefault();
+					this._CollapseMenuFromResize();
+					return;
+				} else if (oEvent.key === 'End') {
+					iNextWidth = this._GetMenuResizeBounds().max;
+				}
+
+				if (iNextWidth !== null) {
+					oEvent.preventDefault();
+					this.element.addClass(this.css_classes.menu_expanded);
+					this._SetMenuWidth(iNextWidth, true);
+					this._SyncMenuResizeState();
+					this._SaveMenuExpandedPreference(true);
+				}
 			},
 			_onMenuGroupClick: function(oEvent, oMenuGroupElem)
 			{
@@ -207,9 +349,148 @@ $(function()
 					$(oEvent.target.closest(this.js_selectors.menu_drawer)).length === 0
 					&& $(oEvent.target.closest('[data-role="ibo-navigation-menu--menu-group"]')).length === 0
 					&& $(oEvent.target.closest(this.js_selectors.menu_toggler)).length === 0
+					&& $(oEvent.target.closest(this.js_selectors.menu_resizer)).length === 0
 				) {
 					this._closeDrawer();
 				}
+			},
+
+			// - Helpers on menu resizing
+			_GetPointerEvent: function (oEvent) {
+				return oEvent.originalEvent || oEvent;
+			},
+			_SyncSiloSelectionWidth: function () {
+				let iLongestLabelWidth = 0;
+				this.element.find(this.js_selectors.menu_group+' .ibo-navigation-menu--menu-group-title').each(function () {
+					const oRange = document.createRange();
+					oRange.selectNodeContents(this);
+					iLongestLabelWidth = Math.max(iLongestLabelWidth, oRange.getBoundingClientRect().width);
+					oRange.detach();
+				});
+
+				const iSelectionWidth = Math.min(
+					this.options.silo_selection_max_width,
+					Math.max(this.options.silo_selection_min_width, Math.ceil(iLongestLabelWidth))
+				);
+				this.element[0].style.setProperty(this.options.silo_selection_width_css_custom_property, iSelectionWidth+'px');
+			},
+			_GetMenuResizeBounds: function () {
+				const iViewportLimit = Math.max(this.options.resizer_collapsed_width, window.innerWidth - this.options.resizer_hit_area_width);
+				const iMinWidth = Math.min(this.options.resizer_min_width, iViewportLimit);
+				return {
+					min: iMinWidth,
+					max: Math.min(iViewportLimit, Math.max(iMinWidth, Math.floor(window.innerWidth * this.options.resizer_max_viewport_ratio))),
+				};
+			},
+			_GetStoredMenuWidth: function () {
+				try {
+					const iWidth = Number.parseInt(window.localStorage.getItem(this.options.resizer_storage_key), 10);
+					return Number.isFinite(iWidth) ? iWidth : null;
+				} catch (oError) {
+					return null;
+				}
+			},
+			_StoreMenuWidth: function (iWidth) {
+				try {
+					window.localStorage.setItem(this.options.resizer_storage_key, String(Math.round(iWidth)));
+				} catch (oError) {
+					// Resizing still works when local storage is unavailable.
+				}
+			},
+			resetSidebar: function () {
+				try {
+					window.localStorage.removeItem(this.options.resizer_storage_key);
+				} catch (oError) {
+					// Reset the current menu even when local storage is unavailable.
+				}
+				this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
+				this.element[0].style.removeProperty(this.options.resizer_reveal_css_custom_property);
+				this.element.removeClass(this.css_classes.has_custom_width);
+				this._SyncMenuResizeState();
+			},
+			_SaveMenuExpandedPreference: function (bExpanded) {
+				this.user_prefers_expanded = bExpanded;
+				this.element[0].dataset.preferredExpanded = String(bExpanded);
+				SetUserPreference('navigation_menu.expanded', bExpanded ? 'expanded' : 'collapsed', true);
+			},
+			_CollapseMenuFromResize: function (iPointerId) {
+				this._FinishMenuResize(iPointerId);
+				this.element.removeClass(this.css_classes.menu_expanded);
+				this._SyncMenuResizeState();
+				this._SaveMenuExpandedPreference(false);
+			},
+			_SetMenuWidth: function (iWidth, bPersist, bAllowCollapsedRange) {
+				const oBounds = this._GetMenuResizeBounds();
+				const iMinimumWidth = bAllowCollapsedRange ? this.options.resizer_collapsed_width : oBounds.min;
+				const iNextWidth = Math.min(oBounds.max, Math.max(iMinimumWidth, iWidth));
+				const oHandleElem = this.element.find(this.js_selectors.menu_resizer);
+
+				this.element[0].style.setProperty(this.options.resizer_css_custom_property, iNextWidth+'px');
+				this.element.addClass(this.css_classes.has_custom_width);
+				oHandleElem.attr({
+					'aria-valuemin': this.options.resizer_collapsed_width,
+					'aria-valuemax': oBounds.max,
+					'aria-valuenow': Math.round(iNextWidth),
+					'aria-valuetext': Math.round(iNextWidth)+' pixels wide',
+				});
+				if (bPersist) {
+					this._StoreMenuWidth(iNextWidth);
+				}
+				return iNextWidth;
+			},
+			_SetMenuContentReveal: function (iWidth) {
+				const iRevealRange = this.options.resizer_min_width - this.options.resizer_collapsed_width;
+				const fReveal = Math.min(1, Math.max(0, (iWidth - this.options.resizer_collapsed_width) / iRevealRange));
+				this.element[0].style.setProperty(this.options.resizer_reveal_css_custom_property, fReveal.toFixed(3));
+			},
+			_SyncMenuResizeState: function () {
+				const oHandleElem = this.element.find(this.js_selectors.menu_resizer);
+				if (oHandleElem.length === 0) {
+					return;
+				}
+
+				const bExpanded = this.element.hasClass(this.css_classes.menu_expanded);
+				const iStoredWidth = this._GetStoredMenuWidth();
+				if (bExpanded && iStoredWidth !== null) {
+					this._SetMenuWidth(iStoredWidth, false);
+				} else {
+					this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
+					this.element[0].style.removeProperty(this.options.resizer_reveal_css_custom_property);
+					this.element.removeClass(this.css_classes.has_custom_width);
+					const oBounds = this._GetMenuResizeBounds();
+					const iCurrentWidth = Math.round(this.element.find(this.js_selectors.menu_body)[0].getBoundingClientRect().width);
+					oHandleElem.attr({
+						'aria-valuemin': this.options.resizer_collapsed_width,
+						'aria-valuemax': oBounds.max,
+						'aria-valuenow': iCurrentWidth,
+						'aria-valuetext': iCurrentWidth+' pixels wide',
+					});
+				}
+			},
+			_FinishMenuResize: function (iPointerId) {
+				if (this.menu_resize_state === null || (iPointerId !== undefined && iPointerId !== this.menu_resize_state.pointer_id)) {
+					return;
+				}
+
+				const iActivePointerId = this.menu_resize_state.pointer_id;
+				const iCurrentWidth = this.element.find(this.js_selectors.menu_body)[0].getBoundingClientRect().width;
+				const bExpanded = iCurrentWidth >= this.options.resizer_snap_threshold;
+				this.menu_resize_state = null;
+				const oHandle = this.element.find(this.js_selectors.menu_resizer)[0];
+				if (oHandle && oHandle.hasPointerCapture && oHandle.hasPointerCapture(iActivePointerId)) {
+					oHandle.releasePointerCapture(iActivePointerId);
+				}
+				this.element.removeClass(this.css_classes.is_resizing);
+				$('body').removeClass('ibo-is-resizing-navigation-menu');
+				if (bExpanded) {
+					this.element.addClass(this.css_classes.menu_expanded);
+					this.element[0].style.removeProperty(this.options.resizer_reveal_css_custom_property);
+					this._SetMenuWidth(Math.max(this.options.resizer_min_width, iCurrentWidth), true);
+				} else {
+					this.element.removeClass(this.css_classes.menu_expanded);
+				}
+				this._SyncMenuResizeState();
+				this._SaveMenuExpandedPreference(bExpanded);
 			},
 			/**
 			 * Return the ID of the active menu group, or null if none (typically when the drawer is closed)
