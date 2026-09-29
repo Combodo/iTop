@@ -38,8 +38,8 @@ iTop also offers mass import tools to help you become even more efficient.
 
 ## Resources
 
- - [iTop Forums][1]: community support
- - [iTop Tickets][2]: for feature requests and bug reports
+ - [GitHub Discussions][1]: community support
+ - [GitHub Issues Tickets ][2]: for feature requests and bug reports
  - [Releases download][3]
  - [iTop requirements][4]
  - [Documentation][5] covering both iTop and its official extensions
@@ -49,7 +49,7 @@ iTop also offers mass import tools to help you become even more efficient.
 
 [1]: https://github.com/Combodo/iTop/discussions
 [2]: https://github.com/Combodo/iTop/issues
-[3]: https://github.com/Combodo/iTop/releases/latest
+[3]: https://github.com/Combodo/iTop/releases
 [4]: https://www.itophub.io/wiki/page?id=latest:install:requirements
 [5]: https://www.itophub.io/wiki
 [6]: https://store.itophub.io/en_US/
