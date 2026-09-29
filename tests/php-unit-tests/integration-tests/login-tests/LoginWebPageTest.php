@@ -123,6 +123,23 @@ class LoginWebPageTest extends ItopDataTestCase
 		$this->assertStringContainsString('<title>iTop login</title>', $sPageContent, 'by default, login should be required when no delegated authentication endpoints list is defined');
 	}
 
+	public function testWithoutDelegatedAuthenticationEndpointsListWithCompatibilityOptOut()
+	{
+		@chmod($this->oConfig->GetLoadedFile(), 0770);
+		$this->oConfig->Set('security.disable_exec_forced_login_for_all_enpoints', true, 'AnythingButEmptyOrUnknownValue');
+		$this->oConfig->WriteToFile();
+		@chmod($this->oConfig->GetLoadedFile(), 0444);
+
+		$sPageContent = $this->CallItopUri(
+			"pages/exec.php?exec_module=extension-without-delegated-authentication-endpoints-list&exec_page=src/Controller/File.php",
+			[],
+			[],
+			true
+		);
+
+		$this->assertStringContainsString('Yo !', $sPageContent, 'the compatibility opt-out should allow anonymous access when no delegated authentication endpoints list is defined');
+	}
+
 	public function testNotInDelegatedAuthenticationEndpointsList()
 	{
 		$sPageContent = $this->CallItopUri(
