@@ -1750,8 +1750,8 @@ class Config
 		'security.disable_joined_classes_filter' => [
 			'type'                => 'bool',
 			'description'         => 'If true, scope filters aren\'t applied to joined classes or union classes not directly listed in the SELECT clause.',
-			'default'             => true,
-			'value'               => true,
+			'default'             => false,
+			'value'               => false,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
@@ -1766,8 +1766,8 @@ class Config
 		'security.disable_exec_forced_login_for_all_enpoints' => [
 			'type'                => 'bool',
 			'description'         => 'If true, when no delegated authentication module is defined, no login will be forced on modules exec endpoints',
-			'default'             => true,
-			'value'               => true,
+			'default'             => false,
+			'value'               => false,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],

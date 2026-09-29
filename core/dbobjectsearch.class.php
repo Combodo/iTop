@@ -1938,7 +1938,7 @@ class DBObjectSearch extends DBSearch
 		$oSearch = $this;
 		$aClassesToFilter = $this->GetSelectedClasses();
 
-		// Opt-in for joined classes filtering, otherwise only filter the selected class(es)
+		// Joined classes filtering can be disabled through the configuration.
 		if (MetaModel::GetConfig()->Get('security.disable_joined_classes_filter') === false) {
 			$aClassesToFilter = $this->GetJoinedClasses();
 		}
