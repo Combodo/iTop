@@ -1704,7 +1704,7 @@ class DBObjectSearch extends DBSearch
 	 * @return array|mixed|\SQLObjectQuery|null
 	 * @throws \CoreException
 	 */
-	public function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null)
+	public function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null, $bSelectOnlyIds = false)
 	{
 		// Hide objects that are not visible to the current user
 		//
@@ -1828,7 +1828,7 @@ class DBObjectSearch extends DBSearch
 		if (!isset($oSQLQuery)) {
 			$oKPI = new ExecutionKPI();
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oSearch);
-			$oSQLQuery = $oSQLObjectQueryBuilder->BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr, $aSelectedClasses, $aSelectExpr);
+			$oSQLQuery = $oSQLObjectQueryBuilder->BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr, $aSelectedClasses, $aSelectExpr, $bSelectOnlyIds);
 			$oKPI->ComputeStats('BuildSQLQueryStruct', $sOqlQuery);
 
 			if (self::$m_bQueryCacheEnabled) {
