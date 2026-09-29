@@ -94,6 +94,7 @@ $(function()
 				$(document).off(this.eventNamespace);
 				$(window).off(this.eventNamespace);
 				this.element.find(this.js_selectors.menu_resizer).off(this.eventNamespace);
+				this.element.find(this.js_selectors.menu_body).off(this.eventNamespace);
 				this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
 				this.element[0].style.removeProperty(this.options.resizer_reveal_css_custom_property);
 				this.element[0].style.removeProperty(this.options.silo_selection_width_css_custom_property);
@@ -119,6 +120,11 @@ $(function()
 				});
 				oMenuResizerElem.on('lostpointercapture'+this.eventNamespace, function () {
 					me._FinishMenuResize();
+				});
+				this.element.find(this.js_selectors.menu_body).on('transitionend'+this.eventNamespace, function (oEvent) {
+					if (oEvent.target === this && oEvent.originalEvent.propertyName === 'width') {
+						me._UpdateMenuResizeAria(this.getBoundingClientRect().width);
+					}
 				});
 				$(window).on('pointermove'+this.eventNamespace, function (oEvent) {
 					me._onMenuResizePointerMove(oEvent);
@@ -423,16 +429,10 @@ $(function()
 				const oBounds = this._GetMenuResizeBounds();
 				const iMinimumWidth = bAllowCollapsedRange ? this.options.resizer_collapsed_width : oBounds.min;
 				const iNextWidth = Math.min(oBounds.max, Math.max(iMinimumWidth, iWidth));
-				const oHandleElem = this.element.find(this.js_selectors.menu_resizer);
 
 				this.element[0].style.setProperty(this.options.resizer_css_custom_property, iNextWidth+'px');
 				this.element.addClass(this.css_classes.has_custom_width);
-				oHandleElem.attr({
-					'aria-valuemin': this.options.resizer_collapsed_width,
-					'aria-valuemax': oBounds.max,
-					'aria-valuenow': Math.round(iNextWidth),
-					'aria-valuetext': Math.round(iNextWidth)+' pixels wide',
-				});
+				this._UpdateMenuResizeAria(iNextWidth);
 				if (bPersist) {
 					this._StoreMenuWidth(iNextWidth);
 				}
@@ -457,15 +457,19 @@ $(function()
 					this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
 					this.element[0].style.removeProperty(this.options.resizer_reveal_css_custom_property);
 					this.element.removeClass(this.css_classes.has_custom_width);
-					const oBounds = this._GetMenuResizeBounds();
 					const iCurrentWidth = Math.round(this.element.find(this.js_selectors.menu_body)[0].getBoundingClientRect().width);
-					oHandleElem.attr({
-						'aria-valuemin': this.options.resizer_collapsed_width,
-						'aria-valuemax': oBounds.max,
-						'aria-valuenow': iCurrentWidth,
-						'aria-valuetext': iCurrentWidth+' pixels wide',
-					});
+					this._UpdateMenuResizeAria(iCurrentWidth);
 				}
+			},
+			_UpdateMenuResizeAria: function (iWidth) {
+				const iRoundedWidth = Math.round(iWidth);
+				const oBounds = this._GetMenuResizeBounds();
+				this.element.find(this.js_selectors.menu_resizer).attr({
+					'aria-valuemin': this.options.resizer_collapsed_width,
+					'aria-valuemax': Math.max(oBounds.max, iRoundedWidth),
+					'aria-valuenow': iRoundedWidth,
+					'aria-valuetext': this.options.resizer_width_label.replace('%1$s', iRoundedWidth),
+				});
 			},
 			_FinishMenuResize: function (iPointerId) {
 				if (this.menu_resize_state === null || (iPointerId !== undefined && iPointerId !== this.menu_resize_state.pointer_id)) {
