@@ -33,7 +33,7 @@ iTop also offers mass import tools to help you become even more efficient.
 [62]: https://www.itophub.io/wiki/page?id=latest:release:change_log
 [63]: https://www.itophub.io/wiki/page?id=latest:release:start
 [64]: https://www.itophub.io/wiki/page?id=latest:install:start
-[65]: https://sourceforge.net/projects/itop/files/latest/download
+[65]: https://github.com/Combodo/iTop/releases/latest
 
 
 ## Resources
@@ -47,9 +47,9 @@ iTop also offers mass import tools to help you become even more efficient.
  - [iTop versions history][7]
 
 
-[1]: https://sourceforge.net/p/itop/discussion/
-[2]: https://sourceforge.net/p/itop/tickets/
-[3]: https://sourceforge.net/projects/itop/files/itop/
+[1]: https://github.com/Combodo/iTop/discussions
+[2]: https://github.com/Combodo/iTop/issues
+[3]: https://github.com/Combodo/iTop/releases/latest
 [4]: https://www.itophub.io/wiki/page?id=latest:install:requirements
 [5]: https://www.itophub.io/wiki
 [6]: https://store.itophub.io/en_US/
