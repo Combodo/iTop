@@ -1775,6 +1775,8 @@ class DBObjectSearch extends DBSearch
 			$aContextData['aSelectExpr'] = $aSelectExpr;
 			$sRawId .= $bGetCount;
 			$aContextData['bGetCount'] = $bGetCount;
+			$sRawId .= 'ids:'.($bSelectOnlyIds ? '1' : '0');
+			$aContextData['bSelectOnlyIds'] = $bSelectOnlyIds;
 			if (is_array($aSelectedClasses)) {
 				$sRawId .= implode(',', $aSelectedClasses); // Unions may alter the list of selected columns
 			}
