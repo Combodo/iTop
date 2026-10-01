@@ -29,13 +29,14 @@ class SQLObjectQueryBuilder
 	 * @param array $aGroupByExpr
 	 * @param array $aSelectedClasses
 	 * @param array $aSelectExpr
+	 * @param bool $bSelectOnlyIds
 	 *
 	 * @return null|SQLObjectQuery
 	 * @throws \CoreException
 	 */
-	public function BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null)
+	public function BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null, $bSelectOnlyIds = false)
 	{
-		if ($bGetCount || !is_null($aGroupByExpr)) {
+		if ($bGetCount || !is_null($aGroupByExpr) || $bSelectOnlyIds) {
 			// Avoid adding all the fields for counts or "group by" requests
 			$aAttToLoad = [];
 			foreach ($this->oDBObjetSearch->GetSelectedClasses() as $sClassAlias => $sClass) {

@@ -527,10 +527,10 @@ class DBUnionSearch extends DBSearch
 		throw new Exception('MakeUpdateQuery is not implemented for the unions!');
 	}
 
-	public function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null)
+	public function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null, $bSelectOnlyIds = false)
 	{
 		if (count($this->aSearches) == 1) {
-			return $this->aSearches[0]->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, $aSelectedClasses, $aSelectExpr);
+			return $this->aSearches[0]->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, $aSelectedClasses, $aSelectExpr, $bSelectOnlyIds);
 		}
 
 		$aSQLQueries = [];
@@ -610,7 +610,7 @@ class DBUnionSearch extends DBSearch
 					}
 				}
 			}
-			$oSubQuery = $oSearch->GetSQLQueryStructure($aQueryAttToLoad, false, $aQueryGroupByExpr, $aSearchSelectedClasses, $aQuerySelectExpr);
+			$oSubQuery = $oSearch->GetSQLQueryStructure($aQueryAttToLoad, false, $aQueryGroupByExpr, $aSearchSelectedClasses, $aQuerySelectExpr, $bSelectOnlyIds);
 			if (count($aSearchAliases) > 1) {
 				// Necessary to make sure that selected columns will match throughout all the queries
 				// (default order of selected fields depending on the order of JOINS)
