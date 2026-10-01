@@ -201,20 +201,22 @@ class DBBackup
 
 		$oArchive = new ITopArchiveTar($sTargetFile.'.tar.gz');
 
-		$sTmpFolder = APPROOT.'data/tmp-backup-'.rand(10000, getrandmax());
+		$sTmpFolder = static::GetTmpDir($this->oConfig);
 		$aFiles = $this->PrepareFilesToBackup($sSourceConfigFile, $sTmpFolder);
 
 		$sFilesList = var_export($aFiles, true);
 		$this->LogInfo("backup: adding to archive files '$sFilesList'");
 		$bArchiveCreationResult = $oArchive->createModify($aFiles, '', $sTmpFolder);
+
+		$this->LogInfo("backup: removing tmp folder '$sTmpFolder'");
+		SetupUtils::rrmdir($sTmpFolder);
+
 		if (!$bArchiveCreationResult) {
+			@unlink($sTargetFile.'.tar.gz');
 			$sErrorMsg = 'Cannot backup : unable to create archive';
 			$this->LogError($sErrorMsg);
 			throw new BackupException($sErrorMsg);
 		}
-
-		$this->LogInfo("backup: removing tmp folder '$sTmpFolder'");
-		SetupUtils::rrmdir($sTmpFolder);
 	}
 
 	/**
@@ -602,6 +604,18 @@ EOF;
 		}
 
 		return '"'.$sMySQLCommand.'"';
+	}
+
+	/**
+	 * Return a directory name for temporary backup files.
+	 */
+	public static function GetTmpDir(Config $oConfig): string
+	{
+		$sTmpDir = @tempnam($oConfig->GetModuleSetting('itop-backup', 'backup_tmpdir', 'data/') , 'itop-backup-');
+		unlink($sTmpDir); // I need a directory, not a file...
+		SetupUtils::builddir($sTmpDir);
+
+		return $sTmpDir;
 	}
 }
 
