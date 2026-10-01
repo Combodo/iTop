@@ -921,7 +921,7 @@ abstract class DBSearch
 	 * @internal
 	 *
 	 */
-	public function MakeSelectQuery($aOrderBy = [], $aArgs = [], $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false, $bBeautifulSQL = true)
+	public function MakeSelectQuery($aOrderBy = [], $aArgs = [], $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false, $bBeautifulSQL = true, $bSelectOnlyIds = false)
 	{
 		// Check the order by specification, and prefix with the class alias
 		// and make sure that the ordering columns are going to be selected
@@ -962,7 +962,7 @@ abstract class DBSearch
 			}
 		}
 
-		$oSQLQuery = $this->GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount);
+		$oSQLQuery = $this->GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, null, null, $bSelectOnlyIds);
 
 		if ($this->m_bNoContextParameters) {
 			// Only internal parameters
@@ -1046,7 +1046,7 @@ abstract class DBSearch
 	 * @internal
 	 *
 	 */
-	protected function GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null, $aSelectExpr = null)
+	protected function GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null, $aSelectExpr = null, $bSelectOnlyIds = false)
 	{
 		$oSearch = $this->ApplyDataFilters();
 
@@ -1068,7 +1068,7 @@ abstract class DBSearch
 			}
 		}
 
-		$oSQLQuery = $oSearch->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, null, $aSelectExpr);
+		$oSQLQuery = $oSearch->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, null, $aSelectExpr, $bSelectOnlyIds);
 		$oSQLQuery->SetSourceOQL($oSearch->ToOQL());
 
 		// Join to an additional table, if required...
@@ -1103,7 +1103,8 @@ abstract class DBSearch
 		$bGetCount,
 		$aGroupByExpr = null,
 		$aSelectedClasses = null,
-		$aSelectExpr = null
+		$aSelectExpr = null,
+		$bSelectOnlyIds = false
 	);
 
 	/**

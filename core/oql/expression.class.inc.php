@@ -1,14 +1,16 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class MissingQueryArgument extends CoreException {
+class MissingQueryArgument extends CoreException
+{
 }
 
-
-class ExpressionHelper {
+class ExpressionHelper
+{
 	/**
 	 * Callback to be used with {@link Expression::Browse}, to update the AllowAllData attribute in the NestedQueryExpression that are
 	 * present in the Expression tree
@@ -20,7 +22,8 @@ class ExpressionHelper {
 	 *
 	 * @since 2.7.2 3.0.0 N°3324
 	 */
-	public static function ExpressionAllowAllDataCallback($oExpression, $bAllowAllData) {
+	public static function ExpressionAllowAllDataCallback($oExpression, $bAllowAllData)
+	{
 		if (!($oExpression instanceof NestedQueryExpression)) {
 			return;
 		}
@@ -36,17 +39,17 @@ class NotYetEvaluatedExpression extends CoreException
 /**
  * @method Check($oModelReflection, array $aAliases, $sSourceQuery)
  */
-abstract class Expression {
-	const OPERATOR_BINARY = 'binary';
-	const OPERATOR_BOOLEAN = 'boolean_binary';
-	const OPERATOR_FIELD = 'field';
-	const OPERATOR_FUNCTION = 'function';
-	const OPERATOR_INTERVAL = 'interval';
-	const OPERATOR_LIST = 'list';
-	const OPERATOR_SCALAR = 'scalar';
-	const OPERATOR_UNARY = 'unary';
-	const OPERATOR_VARIABLE = 'variable';
-
+abstract class Expression
+{
+	public const OPERATOR_BINARY = 'binary';
+	public const OPERATOR_BOOLEAN = 'boolean_binary';
+	public const OPERATOR_FIELD = 'field';
+	public const OPERATOR_FUNCTION = 'function';
+	public const OPERATOR_INTERVAL = 'interval';
+	public const OPERATOR_LIST = 'list';
+	public const OPERATOR_SCALAR = 'scalar';
+	public const OPERATOR_UNARY = 'unary';
+	public const OPERATOR_VARIABLE = 'variable';
 
 	/**
 	 * Perform a deep clone (as opposed to "clone" which does copy a reference to the underlying objects)
@@ -68,22 +71,20 @@ abstract class Expression {
 	 */
 	abstract public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true);
 
-	public final static function ConvertArrayToOQL($aExpressions, $aArgs)
+	final public static function ConvertArrayToOQL($aExpressions, $aArgs)
 	{
-		$aRet = array();
-		foreach ($aExpressions as $sName => $oExpression)
-		{
+		$aRet = [];
+		foreach ($aExpressions as $sName => $oExpression) {
 			/** @var Expression $oExpression */
 			$aRet[$sName] = $oExpression->RenderExpression(false, $aArgs);
 		}
 		return $aRet;
 	}
 
-	public final static function ConvertArrayFromOQL($aExpressions)
+	final public static function ConvertArrayFromOQL($aExpressions)
 	{
-		$aRet = array();
-		foreach ($aExpressions as $sName => $sConditionExpr)
-		{
+		$aRet = [];
+		foreach ($aExpressions as $sName => $sConditionExpr) {
 			/** @var Expression $oExpression */
 			$aRet[$sName] = Expression::FromOQL($sConditionExpr);
 		}
@@ -111,22 +112,19 @@ abstract class Expression {
 	 */
 	public function GetParameters($sParentFilter = null)
 	{
-		$aParameters = array();
+		$aParameters = [];
 		$unused = $this->RenderExpression(false, $aParameters, true);
 
-		if (!is_null($sParentFilter)) $sParentFilter .= '->';
+		if (!is_null($sParentFilter)) {
+			$sParentFilter .= '->';
+		}
 
-		$aRet = array();
-		foreach($aParameters as $sParameter => $unused)
-		{
-			if (is_null($sParentFilter))
-			{
+		$aRet = [];
+		foreach ($aParameters as $sParameter => $unused) {
+			if (is_null($sParentFilter)) {
 				$aRet[] = $sParameter;
-			}
-			else
-			{
-				if (substr($sParameter, 0, strlen($sParentFilter)) == $sParentFilter)
-				{
+			} else {
+				if (substr($sParameter, 0, strlen($sParentFilter)) == $sParentFilter) {
 					$aRet[] = substr($sParameter, strlen($sParentFilter));
 				}
 			}
@@ -162,12 +160,12 @@ abstract class Expression {
 	 * @return array parameters for the search form
 	 * @throws \MissingQueryArgument
 	 */
-	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = [])
 	{
 		return $this->RenderExpression(false, $aArgs);
 	}
 
-	public function GetAttDef($aClasses = array())
+	public function GetAttDef($aClasses = [])
 	{
 		return null;
 	}
@@ -202,10 +200,13 @@ abstract class Expression {
 	// recursively builds an array of parameters to give to current request
 	abstract public function ListParameters();
 
-	public function RequiresField($sClass, $sFieldName) {
+	public function RequiresField($sClass, $sFieldName)
+	{
 		// #@# todo - optimize : this is called quite often when building a single query !
 		$aRequired = $this->ListRequiredFields();
-		if (!in_array($sClass.'.'.$sFieldName, $aRequired)) return false;
+		if (!in_array($sClass.'.'.$sFieldName, $aRequired)) {
+			return false;
+		}
 		return true;
 	}
 
@@ -224,7 +225,7 @@ abstract class Expression {
 	 * @return Expression
 	 * @throws OQLException
 	 */
-	static public function unserialize($sValue)
+	public static function unserialize($sValue)
 	{
 		return self::FromOQL(base64_decode($sValue));
 	}
@@ -235,11 +236,10 @@ abstract class Expression {
 	 * @return Expression
 	 * @throws \OQLException
 	 */
-	static public function FromOQL($sConditionExpr)
+	public static function FromOQL($sConditionExpr)
 	{
-		static $aCache = array();
-		if (array_key_exists($sConditionExpr, $aCache))
-		{
+		static $aCache = [];
+		if (array_key_exists($sConditionExpr, $aCache)) {
 			return unserialize($aCache[$sConditionExpr]);
 		}
 		$oOql = new OqlInterpreter($sConditionExpr);
@@ -249,7 +249,7 @@ abstract class Expression {
 		return $oExpression;
 	}
 
-	static public function FromSQL($sSQL)
+	public static function FromSQL($sSQL)
 	{
 		return new SQLExpression($sSQL);
 	}
@@ -262,8 +262,12 @@ abstract class Expression {
 	 */
 	public function LogAnd(Expression $oExpr)
 	{
-		if ($this->IsTrue()) return clone $oExpr;
-		if ($oExpr->IsTrue()) return clone $this;
+		if ($this->IsTrue()) {
+			return clone $oExpr;
+		}
+		if ($oExpr->IsTrue()) {
+			return clone $this;
+		}
 		return new BinaryExpression($this, 'AND', $oExpr);
 	}
 
@@ -306,12 +310,12 @@ abstract class Expression {
 	 */
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
-		return array(
+		return [
 			'widget' => AttributeDefinition::SEARCH_WIDGET_TYPE_RAW,
 			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
 			'label' => $this->Display($oSearch, $aArgs, $oAttDef),
 			'source' => get_class($this),
-		);
+		];
 	}
 
 	/**
@@ -323,15 +327,12 @@ abstract class Expression {
 	 *
 	 * @return array of expressions
 	 */
-	public static function Split($oExpr, $sOperator = 'AND', &$aAndExpr = array())
+	public static function Split($oExpr, $sOperator = 'AND', &$aAndExpr = [])
 	{
-		if (($oExpr instanceof BinaryExpression) && ($oExpr->GetOperator() == $sOperator))
-		{
+		if (($oExpr instanceof BinaryExpression) && ($oExpr->GetOperator() == $sOperator)) {
 			static::Split($oExpr->GetLeftExpr(), $sOperator, $aAndExpr);
 			static::Split($oExpr->GetRightExpr(), $sOperator, $aAndExpr);
-		}
-		else
-		{
+		} else {
 			$aAndExpr[] = $oExpr;
 		}
 
@@ -395,7 +396,7 @@ class SQLExpression extends Expression
 
 	public function ListRequiredFields()
 	{
-		return array();
+		return [];
 	}
 
 	public function CollectUsedParents(&$aTable)
@@ -404,12 +405,12 @@ class SQLExpression extends Expression
 
 	public function ListConstantFields()
 	{
-		return array();
+		return [];
 	}
 
 	public function ListParameters()
 	{
-		return array();
+		return [];
 	}
 
 	public function RenameParam($sOldName, $sNewName)
@@ -422,8 +423,6 @@ class SQLExpression extends Expression
 		// Do nothing, since there is nothing to rename
 	}
 }
-
-
 
 class BinaryExpression extends Expression
 {
@@ -456,39 +455,37 @@ class BinaryExpression extends Expression
 	 */
 	protected function ValidateConstructorParams($oLeftExpr, $sOperator, $oRightExpr)
 	{
-		if (!is_object($oLeftExpr))
-		{
-			throw new CoreException('Expecting an Expression object on the left hand', array('found_type' => gettype($oLeftExpr)));
+		if (!is_object($oLeftExpr)) {
+			throw new CoreException('Expecting an Expression object on the left hand', ['found_type' => gettype($oLeftExpr)]);
 		}
-		if (!is_object($oRightExpr))
-		{
-			throw new CoreException('Expecting an Expression object on the right hand', array('found_type' => gettype($oRightExpr)));
+		if (!is_object($oRightExpr)) {
+			throw new CoreException('Expecting an Expression object on the right hand', ['found_type' => gettype($oRightExpr)]);
 		}
-		if (!$oLeftExpr instanceof Expression)
-		{
-			throw new CoreException('Expecting an Expression object on the left hand', array('found_class' => get_class($oLeftExpr)));
+		if (!$oLeftExpr instanceof Expression) {
+			throw new CoreException('Expecting an Expression object on the left hand', ['found_class' => get_class($oLeftExpr)]);
 		}
-		if (!$oRightExpr instanceof Expression)
-		{
-			throw new CoreException('Expecting an Expression object on the right hand', array('found_class' => get_class($oRightExpr)));
+		if (!$oRightExpr instanceof Expression) {
+			throw new CoreException('Expecting an Expression object on the right hand', ['found_class' => get_class($oRightExpr)]);
 		}
-		if ((($sOperator == "IN") || ($sOperator == "NOT IN")) && !($oRightExpr instanceof ListExpression || $oRightExpr instanceof NestedQueryExpression))
-		{
-			throw new CoreException("Expecting a List Expression object on the right hand for operator $sOperator",
-				array('found_class' => get_class($oRightExpr)));
+		if ((($sOperator == "IN") || ($sOperator == "NOT IN")) && !($oRightExpr instanceof ListExpression || $oRightExpr instanceof NestedQueryExpression)) {
+			throw new CoreException(
+				"Expecting a List Expression object on the right hand for operator $sOperator",
+				['found_class' => get_class($oRightExpr)]
+			);
 		}
 	}
 
 	public function IsTrue()
 	{
 		// return true if we are certain that it will be true
-		if ($this->m_sOperator == 'AND')
-		{
-			if ($this->m_oLeftExpr->IsTrue() && $this->m_oRightExpr->IsTrue()) return true;
-		}
-		elseif ($this->m_sOperator == 'OR')
-		{
-			if ($this->m_oLeftExpr->IsTrue() || $this->m_oRightExpr->IsTrue()) return true;
+		if ($this->m_sOperator == 'AND') {
+			if ($this->m_oLeftExpr->IsTrue() && $this->m_oRightExpr->IsTrue()) {
+				return true;
+			}
+		} elseif ($this->m_sOperator == 'OR') {
+			if ($this->m_oLeftExpr->IsTrue() || $this->m_oRightExpr->IsTrue()) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -529,8 +526,7 @@ class BinaryExpression extends Expression
 
 		$sOperator = $this->GetOperator();
 		$sType = null;
-		switch($sOperator)
-		{
+		switch ($sOperator) {
 			case '+':
 			case '-':
 			case '*':
@@ -567,12 +563,11 @@ class BinaryExpression extends Expression
 			default:
 				throw new Exception("Operator '$sOperator' not yet supported");
 		}
-		switch ($sType){
+		switch ($sType) {
 			case 'logical':
 				$bLeft = static::CastToBool($mLeft);
 				$bRight = static::CastToBool($mRight);
-				switch ($sOperator)
-				{
+				switch ($sOperator) {
 					case 'OR':
 						$result = (int)($bLeft || $bRight);
 						break;
@@ -587,12 +582,15 @@ class BinaryExpression extends Expression
 			case 'maths':
 				$iLeft = (int) $mLeft;
 				$iRight = (int) $mRight;
-				switch ($sOperator)
-				{
-					case '+' : $result = $iLeft + $iRight; break;
-					case '-' : $result = $iLeft - $iRight; break;
-					case '*' : $result = $iLeft * $iRight; break;
-					case '/' : $result = $iLeft / $iRight; break;
+				switch ($sOperator) {
+					case '+' : $result = $iLeft + $iRight;
+						break;
+					case '-' : $result = $iLeft - $iRight;
+						break;
+					case '*' : $result = $iLeft * $iRight;
+						break;
+					case '/' : $result = $iLeft / $iRight;
+						break;
 					default:
 						throw new Exception("Logic: unknown operator '$sOperator'");
 				}
@@ -600,11 +598,13 @@ class BinaryExpression extends Expression
 			case 'comp':
 				$left = $mLeft;
 				$right = $mRight;
-				switch ($sOperator)
-				{
-					case '=' : $result = ($left == $right); break;
-					case '!=' : $result = ($left != $right); break;
-					case '<>' : $result = ($left != $right); break;
+				switch ($sOperator) {
+					case '=' : $result = ($left == $right);
+						break;
+					case '!=' : $result = ($left != $right);
+						break;
+					case '<>' : $result = ($left != $right);
+						break;
 					default:
 						throw new Exception("Logic: unknown operator '$sOperator'");
 				}
@@ -612,22 +612,28 @@ class BinaryExpression extends Expression
 			case 'numcomp':
 				$iLeft = static::ComparableValue($mLeft);
 				$iRight = static::ComparableValue($mRight);
-				switch ($sOperator)
-				{
-					case '=' : $result = ($iLeft == $iRight); break;
-					case '>' : $result = ($iLeft > $iRight); break;
-					case '<' : $result = ($iLeft < $iRight); break;
-					case '>=' : $result = ($iLeft >= $iRight); break;
-					case '<=' : $result = ($iLeft <= $iRight); break;
-					case '!=' : $result = ($iLeft != $iRight); break;
-					case '<>' : $result = ($iLeft != $iRight); break;
+				switch ($sOperator) {
+					case '=' : $result = ($iLeft == $iRight);
+						break;
+					case '>' : $result = ($iLeft > $iRight);
+						break;
+					case '<' : $result = ($iLeft < $iRight);
+						break;
+					case '>=' : $result = ($iLeft >= $iRight);
+						break;
+					case '<=' : $result = ($iLeft <= $iRight);
+						break;
+					case '!=' : $result = ($iLeft != $iRight);
+						break;
+					case '<>' : $result = ($iLeft != $iRight);
+						break;
 					default:
 						throw new Exception("Logic: unknown operator '$sOperator'");
 				}
 				break;
 			case 'like':
 				$sEscaped = preg_quote($mRight, '/');
-				$sEscaped = str_replace(array('%', '_', '\\\\.*', '\\\\.'), array('.*', '.', '%', '_'), $sEscaped);
+				$sEscaped = str_replace(['%', '_', '\\\\.*', '\\\\.'], ['.*', '.', '%', '_'], $sEscaped);
 				$pregRes = preg_match("/$sEscaped/i", $mLeft);
 				if ($pregRes === false) {
 					throw new Exception("Error in regular expression '$sEscaped'");
@@ -636,7 +642,7 @@ class BinaryExpression extends Expression
 				break;
 			case 'notlike':
 				$sEscaped = preg_quote($mRight, '/');
-				$sEscaped = str_replace(array('%', '_', '\\\\.*', '\\\\.'), array('.*', '.', '%', '_'), $sEscaped);
+				$sEscaped = str_replace(['%', '_', '\\\\.*', '\\\\.'], ['.*', '.', '%', '_'], $sEscaped);
 				$pregRes = preg_match("/$sEscaped/i", $mLeft);
 				if ($pregRes === false) {
 					throw new Exception("Error in regular expression '$sEscaped'");
@@ -653,34 +659,26 @@ class BinaryExpression extends Expression
 		return $result;
 	}
 
-	static protected function CastToBool($mValue)
+	protected static function CastToBool($mValue)
 	{
-		if (is_string($mValue))
-		{
-			if (is_numeric($mValue))
-			{
+		if (is_string($mValue)) {
+			if (is_numeric($mValue)) {
 				return abs($mValue) > 0;
 			}
 			return false;
 		}
 		return (bool)$mValue;
 	}
-	static protected function ComparableValue($mixed)
+	protected static function ComparableValue($mixed)
 	{
-		if (is_string($mixed))
-		{
+		if (is_string($mixed)) {
 			$oDate = new \DateTime($mixed);
-			if (($oDate->format('Y-m-d') == $mixed) || ($oDate->format('Y-m-d H:i:s') == $mixed))
-			{
+			if (($oDate->format('Y-m-d') == $mixed) || ($oDate->format('Y-m-d H:i:s') == $mixed)) {
 				$iRet = $oDate->format('U');
-			}
-			else
-			{
+			} else {
 				$iRet = (int) $mixed;
 			}
-		}
-		else
-		{
+		} else {
 			$iRet = $mixed;
 		}
 
@@ -694,23 +692,22 @@ class BinaryExpression extends Expression
 	 */
 	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
 	{
-		if (($this->GetOperator() == 'AND') || ($this->GetOperator() == 'OR'))
-		{
-			return array(
+		if (($this->GetOperator() == 'AND') || ($this->GetOperator() == 'OR')) {
+			return [
 				'type' => static::OPERATOR_BOOLEAN,
 				'operator' =>  $this->GetOperator(),
 				'left' =>  $this->GetLeftExpr()->ToJSON($aArgs, $bRetrofitParams),
 				'right' => $this->GetRightExpr()->ToJSON($aArgs, $bRetrofitParams),
 				'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
-			);
+			];
 		}
-		return array(
+		return [
 			'type' => static::OPERATOR_BINARY,
 			'operator' =>  $this->GetOperator(),
 			'left' =>  $this->GetLeftExpr()->ToJSON($aArgs, $bRetrofitParams),
 			'right' => $this->GetRightExpr()->ToJSON($aArgs, $bRetrofitParams),
 			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
-		);
+		];
 	}
 
 	public function Browse(Closure $callback)
@@ -728,20 +725,14 @@ class BinaryExpression extends Expression
 	 */
 	public function ApplyParameters($aArgs)
 	{
-		if ($this->m_oLeftExpr instanceof VariableExpression)
-		{
+		if ($this->m_oLeftExpr instanceof VariableExpression) {
 			$this->m_oLeftExpr = $this->m_oLeftExpr->GetAsScalar($aArgs);
-		}
-		else //if ($this->m_oLeftExpr instanceof Expression)
-		{
+		} else { //if ($this->m_oLeftExpr instanceof Expression)
 			$this->m_oLeftExpr->ApplyParameters($aArgs);
 		}
-		if ($this->m_oRightExpr instanceof VariableExpression)
-		{
+		if ($this->m_oRightExpr instanceof VariableExpression) {
 			$this->m_oRightExpr = $this->m_oRightExpr->GetAsScalar($aArgs);
-		}
-		else //if ($this->m_oRightExpr instanceof Expression)
-		{
+		} else { //if ($this->m_oRightExpr instanceof Expression)
 			$this->m_oRightExpr->ApplyParameters($aArgs);
 		}
 	}
@@ -766,7 +757,7 @@ class BinaryExpression extends Expression
 		$oRight = $this->GetRightExpr()->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		return new BinaryExpression($oLeft, $this->GetOperator(), $oRight);
 	}
-	
+
 	public function ListRequiredFields()
 	{
 		$aLeft = $this->GetLeftExpr()->ListRequiredFields();
@@ -780,10 +771,12 @@ class BinaryExpression extends Expression
 		$this->GetRightExpr()->CollectUsedParents($aTable);
 	}
 
-	public function GetAttDef($aClasses = array())
+	public function GetAttDef($aClasses = [])
 	{
 		$oAttDef = $this->GetLeftExpr()->GetAttDef($aClasses);
-		if (!is_null($oAttDef)) return $oAttDef;
+		if (!is_null($oAttDef)) {
+			return $oAttDef;
+		}
 
 		return $this->GetRightExpr()->GetAttDef($aClasses);
 	}
@@ -794,28 +787,18 @@ class BinaryExpression extends Expression
 	 */
 	public function ListConstantFields()
 	{
-		$aResult = array();
-		if ($this->m_sOperator == '=')
-		{
-			if (($this->m_oLeftExpr instanceof FieldExpression) && ($this->m_oRightExpr instanceof ScalarExpression))
-			{
+		$aResult = [];
+		if ($this->m_sOperator == '=') {
+			if (($this->m_oLeftExpr instanceof FieldExpression) && ($this->m_oRightExpr instanceof ScalarExpression)) {
 				$aResult[$this->m_oLeftExpr->GetParent()][$this->m_oLeftExpr->GetName()] = $this->m_oRightExpr;
-			}
-			else if (($this->m_oRightExpr instanceof FieldExpression) && ($this->m_oLeftExpr instanceof ScalarExpression))
-			{
+			} elseif (($this->m_oRightExpr instanceof FieldExpression) && ($this->m_oLeftExpr instanceof ScalarExpression)) {
+				$aResult[$this->m_oRightExpr->GetParent()][$this->m_oRightExpr->GetName()] = $this->m_oLeftExpr;
+			} elseif (($this->m_oLeftExpr instanceof FieldExpression) && ($this->m_oRightExpr instanceof VariableExpression)) {
+				$aResult[$this->m_oLeftExpr->GetParent()][$this->m_oLeftExpr->GetName()] = $this->m_oRightExpr;
+			} elseif (($this->m_oRightExpr instanceof FieldExpression) && ($this->m_oLeftExpr instanceof VariableExpression)) {
 				$aResult[$this->m_oRightExpr->GetParent()][$this->m_oRightExpr->GetName()] = $this->m_oLeftExpr;
 			}
-			else if (($this->m_oLeftExpr instanceof FieldExpression) && ($this->m_oRightExpr instanceof VariableExpression))
-			{
-				$aResult[$this->m_oLeftExpr->GetParent()][$this->m_oLeftExpr->GetName()] = $this->m_oRightExpr;
-			}
-			else if (($this->m_oRightExpr instanceof FieldExpression) && ($this->m_oLeftExpr instanceof VariableExpression))
-			{
-				$aResult[$this->m_oRightExpr->GetParent()][$this->m_oRightExpr->GetName()] = $this->m_oLeftExpr;
-			}
-		}
-		else if ($this->m_sOperator == 'AND')
-		{
+		} elseif ($this->m_sOperator == 'AND') {
 			// Strictly, this should be done only for the AND operator
 			$aResult = array_merge_recursive($this->m_oRightExpr->ListConstantFields(), $this->m_oLeftExpr->ListConstantFields());
 		}
@@ -854,39 +837,31 @@ class BinaryExpression extends Expression
 	 * @throws \DictExceptionMissingString
 	 * @throws \MissingQueryArgument
 	 */
-	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = [])
 	{
 		$bReverseOperator = false;
-		if (method_exists($oSearch, 'GetJoinedClasses'))
-		{
+		if (method_exists($oSearch, 'GetJoinedClasses')) {
 			$aClasses = $oSearch->GetJoinedClasses();
-		}
-		else
-		{
-			$aClasses = array($oSearch->GetClass());
+		} else {
+			$aClasses = [$oSearch->GetClass()];
 		}
 		$oLeftExpr = $this->GetLeftExpr();
-		if ($oLeftExpr instanceof FieldExpression)
-		{
+		if ($oLeftExpr instanceof FieldExpression) {
 			$oAttDef = $oLeftExpr->GetAttDef($aClasses);
 		}
 		$oRightExpr = $this->GetRightExpr();
-		if ($oRightExpr instanceof FieldExpression)
-		{
+		if ($oRightExpr instanceof FieldExpression) {
 			$oAttDef = $oRightExpr->GetAttDef($aClasses);
 			$bReverseOperator = true;
 		}
 
-
-		if ($bReverseOperator)
-		{
+		if ($bReverseOperator) {
 			$sRight = $oRightExpr->Display($oSearch, $aArgs, $oAttDef, $aCtx);
 			$sLeft = $oLeftExpr->Display($oSearch, $aArgs, $oAttDef, $aCtx);
 
 			// switch left and right expressions so reverse the operator
 			// Note that the operation is the same so < becomes > and not >=
-			switch ($this->GetOperator())
-			{
+			switch ($this->GetOperator()) {
 				case '>':
 					$sOperator = '<';
 					break;
@@ -919,8 +894,7 @@ class BinaryExpression extends Expression
 
 	private function OperatorToNaturalLanguage($sOperator, $oAttDef)
 	{
-		if ($oAttDef instanceof AttributeDateTime)
-		{
+		if ($oAttDef instanceof AttributeDateTime) {
 			return Dict::S('Expression:Operator:Date:'.$sOperator, " $sOperator ");
 		}
 
@@ -944,30 +918,23 @@ class BinaryExpression extends Expression
 		$oLeftExpr = $this->GetLeftExpr();
 		$oRightExpr = $this->GetRightExpr();
 
-		if (method_exists($oSearch, 'GetJoinedClasses'))
-		{
+		if (method_exists($oSearch, 'GetJoinedClasses')) {
 			$aClasses = $oSearch->GetJoinedClasses();
-		}
-		else
-		{
-			$aClasses = array($oSearch->GetClass());
+		} else {
+			$aClasses = [$oSearch->GetClass()];
 		}
 
 		$oAttDef = $oLeftExpr->GetAttDef($aClasses);
-		if (is_null($oAttDef))
-		{
+		if (is_null($oAttDef)) {
 			$oAttDef = $oRightExpr->GetAttDef($aClasses);
 			$bReverseOperator = true;
 		}
 
-		if (is_null($oAttDef))
-		{
+		if (is_null($oAttDef)) {
 			return parent::GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 		}
 
-
-		if ($bReverseOperator)
-		{
+		if ($bReverseOperator) {
 			$aCriteriaRight = $oRightExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 			// $oAttDef can be different now
 			$oAttDef = $oRightExpr->GetAttDef($aClasses);
@@ -975,8 +942,7 @@ class BinaryExpression extends Expression
 
 			// switch left and right expressions so reverse the operator
 			// Note that the operation is the same so < becomes > and not >=
-			switch ($this->GetOperator())
-			{
+			switch ($this->GetOperator()) {
 				case '>':
 					$sOperator = '<';
 					break;
@@ -994,9 +960,7 @@ class BinaryExpression extends Expression
 					break;
 			}
 			$aCriteria = self::MergeCriteria($aCriteriaRight, $aCriteriaLeft, $sOperator);
-		}
-		else
-		{
+		} else {
 			$aCriteriaLeft = $oLeftExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 			// $oAttDef can be different now
 			$oAttDef = $oLeftExpr->GetAttDef($aClasses);
@@ -1007,8 +971,7 @@ class BinaryExpression extends Expression
 		$aCriteria['oql'] = $this->RenderExpression(false, $aArgs, $bRetrofitParams);
 		$aCriteria['label'] = $this->Display($oSearch, $aArgs, $oAttDef);
 
-		if (isset($aCriteriaLeft['ref']) && isset($aCriteriaRight['ref']) && ($aCriteriaLeft['ref'] != $aCriteriaRight['ref']))
-		{
+		if (isset($aCriteriaLeft['ref']) && isset($aCriteriaRight['ref']) && ($aCriteriaLeft['ref'] != $aCriteriaRight['ref'])) {
 			// Only one Field is supported in the expressions
 			$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
 		}
@@ -1018,25 +981,20 @@ class BinaryExpression extends Expression
 
 	protected static function MergeCriteria($aCriteriaLeft, $aCriteriaRight, $sOperator)
 	{
-		$aCriteriaOverride = array();
+		$aCriteriaOverride = [];
 		$aCriteriaOverride['operator'] = $sOperator;
-		if ($sOperator == 'OR')
-		{
-			if (isset($aCriteriaLeft['ref']) && isset($aCriteriaRight['ref']) && ($aCriteriaLeft['ref'] == $aCriteriaRight['ref']))
-			{
-				if (isset($aCriteriaLeft['widget']) && isset($aCriteriaRight['widget']) && ($aCriteriaLeft['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY) && ($aCriteriaRight['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY))
-				{
+		if ($sOperator == 'OR') {
+			if (isset($aCriteriaLeft['ref']) && isset($aCriteriaRight['ref']) && ($aCriteriaLeft['ref'] == $aCriteriaRight['ref'])) {
+				if (isset($aCriteriaLeft['widget']) && isset($aCriteriaRight['widget']) && ($aCriteriaLeft['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY) && ($aCriteriaRight['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY)) {
 					$aCriteriaOverride['operator'] = 'IN';
 					$aCriteriaOverride['is_hierarchical'] = true;
 
-					if (isset($aCriteriaLeft['values']) && isset($aCriteriaRight['values']))
-					{
+					if (isset($aCriteriaLeft['values']) && isset($aCriteriaRight['values'])) {
 						$aCriteriaOverride['values'] = array_merge($aCriteriaLeft['values'], $aCriteriaRight['values']);
 					}
 				}
 			}
-			if (isset($aCriteriaLeft['widget']) && isset($aCriteriaRight['widget']) && ($aCriteriaLeft['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_TAG_SET) && ($aCriteriaRight['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_TAG_SET))
-			{
+			if (isset($aCriteriaLeft['widget']) && isset($aCriteriaRight['widget']) && ($aCriteriaLeft['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_TAG_SET) && ($aCriteriaRight['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_TAG_SET)) {
 				$aCriteriaOverride['operator'] = 'MATCHES';
 			}
 		}
@@ -1044,7 +1002,6 @@ class BinaryExpression extends Expression
 		return array_merge($aCriteriaLeft, $aCriteriaRight, $aCriteriaOverride);
 	}
 }
-
 
 /**
  * @since 2.6.0 N°931 tag fields
@@ -1077,12 +1034,9 @@ class MatchExpression extends BinaryExpression
 		$sLeft = $this->GetLeftExpr()->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 		$sRight = $this->GetRightExpr()->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 
-		if ($bForSQL)
-		{
+		if ($bForSQL) {
 			$sRet = "MATCH ($sLeft) AGAINST ($sRight IN BOOLEAN MODE)";
-		}
-		else
-		{
+		} else {
 			$sRet = "$sLeft MATCHES $sRight";
 		}
 
@@ -1109,7 +1063,6 @@ class MatchExpression extends BinaryExpression
 		return new static($oLeft, $oRight);
 	}
 }
-
 
 class UnaryExpression extends Expression
 {
@@ -1154,11 +1107,11 @@ class UnaryExpression extends Expression
 	 */
 	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
 	{
-		return array(
+		return [
 			'type' => static::OPERATOR_UNARY,
 			'value' => $this->m_value,
 			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
-		);
+		];
 	}
 
 	public function Browse(Closure $callback)
@@ -1181,7 +1134,7 @@ class UnaryExpression extends Expression
 
 	public function ListRequiredFields()
 	{
-		return array();
+		return [];
 	}
 
 	public function CollectUsedParents(&$aTable)
@@ -1190,12 +1143,12 @@ class UnaryExpression extends Expression
 
 	public function ListConstantFields()
 	{
-		return array();
+		return [];
 	}
 
 	public function ListParameters()
 	{
-		return array();
+		return [];
 	}
 
 	public function RenameParam($sOldName, $sNewName)
@@ -1221,9 +1174,8 @@ class ScalarExpression extends UnaryExpression
 	 */
 	public function __construct($value)
 	{
-		if (!is_scalar($value) && !is_null($value) && (!$value instanceof OqlHexValue))
-		{
-			throw new CoreException('Attempt to create a scalar expression from a non scalar', array('var_type'=>gettype($value)));
+		if (!is_scalar($value) && !is_null($value) && (!$value instanceof OqlHexValue)) {
+			throw new CoreException('Attempt to create a scalar expression from a non scalar', ['var_type' => gettype($value)]);
 		}
 		parent::__construct($value);
 	}
@@ -1238,41 +1190,33 @@ class ScalarExpression extends UnaryExpression
 	 * @return array|string
 	 * @throws \Exception
 	 */
-	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = [])
 	{
-		if (!is_null($oAttDef))
-		{
-			if ($oAttDef->IsExternalKey())
-			{
-				try
-				{
+		if (!is_null($oAttDef)) {
+			if ($oAttDef->IsExternalKey()) {
+				try {
 					/** @var AttributeExternalKey $oAttDef */
 					$sTarget = $oAttDef->GetTargetClass();
 					$oObj = MetaModel::GetObject($sTarget, $this->m_value, false);
-					if (empty($oObj))
-					{
+					if (empty($oObj)) {
 						return Dict::S('Enum:Undefined');
 					}
 
 					return $oObj->Get("friendlyname");
-				} catch (CoreException $e)
-				{
+				} catch (CoreException $e) {
 				}
 			}
 
-			if (!($oAttDef instanceof AttributeDateTime))
-			{
+			if (!($oAttDef instanceof AttributeDateTime)) {
 				return $oAttDef->GetAsPlainText($this->m_value);
 			}
 		}
 
-		if (strpos($this->m_value, '%') === 0)
-		{
+		if (strpos($this->m_value, '%') === 0) {
 			return '';
 		}
 
-		if (isset($aCtx['date_display']))
-		{
+		if (isset($aCtx['date_display'])) {
 			return $aCtx['date_display']->MakeValueLabel($oSearch, $this->m_value, $this->m_value);
 		}
 
@@ -1282,12 +1226,9 @@ class ScalarExpression extends UnaryExpression
 	// recursive rendering
 	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
-		if (is_null($this->m_value))
-		{
+		if (is_null($this->m_value)) {
 			$sRet = 'NULL';
-		}
-		else
-		{
+		} else {
 			$sRet = CMDBSource::Quote($this->m_value);
 		}
 		return $sRet;
@@ -1309,11 +1250,11 @@ class ScalarExpression extends UnaryExpression
 	 */
 	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
 	{
-		return array(
+		return [
 			'type' => static::OPERATOR_SCALAR,
 			'value' => $this->m_value,
 			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
-		);
+		];
 	}
 
 	/**
@@ -1337,9 +1278,8 @@ class ScalarExpression extends UnaryExpression
 	 */
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
-		$aCriterion = array();
-		switch ((string)($this->m_value))
-		{
+		$aCriterion = [];
+		switch ((string)($this->m_value)) {
 			case '%Y-%m-%d':
 				$aCriterion['unit'] = 'DAY';
 				break;
@@ -1353,139 +1293,105 @@ class ScalarExpression extends UnaryExpression
 				$aCriterion['unit'] = 'HOUR';
 				break;
 			default:
-				$aValue = array();
-				if (!is_null($oAttDef))
-				{
-					switch (true)
-					{
+				$aValue = [];
+				if (!is_null($oAttDef)) {
+					switch (true) {
 						case ($oAttDef instanceof AttributeExternalField):
-							try
-							{
+							try {
 								$oFinalAttDef = $oAttDef->GetFinalAttDef();
-								if($oFinalAttDef instanceof  AttributeExternalKey)
-								{
-									if ($this->GetValue() !== 0)
-									{
+								if ($oFinalAttDef instanceof  AttributeExternalKey) {
+									if ($this->GetValue() !== 0) {
 										/** @var AttributeExternalKey $oFinalAttDef */
 										$sTarget = $oFinalAttDef->GetTargetClass();
 										$oObj = MetaModel::GetObject($sTarget, $this->GetValue());
 										$aValue['label'] = $oObj->Get("friendlyname");
 										$aValue['value'] = $this->GetValue();
-									}
-									else
-									{
+									} else {
 										$aValue['label'] = Dict::S('Enum:Undefined');
 										$aValue['value'] = $this->GetValue();
 									}
-								}
-								else
-								{
+								} else {
 									$aValue['label'] = $this->GetValue();
 									$aValue['value'] = $this->GetValue();
 								}
-								$aCriterion['values'] = array($aValue);
-							}
-							catch (Exception $e)
-							{
+								$aCriterion['values'] = [$aValue];
+							} catch (Exception $e) {
 								IssueLog::Error($e->getMessage());
 							}
 							break;
 						case ($oAttDef instanceof AttributeTagSet):
-							try
-							{
-								if (!empty($this->GetValue()))
-								{
-									$aValues = array();
+							try {
+								if (!empty($this->GetValue())) {
+									$aValues = [];
 									$oValue = $this->GetValue();
-									if (is_string($oValue))
-									{
+									if (is_string($oValue)) {
 										$oValue = $oAttDef->GetExistingTagsFromString($oValue, true);
 									}
 									/** @var \ormTagSet $oValue */
 									$aTags = $oValue->GetTags();
-									foreach($aTags as $oTag)
-									{
+									foreach ($aTags as $oTag) {
 										$aValue['label'] = $oTag->Get('label');
 										$aValue['value'] = $oTag->Get('code');
 										$aValues[] = $aValue;
 									}
 									$aCriterion['values'] = $aValues;
-								}
-								else
-								{
+								} else {
 									$aCriterion['has_undefined'] = true;
 								}
-							} catch (Exception $e)
-							{
+							} catch (Exception $e) {
 								IssueLog::Error($e->getMessage());
 							}
 							break;
 						case ($oAttDef instanceof AttributeEnumSet):
-							try
-							{
-								if (!empty($this->GetValue()))
-								{
-									$aValues = array();
+							try {
+								if (!empty($this->GetValue())) {
+									$aValues = [];
 									$sValue = $this->GetValue();
-									if (is_string($sValue))
-									{
+									if (is_string($sValue)) {
 										$aTags = $oAttDef->FromStringToArray($sValue, ' ');
+									} else {
+										$aTags = [];
 									}
-									else
-									{
-										$aTags = array();
-									}
-									foreach($aTags as $sLabel => $sValue)
-									{
+									foreach ($aTags as $sLabel => $sValue) {
 										$aValue['label'] = $sLabel;
 										$aValue['value'] = $sValue;
 										$aValues[] = $aValue;
 									}
 									$aCriterion['values'] = $aValues;
-								}
-								else
-								{
+								} else {
 									$aCriterion['has_undefined'] = true;
 								}
-							} catch (Exception $e)
-							{
+							} catch (Exception $e) {
 								IssueLog::Error($e->getMessage());
 							}
 							break;
 						case $oAttDef->IsExternalKey():
-							try
-							{
-								if ($this->GetValue() != 0)
-								{
+							try {
+								if ($this->GetValue() != 0) {
 									/** @var AttributeExternalKey $oAttDef */
 									$sTarget = $oAttDef->GetTargetClass();
 									$oObj = MetaModel::GetObject($sTarget, $this->GetValue(), true, true);
 									$aValue['label'] = $oObj->Get("friendlyname");
 									$aValue['value'] = $this->GetValue();
-									$aCriterion['values'] = array($aValue);
-								}
-								else
-								{
+									$aCriterion['values'] = [$aValue];
+								} else {
 									$aValue['label'] = Dict::S('Enum:Undefined');
 									$aValue['value'] = $this->GetValue();
-									$aCriterion['values'] = array($aValue);
+									$aCriterion['values'] = [$aValue];
 								}
-							} catch (Exception $e)
-							{
+							} catch (Exception $e) {
 								// This object cannot be seen... ignore
 							}
 							break;
 						default:
-							try
-							{
+							try {
 								$aValue['label'] = $oAttDef->GetAsPlainText($this->GetValue());
 								$aValue['value'] = $this->GetValue();
-								$aCriterion['values'] = array($aValue);
-							} catch (Exception $e)
-							{
+								$aCriterion['values'] = [$aValue];
+							} catch (Exception $e) {
 								$aValue['label'] = $this->GetValue();
 								$aValue['value'] = $this->GetValue();
-								$aCriterion['values'] = array($aValue);
+								$aCriterion['values'] = [$aValue];
 							}
 							break;
 					}
@@ -1544,8 +1450,14 @@ class FieldExpression extends UnaryExpression
 		return false;
 	}
 
-	public function GetParent() {return $this->m_sParent;}
-	public function GetName() {return $this->m_sName;}
+	public function GetParent()
+	{
+		return $this->m_sParent;
+	}
+	public function GetName()
+	{
+		return $this->m_sName;
+	}
 
 	public function SetParent($sParent)
 	{
@@ -1553,14 +1465,11 @@ class FieldExpression extends UnaryExpression
 		$this->m_value = $sParent.'.'.$this->m_sName;
 	}
 
-	private function GetClassName($aClasses = array())
+	private function GetClassName($aClasses = [])
 	{
-		if (isset($aClasses[$this->m_sParent]))
-		{
+		if (isset($aClasses[$this->m_sParent])) {
 			return $aClasses[$this->m_sParent];
-		}
-		else
-		{
+		} else {
 			return $this->m_sParent;
 		}
 	}
@@ -1577,24 +1486,19 @@ class FieldExpression extends UnaryExpression
 	 * @throws \DictExceptionMissingString
 	 * @throws \Exception
 	 */
-	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = [])
 	{
-		if (empty($this->m_sParent))
-		{
+		if (empty($this->m_sParent)) {
 			return "`{$this->m_sName}`";
 		}
-		if (method_exists($oSearch, 'GetJoinedClasses'))
-		{
+		if (method_exists($oSearch, 'GetJoinedClasses')) {
 			$aClasses = $oSearch->GetJoinedClasses();
-		}
-		else
-		{
-			$aClasses = array($oSearch->GetClass());
+		} else {
+			$aClasses = [$oSearch->GetClass()];
 		}
 		$sClass = $this->GetClassName($aClasses);
 		$sAttName = MetaModel::GetLabel($sClass, $this->m_sName);
-		if ($sClass != $oSearch->GetClass())
-		{
+		if ($sClass != $oSearch->GetClass()) {
 			$sAttName = MetaModel::GetName($sClass).':'.$sAttName;
 		}
 
@@ -1604,8 +1508,7 @@ class FieldExpression extends UnaryExpression
 	// recursive rendering
 	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
-		if (empty($this->m_sParent))
-		{
+		if (empty($this->m_sParent)) {
 			return "`{$this->m_sName}`";
 		}
 		return "`{$this->m_sParent}`.`{$this->m_sName}`";
@@ -1619,8 +1522,7 @@ class FieldExpression extends UnaryExpression
 	public function Evaluate(array $aArgs)
 	{
 		$sKey = empty($this->m_sParent) ? $this->m_sName : "{$this->m_sParent}.{$this->m_sName}";
-		if (!array_key_exists($sKey, $aArgs))
-		{
+		if (!array_key_exists($sKey, $aArgs)) {
 			throw new Exception("Missing field '$sKey' from context");
 		}
 		return $aArgs[$sKey];
@@ -1632,13 +1534,13 @@ class FieldExpression extends UnaryExpression
 	 */
 	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
 	{
-		return array(
+		return [
 			'type' => static::OPERATOR_FIELD,
 			'value' => $this->m_value,
 			'alias' => $this->m_sParent,
 			'field' => $this->m_sName,
 			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
-		);
+		];
 	}
 
 	/**
@@ -1648,27 +1550,22 @@ class FieldExpression extends UnaryExpression
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	public function GetAttDef($aClasses = array())
+	public function GetAttDef($aClasses = [])
 	{
-		if (!empty($this->m_sParent))
-		{
+		if (!empty($this->m_sParent)) {
 			$sClass = $this->GetClassName($aClasses);
 			$aAttDefs = MetaModel::ListAttributeDefs($sClass);
-			if (isset($aAttDefs[$this->m_sName]))
-			{
+			if (isset($aAttDefs[$this->m_sName])) {
 				return $aAttDefs[$this->m_sName];
-			}
-			else
-			{
-				if ($this->m_sName == 'id')
-				{
-					$aParams = array(
+			} else {
+				if ($this->m_sName == 'id') {
+					$aParams = [
 						'default_value' => 0,
 						'is_null_allowed' => false,
 						'allowed_values' => null,
 						'depends_on' => null,
 						'sql' => 'id',
-					);
+					];
 
 					return new AttributeInteger($this->m_sName, $aParams);
 				}
@@ -1678,11 +1575,10 @@ class FieldExpression extends UnaryExpression
 		return null;
 	}
 
-
 	public function ListRequiredFields()
 	{
 		$sField = empty($this->m_sParent) ? $this->m_sName : "{$this->m_sParent}.{$this->m_sName}";
-		return array($sField);
+		return [$sField];
 	}
 
 	public function CollectUsedParents(&$aTable)
@@ -1692,13 +1588,10 @@ class FieldExpression extends UnaryExpression
 
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
-		if ($this->m_sParent == $sAlias)
-		{
+		if ($this->m_sParent == $sAlias) {
 			// Add a reference to the field
 			$aUnresolved[$this->m_sName] = $this;
-		}
-		elseif ($sAlias == '')
-		{
+		} elseif ($sAlias == '') {
 			// An empty alias means "any alias"
 			// In such a case, the results are indexed differently
 			$aUnresolved[$this->m_sParent][$this->m_sName] = $this;
@@ -1715,33 +1608,29 @@ class FieldExpression extends UnaryExpression
 	 */
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
-		if (!array_key_exists($this->m_sParent, $aTranslationData))
-		{
-			if ($bMatchAll) throw new CoreException('Unknown parent id in translation table', array('parent_id' => $this->m_sParent, 'translation_table' => array_keys($aTranslationData)));
+		if (!array_key_exists($this->m_sParent, $aTranslationData)) {
+			if ($bMatchAll) {
+				throw new CoreException('Unknown parent id in translation table', ['parent_id' => $this->m_sParent, 'translation_table' => array_keys($aTranslationData)]);
+			}
 
 			return clone $this;
 		}
-		if (!array_key_exists($this->m_sName, $aTranslationData[$this->m_sParent]))
-		{
-			if (!array_key_exists('*', $aTranslationData[$this->m_sParent]))
-			{
+		if (!array_key_exists($this->m_sName, $aTranslationData[$this->m_sParent])) {
+			if (!array_key_exists('*', $aTranslationData[$this->m_sParent])) {
 				// #@# debug - if ($bMatchAll) MyHelpers::var_dump_html($aTranslationData, true);
-				if ($bMatchAll) throw new CoreException('Unknown name in translation table', array('name' => $this->m_sName, 'parent_id' => $this->m_sParent, 'translation_table' => array_keys($aTranslationData[$this->m_sParent])));
+				if ($bMatchAll) {
+					throw new CoreException('Unknown name in translation table', ['name' => $this->m_sName, 'parent_id' => $this->m_sParent, 'translation_table' => array_keys($aTranslationData[$this->m_sParent])]);
+				}
 				return clone $this;
 			}
 			$sNewParent = $aTranslationData[$this->m_sParent]['*'];
 			$sNewName = $this->m_sName;
-			if ($bMarkFieldsAsResolved)
-			{
+			if ($bMarkFieldsAsResolved) {
 				$oRet = new FieldExpressionResolved($sNewName, $sNewParent);
-			}
-			else
-			{
+			} else {
 				$oRet = new FieldExpression($sNewName, $sNewParent);
 			}
-		}
-		else
-		{
+		} else {
 			$oRet = $aTranslationData[$this->m_sParent][$this->m_sName];
 		}
 		return $oRet;
@@ -1772,35 +1661,25 @@ class FieldExpression extends UnaryExpression
 		$sRes = null;
 
 		// Exceptions...
-		if ($oAttDef->IsExternalKey())
-		{
+		if ($oAttDef->IsExternalKey()) {
 			/** @var AttributeExternalKey $oAttDef */
 			$sObjClass = $oAttDef->GetTargetClass();
 			$iObjKey = (int)$sValue;
-			if ($iObjKey > 0)
-			{
+			if ($iObjKey > 0) {
 				$oObject = MetaModel::GetObjectWithArchive($sObjClass, $iObjKey, true, true);
 				$sRes = $oObject->GetHyperlink();
-			}
-			else
-			{
+			} else {
 				// Undefined
 				$sRes = DBObject::MakeHyperLink($sObjClass, 0);
 			}
-		}
-		elseif ($oAttDef->IsExternalField())
-		{
-			if (is_null($sValue))
-			{
+		} elseif ($oAttDef->IsExternalField()) {
+			if (is_null($sValue)) {
 				$sRes = Dict::S('UI:UndefinedObject');
 			}
-		}
-		elseif ($oAttDef instanceof AttributeEnum)
-		{
+		} elseif ($oAttDef instanceof AttributeEnum) {
 			$sRes = $oAttDef->GetAsPlainText($sValue);
 		}
-		if(is_null($sRes))
-		{
+		if (is_null($sRes)) {
 			$sRes = $oAttDef->GetAsHtml($sValue);
 		}
 		return $sRes;
@@ -1808,24 +1687,19 @@ class FieldExpression extends UnaryExpression
 
 	public function RenameAlias($sOldName, $sNewName)
 	{
-		if ($this->m_sParent == $sOldName)
-		{
+		if ($this->m_sParent == $sOldName) {
 			$this->m_sParent = $sNewName;
 		}
 	}
 
 	private function GetJoinedFilters($oSearch, $iOperatorCodeTarget)
 	{
-		$aFilters = array();
+		$aFilters = [];
 		$aPointingToByKey = $oSearch->GetCriteria_PointingTo();
-		foreach ($aPointingToByKey as $sExtKey => $aPointingTo)
-		{
-			foreach($aPointingTo as $iOperatorCode => $aFilter)
-			{
-				if ($iOperatorCode == $iOperatorCodeTarget)
-				{
-					foreach($aFilter as $oExtFilter)
-					{
+		foreach ($aPointingToByKey as $sExtKey => $aPointingTo) {
+			foreach ($aPointingTo as $iOperatorCode => $aFilter) {
+				if ($iOperatorCode == $iOperatorCodeTarget) {
+					foreach ($aFilter as $oExtFilter) {
 						$aFilters[$sExtKey] = $oExtFilter;
 					}
 				}
@@ -1845,26 +1719,20 @@ class FieldExpression extends UnaryExpression
 	 */
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
-		$aCriteria = array();
+		$aCriteria = [];
 		$aCriteria['is_hierarchical'] = false;
 		// Replace BELOW joins by the corresponding external key for the search
 		// Try to detect hierarchical links
-		if ($this->m_sName == 'id')
-		{
-			if (method_exists($oSearch, 'GetCriteria_PointingTo'))
-			{
+		if ($this->m_sName == 'id') {
+			if (method_exists($oSearch, 'GetCriteria_PointingTo')) {
 				$aFilters = $this->GetJoinedFilters($oSearch, TREE_OPERATOR_EQUALS);
-				if (!empty($aFilters))
-				{
-					foreach($aFilters as $sExtKey => $oFilter)
-					{
+				if (!empty($aFilters)) {
+					foreach ($aFilters as $sExtKey => $oFilter) {
 						$aSubFilters = $this->GetJoinedFilters($oFilter, TREE_OPERATOR_BELOW);
-						foreach($aSubFilters as $oSubFilter)
-						{
+						foreach ($aSubFilters as $oSubFilter) {
 							/** @var \DBObjectSearch $oSubFilter */
 							$sClassAlias = $oSubFilter->GetClassAlias();
-							if ($sClassAlias == $this->m_sParent)
-							{
+							if ($sClassAlias == $this->m_sParent) {
 								// Hierarchical link detected
 								// replace current field with the corresponding external key
 								$this->m_sName = $sExtKey;
@@ -1877,33 +1745,22 @@ class FieldExpression extends UnaryExpression
 			}
 		}
 
-		if (method_exists($oSearch, 'GetJoinedClasses'))
-		{
+		if (method_exists($oSearch, 'GetJoinedClasses')) {
 			$oAttDef = $this->GetAttDef($oSearch->GetJoinedClasses());
-		}
-		else
-		{
+		} else {
 			$oAttDef = $this->GetAttDef($oSearch->GetSelectedClasses());
 		}
-		if (!is_null($oAttDef))
-		{
+		if (!is_null($oAttDef)) {
 			$sSearchType = $oAttDef->GetSearchType();
-			try
-			{
-				if ($sSearchType == AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_KEY)
-				{
-					if (MetaModel::IsHierarchicalClass($oAttDef->GetTargetClass()))
-					{
+			try {
+				if ($sSearchType == AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_KEY) {
+					if (MetaModel::IsHierarchicalClass($oAttDef->GetTargetClass())) {
 						$sSearchType = AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY;
 					}
 				}
+			} catch (CoreException $e) {
 			}
-			catch (CoreException $e)
-			{
-			}
-		}
-		else
-		{
+		} else {
 			$sSearchType = AttributeDefinition::SEARCH_WIDGET_TYPE;
 		}
 
@@ -1922,20 +1779,15 @@ class FieldExpressionResolved extends FieldExpression
 
 	public function __construct($mExpression, $sParent = '')
 	{
-		$this->m_aAdditionalExpressions = array();
-		if (is_array($mExpression))
-		{
-			foreach ($mExpression as $sSuffix => $sExpression)
-			{
-				if ($sSuffix == '')
-				{
+		$this->m_aAdditionalExpressions = [];
+		if (is_array($mExpression)) {
+			foreach ($mExpression as $sSuffix => $sExpression) {
+				if ($sSuffix == '') {
 					$sName = $sExpression;
 				}
 				$this->m_aAdditionalExpressions[$sSuffix] = new FieldExpressionResolved($sExpression, $sParent);
 			}
-		}
-		else
-		{
+		} else {
 			$sName = $mExpression;
 		}
 
@@ -1993,56 +1845,41 @@ class VariableExpression extends UnaryExpression
 	 * @throws \MissingQueryArgument
 	 * @throws \Exception
 	 */
-	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = [])
 	{
 		$sValue = $this->m_value;
-		if (!is_null($aArgs) && (array_key_exists($this->m_sName, $aArgs)))
-		{
+		if (!is_null($aArgs) && (array_key_exists($this->m_sName, $aArgs))) {
 			$sValue = $aArgs[$this->m_sName];
-		}
-		elseif (($iPos = strpos($this->m_sName, '->')) !== false)
-		{
+		} elseif (($iPos = strpos($this->m_sName, '->')) !== false) {
 			$sParamName = substr($this->m_sName, 0, $iPos);
 			$oObj = null;
 			$sAttCode = 'id';
-			if (array_key_exists($sParamName.'->object()', $aArgs))
-			{
+			if (array_key_exists($sParamName.'->object()', $aArgs)) {
 				$sAttCode = substr($this->m_sName, $iPos + 2);
 				$oObj = $aArgs[$sParamName.'->object()'];
-			}
-			elseif (array_key_exists($sParamName, $aArgs))
-			{
+			} elseif (array_key_exists($sParamName, $aArgs)) {
 				$sAttCode = substr($this->m_sName, $iPos + 2);
 				$oObj = $aArgs[$sParamName];
 			}
-			if (!is_null($oObj))
-			{
-				if ($sAttCode == 'id')
-				{
+			if (!is_null($oObj)) {
+				if ($sAttCode == 'id') {
 					$sValue = $oObj->Get("friendlyname");
-				}
-				else
-				{
+				} else {
 					$sValue = $oObj->Get($sAttCode);
 				}
 
 				return $sValue;
 			}
 		}
-		if (!is_null($oAttDef))
-		{
-			if ($oAttDef->IsExternalKey())
-			{
-				try
-				{
+		if (!is_null($oAttDef)) {
+			if ($oAttDef->IsExternalKey()) {
+				try {
 					/** @var AttributeExternalKey $oAttDef */
 					$sTarget = $oAttDef->GetTargetClass();
 					$oObj = MetaModel::GetObject($sTarget, $sValue);
 
 					return $oObj->Get("friendlyname");
-				}
-				catch (CoreException $e)
-				{
+				} catch (CoreException $e) {
 				}
 			}
 
@@ -2062,42 +1899,31 @@ class VariableExpression extends UnaryExpression
 	 */
 	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
-		if (is_null($aArgs))
-		{
+		if (is_null($aArgs)) {
 			return ':'.$this->m_sName;
-		}
-		elseif (array_key_exists($this->m_sName, $aArgs))
-		{
+		} elseif (array_key_exists($this->m_sName, $aArgs)) {
 			$res = CMDBSource::Quote($aArgs[$this->m_sName]);
-			if (is_array($res))
-			{
+			if (is_array($res)) {
 				$res = implode(', ', $res);
 			}
 			return $res;
-		}
-		elseif (($iPos = strpos($this->m_sName, '->')) !== false)
-		{
+		} elseif (($iPos = strpos($this->m_sName, '->')) !== false) {
 			$sParamName = substr($this->m_sName, 0, $iPos);
-			if (array_key_exists($sParamName.'->object()', $aArgs))
-			{
+			if (array_key_exists($sParamName.'->object()', $aArgs)) {
 				$sAttCode = substr($this->m_sName, $iPos + 2);
 				$oObj = $aArgs[$sParamName.'->object()'];
-				if ($sAttCode == 'id')
-				{
+				if ($sAttCode == 'id') {
 					return CMDBSource::Quote($oObj->GetKey());
 				}
 				return CMDBSource::Quote($oObj->Get($sAttCode));
 			}
 		}
 
-		if ($bRetrofitParams)
-		{
+		if ($bRetrofitParams) {
 			$aArgs[$this->m_sName] = null;
 			return ':'.$this->m_sName;
-		}
-		else
-		{
-			throw new MissingQueryArgument('Missing query argument', array('expecting'=>$this->m_sName, 'available'=>array_keys($aArgs)));
+		} else {
+			throw new MissingQueryArgument('Missing query argument', ['expecting' => $this->m_sName, 'available' => array_keys($aArgs)]);
 		}
 	}
 
@@ -2123,17 +1949,16 @@ class VariableExpression extends UnaryExpression
 	 */
 	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
 	{
-		return array(
+		return [
 			'type' => static::OPERATOR_VARIABLE,
 			'value' => $this->m_value,
 			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
-		);
+		];
 	}
 
 	public function RenameParam($sOldName, $sNewName)
 	{
-		if ($this->m_sName == $sOldName)
-		{
+		if ($this->m_sName == $sOldName) {
 			$this->m_sName = $sNewName;
 		}
 	}
@@ -2149,53 +1974,39 @@ class VariableExpression extends UnaryExpression
 	public function GetAsScalar($aArgs)
 	{
 		$oRet = null;
-		if (array_key_exists($this->m_sName, $aArgs))
-		{
-			if(is_array($aArgs[$this->m_sName]))
-			{
-				$aExpressions = array();
-				foreach($aArgs[$this->m_sName] as $sValue)
-				{
+		if (array_key_exists($this->m_sName, $aArgs)) {
+			if (is_array($aArgs[$this->m_sName])) {
+				$aExpressions = [];
+				foreach ($aArgs[$this->m_sName] as $sValue) {
 					$aExpressions[] = new ScalarExpression($sValue);
 				}
 				$oRet = new ListExpression($aExpressions);
-			}
-			else
-			{
+			} else {
 				$oRet = new ScalarExpression($aArgs[$this->m_sName]);
 			}
-		}
-		elseif (($iPos = strpos($this->m_sName, '->')) !== false)
-		{
+		} elseif (($iPos = strpos($this->m_sName, '->')) !== false) {
 			$sParamName = substr($this->m_sName, 0, $iPos);
-			if (array_key_exists($sParamName.'->object()', $aArgs))
-			{
+			if (array_key_exists($sParamName.'->object()', $aArgs)) {
 				$sAttCode = substr($this->m_sName, $iPos + 2);
 				$oObj = $aArgs[$sParamName.'->object()'];
-				if ($sAttCode == 'id')
-				{
+				if ($sAttCode == 'id') {
 					$oRet = new ScalarExpression($oObj->GetKey());
-				}
-				elseif (MetaModel::IsValidAttCode(get_class($oObj), $sAttCode))
-				{
+				} elseif (MetaModel::IsValidAttCode(get_class($oObj), $sAttCode)) {
 					$oRet = new ScalarExpression($oObj->Get($sAttCode));
-				}
-				else
-				{
+				} else {
 					throw new CoreException("Query argument {$this->m_sName} not matching any attribute of class ".get_class($oObj));
 				}
 			}
 		}
-		if (is_null($oRet))
-		{
-			throw new MissingQueryArgument('Missing query argument', array('expecting'=>$this->m_sName, 'available'=>array_keys($aArgs)));
+		if (is_null($oRet)) {
+			throw new MissingQueryArgument('Missing query argument', ['expecting' => $this->m_sName, 'available' => array_keys($aArgs)]);
 		}
 		return $oRet;
 	}
 
 	public function ListParameters()
 	{
-		return array($this);
+		return [$this];
 	}
 
 }
@@ -2219,9 +2030,8 @@ class ListExpression extends Expression
 	 */
 	public static function FromScalars($aScalars)
 	{
-		$aExpressions = array();
-		foreach($aScalars as $value)
-		{
+		$aExpressions = [];
+		foreach ($aScalars as $value) {
 			$aExpressions[] = new ScalarExpression($value);
 		}
 		return new ListExpression($aExpressions);
@@ -2249,9 +2059,8 @@ class ListExpression extends Expression
 	 */
 	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
-		$aRes = array();
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aExpressions as $oExpr) {
 			$aRes[] = $oExpr->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 		}
 		return '('.implode(', ', $aRes).')';
@@ -2278,23 +2087,21 @@ class ListExpression extends Expression
 	 */
 	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
 	{
-		$aFields = array();
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		$aFields = [];
+		foreach ($this->m_aExpressions as $oExpr) {
 			$aFields[] = $oExpr->ToJSON($aArgs, $bRetrofitParams);
 		}
-		return array(
+		return [
 			'type' => static::OPERATOR_LIST,
 			'fields' => $aFields,
 			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
-		);
+		];
 	}
 
 	public function Browse(Closure $callback)
 	{
 		$callback($this);
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		foreach ($this->m_aExpressions as $oExpr) {
 			$oExpr->Browse($callback);
 		}
 	}
@@ -2307,22 +2114,15 @@ class ListExpression extends Expression
 	 */
 	public function ApplyParameters($aArgs)
 	{
-		foreach ($this->m_aExpressions as $idx => $oExpr)
-		{
-			if ($oExpr instanceof VariableExpression)
-			{
+		foreach ($this->m_aExpressions as $idx => $oExpr) {
+			if ($oExpr instanceof VariableExpression) {
 				$oVarExpr = $oExpr->GetAsScalar($aArgs);
-				if ($oVarExpr instanceof ListExpression)
-				{
+				if ($oVarExpr instanceof ListExpression) {
 					$this->m_aExpressions = $oVarExpr->GetItems();
-				}
-				else
-				{
+				} else {
 					$this->m_aExpressions[$idx] = $oVarExpr;
 				}
-			}
-			else
-			{
+			} else {
 				$oExpr->ApplyParameters($aArgs);
 			}
 		}
@@ -2330,17 +2130,15 @@ class ListExpression extends Expression
 
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		foreach ($this->m_aExpressions as $oExpr) {
 			$oExpr->GetUnresolvedFields($sAlias, $aUnresolved);
 		}
 	}
 
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
-		$aRes = array();
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aExpressions as $oExpr) {
 			$aRes[] = $oExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
 		return new ListExpression($aRes);
@@ -2348,9 +2146,8 @@ class ListExpression extends Expression
 
 	public function ListRequiredFields()
 	{
-		$aRes = array();
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aExpressions as $oExpr) {
 			$aRes = array_merge($aRes, $oExpr->ListRequiredFields());
 		}
 		return $aRes;
@@ -2358,17 +2155,15 @@ class ListExpression extends Expression
 
 	public function CollectUsedParents(&$aTable)
 	{
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		foreach ($this->m_aExpressions as $oExpr) {
 			$oExpr->CollectUsedParents($aTable);
 		}
 	}
 
 	public function ListConstantFields()
 	{
-		$aRes = array();
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aExpressions as $oExpr) {
 			$aRes = array_merge($aRes, $oExpr->ListConstantFields());
 		}
 		return $aRes;
@@ -2376,9 +2171,8 @@ class ListExpression extends Expression
 
 	public function ListParameters()
 	{
-		$aRes = array();
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aExpressions as $oExpr) {
 			$aRes = array_merge($aRes, $oExpr->ListParameters());
 		}
 		return $aRes;
@@ -2386,26 +2180,25 @@ class ListExpression extends Expression
 
 	public function RenameParam($sOldName, $sNewName)
 	{
-		foreach ($this->m_aExpressions as $key => $oExpr)
-		{
+		foreach ($this->m_aExpressions as $key => $oExpr) {
 			$this->m_aExpressions[$key] = $oExpr->RenameParam($sOldName, $sNewName);
 		}
 	}
 
 	public function RenameAlias($sOldName, $sNewName)
 	{
-		foreach ($this->m_aExpressions as $key => $oExpr)
-		{
+		foreach ($this->m_aExpressions as $key => $oExpr) {
 			$oExpr->RenameAlias($sOldName, $sNewName);
 		}
 	}
 
-	public function GetAttDef($aClasses = array())
+	public function GetAttDef($aClasses = [])
 	{
-		foreach($this->m_aExpressions as $oExpression)
-		{
+		foreach ($this->m_aExpressions as $oExpression) {
 			$oAttDef = $oExpression->GetAttDef($aClasses);
-			if (!is_null($oAttDef)) return $oAttDef;
+			if (!is_null($oAttDef)) {
+				return $oAttDef;
+			}
 		}
 
 		return null;
@@ -2413,18 +2206,16 @@ class ListExpression extends Expression
 
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
-		$aValues = array();
+		$aValues = [];
 
-		foreach($this->m_aExpressions as $oExpression)
-		{
+		foreach ($this->m_aExpressions as $oExpression) {
 			$aCrit = $oExpression->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
-			if (array_key_exists('values', $aCrit))
-			{
+			if (array_key_exists('values', $aCrit)) {
 				$aValues = array_merge($aValues, $aCrit['values']);
 			}
 		}
 
-		return array('values' => $aValues);
+		return ['values' => $aValues];
 	}
 }
 
@@ -2472,17 +2263,13 @@ class NestedQueryExpression extends Expression
 	 */
 	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
-		if ($bForSQL)
-		{
-			$aAttToLoad = array();
-			foreach ($this->m_oNestedQuery->GetSelectedClasses() as $sClassAlias => $sClass)
-			{
-				$aAttToLoad[$sClassAlias] = array();
+		if ($bForSQL) {
+			$aAttToLoad = [];
+			foreach ($this->m_oNestedQuery->GetSelectedClasses() as $sClassAlias => $sClass) {
+				$aAttToLoad[$sClassAlias] = [];
 			}
-			return  '('.$this->m_oNestedQuery->MakeSelectQuery(array(), $aArgs, $aAttToLoad).')';
-		}
-		else
-		{
+			return  '('.$this->m_oNestedQuery->MakeSelectQuery([], $aArgs, $aAttToLoad, null, 0, 0, false, true, true).')';
+		} else {
 			return '('.$this->m_oNestedQuery->ToOQL(false, null, false).')';
 		}
 	}
@@ -2503,49 +2290,59 @@ class NestedQueryExpression extends Expression
 	}
 
 	/**/
-	public function ApplyParameters($aArgs) {
+	public function ApplyParameters($aArgs)
+	{
 		$this->m_oNestedQuery->ApplyParameters($aArgs);
 	}
 
 	/**/
-	public function GetUnresolvedFields($sAlias, &$aUnresolved) {
+	public function GetUnresolvedFields($sAlias, &$aUnresolved)
+	{
 	}
 
 	/**/
-	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true) {
+	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
+	{
 		// Check and prepare the select information
 		$this->m_oNestedQuery->TranslateConditions($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 
 		return clone $this;
 	}
 
-	public function ListRequiredFields() {
-		return array();
+	public function ListRequiredFields()
+	{
+		return [];
 	}
 
-	public function CollectUsedParents(&$aTable) {
+	public function CollectUsedParents(&$aTable)
+	{
 	}
 
-	public function ListConstantFields() {
+	public function ListConstantFields()
+	{
 		return $this->m_oNestedQuery->ListConstantFields();
 	}
 
-	public function ListParameters() {
+	public function ListParameters()
+	{
 		return $this->m_oNestedQuery->GetExpectedArguments();
 	}
 
-	public function RenameParam($sOldName, $sNewName) {
+	public function RenameParam($sOldName, $sNewName)
+	{
 		$this->m_oNestedQuery->RenameParam($sOldName, $sNewName);
 	}
 
-	public function RenameAlias($sOldName, $sNewName) {
+	public function RenameAlias($sOldName, $sNewName)
+	{
 		$this->m_oNestedQuery->RenameAlias($sOldName, $sNewName);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function ToJSON(&$aArgs = null, $bRetrofitParams = false) {
+	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
+	{
 		return $this->m_oNestedQuery->ToJSON();
 	}
 
@@ -2556,7 +2353,8 @@ class NestedQueryExpression extends Expression
 	 *
 	 * @uses \DBSearch::AllowAllData()
 	 */
-	public function AllowAllData($bAllowAllData = true) {
+	public function AllowAllData($bAllowAllData = true)
+	{
 		$this->m_oNestedQuery->AllowAllData($bAllowAllData);
 	}
 }
@@ -2591,9 +2389,8 @@ class FunctionExpression extends Expression
 	// recursive rendering
 	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
-		$aRes = array();
-		foreach ($this->m_aArgs as $iPos => $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aArgs as $iPos => $oExpr) {
 			$aRes[] = $oExpr->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 		}
 		return $this->m_sVerb.'('.implode(', ', $aRes).')';
@@ -2606,51 +2403,49 @@ class FunctionExpression extends Expression
 */
 	public function Evaluate(array $aArgs)
 	{
-		switch($this->m_sVerb)
-		{
+		switch ($this->m_sVerb) {
 			case 'CONCAT':
 				$sRet = '';
-				foreach ($this->m_aArgs as $iPos => $oExpr)
-				{
+				foreach ($this->m_aArgs as $iPos => $oExpr) {
 					$item = $oExpr->Evaluate($aArgs);
-					if (is_null($item)) return null;
+					if (is_null($item)) {
+						return null;
+					}
 					$sRet .= $item;
 				}
 				return $sRet;
 
 			case 'CONCAT_WS':
-				if (count($this->m_aArgs) < 3)
-				{
+				if (count($this->m_aArgs) < 3) {
 					throw new \Exception("Function {$this->m_sVerb} requires at least 3 arguments");
 				}
 				$sSeparator = $this->m_aArgs[0]->Evaluate($aArgs);
-				foreach ($this->m_aArgs as $iPos => $oExpr)
-				{
-					if ($iPos == 0) continue;
+				foreach ($this->m_aArgs as $iPos => $oExpr) {
+					if ($iPos == 0) {
+						continue;
+					}
 					$item = $oExpr->Evaluate($aArgs);
-					if (is_null($item)) return null;
+					if (is_null($item)) {
+						return null;
+					}
 					$aStrings[] = $item;
 				}
 				$sRet = implode($sSeparator, $aStrings);
 				return $sRet;
 
 			case 'SUBSTR':
-				if (count($this->m_aArgs) < 2)
-				{
-					 throw new \Exception("Function {$this->m_sVerb} requires at least 2 arguments");
+				if (count($this->m_aArgs) < 2) {
+					throw new \Exception("Function {$this->m_sVerb} requires at least 2 arguments");
 				}
 				$sString = $this->m_aArgs[0]->Evaluate($aArgs);
 				$iRawPos = $this->m_aArgs[1]->Evaluate($aArgs);
 				$iPos = $iRawPos > 0 ?
 					$iRawPos - 1// 0-based in PHP (1-based in SQL)
 					: $iRawPos; // Negative
-				if (count($this->m_aArgs) == 2)
-				{
+				if (count($this->m_aArgs) == 2) {
 					// Up to the end of the string
 					$sRet = substr($sString, $iPos);
-				}
-				else
-				{
+				} else {
 					// Length specified
 					$iLen = $this->m_aArgs[2]->Evaluate($aArgs);
 					$sRet = substr($sString, $iPos, $iLen);
@@ -2658,111 +2453,95 @@ class FunctionExpression extends Expression
 				return $sRet;
 
 			case 'TRIM':
-				if (count($this->m_aArgs) != 1)
-				{
+				if (count($this->m_aArgs) != 1) {
 					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
 				}
 				$sRet = trim($this->m_aArgs[0]->Evaluate($aArgs));
 				return $sRet;
 
 			case 'INET_ATON':
-				if (count($this->m_aArgs) != 1)
-				{
+				if (count($this->m_aArgs) != 1) {
 					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
 				}
 				$sRet = ip2long($this->m_aArgs[0]->Evaluate($aArgs));
 				return $sRet;
 
 			case 'INET_NTOA':
-				if (count($this->m_aArgs) != 1)
-				{
+				if (count($this->m_aArgs) != 1) {
 					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
 				}
 				$sRet = long2ip($this->m_aArgs[0]->Evaluate($aArgs));
 				return $sRet;
 
 			case 'ISNULL':
-				if (count($this->m_aArgs) != 1)
-				{
+				if (count($this->m_aArgs) != 1) {
 					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
 				}
 				$sRet = is_null($this->m_aArgs[0]->Evaluate($aArgs));
 				return $sRet;
 
 			case 'COALESCE':
-				if (count($this->m_aArgs) < 1)
-				{
+				if (count($this->m_aArgs) < 1) {
 					throw new \Exception("Function {$this->m_sVerb} requires at least 1 argument");
 				}
 				$ret = null;
-				foreach($this->m_aArgs as $iPos => $oExpr)
-				{
+				foreach ($this->m_aArgs as $iPos => $oExpr) {
 					$ret = $oExpr->Evaluate($aArgs);
-					if (!is_null($ret)) break;
+					if (!is_null($ret)) {
+						break;
+					}
 				}
 				return $ret;
 
 			case 'IF':
-				if (count($this->m_aArgs) != 3)
-				{
+				if (count($this->m_aArgs) != 3) {
 					throw new \Exception("Function {$this->m_sVerb} requires 3 arguments");
 				}
 				$bCond = $this->m_aArgs[0]->Evaluate($aArgs);
-				if ($bCond)
-				{
+				if ($bCond) {
 					$ret = $this->m_aArgs[1]->Evaluate($aArgs);
-				}
-				else
-				{
+				} else {
 					$ret = $this->m_aArgs[2]->Evaluate($aArgs);
 				}
 				return $ret;
 
 			case 'ELT':
-				if (count($this->m_aArgs) < 2)
-				{
+				if (count($this->m_aArgs) < 2) {
 					throw new \Exception("Function {$this->m_sVerb} requires at least 2 arguments");
 				}
 				// First argument is the 1-based position
 				$iPosition = (int) $this->m_aArgs[0]->Evaluate($aArgs);
-				if (($iPosition == 0) || ($iPosition >= count($this->m_aArgs)))
-				{
+				if (($iPosition == 0) || ($iPosition >= count($this->m_aArgs))) {
 					// Out of range
 					$ret = null;
-				}
-				else
-				{
+				} else {
 					$ret = $this->m_aArgs[$iPosition]->Evaluate($aArgs);
 				}
 				return $ret;
 
 			case 'DATE':
-				if (count($this->m_aArgs) != 1)
-				{
+				if (count($this->m_aArgs) != 1) {
 					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
 				}
 				$sRet = date('Y-m-d', strtotime($this->m_aArgs[0]->Evaluate($aArgs)));
 				return $sRet;
 
 			case 'YEAR':
-				if (count($this->m_aArgs) != 1)
-				{
+				if (count($this->m_aArgs) != 1) {
 					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
 				}
 				$iRet = (int) date('Y', strtotime($this->m_aArgs[0]->Evaluate($aArgs)));
 				return $iRet;
 
 			case 'MONTH':
-				if (count($this->m_aArgs) != 1)
-				{
+				if (count($this->m_aArgs) != 1) {
 					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
 				}
 				$iRet = (int) date('m', strtotime($this->m_aArgs[0]->Evaluate($aArgs)));
 				return $iRet;
 
 			case 'DAY':
-				if (count($this->m_aArgs) != 1)
-				{
+				if (count($this->m_aArgs) != 1) {
 					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
 				}
 				$iRet = (int) date('d', strtotime($this->m_aArgs[0]->Evaluate($aArgs)));
@@ -2819,7 +2598,7 @@ class FunctionExpression extends Expression
 					'%m',
 					'%H',
 					'%i',
-					'%s'
+					'%s',
 				];
 				//@formatter:on
 				/**
@@ -2852,7 +2631,7 @@ class FunctionExpression extends Expression
 					'm',
 					'H',
 					'i',
-					's'
+					's',
 				];
 				//@formatter:on
 				$sFormatForPhpDateFormat = str_replace($aFormatsForMysqlDateFormat, $aFormatsForPhpDateFormat, $sFormatForMysqlDateFormat);
@@ -2862,8 +2641,7 @@ class FunctionExpression extends Expression
 				return $sRet;
 
 			case 'TO_DAYS':
-				if (count($this->m_aArgs) != 1)
-				{
+				if (count($this->m_aArgs) != 1) {
 					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
 				}
 
@@ -2889,8 +2667,7 @@ class FunctionExpression extends Expression
 				return $iRet;
 
 			case 'FROM_DAYS':
-				if (count($this->m_aArgs) != 1)
-				{
+				if (count($this->m_aArgs) != 1) {
 					throw new \Exception("Function {$this->m_sVerb} requires 1 argument");
 				}
 				$iSince1582 = $this->m_aArgs[0]->Evaluate($aArgs) - 577814;
@@ -2907,8 +2684,7 @@ class FunctionExpression extends Expression
 				return $sRet;
 
 			case 'DATE_ADD':
-				if (count($this->m_aArgs) != 2)
-				{
+				if (count($this->m_aArgs) != 2) {
 					throw new \Exception("Function {$this->m_sVerb} requires 2 arguments");
 				}
 				$sStartDate = $this->m_aArgs[0]->Evaluate($aArgs);
@@ -2918,8 +2694,7 @@ class FunctionExpression extends Expression
 				return $sRet;
 
 			case 'DATE_SUB':
-				if (count($this->m_aArgs) != 2)
-				{
+				if (count($this->m_aArgs) != 2) {
 					throw new \Exception("Function {$this->m_sVerb} requires 2 arguments");
 				}
 				$sStartDate = $this->m_aArgs[0]->Evaluate($aArgs);
@@ -2939,39 +2714,33 @@ class FunctionExpression extends Expression
 	 */
 	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
 	{
-		$aFields = array();
-		foreach ($this->m_aArgs as $oExpr)
-		{
+		$aFields = [];
+		foreach ($this->m_aArgs as $oExpr) {
 			$aFields[] = $oExpr->ToJSON($aArgs, $bRetrofitParams);
 		}
 
-		return array(
+		return [
 			'type' => static::OPERATOR_FUNCTION,
 			'operator' => $this->m_sVerb,
 			'fields' => $aFields,
 			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
-		);
+		];
 	}
 
 	public function Browse(Closure $callback)
 	{
 		$callback($this);
-		foreach ($this->m_aArgs as $iPos => $oExpr)
-		{
+		foreach ($this->m_aArgs as $iPos => $oExpr) {
 			$oExpr->Browse($callback);
 		}
 	}
 
 	public function ApplyParameters($aArgs)
 	{
-		foreach ($this->m_aArgs as $idx => $oExpr)
-		{
-			if ($oExpr instanceof VariableExpression)
-			{
+		foreach ($this->m_aArgs as $idx => $oExpr) {
+			if ($oExpr instanceof VariableExpression) {
 				$this->m_aArgs[$idx] = $oExpr->GetAsScalar($aArgs);
-			}
-			else
-			{
+			} else {
 				$oExpr->ApplyParameters($aArgs);
 			}
 		}
@@ -2979,17 +2748,15 @@ class FunctionExpression extends Expression
 
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
-		foreach ($this->m_aArgs as $oExpr)
-		{
+		foreach ($this->m_aArgs as $oExpr) {
 			$oExpr->GetUnresolvedFields($sAlias, $aUnresolved);
 		}
 	}
 
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
-		$aRes = array();
-		foreach ($this->m_aArgs as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aArgs as $oExpr) {
 			$aRes[] = $oExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
 		return new FunctionExpression($this->m_sVerb, $aRes);
@@ -2997,9 +2764,8 @@ class FunctionExpression extends Expression
 
 	public function ListRequiredFields()
 	{
-		$aRes = array();
-		foreach ($this->m_aArgs as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aArgs as $oExpr) {
 			$aRes = array_merge($aRes, $oExpr->ListRequiredFields());
 		}
 		return $aRes;
@@ -3007,17 +2773,15 @@ class FunctionExpression extends Expression
 
 	public function CollectUsedParents(&$aTable)
 	{
-		foreach ($this->m_aArgs as $oExpr)
-		{
+		foreach ($this->m_aArgs as $oExpr) {
 			$oExpr->CollectUsedParents($aTable);
 		}
 	}
 
 	public function ListConstantFields()
 	{
-		$aRes = array();
-		foreach ($this->m_aArgs as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aArgs as $oExpr) {
 			$aRes = array_merge($aRes, $oExpr->ListConstantFields());
 		}
 		return $aRes;
@@ -3026,9 +2790,8 @@ class FunctionExpression extends Expression
 	public function ListParameters()
 	{
 
-		$aRes = array();
-		foreach ($this->m_aArgs as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aArgs as $oExpr) {
 			$aRes = array_merge($aRes, $oExpr->ListParameters());
 		}
 		return $aRes;
@@ -3036,26 +2799,25 @@ class FunctionExpression extends Expression
 
 	public function RenameParam($sOldName, $sNewName)
 	{
-		foreach ($this->m_aArgs as $key => $oExpr)
-		{
+		foreach ($this->m_aArgs as $key => $oExpr) {
 			$this->m_aArgs[$key] = $oExpr->RenameParam($sOldName, $sNewName);
 		}
 	}
 
 	public function RenameAlias($sOldName, $sNewName)
 	{
-		foreach ($this->m_aArgs as $key => $oExpr)
-		{
+		foreach ($this->m_aArgs as $key => $oExpr) {
 			$oExpr->RenameAlias($sOldName, $sNewName);
 		}
 	}
 
-	public function GetAttDef($aClasses = array())
+	public function GetAttDef($aClasses = [])
 	{
-		foreach($this->m_aArgs as $oExpression)
-		{
+		foreach ($this->m_aArgs as $oExpression) {
 			$oAttDef = $oExpression->GetAttDef($aClasses);
-			if (!is_null($oAttDef)) return $oAttDef;
+			if (!is_null($oAttDef)) {
+				return $oAttDef;
+			}
 		}
 
 		return null;
@@ -3075,7 +2837,7 @@ class FunctionExpression extends Expression
 		static $aWeekDayToString = null;
 		if (is_null($aWeekDayToString)) {
 			// Init the correspondance table
-			$aWeekDayToString = array(
+			$aWeekDayToString = [
 				0 => Dict::S('DayOfWeek-Sunday'),
 				1 => Dict::S('DayOfWeek-Monday'),
 				2 => Dict::S('DayOfWeek-Tuesday'),
@@ -3083,13 +2845,12 @@ class FunctionExpression extends Expression
 				4 => Dict::S('DayOfWeek-Thursday'),
 				5 => Dict::S('DayOfWeek-Friday'),
 				6 => Dict::S('DayOfWeek-Saturday'),
-			);
+			];
 		}
 		static $aMonthToString = null;
-		if (is_null($aMonthToString))
-		{
+		if (is_null($aMonthToString)) {
 			// Init the correspondance table
-			$aMonthToString = array(
+			$aMonthToString = [
 				1  => Dict::S('Month-01'),
 				2  => Dict::S('Month-02'),
 				3  => Dict::S('Month-03'),
@@ -3102,7 +2863,7 @@ class FunctionExpression extends Expression
 				10 => Dict::S('Month-10'),
 				11 => Dict::S('Month-11'),
 				12 => Dict::S('Month-12'),
-			);
+			];
 		}
 
 		$sRes = $sDefault;
@@ -3129,12 +2890,11 @@ class FunctionExpression extends Expression
 		return $sRes;
 	}
 
-	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = [])
 	{
 		$sOperation = '';
 		$sVerb = '';
-		switch ($this->m_sVerb)
-		{
+		switch ($this->m_sVerb) {
 			case 'ISNULL':
 			case 'NOW':
 				$sVerb = $this->VerbToNaturalLanguage();
@@ -3152,18 +2912,15 @@ class FunctionExpression extends Expression
 				return $this->RenderExpression(false, $aArgs);
 		}
 
-		foreach($this->m_aArgs as $oExpression)
-		{
-			if ($oExpression instanceof IntervalExpression)
-			{
+		foreach ($this->m_aArgs as $oExpression) {
+			if ($oExpression instanceof IntervalExpression) {
 				$sOperation .= $sVerb;
 				$sVerb = '';
 			}
 			$sOperation .= $oExpression->Display($oSearch, $aArgs, $oAttDef, $aCtx);
 		}
 
-		if (!empty($sVerb))
-		{
+		if (!empty($sVerb)) {
 			$sOperation .= $sVerb;
 		}
 		return '('.$sOperation.')';
@@ -3176,13 +2933,11 @@ class FunctionExpression extends Expression
 
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
-		$aCriteria = array();
-		switch ($this->m_sVerb)
-		{
+		$aCriteria = [];
+		switch ($this->m_sVerb) {
 			case 'ISNULL':
 				$aCriteria['operator'] = $this->m_sVerb;
-				foreach($this->m_aArgs as $oExpression)
-				{
+				foreach ($this->m_aArgs as $oExpression) {
 					$aCriteria = array_merge($oExpression->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef), $aCriteria);
 				}
 				$aCriteria['has_undefined'] = true;
@@ -3190,7 +2945,7 @@ class FunctionExpression extends Expression
 				break;
 
 			case 'NOW':
-				$aCriteria = array('widget' => 'date_time');
+				$aCriteria = ['widget' => 'date_time'];
 				$aCriteria['is_relative'] = true;
 				$aCriteria['verb'] = $this->m_sVerb;
 				break;
@@ -3198,9 +2953,8 @@ class FunctionExpression extends Expression
 			case 'DATE_ADD':
 			case 'DATE_SUB':
 			case 'DATE_FORMAT':
-				$aCriteria = array('widget' => 'date_time');
-				foreach($this->m_aArgs as $oExpression)
-				{
+				$aCriteria = ['widget' => 'date_time'];
+				foreach ($this->m_aArgs as $oExpression) {
 					$aCriteria = array_merge($oExpression->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef), $aCriteria);
 				}
 				$aCriteria['verb'] = $this->m_sVerb;
@@ -3267,12 +3021,12 @@ class IntervalExpression extends Expression
 	 */
 	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
 	{
-		return array(
+		return [
 			'type' => static::OPERATOR_INTERVAL,
 			'unit' => $this->m_sUnit,
 			'expression' => $this->m_oValue->ToJSON($aArgs, $bRetrofitParams),
 			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
-		);
+		];
 	}
 
 	public function Browse(Closure $callback)
@@ -3283,12 +3037,9 @@ class IntervalExpression extends Expression
 
 	public function ApplyParameters($aArgs)
 	{
-		if ($this->m_oValue instanceof VariableExpression)
-		{
+		if ($this->m_oValue instanceof VariableExpression) {
 			$this->m_oValue = $this->m_oValue->GetAsScalar($aArgs);
-		}
-		else
-		{
+		} else {
 			$this->m_oValue->ApplyParameters($aArgs);
 		}
 	}
@@ -3305,7 +3056,7 @@ class IntervalExpression extends Expression
 
 	public function ListRequiredFields()
 	{
-		return array();
+		return [];
 	}
 
 	public function CollectUsedParents(&$aTable)
@@ -3314,7 +3065,7 @@ class IntervalExpression extends Expression
 
 	public function ListConstantFields()
 	{
-		return array();
+		return [];
 	}
 
 	public function ListParameters()
@@ -3340,7 +3091,7 @@ class IntervalExpression extends Expression
 		return $aCriteria;
 	}
 
-	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = [])
 	{
 		return $this->m_oValue->RenderExpression(false, $aArgs).' '.Dict::S('Expression:Unit:Long:'.$this->m_sUnit, $this->m_sUnit);
 	}
@@ -3369,9 +3120,8 @@ class CharConcatExpression extends Expression
 	// recursive rendering
 	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
-		$aRes = array();
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aExpressions as $oExpr) {
 			$sCol = $oExpr->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 			// Concat will be globally NULL if one single argument is null !
 			$aRes[] = "COALESCE($sCol, '')";
@@ -3387,8 +3137,7 @@ class CharConcatExpression extends Expression
 	public function Evaluate(array $aArgs)
 	{
 		$sRet = '';
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		foreach ($this->m_aExpressions as $oExpr) {
 			$sRet .= $oExpr->Evaluate($aArgs);
 		}
 		return $sRet;
@@ -3400,38 +3149,32 @@ class CharConcatExpression extends Expression
 	 */
 	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
 	{
-		$aFields = array();
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		$aFields = [];
+		foreach ($this->m_aExpressions as $oExpr) {
 			$aFields[] = $oExpr->RenderExpression($aArgs, $bRetrofitParams);
 		}
 
-		return array(
+		return [
 			'type' => static::OPERATOR_FUNCTION,
 			'operator' => 'concat',
 			'fields' => $aFields,
-		);
+		];
 	}
 
 	public function Browse(Closure $callback)
 	{
 		$callback($this);
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		foreach ($this->m_aExpressions as $oExpr) {
 			$oExpr->Browse($callback);
 		}
 	}
 
 	public function ApplyParameters($aArgs)
 	{
-		foreach ($this->m_aExpressions as $idx => $oExpr)
-		{
-			if ($oExpr instanceof VariableExpression)
-			{
+		foreach ($this->m_aExpressions as $idx => $oExpr) {
+			if ($oExpr instanceof VariableExpression) {
 				$this->m_aExpressions[$idx] = $oExpr->GetAsScalar($aArgs);
-			}
-			else
-			{
+			} else {
 				$this->m_aExpressions->ApplyParameters($aArgs);
 			}
 		}
@@ -3439,17 +3182,15 @@ class CharConcatExpression extends Expression
 
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		foreach ($this->m_aExpressions as $oExpr) {
 			$oExpr->GetUnresolvedFields($sAlias, $aUnresolved);
 		}
 	}
 
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
-		$aRes = array();
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aExpressions as $oExpr) {
 			$aRes[] = $oExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
 		return new CharConcatExpression($aRes);
@@ -3457,9 +3198,8 @@ class CharConcatExpression extends Expression
 
 	public function ListRequiredFields()
 	{
-		$aRes = array();
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aExpressions as $oExpr) {
 			$aRes = array_merge($aRes, $oExpr->ListRequiredFields());
 		}
 		return $aRes;
@@ -3467,17 +3207,15 @@ class CharConcatExpression extends Expression
 
 	public function CollectUsedParents(&$aTable)
 	{
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		foreach ($this->m_aExpressions as $oExpr) {
 			$oExpr->CollectUsedParents($aTable);
 		}
 	}
 
 	public function ListConstantFields()
 	{
-		$aRes = array();
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aExpressions as $oExpr) {
 			$aRes = array_merge($aRes, $oExpr->ListConstantFields());
 		}
 		return $aRes;
@@ -3485,9 +3223,8 @@ class CharConcatExpression extends Expression
 
 	public function ListParameters()
 	{
-		$aRes = array();
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aExpressions as $oExpr) {
 			$aRes = array_merge($aRes, $oExpr->ListParameters());
 		}
 		return $aRes;
@@ -3495,21 +3232,18 @@ class CharConcatExpression extends Expression
 
 	public function RenameParam($sOldName, $sNewName)
 	{
-		foreach ($this->m_aExpressions as $key => $oExpr)
-		{
+		foreach ($this->m_aExpressions as $key => $oExpr) {
 			$this->m_aExpressions[$key] = $oExpr->RenameParam($sOldName, $sNewName);
 		}
 	}
 
 	public function RenameAlias($sOldName, $sNewName)
 	{
-		foreach ($this->m_aExpressions as $key => $oExpr)
-		{
+		foreach ($this->m_aExpressions as $key => $oExpr) {
 			$oExpr->RenameAlias($sOldName, $sNewName);
 		}
 	}
 }
-
 
 class CharConcatWSExpression extends CharConcatExpression
 {
@@ -3524,9 +3258,8 @@ class CharConcatWSExpression extends CharConcatExpression
 	// recursive rendering
 	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
-		$aRes = array();
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aExpressions as $oExpr) {
 			$sCol = $oExpr->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 			// Concat will be globally NULL if one single argument is null !
 			$aRes[] = "COALESCE($sCol, '')";
@@ -3542,9 +3275,8 @@ class CharConcatWSExpression extends CharConcatExpression
 */
 	public function Evaluate(array $aArgs)
 	{
-		$aRes = array();
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aExpressions as $oExpr) {
 			// TODO: Seems weird, this should rather be $aRes[] = $oExpr->Evaluate($aArgs);
 			$aRes .= $oExpr->Evaluate($aArgs);
 		}
@@ -3554,20 +3286,17 @@ class CharConcatWSExpression extends CharConcatExpression
 	public function Browse(Closure $callback)
 	{
 		$callback($this);
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		foreach ($this->m_aExpressions as $oExpr) {
 			$oExpr->Browse($callback);
 		}
 	}
 
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
-		$aRes = array();
-		foreach ($this->m_aExpressions as $oExpr)
-		{
+		$aRes = [];
+		foreach ($this->m_aExpressions as $oExpr) {
 			$aRes[] = $oExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
 		return new CharConcatWSExpression($this->m_separator, $aRes);
 	}
 }
-

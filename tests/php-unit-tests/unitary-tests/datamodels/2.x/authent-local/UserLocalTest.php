@@ -419,6 +419,7 @@ class UserLocalTest extends ItopDataTestCase
 		$this->assertInstanceOf(ormLinkSet::class, $oProfilesSet);
 		$this->assertEquals(0, $oProfilesSet->Count());
 		MetaModel::GetConfig()->Set('security.hide_administrators', false);
+		MetaModel::GetConfig()->Set('security.disable_joined_classes_filter', true);
 		$oProfilesSet = $this->GetAdminUserProfileList();
 		$this->assertIsObject($oProfilesSet);
 		$this->assertInstanceOf(ormLinkSet::class, $oProfilesSet);
