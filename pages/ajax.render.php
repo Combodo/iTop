@@ -62,7 +62,7 @@ try {
 	// check if header contains X-Combodo-Ajax for POST request (CSRF protection for ajax calls)
 	// check must be performed after DoLoginEx to be logged in and to be able to check the token (based on the transaction id)
 	if (!isset($_SERVER['HTTP_X_COMBODO_AJAX']) && $_SERVER['REQUEST_METHOD'] !== 'GET') {
-		$sTransactionId = utils::ReadPostedParam("transaction_id");
+		$sTransactionId = utils::ReadPostedParam("transaction_id",'','transaction_id');
 		if (!utils::IsTransactionValid($sTransactionId, false)) { // if a form is submitted without header but contains a token... should be exceptional
 			$sReferer = $_SERVER['HTTP_REFERER'];
 			$sErrorMsg = 'Unauthorized access. Please see https://www.itophub.io/wiki/page?id=3_2_0:release:developer#checking_for_the_presence_of_specific_header_in_the_post_to_enhance_protection_against_csrf_attacks';
