@@ -50,6 +50,9 @@ class AttributeClassState extends AttributeString
 
 			$aAllowedStates = [];
 			foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass) {
+				if (!MetaModel::HasLifecycle($sChildClass)) {
+					continue;
+				}
 				$aValues = MetaModel::EnumStates($sChildClass);
 				foreach (array_keys($aValues) as $sState) {
 					$aAllowedStates[$sState] = $sState.' ('.MetaModel::GetStateLabel($sChildClass, $sState).')';
