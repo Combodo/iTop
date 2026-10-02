@@ -405,9 +405,18 @@ class SynchroDataSource extends cmdbAbstractObject
 				// Still running !
 				$oPage->p('<h2>'.Dict::Format('Core:Synchro:SynchroRunningStartedOn_Date', $sStartDate).'</h2>');
 			} else {
-				$sEndDate = $oLastLog->GetAsHTML('end_date');
 				$iLastLog = $oLastLog->GetKey();
-				$oPage->p('<h2>'.Dict::Format('Core:Synchro:SynchroEndedOn_Date', $sEndDate).'</h2>');
+
+				$sStartDate = $oLastLog->Get('start_date');
+				$sEndDate = $oLastLog->Get('end_date');
+				$oStartDate = new DateTime($sStartDate);
+				$oEndDate = new DateTime($sEndDate);
+				/** @var integer $iDuration */
+				$iDuration = $oEndDate->format('U') - $oStartDate->format('U');
+				$sDuration = AttributeDuration::FormatDuration($iDuration);
+				$sEndDate = $oLastLog->GetAsHTML('end_date');
+
+				$oPage->p('<h2>'.Dict::Format('Core:Synchro:SynchroEndedOn_Date', $sEndDate, $sDuration).'</h2>');
 				$sOQL = "SELECT SynchroReplica WHERE sync_source_id=$iDSid";
 				$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
 				$iCountAllReplicas = $oSet->Count();
@@ -420,11 +429,14 @@ class SynchroDataSource extends cmdbAbstractObject
 				$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
 				$iCountAllWarnings = $oSet->Count();
 				$sAllWarnings = "<a href=\"../synchro/replica.php?operation=oql&datasource=$iDSid&oql=$sOQL\">$iCountAllWarnings</a>";
+				$iMemPeakInMo = sprintf('%.2f Mo', $oLastLog->Get('memory_usage_peak') / (1024 * 1024));
+
 				$oPage->p('<h2>'.Dict::Format(
 					'Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings',
 					$sAllReplicas,
 					$sAllErrors,
-					$sAllWarnings
+					$sAllWarnings,
+					$iMemPeakInMo
 				).'</h2>');
 			}
 
