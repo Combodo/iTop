@@ -1,4 +1,29 @@
-<nav id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsExpanded() == true %}ibo-is-expanded{% endif %}" data-role="ibo-navigation-menu">
+<nav id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-is-resizer-initializing {% if oUIBlock.IsExpanded() == true %}ibo-is-expanded{% endif %}" data-role="ibo-navigation-menu">
+	<script>
+		(function (oMenu) {
+			const bPreferredExpanded = oMenu.classList.contains('ibo-is-expanded');
+			oMenu.dataset.preferredExpanded = String(bPreferredExpanded);
+			if (window.innerWidth < 740) {
+				oMenu.classList.remove('ibo-is-expanded');
+				return;
+			}
+			if (!bPreferredExpanded) {
+				return;
+			}
+
+			try {
+				const iStoredWidth = Number.parseInt(window.localStorage.getItem('itop.navigationMenuWidth'), 10);
+				if (!Number.isFinite(iStoredWidth)) {
+					return;
+				}
+
+				oMenu.style.setProperty('--ibo-navigation-menu--custom-width', Math.max(240, Math.min(iStoredWidth, Math.floor(window.innerWidth * 0.5)))+'px');
+				oMenu.classList.add('ibo-has-custom-width');
+			} catch (oError) {
+				// The widget will use the fixed expanded preset when local storage is unavailable.
+			}
+		})(document.currentScript.parentElement);
+	</script>
 	<div class="ibo-navigation-menu--body">
 		<div class="ibo-navigation-menu--top-part">
 			<a class="ibo-navigation-menu--square-company-logo" data-role="ibo-navigation-menu--square-company-logo" title="{{ oUIBlock.GetAppRevisionNumber() }}" href="{{ oUIBlock.GetAppIconLink() }}">
@@ -57,15 +82,9 @@
 					</a>
 				</div>
 				<div class="ibo-navigation-menu--user-welcome-message">
-					<a data-role="ibo-navigation-menu--user-menu--toggler" href="#" aria-label="{{ 'UI:Layout:NavigationMenu:UserMenu:Toggler:Label'|dict_s }}">
-						<div class="ibo-navigation-menu--user-welcome-message--text">
-							<a class="ibo-navigation-menu--user-welcome-message--toggler" data-role="ibo-navigation-menu--user-menu--toggler" href="#">
-								{{ oUIBlock.GetUserData().sWelcomeMessage }}
-								<span class="ibo-navigation-menu--user-welcome-message--toggler">
-									<i class="fas fa-caret-down"></i>
-								</span>
-							</a>
-						</div>
+					<a class="ibo-navigation-menu--user-welcome-message--toggler" data-role="ibo-navigation-menu--user-menu--toggler" href="#" aria-label="{{ 'UI:Layout:NavigationMenu:UserMenu:Toggler:Label'|dict_s }}">
+						<span class="ibo-navigation-menu--user-welcome-message--text">{{ oUIBlock.GetUserData().sWelcomeMessage }}</span>
+						<span class="ibo-navigation-menu--user-welcome-message--caret"><i class="fas fa-caret-down"></i></span>
 					</a>
 				</div>
 				{% if oUIBlock.IsNewsroomEnabled() == true %}
@@ -92,6 +111,13 @@
                 </div>
             </div>
         </div>
+		<button type="button"
+				class="ibo-navigation-menu--resizer"
+				data-role="ibo-navigation-menu--resizer"
+				role="separator"
+				aria-label="{{ 'UI:Layout:NavigationMenu:Resizer:Label'|dict_s }}"
+				aria-orientation="vertical"
+				title="{{ 'UI:Layout:NavigationMenu:Resizer:Tooltip'|dict_s }}"></button>
     </div>
     <div class="ibo-navigation-menu--drawer" data-role="ibo-navigation-menu--drawer">
         <div class="ibo-navigation-menu--menu-filter" data-role="ibo-nav-menu--menu-filter">
