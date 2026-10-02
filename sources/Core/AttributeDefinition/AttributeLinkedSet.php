@@ -32,6 +32,7 @@ use ValueSetObjects;
  */
 class AttributeLinkedSet extends AttributeDefinition
 {
+	public $bAllowAllData = false;
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
@@ -48,6 +49,11 @@ class AttributeLinkedSet extends AttributeDefinition
 	{
 		parent::__construct($sCode, $aParams);
 		$this->aCSSClasses[] = 'attribute-set';
+	}
+
+	public function AllowAllData()
+	{
+		$this->bAllowAllData = true;
 	}
 
 	public static function ListExpectedParams()
@@ -143,6 +149,9 @@ class AttributeLinkedSet extends AttributeDefinition
 		}
 
 		$oLinkSearch = new DBObjectSearch($sLinkClass);
+		if ($this->bAllowAllData) {
+			$oLinkSearch->AllowAllData(true);
+		}
 		$oLinkSearch->AddCondition_PointingTo($oMyselfSearch, $sExtKeyToMe);
 		if ($this->IsIndirect()) {
 			// Join the remote class so that the archive flag will be taken into account
