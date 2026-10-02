@@ -52,6 +52,13 @@ p_object_search_from_attribute:
     sHostObjectClass: ~
     sHostObjectId: ~
 
+p_columns_from_attribute_with_class:
+  path: '/object/search/columns-from-attribute-with-class/{sTargetAttCode}/{sHostObjectClass}/{sHostObjectId}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::GetColumnsFromAttributeAction'
+    sHostObjectClass: ~
+    sHostObjectId: ~
+
 p_object_search_autocomplete:
   path: '/object/search/autocomplete/{sTargetAttCode}/{sHostObjectClass}/{sHostObjectId}'
   defaults:
