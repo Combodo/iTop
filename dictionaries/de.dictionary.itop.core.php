@@ -4,7 +4,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * @license    https://opensource.org/licenses/AGPL-3.0
  * @author Stephan Rosenke <stephan.rosenke@itomig.de>
  * @author Martin Raenker <martin.raenker@itomig.de>
  * @author Attila Baroti <attila.baroti@itomig.de>
