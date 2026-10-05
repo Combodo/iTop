@@ -37,6 +37,8 @@ class DownloadPage extends AjaxPage
 	public function output()
 	{
 		$oKpi = new ExecutionKPI();
+		$this->add_header('Content-Security-Policy: sandbox; default-src \'none\'');
+
 		if (!empty($this->sContentType)) {
 			$this->add_header('Content-type: '.$this->sContentType);
 		}
