@@ -37,7 +37,6 @@ class DownloadPage extends AjaxPage
 	public function output()
 	{
 		$oKpi = new ExecutionKPI();
-		$this->add_header('Content-Security-Policy: sandbox; default-src \'none\'');
 
 		if (!empty($this->sContentType)) {
 			$this->add_header('Content-type: '.$this->sContentType);
@@ -49,11 +48,11 @@ class DownloadPage extends AjaxPage
 			header($s_header);
 		}
 
-		$sContent = $this->sContent;
+		$this->add_header('Content-Security-Policy: sandbox; default-src \'none\'');
 
 		$oKpi->ComputeAndReport(get_class($this).' output');
-		echo $sContent;
-		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sContent) / 1024).' Kb)');
+		echo $this->sContent;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($this->sContent) / 1024).' Kb)');
 		ExecutionKPI::ReportStats();
 	}
 }
