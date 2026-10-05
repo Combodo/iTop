@@ -37,14 +37,12 @@ class DownloadPage extends AjaxPage
 	public function output()
 	{
 		$oKpi = new ExecutionKPI();
-
 		if (!empty($this->sContentType)) {
 			$this->add_header('Content-type: '.$this->sContentType);
 		}
 		if (!empty($this->sContentDisposition)) {
 			$this->add_header('Content-Disposition: '.$this->sContentDisposition.'; filename="'.$this->sContentFileName.'"');
 		}
-
 		foreach ($this->a_headers as $s_header) {
 			header($s_header);
 		}
