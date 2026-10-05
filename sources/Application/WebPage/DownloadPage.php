@@ -44,11 +44,11 @@ class DownloadPage extends AjaxPage
 		if (!empty($this->sContentDisposition)) {
 			$this->add_header('Content-Disposition: '.$this->sContentDisposition.'; filename="'.$this->sContentFileName.'"');
 		}
+		$this->add_header('Content-Security-Policy: sandbox; default-src \'none\'');
+
 		foreach ($this->a_headers as $s_header) {
 			header($s_header);
 		}
-
-		$this->add_header('Content-Security-Policy: sandbox; default-src \'none\'');
 
 		$oKpi->ComputeAndReport(get_class($this).' output');
 		echo $this->sContent;
