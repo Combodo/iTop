@@ -82,6 +82,7 @@ $(function()
 				this.element.addClass('ibo-navigation-menu');
 				this.user_prefers_expanded = this.element[0].dataset.preferredExpanded === 'true';
 				this.responsive_is_narrow = window.innerWidth < this.options.responsive_collapse_breakpoint;
+				this._SetTogglerTooltip();
 				this._bindEvents();
 				this._SyncMenuResizeState();
 				this.element.removeClass(this.css_classes.is_resizer_initializing);
@@ -99,6 +100,19 @@ $(function()
 				this.element[0].style.removeProperty(this.options.resizer_reveal_css_custom_property);
 				this.element[0].style.removeProperty(this.options.silo_selection_width_css_custom_property);
 				this.element.removeClass('ibo-navigation-menu');
+			},
+			_SetTogglerTooltip: function () {
+				const oTogglerElem = this.element.find(this.js_selectors.menu_toggler);
+				const sPlatform = navigator.userAgentData?.platform || navigator.platform || '';
+				const sShortcut = /Mac|iPhone|iPad|iPod/i.test(sPlatform) ? '⌘B' : 'Ctrl+B';
+				const sTooltip = $('<span class="ibo-navigation-menu--toggler-tooltip">')
+					.append($('<span>').text(oTogglerElem.attr('aria-label')))
+					.append($('<kbd>').text(sShortcut))[0].outerHTML;
+
+				oTogglerElem.attr('data-tooltip-content', sTooltip);
+				if (oTogglerElem[0]._tippy) {
+					oTogglerElem[0]._tippy.setContent(sTooltip);
+				}
 			},
 			_bindEvents: function () {
 				const me = this;

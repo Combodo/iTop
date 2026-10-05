@@ -34,7 +34,9 @@
 			</a>
 			<a class="ibo-navigation-menu--toggler" data-role="ibo-navigation-menu--toggler"
                aria-label="{% if oUIBlock.HasSiloSelected() %}{{ 'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel'|dict_format(oUIBlock.GetSiloLabel()) }}{% else %}{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}{% endif %}"
+			   aria-keyshortcuts="Control+B Meta+B"
                data-tooltip-content="{% if oUIBlock.HasSiloSelected() %}{{ 'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel'|dict_format(oUIBlock.GetSiloLabel()) }}{% else %}{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}{% endif %}"
+			   data-tooltip-html-enabled="true"
 			   data-tooltip-placement="right"
 			   data-tooltip-distance-offset="20"
 			   href="#">

@@ -445,6 +445,21 @@ body.ibo-is-resizing-navigation-menu{
 		}
 	}
 }
+.ibo-navigation-menu--toggler-tooltip{
+	display: flex;
+	align-items: center;
+	gap: $ibo-spacing-200;
+
+	kbd{
+		flex: none;
+		padding: 2px $ibo-spacing-200;
+		border-radius: $ibo-border-radius-300;
+		background-color: rgba(255, 255, 255, 0.16);
+		color: inherit;
+		font: inherit;
+		white-space: nowrap;
+	}
+}
 .ibo-navigation-menu--toggler-icon{
 	position: relative;
 	display: flex;
