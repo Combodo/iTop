@@ -143,7 +143,7 @@ class AjaxRenderTest extends ItopDataTestCase
 			'file' => new ormDocument('<svg xmlns="http://www.w3.org/2000/svg"></svg>', 'image/svg+xml', 'test.svg'),
 		]);
 
-		$this->oiTopConfig->Set('security.disable_inline_documents_sandbox', $bDisable);
+		$this->oiTopConfig->Set('security.disable_inline_documents_sandbox', false);
 		$this->SaveItopConfFile();
 		$sResponseHeaders = $this->GetDocumentResponseHeaders($sLogin, $iDocumentId);
 		$this->assertStringContainsString(
