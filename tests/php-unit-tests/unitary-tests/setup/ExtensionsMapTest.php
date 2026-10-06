@@ -420,4 +420,109 @@ XML;
 
 		return $aRes;
 	}
+
+	public function testGetExtensionsFromDir_MonoModuleExtensionWithXmlDefinition()
+	{
+		$oiTopExtensionsMap = iTopExtensionsMap::GetExtensionsMap();
+		$sTestDir = $this->PrepareTestDir();
+
+		$this->CreateExtensionFolder($sTestDir, "ext1", "ext_code1", "1.5.9");
+		$this->CreateModule($sTestDir, "module1", "module_code1", "9.5.1");
+		self::assertEquals(['ext_code1' => 'ext1'], $oiTopExtensionsMap->GetExtensionsFromDir($sTestDir));
+	}
+
+	public function testGetExtensionsFromDir_MultiModuleExtension()
+	{
+		$oiTopExtensionsMap = iTopExtensionsMap::GetExtensionsMap();
+		$sTestDir = $this->PrepareTestDir();
+
+		$this->CreateExtensionFolder($sTestDir, "ext1", "ext_code1", "1.5.9");
+		$this->CreateModule($sTestDir, "module1", "module_code1", "9.5.1");
+		$this->CreateModule($sTestDir, "module2", "module_code2", "1.1");
+		$this->CreateModule($sTestDir, "module3", "module_code3", "2.2.2");
+		self::assertEquals(['ext_code1' => 'ext1'], $oiTopExtensionsMap->GetExtensionsFromDir($sTestDir));
+	}
+
+	public function testGetExtensionsFromDir_FurtherMonoModuleExtensionsWithoutXmlDefinition()
+	{
+		$oiTopExtensionsMap = iTopExtensionsMap::GetExtensionsMap();
+		$sTestDir = $this->PrepareTestDir();
+
+		$this->CreateModule($sTestDir, "module1", "module_code1", "9.5.1");
+		$this->CreateModule($sTestDir, "module2", "module_code2", "1.1");
+		$this->CreateModule($sTestDir, "module3", "module_code3", "2.2.2");
+		$expected = [
+			'module_code1' => 'module1',
+			'module_code2' => 'module2',
+			'module_code3' => 'module3',
+		];
+		self::assertEquals($expected, $oiTopExtensionsMap->GetExtensionsFromDir($sTestDir));
+	}
+
+	public function testGetExtensionsFromDir_MonoModuleExtensionWithoutXmlDefinition()
+	{
+		$oiTopExtensionsMap = iTopExtensionsMap::GetExtensionsMap();
+		$sTestDir = $this->PrepareTestDir();
+
+		$this->CreateModule($sTestDir, "module1", "module_code1", "9.5.1");
+		self::assertEquals(['module_code1' => 'module1'], $oiTopExtensionsMap->GetExtensionsFromDir($sTestDir));
+	}
+
+	private function PrepareTestDir(): string
+	{
+		$sTestDir = tempnam(sys_get_temp_dir(), "ext_map");
+		unlink($sTestDir);
+		mkdir($sTestDir, 0777, true);
+		$this->aFileToClean[] = $sTestDir;
+		return $sTestDir;
+	}
+
+	private function CreateExtensionFolder(string $sDir, string $sExtensionLabel, string $sExtensionCode, string $sExtensionVersion)
+	{
+		$sXmlDef = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<extension format="1.0">
+  <extension_code>$sExtensionCode</extension_code>
+  <label><![CDATA[$sExtensionLabel]]></label>
+  <description><![CDATA[BLABLA]]></description>
+  <version>$sExtensionVersion</version>
+  <modules type="array">
+    <module>
+      <id>aaa</id>
+      <version>tags/6.6.6</version>
+    </module>
+  </modules>
+  <release_date>2023-07-19</release_date>
+  <itop_version_min>3.2.0</itop_version_min>
+  <status></status>
+  <mandatory>false</mandatory>
+  <more_info_url></more_info_url>
+</extension>
+XML;
+
+		file_put_contents($sDir.'/extension.xml', $sXmlDef);
+	}
+
+	private function CreateModule(string $sDir, string $sModuleLabel, string $sModuleCode, string $sVersion)
+	{
+		$sModuleDir = $sDir."/$sModuleCode";
+		mkdir($sModuleDir, 0777, true);
+		$sModuleContent = <<<PHP
+<?php
+SetupWebPage::AddModule(
+	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
+	'$sModuleCode/$sVersion',
+	[
+		'label' => '$sModuleLabel',
+		'category' => 'authentication',
+		'dependencies' => [],
+		'mandatory' => true,
+		'visible' => true,
+		'datamodel' => [],
+	]
+);
+PHP;
+
+		file_put_contents($sModuleDir."/module.{$sModuleCode}.php", $sModuleContent);
+	}
 }

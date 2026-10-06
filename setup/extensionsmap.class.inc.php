@@ -62,20 +62,22 @@ class iTopExtensionsMap
 	 *
 	 * @throws \Exception
 	 */
-	private function __construct(string $sFromEnvironment = ITOP_DEFAULT_ENV, array $aExtraDirs = [], ?string $sAppRootForTests = null)
+	private function __construct(string $sFromEnvironment = ITOP_DEFAULT_ENV, array $aExtraDirs = [], ?string $sAppRootForTests = null, bool $bNoScan = false)
 	{
 		$this->aExtensions = [];
 		$this->aExtensionsByCode = [];
 		$this->aScannedDirs = [];
 
-		$sAppRoot = $sAppRootForTests ?? APPROOT;
-		$this->ScanDisk($sFromEnvironment, $sAppRoot);
+		if (! $bNoScan) {
+			$sAppRoot = $sAppRootForTests ?? APPROOT;
+			$this->ScanDisk($sFromEnvironment, $sAppRoot);
 
-		foreach ($aExtraDirs as $sDir) {
-			$this->ReadDir($sDir, iTopExtension::SOURCE_REMOTE, bIsRootDir: true);
+			foreach ($aExtraDirs as $sDir) {
+				$this->ReadDir($sDir, iTopExtension::SOURCE_REMOTE, bIsRootDir: true);
+			}
+
+			$this->CheckDependencies($sAppRoot);
 		}
-
-		$this->CheckDependencies($sAppRoot);
 	}
 
 	/**
@@ -357,7 +359,7 @@ class iTopExtensionsMap
 							$oExtension->sVersion = $sModuleVersion;
 							$oExtension->sSource = $sSource;
 							$oExtension->bMandatory = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['mandatory'];
-							$oExtension->sMoreInfoUrl = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['doc.more_information'];
+							$oExtension->sMoreInfoUrl = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['doc.more_information']??'';
 							$oExtension->aModules = [$sModuleName];
 							$oExtension->aModuleVersion[$sModuleName] = $sModuleVersion;
 							$oExtension->aModuleInfo[$sModuleName] = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG];
@@ -403,27 +405,15 @@ class iTopExtensionsMap
 			return [];
 		}
 
-		$aExtensions = [];
-		$hDir = opendir($sSearchDir);
-		if ($hDir !== false) {
+		$oiTopExtensionsMap = new iTopExtensionsMap(bNoScan: true);
+		$oiTopExtensionsMap->ReadDir($sSearchDir, iTopExtension::SOURCE_REMOTE, bIsRootDir: true);
 
-			// Then scan the other files and subdirectories
-			while (($sDir = readdir($hDir)) !== false) {
-				if (($sDir === '.') || ($sDir === '..') || !is_dir($sSearchDir.$sDir)) {
-					continue;
-				}
-
-				// First check if there is an extension.xml file in this directory
-				if (is_readable($sSearchDir.$sDir.'/extension.xml')) {
-					$oXml = new XMLParameters($sSearchDir.$sDir.'/extension.xml');
-					$aExtensions[$oXml->Get('extension_code')] = $oXml->Get('label');
-				}
-			}
-
-			closedir($hDir);
+		$aRes = [];
+		foreach ($oiTopExtensionsMap->aExtensionsByCode as $sCode => $oExtension) {
+			/** @var iTopExtension $oExtension */
+			$aRes[$sCode] = $oExtension->sLabel;
 		}
-
-		return $aExtensions;
+		return $aRes;
 	}
 
 	/**
