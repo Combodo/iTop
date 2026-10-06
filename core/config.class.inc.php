@@ -1771,6 +1771,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+		'security.allowed_protocols_post_requests' => [
+			'type'                => 'string',
+			'description'         => 'List of allowed protocols that will be used for post requests. Allowed values: dict, file, ftp, ftps, gopher, http, https, imap, imaps, ldap, ldaps, mqtt, pop3, pop3s, rtsp, scp, sftp, smtp, smtps, telnet, tftp',
+			'default'             => 'http,https,ftp,ftps,sftp',
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
 		'behind_reverse_proxy' => [
 			'type' => 'bool',
 			'description' => 'If true, then proxies custom header (X-Forwarded-*) are taken into account. Use only if the webserver is not publicly accessible (reachable only by the reverse proxy)',

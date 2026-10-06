@@ -73,6 +73,30 @@ class utilsTest extends ItopTestCase
 	}
 
 	/**
+	 * @dataProvider DoPostRequestAllowedProtocolsProvider
+	 */
+	public function testDoPostRequestRespectsAllowedProtocolsConfig(string $sAllowedProtocols, bool $bFileProtocolAllowed): void
+	{
+		// Config::Set changes the in-memory setting only; the test framework reloads config after this test class.
+		utils::GetConfig()->Set('security.allowed_protocols_post_requests', $sAllowedProtocols);
+		if (!$bFileProtocolAllowed) {
+			$this->expectException(\Exception::class);
+			$this->expectExceptionMessage('Protocol "file" not supported or disabled');
+			utils::DoPostRequest('file:///tmp', ['payload' => 'test']);
+		} else {
+			$this->assertTrue(true); // no error during execution
+		}
+	}
+
+	public function DoPostRequestAllowedProtocolsProvider(): array
+	{
+		return [
+			'file protocol is allowed' => ['file,http,https', true],
+			'file protocol is not allowed' => ['http,https', false],
+		];
+	}
+
+	/**
 	 * @dataProvider realPathDataProvider
 	 * @covers       utils::RealPath()
 	 */

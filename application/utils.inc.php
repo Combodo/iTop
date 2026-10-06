@@ -1886,6 +1886,9 @@ SQL;
 			$aHTTPHeaders[] = trim($sHeaderString);
 		}
 		// Default options, can be overloaded/extended with the 4th parameter of this method, see above $aCurlOptions
+		$iCurlAllowedProtocols = self::ConvertProtocolsToCurlOption(
+			self::GetConfig()->Get('security.allowed_protocols_post_requests')
+		);
 		$aOptions = [
 			CURLOPT_RETURNTRANSFER => true,     // return the content of the request
 			CURLOPT_HEADER         => false,    // don't return the headers in the output
@@ -1897,6 +1900,7 @@ SQL;
 			CURLOPT_TIMEOUT        => 120,      // timeout on response
 			CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
 			CURLOPT_SSL_VERIFYPEER => false,    // Disabled SSL Cert checks
+			CURLOPT_PROTOCOLS      => $iCurlAllowedProtocols,
 			// SSLV3 (CURL_SSLVERSION_SSLv3 = 3) is now considered as obsolete/dangerous: http://disablessl3.com/#why
 			// but it used to be a MUST to prevent a strange SSL error: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
 			// CURLOPT_SSLVERSION		=> 3,
@@ -1927,6 +1931,40 @@ SQL;
 		}
 
 		return $response;
+	}
+
+	private static function ConvertProtocolsToCurlOption(string $sProtocols): int
+	{
+		$aProtocols = explode(',', $sProtocols);
+
+		$iCurlProtocols = 0;
+		foreach ($aProtocols as $sProtocol) {
+			$iCurlProtocols |= match (strtolower(trim($sProtocol))) {
+				'dict' => CURLPROTO_DICT,
+				'file' => CURLPROTO_FILE,
+				'ftp' => CURLPROTO_FTP,
+				'ftps' => CURLPROTO_FTPS,
+				'gopher' => CURLPROTO_GOPHER,
+				'http' => CURLPROTO_HTTP,
+				'https' => CURLPROTO_HTTPS,
+				'imap' => CURLPROTO_IMAP,
+				'imaps' => CURLPROTO_IMAPS,
+				'ldap' => CURLPROTO_LDAP,
+				'ldaps' => CURLPROTO_LDAPS,
+				'mqtt' => CURLPROTO_MQTT,
+				'pop3' => CURLPROTO_POP3,
+				'pop3s' => CURLPROTO_POP3S,
+				'rtsp' => CURLPROTO_RTSP,
+				'scp' => CURLPROTO_SCP,
+				'sftp' => CURLPROTO_SFTP,
+				'smtp' => CURLPROTO_SMTP,
+				'smtps' => CURLPROTO_SMTPS,
+				'telnet' => CURLPROTO_TELNET,
+				'tftp' => CURLPROTO_TFTP,
+				default => throw new Exception("Unsupported protocol: $sProtocol"),
+			};
+		}
+		return $iCurlProtocols;
 	}
 
 	/**
