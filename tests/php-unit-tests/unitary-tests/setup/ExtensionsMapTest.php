@@ -437,9 +437,27 @@ XML;
 		$sTestDir = $this->PrepareTestDir();
 
 		$this->CreateExtensionFolder($sTestDir, "ext1", "ext_code1", "1.5.9");
-		$this->CreateModule($sTestDir, "module1", "module_code1", "9.5.1");
-		$this->CreateModule($sTestDir, "module2", "module_code2", "1.1");
-		$this->CreateModule($sTestDir, "module3", "module_code3", "2.2.2");
+
+		foreach ([1, 2, 3] as $i) {
+			$this->CreateModule($sTestDir, "module{$i}", "module_code{$i}", "9.5.{$i}");
+		}
+		self::assertEquals(['ext_code1' => 'ext1'], $oiTopExtensionsMap->GetExtensionsFromDir($sTestDir));
+	}
+
+	public function testGetExtensionsFromDir_MultiModuleExtensionWithOneXMLDefPerModule()
+	{
+		$oiTopExtensionsMap = iTopExtensionsMap::GetExtensionsMap();
+		$sTestDir = $this->PrepareTestDir();
+
+		$this->CreateExtensionFolder($sTestDir, "ext1", "ext_code1", "1.5.9");
+
+		foreach ([1, 2, 3] as $i) {
+			if (! is_dir("$sTestDir/module_code{$i}")){
+				mkdir("$sTestDir/module_code{$i}");
+			}
+			$this->CreateExtensionFolder("$sTestDir/module_code{$i}", "ext{$i}", "ext_code{$i}", "9.5.{$i}");
+			$this->CreateModule($sTestDir, "module{$i}", "module_code{$i}", "9.5.{$i}");
+		}
 		self::assertEquals(['ext_code1' => 'ext1'], $oiTopExtensionsMap->GetExtensionsFromDir($sTestDir));
 	}
 
@@ -448,9 +466,10 @@ XML;
 		$oiTopExtensionsMap = iTopExtensionsMap::GetExtensionsMap();
 		$sTestDir = $this->PrepareTestDir();
 
-		$this->CreateModule($sTestDir, "module1", "module_code1", "9.5.1");
-		$this->CreateModule($sTestDir, "module2", "module_code2", "1.1");
-		$this->CreateModule($sTestDir, "module3", "module_code3", "2.2.2");
+		foreach ([1, 2, 3] as $i) {
+			$this->CreateModule($sTestDir, "module{$i}", "module_code{$i}", "9.5.{$i}");
+		}
+
 		$expected = [
 			'module_code1' => 'module1',
 			'module_code2' => 'module2',
@@ -506,7 +525,9 @@ XML;
 	private function CreateModule(string $sDir, string $sModuleLabel, string $sModuleCode, string $sVersion)
 	{
 		$sModuleDir = $sDir."/$sModuleCode";
-		mkdir($sModuleDir, 0777, true);
+		if (! is_dir($sModuleDir)){
+			mkdir($sModuleDir, 0777, true);
+		}
 		$sModuleContent = <<<PHP
 <?php
 SetupWebPage::AddModule(
