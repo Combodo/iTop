@@ -1887,7 +1887,7 @@ SQL;
 		}
 		// Default options, can be overloaded/extended with the 4th parameter of this method, see above $aCurlOptions
 		$iCurlAllowedProtocols = self::ConvertProtocolsToCurlOption(
-			self::GetConfig()->Get('security.allowed_protocols_post_requests')
+			self::GetConfig()->Get('security.post_requests.allowed_protocols')
 		);
 		$aOptions = [
 			CURLOPT_RETURNTRANSFER => true,     // return the content of the request
@@ -1912,6 +1912,9 @@ SQL;
 		$aAllOptions = $aCurlOptions + $aOptions;
 		$ch = curl_init($sUrl);
 		curl_setopt_array($ch, $aAllOptions);
+		if (!curl_setopt($ch, CURLOPT_PROTOCOLS, $iCurlAllowedProtocols)) {
+			throw new Exception('Unable to enforce allowed protocols for cURL request');
+		}
 		$response = curl_exec($ch);
 		$iErr = curl_errno($ch);
 		$sErrMsg = curl_error($ch);
@@ -1940,27 +1943,27 @@ SQL;
 		$iCurlProtocols = 0;
 		foreach ($aProtocols as $sProtocol) {
 			$iCurlProtocols |= match (strtolower(trim($sProtocol))) {
-				'dict' => CURLPROTO_DICT,
-				'file' => CURLPROTO_FILE,
-				'ftp' => CURLPROTO_FTP,
-				'ftps' => CURLPROTO_FTPS,
-				'gopher' => CURLPROTO_GOPHER,
-				'http' => CURLPROTO_HTTP,
-				'https' => CURLPROTO_HTTPS,
-				'imap' => CURLPROTO_IMAP,
-				'imaps' => CURLPROTO_IMAPS,
-				'ldap' => CURLPROTO_LDAP,
-				'ldaps' => CURLPROTO_LDAPS,
-				'mqtt' => CURLPROTO_MQTT,
-				'pop3' => CURLPROTO_POP3,
-				'pop3s' => CURLPROTO_POP3S,
-				'rtsp' => CURLPROTO_RTSP,
-				'scp' => CURLPROTO_SCP,
-				'sftp' => CURLPROTO_SFTP,
-				'smtp' => CURLPROTO_SMTP,
-				'smtps' => CURLPROTO_SMTPS,
-				'telnet' => CURLPROTO_TELNET,
-				'tftp' => CURLPROTO_TFTP,
+				'dict' => defined('CURLPROTO_DICT') ? CURLPROTO_DICT : 0,
+				'file' => defined('CURLPROTO_FILE') ? CURLPROTO_FILE : 0,
+				'ftp' => defined('CURLPROTO_FTP') ? CURLPROTO_FTP : 0,
+				'ftps' => defined('CURLPROTO_FTPS') ? CURLPROTO_FTPS : 0,
+				'gopher' => defined('CURLPROTO_GOPHER') ? CURLPROTO_GOPHER : 0,
+				'http' => defined('CURLPROTO_HTTP') ? CURLPROTO_HTTP : 0,
+				'https' => defined('CURLPROTO_HTTPS') ? CURLPROTO_HTTPS : 0,
+				'imap' => defined('CURLPROTO_IMAP') ? CURLPROTO_IMAP : 0,
+				'imaps' => defined('CURLPROTO_IMAPS') ? CURLPROTO_IMAPS : 0,
+				'ldap' => defined('CURLPROTO_LDAP') ? CURLPROTO_LDAP : 0,
+				'ldaps' => defined('CURLPROTO_LDAPS') ? CURLPROTO_LDAPS : 0,
+				'mqtt' => defined('CURLPROTO_MQTT') ? CURLPROTO_MQTT : 0,
+				'pop3' => defined('CURLPROTO_POP3') ? CURLPROTO_POP3 : 0,
+				'pop3s' => defined('CURLPROTO_POP3S') ? CURLPROTO_POP3S : 0,
+				'rtsp' => defined('CURLPROTO_RTSP') ? CURLPROTO_RTSP : 0,
+				'scp' => defined('CURLPROTO_SCP') ? CURLPROTO_SCP : 0,
+				'sftp' => defined('CURLPROTO_SFTP') ? CURLPROTO_SFTP : 0,
+				'smtp' => defined('CURLPROTO_SMTP') ? CURLPROTO_SMTP : 0,
+				'smtps' => defined('CURLPROTO_SMTPS') ? CURLPROTO_SMTPS : 0,
+				'telnet' => defined('CURLPROTO_TELNET') ? CURLPROTO_TELNET : 0,
+				'tftp' => defined('CURLPROTO_TFTP') ? CURLPROTO_TFTP : 0,
 				default => throw new Exception("Unsupported protocol: $sProtocol"),
 			};
 		}

@@ -1771,13 +1771,13 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'security.allowed_protocols_post_requests' => [
+		'security.post_requests.allowed_protocols' => [
 			'type'                => 'string',
 			'description'         => 'List of allowed protocols that will be used for post requests. Allowed values: dict, file, ftp, ftps, gopher, http, https, imap, imaps, ldap, ldaps, mqtt, pop3, pop3s, rtsp, scp, sftp, smtp, smtps, telnet, tftp',
 			'default'             => 'http,https,ftp,ftps,sftp',
-			'value'               => false,
+			'value'               => 'http,https,ftp,ftps,sftp',
 			'source_of_value'     => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		],
 		'behind_reverse_proxy' => [
 			'type' => 'bool',
