@@ -263,7 +263,7 @@ class iTopExtensionsMap
 		foreach ($aExtensionCodes as $sCode => $sLabel) {
 			$sRealCode = is_int($sCode) ? $sLabel : $sCode;
 
-			/** @var \iTopExtension $oExtension */
+			/** @var ?\iTopExtension $oExtension */
 			$oExtension = $this->GetFromExtensionCode($sRealCode);
 			if (!is_null($oExtension)) {
 				$aRemovedExtension [] = $oExtension;
@@ -359,7 +359,7 @@ class iTopExtensionsMap
 							$oExtension->sVersion = $sModuleVersion;
 							$oExtension->sSource = $sSource;
 							$oExtension->bMandatory = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['mandatory'];
-							$oExtension->sMoreInfoUrl = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['doc.more_information']??'';
+							$oExtension->sMoreInfoUrl = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['doc.more_information'] ?? '';
 							$oExtension->aModules = [$sModuleName];
 							$oExtension->aModuleVersion[$sModuleName] = $sModuleVersion;
 							$oExtension->aModuleInfo[$sModuleName] = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG];
