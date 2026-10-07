@@ -1900,7 +1900,6 @@ SQL;
 			CURLOPT_TIMEOUT        => 120,      // timeout on response
 			CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
 			CURLOPT_SSL_VERIFYPEER => false,    // Disabled SSL Cert checks
-			CURLOPT_PROTOCOLS      => $iCurlAllowedProtocols,
 			// SSLV3 (CURL_SSLVERSION_SSLv3 = 3) is now considered as obsolete/dangerous: http://disablessl3.com/#why
 			// but it used to be a MUST to prevent a strange SSL error: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
 			// CURLOPT_SSLVERSION		=> 3,
