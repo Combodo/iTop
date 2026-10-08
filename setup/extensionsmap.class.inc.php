@@ -300,7 +300,7 @@ class iTopExtensionsMap
 			$aSubDirectories = [];
 
 			// First check if there is an extension.xml file in this directory
-			if (is_readable($sSearchDir.'/extension.xml')) {
+			if ($sParentExtensionId === null && is_readable($sSearchDir.'/extension.xml')) {
 				$oXml = new XMLParameters($sSearchDir.'/extension.xml');
 				$oExtension = new iTopExtension();
 				$oExtension->sCode = $oXml->Get('extension_code');
