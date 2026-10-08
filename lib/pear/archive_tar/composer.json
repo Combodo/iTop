@@ -7,7 +7,7 @@
         "tar"
     ],
     "homepage": "https://github.com/pear/Archive_Tar",
-    "license": "BSD-3-Clause",
+    "license": "BSD-2-Clause",
     "authors": [
         {
             "name": "Vincent Blavet",
@@ -23,7 +23,7 @@
         }
     ],
     "require": {
-        "php": ">=5.2.0",
+        "php": ">=5.4.0",
         "pear/pear-core-minimal": "^1.10.0alpha2"
     },
     "suggest": {

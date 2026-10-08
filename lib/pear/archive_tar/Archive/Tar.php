@@ -48,27 +48,6 @@ if (!class_exists('PEAR')) {
 define('ARCHIVE_TAR_ATT_SEPARATOR', 90001);
 define('ARCHIVE_TAR_END_BLOCK', pack("a512", ''));
 
-if (!function_exists('gzopen') && function_exists('gzopen64')) {
-    function gzopen($filename, $mode, $use_include_path = 0)
-    {
-        return gzopen64($filename, $mode, $use_include_path);
-    }
-}
-
-if (!function_exists('gztell') && function_exists('gztell64')) {
-    function gztell($zp)
-    {
-        return gztell64($zp);
-    }
-}
-
-if (!function_exists('gzseek') && function_exists('gzseek64')) {
-    function gzseek($zp, $offset, $whence = SEEK_SET)
-    {
-        return gzseek64($zp, $offset, $whence);
-    }
-}
-
 /**
  * Creates a (compressed) Tar archive
  *
@@ -244,7 +223,7 @@ class Archive_Tar extends PEAR
                 "a8checksum/a1typeflag/a100link/a6magic/a2version/" .
                 "a32uname/a32gname/a8devmajor/a8devminor/a131prefix";
         } else {
-            $this->_fmt = "Z100filename/Z8mode/Z8uid/Z8gid/Z12size/Z12mtime/" .
+            $this->_fmt = "Z100filename/Z8mode/Z8uid/Z8gid/a12size/Z12mtime/" .
                 "Z8checksum/Z1typeflag/Z100link/Z6magic/Z2version/" .
                 "Z32uname/Z32gname/Z8devmajor/Z8devminor/Z131prefix";
         }
@@ -280,7 +259,7 @@ class Archive_Tar extends PEAR
      *              single string with names separated by a single
      *              blank space.
      *
-     * @return true on success, false on error.
+     * @return bool true on success, false on error.
      * @see    createModify()
      */
     public function create($p_filelist)
@@ -300,7 +279,7 @@ class Archive_Tar extends PEAR
      *              single string with names separated by a single
      *              blank space.
      *
-     * @return true on success, false on error.
+     * @return bool true on success, false on error.
      * @see    createModify()
      * @access public
      */
@@ -443,7 +422,7 @@ class Archive_Tar extends PEAR
      *                             each element in the list, when
      *                             relevant.
      *
-     * @return true on success, false on error.
+     * @return bool true on success, false on error.
      */
     public function addModify($p_filelist, $p_add_dir, $p_remove_dir = '')
     {
@@ -496,7 +475,7 @@ class Archive_Tar extends PEAR
      *                               gid => the group ID of the file
      *                                   (default = 0 = root)
      *
-     * @return true on success, false on error.
+     * @return bool true on success, false on error.
      */
     public function addString($p_filename, $p_string, $p_datetime = false, $p_params = array())
     {
@@ -622,7 +601,7 @@ class Archive_Tar extends PEAR
      * @param boolean $p_preserve Preserve user/group ownership of files
      * @param boolean $p_symlinks Allow symlinks.
      *
-     * @return true on success, false on error.
+     * @return bool true on success, false on error.
      * @see    extractModify()
      */
     public function extractList($p_filelist, $p_path = '', $p_remove_path = '', $p_preserve = false, $p_symlinks = true)
@@ -660,7 +639,7 @@ class Archive_Tar extends PEAR
      * list of parameters, in the format attribute code + attribute values :
      * $arch->setAttribute(ARCHIVE_TAR_ATT_SEPARATOR, ',');
      *
-     * @return true on success, false on error.
+     * @return bool true on success, false on error.
      */
     public function setAttribute()
     {
@@ -991,48 +970,45 @@ class Archive_Tar extends PEAR
     {
         if (is_resource($this->_file)) {
             if ($p_len === null) {
-                if ($this->_compress_type == 'gz') {
-                    @gzputs($this->_file, $p_binary_data);
-                } else {
-                    if ($this->_compress_type == 'bz2') {
-                        @bzwrite($this->_file, $p_binary_data);
-                    } else {
-                        if ($this->_compress_type == 'lzma2') {
-                            @xzwrite($this->_file, $p_binary_data);
-                        } else {
-                            if ($this->_compress_type == 'none') {
-                                @fputs($this->_file, $p_binary_data);
-                            } else {
-                                $this->_error(
-                                    'Unknown or missing compression type ('
-                                    . $this->_compress_type . ')'
-                                );
-                            }
-                        }
-                    }
-                }
-            } else {
-                if ($this->_compress_type == 'gz') {
-                    @gzputs($this->_file, $p_binary_data, $p_len);
-                } else {
-                    if ($this->_compress_type == 'bz2') {
-                        @bzwrite($this->_file, $p_binary_data, $p_len);
-                    } else {
-                        if ($this->_compress_type == 'lzma2') {
-                            @xzwrite($this->_file, $p_binary_data, $p_len);
-                        } else {
-                            if ($this->_compress_type == 'none') {
-                                @fputs($this->_file, $p_binary_data, $p_len);
-                            } else {
-                                $this->_error(
-                                    'Unknown or missing compression type ('
-                                    . $this->_compress_type . ')'
-                                );
-                            }
-                        }
-                    }
-                }
+	            switch ($this->_compress_type)
+	            {
+		            case 'gz':
+			            $bytes = @gzwrite($this->_file, $p_binary_data);
+			            break;
+		            case 'bz2':
+			            $bytes = @bzwrite($this->_file, $p_binary_data);
+			            break;
+		            case 'lzma2':
+			            $bytes = @xzwrite($this->_file, $p_binary_data);
+			            break;
+		            case 'none':
+			            $bytes = @fwrite($this->_file, $p_binary_data);
+			            break;
+		            default:
+			            $this->_error('Unknown or missing compression type (' . $this->_compress_type . ')');
+						return false;
+	            }
+			} else {
+	            switch ($this->_compress_type)
+	            {
+		            case 'gz':
+			            $bytes = @gzwrite($this->_file, $p_binary_data, $p_len);
+			            break;
+		            case 'bz2':
+			            $bytes = @bzwrite($this->_file, $p_binary_data, $p_len);
+			            break;
+		            case 'lzma2':
+			            $bytes = @xzwrite($this->_file, $p_binary_data, $p_len);
+			            break;
+		            case 'none':
+			            $bytes = @fwrite($this->_file, $p_binary_data, $p_len);
+			            break;
+		            default:
+			            $this->_error('Unknown or missing compression type (' . $this->_compress_type . ')');
+			            return false;
+	            }
             }
+			return $bytes !== false;
         }
         return true;
     }
@@ -1117,7 +1093,7 @@ class Archive_Tar extends PEAR
         if (is_resource($this->_file)) {
             // ----- Write the last 0 filled block for end of archive
             $v_binary_data = pack('a1024', '');
-            $this->_writeBlock($v_binary_data);
+            return $this->_writeBlock($v_binary_data);
         }
         return true;
     }
@@ -1279,7 +1255,9 @@ class Archive_Tar extends PEAR
                     $pack_format = sprintf('a%d', $this->buffer_length);
                 }
                 $v_binary_data = pack($pack_format, "$v_buffer");
-                $this->_writeBlock($v_binary_data);
+                if(!$this->_writeBlock($v_binary_data)) {
+					return false;
+                }
             }
 
             fclose($v_file);
@@ -1341,7 +1319,9 @@ class Archive_Tar extends PEAR
         $i = 0;
         while (($v_buffer = substr($p_string, (($i++) * 512), 512)) != '') {
             $v_binary_data = pack("a512", $v_buffer);
-            $this->_writeBlock($v_binary_data);
+            if (!$this->_writeBlock($v_binary_data)) {
+				return false;
+            }
         }
 
         return true;
@@ -2115,7 +2095,7 @@ class Archive_Tar extends PEAR
                 if ($v_extract_file) {
                     if ($v_header['typeflag'] == "5") {
                         if (!@file_exists($v_header['filename'])) {
-                            if (!@mkdir($v_header['filename'], 0777)) {
+                            if (!@mkdir($v_header['filename'], 0775)) {
                                 $this->_error(
                                     'Unable to create directory {'
                                     . $v_header['filename'] . '}'
@@ -2448,7 +2428,7 @@ class Archive_Tar extends PEAR
             return false;
         }
 
-        if (!@mkdir($p_dir, 0777)) {
+        if (!@mkdir($p_dir, 0775)) {
             $this->_error("Unable to create directory '$p_dir'");
             return false;
         }
