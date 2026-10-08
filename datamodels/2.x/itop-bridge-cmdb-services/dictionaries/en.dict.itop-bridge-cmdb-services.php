@@ -19,7 +19,7 @@
 /**
 * @author       Benjamin Planque <benjamin.planque@combodo.com>
 * @copyright   Copyright (C) 2010-2024 Combodo SAS
-* @license     http://opensource.org/licenses/AGPL-3.0
+* @license     https://opensource.org/licenses/AGPL-3.0
 */
 
 //////////////////////////////////////////////////////////////////////
