@@ -123,6 +123,15 @@ class PopoverMenuFactory
 			)
 		);
 
+		// Reset the navigation menu to its default width without changing its expanded state.
+		$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+			new JSPopupMenuItem(
+				'UI:Layout:NavigationMenu:ResetSidebar',
+				Dict::S('UI:Layout:NavigationMenu:ResetSidebar', 'Reset sidebar'),
+				'$(\'[data-role="ibo-navigation-menu"]\').navigation_menu(\'resetSidebar\'); return false;'
+			)
+		);
+
 		// Archive mode
 		if (true === utils::IsArchiveMode()) {
 			$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
