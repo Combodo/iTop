@@ -78,6 +78,11 @@ XML,
 &lt;/root&gt;
 HTML
 			],
+			'DesignerComboField should not escape html characters to preserve indentation made with &nbsp;' => [
+				'\\DesignerComboField',
+				'&nbsp;&nbsp;Foo & Bar',
+				'&nbsp;&nbsp;Foo & Bar'
+			],
 		];
 	}
 }
