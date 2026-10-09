@@ -78,9 +78,9 @@ XML,
 &lt;/root&gt;
 HTML
 			],
-			'DesignerComboField should replace leading spaces with &nbsp; to preserve indentation' => [
+			'DesignerComboField should not escape html characters to preserve indentation made with &nbsp;' => [
 				'\\DesignerComboField',
-				'  Foo & Bar',
+				'&nbsp;&nbsp;Foo & Bar',
 				'&nbsp;&nbsp;Foo & Bar'
 			],
 		];

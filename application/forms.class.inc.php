@@ -1268,9 +1268,7 @@ EOF
 		if (is_null($sValue)) {
 			$sValue = $this->defaultValue;
 		}
-		return preg_replace_callback('/^ +/', static function ($aMatches) {
-			return str_repeat('&nbsp;', strlen($aMatches[0]));
-		}, $sValue);
+		return $sValue;
 	}
 
 	public function ReadParam(&$aValues)
