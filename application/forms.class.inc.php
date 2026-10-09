@@ -1246,7 +1246,10 @@ class DesignerComboField extends DesignerFormField
 					$sSelected = ($sKey == $this->defaultValue) ? 'selected' : '';
 				}
 				// Quick and dirty: display the menu parents as a tree
-				$sHtmlValue = str_replace(' ', '&nbsp;', $sDisplayValue);
+				//N°10187 Only replace leading spaces to preserve indentation
+				$sHtmlValue = preg_replace_callback('/^ +/', static function ($aMatches) {
+					return str_repeat('&nbsp;', strlen($aMatches[0]));
+				}, $sDisplayValue);
 				$sHtml .= "<option value=\"".utils::EscapeHtml($sKey)."\" $sSelected>$sHtmlValue</option>";
 			}
 			$sHtml .= "</select></span>";
