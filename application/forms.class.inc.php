@@ -1202,7 +1202,6 @@ class DesignerComboField extends DesignerFormField
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		$sChecked = $this->defaultValue ? 'checked' : '';
 		$sMandatory = $this->bMandatory ? 'true' : 'false';
 		$sReadOnly = $this->IsReadOnly() ? 'disabled="disabled"' : '';
 		if ($this->IsSorted()) {
@@ -1247,9 +1246,7 @@ class DesignerComboField extends DesignerFormField
 				}
 				// Quick and dirty: display the menu parents as a tree
 				//N°10187 Only replace leading spaces to preserve indentation
-				$sHtmlValue = preg_replace_callback('/^ +/', static function ($aMatches) {
-					return str_repeat('&nbsp;', strlen($aMatches[0]));
-				}, $sDisplayValue);
+				$sHtmlValue = $this->PrepareValueForRendering($sDisplayValue);
 				$sHtml .= "<option value=\"".utils::EscapeHtml($sKey)."\" $sSelected>$sHtmlValue</option>";
 			}
 			$sHtml .= "</select></span>";
@@ -1264,6 +1261,16 @@ EOF
 		}
 		return ['label' => $this->sLabel, 'value' => $sHtml];
 
+	}
+
+	protected function PrepareValueForRendering($sValue = null): ?string
+	{
+		if (is_null($sValue)) {
+			$sValue = $this->defaultValue;
+		}
+		return preg_replace_callback('/^ +/', static function ($aMatches) {
+			return str_repeat('&nbsp;', strlen($aMatches[0]));
+		}, $sValue);
 	}
 
 	public function ReadParam(&$aValues)
