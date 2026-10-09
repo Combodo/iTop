@@ -64,7 +64,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	}
 
 	/** @inheritDoc */
-	public static function IsBulkModifyCompatible(): bool
+	public function IsBulkModifyCompatible(): bool
 	{
 		return false;
 	}
