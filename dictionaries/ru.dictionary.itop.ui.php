@@ -1336,7 +1336,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: все',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s от %2$s',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s до %2$s',
-	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= %1$s <= %3$s',
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s и %3$s других',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: все',

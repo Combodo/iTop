@@ -1340,7 +1340,7 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: bármely',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s a %2$s -ból',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s egészen %2$s -ig',
-	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= %1$s <= %3$s',
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s és %3$s másik',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: bármely',
