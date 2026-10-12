@@ -4,6 +4,7 @@ namespace Combodo\iTop\Test\UnitTest\Pages;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Dict;
+use ormDocument;
 use UserLocal;
 use UserRequest;
 
@@ -130,6 +131,47 @@ class AjaxRenderTest extends ItopDataTestCase
 		$this->CreateUserWithProfile(self::$aURP_Profiles['Support Agent']);
 
 		return $this->AcquireLockAsUser(self::$sLogin, self::$iTicketId);
+	}
+
+	public function testDisplayDocumentHasSandboxWhenConfigurationDoesNotDisableIt(): void
+	{
+		$sLogin = uniqid('AjaxRenderTest');
+		$this->CreateContactlessUser($sLogin, self::$aURP_Profiles['Administrator'], self::AUTHENTICATION_PASSWORD);
+		$iDocumentId = $this->GivenObjectInDB('DocumentFile', [
+			'name' => 'AjaxRenderTest_'.uniqid(),
+			'org_id' => $this->getTestOrgId(),
+			'file' => new ormDocument('<svg xmlns="http://www.w3.org/2000/svg"></svg>', 'image/svg+xml', 'test.svg'),
+		]);
+
+		$this->oiTopConfig->Set('security.disable_inline_documents_sandbox', false);
+		$this->SaveItopConfFile();
+		$sResponseHeaders = $this->GetDocumentResponseHeaders($sLogin, $iDocumentId);
+		$this->assertStringContainsString(
+			'sandbox',
+			$sResponseHeaders
+		);
+	}
+
+	private function GetDocumentResponseHeaders(string $sLogin, int $iDocumentId): string
+	{
+		$sResponse = $this->CallItopUri(
+			'pages/ajax.render.php?'.http_build_query([
+				'operation' => 'display_document',
+				'class' => 'DocumentFile',
+				'id' => $iDocumentId,
+				'field' => 'file',
+				'auth_user' => $sLogin,
+				'auth_pwd' => self::AUTHENTICATION_PASSWORD,
+			]),
+			[],
+			[
+				CURLOPT_HTTPHEADER => ['X-Combodo-Ajax:1'],
+				CURLOPT_HEADER => true,
+				CURLOPT_POST => 0,
+			]
+		);
+
+		return substr($sResponse, 0, $this->aLastCurlGetInfo['header_size']);
 	}
 
 	// Helper method to create a user with a specific profile

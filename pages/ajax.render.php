@@ -768,7 +768,7 @@ try {
 
 					// N°4129 - Prevent XSS attacks & other script executions
 					if (utils::GetConfig()->Get('security.disable_inline_documents_sandbox') === false) {
-						$oPage->add_header('Content-Security-Policy: sandbox;');
+						$oPage->add_header('Content-Security-Policy: sandbox; default-src \'none\'');
 					}
 
 					ormDocument::DownloadDocument($oPage, $sClass, $id, $sField, 'inline');

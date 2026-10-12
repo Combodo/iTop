@@ -47,15 +47,9 @@ class DownloadPage extends AjaxPage
 			header($s_header);
 		}
 
-		if (($this->sContentType == 'text/html') && ($this->sContentDisposition == 'inline')) {
-			// inline content != attachment && html => filter all scripts for malicious XSS scripts
-			$sContent = self::FilterXSS($this->sContent);
-		} else {
-			$sContent = $this->sContent;
-		}
 		$oKpi->ComputeAndReport(get_class($this).' output');
-		echo $sContent;
-		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sContent) / 1024).' Kb)');
+		echo $this->sContent;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($this->sContent) / 1024).' Kb)');
 		ExecutionKPI::ReportStats();
 	}
 }
