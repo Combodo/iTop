@@ -331,4 +331,12 @@ class AjaxPage extends WebPage implements iTabbedPage
 	{
 		assert(false);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function FilterXSS($sHTML)
+	{
+		return str_ireplace(['<script', '</script>'], ['<!-- <removed-script', '</removed-script> -->'], $sHTML);
+	}
 }
