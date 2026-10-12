@@ -452,7 +452,7 @@ XML;
 		$this->CreateExtensionFolder($sTestDir, "ext1", "ext_code1", "1.5.9");
 
 		foreach ([1, 2, 3] as $i) {
-			if (! is_dir("$sTestDir/module_code{$i}")){
+			if (! is_dir("$sTestDir/module_code{$i}")) {
 				mkdir("$sTestDir/module_code{$i}");
 			}
 			$this->CreateExtensionFolder("$sTestDir/module_code{$i}", "ext{$i}", "ext_code{$i}", "9.5.{$i}");
@@ -525,7 +525,7 @@ XML;
 	private function CreateModule(string $sDir, string $sModuleLabel, string $sModuleCode, string $sVersion)
 	{
 		$sModuleDir = $sDir."/$sModuleCode";
-		if (! is_dir($sModuleDir)){
+		if (! is_dir($sModuleDir)) {
 			mkdir($sModuleDir, 0777, true);
 		}
 		$sModuleContent = <<<PHP
