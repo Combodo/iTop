@@ -1340,7 +1340,7 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Any',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s from %2$s',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s up to %2$s',
-	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= %1$s <= %3$s',
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s en %3$s andere',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Alle',

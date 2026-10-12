@@ -1341,7 +1341,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s : Indifférent',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s à partir de %2$s',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s jusqu\'à %2$s',
-	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= %1$s <= %3$s',
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s : %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s : %2$s et %3$s autres',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s : Indifférent',
