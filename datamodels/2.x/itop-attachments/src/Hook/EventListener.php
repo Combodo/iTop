@@ -159,7 +159,7 @@ class EventListener implements iEventServiceSetup
 		while ($oTrigger = $oTriggerSet->Fetch()) {
 			try {
 				$aContextArgs = $aTriggerContextArgs;
-				if ($oTrigger->Get('file_in_email')) {
+				if (MetaModel::IsValidAttCode($sTriggerClass, 'file_in_email') && $oTrigger->Get('file_in_email')) {
 					$aContextArgs['attachments'] = [$oDocument];
 				}
 				$oTrigger->DoActivate($aContextArgs);
