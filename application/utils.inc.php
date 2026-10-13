@@ -1313,8 +1313,8 @@ class utils
 		}
 
 		if (is_null($sAuthUser)) {
-			$sAuthUser = self::ReadParam('auth_user', '', 'raw_data');
-			$sAuthPwd = self::ReadParam('auth_pwd', '', 'raw_data');
+			$sAuthUser = self::ReadParam('auth_user', '', true, 'raw_data');
+			$sAuthPwd = self::ReadParam('auth_pwd', '', true, 'raw_data');
 		}
 		$sParamFile = self::GetParamSourceFile('auth_user');
 		if (is_null($sParamFile)) {
