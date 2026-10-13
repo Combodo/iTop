@@ -117,7 +117,7 @@ class LoginBasic extends AbstractLoginFSMExtension
 		}
 
 		// Decode without Bearer
-		if (!utils::StartsWith($sAuthorization, 'Basic ')) {
+		if (strncasecmp($sAuthorization, 'Basic ', 6) !== 0) {
 			return null;
 		}
 		$sDecodedAuthorisation = base64_decode(substr($sAuthorization, 6));
