@@ -2075,17 +2075,8 @@ class MenuBlock extends DisplayBlock
 									$aAllowedProfiles = MetaModel::GetConfig()->Get('concurrent_lock_override_profiles');
 									$bCanKill = false;
 
-									$oUser = UserRights::GetUserObject();
-									$aUserProfiles = [];
-									if (!is_null($oUser)) {
-										$oProfileSet = $oUser->Get('profile_list');
-										while ($oProfile = $oProfileSet->Fetch()) {
-											$aUserProfiles[$oProfile->Get('profile')] = true;
-										}
-									}
-
 									foreach ($aAllowedProfiles as $sProfile) {
-										if (array_key_exists($sProfile, $aUserProfiles)) {
+										if (UserRights::HasProfile($sProfile)) {
 											$bCanKill = true;
 											break;
 										}
