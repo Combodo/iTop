@@ -1739,6 +1739,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'security.disable_inline_images_protection' => [
+			'type'                => 'bool',
+			'description'         => 'If true then the images can be seen with url without authentification. Note that setting this to true it gives insecure access to inline images!',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 		'security.disable_joined_classes_filter' => [
 			'type'                => 'bool',
 			'description'         => 'If true, scope filters aren\'t applied to joined classes or union classes not directly listed in the SELECT clause.',
