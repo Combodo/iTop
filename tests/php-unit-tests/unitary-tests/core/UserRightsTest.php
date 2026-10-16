@@ -34,6 +34,7 @@ use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
 use DeleteException;
+use MetaModel;
 use URP_UserProfile;
 use UserRights;
 use utils;
@@ -276,6 +277,71 @@ class UserRightsTest extends ItopDataTestCase
 			'Configuration manager UserLocal'          => [3, ['class' => 'UserLocal', 'action' => 2, 'res' => false]],
 			'Configuration manager ModuleInstallation' => [3, ['class' => 'ModuleInstallation', 'action' => 2, 'res' => false]],
 		];
+	}
+
+	public function testLinkedUserCanUpdateOwnContactEmailViaDbUpdate(): void
+	{
+		$this->CreateTestOrganization();
+		$oContact = $this->CreatePerson(201);
+		$this->CreateAndLoginContactEmailTestUser('contact-email-linked-', 3, $oContact);
+
+		$oContact->Set('email', 'linked-user@example.com');
+		$oContact->DBUpdate();
+
+		$this->assertSame('linked-user@example.com', MetaModel::GetObject('Contact', $oContact->GetKey(), false, true)->Get('email'));
+	}
+
+	public function testAdministratorCanUpdateAnotherContactEmailViaDbUpdate(): void
+	{
+		$this->CreateTestOrganization();
+		$oTargetContact = $this->CreatePerson(202);
+		$oAdministratorContact = $this->CreatePerson(203);
+		$this->CreateAndLoginContactEmailTestUser('contact-email-admin-', 1, $oAdministratorContact);
+
+		$oTargetContact->Set('email', 'administrator@example.com');
+		$oTargetContact->DBUpdate();
+
+		$this->assertSame('administrator@example.com', MetaModel::GetObject('Contact', $oTargetContact->GetKey(), false, true)->Get('email'));
+	}
+
+	public function testSuperUserCanUpdateAnotherContactEmailViaDbUpdate(): void
+	{
+		$this->CreateTestOrganization();
+		$oTargetContact = $this->CreatePerson(204);
+		$oSuperUserContact = $this->CreatePerson(205);
+		$oSuperUserProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", ['name' => 'SuperUser'], true);
+		$this->assertNotNull($oSuperUserProfile, 'The SuperUser profile must be available for this test');
+		$this->CreateAndLoginContactEmailTestUser('contact-email-superuser-', $oSuperUserProfile->GetKey(), $oSuperUserContact);
+
+		$oTargetContact->Set('email', 'superuser@example.com');
+		$oTargetContact->DBUpdate();
+
+		$this->assertSame('superuser@example.com', MetaModel::GetObject('Contact', $oTargetContact->GetKey(), false, true)->Get('email'));
+	}
+
+	public function testConfigurationManagerCannotUpdateAnotherContactEmailViaDbUpdate(): void
+	{
+		$this->CreateTestOrganization();
+		$oTargetContact = $this->CreatePerson(206);
+		$oConfigurationManagerContact = $this->CreatePerson(207);
+		$this->CreateAndLoginContactEmailTestUser('contact-email-config-manager-', 3, $oConfigurationManagerContact);
+
+		$oTargetContact->Set('email', 'forbidden@example.com');
+		try {
+			$oTargetContact->DBUpdate();
+			$this->fail('The object write check must reject an email change to another contact');
+		} catch (CoreCannotSaveObjectException $e) {
+			$this->assertNotEmpty($e->getIssues());
+		}
+
+		$this->assertSame('', MetaModel::GetObject('Contact', $oTargetContact->GetKey(), false, true)->Get('email'));
+	}
+
+	private function CreateAndLoginContactEmailTestUser(string $sLoginPrefix, int $iProfileId, DBObject $oContact): void
+	{
+		$_SESSION = [];
+		$oUser = $this->CreateUser(uniqid($sLoginPrefix), $iProfileId, 'A1b!Passw0rd', $oContact->GetKey());
+		UserRights::Login($oUser->Get('login'));
 	}
 
 	/**

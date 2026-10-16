@@ -1635,10 +1635,18 @@ class UserRights
 			return UR_ALLOWED_YES;
 		}
 
+		if (is_null($oUser)) {
+			$oUser = self::$m_oUser;
+		}
+
+		if (($sAttCode === 'email')
+			&& in_array($iActionCode, [UR_ACTION_MODIFY, UR_ACTION_BULK_MODIFY], true)
+			&& MetaModel::IsParentClass('Contact', $sClass)
+			&& !self::IsContactEmailEditAllowed($oInstanceSet, $oUser)) {
+			return UR_ALLOWED_NO;
+		}
+
 		if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'grant_by_profile')) {
-			if (is_null($oUser)) {
-				$oUser = self::$m_oUser;
-			}
 			return self::$m_oAddOn->IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet);
 		}
 
@@ -1650,6 +1658,30 @@ class UserRights
 		// the rest is allowed
 		return UR_ALLOWED_YES;
 
+	}
+
+	private static function IsContactEmailEditAllowed($oInstanceSet, $oUser): bool
+	{
+		if (self::HasProfile('SuperUser', $oUser) && self::IsAdministrator($oUser)) {
+			return true;
+		}
+
+		$oCurrentContact = is_null($oUser) ? null : $oUser->GetContactObject();
+		if (is_null($oCurrentContact)) {
+			return false;
+		}
+
+		$oTargetContact = null;
+		if ($oInstanceSet instanceof DBObject) {
+			$oTargetContact = $oInstanceSet;
+		} elseif (($oInstanceSet instanceof DBObjectSet) && ($oInstanceSet->Count() === 1)) {
+			$aTargetObjects = $oInstanceSet->ToArray(false);
+			$oTargetContact = $aTargetObjects[0] ?? null;
+		}
+
+		return ($oTargetContact instanceof DBObject)
+			&& MetaModel::IsParentClass('Contact', get_class($oTargetContact))
+			&& ($oCurrentContact->GetKey() == $oTargetContact->GetKey());
 	}
 
 	/**
