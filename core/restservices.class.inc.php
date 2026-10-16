@@ -433,7 +433,7 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 				if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_MODIFY) != UR_ALLOWED_YES) {
 					$oResult->code = RestResult::UNAUTHORIZED;
 					$oResult->message = "The current user does not have enough permissions for modifying data of class $sTargetClass";
-				} elseif (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_BULK_MODIFY) != UR_ALLOWED_YES) {
+				} elseif (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_MODIFY) != UR_ALLOWED_YES) {
 					$oResult->code = RestResult::UNAUTHORIZED;
 					$oResult->message = "The current user does not have enough permissions for massively modifying data of class $sTargetClass";
 				} else {
