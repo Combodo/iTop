@@ -1747,6 +1747,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'security.disable_mandatory_authentication_for_inline_images' => [
+			'type'                => 'bool',
+			'description' => 'If true then image access does not require user authentication, provided the image\'s secret is valid. Note that setting this to true gives a less secure access to inline images!',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 		'security.disable_joined_classes_filter' => [
 			'type'                => 'bool',
 			'description'         => 'If true, scope filters aren\'t applied to joined classes or union classes not directly listed in the SELECT clause.',
