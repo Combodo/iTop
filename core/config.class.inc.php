@@ -1739,7 +1739,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'security.disable_inline_images_protection' => [
+		'security.disable_mandatory_authentication_for_inline_images' => [
 			'type'                => 'bool',
 			'description'         => 'If true then the images can be seen with url without authentification. Note that setting this to true it gives insecure access to inline images!',
 			'default'             => false,
