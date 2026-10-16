@@ -1662,7 +1662,7 @@ class UserRights
 
 	private static function IsContactEmailEditAllowed($oInstanceSet, $oUser): bool
 	{
-		if (self::HasProfile('SuperUser', $oUser)) {
+		if (self::HasProfile('SuperUser', $oUser) && self::IsAdministrator($oUser)) {
 			return true;
 		}
 
