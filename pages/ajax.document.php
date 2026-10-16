@@ -64,7 +64,9 @@ try {
 			break;
 
 		case 'download_inlineimage':
-			LoginWebPage::DoLoginEx();
+			if (MetaModel::GetConfig()->Get('security.disable_mandatory_authentication_for_inline_images') === false) {
+				LoginWebPage::DoLoginEx();
+			}
 			$id = utils::ReadParam('id', '');
 			$sSecret = utils::ReadParam('s', '');
 			$iCacheSec = 31556926; // One year ahead: an inline image cannot change
