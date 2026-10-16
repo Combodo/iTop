@@ -64,7 +64,7 @@ try {
 			break;
 
 		case 'download_inlineimage':
-			if (!MetaModel::GetConfig()->Get('security.disable_inline_images_protection') === true) {
+			if (MetaModel::GetConfig()->Get('security.disable_mandatory_authentication_for_inline_images') === false) {
 				LoginWebPage::DoLoginEx();
 			}
 			$id = utils::ReadParam('id', '');
