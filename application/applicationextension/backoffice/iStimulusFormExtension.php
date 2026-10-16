@@ -1,3 +1,5 @@
+<?php
+
 /**
  * Implement this interface to change the behavior of stimulus forms.
  *
