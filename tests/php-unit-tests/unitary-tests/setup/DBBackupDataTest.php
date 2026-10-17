@@ -2,6 +2,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
+use BackupException;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBBackup;
 use DBRestore;
@@ -80,7 +81,7 @@ class DBBackupDataTest extends ItopDataTestCase
 	 */
 	public function testRestoreListExtraFiles($aFilesToCreate, $aExpectedRelativeExtraFiles)
 	{
-		require_once(APPROOT.'/env-production/itop-backup/dbrestore.class.inc.php');
+		$this->RequireOnceItopFile('/env-production/itop-backup/dbrestore.class.inc.php');
 
 		$sTmpDir = sys_get_temp_dir().'/testRestoreListExtraFiles-'.time();
 
@@ -119,4 +120,19 @@ class DBBackupDataTest extends ItopDataTestCase
 		];
 	}
 
+	public function testRestoreFromCompressedBackup()
+	{
+		$this->RequireOnceItopFile('env-production/itop-backup/dbrestore.class.inc.php');
+
+		$oConfig = \utils::GetConfig();
+		$oRestore = new DBRestore($oConfig);
+
+		$this->expectException(BackupException::class);
+
+		$this->expectExceptionMessage('Failed to extract archive.');
+		$oRestore->RestoreFromCompressedBackup('nonexistent.tar.gz');
+
+		$this->expectExceptionMessage('Unsupported format for a backup file: very_old_backup.zip');
+		$oRestore->RestoreFromCompressedBackup('very_old_backup.zip');
+	}
 }
