@@ -2,7 +2,7 @@
 
 /**
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @license     https://opensource.org/licenses/AGPL-3.0
  */
 
 /**
