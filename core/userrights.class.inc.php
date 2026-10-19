@@ -1666,11 +1666,6 @@ class UserRights
 			return true;
 		}
 
-		$oCurrentContact = is_null($oUser) ? null : $oUser->GetContactObject();
-		if (is_null($oCurrentContact)) {
-			return false;
-		}
-
 		$oTargetContact = null;
 		if ($oInstanceSet instanceof DBObject) {
 			$oTargetContact = $oInstanceSet;
@@ -1679,9 +1674,17 @@ class UserRights
 			$oTargetContact = $aTargetObjects[0] ?? null;
 		}
 
-		return ($oTargetContact instanceof DBObject)
-			&& MetaModel::IsParentClass('Contact', get_class($oTargetContact))
-			&& ($oCurrentContact->GetKey() == $oTargetContact->GetKey() || $oTargetContact->GetKey() < 0);
+		if (!($oTargetContact instanceof DBObject)
+			|| !MetaModel::IsParentClass('Contact', get_class($oTargetContact))) {
+			return false;
+		}
+		if ($oTargetContact->IsNew()) {
+			return true;
+		}
+
+		$oCurrentContact = is_null($oUser) ? null : $oUser->GetContactObject();
+		return !is_null($oCurrentContact)
+			&& ($oCurrentContact->GetKey() == $oTargetContact->GetKey());
 	}
 
 	/**
