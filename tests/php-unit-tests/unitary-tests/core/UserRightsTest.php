@@ -295,6 +295,7 @@ class UserRightsTest extends ItopDataTestCase
 	{
 		$this->CreateTestOrganization();
 		$oTargetContact = $this->CreatePerson(202);
+		$this->CreateUser(uniqid('contact-email-admin-target-'), 3, 'A1b!Passw0rd', $oTargetContact->GetKey());
 		$oAdministratorContact = $this->CreatePerson(203);
 		$this->CreateAndLoginContactEmailTestUser('contact-email-admin-', 1, $oAdministratorContact);
 
@@ -308,6 +309,7 @@ class UserRightsTest extends ItopDataTestCase
 	{
 		$this->CreateTestOrganization();
 		$oTargetContact = $this->CreatePerson(204);
+		$this->CreateUser(uniqid('contact-email-superuser-target-'), 3, 'A1b!Passw0rd', $oTargetContact->GetKey());
 		$oSuperUserContact = $this->CreatePerson(205);
 		$oSuperUserProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", ['name' => 'SuperUser'], true);
 		$this->assertNotNull($oSuperUserProfile, 'The SuperUser profile must be available for this test');
@@ -319,28 +321,50 @@ class UserRightsTest extends ItopDataTestCase
 		$this->assertSame('superuser@example.com', MetaModel::GetObject('Contact', $oTargetContact->GetKey(), false, true)->Get('email'));
 	}
 
-	public function testConfigurationManagerCannotUpdateAnotherContactEmailViaDbUpdate(): void
+	public function testConfigurationManagerCannotUpdateAnotherUsersContactEmail(): void
 	{
 		$this->CreateTestOrganization();
 		$oTargetContact = $this->CreatePerson(206);
+		$this->CreateUser(uniqid('contact-email-target-'), 3, 'A1b!Passw0rd', $oTargetContact->GetKey());
 		$oConfigurationManagerContact = $this->CreatePerson(207);
 		$this->CreateAndLoginContactEmailTestUser('contact-email-config-manager-', 3, $oConfigurationManagerContact);
 
-		$oTargetContact->Set('email', 'forbidden@example.com');
-		try {
-			$oTargetContact->DBUpdate();
-			$this->fail('The object write check must reject an email change to another contact');
-		} catch (CoreCannotSaveObjectException $e) {
-			$this->assertNotEmpty($e->getIssues());
-		}
+		$oResult = (new \CoreServices())->ExecOperation('1.3', 'core/update', (object) [
+			'comment' => 'Update another user contact email',
+			'class' => 'Person',
+			'key' => $oTargetContact->GetKey(),
+			'fields' => (object) ['email' => 'forbidden@example.com'],
+			'output_fields' => 'email',
+		]);
 
+		$this->assertSame(\RestResult::UNAUTHORIZED, $oResult->code);
 		$this->assertSame('', MetaModel::GetObject('Contact', $oTargetContact->GetKey(), false, true)->Get('email'));
+	}
+
+	public function testConfigurationManagerCanUpdateContactEmailWhenNoUserIsLinked(): void
+	{
+		$this->CreateTestOrganization();
+		$oTargetContact = $this->CreatePerson(208);
+		$oConfigurationManagerContact = $this->CreatePerson(209);
+		$this->CreateAndLoginContactEmailTestUser('contact-email-config-manager-unlinked-', 3, $oConfigurationManagerContact);
+
+		$oResult = (new \CoreServices())->ExecOperation('1.3', 'core/update', (object) [
+			'comment' => 'Update contact email without linked user',
+			'class' => 'Person',
+			'key' => $oTargetContact->GetKey(),
+			'fields' => (object) ['email' => 'unlinked-contact@example.com'],
+			'output_fields' => 'email',
+		]);
+
+		$this->assertSame(\RestResult::OK, $oResult->code);
+		$this->assertSame('unlinked-contact@example.com', MetaModel::GetObject('Contact', $oTargetContact->GetKey(), false, true)->Get('email'));
 	}
 
 	public function testConfigurationManagerCanUpdateAnotherContactWhenRestRequestIncludesUnchangedEmail(): void
 	{
 		$this->CreateTestOrganization();
 		$oTargetContact = $this->CreatePerson(210);
+		$this->CreateUser(uniqid('contact-rest-target-'), 3, 'A1b!Passw0rd', $oTargetContact->GetKey());
 		$oTargetContact->Set('email', 'existing@example.com');
 		$oTargetContact->DBUpdate();
 		$oConfigurationManagerContact = $this->CreatePerson(211);
@@ -366,10 +390,10 @@ class UserRightsTest extends ItopDataTestCase
 	public function testConfigurationManagerCanCreatePersonContact(): void
 	{
 		$this->CreateTestOrganization();
-		$oConfigurationManagerContact = $this->CreatePerson(208);
+		$oConfigurationManagerContact = $this->CreatePerson(212);
 		$this->CreateAndLoginContactEmailTestUser('contact-create-config-manager-', 3, $oConfigurationManagerContact);
 
-		$oCreatedContact = $this->CreatePerson(209);
+		$oCreatedContact = $this->CreatePerson(213);
 
 		$this->assertGreaterThan(0, $oCreatedContact->GetKey());
 		$this->assertNotNull(MetaModel::GetObject('Person', $oCreatedContact->GetKey(), false, true));

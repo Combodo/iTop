@@ -1682,6 +1682,15 @@ class UserRights
 			return true;
 		}
 
+		$oLinkedUsers = new DBObjectSet(
+			DBObjectSearch::FromOQL_AllData('SELECT User WHERE contactid = :contact_id'),
+			[],
+			['contact_id' => $oTargetContact->GetKey()]
+		);
+		if ($oLinkedUsers->Count() === 0) {
+			return true; // no risk if no user is linked to this contact
+		}
+
 		$oCurrentContact = is_null($oUser) ? null : $oUser->GetContactObject();
 		return !is_null($oCurrentContact)
 			&& ($oCurrentContact->GetKey() == $oTargetContact->GetKey());
