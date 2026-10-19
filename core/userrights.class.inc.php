@@ -1639,13 +1639,6 @@ class UserRights
 			$oUser = self::$m_oUser;
 		}
 
-		if (($sAttCode === 'email')
-			&& in_array($iActionCode, [UR_ACTION_MODIFY, UR_ACTION_BULK_MODIFY], true)
-			&& MetaModel::IsParentClass('Contact', $sClass)
-			&& !self::IsContactEmailEditAllowed($oInstanceSet, $oUser)) {
-			return UR_ALLOWED_NO;
-		}
-
 		if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'grant_by_profile')) {
 			return self::$m_oAddOn->IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet);
 		}
@@ -1658,42 +1651,6 @@ class UserRights
 		// the rest is allowed
 		return UR_ALLOWED_YES;
 
-	}
-
-	private static function IsContactEmailEditAllowed($oInstanceSet, $oUser): bool
-	{
-		if (self::HasProfile('SuperUser', $oUser) || self::IsAdministrator($oUser)) {
-			return true;
-		}
-
-		$oTargetContact = null;
-		if ($oInstanceSet instanceof DBObject) {
-			$oTargetContact = $oInstanceSet;
-		} elseif (($oInstanceSet instanceof DBObjectSet) && ($oInstanceSet->Count() === 1)) {
-			$aTargetObjects = $oInstanceSet->ToArray(false);
-			$oTargetContact = $aTargetObjects[0] ?? null;
-		}
-
-		if (!($oTargetContact instanceof DBObject)
-			|| !MetaModel::IsParentClass('Contact', get_class($oTargetContact))) {
-			return false;
-		}
-		if ($oTargetContact->IsNew()) {
-			return true;
-		}
-
-		$oLinkedUsers = new DBObjectSet(
-			DBObjectSearch::FromOQL_AllData('SELECT User WHERE contactid = :contact_id'),
-			[],
-			['contact_id' => $oTargetContact->GetKey()]
-		);
-		if ($oLinkedUsers->Count() === 0) {
-			return true; // no risk if no user is linked to this contact
-		}
-
-		$oCurrentContact = is_null($oUser) ? null : $oUser->GetContactObject();
-		return !is_null($oCurrentContact)
-			&& ($oCurrentContact->GetKey() == $oTargetContact->GetKey());
 	}
 
 	/**

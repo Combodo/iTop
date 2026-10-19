@@ -329,15 +329,19 @@ class UserRightsTest extends ItopDataTestCase
 		$oConfigurationManagerContact = $this->CreatePerson(207);
 		$this->CreateAndLoginContactEmailTestUser('contact-email-config-manager-', 3, $oConfigurationManagerContact);
 
-		$oResult = (new \CoreServices())->ExecOperation('1.3', 'core/update', (object) [
-			'comment' => 'Update another user contact email',
-			'class' => 'Person',
-			'key' => $oTargetContact->GetKey(),
-			'fields' => (object) ['email' => 'forbidden@example.com'],
-			'output_fields' => 'email',
-		]);
+		try {
+			(new \CoreServices())->ExecOperation('1.3', 'core/update', (object) [
+				'comment' => 'Update another user contact email',
+				'class' => 'Person',
+				'key' => $oTargetContact->GetKey(),
+				'fields' => (object) ['email' => 'forbidden@example.com'],
+				'output_fields' => 'email',
+			]);
+			$this->fail('A configuration manager must not change the email of a contact linked to another user');
+		} catch (CoreCannotSaveObjectException $e) {
+			$this->assertNotEmpty($e->getIssues());
+		}
 
-		$this->assertSame(\RestResult::UNAUTHORIZED, $oResult->code);
 		$this->assertSame('', MetaModel::GetObject('Contact', $oTargetContact->GetKey(), false, true)->Get('email'));
 	}
 
