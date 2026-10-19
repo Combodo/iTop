@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files>
+<file><path>file1</path><md5>e7d0f0aa46a74bd08e0f0f268a19812b</md5><size>15</size></file>
+<file><path>folder1/file1</path><md5>f0d7b0cc26724909f6cb17f55040e054</md5><size>23</size></file>
+<file><path>folder1/file2</path><md5>1696bef05836b4787a86a6497781e161</md5><size>24</size></file>
+<file><path>folder2/file1</path><md5>d9966d42983e134e3f5249a5f2be66f7</md5><size>14</size></file>
+</files>
