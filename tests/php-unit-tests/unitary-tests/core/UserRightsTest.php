@@ -375,6 +375,30 @@ class UserRightsTest extends ItopDataTestCase
 		$this->assertNotNull(MetaModel::GetObject('Person', $oCreatedContact->GetKey(), false, true));
 	}
 
+	public function testContactlessConfigurationManagerCanCreatePersonAndTeamWithEmptyEmail(): void
+	{
+		$oOrganization = $this->CreateTestOrganization();
+		$oUser = $this->CreateContactlessUser(uniqid('contactless-config-manager-'), 3, 'A1b!Passw0rd');
+		$_SESSION = [];
+		UserRights::Login($oUser->Get('login'));
+		$this->assertNull(UserRights::GetContactObject());
+
+		$oPerson = $this->createObject('Person', [
+			'name' => 'Person_without_email',
+			'first_name' => 'Test',
+			'org_id' => $oOrganization->GetKey(),
+		]);
+		$oTeam = $this->createObject('Team', [
+			'name' => 'Team_without_email',
+			'org_id' => $oOrganization->GetKey(),
+		]);
+
+		$this->assertGreaterThan(0, $oPerson->GetKey());
+		$this->assertGreaterThan(0, $oTeam->GetKey());
+		$this->assertSame('', MetaModel::GetObject('Person', $oPerson->GetKey(), false, true)->Get('email'));
+		$this->assertSame('', MetaModel::GetObject('Team', $oTeam->GetKey(), false, true)->Get('email'));
+	}
+
 	private function CreateAndLoginContactEmailTestUser(string $sLoginPrefix, int $iProfileId, DBObject $oContact): void
 	{
 		$_SESSION = [];
