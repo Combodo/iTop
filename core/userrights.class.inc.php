@@ -1662,7 +1662,7 @@ class UserRights
 
 	private static function IsContactEmailEditAllowed($oInstanceSet, $oUser): bool
 	{
-		if (self::HasProfile('SuperUser', $oUser) && self::IsAdministrator($oUser)) {
+		if (self::HasProfile('SuperUser', $oUser) || self::IsAdministrator($oUser)) {
 			return true;
 		}
 
@@ -1681,7 +1681,7 @@ class UserRights
 
 		return ($oTargetContact instanceof DBObject)
 			&& MetaModel::IsParentClass('Contact', get_class($oTargetContact))
-			&& ($oCurrentContact->GetKey() == $oTargetContact->GetKey());
+			&& ($oCurrentContact->GetKey() == $oTargetContact->GetKey() || $oTargetContact->GetKey() < 0);
 	}
 
 	/**

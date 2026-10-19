@@ -337,6 +337,18 @@ class UserRightsTest extends ItopDataTestCase
 		$this->assertSame('', MetaModel::GetObject('Contact', $oTargetContact->GetKey(), false, true)->Get('email'));
 	}
 
+	public function testConfigurationManagerCanCreatePersonContact(): void
+	{
+		$this->CreateTestOrganization();
+		$oConfigurationManagerContact = $this->CreatePerson(208);
+		$this->CreateAndLoginContactEmailTestUser('contact-create-config-manager-', 3, $oConfigurationManagerContact);
+
+		$oCreatedContact = $this->CreatePerson(209);
+
+		$this->assertGreaterThan(0, $oCreatedContact->GetKey());
+		$this->assertNotNull(MetaModel::GetObject('Person', $oCreatedContact->GetKey(), false, true));
+	}
+
 	private function CreateAndLoginContactEmailTestUser(string $sLoginPrefix, int $iProfileId, DBObject $oContact): void
 	{
 		$_SESSION = [];
