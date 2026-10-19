@@ -337,6 +337,32 @@ class UserRightsTest extends ItopDataTestCase
 		$this->assertSame('', MetaModel::GetObject('Contact', $oTargetContact->GetKey(), false, true)->Get('email'));
 	}
 
+	public function testConfigurationManagerCanUpdateAnotherContactWhenRestRequestIncludesUnchangedEmail(): void
+	{
+		$this->CreateTestOrganization();
+		$oTargetContact = $this->CreatePerson(210);
+		$oTargetContact->Set('email', 'existing@example.com');
+		$oTargetContact->DBUpdate();
+		$oConfigurationManagerContact = $this->CreatePerson(211);
+		$this->CreateAndLoginContactEmailTestUser('contact-rest-config-manager-', 3, $oConfigurationManagerContact);
+
+		$oResult = (new \CoreServices())->ExecOperation('1.3', 'core/update', (object) [
+			'comment' => 'Update contact phone',
+			'class' => 'Person',
+			'key' => $oTargetContact->GetKey(),
+			'fields' => (object) [
+				'email' => 'existing@example.com',
+				'phone' => '555-0100',
+			],
+			'output_fields' => 'email, phone',
+		]);
+
+		$this->assertSame(\RestResult::OK, $oResult->code);
+		$oUpdatedContact = MetaModel::GetObject('Person', $oTargetContact->GetKey(), false, true);
+		$this->assertSame('existing@example.com', $oUpdatedContact->Get('email'));
+		$this->assertSame('555-0100', $oUpdatedContact->Get('phone'));
+	}
+
 	public function testConfigurationManagerCanCreatePersonContact(): void
 	{
 		$this->CreateTestOrganization();

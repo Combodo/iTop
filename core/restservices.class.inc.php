@@ -438,8 +438,10 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 					$oResult->message = "The current user does not have enough permissions for massively modifying data of class $sTargetClass";
 				} else {
 					$oObject = RestUtils::FindObjectFromKey($sClass, $key);
+					RestUtils::UpdateObjectFromFields($oObject, $aFields);
+					$aChanges = $oObject->ListChanges();
 					if (MetaModel::IsParentClass('Contact', get_class($oObject))
-						&& property_exists($aFields, 'email')
+						&& array_key_exists('email', $aChanges)
 						&& UserRights::IsActionAllowedOnAttribute(
 							get_class($oObject),
 							'email',
@@ -449,7 +451,6 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 						$oResult->code = RestResult::UNAUTHORIZED;
 						$oResult->message = "The current user does not have enough permissions for modifying the email of the contact of class $sTargetClass";
 					} else {
-						RestUtils::UpdateObjectFromFields($oObject, $aFields);
 						$oObject->DBUpdate();
 						$oResult->AddObject(0, 'updated', $oObject, $aShowFields, $bExtendedOutput);
 					}
