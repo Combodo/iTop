@@ -17,7 +17,9 @@
             }
 
             try {
-                const iStoredWidth = Number.parseInt(window.localStorage.getItem('itop.activityPanelWidth'), 10);
+                const sModeKey = 'itop.activityPanelWidth.' + (oPanel.classList.contains('ibo-is-expanded') ? 'expanded' : 'reduced');
+                const sStoredWidth = window.localStorage.getItem(sModeKey) ?? window.localStorage.getItem('itop.activityPanelWidth');
+                const iStoredWidth = Number.parseInt(sStoredWidth, 10);
                 if (!Number.isFinite(iStoredWidth)) {
                     return;
                 }
@@ -26,11 +28,8 @@
                 const iAvailableWidth = oCenterContainer ? oCenterContainer.getBoundingClientRect().width : window.innerWidth;
                 const iMaxWidth = Math.max(32, Math.floor(iAvailableWidth - 320));
                 const iWidth = Math.min(iMaxWidth, Math.max(Math.min(360, iMaxWidth), iStoredWidth));
-                const iExpandedPresetWidth = window.innerWidth * 0.6;
-                const iModeSwitchWidth = 480 + ((iExpandedPresetWidth - 480) * 0.25);
                 oPanel.style.setProperty('--ibo-activity-panel--custom-width', iWidth+'px');
                 oPanel.classList.add('ibo-has-custom-width');
-                oPanel.classList.toggle('ibo-is-expanded', iWidth >= iModeSwitchWidth);
             } catch (oError) {
                 // The widget will use the fixed preset when local storage is unavailable.
             }
@@ -87,6 +86,12 @@
                    data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip'|dict_s }}"
                    aria-label="{{ 'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip'|dict_s }}">
                     <span class="fas fa-fw fa-compress-alt"></span>
+                </a>
+                <a href="#" class="ibo-activity-panel--reset-width" hidden
+                   data-role="ibo-activity-panel--reset-width"
+                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Resizer:Reset:Tooltip'|dict_s }}"
+                   aria-label="{{ 'UI:Layout:ActivityPanel:Resizer:Reset:Tooltip'|dict_s }}">
+                    <span class="fas fa-fw fa-undo"></span>
                 </a>
                 <a href="#" class="ibo-activity-panel--close-icon"
                    data-role="ibo-activity-panel--close-icon"

@@ -266,6 +266,10 @@ body.ibo-is-resizing-activity-panel {
   }
 }
 
+.ibo-activity-panel--reset-width[hidden] {
+  display: none;
+}
+
 /* Tabs togglers */
 .ibo-activity-panel--tabs-togglers{
   display: flex;
