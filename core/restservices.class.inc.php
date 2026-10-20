@@ -439,21 +439,8 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 				} else {
 					$oObject = RestUtils::FindObjectFromKey($sClass, $key);
 					RestUtils::UpdateObjectFromFields($oObject, $aFields);
-					$aChanges = $oObject->ListChanges();
-					if (MetaModel::IsParentClass('Contact', get_class($oObject))
-						&& array_key_exists('email', $aChanges)
-						&& UserRights::IsActionAllowedOnAttribute(
-							get_class($oObject),
-							'email',
-							UR_ACTION_MODIFY,
-							DBObjectSet::FromObject($oObject)
-						) != UR_ALLOWED_YES) {
-						$oResult->code = RestResult::UNAUTHORIZED;
-						$oResult->message = "The current user does not have enough permissions for modifying the email of the contact of class $sTargetClass";
-					} else {
-						$oObject->DBUpdate();
-						$oResult->AddObject(0, 'updated', $oObject, $aShowFields, $bExtendedOutput);
-					}
+					$oObject->DBUpdate();
+					$oResult->AddObject(0, 'updated', $oObject, $aShowFields, $bExtendedOutput);
 				}
 				break;
 

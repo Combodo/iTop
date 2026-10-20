@@ -1635,11 +1635,10 @@ class UserRights
 			return UR_ALLOWED_YES;
 		}
 
-		if (is_null($oUser)) {
-			$oUser = self::$m_oUser;
-		}
-
 		if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'grant_by_profile')) {
+			if (is_null($oUser)) {
+				$oUser = self::$m_oUser;
+			}
 			return self::$m_oAddOn->IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet);
 		}
 

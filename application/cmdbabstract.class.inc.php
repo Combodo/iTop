@@ -3936,18 +3936,6 @@ HTML;
 			$iFlags = $iFlags & ~OPT_ATT_READONLY; // Mandatory fields cannot be read-only when creating an object
 		}
 
-		if (!$this->IsNew()
-			&& ($sAttCode === 'email')
-			&& MetaModel::IsParentClass('Contact', get_class($this))
-			&& UserRights::IsActionAllowedOnAttribute(
-				get_class($this),
-				$sAttCode,
-				UR_ACTION_MODIFY,
-				DBObjectSet::FromObject($this)
-			) != UR_ALLOWED_YES) {
-			$iFlags |= OPT_ATT_READONLY;
-		}
-
 		return $iFlags;
 	}
 
