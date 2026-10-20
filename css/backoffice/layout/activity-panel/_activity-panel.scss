@@ -160,6 +160,11 @@ $ibo-activity-panel--resizer--desktop-breakpoint: 900px !default;
       display: inherit;
     }
   }
+
+  /* Keep the dragged width visible while crossing the closed/open snap range. */
+  &.ibo-is-closed.ibo-has-custom-width {
+    width: var(--ibo-activity-panel--custom-width);
+  }
 }
 
 /* Mouse and keyboard resize handle on the panel's left edge */

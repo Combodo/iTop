@@ -6,7 +6,13 @@
      data-object-mode="{{ oUIBlock.GetObjectMode() }}">
     <script>
         (function (oPanel) {
+            const bPreferredClosed = oPanel.classList.contains('ibo-is-closed');
+            oPanel.dataset.preferredClosed = String(bPreferredClosed);
             if (window.innerWidth <= 900) {
+                oPanel.classList.add('ibo-is-closed');
+                return;
+            }
+            if (bPreferredClosed) {
                 return;
             }
 
@@ -16,7 +22,10 @@
                     return;
                 }
 
-                const iWidth = Math.max(360, iStoredWidth);
+                const oCenterContainer = oPanel.closest('#ibo-center-container');
+                const iAvailableWidth = oCenterContainer ? oCenterContainer.getBoundingClientRect().width : window.innerWidth;
+                const iMaxWidth = Math.max(32, Math.floor(iAvailableWidth - 320));
+                const iWidth = Math.min(iMaxWidth, Math.max(Math.min(360, iMaxWidth), iStoredWidth));
                 const iExpandedPresetWidth = window.innerWidth * 0.6;
                 const iModeSwitchWidth = 480 + ((iExpandedPresetWidth - 480) * 0.25);
                 oPanel.style.setProperty('--ibo-activity-panel--custom-width', iWidth+'px');
