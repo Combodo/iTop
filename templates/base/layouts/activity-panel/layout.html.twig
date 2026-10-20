@@ -1,9 +1,39 @@
 <div id="{{ oUIBlock.GetId() }}"
-     class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsExpanded() %}ibo-is-expanded{% endif %} {% if oUIBlock.IsClosed() %}ibo-is-closed{% endif %}"
+     class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-is-resizer-initializing {% if oUIBlock.IsExpanded() %}ibo-is-expanded{% endif %} {% if oUIBlock.IsClosed() %}ibo-is-closed{% endif %}"
      data-role="ibo-activity-panel"
      data-object-class="{{ oUIBlock.GetObjectClass() }}"
      data-object-id="{{ oUIBlock.GetObjectId() }}"
      data-object-mode="{{ oUIBlock.GetObjectMode() }}">
+    <script>
+        (function (oPanel) {
+            if (window.innerWidth <= 900) {
+                return;
+            }
+
+            try {
+                const iStoredWidth = Number.parseInt(window.localStorage.getItem('itop.activityPanelWidth'), 10);
+                if (!Number.isFinite(iStoredWidth)) {
+                    return;
+                }
+
+                const iWidth = Math.max(360, iStoredWidth);
+                const iExpandedPresetWidth = window.innerWidth * 0.6;
+                const iModeSwitchWidth = 480 + ((iExpandedPresetWidth - 480) * 0.25);
+                oPanel.style.setProperty('--ibo-activity-panel--custom-width', iWidth+'px');
+                oPanel.classList.add('ibo-has-custom-width');
+                oPanel.classList.toggle('ibo-is-expanded', iWidth >= iModeSwitchWidth);
+            } catch (oError) {
+                // The widget will use the fixed preset when local storage is unavailable.
+            }
+        })(document.currentScript.parentElement);
+    </script>
+    <button type="button"
+            class="ibo-activity-panel--resizer"
+            data-role="ibo-activity-panel--resizer"
+            role="separator"
+            aria-label="{{ 'UI:Layout:ActivityPanel:Resizer:Label'|dict_s }}"
+            aria-orientation="vertical"
+            title="{{ 'UI:Layout:ActivityPanel:Resizer:Tooltip'|dict_s }}"></button>
     <div class="ibo-activity-panel--header" data-role="ibo-activity-panel--header">
         <div class="ibo-activity-panel--togglers" data-role="ibo-activity-panel--togglers">
             <div class="ibo-activity-panel--tabs-togglers" data-role="ibo-activity-panel--tabs-togglers">

@@ -11,6 +11,9 @@
  *
  */
 Dict::Add('EN GB', 'British English', 'British English', [
+	'UI:Layout:ActivityPanel:Resizer:Label' => 'Resize the log and activity panel',
+	'UI:Layout:ActivityPanel:Resizer:Tooltip' => 'Drag to resize. Double-click to reset.',
+	'UI:Layout:ActivityPanel:Resizer:Width' => '%1$s pixels wide',
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduce',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Close',

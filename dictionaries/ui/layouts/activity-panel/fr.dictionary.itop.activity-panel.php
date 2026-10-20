@@ -11,6 +11,9 @@
  *
  */
 Dict::Add('FR FR', 'French', 'Français', [
+	'UI:Layout:ActivityPanel:Resizer:Label' => 'Redimensionner le panneau des journaux et activités',
+	'UI:Layout:ActivityPanel:Resizer:Tooltip' => 'Faire glisser pour redimensionner. Double-cliquer pour réinitialiser.',
+	'UI:Layout:ActivityPanel:Resizer:Width' => '%1$s pixels de large',
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Déplier',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Replier',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Fermer',

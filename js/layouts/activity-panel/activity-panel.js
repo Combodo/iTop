@@ -35,6 +35,16 @@ $(function()
 					save_state_endpoint: null,
 					last_loaded_entries_ids: {},
 					load_more_entries_endpoint: null,
+					resizer_storage_key: 'itop.activityPanelWidth',
+					resizer_css_custom_property: '--ibo-activity-panel--custom-width',
+					resizer_desktop_breakpoint: 900,
+					resizer_min_width: 360,
+					resizer_main_content_min_width: 320,
+					resizer_keyboard_step: 24,
+					resizer_reduced_preset_width: 480,
+					resizer_expanded_viewport_ratio: 0.6,
+					resizer_mode_switch_ratio: 0.25,
+					resizer_width_label: null,
 				},
 			css_classes:
 				{
@@ -47,6 +57,9 @@ $(function()
 					is_hidden: 'ibo-is-hidden',
 					is_draft: 'ibo-is-draft',
 					is_current_user: 'ibo-is-current-user',
+					is_resizing: 'ibo-is-user-resizing',
+					is_resizer_initializing: 'ibo-is-resizer-initializing',
+					has_custom_width: 'ibo-has-custom-width',
 				},
 			js_selectors:
 				{
@@ -55,6 +68,7 @@ $(function()
 					panel_size_reduce: '[data-role="ibo-activity-panel--reduce-icon"]',
 					panel_size_close: '[data-role="ibo-activity-panel--close-icon"]',
 					panel_size_open: '[data-role="ibo-activity-panel--closed-cover"]',
+					panel_resizer: '[data-role="ibo-activity-panel--resizer"]',
 					tab_toggler: '[data-role="ibo-activity-panel--tab-toggler"]',
 					tab_title: '[data-role="ibo-activity-panel--tab-title"]',
 					tabs_toolbars: '[data-role="ibo-activity-panel--tabs-toolbars"]',
@@ -119,6 +133,7 @@ $(function()
 				},
 			},
 			release_lock_promise_resolve: null,	// N°4494 - Resolve callback of the Promise used for the action following the log entry send, which must be done only once the lock is released
+			panel_resize_state: null,
 
 			// the constructor
 			_create: function () {
@@ -128,6 +143,7 @@ $(function()
 				moment.locale(GetUserLanguage());
 
 				this._bindEvents();
+				this._InitializePanelResizer();
 
 				// Lock
 				if (null === this.options.lock_status) {
@@ -149,6 +165,11 @@ $(function()
 			// events bound via _bind are removed automatically
 			// revert other modifications here
 			_destroy: function () {
+				this._FinishPanelResize();
+				$(window).off(this.eventNamespace);
+				this.element.off(this.eventNamespace);
+				this.element.find(this.js_selectors.panel_resizer).off(this.eventNamespace);
+				this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
 				this.element.removeClass('ibo-activity-panel');
 			},
 			_bindEvents: function () {
@@ -163,6 +184,35 @@ $(function()
 				// - Click on the panel close/open togglers
 				this.element.find(this.js_selectors.panel_size_close+', '+this.js_selectors.panel_size_open).on('click', function (oEvent) {
 					me._onPanelDisplayIconClick(oEvent);
+				});
+
+				// Mouse and keyboard resizing
+				const oPanelResizerElem = this.element.find(this.js_selectors.panel_resizer);
+				oPanelResizerElem.on('pointerdown'+this.eventNamespace, function (oEvent) {
+					me._onPanelResizePointerDown(oEvent);
+				});
+				oPanelResizerElem.on('dblclick'+this.eventNamespace, function (oEvent) {
+					me._onPanelResizeReset(oEvent);
+				});
+				oPanelResizerElem.on('keydown'+this.eventNamespace, function (oEvent) {
+					me._onPanelResizeKeyDown(oEvent);
+				});
+				oPanelResizerElem.on('lostpointercapture'+this.eventNamespace, function () {
+					me._FinishPanelResize();
+				});
+				this.element.on('transitionend'+this.eventNamespace, function (oEvent) {
+					if (oEvent.target === this && oEvent.originalEvent.propertyName === 'width') {
+						me._UpdatePanelResizeAria(this.getBoundingClientRect().width);
+					}
+				});
+				$(window).on('pointermove'+this.eventNamespace, function (oEvent) {
+					me._onPanelResizePointerMove(oEvent);
+				});
+				$(window).on('pointerup'+this.eventNamespace+' pointercancel'+this.eventNamespace, function (oEvent) {
+					me._FinishPanelResize(me._GetPointerEvent(oEvent).pointerId);
+				});
+				$(window).on('resize'+this.eventNamespace, function () {
+					me._SyncPanelResizeState();
 				});
 				// - Click on a tab title
 				this.element.find(this.js_selectors.tab_title).on('click', function (oEvent) {
@@ -266,8 +316,12 @@ $(function()
 				// Avoid anchor glitch
 				oEvent.preventDefault();
 
+				// Both controls are presets; a manual width starts only when resizing.
+				this._ResetPanelWidth();
+
 				// Toggle menu
 				this.element.toggleClass(this.css_classes.is_expanded);
+				this._SyncPanelResizeState();
 				this._SaveStatePreferences();
 			},
 			_onPanelDisplayIconClick: function (oEvent) {
@@ -276,7 +330,72 @@ $(function()
 
 				// Toggle menu
 				this.element.toggleClass(this.css_classes.is_closed);
+				this._SyncPanelResizeState();
 				this._SaveStatePreferences();
+			},
+			_onPanelResizePointerDown: function (oEvent) {
+				const oPointerEvent = this._GetPointerEvent(oEvent);
+				if (oPointerEvent.button !== 0 || this.element.hasClass(this.css_classes.is_closed)) {
+					return;
+				}
+
+				oEvent.preventDefault();
+				const iStartWidth = this.element[0].getBoundingClientRect().width;
+				this.element.addClass(this.css_classes.is_resizing);
+				this._PreparePanelForManualResize(iStartWidth);
+				this.panel_resize_state = {
+					pointer_id: oPointerEvent.pointerId,
+					start_x: oPointerEvent.clientX,
+					start_width: iStartWidth,
+				};
+				oEvent.currentTarget.setPointerCapture(oPointerEvent.pointerId);
+				$('body').addClass('ibo-is-resizing-activity-panel');
+			},
+			_onPanelResizePointerMove: function (oEvent) {
+				if (this.panel_resize_state === null) {
+					return;
+				}
+
+				const oPointerEvent = this._GetPointerEvent(oEvent);
+				if (oPointerEvent.pointerId !== this.panel_resize_state.pointer_id) {
+					return;
+				}
+
+				oEvent.preventDefault();
+				const iWidth = this.panel_resize_state.start_width + this.panel_resize_state.start_x - oPointerEvent.clientX;
+				const iAppliedWidth = this._SetPanelWidth(iWidth, false);
+				this._UpdatePanelSizeMode(iAppliedWidth);
+			},
+			_onPanelResizeReset: function (oEvent) {
+				oEvent.preventDefault();
+				this._ResetPanelWidth();
+				this._SyncPanelResizeState();
+			},
+			_onPanelResizeKeyDown: function (oEvent) {
+				if (this.element.hasClass(this.css_classes.is_closed)) {
+					return;
+				}
+
+				const iCurrentWidth = this.element[0].getBoundingClientRect().width;
+				let iNextWidth = null;
+
+				if (oEvent.key === 'ArrowLeft') {
+					iNextWidth = iCurrentWidth + this.options.resizer_keyboard_step;
+				} else if (oEvent.key === 'ArrowRight') {
+					iNextWidth = iCurrentWidth - this.options.resizer_keyboard_step;
+				} else if (oEvent.key === 'Home') {
+					iNextWidth = this._GetPanelResizeBounds().min;
+				} else if (oEvent.key === 'End') {
+					iNextWidth = this._GetPanelResizeBounds().max;
+				}
+
+				if (iNextWidth !== null) {
+					oEvent.preventDefault();
+					this._PreparePanelForManualResize(iCurrentWidth);
+					const iAppliedWidth = this._SetPanelWidth(iNextWidth, true);
+					this._UpdatePanelSizeMode(iAppliedWidth);
+					this._SaveStatePreferences();
+				}
 			},
 			_onTabTitleClick: function (oEvent, oTabTitleElem) {
 				// Avoid anchor glitch
@@ -589,6 +708,138 @@ $(function()
 						'is_closed': this.element.hasClass(this.css_classes.is_closed),
 					}
 				);
+			},
+
+			// - Helpers on panel resizing
+			_InitializePanelResizer: function () {
+				if (this.element.find(this.js_selectors.panel_resizer).length === 0) {
+					return;
+				}
+
+				this._SyncPanelResizeState();
+				this.element.removeClass(this.css_classes.is_resizer_initializing);
+			},
+			_GetPointerEvent: function (oEvent) {
+				return oEvent.originalEvent || oEvent;
+			},
+			_GetPanelResizeBounds: function () {
+				const oCenterContainer = this.element.closest('#ibo-center-container')[0];
+				const iAvailableWidth = oCenterContainer ? oCenterContainer.getBoundingClientRect().width : window.innerWidth;
+				return {
+					min: this.options.resizer_min_width,
+					max: Math.max(this.options.resizer_min_width, iAvailableWidth - this.options.resizer_main_content_min_width),
+				};
+			},
+			_PreparePanelForManualResize: function (iRenderedWidth) {
+				// Store the current rendered width before enabling custom sizing. This keeps
+				// the fixed expanded preset and the first dragged frame at exactly the same width.
+				this.element[0].style.setProperty(this.options.resizer_css_custom_property, iRenderedWidth+'px');
+				this.element.addClass(this.css_classes.has_custom_width);
+			},
+			_GetPanelSizeModeThreshold: function () {
+				const iExpandedPresetWidth = window.innerWidth * this.options.resizer_expanded_viewport_ratio;
+				const iPresetWidthDifference = iExpandedPresetWidth - this.options.resizer_reduced_preset_width;
+				return this.options.resizer_reduced_preset_width + (iPresetWidthDifference * this.options.resizer_mode_switch_ratio);
+			},
+			_UpdatePanelSizeMode: function (iWidth) {
+				const bIsExpanded = iWidth >= this._GetPanelSizeModeThreshold();
+				this.element.toggleClass(this.css_classes.is_expanded, bIsExpanded);
+			},
+			_GetStoredPanelWidth: function () {
+				try {
+					const iWidth = Number.parseInt(window.localStorage.getItem(this.options.resizer_storage_key), 10);
+					return Number.isFinite(iWidth) ? iWidth : null;
+				} catch (oError) {
+					return null;
+				}
+			},
+			_StorePanelWidth: function (iWidth) {
+				try {
+					window.localStorage.setItem(this.options.resizer_storage_key, String(Math.round(iWidth)));
+				} catch (oError) {
+					// Resizing still works when local storage is unavailable.
+				}
+			},
+			_ClearStoredPanelWidth: function () {
+				try {
+					window.localStorage.removeItem(this.options.resizer_storage_key);
+				} catch (oError) {
+					// Reset the current panel even when local storage is unavailable.
+				}
+			},
+			_ResetPanelWidth: function () {
+				this._ClearStoredPanelWidth();
+				this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
+				this.element.removeClass(this.css_classes.has_custom_width);
+			},
+			_SetPanelWidth: function (iWidth, bPersist) {
+				const oBounds = this._GetPanelResizeBounds();
+				const iNextWidth = Math.min(oBounds.max, Math.max(oBounds.min, iWidth));
+
+				this.element[0].style.setProperty(this.options.resizer_css_custom_property, iNextWidth+'px');
+				this.element.addClass(this.css_classes.has_custom_width);
+				this._UpdatePanelResizeAria(iNextWidth);
+				if (bPersist) {
+					this._StorePanelWidth(iNextWidth);
+				}
+				return iNextWidth;
+			},
+			_SyncPanelResizeState: function () {
+				const oHandleElem = this.element.find(this.js_selectors.panel_resizer);
+				if (oHandleElem.length === 0) {
+					return;
+				}
+
+				const bDesktop = window.innerWidth > this.options.resizer_desktop_breakpoint;
+				const bCanResize = bDesktop && !this.element.hasClass(this.css_classes.is_closed);
+				oHandleElem.prop('hidden', !bCanResize);
+				if (!bDesktop) {
+					this._FinishPanelResize();
+					this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
+					this.element.removeClass(this.css_classes.has_custom_width);
+					return;
+				}
+
+				const iStoredWidth = this._GetStoredPanelWidth();
+				if (iStoredWidth !== null) {
+					const iAppliedWidth = this._SetPanelWidth(iStoredWidth, false);
+					if (!this.element.hasClass(this.css_classes.is_closed)) {
+						this._UpdatePanelSizeMode(iAppliedWidth);
+					}
+				} else if (bCanResize) {
+					this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
+					this.element.removeClass(this.css_classes.has_custom_width);
+					const iCurrentWidth = Math.round(this.element[0].getBoundingClientRect().width);
+					this._UpdatePanelResizeAria(iCurrentWidth);
+				}
+			},
+			_UpdatePanelResizeAria: function (iWidth) {
+				const iRoundedWidth = Math.round(iWidth);
+				const oBounds = this._GetPanelResizeBounds();
+				this.element.find(this.js_selectors.panel_resizer).attr({
+					'aria-valuemin': oBounds.min,
+					'aria-valuemax': Math.max(oBounds.max, iRoundedWidth),
+					'aria-valuenow': iRoundedWidth,
+					'aria-valuetext': this.options.resizer_width_label.replace('%1$s', iRoundedWidth),
+				});
+			},
+			_FinishPanelResize: function (iPointerId) {
+				if (this.panel_resize_state === null || (iPointerId !== undefined && iPointerId !== this.panel_resize_state.pointer_id)) {
+					return;
+				}
+
+				const iActivePointerId = this.panel_resize_state.pointer_id;
+				const iCurrentWidth = this.element[0].getBoundingClientRect().width;
+				this._StorePanelWidth(iCurrentWidth);
+				this._UpdatePanelSizeMode(iCurrentWidth);
+				this._SaveStatePreferences();
+				this.panel_resize_state = null;
+				const oHandle = this.element.find(this.js_selectors.panel_resizer)[0];
+				if (oHandle && oHandle.hasPointerCapture && oHandle.hasPointerCapture(iActivePointerId)) {
+					oHandle.releasePointerCapture(iActivePointerId);
+				}
+				this.element.removeClass(this.css_classes.is_resizing);
+				$('body').removeClass('ibo-is-resizing-activity-panel');
 			},
 
 			// - Helpers on dates

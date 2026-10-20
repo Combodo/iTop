@@ -109,18 +109,32 @@ $ibo-activity-panel--closed-cover--z-index: 2 !default;
 $ibo-activity-panel--closed-cover--background-color: $ibo-activity-panel--header--background-color !default;
 $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 
+/* - Resizer */
+$ibo-activity-panel--resizer--hit-area-width: 12px !default;
+$ibo-activity-panel--resizer--line-width: 2px !default;
+$ibo-activity-panel--resizer--line-color: $ibo-color-grey-300 !default;
+$ibo-activity-panel--resizer--line-color--on-hover: $ibo-color-primary-500 !default;
+$ibo-activity-panel--resizer--desktop-breakpoint: 900px !default;
+
 /* Whole layout */
 .ibo-activity-panel {
   position: relative;
   display: flex;
   flex-direction: column;
-  width: $ibo-activity-panel--width;
+  width: var(--ibo-activity-panel--custom-width, #{$ibo-activity-panel--width});
   height: $ibo-activity-panel--height;
   transition: width 0.2s ease-in-out;
 
-  &.ibo-is-expanded {
-    width: $ibo-activity-panel--is-expanded--width;
+  &.ibo-is-user-resizing,
+  &.ibo-is-resizer-initializing {
+    transition: none;
+  }
 
+  &.ibo-is-expanded:not(.ibo-has-custom-width) {
+    width: $ibo-activity-panel--is-expanded--width;
+  }
+
+  &.ibo-is-expanded {
     .ibo-activity-panel--expand-icon {
       display: none;
     }
@@ -145,6 +159,68 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
     .ibo-activity-panel--closed-cover {
       display: inherit;
     }
+  }
+}
+
+/* Mouse and keyboard resize handle on the panel's left edge */
+.ibo-activity-panel--resizer {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  bottom: 0;
+  left: -($ibo-activity-panel--resizer--hit-area-width / 2);
+  width: $ibo-activity-panel--resizer--hit-area-width;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: ew-resize;
+  touch-action: none;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: $ibo-activity-panel--resizer--line-width;
+    transform: translateX(-50%);
+    background-color: $ibo-activity-panel--resizer--line-color;
+    transition: background-color 0.15s ease-in-out;
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    background-color: $ibo-activity-panel--resizer--line-color--on-hover;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.ibo-activity-panel.ibo-is-user-resizing .ibo-activity-panel--resizer::after {
+  background-color: $ibo-activity-panel--resizer--line-color--on-hover;
+}
+
+body.ibo-is-resizing-activity-panel {
+  cursor: ew-resize;
+  user-select: none;
+}
+
+/* Let the activity panel width drive its flex column without overflowing the page. */
+#ibo-center-container.ibo-center-container--with-side-content {
+  #ibo-main-content {
+    min-width: 0;
+  }
+
+  #ibo-side-content {
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: $ibo-activity-panel--resizer--desktop-breakpoint) {
+  .ibo-activity-panel--resizer {
+    display: none;
   }
 }
 
