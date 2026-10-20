@@ -119,7 +119,7 @@ These rules apply to every change. In code review, a violation is a P1 issue.
     3. `Combodo\iTop\Test\UnitTest\ItopDataTestCase`: starts the datamodel (`MetaModel`) and rolls back CRUD operations. Slow: only when the test needs the datamodel or iTop objects.
     4. `Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase`: a non-standard datamodel.
 - Process isolation (`@runInSeparateProcess`, about 800 ms per `ItopDataTestCase` test) only when needed, on the test, never globally.
-- Do not leave static state behind (`ContextTag::addTag()`, `EventService::RegisterListener()`, `Dict::Add()`): checked by `integration-tests/DetectStaticPollutionTest.php`.
+- Do not leave static state behind (`ContextTag::AddContext()`, `EventService::RegisterListener()`, `Dict::Add()`): checked by `integration-tests/DetectStaticPollutionTest.php`.
 - `markTestSkipped()` only for a temporarily disabled test.
 - More details: `tests/php-unit-tests/README.md`.
 
