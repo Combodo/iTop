@@ -736,8 +736,13 @@
 			$this->m_bSecurityIssue = true;
 		}
 	}
-
-	public function IsContactEmailEditAllowed(): bool
+]]></code>
+        </method>
+        <method id="IsContactEmailEditAllowed">
+          <static>false</static>
+          <access>public</access>
+          <type>Helper</type>
+          <code><![CDATA[	public function IsContactEmailEditAllowed(): bool
 	{
 		if (!UserRights::IsLoggedIn() || $this->IsNew()
 			|| UserRights::IsAdministrator()
