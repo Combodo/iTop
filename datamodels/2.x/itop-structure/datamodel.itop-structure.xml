@@ -722,22 +722,6 @@
         </field>
       </fields>
       <methods>
-        <method id="DoCheckToWrite">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function DoCheckToWrite()
-	{
-		parent::DoCheckToWrite();
-
-		$aChanges = $this->ListChanges();
-		if (array_key_exists('email', $aChanges) && !$this->IsContactEmailEditAllowed()) {
-			$this->AddCheckIssue(Dict::S('UI:Login:Error:AccessRestricted'));
-			$this->m_bSecurityIssue = true;
-		}
-	}
-]]></code>
-        </method>
         <method id="IsContactEmailEditAllowed">
           <static>false</static>
           <access>public</access>
@@ -772,6 +756,9 @@
   	{
         // This method can block the Person modification, by adding a Check Issue
         $aChanges = $this->ListChanges();
+        if (array_key_exists('email', $aChanges) && !$this->IsContactEmailEditAllowed()) {
+            $this->AddCheckIssue(Dict::S('UI:Login:Error:AccessRestricted'));
+        }
         // Current User may not be allowed to see User class, so we can't use $this->Get('user_list')
         $oSearch = new DBObjectSearch('User');
         $oSearch->AddCondition('contactid', $this->GetKey(), '=');
@@ -841,6 +828,10 @@
           <type>Overload-DBObject</type>
           <code><![CDATA[	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
+		if (($sAttCode == 'email') && !$this->IsContactEmailEditAllowed()) {
+			return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState) | OPT_ATT_READONLY; // e.g. OPT_ATT_SLAVE
+		}
+
 		if ( ($sAttCode == 'org_id') && (!$this->IsNew()) )
 		{
 			if (MetaModel::GetConfig()->Get('demo_mode'))
