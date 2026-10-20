@@ -828,7 +828,7 @@
           <type>Overload-DBObject</type>
           <code><![CDATA[	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
-		if (($sAttCode == 'email') && !$this->IsContactEmailEditAllowed()) {
+		if (($sAttCode === 'email') && !$this->IsContactEmailEditAllowed()) {
 			return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState) | OPT_ATT_READONLY; // e.g. OPT_ATT_SLAVE
 		}
 
