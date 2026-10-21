@@ -104,8 +104,8 @@ $(function()
 			$(document).on('click', function(){
 				me._cleanAllMenus();
 			});
-			var oMenu =
-				$('<ul class="menu-icon-select ibo-input-select-icon--menu">');
+			var oMenu = $('<ul class="menu-icon-select ibo-input-select-icon--menu">');
+			this.oButton.data('icon-select-menu', oMenu[0]);
 			for(var i in this.options.items)
 			{
 				var oItem = $('<li class="ibo-input-select-icon--menu--item"><div value="'+i+'"><img class="ibo-input-select-icon--menu--icon" src="'+this.options.items[i].icon+'" style="vertical-align: middle;"/>'+this.options.items[i].label+'<div></li>');
