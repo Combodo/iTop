@@ -23,6 +23,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Layout:ExtensionsDetails:BadgeToBeUninstalled+' => 'Diese Extension wird während des Setups deinstalliert.',
 	'UI:Layout:ExtensionsDetails:BadgeNotUninstallable' => 'nicht deinstallierbar',
 	'UI:Layout:ExtensionsDetails:BadgeNotUninstallable+' => 'Sobald diese Extension installiert ist, sollte sie nicht mehr deinstalliert werden.',
+	'UI:Layout:ExtensionsDetails:BadgeAlreadyPartOfITop' => 'already part of iTop~~',
+	'UI:Layout:ExtensionsDetails:BadgeAlreadyPartOfITop+' => 'All modules in this extension are already part of the iTop package. To uninstall this extension, you have to delete its folder.~~',
 	'UI:Layout:ExtensionsDetails:BadgeMissingFromDisk' => 'auf dem Datenträger nicht vorhanden',
 	'UI:Layout:ExtensionsDetails:BadgeMissingFromDisk+' => 'Das lokale Verzeichnis der Extension wurde vom Datenträger entfernt. Dadurch wird die Deinstallation dieser Extension erzwungen.',
 	'UI:Layout:ExtensionsDetails:MenuAboutTitle' => 'Über %1$s',
