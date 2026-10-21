@@ -142,7 +142,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 						// When not in advanced mode do not allow to use reconciliation keys (on external keys) if they are themselves external keys !
 						$aChoices[$sAttCode.'->'.$sTargetAttCode] = MetaModel::GetLabel($sClassName, $sAttCode.'->'.$sTargetAttCode, true);
 						foreach ($aSignatures as $sSignature) {
-							if (strcasecmp($sFieldName, $sSignature) == 0) {
+                            if (strcasecmp(trim($sFieldName), trim($sSignature)) == 0) {
 								$sFieldCode = $sAttCode.'->'.$sTargetAttCode;
 							}
 						}
@@ -154,7 +154,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 			|| ($oAttDef instanceof AttributeFriendlyName)
 		) {
 			$aChoices[$sAttCode] = MetaModel::GetLabel($sClassName, $sAttCode, true);
-			if (($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode)) {
+            if (strcasecmp(trim($sFieldName), trim($oAttDef->GetLabel())) == 0 || (trim($sFieldName) == $sAttCode)) {
 				$sFieldCode = $sAttCode;
 			}
 		}
