@@ -117,13 +117,13 @@ Dict::Add('UK UA', 'Ukrainian', 'Українська', array(
 Dict::Add('UK UA', 'Ukrainian', 'Українська', array(
 	'Brick:Portal:Object:Name' => 'Об\'єкт',
 	'Brick:Portal:Object:Form:Create:Title' => 'Створити %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Оновлення %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Оновлення %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Будь ласка, вкажіть наступну інформацію:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Збережено',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s збережено',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Вибрати %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Вибрати %1$s (%2$s)',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Вибрати %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Вибрати %1$s',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Скопіювати посилання на об\'єкт',
 	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Посилання скопійовано'
