@@ -15,6 +15,6 @@ Dict::Add('UK UA', 'Ukrainian', 'Українська', array(
 //
 
 Dict::Add('UK UA', 'Ukrainian', 'Українська', array(
-	'Class:LogicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:LogicalInterface/Attribute:org_id' => 'Організація',
 	'Class:LogicalInterface/Attribute:org_id+' => '~~',
 ));
