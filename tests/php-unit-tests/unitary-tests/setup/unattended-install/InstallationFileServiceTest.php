@@ -135,6 +135,40 @@ class InstallationFileServiceTest extends ItopTestCase
 		$this->assertEquals($aExpectedAutoSelectModules, $aAutoSelectModules);
 	}
 
+	public function testUnpackagedConditionalModulesAreSelectedOnlyByAutoSelect()
+	{
+		$oInstallationFileService = new InstallationFileService('', 'production', [], true);
+		$aModules = [
+			'regular-module' => ['category' => 'business', 'visible' => true],
+			'conditional-false' => ['auto_select' => 'false'],
+			'conditional-true' => ['auto_select' => 'true'],
+		];
+		$oProductionEnv = $this->createMock(RunTimeEnvironment::class);
+		$oProductionEnv->expects($this->once())
+			->method('AnalyzeInstallation')
+			->willReturn($aModules);
+		$oInstallationFileService->SetProductionEnv($oProductionEnv);
+
+		$oExtension = $this->CreateItopExtension(
+			iTopExtension::SOURCE_REMOTE, 'conditional-extension', array_keys($aModules), [], true
+		);
+		$oItopExtensionsMap = $this->createMock(ItopExtensionsMap::class);
+		$oItopExtensionsMap->expects($this->once())
+			->method('GetAllExtensions')
+			->willReturn([$oExtension]);
+		$oInstallationFileService->SetItopExtensionsMap($oItopExtensionsMap);
+
+		$oInstallationFileService->ProcessDefaultModules();
+		$oInstallationFileService->ProcessExtensionModulesNotSpecifiedInChoices();
+		$this->assertSame(['regular-module' => true], $oInstallationFileService->GetSelectedModules());
+
+		$oInstallationFileService->ProcessAutoSelectModules();
+		$this->assertSame(
+			['regular-module' => true, 'conditional-true' => true],
+			$oInstallationFileService->GetSelectedModules()
+		);
+	}
+
 	public function ProcessInstallationChoicesProvider()
 	{
 		return [
