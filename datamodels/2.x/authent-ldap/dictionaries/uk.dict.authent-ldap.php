@@ -8,7 +8,7 @@
  */
 Dict::Add('UK UA', 'Ukrainian', 'Українська', array(
 	'Class:UserLDAP' => 'Користувач LDAP',
-	'Class:UserLDAP+' => 'Користувач, аутентифицируемый через LDAP',
+	'Class:UserLDAP+' => 'Користувач, що автентифікується через LDAP',
 	'UserLDAP:server' => 'LDAP specifics~~',
 ));
 
