@@ -75,7 +75,7 @@ abstract class ModuleInstallerAPI
 	/**
 	 * Helper to complete the renaming of a class
 	 * The renaming is made in the datamodel definition, but the name has to be changed in the DB as well
-	 * Must be called after DB update, i.e within an implementation of AfterDatabaseCreation()
+	 * Must be called before DB update, i.e within an implementation of BeforeDatabaseCreation()
 	 *
 	 * @param string $sFrom Original name (already INVALID in the current datamodel)
 	 * @param string $sTo New name (valid in the current datamodel)
@@ -83,15 +83,41 @@ abstract class ModuleInstallerAPI
 	 */
 	public static function RenameClassInDB($sFrom, $sTo)
 	{
+		if (!MetaModel::DBExists(false)) {
+			// Install from scratch, no migration
+			return;
+		}
+
 		try {
 			if (!MetaModel::IsStandaloneClass($sTo)) {
-				$sRootClass = MetaModel::GetRootClass($sTo);
-				$sTableName = MetaModel::DBGetTable($sRootClass);
-				$sFinalClassCol = MetaModel::DBGetClassField($sRootClass);
-				$sRepair = "UPDATE `$sTableName` SET `$sFinalClassCol` = '$sTo' WHERE `$sFinalClassCol` = BINARY '$sFrom'";
-				CMDBSource::Query($sRepair);
-				$iAffectedRows = CMDBSource::AffectedRows();
+				$iAffectedRows = 0;
+				foreach (MetaModel::EnumParentClasses($sTo) as $sParentClass) {
+					$sTableName = MetaModel::DBGetTable($sParentClass);
+					$sFinalClassCol = MetaModel::DBGetClassField($sParentClass);
+					$sRepair = "UPDATE `$sTableName` SET `$sFinalClassCol` = '$sTo' WHERE `$sFinalClassCol` = BINARY '$sFrom'";
+					CMDBSource::Query($sRepair);
+					$iAffectedRows += CMDBSource::AffectedRows();
+				}
 				SetupLog::Info("Renaming class in DB - final class from '$sFrom' to '$sTo': $iAffectedRows rows affected");
+			}
+
+			// Also rename the class reference on the following classes
+			$aAdditionalClassReferences = [
+				['class' => CMDBChangeOp::class, 'attcode' => 'objclass'],
+				['class' => SynchroDataSource::class, 'attcode' => 'scope_class'],
+				['class' => SynchroReplica::class, 'attcode' => 'dest_class'],
+				['class' => TriggerOnObject::class, 'attcode' => 'target_class'],
+				['class' => EventOnObject::class, 'attcode' => 'obj_class'],
+			];
+			foreach ($aAdditionalClassReferences as ['class' => $sClass, 'attcode' => $sAttCode]) {
+				if (MetaModel::IsValidAttCode($sClass, $sAttCode)) {
+					$sTableName = MetaModel::DBGetTable($sClass, $sAttCode);
+					$sClassCol = MetaModel::GetAttributeDef($sClass, $sAttCode)->Get("sql");
+					$sRepair = "UPDATE `$sTableName` SET `$sClassCol` = '$sTo' WHERE `$sClassCol` = BINARY '$sFrom'";
+					CMDBSource::Query($sRepair);
+					$iAffectedRows = CMDBSource::AffectedRows();
+					SetupLog::Info("Renaming class in DB - $sClass::$sAttCode - from '$sFrom' to '$sTo': $iAffectedRows rows affected");
+				}
 			}
 		} catch (Exception $e) {
 			SetupLog::Warning("Failed to rename class in DB - final class from '$sFrom' to '$sTo'. Reason: ".$e->getMessage());
