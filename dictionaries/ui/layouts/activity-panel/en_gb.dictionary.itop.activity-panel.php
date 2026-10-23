@@ -21,6 +21,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Load more entries',
 	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Load all previous entries',
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activity',
+	'UI:Layout:ActivityPanel:Tab:Log:public_log:CompactTitle' => 'Public',
+	'UI:Layout:ActivityPanel:Tab:Log:private_log:CompactTitle' => 'Private',
 	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Draft entry',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Show / hide log entries on this tab',

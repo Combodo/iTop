@@ -53,9 +53,9 @@
                      data-caselog-attribute-code="{{ sCaseLogAttCode }}"
                      data-caselog-attribute-label="{{ aCaseLogData.title }}"
                      data-caselog-rank="{{ loop.index }}">
-                    <a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
-                        <span class="ibo-activity-panel--tab-title-decoration" data-role="ibo-activity-panel--tab-title-decoration"></span>
-                        <span class="ibo-activity-panel--tab-title-text" data-role="ibo-activity-panel--tab-title-text" title="{{ aCaseLogData.title }}">{{ aCaseLogData.title }}</span>
+                    <a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title" title="{{ aCaseLogData.title }}" aria-label="{{ aCaseLogData.title }}">
+                        <span class="ibo-activity-panel--tab-title-decoration" data-role="ibo-activity-panel--tab-title-decoration" aria-hidden="true"></span>
+                        <span class="ibo-activity-panel--tab-title-text" data-role="ibo-activity-panel--tab-title-text" title="{{ aCaseLogData.title }}" data-compact-label="{{ ('UI:Layout:ActivityPanel:Tab:Log:' ~ sCaseLogAttCode ~ ':CompactTitle')|dict_s(aCaseLogData.title) }}">{{ aCaseLogData.title }}</span>
                         <span class="ibo-activity-panel--tab-title-messages-count" data-role="ibo-activity-panel--tab-title-messages-count" data-messages-count="{{ aCaseLogData.total_messages_count }}">{{ aCaseLogData.total_messages_count }}</span>
                         <span class="ibo-activity-panel--tab-title-draft-indicator"
                               data-role="ibo-activity-panel--tab-title-draft-indicator"
@@ -69,12 +69,19 @@
             <div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-activity {{ sExtraCSSClass }}"
                  data-role="ibo-activity-panel--tab-toggler"
                  data-tab-type="activity">
-                <a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
+                <a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title" title="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}" aria-label="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}">
+                    <span class="fas fa-history ibo-activity-panel--tab-title-icon" aria-hidden="true"></span>
                     <span class="ibo-activity-panel--tab-title-text" title="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}">{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}</span>
                 </a>
             </div>
         </div>
             <div class="ibo-activity-panel--actions" data-role="ibo-activity-panel--actions">
+                <a href="#" class="ibo-activity-panel--reset-width" hidden
+                   data-role="ibo-activity-panel--reset-width"
+                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Resizer:Reset:Tooltip'|dict_s }}"
+                   aria-label="{{ 'UI:Layout:ActivityPanel:Resizer:Reset:Tooltip'|dict_s }}">
+                    <span class="fas fa-fw fa-undo"></span>
+                </a>
                 <a href="#" class="ibo-activity-panel--expand-icon"
                    data-role="ibo-activity-panel--expand-icon"
                    data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip'|dict_s }}"
@@ -86,12 +93,6 @@
                    data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip'|dict_s }}"
                    aria-label="{{ 'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip'|dict_s }}">
                     <span class="fas fa-fw fa-compress-alt"></span>
-                </a>
-                <a href="#" class="ibo-activity-panel--reset-width" hidden
-                   data-role="ibo-activity-panel--reset-width"
-                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Resizer:Reset:Tooltip'|dict_s }}"
-                   aria-label="{{ 'UI:Layout:ActivityPanel:Resizer:Reset:Tooltip'|dict_s }}">
-                    <span class="fas fa-fw fa-undo"></span>
                 </a>
                 <a href="#" class="ibo-activity-panel--close-icon"
                    data-role="ibo-activity-panel--close-icon"

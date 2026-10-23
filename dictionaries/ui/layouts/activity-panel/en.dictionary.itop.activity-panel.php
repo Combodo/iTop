@@ -31,6 +31,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Load all previous entries',
 
 	// Tabs
+	'UI:Layout:ActivityPanel:Tab:Log:public_log:CompactTitle' => 'Public',
+	'UI:Layout:ActivityPanel:Tab:Log:private_log:CompactTitle' => 'Private',
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activity',
 	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Draft entry',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs',

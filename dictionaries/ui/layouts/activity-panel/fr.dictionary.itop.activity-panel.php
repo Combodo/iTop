@@ -21,6 +21,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Charger les entrées précédentes',
 	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Charger toutes les entrées',
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activité',
+	'UI:Layout:ActivityPanel:Tab:Log:public_log:CompactTitle' => 'Public',
+	'UI:Layout:ActivityPanel:Tab:Log:private_log:CompactTitle' => 'Privé',
 	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Brouillon',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Journaux',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Afficher / masquer les entrées de journaux sur cet onglet',
