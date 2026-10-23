@@ -3300,4 +3300,47 @@ TXT
 			}
 		}
 	}
+
+	/**
+	 * Test if a string start with DOCTYPE or HTML tag, to detect if the string is a HTML document markup
+	 *
+	 * @param string $sText
+	 *
+	 * @return bool
+	 */
+	public static function StartsWithHtmlDocumentMarkup(string $sText): bool
+	{
+		if (!preg_match('/^\s*(?:<!DOCTYPE\s+html\b|<\/?[a-z][a-z0-9:-]*(?:\s|\/?>))/i', $sText)) {
+			return false;
+		}
+
+		$bInitialUseInternalErrorsFlag = libxml_use_internal_errors(true);
+
+		$dom = new DOMDocument();
+		$ok = $dom->loadHTML(
+			'<!DOCTYPE html><html><body>'.$sText.'</body></html>',
+			LIBXML_NOWARNING | LIBXML_NOERROR
+		);
+
+		libxml_clear_errors();
+		libxml_use_internal_errors($bInitialUseInternalErrorsFlag);
+
+		if (!$ok) {
+			return false;
+		}
+
+		// Si on trouve des balises "réelles" dans le body, on considère qu'il y a du HTML
+		$body = $dom->getElementsByTagName('body')->item(0);
+		if (!$body) {
+			return false;
+		}
+
+		foreach ($body->childNodes as $node) {
+			if ($node->nodeType === XML_ELEMENT_NODE) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

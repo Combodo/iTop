@@ -361,6 +361,10 @@ class HTMLDOMSanitizer extends DOMSanitizer
 		// Building href validation pattern from url and email validation patterns as the patterns are not used the same way in HTML content than in standard attributes value.
 		// eg. "foo@bar.com" vs "mailto:foo@bar.com?subject=Title&body=Hello%20world"
 		if (!array_key_exists('href', self::$aAttrsWhiteList)) {
+
+			// Forbidden patterns
+			$sForbiddenPattern = '(javascript:|vbscript:|data:)';
+
 			// Regular urls
 			$sUrlPattern = utils::GetConfig()->Get('url_validation_pattern');
 
@@ -372,8 +376,9 @@ class HTMLDOMSanitizer extends DOMSanitizer
 			// Note: Authorize both $xxx$ and %24xxx%24 as the latter one is encoded when used in HTML attributes (eg. a[href])
 			$sPlaceholderPattern = '(\$|%24)[\w-]*(->[\w]*(\([\w-]*?\))?)?(\$|%24)';
 
-			$sPattern = $sUrlPattern.'|'.$sMailtoPattern.'|'.$sPlaceholderPattern;
-			$sPattern = '/'.str_replace('/', '\/', $sPattern).'/i';
+			// Final pattern: allow urls, mailto and placeholders, but not if they start with a forbidden pattern
+			$sPattern = '(?!(?:'.$sForbiddenPattern.')$)(?:'.$sUrlPattern.'|'.$sMailtoPattern.'|'.$sPlaceholderPattern.')';
+			$sPattern = '/^'.str_replace('/', '\/', $sPattern).'/i';
 			self::$aAttrsWhiteList['href'] = $sPattern;
 		}
 	}
