@@ -53,6 +53,7 @@ require_once(APPROOT.'application/applicationextension/backoffice/iBackofficeSty
 require_once(APPROOT.'application/applicationextension/backoffice/iFieldRendererMappingsExtension.php');
 require_once(APPROOT.'application/applicationextension/backoffice/iPageUIBlockExtension.php');
 require_once(APPROOT.'application/applicationextension/backoffice/iPreferencesExtension.php');
+require_once(APPROOT.'application/applicationextension/backoffice/iStimulusFormExtension.php');
 require_once(APPROOT.'application/applicationextension/backoffice/iWelcomePopupExtension.php');
 require_once(APPROOT.'application/applicationextension/backoffice/AbstractApplicationUIExtension.php');
 require_once(APPROOT.'application/applicationextension/backoffice/AbstractPageUIBlockExtension.php');
