@@ -226,6 +226,9 @@ $(function()
 				$(window).on('resize'+this.eventNamespace, function () {
 					me._onWindowResize();
 				});
+				$(window).on('keydown'+this.eventNamespace, function (oEvent) {
+					me._onPanelToggleShortcut(oEvent);
+				});
 				// - Click on a tab title
 				this.element.find(this.js_selectors.tab_title).on('click', function (oEvent) {
 					me._onTabTitleClick(oEvent, $(this));
@@ -350,6 +353,16 @@ $(function()
 				this.element.toggleClass(this.css_classes.is_closed);
 				this._SyncPanelResizeState();
 				this._SavePanelDisplayPreference();
+			},
+			_onPanelToggleShortcut: function (oEvent) {
+				if (oEvent.key.toLowerCase() !== 'b' || oEvent.ctrlKey === oEvent.metaKey || !oEvent.shiftKey || oEvent.altKey || this.panel_resize_state !== null ||
+					$(oEvent.target).closest('input, textarea, select, [contenteditable]').length > 0) {
+					return;
+				}
+				oEvent.preventDefault();
+				if (!(oEvent.originalEvent || oEvent).repeat) {
+					this._onPanelDisplayIconClick(oEvent);
+				}
 			},
 			_onWindowResize: function () {
 				const bNarrow = window.innerWidth <= this.options.resizer_desktop_breakpoint;
