@@ -199,7 +199,8 @@ $ibo-activity-panel--resizer--desktop-breakpoint: 900px !default;
   }
 
   &:focus-visible {
-    outline: none;
+    outline: 2px solid $ibo-activity-panel--resizer--line-color--on-hover;
+    outline-offset: -2px;
   }
 }
 
@@ -223,10 +224,8 @@ body.ibo-is-resizing-activity-panel {
   }
 }
 
-@media (max-width: $ibo-activity-panel--resizer--desktop-breakpoint) {
-  .ibo-activity-panel--resizer {
-    display: none;
-  }
+.ibo-activity-panel--resizer[hidden] {
+  display: none;
 }
 
 /* Header */
@@ -235,7 +234,8 @@ body.ibo-is-resizing-activity-panel {
 	background-color: $ibo-activity-panel--header--background-color;
 
 	/* Remove hyperlinks default color */
-  .ibo-activity-panel--togglers a{
+  .ibo-activity-panel--togglers a,
+  .ibo-activity-panel--togglers button{
 		color: $ibo-activity-panel--tab-toolbar--text-color;
 	}
 }
@@ -247,6 +247,15 @@ body.ibo-is-resizing-activity-panel {
 }
 
 /* Size/display togglers */
+.ibo-activity-panel--actions button,
+.ibo-activity-panel--closed-cover {
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
 .ibo-activity-panel--actions {
   display: flex;
   align-items: center;
@@ -257,6 +266,10 @@ body.ibo-is-resizing-activity-panel {
 
   background-color: $ibo-activity-panel--header--background-color;
   color: $ibo-activity-panel--actions--color;
+
+  button {
+    background: transparent;
+  }
 
   &:hover {
     color: $ibo-activity-panel--actions--on-hover--color;
@@ -561,6 +574,8 @@ body.ibo-is-resizing-activity-panel {
   bottom: 0;
   left: 0;
   right: 0;
+  width: 100%;
+  height: 100%;
   @extend %ibo-fully-centered-content;
   background-color: $ibo-activity-panel--closed-cover--background-color;
   cursor: pointer;

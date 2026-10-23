@@ -159,6 +159,7 @@ $(function()
 				}
 
 				this._InitializeCurrentTab();
+				this._UpdateTabAccessibility();
 				this._ApplyEntriesFilters();
 				this._UpdateMessagesCounters();
 				this._InitializeTabLabels();
@@ -178,6 +179,7 @@ $(function()
 				$(window).off(this.eventNamespace);
 				this.element.off(this.eventNamespace);
 				this.element.find(this.js_selectors.panel_resizer).off(this.eventNamespace);
+				this.element.find(this.js_selectors.tab_title).off(this.eventNamespace);
 				this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
 				this.element.removeClass('ibo-activity-panel');
 			},
@@ -232,6 +234,9 @@ $(function()
 				// - Click on a tab title
 				this.element.find(this.js_selectors.tab_title).on('click', function (oEvent) {
 					me._onTabTitleClick(oEvent, $(this));
+				});
+				this.element.find(this.js_selectors.tab_title).on('keydown'+this.eventNamespace, function (oEvent) {
+					me._onTabTitleKeyDown(oEvent);
 				});
 
 				// Tabs toolbar
@@ -330,14 +335,21 @@ $(function()
 			_onPanelSizeIconClick: function (oEvent) {
 				// Avoid anchor glitch
 				oEvent.preventDefault();
+				const bHadFocus = this.element.find(this.js_selectors.panel_size_expand+', '+this.js_selectors.panel_size_reduce).is(':focus');
 
 				// Switch between each mode's saved width or its default preset.
 				this.element.toggleClass(this.css_classes.is_expanded);
 				this._SyncPanelResizeState();
+				if (bHadFocus) {
+					this.element.find(this.js_selectors.panel_size_expand+', '+this.js_selectors.panel_size_reduce).filter(':visible').trigger('focus');
+				}
 				this._SaveStatePreferences();
 			},
 			_onPanelResizeReset: function (oEvent) {
 				oEvent.preventDefault();
+				if (this.element.find(this.js_selectors.panel_resize_reset).is(':focus')) {
+					this.element.find(this.js_selectors.panel_size_expand+', '+this.js_selectors.panel_size_reduce).filter(':visible').trigger('focus');
+				}
 				try {
 					window.localStorage.removeItem(this._GetPanelWidthStorageKey());
 				} catch (oError) {
@@ -365,6 +377,7 @@ $(function()
 				}
 			},
 			_onWindowResize: function () {
+				const oFocusedElement = document.activeElement;
 				const bNarrow = window.innerWidth <= this.options.resizer_desktop_breakpoint;
 				if (bNarrow !== this.responsive_is_narrow) {
 					this._FinishPanelResize();
@@ -372,6 +385,7 @@ $(function()
 					this.element.toggleClass(this.css_classes.is_closed, bNarrow || this.element[0].dataset.preferredClosed === 'true');
 				}
 				this._SyncPanelResizeState();
+				this._RestorePanelFocus(oFocusedElement);
 			},
 			_onPanelResizePointerDown: function (oEvent) {
 				const oPointerEvent = this._GetPointerEvent(oEvent);
@@ -425,7 +439,10 @@ $(function()
 				const iCurrentWidth = this.element[0].getBoundingClientRect().width;
 				let iNextWidth = null;
 
-				if (oEvent.key === 'ArrowLeft') {
+				if (oEvent.key === 'Enter') {
+					this._onPanelDisplayIconClick(oEvent);
+					return;
+				} else if (oEvent.key === 'ArrowLeft') {
 					iNextWidth = bClosed ? this._GetPanelResizeBounds().min : iCurrentWidth + this.options.resizer_keyboard_step;
 				} else if (oEvent.key === 'ArrowRight') {
 					if (bClosed) {
@@ -453,6 +470,22 @@ $(function()
 					this._StorePanelWidth(iAppliedWidth);
 					this._UpdatePanelResetControl();
 					this._SavePanelDisplayPreference();
+				}
+			},
+			_onTabTitleKeyDown: function (oEvent) {
+				const oTabs = this.element.find(this.js_selectors.tab_title);
+				const iCurrent = oTabs.index(oEvent.currentTarget);
+				const aTargets = {
+					ArrowLeft: (iCurrent + oTabs.length - 1) % oTabs.length,
+					ArrowRight: (iCurrent + 1) % oTabs.length,
+					Home: 0,
+					End: oTabs.length - 1,
+					Enter: iCurrent,
+					' ': iCurrent,
+				};
+				if (Number.isInteger(aTargets[oEvent.key])) {
+					oEvent.preventDefault();
+					oTabs.eq(aTargets[oEvent.key]).trigger('focus').trigger('click');
 				}
 			},
 			_onTabTitleClick: function (oEvent, oTabTitleElem) {
@@ -484,6 +517,7 @@ $(function()
 				}
 
 				// Add current activity tab to url hash
+				this._UpdateTabAccessibility();
 				$.bbq.pushState(oState);
 			},
 			/**
@@ -867,11 +901,15 @@ $(function()
 				this._UpdatePanelResetControl();
 
 				const bDesktop = window.innerWidth > this.options.resizer_desktop_breakpoint;
+				if (!bDesktop && oHandleElem.is(':focus')) {
+					this.element.find(this.js_selectors.panel_size_open).trigger('focus');
+				}
 				oHandleElem.prop('hidden', !bDesktop);
 				if (!bDesktop) {
 					this._FinishPanelResize();
 					this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
 					this.element.removeClass(this.css_classes.has_custom_width);
+					this._UpdatePanelResizeAria(this.element[0].getBoundingClientRect().width);
 					return;
 				}
 				if (this.panel_resize_state !== null) {
@@ -900,14 +938,26 @@ $(function()
 				}
 			},
 			_UpdatePanelResizeAria: function (iWidth) {
+				const oFocusedElement = document.activeElement;
 				const iRoundedWidth = Math.round(iWidth);
 				const oBounds = this._GetPanelResizeBounds();
+				const bClosed = this.element.hasClass(this.css_classes.is_closed);
+				this.element.find(this.js_selectors.panel_size_close+', '+this.js_selectors.panel_size_open).attr('aria-expanded', !bClosed);
+				this._RestorePanelFocus(oFocusedElement);
 				this.element.find(this.js_selectors.panel_resizer).attr({
 					'aria-valuemin': this.options.resizer_closed_width,
 					'aria-valuemax': Math.max(oBounds.max, iRoundedWidth),
 					'aria-valuenow': iRoundedWidth,
 					'aria-valuetext': this.options.resizer_width_label.replace('%1$s', iRoundedWidth),
 				});
+			},
+			_RestorePanelFocus: function (oFocusedElement) {
+				if (this.element[0].contains(oFocusedElement) && !$(oFocusedElement).is(':visible')) {
+					const bClosed = this.element.hasClass(this.css_classes.is_closed);
+					const sFocusTarget = bClosed && window.innerWidth > this.options.resizer_desktop_breakpoint ? this.js_selectors.panel_resizer
+						: (bClosed ? this.js_selectors.panel_size_open : this.js_selectors.panel_size_close);
+					this.element.find(sFocusTarget).trigger('focus');
+				}
 			},
 			_FinishPanelResize: function (iPointerId) {
 				if (this.panel_resize_state === null || (iPointerId !== undefined && iPointerId !== this.panel_resize_state.pointer_id)) {
@@ -990,6 +1040,17 @@ $(function()
 			},
 
 			// - Helpers on tabs
+			_UpdateTabAccessibility: function () {
+				const me = this;
+				this.element.find(this.js_selectors.tab_toggler).each(function () {
+					const oTab = $(this).find(me.js_selectors.tab_title);
+					const bActive = $(this).hasClass(me.css_classes.is_active);
+					oTab.attr({'aria-selected': bActive, tabindex: bActive ? 0 : -1});
+					if (bActive) {
+						me.element.find(me.js_selectors.body).attr('aria-labelledby', oTab.attr('id'));
+					}
+				});
+			},
 			/**
 			 * @returns {Object} Data on the active tab:
 			 *
