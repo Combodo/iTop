@@ -6,6 +6,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreException;
 use DBObjectSearch;
 use MetaModel;
+use utils;
 
 /**
  * Class MetaModelTest
@@ -20,16 +21,25 @@ class MetaModelTest extends ItopDataTestCase
 	protected static $sDefaultUserRequestTitle = 'Unit test title';
 	protected static $sDefaultUserRequestDescription = 'Unit test description';
 	protected static $sDefaultUserRequestDescriptionAsHtml = '<p>Unit test description</p>';
+	private bool $bInitialSecurityFlagDisabled = false;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->RequireOnceItopFile('/core/metamodel.class.php');
+
+		// save the initial security flag as it will be modified in some tests and we want to restore it to its initial value at the end of the test
+		$this->bInitialSecurityFlagDisabled = utils::GetConfig()->Get('security.disable_apply_params_auto_sanitization');
+
 	}
 
 	protected function tearDown(): void
 	{
 		$this->InvokeNonPublicStaticMethod('PluginManager', 'ResetPlugins');
+
+		// restore the initial security flag value
+		utils::GetConfig()->Set('security.disable_apply_params_auto_sanitization', $this->bInitialSecurityFlagDisabled);
+
 		parent::tearDown();
 	}
 
@@ -144,7 +154,66 @@ class MetaModelTest extends ItopDataTestCase
 			'Placeholder for an object HTML attribute as HTML' => [
 				'$this->html(description)$',
 				$aParams,
-				'<div class="HTML ibo-is-html-content" ><p>Unit test description</p></div>', // As the AttributeText::GetForHTML() called by AttributeDefinition::GetForTemplate() adds this markup, we have to mock it here as well
+				'<div class="HTML ibo-is-html-content"><p>Unit test description</p></div>', // As the AttributeText::GetForHTML() called by AttributeDefinition::GetForTemplate() adds this markup, we have to mock it here as well
+			],
+		];
+	}
+
+	/**
+	 * @group itopRequestMgmt
+	 * @covers       MetaModel::ApplyParams()
+	 * @dataProvider ApplyParamsSanitizationProvider
+	 *
+	 * @param string $sInput
+	 * @param array $aParams
+	 * @param string $sExpectedOutput
+	 * @param string $sApplySanitizeMode
+	 *
+	 * @throws \Exception
+	 */
+	public function testApplyParamsSanitization($sInput, $aParams, $sExpectedOutput, string $sApplySanitizeMode = 'auto', bool $bSecurityFlagDisabled = true)
+	{
+		utils::GetConfig()->Set('security.disable_apply_params_auto_sanitization', $bSecurityFlagDisabled);
+
+		$sGeneratedOutput = MetaModel::ApplyParams($sInput, $aParams, $sApplySanitizeMode);
+
+		$this->assertEquals($sExpectedOutput, $sGeneratedOutput, "ApplyParams test returned $sGeneratedOutput");
+	}
+
+	public function ApplyParamsSanitizationProvider()
+	{
+		$aParams = [
+			'foo->javascript_injection' => 'javascript:alert(1)/*https://example.com*/',
+		];
+
+		return [
+			'Placeholder with malicious javascript injection (sanitization auto)' => [
+				'<a href="$foo->javascript_injection$">Hyperlink</a>',
+				$aParams,
+				'<a>Hyperlink</a>',
+				'auto',
+				false,
+			],
+			'Placeholder with malicious javascript injection (sanitization auto but security flag disabled)' => [
+				'<a href="$foo->javascript_injection$">Hyperlink</a>',
+				$aParams,
+				'<a href="javascript:alert(1)/*https://example.com*/">Hyperlink</a>',
+				'auto',
+				true,
+			],
+			'Placeholder with malicious javascript injection (sanitization html)' => [
+				'<a href="$foo->javascript_injection$">Hyperlink</a>',
+				$aParams,
+				'<a>Hyperlink</a>',
+				'html',
+				false,
+			],
+			'Placeholder with malicious javascript injection (sanitization off)' => [
+				'<a href="$foo->javascript_injection$">Hyperlink</a>',
+				$aParams,
+				'<a href="javascript:alert(1)/*https://example.com*/">Hyperlink</a>',
+				'none',
+				false,
 			],
 		];
 	}

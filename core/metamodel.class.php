@@ -6732,14 +6732,19 @@ abstract class MetaModel
 	 *   * foo->bar : Another static placeholder
 	 *   * foo->object() : Will be developed into a set of placeholders depending on the attribute of the given \DBObject and their corresponding transformation methods {@see \AttributeDefinition::GetForTemplate()}
 	 *                     Example: foo->hyperlink(), foo->name, foo->html(name), foo->head(log), foo->head_html(log), ...
+	 * @param string $sApplySanitizeMode One of [auto,html,none] to specify if the result should be sanitized or not. Default is 'auto' which means that the result will be sanitized if it is HTML and if the configuration option security.disable_apply_params_auto_sanitization is not set to true.
 	 *
 	 * @link https://www.itophub.io/wiki/page?id=latest:admin:placeholders
 	 * @return string
 	 *
 	 * @throws \Exception
 	 */
-	public static function ApplyParams($sInput, $aParams)
+	public static function ApplyParams($sInput, $aParams, string $sApplySanitizeMode = 'auto')
 	{
+		if(in_array($sApplySanitizeMode, ['auto', 'html', 'none'], true) === false) {
+			throw new CoreException('Invalid value for $sApplySanitizeMode parameter', ['value' => $sApplySanitizeMode]);
+		}
+
 		$aParams = static::AddMagicPlaceholders($aParams);
 
 		// Declare magic parameters
@@ -6827,7 +6832,15 @@ abstract class MetaModel
 			}
 		}
 
-		return str_replace($aSearches, $aReplacements, $sInput);
+		$sTemplate = str_replace($aSearches, $aReplacements, $sInput);
+
+		// HTML sanitization
+		if ($sApplySanitizeMode === 'html'
+		|| ($sApplySanitizeMode === 'auto' && !utils::GetConfig()->Get('security.disable_apply_params_auto_sanitization') && utils::StartsWithHtmlDocumentMarkup($sTemplate))) {
+			$sTemplate = DOMSanitizer::Sanitize($sTemplate);
+		}
+
+		return $sTemplate;
 	}
 
 	/**
