@@ -1524,7 +1524,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	//   - Numeric widget
 	//   None yet
 	//   - DateTime widget
-	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= %1$s <= %3$s',
 	//   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s 和 %3$s 其它',
