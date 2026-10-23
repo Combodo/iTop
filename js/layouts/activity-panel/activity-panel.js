@@ -138,6 +138,7 @@ $(function()
 			panel_resize_state: null,
 			responsive_is_narrow: null,
 			tab_labels_observer: null,
+			panel_bounds_observer: null,
 
 			// the constructor
 			_create: function () {
@@ -175,6 +176,9 @@ $(function()
 				this._FinishPanelResize();
 				if (this.tab_labels_observer !== null) {
 					this.tab_labels_observer.disconnect();
+				}
+				if (this.panel_bounds_observer !== null) {
+					this.panel_bounds_observer.disconnect();
 				}
 				$(window).off(this.eventNamespace);
 				this.element.off(this.eventNamespace);
@@ -398,6 +402,7 @@ $(function()
 				this.panel_resize_state = {
 					pointer_id: oPointerEvent.pointerId,
 					start_x: oPointerEvent.clientX,
+					last_x: oPointerEvent.clientX,
 					start_width: iStartWidth,
 					start_expanded: this.element.hasClass(this.css_classes.is_expanded),
 					has_moved: false,
@@ -414,6 +419,7 @@ $(function()
 					return;
 				}
 
+				this.panel_resize_state.last_x = oPointerEvent.clientX;
 				oEvent.preventDefault();
 				if (!this.panel_resize_state.has_moved) {
 					// Clicks, including both clicks of a double-click, must not resize or
@@ -436,7 +442,9 @@ $(function()
 			},
 			_onPanelResizeKeyDown: function (oEvent) {
 				const bClosed = this.element.hasClass(this.css_classes.is_closed);
-				const iCurrentWidth = this.element[0].getBoundingClientRect().width;
+				const iCurrentWidth = Math.min(this._GetPanelResizeBounds().max, this.element.hasClass(this.css_classes.has_custom_width)
+					? Number.parseFloat(this.element[0].style.getPropertyValue(this.options.resizer_css_custom_property))
+					: this._GetPanelPresetWidth());
 				let iNextWidth = null;
 
 				if (oEvent.key === 'Enter') {
@@ -466,10 +474,13 @@ $(function()
 					oEvent.preventDefault();
 					this.element.removeClass(this.css_classes.is_closed);
 					const iAppliedWidth = this._SetPanelWidth(iNextWidth);
+					const bWasExpanded = this.element.hasClass(this.css_classes.is_expanded);
 					this._UpdatePanelSizeMode(iAppliedWidth);
 					this._StorePanelWidth(iAppliedWidth);
 					this._UpdatePanelResetControl();
-					this._SavePanelDisplayPreference();
+					if (bClosed || bWasExpanded !== this.element.hasClass(this.css_classes.is_expanded)) {
+						this._SavePanelDisplayPreference();
+					}
 				}
 			},
 			_onTabTitleKeyDown: function (oEvent) {
@@ -811,6 +822,11 @@ $(function()
 				this._MigrateLegacyPanelWidth();
 				this._SyncPanelResizeState();
 				this.element.removeClass(this.css_classes.is_resizer_initializing);
+				const oCenterContainer = this.element.closest('#ibo-center-container')[0];
+				if (oCenterContainer) {
+					this.panel_bounds_observer = new ResizeObserver(() => this._SyncPanelResizeState());
+					this.panel_bounds_observer.observe(oCenterContainer);
+				}
 			},
 			_GetPointerEvent: function (oEvent) {
 				return oEvent.originalEvent || oEvent;
@@ -912,7 +928,9 @@ $(function()
 					this._UpdatePanelResizeAria(this.element[0].getBoundingClientRect().width);
 					return;
 				}
-				if (this.panel_resize_state !== null) {
+				if (this.panel_resize_state !== null && this.panel_resize_state.has_moved) {
+					const oState = this.panel_resize_state;
+					this._SetPanelWidth(oState.start_width + oState.start_x - oState.last_x, true);
 					return;
 				}
 				if (this.element.hasClass(this.css_classes.is_closed)) {
