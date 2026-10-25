@@ -23,7 +23,7 @@ Dict::Add('UK UA', 'Ukrainian', 'Українська', array(
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Пароль не може бути змінений користувачем.',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Дата зміни пароля',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Коли пароль було змінено останній раз',
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Пароль повинен містити не менше 8 символів і включати великі літери, малі літери, цифри та спеціальні символи.',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Пароль повинен містити не менше 12 символів і включати великі літери, малі літери, цифри та спеціальні символи.',
 	'UserLocal:password:expiration' => 'Поля вимагають наявності додаткового розширення',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Встановлення терміну дії пароля на "Одноразовий пароль" не дозволено для вашого власного облікового запису користувача',
 ));
