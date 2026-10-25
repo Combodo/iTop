@@ -603,8 +603,8 @@ EOF
 			'ru'    => ['RU RU', 'Russian', 'Русский'],
 			'sk'    => ['SK SK', 'Slovak', 'Slovenčina'],
 			'tr'    => ['TR TR', 'Turkish', 'Türkçe'],
-			'zh_cn' => ['ZH CN', 'Chinese', '简体中文'],
 			'uk'    => ['UK UA', 'Ukrainian', 'Українська'],
+			'zh_cn' => ['ZH CN', 'Chinese', '简体中文'],
 		];
 
 		if ($bPrefixOnly) {
