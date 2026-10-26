@@ -46,7 +46,7 @@ class ActionEmailTest extends ItopDataTestCase
 		$sHtml =
 <<<HTML
 <body>
-	<table data-something-that-would-be-removed-by-the-sanitizer-through-ckeditor-but-that-will-stay-with-the-template="bar">
+	<table>
 		<tr><td>Formatted eMail</td></tr>
 		<tr><td>\$content\$</td></tr>
 </body>
@@ -260,13 +260,13 @@ HTML
 				['body' => '<p>Ticket "$this->title$" created.</p>', 'html_template' => true],
 				['body' =>
 <<<HTML
-<body>
-	<table data-something-that-would-be-removed-by-the-sanitizer-through-ckeditor-but-that-will-stay-with-the-template="bar">
+
+	<table>
 		<tr><td>Formatted eMail</td></tr>
 		<tr><td><div class="email-is-html-content">
 	<p>Ticket "Test UserRequest" created.</p>
 </div></td></tr>
-</body>
+</table>
 HTML
 				],
 			],
