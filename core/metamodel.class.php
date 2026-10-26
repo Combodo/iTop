@@ -6739,9 +6739,9 @@ abstract class MetaModel
 	 *
 	 * @throws \Exception
 	 */
-	public static function ApplyParams($sInput, $aParams, string $sApplySanitizeMode = 'auto')
+	public static function ApplyParams($sInput, $aParams, string $sApplySanitizeMode = 'sanitize_auto')
 	{
-		if(in_array($sApplySanitizeMode, ['auto', 'html', 'none'], true) === false) {
+		if(in_array($sApplySanitizeMode, ['sanitize_auto', 'sanitize_html', 'sanitize_none'], true) === false) {
 			throw new CoreException('Invalid value for $sApplySanitizeMode parameter', ['value' => $sApplySanitizeMode]);
 		}
 
@@ -6835,8 +6835,8 @@ abstract class MetaModel
 		$sTemplate = str_replace($aSearches, $aReplacements, $sInput);
 
 		// HTML sanitization
-		if ($sApplySanitizeMode === 'html'
-		|| ($sApplySanitizeMode === 'auto' && !utils::GetConfig()->Get('security.disable_apply_params_auto_sanitization') && self::StartsWithHtmlDocumentMarkup($sTemplate))) {
+		if ($sApplySanitizeMode === 'sanitize_html'
+		|| ($sApplySanitizeMode === 'sanitize_auto' && !utils::GetConfig()->Get('security.disable_apply_params_auto_sanitization') && self::StartsWithHtmlDocumentMarkup($sTemplate))) {
 			$sTemplate = DOMSanitizer::Sanitize($sTemplate);
 		}
 
