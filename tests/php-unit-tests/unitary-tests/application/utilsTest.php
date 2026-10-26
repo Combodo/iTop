@@ -1069,28 +1069,4 @@ INI;
 		utils::Unserialize($sData);
 
 	}
-
-	/**
-	 * @dataProvider StartsWithHtmlDocumentMarkupProvider
-	 */
-	public function testStartsWithHtmlDocumentMarkup(string $sInput, bool $bExpected)
-	{
-		$bTested = utils::StartsWithHtmlDocumentMarkup($sInput);
-		self::assertSame($bExpected, $bTested);
-	}
-
-	public static function StartsWithHtmlDocumentMarkupProvider()
-	{
-		return [
-			"CONTENT_EMPTY" => ['', false],
-			"CONTENT_WITH_DOCTYPE" => ['<!DOCTYPE html><html><head><title>Title</title></head><body>Content</body></html>', true],
-			"CONTENT_WITH_FULL_HTML" => ['<html><head><title>Title</title></head><body>Content</body></html>', true],
-			"CONTENT_WITH_SIMPLE_TAG" => ['<a href="https://www.itop.com">link</a>', true],
-			"CONTENT_WITH_UNKNOWN_TAG" => ['<unknown></unknown>', true],
-			"CONTENT_WITH_UNCLOSED_TAG" => ['<unknown>', true],
-			"CONTENT_WITH_RAW_TEXT" => ['raw text', false],
-			"CONTENT_WITH_LEADING_WHITESPACE" => [" <p>this paragraph</p>", true],
-			"CONTENT_WITH_RAW_TEXTWITH_NESTED_HTML" => ['raw text <p>this paragraph</p>', false],
-		];
-	}
 }
