@@ -323,7 +323,7 @@ class HTMLDOMSanitizer extends DOMSanitizer
 
 	protected static $aAttrsWhiteList = [
 		'src' => '/^(http:|https:|data:)/i',
-		'href' => '/^(http:|https:|mailto:|\$)/i',
+		'href' => '/^(http:|https:|ftp:|mailto:|\$|%24)/i',
 	];
 
 	/**
