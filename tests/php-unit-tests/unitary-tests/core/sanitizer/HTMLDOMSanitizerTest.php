@@ -224,7 +224,7 @@ class HTMLDOMSanitizerTest extends AbstractDOMSanitizerTest
 			],
 			'link href short url without protocol' => [
 				'html' => '<a href="www.itop.com">Hyperlink</a>',
-				'expected' => '<a>Hyperlink</a>',
+				'expected' => '<a href="www.itop.com">Hyperlink</a>',
 			],
 			'link href javascript injection' => [
 				'html' => '<a href="javascript:alert(1)/*https://example.com*/">Hyperlink</a>',
@@ -253,6 +253,18 @@ class HTMLDOMSanitizerTest extends AbstractDOMSanitizerTest
 			'link href with javascript injection and placeholder' => [
 				'html' => '<a href="javascript:alert(1)/*$APPLICATION_URL$*">Hyperlink</a>',
 				'expected' => '<a>Hyperlink</a>',
+			],
+			'link href with vbscript injection and placeholder' => [
+				'html' => '<a href="vbscript:alert(1)/*$APPLICATION_URL$*">Hyperlink</a>',
+				'expected' => '<a>Hyperlink</a>',
+			],
+			'link href with data injection and placeholder' => [
+				'html' => '<a href="data:alert(1)/*$APPLICATION_URL$*">Hyperlink</a>',
+				'expected' => '<a>Hyperlink</a>',
+			],
+			'link href with toto injection and placeholder' => [
+				'html' => '<a href="toto:alert(1)/*$APPLICATION_URL$*">Hyperlink</a>',
+				'expected' => '<a href="toto:alert(1)/*%24APPLICATION_URL%24*">Hyperlink</a>',
 			],
 		];
 	}

@@ -323,6 +323,7 @@ class HTMLDOMSanitizer extends DOMSanitizer
 
 	protected static $aAttrsWhiteList = [
 		'src' => '/^(http:|https:|data:)/i',
+		'href' => '/^(?!javascript:|data:|vbscript:)/i',
 	];
 
 	/**
@@ -353,35 +354,6 @@ class HTMLDOMSanitizer extends DOMSanitizer
 		'width',
 		'white-space',
 	];
-
-	public function __construct($sInlineImageClassName = InlineImage::class)
-	{
-		parent::__construct($sInlineImageClassName);
-
-		// Building href validation pattern from url and email validation patterns as the patterns are not used the same way in HTML content than in standard attributes value.
-		// eg. "foo@bar.com" vs "mailto:foo@bar.com?subject=Title&body=Hello%20world"
-		if (!array_key_exists('href', self::$aAttrsWhiteList)) {
-
-			// Forbidden patterns
-			$sForbiddenPattern = '(javascript:|vbscript:|data:)';
-
-			// Regular urls
-			$sUrlPattern = utils::GetConfig()->Get('url_validation_pattern');
-
-			// Mailto urls
-			$sMailtoPattern = '(mailto:('.utils::GetConfig()->Get('email_validation_pattern').')(?:\?(?:subject|body)=([a-zA-Z0-9+\$_.-]*)(?:&(?:subject|body)=([a-zA-Z0-9+\$_.-]*))?)?)';
-
-			// Notification placeholders
-			// eg. $this->caller_id$, $this->hyperlink()$, $this->hyperlink(portal)$, $APP_URL$, $MODULES_URL$, ...
-			// Note: Authorize both $xxx$ and %24xxx%24 as the latter one is encoded when used in HTML attributes (eg. a[href])
-			$sPlaceholderPattern = '(\$|%24)[\w-]*(->[\w]*(\([\w-]*?\))?)?(\$|%24)';
-
-			// Final pattern: allow urls, mailto and placeholders, but not if they start with a forbidden pattern
-			$sPattern = '(?!(?:'.$sForbiddenPattern.')$)(?:'.$sUrlPattern.'|'.$sMailtoPattern.'|'.$sPlaceholderPattern.')';
-			$sPattern = '/^'.str_replace('/', '\/', $sPattern).'/i';
-			self::$aAttrsWhiteList['href'] = $sPattern;
-		}
-	}
 
 	public function GetTagsWhiteList()
 	{
