@@ -67,7 +67,6 @@ class WizardHelper
 							throw new CoreException('WizardHelper GetTargetObject: invalid data for linked set attribute '.$sAttCode.' of class '.$this->m_aData['m_sClass'], [
 								'att_code' => $sAttCode,
 								'linked_class' => $this->m_aData['m_sClass'],
-								'data' => $this->m_aData['m_sClass'],
 							], 'Invalid JSON data', $e);
 						}
 					} else {

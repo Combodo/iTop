@@ -22,14 +22,14 @@
 
 namespace Combodo\iTop\Test\UnitTest\Application;
 
-use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use WizardHelper;
 use CoreException;
 
 /**
  * @covers WizardHelper
  */
-class wizardHelperTest extends ItopTestCase
+class wizardHelperTest extends ItopDataTestCase
 {
 
 	public function testGetTargetObjectWithInvalidLinkSetDataValue()
@@ -37,6 +37,7 @@ class wizardHelperTest extends ItopTestCase
 		// test case from N°9392 - [SECU] Stored XSS in subnets_list Parameter
 		$sWizardHelperJSON = '{"m_sClass":"VLAN","m_oFieldsMap":{"vlan_tag":"2_vlan_tag","org_id":"2_org_id","description":"2_description","subnets_list":"2_subnets_list","physicalinterfaces_list":"2_physicalinterfaces_list"},"m_oCurrentValues":{"vlan_tag":null,"org_id":null,"description":null,"subnets_list":"[]oszzt<img src=a onerror=alert(1)>l053a","physicalinterfaces_list":"[]"},"m_aDefaultValueRequested":[],"m_aAllowedValuesRequested":[],"m_oDefaultValue":{},"m_oAllowedValues":{},"m_aStaticValues":[],"m_iFieldsCount":5,"m_sFormPrefix":"","m_sState":"","m_bReturnNotEditableFields":false,"m_sWizHelperJsVarName":null}';
 		$this->expectException(CoreException::class);
+		$this->expectExceptionMessageMatches('/^WizardHelper GetTargetObject: invalid data for linked set attribute/');
 		$oWizardHelper = WizardHelper::FromJSON($sWizardHelperJSON);
 		$oWizardHelper->GetTargetObject();
 	}
