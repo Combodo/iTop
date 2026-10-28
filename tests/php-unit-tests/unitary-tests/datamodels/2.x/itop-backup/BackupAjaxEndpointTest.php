@@ -64,7 +64,6 @@ class BackupAjaxEndpointTest extends ItopDataTestCase
 		$this->assertSame(500, $this->aLastCurlGetInfo['http_code']);
 	}
 
-
 	public function testRestoreGetToken(): void
 	{
 		$sLogin = 'test-backup-endpoint-'.uniqid();

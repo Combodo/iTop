@@ -63,73 +63,72 @@ $oPage->SetContentType('text/html');
 
 try {
 
-/**
- * Check security
- */
-switch ($sOperation) {
 	/**
-	 * Can't use normal check methods (DoLogin for ex) as the datamodel can't be loaded here
-	 * So we're only using a token generated in the restore_token operation
+	 * Check security
 	 */
-	case 'restore_exec':
-		IssueLog::Enable(APPROOT.'log/error.log');
-		if (utils::GetConfig()->Get('demo_mode')) {
-			DisplayErrorAndDie(
-				$oPage,
-				'<div data-error-stimulus="Error">Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the feature is disabled.</div>'
-			);
-		}
+	switch ($sOperation) {
+		/**
+		 * Can't use normal check methods (DoLogin for ex) as the datamodel can't be loaded here
+		 * So we're only using a token generated in the restore_token operation
+		 */
+		case 'restore_exec':
+			IssueLog::Enable(APPROOT.'log/error.log');
+			if (utils::GetConfig()->Get('demo_mode')) {
+				DisplayErrorAndDie(
+					$oPage,
+					'<div data-error-stimulus="Error">Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the feature is disabled.</div>'
+				);
+			}
 
-		$sToken = utils::ReadParam('token', '', false, 'raw_data');
-		$sBasePath = APPROOT.'/data/';
-		$sTokenFile = $sBasePath.'restore.'.$sToken.'.tok';
-		$tokenRealPath = utils::RealPath($sTokenFile, $sBasePath);
-		if (($tokenRealPath === false) || (!is_file($tokenRealPath))) {
-			throw new AjaxBackupException([
-				'backup_operation' => $sOperation,
-				'message' => 'Token file not found',
-				'token' => $sToken,
-			]);
-		}
-		break;
+			$sToken = utils::ReadParam('token', '', false, 'raw_data');
+			$sBasePath = APPROOT.'/data/';
+			$sTokenFile = $sBasePath.'restore.'.$sToken.'.tok';
+			$tokenRealPath = utils::RealPath($sTokenFile, $sBasePath);
+			if (($tokenRealPath === false) || (!is_file($tokenRealPath))) {
+				throw new AjaxBackupException([
+					'backup_operation' => $sOperation,
+					'message' => 'Token file not found',
+					'token' => $sToken,
+				]);
+			}
+			break;
 
-	default:
-		require_once(APPROOT.'/application/startup.inc.php');
-		require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+		default:
+			require_once(APPROOT.'/application/startup.inc.php');
+			require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 
-		LoginWebPage::DoLogin();
+			LoginWebPage::DoLogin();
 
-		$sTransactionId = utils::ReadParam('transaction_id', '', true, 'transaction_id');
-		// the consumer page is not reloaded after download, we need to keep the transaction_id
-		$bRemoveTransactionId = ($sOperation !== 'download');
-		if (!utils::IsTransactionValid($sTransactionId, $bRemoveTransactionId)) {
-			throw new AjaxBackupException([
-				'backup_operation' => $sOperation,
-				'message' => 'Invalid transaction id',
-				'transaction_id' => $sTransactionId,
-			]);
-		}
+			$sTransactionId = utils::ReadParam('transaction_id', '', true, 'transaction_id');
+			// the consumer page is not reloaded after download, we need to keep the transaction_id
+			$bRemoveTransactionId = ($sOperation !== 'download');
+			if (!utils::IsTransactionValid($sTransactionId, $bRemoveTransactionId)) {
+				throw new AjaxBackupException([
+					'backup_operation' => $sOperation,
+					'message' => 'Invalid transaction id',
+					'transaction_id' => $sTransactionId,
+				]);
+			}
 
-		ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
+			ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
 
-		if (utils::GetConfig()->Get('demo_mode')) {
-			DisplayErrorAndDie($oPage, '<div data-error-stimulus="Error">Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the feature is disabled.</div>');
-		}
-		break;
-}
+			if (utils::GetConfig()->Get('demo_mode')) {
+				DisplayErrorAndDie($oPage, '<div data-error-stimulus="Error">Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the feature is disabled.</div>');
+			}
+			break;
+	}
 
 	/**
 	 * Backup from an interactive session
 	 */
 	switch ($sOperation) {
 		case 'backup':
-			try{
+			try {
 				set_time_limit(0);
 				$oBB = new BackupExec(APPROOT.'data/backups/manual/', 0 /*iRetentionCount*/);
 				$sRes = $oBB->Process(time() + 36000); // 10 hours to complete should be sufficient!
 				$oPage->output();
-			}
-			catch(Exception $e){
+			} catch (Exception $e) {
 				throw new AjaxBackupException([
 					'backup_operation' => $sOperation,
 					'message' => $e->getMessage(),
@@ -137,15 +136,15 @@ switch ($sOperation) {
 			}
 			break;
 
-		/*
-		 * Fix a specific token :
-		 *  We can't load the MetaModel because in DBRestore, after restore is done we're launching a compile !
-		 *  So as LoginWebPage::DoLogin needs a loaded DataModel, we can't use it
-		 *  Also, we can't use \utils::IsTransactionValid as it uses \MetaModel::GetConfig
-		 *  As a result we're setting a token file to make sure the restore is called by an authenticated user with the correct rights !
-		 */
+			/*
+			 * Fix a specific token :
+			 *  We can't load the MetaModel because in DBRestore, after restore is done we're launching a compile !
+			 *  So as LoginWebPage::DoLogin needs a loaded DataModel, we can't use it
+			 *  Also, we can't use \utils::IsTransactionValid as it uses \MetaModel::GetConfig
+			 *  As a result we're setting a token file to make sure the restore is called by an authenticated user with the correct rights !
+			 */
 		case 'restore_get_token':
-			$oPage = new JsonPage();
+			$oPage = new JsonPage() ;
 			$oPage->SetOutputDataOnly(true);
 
 			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
@@ -172,10 +171,10 @@ switch ($sOperation) {
 			$oPage->output();
 			break;
 
-		/*
-		 * We can't call \LoginWebPage::DoLogin because DBRestore will do a compile after restoring the DB
-		 * Authentication is checked with a token file (see $sOperation='restore_get_token')
-		 */
+			/*
+			 * We can't call \LoginWebPage::DoLogin because DBRestore will do a compile after restoring the DB
+			 * Authentication is checked with a token file (see $sOperation='restore_get_token')
+			 */
 		case 'restore_exec':
 			require_once(APPROOT."setup/runtimeenv.class.inc.php");
 			require_once(APPROOT.'/application/utils.inc.php');
@@ -201,14 +200,12 @@ switch ($sOperation) {
 				$sRes = $oDBRS->RestoreFromCompressedBackup($sBackupFile, $sEnvironment);
 
 				IssueLog::Info('Backup Restore - Done, releasing the LOCK');
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				throw new AjaxBackupException([
 					'backup_operation' => $sOperation,
 					'message' => $e->getMessage(),
 				], $e);
-			}
-			finally {
+			} finally {
 				unlink($tokenRealPath);
 			}
 
@@ -232,8 +229,7 @@ switch ($sOperation) {
 			$oBackup->DownloadBackup($sBackupFilePath);
 			break;
 	}
-}
-catch (Exception $e) {
+} catch (Exception $e) {
 	// exception handler
 	IssueLog::Error('Unable to perform backup `'.$e->getContextData()['backup_operation'].'` : Invalid backup file path', LogChannels::SECURITY, [
 		'backup_operation' => $e->getContextData()['backup_operation'] ?? null,
