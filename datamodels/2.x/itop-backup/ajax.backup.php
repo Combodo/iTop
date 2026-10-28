@@ -31,6 +31,14 @@ require_once(APPROOT.'core/mutex.class.inc.php');
 
 const BACKUP_DIR = APPROOT.'data/backups/';
 
+class AjaxBackupException extends CoreException
+{
+	public function __construct(array $aContextData = null, Exception $oPreviousException = null)
+	{
+		parent::__construct('Backup/Restore exception occurred', $aContextData, oPrevious: $oPreviousException);
+	}
+}
+
 /**
  * @param WebPage $oPage
  * @param string $sHtmlErrorMessage the whole HTML error, cinluding div/p/...
@@ -52,6 +60,8 @@ $sOperation = utils::ReadParam('operation', '');
 
 $oPage = new AjaxPage('');
 $oPage->SetContentType('text/html');
+
+try {
 
 /**
  * Check security
@@ -75,11 +85,12 @@ switch ($sOperation) {
 		$sTokenFile = $sBasePath.'restore.'.$sToken.'.tok';
 		$tokenRealPath = utils::RealPath($sTokenFile, $sBasePath);
 		if (($tokenRealPath === false) || (!is_file($tokenRealPath))) {
-			IssueLog::Error("ajax.backup.php operation=$sOperation ERROR = inexisting token $sToken");
-			$sEscapedToken = utils::HtmlEntities($sToken);
-			DisplayErrorAndDie($oPage, "<p>Error: missing token file: '$sEscapedToken'</p>");
+			throw new AjaxBackupException([
+				'backup_operation' => $sOperation,
+				'message' => 'Token file not found',
+				'token' => $sToken,
+			]);
 		}
-
 		break;
 
 	default:
@@ -92,8 +103,11 @@ switch ($sOperation) {
 		// the consumer page is not reloaded after download, we need to keep the transaction_id
 		$bRemoveTransactionId = ($sOperation !== 'download');
 		if (!utils::IsTransactionValid($sTransactionId, $bRemoveTransactionId)) {
-			$sEscapedOperation = utils::HtmlEntities($sOperation);
-			DisplayErrorAndDie($oPage, "<div data-error-stimulus=\"Error\">Error: invalid Transaction ID. The operation '$sEscapedOperation' was NOT performed!</div>");
+			throw new AjaxBackupException([
+				'backup_operation' => $sOperation,
+				'message' => 'Invalid transaction id',
+				'transaction_id' => $sTransactionId,
+			]);
 		}
 
 		ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
@@ -104,23 +118,23 @@ switch ($sOperation) {
 		break;
 }
 
-/**
- * Backup from an interactive session
- */
-try {
+	/**
+	 * Backup from an interactive session
+	 */
 	switch ($sOperation) {
 		case 'backup':
-			try {
+			try{
 				set_time_limit(0);
 				$oBB = new BackupExec(APPROOT.'data/backups/manual/', 0 /*iRetentionCount*/);
 				$sRes = $oBB->Process(time() + 36000); // 10 hours to complete should be sufficient!
+				$oPage->output();
 			}
-			catch (Exception $e) {
-				$oPage->p('Error: '.$e->getMessage());
-				IssueLog::Error($sOperation.' - '.$e->getMessage());
+			catch(Exception $e){
+				throw new AjaxBackupException([
+					'backup_operation' => $sOperation,
+					'message' => $e->getMessage(),
+				], $e);
 			}
-
-			$oPage->output();
 			break;
 
 		/*
@@ -143,9 +157,10 @@ try {
 			$sFile = utils::ReadParam('file', '', false, 'raw_data');
 			$sBackupFilePath = utils::RealPath(BACKUP_DIR.$sFile, BACKUP_DIR);
 			if ($sBackupFilePath === false) {
-				throw new CoreUnexpectedValue('Unable to perform restore, invalid backup file path', [
+				throw new AjaxBackupException([
 					'backup_operation' => $sOperation,
-					'backup_file_path' => BACKUP_DIR.$sFile,
+					'message' => 'Invalid backup file path',
+					'backup_file' => $sFile,
 				]);
 			}
 
@@ -188,8 +203,10 @@ try {
 				IssueLog::Info('Backup Restore - Done, releasing the LOCK');
 			}
 			catch (Exception $e) {
-				$oPage->p('Error: '.$e->getMessage());
-				IssueLog::Error($sOperation.' - '.$e->getMessage());
+				throw new AjaxBackupException([
+					'backup_operation' => $sOperation,
+					'message' => $e->getMessage(),
+				], $e);
 			}
 			finally {
 				unlink($tokenRealPath);
@@ -206,21 +223,22 @@ try {
 			$oBackup = new DBBackupScheduled();
 			$sBackupFilePath = utils::RealPath(BACKUP_DIR.$sFile, BACKUP_DIR);
 			if ($sBackupFilePath === false) {
-				throw new CoreUnexpectedValue('Unable to perform backup, invalid backup file path', [
+				throw new AjaxBackupException([
 					'backup_operation' => $sOperation,
-					'backup_file_path' => BACKUP_DIR.$sFile,
+					'message' => 'Invalid backup file path',
+					'backup_file' => $sFile,
 				]);
 			}
 			$oBackup->DownloadBackup($sBackupFilePath);
 			break;
 	}
 }
-catch (CoreUnexpectedValue $e) {
+catch (Exception $e) {
+	// exception handler
 	IssueLog::Error('Unable to perform backup `'.$e->getContextData()['backup_operation'].'` : Invalid backup file path', LogChannels::SECURITY, [
 		'backup_operation' => $e->getContextData()['backup_operation'] ?? null,
 		'backup_file_path' => $e->getContextData()['backup_file_path'] ?? null,
 	]);
-}
-catch (Exception $e) {
-	IssueLog::Error($sOperation.' - '.$e->getMessage());
+	http_response_code(500);
+	die($e->getCode());
 }
