@@ -57,7 +57,12 @@ class ModelReflectionSerializer
 		$sPHPExec = trim(utils::GetConfig()->Get('php_path'));
 		$aOutput = null;
 		$iRes = 0;
-		$sCommandLine = sprintf("$sPHPExec %s/get_model_reflection.php --env=%s", __DIR__, escapeshellarg($sEnv));
+		$sCommandLine = sprintf(
+			'%s %s --env=%s',
+			escapeshellarg($sPHPExec),
+			escapeshellarg(__DIR__.'/get_model_reflection.php'),
+			escapeshellarg($sEnv)
+		);
 		exec($sCommandLine, $aOutput, $iRes);
 		if ($iRes != 0) {
 			$sError = $aOutput[0] ?? 'Invalid output when serializing model';
