@@ -59,7 +59,7 @@ class ModelReflectionSerializer
 		$iRes = 0;
 		$sCommandLine = sprintf(
 			'%s %s --env=%s',
-			escapeshellarg($sPHPExec),
+			$sPHPExec,
 			escapeshellarg(__DIR__.'/get_model_reflection.php'),
 			escapeshellarg($sEnv)
 		);
