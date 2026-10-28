@@ -85,12 +85,13 @@ if (function_exists('ldap_connect')) {
 
 			$aServers = $oConfiguration->GetModuleSetting('authent-ldap', 'servers', []);
 			foreach ($aServers as &$aServer) {
-				if (!array_key_exists($aServer, 'uri')) {
-					$sLDAPHost = $aServerParams['host'] ?? 'localhost';
-					$iLDAPPort = $aServerParams['port'] ?? 389;
+				if (!array_key_exists('uri', $aServer)) {
+					$sLDAPHost = $aServer['host'] ?? 'localhost';
+					$iLDAPPort = $aServer['port'] ?? 389;
 					$aServer['uri'] = preg_match('#^ldaps?://#i', $sLDAPHost) ? $sLDAPHost : 'ldap://'.$sLDAPHost.':'.$iLDAPPort;
 				}
 			}
+			unset($aServer);
 			$oConfiguration->SetModuleSetting('authent-ldap', 'servers', $aServers);
 		}
 	}
