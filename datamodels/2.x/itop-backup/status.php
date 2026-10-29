@@ -443,6 +443,13 @@ function LaunchBackupNow()
 				window.location.reload();
 			}
 			oModal.dialog('close');
+		}).fail(function(xhr){
+			var sErrorMessage = xhr.status === 500
+				? (xhr.responseText || 'Erreur serveur (HTTP 500).')
+				: (xhr.responseText || 'Erreur HTTP ' + xhr.status + '.');
+			$('#backup_errors').text(sErrorMessage);
+			$('#backup_errors').removeClass('ibo-is-hidden');
+			oModal.dialog('close');
 		});
 	}
 }
@@ -487,11 +494,25 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 					$('#backup_success').removeClass('ibo-is-hidden');
 				}
 				oModal.dialog('close');
+			}).fail(function(xhr){
+				var sErrorMessage = xhr.status === 500
+					? (xhr.responseText || 'Erreur serveur (HTTP 500).')
+					: (xhr.responseText || 'Erreur HTTP ' + xhr.status + '.');
+				$('#backup_errors').text(sErrorMessage);
+				$('#backup_errors').removeClass('ibo-is-hidden');
+				oModal.dialog('close');
 			});
 		} else {
 			$('button.restore').prop('disabled', true);
 			oModal.dialog('close');
 		}
+	}).fail(function(xhr){
+		var sErrorMessage = xhr.status === 500
+			? (xhr.responseText || 'Erreur serveur (HTTP 500).')
+			: (xhr.responseText || 'Erreur HTTP ' + xhr.status + '.');
+		$('#backup_errors').text(sErrorMessage);
+		$('#backup_errors').removeClass('ibo-is-hidden');
+		oModal.dialog('close');
 	});
 }
 JS

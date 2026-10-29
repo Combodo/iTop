@@ -87,8 +87,8 @@ try {
 			if (($tokenRealPath === false) || (!is_file($tokenRealPath))) {
 				throw new AjaxBackupException([
 					'backup_operation' => $sOperation,
-					'message' => 'Token file not found',
-					'token' => $sToken,
+					'message'          => 'Token file not found',
+					'token'            => $sToken,
 				]);
 			}
 			break;
@@ -105,8 +105,8 @@ try {
 			if (!utils::IsTransactionValid($sTransactionId, $bRemoveTransactionId)) {
 				throw new AjaxBackupException([
 					'backup_operation' => $sOperation,
-					'message' => 'Invalid transaction id',
-					'transaction_id' => $sTransactionId,
+					'message'          => 'Invalid transaction id',
+					'transaction_id'   => $sTransactionId,
 				]);
 			}
 
@@ -128,23 +128,24 @@ try {
 				$oBB = new BackupExec(APPROOT.'data/backups/manual/', 0 /*iRetentionCount*/);
 				$sRes = $oBB->Process(time() + 36000); // 10 hours to complete should be sufficient!
 				$oPage->output();
-			} catch (Exception $e) {
+			}
+			catch (Exception $e) {
 				throw new AjaxBackupException([
 					'backup_operation' => $sOperation,
-					'message' => $e->getMessage(),
+					'message'          => $e->getMessage(),
 				], $e);
 			}
 			break;
 
-			/*
-			 * Fix a specific token :
-			 *  We can't load the MetaModel because in DBRestore, after restore is done we're launching a compile !
-			 *  So as LoginWebPage::DoLogin needs a loaded DataModel, we can't use it
-			 *  Also, we can't use \utils::IsTransactionValid as it uses \MetaModel::GetConfig
-			 *  As a result we're setting a token file to make sure the restore is called by an authenticated user with the correct rights !
-			 */
+		/*
+		 * Fix a specific token :
+		 *  We can't load the MetaModel because in DBRestore, after restore is done we're launching a compile !
+		 *  So as LoginWebPage::DoLogin needs a loaded DataModel, we can't use it
+		 *  Also, we can't use \utils::IsTransactionValid as it uses \MetaModel::GetConfig
+		 *  As a result we're setting a token file to make sure the restore is called by an authenticated user with the correct rights !
+		 */
 		case 'restore_get_token':
-			$oPage = new JsonPage() ;
+			$oPage = new JsonPage();
 			$oPage->SetOutputDataOnly(true);
 
 			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
@@ -158,8 +159,8 @@ try {
 			if ($sBackupFilePath === false) {
 				throw new AjaxBackupException([
 					'backup_operation' => $sOperation,
-					'message' => 'Invalid backup file path',
-					'backup_file' => $sFile,
+					'message'          => 'Invalid backup file path',
+					'backup_file'      => $sFile,
 				]);
 			}
 
@@ -171,10 +172,10 @@ try {
 			$oPage->output();
 			break;
 
-			/*
-			 * We can't call \LoginWebPage::DoLogin because DBRestore will do a compile after restoring the DB
-			 * Authentication is checked with a token file (see $sOperation='restore_get_token')
-			 */
+		/*
+		 * We can't call \LoginWebPage::DoLogin because DBRestore will do a compile after restoring the DB
+		 * Authentication is checked with a token file (see $sOperation='restore_get_token')
+		 */
 		case 'restore_exec':
 			require_once(APPROOT."setup/runtimeenv.class.inc.php");
 			require_once(APPROOT.'/application/utils.inc.php');
@@ -200,12 +201,14 @@ try {
 				$sRes = $oDBRS->RestoreFromCompressedBackup($sBackupFile, $sEnvironment);
 
 				IssueLog::Info('Backup Restore - Done, releasing the LOCK');
-			} catch (Exception $e) {
+			}
+			catch (Exception $e) {
 				throw new AjaxBackupException([
 					'backup_operation' => $sOperation,
-					'message' => $e->getMessage(),
+					'message'          => $e->getMessage(),
 				], $e);
-			} finally {
+			}
+			finally {
 				unlink($tokenRealPath);
 			}
 
@@ -222,19 +225,24 @@ try {
 			if ($sBackupFilePath === false) {
 				throw new AjaxBackupException([
 					'backup_operation' => $sOperation,
-					'message' => 'Invalid backup file path',
-					'backup_file' => $sFile,
+					'message'          => 'Invalid backup file path',
+					'backup_file'      => $sFile,
 				]);
 			}
 			$oBackup->DownloadBackup($sBackupFilePath);
 			break;
 	}
-} catch (Exception $e) {
-	// exception handler
-	IssueLog::Error('Unable to perform backup `'.$e->getContextData()['backup_operation'].'` : Invalid backup file path', LogChannels::SECURITY, [
+}
+catch (CoreException $e) {
+	IssueLog::Error('Unable to perform backup `'.$e->getContextData()['backup_operation'].'` : '.$e->getContextData()['message'], LogChannels::SECURITY, [
 		'backup_operation' => $e->getContextData()['backup_operation'] ?? null,
 		'backup_file_path' => $e->getContextData()['backup_file_path'] ?? null,
 	]);
 	http_response_code(500);
-	die($e->getCode());
+	die(Dict::S('UI:PageTitle:FatalError'));
+}
+catch (Exception $e) {
+	IssueLog::Error($e->getMessage());
+	http_response_code(500);
+	die(Dict::S('UI:PageTitle:FatalError'));
 }
