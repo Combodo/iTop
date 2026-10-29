@@ -39,6 +39,14 @@ class AjaxBackupException extends CoreException
 	}
 }
 
+class AjaxBackupInvalidFileException extends AjaxBackupException
+{
+	public function __construct(array $aContextData = null, Exception $oPreviousException = null)
+	{
+		parent::__construct($aContextData, oPreviousException: $oPreviousException);
+	}
+}
+
 /**
  * @param WebPage $oPage
  * @param string $sHtmlErrorMessage the whole HTML error, cinluding div/p/...
@@ -85,9 +93,9 @@ try {
 			$sTokenFile = $sBasePath.'restore.'.$sToken.'.tok';
 			$tokenRealPath = utils::RealPath($sTokenFile, $sBasePath);
 			if (($tokenRealPath === false) || (!is_file($tokenRealPath))) {
-				throw new AjaxBackupException([
+				throw new AjaxBackupInvalidFileException([
 					'backup_operation' => $sOperation,
-					'message'          => 'Token file not found',
+					'message'          => 'Could not restore backup, invalid token file.',
 					'token'            => $sToken,
 				]);
 			}
@@ -157,9 +165,9 @@ try {
 			$sFile = utils::ReadParam('file', '', false, 'raw_data');
 			$sBackupFilePath = utils::RealPath(BACKUP_DIR.$sFile, BACKUP_DIR);
 			if ($sBackupFilePath === false) {
-				throw new AjaxBackupException([
+				throw new AjaxBackupInvalidFileException([
 					'backup_operation' => $sOperation,
-					'message'          => 'Invalid backup file path',
+					'message'          => 'Could not restore backup, invalid file given.',
 					'backup_file'      => $sFile,
 				]);
 			}
@@ -223,9 +231,9 @@ try {
 			$oBackup = new DBBackupScheduled();
 			$sBackupFilePath = utils::RealPath(BACKUP_DIR.$sFile, BACKUP_DIR);
 			if ($sBackupFilePath === false) {
-				throw new AjaxBackupException([
+				throw new AjaxBackupInvalidFileException([
 					'backup_operation' => $sOperation,
-					'message'          => 'Invalid backup file path',
+					'message'          => 'Could not download backup, invalid file given.',
 					'backup_file'      => $sFile,
 				]);
 			}
@@ -233,10 +241,18 @@ try {
 			break;
 	}
 }
-catch (CoreException $e) {
-	IssueLog::Error('Unable to perform backup `'.$e->getContextData()['backup_operation'].'` : '.$e->getContextData()['message'], LogChannels::SECURITY, [
+catch (AjaxBackupInvalidFileException $e) {
+	IssueLog::Warning('Unable to perform backup `'.$e->getContextData()['backup_operation'].'` : '.$e->getContextData()['message'], LogChannels::SECURITY, [
 		'backup_operation' => $e->getContextData()['backup_operation'] ?? null,
-		'backup_file_path' => $e->getContextData()['backup_file_path'] ?? null,
+		'backup_file'      => $e->getContextData()['backup_file'] ?? null,
+	]);
+	http_response_code(422);
+	die($e->getContextData()['message']);
+}
+catch (CoreException $e) {
+	IssueLog::Error('Unable to perform backup `'.$e->getContextData()['backup_operation'].'` : '.$e->getContextData()['message'], LogChannels::BACKUP, [
+		'backup_operation' => $e->getContextData()['backup_operation'] ?? null,
+		'backup_file'      => $e->getContextData()['backup_file'] ?? null,
 	]);
 	http_response_code(500);
 	die(Dict::S('UI:PageTitle:FatalError'));
