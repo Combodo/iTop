@@ -119,29 +119,25 @@ class DBRestore extends DBBackup
 			IssueLog::Info('Backup Restore - LOCK acquired, executing...');
 			$bReadonlyBefore = SetupUtils::EnterMaintenanceMode(MetaModel::GetConfig());
 
+			$sDataDir = static::GetTmpDir($this->oConfig); // Here is the directory
+
 			try {
 				//safe zone for db backup => cron is stopped/ itop in readonly
 				$this->LogInfo("Starting restore of ".basename($sFile));
 
 				$sNormalizedFile = strtolower(basename($sFile));
-				if (substr($sNormalizedFile, -4) == '.zip') {
-					$this->LogInfo('zip file detected');
-					$oArchive = new ZipArchiveEx();
-					$oArchive->open($sFile);
-				} elseif (substr($sNormalizedFile, -7) == '.tar.gz') {
+				if (str_ends_with($sNormalizedFile, '.tar.gz')) {
 					$this->LogInfo('tar.gz file detected');
 					$oArchive = new TarGzArchive($sFile);
+					if (!$oArchive->extractTo($sDataDir)) {
+						throw new BackupException('Failed to extract archive.');
+					}
 				} else {
 					throw new BackupException('Unsupported format for a backup file: '.$sFile);
 				}
 
 				// Load the database
 				//
-				$sDataDir = APPROOT.'data/tmp-backup-'.rand(10000, getrandmax());
-
-				SetupUtils::builddir($sDataDir); // Here is the directory
-				$oArchive->extractTo($sDataDir);
-
 				$sDataFile = $sDataDir.'/itop-dump.sql';
 				$this->LoadDatabase($sDataFile);
 
@@ -177,12 +173,6 @@ class DBRestore extends DBBackup
 					rename($sSourceFilePath, $sDestinationFilePath);
 				}
 
-				try {
-					SetupUtils::rrmdir($sDataDir);
-				} catch (Exception $e) {
-					throw new BackupException("Can't remove data dir", 0, $e);
-				}
-
 				$oEnvironment = new RunTimeEnvironment($sEnvironment);
 				$oEnvironment->CompileFrom($sEnvironment);
 			} finally {
@@ -191,6 +181,12 @@ class DBRestore extends DBBackup
 				} else {
 					//we are in the scope of main process that needs to handle/keep readonly mode.
 					$this->LogInfo("Keep maintenance mode after restore");
+				}
+
+				try {
+					SetupUtils::rrmdir($sDataDir);
+				} catch (Exception $e) {
+					throw new BackupException("Can't remove tmp folder", previous: $e);
 				}
 			}
 		} finally {
