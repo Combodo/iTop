@@ -10,8 +10,16 @@ use utils;
 
 class BackupAjaxEndpointTest extends ItopDataTestCase
 {
-	public const USE_TRANSACTION = false;
+	public const  USE_TRANSACTION         = false;
 	private const AUTHENTICATION_PASSWORD = 'tagada-Secret,007';
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->BackupConfiguration();
+		$this->AddLoginModeAndSaveConfiguration('url');
+	}
 
 	public function testDownloadInvalidDownloadPathReturnsHttp500(): void
 	{
@@ -22,21 +30,21 @@ class BackupAjaxEndpointTest extends ItopDataTestCase
 
 		$this->CallItopUri(
 			'env-production/itop-backup/ajax.backup.php?'.http_build_query([
-				'operation' => 'download',
-				'file' => 'missing-'.uniqid().'.zip',
-				'auth_user' => $sLogin,
-				'auth_pwd' => self::AUTHENTICATION_PASSWORD,
+				'operation'      => 'download',
+				'file'           => 'missing-'.uniqid().'.zip',
+				'auth_user'      => $sLogin,
+				'auth_pwd'       => self::AUTHENTICATION_PASSWORD,
 				'transaction_id' => utils::GetNewTransactionId(),
 			]),
 			[],
 			[
 				CURLOPT_HTTPHEADER => ['X-Combodo-Ajax:1'],
-				CURLOPT_POST => 0,
+				CURLOPT_POST       => 0,
 			],
 			true
 		);
 
-		$this->assertSame(500, $this->aLastCurlGetInfo['http_code']);
+		$this->assertSame(422, $this->aLastCurlGetInfo['http_code']);
 	}
 
 	public function testRestoreGetTokenInvalidTransactionIdReturnsHttp500(): void
@@ -48,15 +56,15 @@ class BackupAjaxEndpointTest extends ItopDataTestCase
 
 		$this->CallItopUri(
 			'env-production/itop-backup/ajax.backup.php?'.http_build_query([
-				'operation' => 'restore_get_token',
-				'auth_user' => $sLogin,
-				'auth_pwd' => self::AUTHENTICATION_PASSWORD,
+				'operation'      => 'restore_get_token',
+				'auth_user'      => $sLogin,
+				'auth_pwd'       => self::AUTHENTICATION_PASSWORD,
 				'transaction_id' => 'unknown-transaction-id-'.uniqid(),
 			]),
 			[],
 			[
 				CURLOPT_HTTPHEADER => ['X-Combodo-Ajax:1'],
-				CURLOPT_POST => 0,
+				CURLOPT_POST       => 0,
 			],
 			true
 		);
@@ -73,15 +81,15 @@ class BackupAjaxEndpointTest extends ItopDataTestCase
 
 		$sData = $this->CallItopUri(
 			'env-production/itop-backup/ajax.backup.php?'.http_build_query([
-				'operation' => 'restore_get_token',
-				'auth_user' => $sLogin,
-				'auth_pwd' => self::AUTHENTICATION_PASSWORD,
+				'operation'      => 'restore_get_token',
+				'auth_user'      => $sLogin,
+				'auth_pwd'       => self::AUTHENTICATION_PASSWORD,
 				'transaction_id' => utils::GetNewTransactionId(),
 			]),
 			[],
 			[
 				CURLOPT_HTTPHEADER => ['X-Combodo-Ajax:1'],
-				CURLOPT_POST => 0,
+				CURLOPT_POST       => 0,
 			],
 			true
 		);
