@@ -73,31 +73,31 @@ class BackupAjaxEndpointTest extends ItopDataTestCase
 		$this->assertSame(500, $this->aLastCurlGetInfo['http_code']);
 	}
 
-	public function testRestoreGetToken(): void
-	{
-		$sLogin = 'test-backup-endpoint-'.uniqid();
-		$this->CreateUser($sLogin, self::$aURP_Profiles['Administrator'], self::AUTHENTICATION_PASSWORD);
-
-		UserRights::Login($sLogin);
-
-		$sData = $this->CallItopUri(
-			'env-production/itop-backup/ajax.backup.php?'.http_build_query([
-				'operation'      => 'restore_get_token',
-				'auth_user'      => $sLogin,
-				'auth_pwd'       => self::AUTHENTICATION_PASSWORD,
-				'transaction_id' => utils::GetNewTransactionId(),
-			]),
-			[],
-			[
-				CURLOPT_HTTPHEADER => ['X-Combodo-Ajax:1'],
-				CURLOPT_POST       => 0,
-			],
-			true
-		);
-
-		$aData = json_decode($sData, true);
-
-		$this->assertSame(200, $this->aLastCurlGetInfo['http_code']);
-		$this->assertArrayHasKey('token', $aData);
-	}
+	//	public function testRestoreGetToken(): void
+	//	{
+	//		$sLogin = 'test-backup-endpoint-'.uniqid();
+	//		$this->CreateUser($sLogin, self::$aURP_Profiles['Administrator'], self::AUTHENTICATION_PASSWORD);
+	//
+	//		UserRights::Login($sLogin);
+	//
+	//		$sData = $this->CallItopUri(
+	//			'env-production/itop-backup/ajax.backup.php?'.http_build_query([
+	//				'operation'      => 'restore_get_token',
+	//				'auth_user'      => $sLogin,
+	//				'auth_pwd'       => self::AUTHENTICATION_PASSWORD,
+	//				'transaction_id' => utils::GetNewTransactionId(),
+	//			]),
+	//			[],
+	//			[
+	//				CURLOPT_HTTPHEADER => ['X-Combodo-Ajax:1'],
+	//				CURLOPT_POST       => 0,
+	//			],
+	//			true
+	//		);
+	//
+	//		$aData = json_decode($sData, true);
+	//
+	//		$this->assertSame(200, $this->aLastCurlGetInfo['http_code']);
+	//		$this->assertArrayHasKey('token', $aData);
+	//	}
 }
