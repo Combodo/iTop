@@ -17,9 +17,11 @@ use Combodo\iTop\Service\Base\ObjectRepository;
 use Combodo\iTop\Service\Router\Router;
 use CoreException;
 use DBObject;
+use DBObjectSet;
 use Dict;
 use Exception;
 use MetaModel;
+use SecurityException;
 use UserRights;
 use utils;
 
@@ -58,7 +60,11 @@ class LinkSetController extends AbstractController
 		// check transaction id
 		if (utils::IsTransactionValid($sTransactionId, false)) {
 			try {
-				$oDeletionPlan = MetaModel::GetObject($sLinkedObjectClass, $sLinkedObjectObjectKey)->DBDelete();
+				$oLinkedObject = MetaModel::GetObject($sLinkedObjectClass, $sLinkedObjectObjectKey);
+				if (UserRights::IsActionAllowed($sLinkedObjectClass, UR_ACTION_DELETE, DBObjectSet::FromObject($oLinkedObject)) !== UR_ALLOWED_YES) {
+					throw new SecurityException('You are not allowed to delete this object.');
+				}
+				$oDeletionPlan = $oLinkedObject->DBDelete();
 				$bOperationSuccess = (count($oDeletionPlan->GetIssues()) === 0);
 				if (!$bOperationSuccess) {
 					$sErrorMessage = json_encode($oDeletionPlan->GetIssues());
@@ -103,6 +109,9 @@ class LinkSetController extends AbstractController
 		if (utils::IsTransactionValid($sTransactionId, false)) {
 			try {
 				$oLinkedObject = MetaModel::GetObject($sLinkedObjectClass, $sLinkedObjectKey);
+				if (UserRights::IsActionAllowed($sLinkedObjectClass, UR_ACTION_MODIFY, DBObjectSet::FromObject($oLinkedObject)) !== UR_ALLOWED_YES) {
+					throw new SecurityException('User not allowed to modify this object');
+				}
 				$oLinkedObject->Set($sExternalKeyAttCode, null);
 				$oLinkedObject->DBWrite();
 				$bOperationSuccess = true;
