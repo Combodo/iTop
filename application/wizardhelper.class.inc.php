@@ -35,10 +35,14 @@ class WizardHelper
 	public function __construct()
 	{
 	}
+
 	/**
 	 * Constructs the PHP target object from the parameters sent to the web page by the wizard
+	 *
 	 * @param boolean $bReadUploadedFiles True to also read any uploaded file (for blob/document fields)
+	 *
 	 * @return object
+	 * @throws CoreException
 	 */
 	public function GetTargetObject($bReadUploadedFiles = false)
 	{
@@ -57,7 +61,14 @@ class WizardHelper
 					// assumes this is handled as an array of objects
 					// thus encoded in json like: [ { name:'link1', 'id': 123}, { name:'link2', 'id': 124}...]
 					if (!is_array($value)) {
-						$aData = json_decode($value, true); // true means decode as a hash array (not an object)
+						try{
+							$aData = json_decode($value, associative: true,  flags: JSON_THROW_ON_ERROR); // true means decode as a hash array (not an object)
+						} catch (JsonException $e) {
+							throw new CoreException('WizardHelper GetTargetObject: invalid data for linked set attribute '.$sAttCode.' of class '.$this->m_aData['m_sClass'], [
+								'att_code' => $sAttCode,
+								'linked_class' => $this->m_aData['m_sClass'],
+							], 'Invalid JSON data', $e);
+						}
 					} else {
 						$aData = $value;
 					}
@@ -66,9 +77,6 @@ class WizardHelper
 					$aFields = $this->GetLinkedWizardStructure($oAttDef);
 					$sLinkedClass = $oAttDef->GetLinkedClass();
 					$aLinkedObjectsArray = [];
-					if (!is_array($aData)) {
-						echo("aData: '$aData' (value: '$value')\n");
-					}
 					foreach ($aData as $aLinkedObject) {
 						$oLinkedObj = MetaModel::NewObject($sLinkedClass);
 						foreach ($aFields as $sLinkedAttCode) {
