@@ -308,6 +308,15 @@ EOF
 						} elseif ($oAttDef instanceof AttributeTagSet) {
 							$sField = utils::HtmlEntities($oObj->GetAsCSV($sAttCode, $this->bLocalizeOutput, ''));
 							$sData .= "<td x:str>$sField</td>";
+						} else if ($oAttDef instanceof AttributeLinkedSet) {
+							if ($this->bLocalizeOutput) {
+								/** @var \ormLinkSet $oLinkSet */
+								$oLinkSet = $oObj->Get($sAttCode);
+								$sField = implode('<br/>', $oLinkSet->GetLabels());
+							} else {
+								$sField = $oObj->GetEditValue($sAttCode);
+							}
+							$sData .= "<td x:str>$sField</td>";
 						} else {
 							$rawValue = $oObj->Get($sAttCode);
 							if ($this->bLocalizeOutput) {
