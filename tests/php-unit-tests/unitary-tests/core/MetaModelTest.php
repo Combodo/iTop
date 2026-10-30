@@ -171,7 +171,7 @@ class MetaModelTest extends ItopDataTestCase
 	 *
 	 * @throws \Exception
 	 */
-	public function testApplyParamsSanitization($sInput, $aParams, $sExpectedOutput, string $sApplySanitizeMode = 'sanitize_auto', bool $bSecurityFlagDisabled = true)
+	public function testApplyParamsSanitization($sInput, $aParams, $sExpectedOutput, string $sApplySanitizeMode = MetaModel::APPLY_PARAMS_SANITIZE_AUTO, bool $bSecurityFlagDisabled = true)
 	{
 		utils::GetConfig()->Set('security.disable_apply_params_auto_sanitization', $bSecurityFlagDisabled);
 
