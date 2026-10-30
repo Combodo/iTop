@@ -179,6 +179,11 @@ class ValueSetObjects extends ValueSetDefinition
 		return new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);
 	}
 
+	public function RemoveLoaded()
+	{
+		$this->m_bIsLoaded = false;
+	}
+
 	/**
 	 * @inheritDoc
 	 * @throws CoreException
