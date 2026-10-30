@@ -28,7 +28,7 @@ class BackupAjaxEndpointTest extends ItopDataTestCase
 
 		UserRights::Login($sLogin);
 
-		$this->CallItopUri(
+		$testCurlResult = $this->CallItopUri(
 			'env-production/itop-backup/ajax.backup.php?'.http_build_query([
 				'operation'      => 'download',
 				'file'           => 'missing-'.uniqid().'.zip',
@@ -43,6 +43,8 @@ class BackupAjaxEndpointTest extends ItopDataTestCase
 			],
 			true
 		);
+
+		echo $testCurlResult;
 
 		$this->assertSame(422, $this->aLastCurlGetInfo['http_code']);
 	}
