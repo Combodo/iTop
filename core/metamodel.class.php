@@ -117,6 +117,11 @@ define('MYSQL_ENGINE', 'innodb');
  */
 abstract class MetaModel
 {
+	/** Constants used for apply param function sanitization parameter */
+	public const APPLY_PARAMS_SANITIZE_AUTO = 'sanitize_auto';
+	public const APPLY_PARAMS_SANITIZE_HTML = 'sanitize_html';
+	public const APPLY_PARAMS_SANITIZE_NONE = 'sanitize_none';
+
 	///////////////////////////////////////////////////////////////////////////
 	//
 	// STATIC Members
@@ -6732,16 +6737,17 @@ abstract class MetaModel
 	 *   * foo->bar : Another static placeholder
 	 *   * foo->object() : Will be developed into a set of placeholders depending on the attribute of the given \DBObject and their corresponding transformation methods {@see \AttributeDefinition::GetForTemplate()}
 	 *                     Example: foo->hyperlink(), foo->name, foo->html(name), foo->head(log), foo->head_html(log), ...
-	 * @param string $sApplySanitizeMode One of [auto,html,none] to specify if the result should be sanitized or not. Default is 'auto' which means that the result will be sanitized if it is HTML and if the configuration option security.disable_apply_params_auto_sanitization is not set to true.
+	 * @param string $sApplySanitizeMode Allowed values are one of {@see self::APPLY_PARAMS_SANITIZE_AUTO}, {@see self::APPLY_PARAMS_SANITIZE_HTML}, {@see self::APPLY_PARAMS_SANITIZE_NONE}. Default is {@see self::APPLY_PARAMS_SANITIZE_AUTO}, which means that the result will be sanitized if it is
+	 *     HTML and if the configuration option security.disable_apply_params_auto_sanitization is not set to true.
 	 *
 	 * @link https://www.itophub.io/wiki/page?id=latest:admin:placeholders
 	 * @return string
 	 *
 	 * @throws \Exception
 	 */
-	public static function ApplyParams($sInput, $aParams, string $sApplySanitizeMode = 'sanitize_auto')
+	public static function ApplyParams($sInput, $aParams, string $sApplySanitizeMode = self::APPLY_PARAMS_SANITIZE_AUTO)
 	{
-		if(in_array($sApplySanitizeMode, ['sanitize_auto', 'sanitize_html', 'sanitize_none'], true) === false) {
+		if (in_array($sApplySanitizeMode, [self::APPLY_PARAMS_SANITIZE_AUTO, self::APPLY_PARAMS_SANITIZE_HTML, self::APPLY_PARAMS_SANITIZE_NONE], true) === false) {
 			throw new CoreException('Invalid value for $sApplySanitizeMode parameter', ['value' => $sApplySanitizeMode]);
 		}
 
@@ -6835,8 +6841,8 @@ abstract class MetaModel
 		$sTemplate = str_replace($aSearches, $aReplacements, $sInput);
 
 		// HTML sanitization
-		if ($sApplySanitizeMode === 'sanitize_html'
-		|| ($sApplySanitizeMode === 'sanitize_auto' && !utils::GetConfig()->Get('security.disable_apply_params_auto_sanitization') && self::StartsWithHtmlDocumentMarkup($sTemplate))) {
+		if ($sApplySanitizeMode === self::APPLY_PARAMS_SANITIZE_HTML
+			|| ($sApplySanitizeMode === self::APPLY_PARAMS_SANITIZE_AUTO && !utils::GetConfig()->Get('security.disable_apply_params_auto_sanitization') && self::StartsWithHtmlDocumentMarkup($sTemplate))) {
 			$sTemplate = DOMSanitizer::Sanitize($sTemplate);
 		}
 
@@ -6858,8 +6864,8 @@ abstract class MetaModel
 
 		$bInitialUseInternalErrorsFlag = libxml_use_internal_errors(true);
 
-		$dom = new DOMDocument();
-		$ok = $dom->loadHTML(
+		$oDom = new DOMDocument();
+		$ok = $oDom->loadHTML(
 			'<!DOCTYPE html><html><body>'.$sText.'</body></html>',
 			LIBXML_NOWARNING | LIBXML_NOERROR
 		);
@@ -6872,7 +6878,7 @@ abstract class MetaModel
 		}
 
 		// Si on trouve des balises "réelles" dans le body, on considère qu'il y a du HTML
-		$body = $dom->getElementsByTagName('body')->item(0);
+		$body = $oDom->getElementsByTagName('body')->item(0);
 		if (!$body) {
 			return false;
 		}
