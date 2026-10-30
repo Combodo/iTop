@@ -229,7 +229,7 @@ try {
 			$oBlock->Display($oP, 1);
 			$oP->p("</div>");
 			$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey();
-			$oP->add_ready_script("$('a[href*=\"pages/UI.php?operation=search\"]').attr('href', '".$sExportUrl."')");
+			$oP->add_ready_script("$('a[href*=\"pages/UI.php?operation=search\"]').attr('href', '".$sExportUrl."');");
 			break;
 
 		case 'selection':
