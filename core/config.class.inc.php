@@ -1787,6 +1787,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+		'security.disable_apply_params_auto_sanitization' => [
+			'type' => 'bool',
+			'description' => 'If true then the apply param function of the metamodel will not AUTOMATICALLY sanitize the parameters, it will still be sanitized when explicitly requested by the consumer.',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'behind_reverse_proxy' => [
 			'type' => 'bool',
 			'description' => 'If true, then proxies custom header (X-Forwarded-*) are taken into account. Use only if the webserver is not publicly accessible (reachable only by the reverse proxy)',
