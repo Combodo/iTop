@@ -86,52 +86,36 @@ class BackupAjaxEndpointTest extends ItopDataTestCase
 		}
 		$sBackupFile = 'backup-'.uniqid().'.zip';
 		$sBackupPath = $sBackupDirectory.$sBackupFile;
-		$sTokenFile = null;
 		$oArchive = new \ZipArchive();
-		$bArchiveOpen = false;
 
-		try {
-			$bArchiveOpen = $oArchive->open($sBackupPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-			$this->assertTrue($bArchiveOpen);
-			$this->assertTrue($oArchive->addFromString('itop-dump.sql', '-- Test backup'));
-			$sConfigContents = file_get_contents(MetaModel::GetConfig()->GetLoadedFile());
-			$this->assertNotFalse($sConfigContents);
-			$this->assertTrue($oArchive->addFromString('config-itop.php', $sConfigContents));
-			$this->assertTrue($oArchive->close());
-			$bArchiveOpen = false;
+		$bArchiveOpen = $oArchive->open($sBackupPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+		$this->assertTrue($bArchiveOpen);
+		$this->assertTrue($oArchive->addFromString('itop-dump.sql', '-- Test backup'));
+		$sConfigContents = file_get_contents(MetaModel::GetConfig()->GetLoadedFile());
+		$this->assertNotFalse($sConfigContents);
+		$this->assertTrue($oArchive->addFromString('config-itop.php', $sConfigContents));
+		$this->assertTrue($oArchive->close());
+		$this->aFileToClean[] = $sBackupPath;
 
-			$sData = $this->CallItopUri(
-				'env-production/itop-backup/ajax.backup.php?'.http_build_query([
-					'operation'      => 'restore_get_token',
-					'auth_user'      => $sLogin,
-					'auth_pwd'       => self::AUTHENTICATION_PASSWORD,
-					'file'           => $sBackupFile,
-					'transaction_id' => utils::GetNewTransactionId(),
-				]),
-				[],
-				[
-					CURLOPT_HTTPHEADER => ['X-Combodo-Ajax:1'],
-					CURLOPT_POST       => 0,
-				],
-				true
-			);
+		$sData = $this->CallItopUri(
+			'env-production/itop-backup/ajax.backup.php?'.http_build_query([
+				'operation'      => 'restore_get_token',
+				'auth_user'      => $sLogin,
+				'auth_pwd'       => self::AUTHENTICATION_PASSWORD,
+				'file'           => $sBackupFile,
+				'transaction_id' => utils::GetNewTransactionId(),
+			]),
+			[],
+			[
+				CURLOPT_HTTPHEADER => ['X-Combodo-Ajax:1'],
+				CURLOPT_POST       => 0,
+			],
+			true
+		);
 
-			$aData = json_decode($sData, true);
-			$this->assertSame(200, $this->aLastCurlGetInfo['http_code'], __METHOD__.':'.$sData);
-			$this->assertArrayHasKey('token', $aData);
+		$aData = json_decode($sData, true);
+		$this->assertSame(200, $this->aLastCurlGetInfo['http_code'], __METHOD__.':'.$sData);
+		$this->assertArrayHasKey('token', $aData);
 
-			$sTokenFile = APPROOT.'data/restore.'.$aData['token'].'.tok';
-		}
-		finally {
-			if ($bArchiveOpen) {
-				$oArchive->close();
-			}
-			if (is_file($sBackupPath)) {
-				unlink($sBackupPath);
-			}
-			if (($sTokenFile !== null) && is_file($sTokenFile)) {
-				unlink($sTokenFile);
-			}
-		}
 	}
 }
