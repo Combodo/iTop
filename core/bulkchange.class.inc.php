@@ -550,6 +550,8 @@ class BulkChange
 			// if (!array_key_exists($sAttCode, $this->m_aAttList)) continue;
 
 			$oExtKey = MetaModel::GetAttributeDef(get_class($oTargetObj), $sAttCode);
+			//remove any loaded value to avoid problems with data already in memory due to previous operations
+			$oExtKey->RemoveLoaded();
 
 			if ($this->IsNullExternalKeySpec($aRowData, $sAttCode)) {
 				foreach ($aReconKeys as $sReconKeyAttCode => $iCol) {
