@@ -941,3 +941,6 @@ Operadores:<br/>
 	'Class:ResourceSystemMenu' => 'Recurso Menú de Sistema',
 	'Class:ResourceSystemMenu+' => '~~',
 ]);
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+	'Change:AttName_EntryEdited' => '%1$s modified, existing entry edited: %2$s~~',
+]);

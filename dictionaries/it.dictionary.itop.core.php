@@ -949,3 +949,6 @@ If omitted the From (email) is used.~~',
 	'Class:ResourceSystemMenu' => 'Menu di Sistema delle Risorse',
 	'Class:ResourceSystemMenu+' => '~~',
 ]);
+Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Change:AttName_EntryEdited' => '%1$s modified, existing entry edited: %2$s~~',
+]);

@@ -8,4 +8,9 @@ $('#{{ oUIBlock.GetId() }}').activity_panel({
     save_state_endpoint: {{ oUIBlock.GetSaveStateEndpoint()|var_export|raw }},
     last_loaded_entries_ids: {{ oUIBlock.GetLastEntryIds()|json_encode|raw }},
     load_more_entries_endpoint: {{ oUIBlock.GetLoadMoreEntriesEndpoint()|var_export|raw }},
+	{% if oUIBlock.IsCaseLogEditionEnabled() %}
+	caselog_edition_endpoint: {{ oUIBlock.GetEditCaseLogEntryEndpoint()|var_export|raw }},
+	caselog_edition_editor_configuration: {{ oUIBlock.GetCaseLogEditionEditorConfiguration()|json_encode|raw }},
+	caselog_edition_image_upload_url: {{ oUIBlock.GetCaseLogEditionImageUploadUrl()|json_encode|raw }},
+	{% endif %}
 });

@@ -1695,3 +1695,16 @@ Dict::Add('EN US', 'English', 'English', [
 	'Menu:Integrations+'          => '',
 
 ]);
+Dict::Add('EN US', 'English', 'English', [
+	'UI:CaseLog:Edition:ModifiedAt' => 'Modified on %1$s',
+	'UI:CaseLog:Edition:PreviousVersion' => 'Previous version',
+	'UI:CaseLog:Edition:NewVersion' => 'New version',
+	'UI:CaseLog:Edition:SnapshotUnavailable' => 'Version content is unavailable for this historical edit.',
+	'UI:CaseLog:Edition:Edit' => 'Edit this entry',
+	'UI:CaseLog:Edition:Save' => 'Save',
+	'UI:CaseLog:Edition:Cancel' => 'Cancel',
+	'UI:CaseLog:Edition:ErrorRequest' => 'The CaseLog entry could not be saved. Please try again.',
+	'UI:CaseLog:Edition:ErrorNotAllowed' => 'You are not allowed to edit this CaseLog entry.',
+	'UI:CaseLog:Edition:ErrorEditorInitialization' => 'The CaseLog editor could not be opened. Please try again.',
+	'UI:CaseLog:Edition:ActivityEntry' => 'CaseLog entry edited',
+]);

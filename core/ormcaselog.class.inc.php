@@ -49,17 +49,30 @@ class ormCaseLog
 	protected $m_sLog;
 	protected $m_aIndex;
 	protected $m_bModified;
+	/**
+	 * @var int|null Internal index of the last entry modified by this object
+	 * @since 3.3.0 N°1365 - Track the CaseLog entry changed for native history
+	 */
+	protected $m_iModifiedEntryIndex;
+	/**
+	 * @var bool Whether the last modification edited an existing entry
+	 * @since 3.3.0 N°1365 - Distinguish an edit from an appended entry
+	 */
+	protected $m_bModifiedEntryIsEdit;
 
 	/**
 	 * Initializes the log with the first (initial) entry
 	 * @param $sLog string The text of the whole case log
 	 * @param $aIndex array The case log index
+	 * @since 3.3.0 N°1365 - Initialize CaseLog edit tracking
 	 */
 	public function __construct($sLog = '', $aIndex = [])
 	{
 		$this->m_sLog = $sLog;
 		$this->m_aIndex = $aIndex;
 		$this->m_bModified = false;
+		$this->m_iModifiedEntryIndex = null;
+		$this->m_bModifiedEntryIsEdit = false;
 	}
 
 	public function GetText($bConvertToPlainText = false)
@@ -217,9 +230,16 @@ class ormCaseLog
 		return count($this->m_aIndex);
 	}
 
+	/**
+	 * Clear the modified state after the CaseLog has been persisted.
+	 *
+	 * @since 3.3.0 N°1365 - Reset CaseLog edit tracking after persistence
+	 */
 	public function ClearModifiedFlag()
 	{
 		$this->m_bModified = false;
+		$this->m_iModifiedEntryIndex = null;
+		$this->m_bModifiedEntryIsEdit = false;
 	}
 
 	/**
@@ -491,6 +511,7 @@ class ormCaseLog
 	 *
 	 * @since 3.0.0 New $iOnBehalfOfId parameter
 	 * @since 3.0.0 May throw \ArchivedObjectException exception
+	 * @since 3.3.0 N°1365 - Track the newly appended CaseLog entry
 	 */
 	public function AddLogEntry(string $sText, $sOnBehalfOf = '', $iOnBehalfOfId = null)
 	{
@@ -535,8 +556,18 @@ class ormCaseLog
 			'format' => static::ENUM_FORMAT_HTML,
 		];
 		$this->m_bModified = true;
+		$this->m_iModifiedEntryIndex = count($this->m_aIndex) - 1;
+		$this->m_bModifiedEntryIsEdit = false;
 	}
 
+	/**
+	 * Add a CaseLog entry from its JSON representation.
+	 *
+	 * @param object $oJson
+	 * @param bool $bCheckUserId
+	 *
+	 * @since 3.3.0 N°1365 - Track the newly appended CaseLog entry
+	 */
 	public function AddLogEntryFromJSON($oJson, $bCheckUserId = true)
 	{
 		if (isset($oJson->user_id)) {
@@ -594,13 +625,39 @@ class ormCaseLog
 		];
 
 		$this->m_bModified = true;
+		$this->m_iModifiedEntryIndex = count($this->m_aIndex) - 1;
+		$this->m_bModifiedEntryIsEdit = false;
 	}
 
+	/**
+	 * Return the entry changed by the last modification in the requested format.
+	 *
+	 * @param string $sFormat
+	 *
+	 * @return string
+	 * @since 3.3.0 N°1365 - Return the indexed CaseLog entry modified by the last operation
+	 */
 	public function GetModifiedEntry($sFormat = self::ENUM_FORMAT_TEXT)
 	{
 		$sModifiedEntry = '';
 		if ($this->m_bModified) {
-			$sModifiedEntry = $this->GetLatestEntry($sFormat);
+			if ($this->m_iModifiedEntryIndex === null) {
+				$sModifiedEntry = $this->GetLatestEntry($sFormat);
+			} else {
+				$iArrayIndex = $this->GetLatestEntryIndex() - $this->m_iModifiedEntryIndex;
+				$aEntries = $this->GetAsArray();
+				if (isset($aEntries[$iArrayIndex])) {
+					switch ($sFormat) {
+						case static::ENUM_FORMAT_TEXT:
+							$sModifiedEntry = $aEntries[$iArrayIndex]['message'];
+							break;
+
+						case static::ENUM_FORMAT_HTML:
+							$sModifiedEntry = $aEntries[$iArrayIndex]['message_html'];
+							break;
+					}
+				}
+			}
 		}
 		return $sModifiedEntry;
 	}
@@ -665,5 +722,61 @@ class ormCaseLog
 		$iPos += $this->m_aIndex[$index]['separator_length'];
 		$sText = substr($this->m_sLog, $iPos, $this->m_aIndex[$index]['text_length']);
 		return InlineImage::FixUrls($sText);
+	}
+
+	/**
+	 * Replace an existing entry by its zero-based internal index (oldest entry first).
+	 *
+	 * @param int $iIndex
+	 * @param string $sText HTML content to store
+	 *
+	 * @return string Sanitized HTML content stored in the entry
+	 * @throws \CoreException
+	 * @since 3.3.0 N°1365 - Support editing an existing case log entry
+	 */
+	public function UpdateEntryAt(int $iIndex, string $sText): string
+	{
+		if (!array_key_exists($iIndex, $this->m_aIndex)) {
+			throw new CoreException("Invalid CaseLog entry index: $iIndex");
+		}
+
+		$sText = HTMLSanitizer::Sanitize($sText);
+
+		$iOffset = 0;
+		for ($i = count($this->m_aIndex) - 1; $i > $iIndex; --$i) {
+			$iOffset += $this->m_aIndex[$i]['separator_length'] + $this->m_aIndex[$i]['text_length'];
+		}
+		$iOffset += $this->m_aIndex[$iIndex]['separator_length'];
+
+		$this->m_sLog = substr_replace($this->m_sLog, $sText, $iOffset, $this->m_aIndex[$iIndex]['text_length']);
+		$this->m_aIndex[$iIndex]['text_length'] = strlen($sText);
+		$this->m_aIndex[$iIndex]['format'] = static::ENUM_FORMAT_HTML;
+		$this->m_bModified = true;
+		$this->m_iModifiedEntryIndex = $iIndex;
+		$this->m_bModifiedEntryIsEdit = true;
+
+		return $sText;
+	}
+
+	/**
+	 * Return the internal index of the entry modified by the last operation.
+	 *
+	 * @return int|null
+	 * @since 3.3.0 N°1365 - Expose the case log entry index used by change tracking
+	 */
+	public function GetModifiedEntryIndex(): ?int
+	{
+		return $this->m_iModifiedEntryIndex;
+	}
+
+	/**
+	 * Return whether the last modification edited an existing entry.
+	 *
+	 * @return bool
+	 * @since 3.3.0 N°1365 - Distinguish entry edits from appended case log entries
+	 */
+	public function WasModifiedEntryEdited(): bool
+	{
+		return $this->m_bModifiedEntryIsEdit;
 	}
 }

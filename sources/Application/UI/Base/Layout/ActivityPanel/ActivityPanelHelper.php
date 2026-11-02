@@ -11,10 +11,12 @@ use appUserPreferences;
 use BinaryExpression;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
+use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\CaseLogEditEntry;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\EditsEntry;
 use DBObjectSearch;
 use DBObjectSet;
 use Exception;
+use ExceptionLog;
 use FieldExpression;
 use IssueLog;
 use MetaModel;
@@ -30,6 +32,51 @@ use VariableExpression;
  */
 class ActivityPanelHelper
 {
+	/**
+	 * Find all native history entries for an edited CaseLog entry.
+	 *
+	 * @param string $sObjectClass
+	 * @param string $sObjectId
+	 * @param string $sAttCode
+	 * @param int $iEntryIndex Internal CaseLog index, oldest entry first
+	 *
+	 * @return array<int, \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\CaseLogEditEntry>
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 * @since 3.3.0 N°1365 - Display CaseLog edit history
+	 */
+	public static function GetCaseLogEditEntries(string $sObjectClass, string $sObjectId, string $sAttCode, int $iEntryIndex): array
+	{
+		$oSearch = DBObjectSearch::FromOQL('SELECT CO, C FROM CMDBChangeOpSetAttributeCaseLog AS CO JOIN CMDBChange AS C ON CO.change = C.id WHERE CO.objclass = :obj_class AND CO.objkey = :obj_key AND CO.attcode = :att_code AND CO.lastentry = :entry_index AND CO.is_edit = :is_edit');
+		$oSet = new DBObjectSet($oSearch, ['CO.id' => false], [
+			'obj_class' => $sObjectClass,
+			'obj_key' => $sObjectId,
+			'att_code' => $sAttCode,
+			'entry_index' => $iEntryIndex,
+			'is_edit' => true,
+		]);
+
+		$aEntries = [];
+		while ($aChangeRow = $oSet->FetchAssoc()) {
+			$oChangeOp = $aChangeRow['CO'];
+			try {
+				$oEntry = ActivityEntryFactory::MakeFromCmdbChangeOp($oChangeOp, $aChangeRow['C']);
+			} catch (Exception $oException) {
+				ExceptionLog::LogException($oException);
+				continue;
+			}
+			if ($oEntry instanceof CaseLogEditEntry) {
+				$aEntries[] = $oEntry;
+			}
+		}
+
+		return $aEntries;
+	}
+
 	/**
 	 * Save in the user pref. if the activity panel should be expanded or not for $sObjectClass in $sObjectMode
 	 *
@@ -90,10 +137,10 @@ class ActivityPanelHelper
 	 * @param string|null $sChangeOpIdToOffsetFrom Entries will be retrieved after this CMDBChangeOp ID. Typically used for pagination.
 	 * @param bool $bLimitResultsLength True to limit to the X previous entries, false to retrieve them all
 	 *
-	 * @return array The 'max_history_length' edits entries from the CMDBChangeOp of the object, starting from $sChangeOpIdToOffsetFrom. Flag to know if more entries are available and the ID of the last returned entry are also provided.
+	 * @return array The 'max_history_length' Activity entries from the CMDBChangeOp of the object, starting from $sChangeOpIdToOffsetFrom. Flag to know if more entries are available and the ID of the last returned entry are also provided.
 	 *
 	 * [
-	 *  'entries' => EditsEntry[],
+	 *  'entries' => ActivityEntry[],
 	 *  'last_loaded_entry_id' => null|int,
 	 *  'more_entries_to_load' => bool,
 	 * ]
@@ -105,10 +152,11 @@ class ActivityPanelHelper
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
+	 * @since 3.3.0 N°1365 - Keep CaseLog edits out of the Activity feed
 	 */
 	public static function GetCMDBChangeOpEditsEntriesForObject(string $sObjectClass, string $sObjectId, ?string $sChangeOpIdToOffsetFrom = null, bool $bLimitResultsLength = true): array
 	{
-		$iMaxHistoryLength = MetaModel::GetConfig()->Get('max_history_length');
+		$iMaxHistoryLength = (int)MetaModel::GetConfig()->Get('max_history_length');
 		$aResults = [
 			'entries' => [],
 			'last_loaded_entry_id' => null,
@@ -118,7 +166,11 @@ class ActivityPanelHelper
 		// - Prepare query to retrieve changes
 		// N°3924: The "CO.objkey > 0" clause is there to avoid retrieving orphan elements from objects that have not been completely created / cleaned. There seem to be a lot of them due to some cron tasks.
 		$oSearch = DBObjectSearch::FromOQL('SELECT CO, C FROM CMDBChangeOp AS CO JOIN CMDBChange AS C ON CO.change = C.id WHERE CO.objclass = :obj_class AND CO.objkey = :obj_key AND CO.objkey > 0 AND CO.finalclass NOT IN (:excluded_optypes)');
-		$aArgs = ['obj_class' => $sObjectClass, 'obj_key' => $sObjectId, 'excluded_optypes' => ['CMDBChangeOpSetAttributeCaseLog']];
+		$aArgs = [
+			'obj_class' => $sObjectClass,
+			'obj_key' => $sObjectId,
+			'excluded_optypes' => ['CMDBChangeOpSetAttributeCaseLog'],
+		];
 
 		// - Optional offset condition
 		if (null !== $sChangeOpIdToOffsetFrom) {
@@ -136,12 +188,21 @@ class ActivityPanelHelper
 		// As the DB returns rows "chronologically", we get the older first and it messes with the processing. Ordering by the ID is way much simpler and less DB CPU consuming.
 		$oSet = new DBObjectSet($oSearch, ['CO.id' => false], $aArgs);
 
-		// - Limit history entries to display
+		$aChangeRows = [];
 		if ($bLimitResultsLength) {
-			$bMoreEntriesToLoad = $oSet->CountExceeds($iMaxHistoryLength);
-			$oSet->SetLimit($iMaxHistoryLength);
-		} else {
-			$bMoreEntriesToLoad = false;
+			$oSet->SetLimit($iMaxHistoryLength + 1);
+		}
+		while ($aElements = $oSet->FetchAssoc()) {
+			$aChangeRows[] = $aElements;
+		}
+		unset($oSet);
+
+		usort($aChangeRows, static function (array $aLeft, array $aRight): int {
+			return (int)$aRight['CO']->GetKey() <=> (int)$aLeft['CO']->GetKey();
+		});
+		if ($bLimitResultsLength && (count($aChangeRows) > $iMaxHistoryLength)) {
+			$aResults['more_entries_to_load'] = true;
+			$aChangeRows = array_slice($aChangeRows, 0, $iMaxHistoryLength);
 		}
 
 		// Prepare previous values to group edits within a same CMDBChange
@@ -151,21 +212,19 @@ class ActivityPanelHelper
 		$oPreviousEditsEntry = null;
 
 		/** @var \CMDBChangeOp $oChangeOp */
-		while ($aElements = $oSet->FetchAssoc()) {
+		foreach ($aChangeRows as $aElements) {
 			$oChange = $aElements['C'];
 			$oChangeOp = $aElements['CO'];
 
-			// Skip case log changes as they are handled directly from the attributes themselves (most of them should have been excluded by the OQL above, but some derivated classes could still be retrieved)
-			if ($oChangeOp instanceof CMDBChangeOpSetAttributeCaseLog) {
-				continue;
-			}
-
 			// Make entry from CMDBChangeOp
 			$iChangeId = $oChangeOp->Get('change');
+			$iPreviousChangeOpId = $oChangeOp->GetKey();
 			try {
 				$oEntry = ActivityEntryFactory::MakeFromCmdbChangeOp($oChangeOp, $oChange);
 			} catch (Exception $oException) {
 				IssueLog::Debug(static::class.': Could not create entry from CMDBChangeOp #'.$oChangeOp->GetKey().' related to '.$oChangeOp->Get('objclass').'::'.$oChangeOp->Get('objkey').': '.$oException->getMessage());
+				$oPreviousEditsEntry = null;
+				$iPreviousChangeId = $iChangeId;
 				continue;
 			}
 			// If same CMDBChange and mergeable edits entry from the same author, we merge them
@@ -173,22 +232,16 @@ class ActivityPanelHelper
 				$oPreviousEditsEntry->Merge($oEntry);
 			} else {
 				$aResults['entries'][] = $oEntry;
-
-				// Set previous edits entry
-				if ($oEntry instanceof EditsEntry) {
-					$oPreviousEditsEntry = $oEntry;
-				}
+				$oPreviousEditsEntry = ($oEntry instanceof EditsEntry) ? $oEntry : null;
 			}
 
 			$iPreviousChangeId = $iChangeId;
-			$iPreviousChangeOpId = $oChangeOp->GetKey();
 		}
 		unset($oSet);
 
 		// - Set last entry ID so the other can be loaded later
-		if ((true === $bMoreEntriesToLoad) && (0 !== $iPreviousChangeOpId)) {
+		if ((true === $aResults['more_entries_to_load']) && (0 !== $iPreviousChangeOpId)) {
 			$aResults['last_loaded_entry_id'] = $iPreviousChangeOpId;
-			$aResults['more_entries_to_load'] = true;
 		}
 
 		return $aResults;

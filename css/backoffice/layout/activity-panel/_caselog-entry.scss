@@ -7,6 +7,8 @@
 $ibo-caselog-entry--highlight-colors: $ibo-caselog-highlight-colors !default;
 $ibo-caselog-entry--main-information--padding-y: $ibo-spacing-400 !default;
 $ibo-caselog-entry--main-information--decoration--width: 3px !default;
+$ibo-caselog-entry--edition-footer--text-color: $ibo-color-grey-700 !default;
+$ibo-caselog-entry--edition-error--text-color: $ibo-color-red-600 !default;
 
 /* Main information */
 .ibo-caselog-entry{
@@ -17,8 +19,52 @@ $ibo-caselog-entry--main-information--decoration--width: 3px !default;
 	.ibo-activity-entry--main-information-icon{
 		display: none;
 	}
-  .ibo-activity-entry--main-information-content{
-  }
+	.ibo-caselog-entry--edition-form{
+		width: 100%;
+	}
+	.ibo-caselog-entry--edition-actions{
+		display: flex;
+		justify-content: flex-end;
+		gap: $ibo-spacing-200;
+		margin-top: $ibo-spacing-200;
+	}
+	.ibo-caselog-entry--edition-error{
+		margin-top: $ibo-spacing-200;
+		color: $ibo-caselog-entry--edition-error--text-color;
+	}
+	.ibo-caselog-entry--edition-footer{
+		display: block;
+		margin-top: $ibo-spacing-200;
+		color: $ibo-caselog-entry--edition-footer--text-color;
+		text-align: right;
+		@extend %ibo-font-size-50;
+	}
+	.ibo-caselog-entry--edit-button{
+		margin-left: $ibo-spacing-200;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: inherit;
+		cursor: pointer;
+	}
+	.ibo-caselog-entry--modification-history{
+		margin-top: $ibo-spacing-200;
+		text-align: left;
+	}
+	.ibo-caselog-entry--modification{
+		padding-top: $ibo-spacing-200;
+		border-top: 1px solid $ibo-color-grey-300;
+	}
+	.ibo-caselog-entry--modification + .ibo-caselog-entry--modification{
+		margin-top: $ibo-spacing-200;
+	}
+	.ibo-caselog-entry--modification--metadata{
+		margin-bottom: $ibo-spacing-200;
+		color: $ibo-color-grey-700;
+	}
+	.ibo-caselog-entry--modification--snapshot-unavailable{
+		text-align: left;
+	}
 
 	/* Highlight color */
 	.ibo-activity-entry--main-information::before{
@@ -66,6 +112,63 @@ $ibo-caselog-entry--main-information--decoration--width: 3px !default;
 			}
 		}
 	}
+}
+@media (max-width: 700px){
+	.ibo-rich-text-diff--versions{
+		grid-template-columns: 1fr;
+	}
+}
+
+.ibo-rich-text-diff--versions{
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: $ibo-spacing-200;
+}
+.ibo-rich-text-diff--version{
+	min-width: 0;
+	padding: $ibo-spacing-200;
+	overflow-wrap: anywhere;
+}
+.ibo-rich-text-diff--version--previous{
+	border-left: 3px solid $ibo-color-red-600;
+	background-color: $ibo-color-red-100;
+	color: $ibo-color-red-800;
+}
+.ibo-rich-text-diff--version--new{
+	border-left: 3px solid $ibo-color-green-600;
+	background-color: $ibo-color-green-100;
+	color: $ibo-color-green-800;
+}
+.ibo-rich-text-diff--version-title{
+	margin-bottom: $ibo-spacing-100;
+	font-weight: bold;
+}
+.ibo-rich-text-diff--version-content{
+	overflow-wrap: anywhere;
+}
+.ibo-rich-text-diff--version-content img{
+	max-width: 100%;
+	height: auto;
+}
+.ibo-rich-text-diff--removed{
+	color: $ibo-color-red-900;
+	background-color: $ibo-color-red-100;
+	text-decoration: line-through;
+}
+.ibo-rich-text-diff--added{
+	color: $ibo-color-green-900;
+	background-color: $ibo-color-green-100;
+	text-decoration: underline;
+}
+.ibo-rich-text-diff--image{
+	display: inline-block;
+	padding: $ibo-spacing-100;
+}
+.ibo-rich-text-diff--image.ibo-rich-text-diff--removed{
+	outline: 2px solid $ibo-color-red-600;
+}
+.ibo-rich-text-diff--image.ibo-rich-text-diff--added{
+	outline: 2px solid $ibo-color-green-600;
 }
 /* - Specific decoration regarding the case log rank */
 @each $sColor in $ibo-caselog-entry--highlight-colors {

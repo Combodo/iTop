@@ -1,4 +1,72 @@
 {% extends 'base/layouts/activity-panel/activity-entry/layout.html.twig' %}
 
 {% block iboActivityEntryExtraClasses %}ibo-caselog-entry ibo-caselog-entry--entry-for-caselog-{{ oUIBlock.GetCaseLogRank() }} ibo-is-html-content{% endblock %}
-{% block iboActivityEntryExtraDataAttributes %}data-entry-caselog-attribute-code="{{ oUIBlock.GetAttCode() }}"{% endblock %}
+{% block iboActivityEntryExtraDataAttributes %}data-entry-caselog-attribute-code="{{ oUIBlock.GetAttCode() }}" data-entry-caselog-index="{{ oUIBlock.GetEntryIndex() }}" data-entry-caselog-edition-error="{{ 'UI:CaseLog:Edition:ErrorRequest'|dict_s }}" data-entry-caselog-edition-editor-error="{{ 'UI:CaseLog:Edition:ErrorEditorInitialization'|dict_s }}"{% endblock %}
+
+{% block iboActivityEntryMainInformationContent %}
+	{# CaseLog HTML is sanitized by HTMLSanitizer before it reaches this template. #}
+	<div class="ibo-caselog-entry--content" data-role="ibo-caselog-entry--content">{{ oUIBlock.GetContent()|render_wiki_to_html|raw }}</div>
+	{% if oUIBlock.CanEditEntry() %}
+		<div class="ibo-caselog-entry--edition-form ibo-is-hidden" data-role="ibo-caselog-entry--edition-form">
+			<textarea id="{{ oUIBlock.GetId() }}--edition-editor" class="ibo-caselog-entry--edition-editor" data-role="ibo-caselog-entry--edition-editor">{{ oUIBlock.GetContent() }}</textarea>
+			<template id="{{ oUIBlock.GetId() }}--edition-editor_items_template">
+				{% include 'application/object/set/option_renderer.html.twig' %}
+			</template>
+			<div class="ibo-caselog-entry--edition-actions" data-role="ibo-caselog-entry--edition-actions">
+				<button type="button" class="ibo-button ibo-is-primary" data-role="ibo-caselog-entry--edition-save">{{ 'UI:CaseLog:Edition:Save'|dict_s }}</button>
+				<button type="button" class="ibo-button" data-role="ibo-caselog-entry--edition-cancel">{{ 'UI:CaseLog:Edition:Cancel'|dict_s }}</button>
+			</div>
+			<div class="ibo-caselog-entry--edition-error ibo-is-hidden" data-role="ibo-caselog-entry--edition-error" role="alert"></div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block iboActivityEntrySubInformation %}
+	{{ parent() }}
+	{% if oUIBlock.HasModificationHistory() or oUIBlock.CanEditEntry() %}
+		<div class="ibo-caselog-entry--edition-footer" data-role="ibo-caselog-entry--edition-footer">
+			{% if oUIBlock.HasModificationHistory() %}
+				<button type="button"
+						class="ibo-caselog-entry--edit-button ibo-caselog-entry--history-toggle"
+						data-role="ibo-caselog-entry--history-toggle"
+						aria-controls="{{ oUIBlock.GetId() }}--modification-history"
+						aria-expanded="false">{{ 'UI:HistoryTab'|dict_s }} ({{ 'UI:CaseLog:Edition:ModifiedAt'|dict_format(oUIBlock.GetFormattedLastModificationDateTime()) }})</button>
+			{% endif %}
+			{% if oUIBlock.CanEditEntry() %}
+				<button type="button"
+						class="ibo-caselog-entry--edit-button"
+						data-role="ibo-caselog-entry--edit-button"
+						title="{{ 'UI:CaseLog:Edition:Edit'|dict_s }}"
+						aria-label="{{ 'UI:CaseLog:Edition:Edit'|dict_s }}">
+					<span class="fas fa-pencil-alt" aria-hidden="true"></span>
+				</button>
+			{% endif %}
+			{% if oUIBlock.HasModificationHistory() %}
+				<div id="{{ oUIBlock.GetId() }}--modification-history"
+					 class="ibo-caselog-entry--modification-history ibo-is-hidden"
+					 data-role="ibo-caselog-entry--modification-history">
+					{% for oModification in oUIBlock.GetModificationHistory() %}
+						<section class="ibo-caselog-entry--modification">
+							<div class="ibo-caselog-entry--modification--metadata">{{ 'UI:History:LastModified_On_By'|dict_format(oModification.GetFormattedDateTime(), oModification.GetAuthorFriendlyname()) }}</div>
+							{% if oModification.HasContentSnapshot() %}
+								<div class="ibo-rich-text-diff--versions">
+									<div class="ibo-rich-text-diff--version ibo-rich-text-diff--version--previous">
+										<div class="ibo-rich-text-diff--version-title">{{ 'UI:CaseLog:Edition:PreviousVersion'|dict_s }}</div>
+										{# The comparison sanitizes and wiki-renders both versions before adding trusted diff markers. #}
+										<div class="ibo-rich-text-diff--version-content">{{ oModification.GetPreviousContent()|raw }}</div>
+									</div>
+									<div class="ibo-rich-text-diff--version ibo-rich-text-diff--version--new">
+										<div class="ibo-rich-text-diff--version-title">{{ 'UI:CaseLog:Edition:NewVersion'|dict_s }}</div>
+										<div class="ibo-rich-text-diff--version-content">{{ oModification.GetNewContent()|raw }}</div>
+									</div>
+								</div>
+							{% else %}
+								<p class="ibo-caselog-entry--modification--snapshot-unavailable">{{ 'UI:CaseLog:Edition:SnapshotUnavailable'|dict_s }}</p>
+							{% endif %}
+						</section>
+					{% endfor %}
+				</div>
+			{% endif %}
+		</div>
+	{% endif %}
+{% endblock %}

@@ -951,3 +951,6 @@ If omitted the From (label) is used.~~',
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
 	'Class:ResourceSystemMenu+' => '~~',
 ]);
+Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Change:AttName_EntryEdited' => '%1$s modified, existing entry edited: %2$s~~',
+]);

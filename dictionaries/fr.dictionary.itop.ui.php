@@ -1450,3 +1450,16 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Menu:Integrations' => 'Intégrations',
 	'Menu:Integrations+' => '~~',
 ]);
+Dict::Add('FR FR', 'French', 'Français', [
+	'UI:CaseLog:Edition:ModifiedAt' => 'Modifié le %1$s',
+	'UI:CaseLog:Edition:PreviousVersion' => 'Version précédente',
+	'UI:CaseLog:Edition:NewVersion' => 'Nouvelle version',
+	'UI:CaseLog:Edition:SnapshotUnavailable' => 'Le contenu de cette version n\'est pas disponible pour cette modification historique.',
+	'UI:CaseLog:Edition:Edit' => 'Modifier cette entrée',
+	'UI:CaseLog:Edition:Save' => 'Enregistrer',
+	'UI:CaseLog:Edition:Cancel' => 'Annuler',
+	'UI:CaseLog:Edition:ErrorRequest' => 'Impossible d\'enregistrer l\'entrée du journal. Veuillez réessayer.',
+	'UI:CaseLog:Edition:ErrorNotAllowed' => 'Vous n\'êtes pas autorisé à modifier cette entrée du journal.',
+	'UI:CaseLog:Edition:ErrorEditorInitialization' => 'Impossible d\'ouvrir l\'éditeur du journal. Veuillez réessayer.',
+	'UI:CaseLog:Edition:ActivityEntry' => 'Entrée du journal modifiée',
+]);

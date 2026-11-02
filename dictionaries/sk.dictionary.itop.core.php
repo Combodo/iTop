@@ -970,3 +970,6 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
 	'Class:ResourceSystemMenu+' => '~~',
 ]);
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'Change:AttName_EntryEdited' => '%1$s modified, existing entry edited: %2$s~~',
+]);

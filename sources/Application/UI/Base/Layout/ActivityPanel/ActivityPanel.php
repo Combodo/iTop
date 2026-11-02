@@ -23,6 +23,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel;
 use appUserPreferences;
 use AttributeDateTime;
 use cmdbAbstractObject;
+use Combodo\iTop\Application\Helper\CKEditorHelper;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntry;
@@ -844,6 +845,75 @@ class ActivityPanel extends UIBlock
 	public function GetLoadMoreEntriesEndpoint(): string
 	{
 		return utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
+	}
+
+	/**
+	 * @return string
+	 * @throws \Exception
+	 * @since 3.3.0 N°1365 - Provide the CaseLog edition AJAX endpoint
+	 */
+	public function GetEditCaseLogEntryEndpoint(): string
+	{
+		return utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
+	}
+
+	/**
+	 * Return whether CaseLog editing is enabled for this panel.
+	 *
+	 * @return bool
+	 * @since 3.3.0 N°1365 - Enable in-place CaseLog editing in the back office
+	 */
+	public function IsCaseLogEditionEnabled(): bool
+	{
+		return ($this->sObjectMode === cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW)
+			&& !($this instanceof ActivityPanelPrint)
+			&& (bool)MetaModel::GetConfig()->Get('caselog_edition.enabled');
+	}
+
+	/**
+	 * Return the CKEditor configuration used for editing CaseLog entries.
+	 *
+	 * @return array
+	 * @throws \Exception
+	 * @since 3.3.0 N°1365 - Configure the in-place CaseLog editor
+	 */
+	public function GetCaseLogEditionEditorConfiguration(): array
+	{
+		$aConfig = CKEditorHelper::GetCkeditorConfiguration(true, null);
+		if (isset($aConfig['mention']['feeds'])) {
+			foreach ($aConfig['mention']['feeds'] as $iIndex => $aFeed) {
+				$sFeedUrl = $aFeed['feed_ajax_options']['url'];
+				$sFeedUrl = str_replace('&needle=', '', $sFeedUrl);
+				$sFeedUrl = utils::AddParameterToUrl($sFeedUrl, 'host_class', $this->GetObjectClass());
+				$sFeedUrl = utils::AddParameterToUrl($sFeedUrl, 'host_id', $this->GetObjectId());
+				$sFeedUrl = utils::AddParameterToUrl($sFeedUrl, 'needle', '');
+				$aConfig['mention']['feeds'][$iIndex]['feed_ajax_options']['url'] = $sFeedUrl;
+			}
+		}
+
+		return $aConfig;
+	}
+
+	/**
+	 * Return the image upload URL for the in-place CaseLog editor.
+	 *
+	 * @return string|null
+	 * @throws \Exception
+	 * @since 3.3.0 N°1365 - Support inline image upload while editing a CaseLog entry
+	 */
+	public function GetCaseLogEditionImageUploadUrl(): ?string
+	{
+		$sTransactionId = $this->GetTransactionId();
+		if ($sTransactionId === null) {
+			return null;
+		}
+
+		return utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?'.http_build_query([
+			'operation' => 'cke_img_upload',
+			'temp_id' => utils::GetUploadTempId($sTransactionId),
+			'obj_class' => $this->GetObjectClass(),
+			'obj_key' => $this->GetObjectId(),
+		]);
 	}
 
 	/**

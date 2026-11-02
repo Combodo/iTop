@@ -950,3 +950,6 @@ Operators:<br/>
 	'Class:ResourceSystemMenu' => 'Tool "System Menu"',
 	'Class:ResourceSystemMenu+' => '~~',
 ]);
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Change:AttName_EntryEdited' => '%1$s modified, existing entry edited: %2$s~~',
+]);

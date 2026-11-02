@@ -740,6 +740,7 @@ class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
 {
 	/**
 	 * @inheritDoc
+	 * @since 3.3.0 N°1365 - Store HTML values for rendered history comparisons
 	 */
 	public static function Init()
 	{
@@ -756,6 +757,7 @@ class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
 		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeLongText("newvalue", ["allowed_values" => null, "sql" => "newvalue", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for the complete details
@@ -792,10 +794,7 @@ class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
 }
 
 /**
- * Record the modification of a caselog (text)
- * since the caselog itself stores the history
- * of its entries, there is no need to duplicate
- * the text here
+ * Record CaseLog changes, including the content snapshots for edited entries.
  *
  * @package     iTopORM
  */
@@ -803,6 +802,7 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 {
 	/**
 	 * @inheritDoc
+	 * @since 3.3.0 N°1365 - Store indexed CaseLog edit snapshots in history
 	 */
 	public static function Init()
 	{
@@ -820,6 +820,9 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeInteger("lastentry", ["allowed_values" => null, "sql" => "lastentry", "default_value" => 0, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeBoolean("is_edit", ["allowed_values" => null, "sql" => "is_edit", "default_value" => false, "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeLongText("oldvalue", ["allowed_values" => null, "sql" => "oldvalue", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeLongText("newvalue", ["allowed_values" => null, "sql" => "newvalue", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for the complete details
@@ -828,6 +831,7 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 
 	/**
 	 * @inheritDoc
+	 * @since 3.3.0 N°1365 - Describe edited CaseLog entries in native history
 	 */
 	public function GetDescription()
 	{
@@ -853,7 +857,8 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 			$oCaseLog = $oObj->Get($this->Get('attcode'));
 			$sTextEntry = '<div class="history_entry history_entry_truncated"><div class="history_html_content">'.$oCaseLog->GetEntryAt($this->Get('lastentry')).'</div></div>';
 
-			$sResult = Dict::Format('Change:AttName_EntryAdded', $sAttName, $sTextEntry);
+			$sDescriptionKey = ((bool)$this->Get('is_edit')) ? 'Change:AttName_EntryEdited' : 'Change:AttName_EntryAdded';
+			$sResult = Dict::Format($sDescriptionKey, $sAttName, $sTextEntry);
 		}
 		return $sResult;
 	}

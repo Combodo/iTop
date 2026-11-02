@@ -9,6 +9,7 @@ namespace Combodo\iTop\Controller\Base\Layout;
 
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanelHelper;
+use Combodo\iTop\Service\CaseLog\CaseLogEditionService;
 use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Dict;
@@ -130,6 +131,80 @@ class ActivityPanelController extends AbstractController
 		$oObject->DBWrite();
 
 		return $aResults;
+	}
+
+	/**
+	 * Edit one existing CaseLog entry and return its refreshed activity rendering.
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 * @since 3.3.0 N°1365 - Add the CaseLog editing AJAX operation
+	 */
+	public function EditCaseLogEntry(): array
+	{
+		$sObjectClass = utils::ReadPostedParam('object_class', '', utils::ENUM_SANITIZATION_FILTER_CLASS);
+		$iObjectId = utils::ReadPostedParam('object_id', 0, utils::ENUM_SANITIZATION_FILTER_INTEGER);
+		$sAttCode = utils::ReadPostedParam('attribute_code', '', utils::ENUM_SANITIZATION_FILTER_FIELD_NAME);
+		$iEntryIndex = utils::ReadPostedParam('entry_index', -1, utils::ENUM_SANITIZATION_FILTER_INTEGER);
+		$sTransactionId = utils::ReadPostedParam('transaction_id', '', utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
+		// CaseLog content is rich HTML; retain it here so HTMLSanitizer can apply iTop's configured allow-list.
+		$sContent = utils::ReadPostedParam('content', '', utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+
+		if (false === is_string($sContent)) {
+			throw new \CoreException(Dict::S('UI:CaseLog:Edition:ErrorRequest'));
+		}
+		if (utils::IsNullOrEmptyString($sObjectClass) || ($iObjectId <= 0) || utils::IsNullOrEmptyString($sAttCode) || ($iEntryIndex < 0) || utils::IsNullOrEmptyString($sTransactionId)) {
+			throw new \CoreException(Dict::S('UI:CaseLog:Edition:ErrorRequest'));
+		}
+		if (false === utils::IsTransactionValid($sTransactionId, false)) {
+			throw new \CoreException(Dict::S('iTopUpdate:Error:InvalidToken'));
+		}
+
+		$oObject = MetaModel::GetObject($sObjectClass, $iObjectId);
+		$aEditResult = CaseLogEditionService::GetInstance()->EditEntry($oObject, $sAttCode, $iEntryIndex, $sContent);
+
+		$oCaseLog = $oObject->Get($sAttCode);
+		$iArrayIndex = $oCaseLog->GetLatestEntryIndex() - $iEntryIndex;
+		$aEntries = $oCaseLog->GetAsArray();
+		if (!isset($aEntries[$iArrayIndex])) {
+			throw new \CoreException(Dict::S('UI:CaseLog:Edition:ErrorRequest'));
+		}
+
+		$oCaseLogEntry = ActivityEntryFactory::MakeFromCaseLogEntryArray($sAttCode, $aEntries[$iArrayIndex], $iEntryIndex, $oObject);
+		$aCaseLogAttCodes = MetaModel::GetCaseLogs($sObjectClass, 'details');
+		if (empty($aCaseLogAttCodes)) {
+			$aCaseLogAttCodes = MetaModel::GetCaseLogs($sObjectClass);
+		}
+		$iCaseLogRank = 0;
+		foreach ($aCaseLogAttCodes as $sCaseLogAttCode) {
+			if (($oObject->GetAttributeFlags($sCaseLogAttCode) & OPT_ATT_HIDDEN) !== 0) {
+				continue;
+			}
+			$iCaseLogRank++;
+			if ($sCaseLogAttCode === $sAttCode) {
+				$oCaseLogEntry->SetCaseLogRank($iCaseLogRank);
+				break;
+			}
+		}
+
+		$aEditHistoryEntries = ActivityPanelHelper::GetCaseLogEditEntries($sObjectClass, (string)$iObjectId, $sAttCode, $iEntryIndex);
+		$oCaseLogEntry->SetModificationHistory($aEditHistoryEntries);
+		if (($aEditResult['changed'] === true) && ($aEditHistoryEntries === [])) {
+			throw new \CoreException(Dict::S('UI:CaseLog:Edition:ErrorRequest'));
+		}
+
+		return [
+			'success' => true,
+			'entry_html' => BlockRenderer::RenderBlockTemplates($oCaseLogEntry),
+		];
 	}
 
 	/**

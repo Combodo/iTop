@@ -467,6 +467,10 @@ class AttributeText extends AttributeString
 		}
 	}
 
+	/**
+	 * @inheritDoc
+	 * @since 3.3.0 N°1365 - Persist HTML snapshots for rich-text history
+	 */
 	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
 	{
 		/** @noinspection PhpConditionCheckedByNextConditionInspection */
@@ -474,6 +478,9 @@ class AttributeText extends AttributeString
 			$original = $original->GetText();
 		}
 		$oMyChangeOp->Set("prevdata", $original);
+		if ($this->GetFormat() === 'html') {
+			$oMyChangeOp->Set("newvalue", $value ?? '');
+		}
 	}
 
 	protected function GetChangeRecordClassName(): string

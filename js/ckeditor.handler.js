@@ -40,9 +40,11 @@ const CombodoCKEditorHandler = {
 	 *
 	 * @param {string} sElem The id object of the element
 	 * @param {array} aConfiguration The CKEditor configuration
+	 * @param {boolean} bRejectOnFailure Whether to reject when the editor cannot be created
 	 * @constructor
+	 * @since 3.3.0 N°1365 - Allow CKEditor creation failures to be propagated to callers
 	 */
-	CreateInstance: function (sElem, aConfiguration) {
+	CreateInstance: function (sElem, aConfiguration, bRejectOnFailure = false) {
 
 		// prepare configuration
 		CombodoCKEditorHandler.PrepareConfiguration(sElem, aConfiguration);
@@ -70,6 +72,9 @@ const CombodoCKEditorHandler = {
 			})
 			.catch( error => {
 				console.error( error );
+				if (bRejectOnFailure) {
+					reject(error);
+				}
 			} );
 		});
 	},

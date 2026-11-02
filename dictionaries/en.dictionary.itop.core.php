@@ -1339,3 +1339,6 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:ResourceSystemMenu' => 'Resource System Menu',
 	'Class:ResourceSystemMenu+' => '',
 ]);
+Dict::Add('EN US', 'English', 'English', [
+	'Change:AttName_EntryEdited' => '%1$s modified, existing entry edited: %2$s',
+]);

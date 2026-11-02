@@ -949,3 +949,6 @@ Operatory:<br/>
 	'Class:ResourceSystemMenu' => 'Zasób Menu systemowe',
 	'Class:ResourceSystemMenu+' => '~~',
 ]);
+Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Change:AttName_EntryEdited' => '%1$s modified, existing entry edited: %2$s~~',
+]);

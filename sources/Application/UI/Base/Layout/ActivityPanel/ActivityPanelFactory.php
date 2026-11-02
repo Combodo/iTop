@@ -22,6 +22,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel;
 
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
+use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\CaseLogEditEntry;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanelAction\ActivityPanelActionFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryFormFactory;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
@@ -30,6 +31,7 @@ use DBObjectSearch;
 use DBObjectSet;
 use Dict;
 use Exception;
+use ExceptionLog;
 use ExecutionKPI;
 use iPopupMenuExtension;
 use IssueLog;
@@ -60,6 +62,7 @@ class ActivityPanelFactory
 	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
 	 * @throws \OQLException
+	 * @since 3.3.0 N°1365 - Display native CaseLog edit history
 	 */
 	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE)
 	{
@@ -96,10 +99,7 @@ class ActivityPanelFactory
 				continue;
 			}
 
-			// Retrieve CMDBChange of the log entries to find their origins
-			//
-			// IMPORTANT: We don't have an easy way to find a log entry's origin, so we have to cross it with the corresponding CMDBChange
-			// The following code is an attempt to do so, but it might not be bulletproof against missing CMDBChanges or future code evolutions
+			// CaseLog operations store the internal entry index, so origin and edit metadata can be matched without inferring identity from entry content.
 			$oCaseLogEntriesOriginsSearch = DBObjectSearch::FromOQL('SELECT C, CO FROM CMDBChange AS C JOIN CMDBChangeOpSetAttributeCaseLog AS CO ON CO.change = C.id WHERE CO.objclass = :objclass AND CO.objkey = :objkey AND CO.attcode = :attcode');
 			$oCaseLogEntriesOriginsSearch->SetInternalParams([
 				'objclass' => $sObjClass,
@@ -107,24 +107,41 @@ class ActivityPanelFactory
 				'attcode' => $sCaseLogAttCode,
 			]);
 
-			// - Results must be in the same order as the entries in the ormCaseLog (otherwise we would need to loop over the set to find the matching index, which would not be efficient)
-			$oCaseLogEntriesOriginsSet = new DBObjectSet($oCaseLogEntriesOriginsSearch, ['date' => false]);
-			$oCaseLogEntriesOriginsSet->OptimizeColumnLoad(['C' => ['origin'], 'CO' => ['lastentry']]);
+			$oCaseLogEntriesOriginsSet = new DBObjectSet($oCaseLogEntriesOriginsSearch, ['CO.id' => false]);
+			$oCaseLogEntriesOriginsSet->OptimizeColumnLoad(['C' => ['origin'], 'CO' => ['attcode', 'date', 'is_edit', 'lastentry', 'oldvalue', 'newvalue', 'user_id', 'userinfo']]);
 
-			// Retrieve log entries
-			// Debug message to help understand why there could be anomalies on the log entries origins
-			if ($oCaseLog->GetEntryCount() !== $oCaseLogEntriesOriginsSet->Count()) {
-				IssueLog::Debug(static::class.": Number of log entries ({$oCaseLog->GetEntryCount()}) don't match number of corresponding CMDBChanges ({$oCaseLogEntriesOriginsSet->Count()}) for object {$sObjClass}::{$sObjId} / attribute {$sCaseLogAttCode}");
+			$aEntryOriginsByIndex = [];
+			$aModificationHistoryByIndex = [];
+			while ($aChangeRow = $oCaseLogEntriesOriginsSet->FetchAssoc()) {
+				$oChangeOp = $aChangeRow['CO'];
+				$iEntryIndex = (int)$oChangeOp->Get('lastentry');
+				if ((bool)$oChangeOp->Get('is_edit')) {
+					try {
+						$oEditActivityEntry = ActivityEntryFactory::MakeFromCmdbChangeOp($oChangeOp, $aChangeRow['C']);
+					} catch (Exception $oException) {
+						ExceptionLog::LogException($oException);
+						continue;
+					}
+					if ($oEditActivityEntry instanceof CaseLogEditEntry) {
+						$aModificationHistoryByIndex[$iEntryIndex][] = $oEditActivityEntry;
+					}
+				} elseif (!isset($aEntryOriginsByIndex[$iEntryIndex])) {
+					$aEntryOriginsByIndex[$iEntryIndex] = $aChangeRow['C']->Get('origin');
+				}
+			}
+
+			if ($oCaseLog->GetEntryCount() !== count($aEntryOriginsByIndex)) {
+				IssueLog::Debug(static::class.": Number of log entries ({$oCaseLog->GetEntryCount()}) don't match number of corresponding CMDBChanges (".count($aEntryOriginsByIndex).") for object {$sObjClass}::{$sObjId} / attribute {$sCaseLogAttCode}");
 			}
 
 			$iCurrentEntryIndex = $oCaseLog->GetLatestEntryIndex();
 			foreach ($oCaseLog->GetAsArray() as $aOrmEntry) {
-				$oCaseLogEntry = ActivityEntryFactory::MakeFromCaseLogEntryArray($sCaseLogAttCode, $aOrmEntry);
-
-				// Try to set the origin, only if we have the corresponding data
-				$aChangeRow = $oCaseLogEntriesOriginsSet->FetchAssoc();
-				if (($aChangeRow !== null) && ($aChangeRow['CO']->Get('lastentry') === $iCurrentEntryIndex)) {
-					$oCaseLogEntry->SetOrigin($aChangeRow['C']->Get('origin'));
+				$oCaseLogEntry = ActivityEntryFactory::MakeFromCaseLogEntryArray($sCaseLogAttCode, $aOrmEntry, $iCurrentEntryIndex, $oObject, $oActivityPanel->IsCaseLogEditionEnabled());
+				if (isset($aEntryOriginsByIndex[$iCurrentEntryIndex])) {
+					$oCaseLogEntry->SetOrigin($aEntryOriginsByIndex[$iCurrentEntryIndex]);
+				}
+				if (isset($aModificationHistoryByIndex[$iCurrentEntryIndex])) {
+					$oCaseLogEntry->SetModificationHistory($aModificationHistoryByIndex[$iCurrentEntryIndex]);
 				}
 
 				$oActivityPanel->AddEntry($oCaseLogEntry);

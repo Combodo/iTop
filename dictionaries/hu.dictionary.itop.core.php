@@ -947,3 +947,6 @@ Operátorok:<br/>
 	'Class:ResourceSystemMenu' => 'Erőforrás rendszer menü',
 	'Class:ResourceSystemMenu+' => '~~',
 ]);
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Change:AttName_EntryEdited' => '%1$s modified, existing entry edited: %2$s~~',
+]);

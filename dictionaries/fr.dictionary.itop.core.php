@@ -976,3 +976,6 @@ Plusieurs champs peuvent ainsi être modifiés lors d\'une "mise à jour" en app
 	'Class:ResourceSystemMenu' => 'Menu System',
 	'Class:ResourceSystemMenu+' => '~~',
 ]);
+Dict::Add('FR FR', 'French', 'Français', [
+	'Change:AttName_EntryEdited' => '%1$s champ modifié, une entrée existante a été modifiée : %2$s',
+]);

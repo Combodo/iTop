@@ -49,6 +49,21 @@ class CaseLogEntry extends ActivityEntry
 	protected $iCaseLogRank;
 	/** @var string $sAuthorName Fallback name used if $sAuthorLogin is empty */
 	protected $sAuthorName;
+	/**
+	 * @var int|null Internal index of the CaseLog entry
+	 * @since 3.3.0 N°1365 - Carry the internal index into the Activity panel
+	 */
+	protected $iEntryIndex;
+	/**
+	 * @var bool Whether the current user can edit this entry
+	 * @since 3.3.0 N°1365 - Track whether the edit action is authorized
+	 */
+	protected $bCanEditEntry;
+	/**
+	 * @var array<int, CaseLogEditEntry> Edit history, newest first
+	 * @since 3.3.0 N°1365 - Expose the CaseLog edit history
+	 */
+	protected $aModificationHistory;
 
 	/**
 	 * CaseLogEntry constructor.
@@ -61,6 +76,7 @@ class CaseLogEntry extends ActivityEntry
 	 * @param string|null $sId
 	 *
 	 * @throws \OQLException
+	 * @since 3.3.0 N°1365 - Initialize CaseLog edit metadata
 	 */
 	public function __construct(DateTime $oDateTime, string $sAuthorLogin, string $sAttCode, string $sContent, string $sAuthorName, ?string $sId = null)
 	{
@@ -69,6 +85,9 @@ class CaseLogEntry extends ActivityEntry
 
 		$this->sAttCode = $sAttCode;
 		$this->SetCaseLogRank(static::DEFAULT_CASELOG_RANK);
+		$this->iEntryIndex = null;
+		$this->bCanEditEntry = false;
+		$this->aModificationHistory = [];
 	}
 
 	/*
@@ -107,6 +126,111 @@ class CaseLogEntry extends ActivityEntry
 	public function GetAttCode(): string
 	{
 		return $this->sAttCode;
+	}
+
+	/**
+	 * Set the internal CaseLog entry index.
+	 *
+	 * @param int $iEntryIndex
+	 *
+	 * @return $this
+	 * @since 3.3.0 N°1365 - Expose the indexed CaseLog entry to the activity panel
+	 */
+	public function SetEntryIndex(int $iEntryIndex)
+	{
+		$this->iEntryIndex = $iEntryIndex;
+
+		return $this;
+	}
+
+	/**
+	 * Return the internal CaseLog entry index.
+	 *
+	 * @return int|null
+	 * @since 3.3.0 N°1365 - Expose the indexed CaseLog entry to the activity panel
+	 */
+	public function GetEntryIndex(): ?int
+	{
+		return $this->iEntryIndex;
+	}
+
+	/**
+	 * Set whether the current user can edit this entry.
+	 *
+	 * @param bool $bCanEditEntry
+	 *
+	 * @return $this
+	 * @since 3.3.0 N°1365 - Display the CaseLog edition action only when authorized
+	 */
+	public function SetCanEditEntry(bool $bCanEditEntry)
+	{
+		$this->bCanEditEntry = $bCanEditEntry;
+
+		return $this;
+	}
+
+	/**
+	 * Return whether the current user can edit this entry.
+	 *
+	 * @return bool
+	 * @since 3.3.0 N°1365 - Display the CaseLog edition action only when authorized
+	 */
+	public function CanEditEntry(): bool
+	{
+		return $this->bCanEditEntry;
+	}
+
+	/**
+	 * Set the edit history for this entry.
+	 *
+	 * @param array<int, CaseLogEditEntry> $aModificationHistory
+	 *
+	 * @return $this
+	 * @since 3.3.0 N°1365 - Expose the CaseLog edit history
+	 */
+	public function SetModificationHistory(array $aModificationHistory)
+	{
+		$this->aModificationHistory = $aModificationHistory;
+
+		return $this;
+	}
+
+	/**
+	 * Return whether this entry has any edit history.
+	 *
+	 * @return bool
+	 * @since 3.3.0 N°1365 - Display the CaseLog edit history
+	 */
+	public function HasModificationHistory(): bool
+	{
+		return $this->aModificationHistory !== [];
+	}
+
+	/**
+	 * Return the edit history, newest first.
+	 *
+	 * @return array<int, CaseLogEditEntry>
+	 * @since 3.3.0 N°1365 - Display the CaseLog edit history
+	 */
+	public function GetModificationHistory(): array
+	{
+		return $this->aModificationHistory;
+	}
+
+	/**
+	 * Return the formatted date of the latest edit.
+	 *
+	 * @return string
+	 * @throws \Exception
+	 * @since 3.3.0 N°1365 - Display the latest CaseLog edit date
+	 */
+	public function GetFormattedLastModificationDateTime(): string
+	{
+		if (false === $this->HasModificationHistory()) {
+			return '';
+		}
+
+		return $this->aModificationHistory[0]->GetFormattedDateTime();
 	}
 
 	/**

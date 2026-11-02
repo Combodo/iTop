@@ -2338,6 +2338,21 @@ EOF
 				break;
 
 				/** @internal */
+			case 'activity_panel.edit_caselog_entry':
+				$oPage = new JsonPage();
+				try {
+					$oController = new ActivityPanelController();
+					$aResult = $oController->EditCaseLogEntry();
+				} catch (Exception $oException) {
+					$aResult = [
+						'success'       => false,
+						'error_message' => $oException->getMessage(),
+					];
+				}
+				$oPage->SetData($aResult);
+				break;
+
+				/** @internal */
 			case 'activity_panel.load_more_entries':
 				$oPage = new JsonPage();
 				try {

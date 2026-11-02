@@ -23,6 +23,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry;
 use AttributeDateTime;
 use CMDBChange;
 use CMDBChangeOp;
+use Combodo\iTop\Service\CaseLog\CaseLogEditionService;
 use DateTime;
 use DBObject;
 use EventNotification;
@@ -72,13 +73,17 @@ class ActivityEntryFactory
 	 *
 	 * @param string $sAttCode Code of the case log attribute
 	 * @param array $aOrmEntry
+	 * @param int|null $iEntryInternalIndex
+	 * @param \DBObject|null $oHostObject
+	 * @param bool $bAllowCaseLogEditing Whether this panel should expose the edit action
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\CaseLogEntry
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
+	 * @since 3.3.0 N°1365 - Carry CaseLog indexes into the activity panel
 	 */
-	public static function MakeFromCaseLogEntryArray(string $sAttCode, array $aOrmEntry)
+	public static function MakeFromCaseLogEntryArray(string $sAttCode, array $aOrmEntry, $iEntryInternalIndex = null, $oHostObject = null, bool $bAllowCaseLogEditing = true)
 	{
 		$oUser = MetaModel::GetObject('User', $aOrmEntry['user_id'], false, true);
 		$sUserLogin = ($oUser === null) ? '' : $oUser->Get('login');
@@ -91,6 +96,12 @@ class ActivityEntryFactory
 			\HTMLSanitizer::Sanitize($aOrmEntry['message_html']),
 			$aOrmEntry['user_login']
 		);
+		if (is_int($iEntryInternalIndex)) {
+			$oEntry->SetEntryIndex($iEntryInternalIndex);
+			if ($oHostObject instanceof DBObject) {
+				$oEntry->SetCanEditEntry($bAllowCaseLogEditing && CaseLogEditionService::GetInstance()->CanEditEntry($oHostObject, $sAttCode, $iEntryInternalIndex));
+			}
+		}
 
 		return $oEntry;
 	}

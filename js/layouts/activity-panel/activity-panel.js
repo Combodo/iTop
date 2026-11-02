@@ -35,6 +35,9 @@ $(function()
 					save_state_endpoint: null,
 					last_loaded_entries_ids: {},
 					load_more_entries_endpoint: null,
+					caselog_edition_endpoint: null,
+					caselog_edition_editor_configuration: {},
+					caselog_edition_image_upload_url: null,
 				},
 			css_classes:
 				{
@@ -87,6 +90,14 @@ $(function()
 					entry_datetime: '[data-role="ibo-activity-entry--datetime"]',
 					edits_entry_long_description: '[data-role="ibo-edits-entry--long-description"]',
 					edits_entry_long_description_toggler: '[data-role="ibo-edits-entry--long-description-toggler"]',
+					caselog_edit_button: '[data-role="ibo-caselog-entry--edit-button"]',
+					caselog_history_toggle: '[data-role="ibo-caselog-entry--history-toggle"]',
+					caselog_history: '[data-role="ibo-caselog-entry--modification-history"]',
+					caselog_edition_form: '[data-role="ibo-caselog-entry--edition-form"]',
+					caselog_edition_editor: '[data-role="ibo-caselog-entry--edition-editor"]',
+					caselog_edition_save: '[data-role="ibo-caselog-entry--edition-save"]',
+					caselog_edition_cancel: '[data-role="ibo-caselog-entry--edition-cancel"]',
+					caselog_edition_error: '[data-role="ibo-caselog-entry--edition-error"]',
 					notification_entry_long_description: '[data-role="ibo-notification-entry--long-description"]',
 					notification_entry_long_description_toggler: '[data-role="ibo-notification-entry--long-description-toggler"]',
 					load_more_entries_container: '[data-role="ibo-activity-panel--load-more-entries-container"]',
@@ -234,6 +245,18 @@ $(function()
 				// - Click on an notification entry's long description toggler
 				this.element.on('click', this.js_selectors.notification_entry_long_description_toggler, function (oEvent) {
 					me._onEntryLongDescriptionTogglerClick(oEvent, $(this).closest(me.js_selectors.entry));
+				});
+				this.element.on('click', this.js_selectors.caselog_edit_button, function (oEvent) {
+					me._onCaseLogEditButtonClick(oEvent, $(this).closest(me.js_selectors.entry));
+				});
+				this.element.on('click', this.js_selectors.caselog_edition_save, function (oEvent) {
+					me._onCaseLogEditionSaveClick(oEvent, $(this).closest(me.js_selectors.entry));
+				});
+				this.element.on('click', this.js_selectors.caselog_edition_cancel, function (oEvent) {
+					me._onCaseLogEditionCancelClick(oEvent, $(this).closest(me.js_selectors.entry));
+				});
+				this.element.on('click', this.js_selectors.caselog_history_toggle, function (oEvent) {
+					me._onCaseLogHistoryToggleClick(oEvent, $(this).closest(me.js_selectors.entry), $(this));
 				});
 				// - Click on load more entries button
 				this.element.find(this.js_selectors.load_more_entries).on('click', function (oEvent) {
@@ -525,6 +548,165 @@ $(function()
 				oEvent.preventDefault();
 
 				oEntryElem.toggleClass(this.css_classes.is_closed);
+			},
+			_onCaseLogEditButtonClick: function (oEvent, oEntryElem) {
+				oEvent.preventDefault();
+
+				const oFormElem = oEntryElem.find(this.js_selectors.caselog_edition_form);
+				const oEditorElem = oFormElem.find(this.js_selectors.caselog_edition_editor);
+				const sEditorId = oEditorElem.attr('id');
+				const oContentElem = oEntryElem.find('[data-role="ibo-caselog-entry--content"]');
+				const sOriginalHtml = oEditorElem.val();
+				const aConfiguration = $.extend(true, {}, this.options.caselog_edition_editor_configuration);
+				oEntryElem.find(this.js_selectors.caselog_history).addClass(this.css_classes.is_hidden);
+				oEntryElem.find(this.js_selectors.caselog_history_toggle).attr('aria-expanded', 'false');
+				aConfiguration.detectChanges = Object.assign({}, aConfiguration.detectChanges || {}, {
+					initialValue: sOriginalHtml,
+				});
+
+				oFormElem.data('original-html', sOriginalHtml);
+				oEditorElem.val(sOriginalHtml);
+				oContentElem.addClass(this.css_classes.is_hidden);
+				oEntryElem.find('[data-role="ibo-caselog-entry--edition-footer"]').addClass(this.css_classes.is_hidden);
+				oFormElem.removeClass(this.css_classes.is_hidden);
+				oEntryElem.addClass('ibo-is-editing');
+				oFormElem.find(this.js_selectors.caselog_edition_error).addClass(this.css_classes.is_hidden).text('');
+				oFormElem.find(this.js_selectors.caselog_edition_save+', '+this.js_selectors.caselog_edition_cancel).prop('disabled', true);
+
+				Promise.resolve()
+					.then(() => CombodoCKEditorHandler.CreateInstance('#'+sEditorId, aConfiguration, true))
+					.then((oEditor) => {
+						const oImageUploadPromise = this.options.caselog_edition_image_upload_url
+							? CombodoCKEditorHandler.EnableImageUpload('#'+sEditorId, this.options.caselog_edition_image_upload_url)
+							: Promise.resolve();
+
+						return oImageUploadPromise.then(() => {
+							oFormElem.find(this.js_selectors.caselog_edition_save+', '+this.js_selectors.caselog_edition_cancel).prop('disabled', false);
+							oEditor.focus();
+						});
+					})
+					.catch((oError) => {
+						const sEditorSelector = '#'+sEditorId;
+						this._DestroyCaseLogEditor(sEditorId)
+							.catch((oDestroyError) => {
+								CombodoJSConsole.Error('ActivityPanel: Could not destroy a failed CaseLog editor: '+oDestroyError);
+							})
+							.then(() => {
+								delete CombodoCKEditorHandler.instances[sEditorSelector];
+								delete CombodoCKEditorHandler.instances_promise[sEditorSelector];
+								delete CombodoCKEditorHandler.is_upload_configured[sEditorSelector];
+								oFormElem.addClass(this.css_classes.is_hidden);
+								oContentElem.removeClass(this.css_classes.is_hidden);
+								oEntryElem.find('[data-role="ibo-caselog-entry--edition-footer"]').removeClass(this.css_classes.is_hidden);
+								oEntryElem.removeClass('ibo-is-editing');
+								CombodoModal.OpenErrorModal(oEntryElem.attr('data-entry-caselog-edition-editor-error'));
+								CombodoJSConsole.Error('ActivityPanel: Could not initialize a CaseLog editor: '+oError);
+							});
+					});
+			},
+			_onCaseLogEditionSaveClick: function (oEvent, oEntryElem) {
+				oEvent.preventDefault();
+
+				const me = this;
+				const oFormElem = oEntryElem.find(this.js_selectors.caselog_edition_form);
+				const oEditorElem = oFormElem.find(this.js_selectors.caselog_edition_editor);
+				const sEditorId = oEditorElem.attr('id');
+				const oEditor = CombodoCKEditorHandler.GetInstanceSynchronous('#'+sEditorId);
+				if (oEditor === undefined) {
+					return;
+				}
+
+				const iEntryIndex = parseInt(oEntryElem.attr('data-entry-caselog-index'), 10);
+				const sAttCode = oEntryElem.attr('data-entry-caselog-attribute-code');
+				const sContent = oEditor.getData();
+				const oActionButtons = oFormElem.find(this.js_selectors.caselog_edition_save+', '+this.js_selectors.caselog_edition_cancel);
+				oActionButtons.prop('disabled', true);
+				oFormElem.find(this.js_selectors.caselog_edition_error).addClass(this.css_classes.is_hidden).text('');
+
+				$.post(
+					this.options.caselog_edition_endpoint,
+					{
+						operation: 'activity_panel.edit_caselog_entry',
+						object_class: this._GetHostObjectClass(),
+						object_id: this._GetHostObjectID(),
+						attribute_code: sAttCode,
+						entry_index: iEntryIndex,
+						content: sContent,
+						transaction_id: this.options.transaction_id,
+					},
+					'json'
+				).done(function (oData) {
+					if (false === oData.data.success) {
+						me._ShowCaseLogEditionError(oEntryElem, oData.data.error_message);
+						oActionButtons.prop('disabled', false);
+						return;
+					}
+
+					me._DestroyCaseLogEditor(sEditorId).catch((oError) => {
+						CombodoJSConsole.Error('ActivityPanel: Could not destroy a saved CaseLog editor: '+oError);
+					}).then(function () {
+						oEntryElem.replaceWith(oData.data.entry_html);
+						me._ApplyEntriesFilters();
+						me._UpdateMessagesCounters();
+						CombodoInlineImage.FixImagesWidth();
+					});
+				}).fail(function (oXHR, sStatus, sErrorThrown) {
+					const sErrorMessage = oXHR.responseJSON?.data?.error_message || oEntryElem.attr('data-entry-caselog-edition-error');
+					me._ShowCaseLogEditionError(oEntryElem, sErrorMessage);
+					oActionButtons.prop('disabled', false);
+					CombodoJSConsole.Error('ActivityPanel: Could not edit a CaseLog entry: '+sErrorThrown);
+				});
+			},
+			_onCaseLogEditionCancelClick: function (oEvent, oEntryElem) {
+				oEvent.preventDefault();
+
+				const oFormElem = oEntryElem.find(this.js_selectors.caselog_edition_form);
+				const sEditorId = oFormElem.find(this.js_selectors.caselog_edition_editor).attr('id');
+				this._DestroyCaseLogEditor(sEditorId).catch((oError) => {
+					CombodoJSConsole.Error('ActivityPanel: Could not destroy a cancelled CaseLog editor: '+oError);
+				}).then(() => {
+					oFormElem.addClass(this.css_classes.is_hidden);
+					oEntryElem.find('[data-role="ibo-caselog-entry--content"]').removeClass(this.css_classes.is_hidden);
+					oEntryElem.find('[data-role="ibo-caselog-entry--edition-footer"]').removeClass(this.css_classes.is_hidden);
+					oEntryElem.removeClass('ibo-is-editing');
+				});
+			},
+			_onCaseLogHistoryToggleClick: function (oEvent, oEntryElem, oToggleElem) {
+				oEvent.preventDefault();
+				oEvent.stopPropagation();
+
+				const oHistoryElem = oEntryElem.find(this.js_selectors.caselog_history);
+				const bWasHidden = oHistoryElem.hasClass(this.css_classes.is_hidden);
+				oHistoryElem.toggleClass(this.css_classes.is_hidden, !bWasHidden);
+				oToggleElem.attr('aria-expanded', bWasHidden ? 'true' : 'false');
+			},
+			_ShowCaseLogEditionError: function (oEntryElem, sMessage) {
+				const sErrorMessage = sMessage || oEntryElem.attr('data-entry-caselog-edition-error');
+				oEntryElem.find(this.js_selectors.caselog_edition_error)
+					.text(sErrorMessage)
+					.removeClass(this.css_classes.is_hidden);
+			},
+			_DestroyCaseLogEditor: function (sEditorId) {
+				const sEditorSelector = '#'+sEditorId;
+				const oEditor = CombodoCKEditorHandler.GetInstanceSynchronous(sEditorSelector);
+				if (oEditor === undefined) {
+					return Promise.resolve();
+				}
+
+				const ClearEditorInstance = () => {
+					delete CombodoCKEditorHandler.instances[sEditorSelector];
+					delete CombodoCKEditorHandler.instances_promise[sEditorSelector];
+					delete CombodoCKEditorHandler.is_upload_configured[sEditorSelector];
+				};
+				return Promise.resolve()
+					.then(() => oEditor.destroy())
+					.then(
+						() => ClearEditorInstance(),
+						(oError) => {
+							ClearEditorInstance();
+							throw oError;
+						}
+					);
 			},
 			/**
 			 * Callback for mouse clicks that should interact with the activity panel (eg. Clic outside a dropdown should close it, ...)
@@ -1485,7 +1667,7 @@ $(function()
 			 *
 			 * @param {boolean} bLimitResultsLength True to limit the results length to the X previous entries, false to retrieve them all
 			 * @private
-			 * @return {void}
+			 * @return {jqXHR}
 			 */
 			_LoadMoreEntries: function (bLimitResultsLength = true) {
 				const me = this;
@@ -1506,7 +1688,7 @@ $(function()
 					last_loaded_entries_ids: this.options.last_loaded_entries_ids,
 					limit_results_length: bLimitResultsLength,
 				};
-				$.post(
+				return $.post(
 						this.options.load_more_entries_endpoint,
 						oParams,
 						'json'

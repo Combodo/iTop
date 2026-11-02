@@ -46,6 +46,11 @@ class EditsEntry extends ActivityEntry
 	protected $sObjectClass;
 	/** @var array $aAttributes Array of edited attributes with their code, label and descriptions (an attribute can have several descriptions at once, eg. linkedset items added/removed) */
 	protected $aAttributes;
+	/**
+	 * @var array<string, array{previous: string, new: string}> Rendered HTML attribute comparisons
+	 * @since 3.3.0 N°1365 - Show rich-text field differences in activity history
+	 */
+	protected $aHtmlComparisons = [];
 
 	/**
 	 * EditsEntry constructor.
@@ -97,6 +102,59 @@ class EditsEntry extends ActivityEntry
 	public function GetAttributes(): array
 	{
 		return $this->aAttributes;
+	}
+
+	/**
+	 * Set the rendered HTML comparison for an attribute.
+	 *
+	 * @param string $sAttCode
+	 * @param array{previous: string, new: string} $aComparison
+	 *
+	 * @return $this
+	 * @since 3.3.0 N°1365 - Show rich-text field differences in activity history
+	 */
+	public function SetHtmlComparison(string $sAttCode, array $aComparison)
+	{
+		$this->aHtmlComparisons[$sAttCode] = $aComparison;
+
+		return $this;
+	}
+
+	/**
+	 * Return whether this edit entry has any rendered HTML comparisons.
+	 *
+	 * @return bool
+	 * @since 3.3.0 N°1365 - Expand rich-text differences on demand
+	 */
+	public function HasHtmlComparisons(): bool
+	{
+		return $this->aHtmlComparisons !== [];
+	}
+
+	/**
+	 * Return whether the specified attribute has a rendered HTML comparison.
+	 *
+	 * @param string $sAttCode
+	 *
+	 * @return bool
+	 * @since 3.3.0 N°1365 - Render rich-text attribute history
+	 */
+	public function HasHtmlComparison(string $sAttCode): bool
+	{
+		return isset($this->aHtmlComparisons[$sAttCode]);
+	}
+
+	/**
+	 * Return the rendered HTML comparison for the specified attribute.
+	 *
+	 * @param string $sAttCode
+	 *
+	 * @return array{previous: string, new: string}
+	 * @since 3.3.0 N°1365 - Render rich-text attribute history
+	 */
+	public function GetHtmlComparison(string $sAttCode): array
+	{
+		return $this->aHtmlComparisons[$sAttCode] ?? ['previous' => '', 'new' => ''];
 	}
 
 	/**
@@ -152,6 +210,7 @@ class EditsEntry extends ActivityEntry
 	 *
 	 * @return $this
 	 * @throws \Exception
+	 * @since 3.3.0 N°1365 - Merge rendered rich-text comparisons with grouped edits
 	 */
 	public function Merge(EditsEntry $oEntry)
 	{
@@ -164,6 +223,9 @@ class EditsEntry extends ActivityEntry
 			foreach ($aAttData['descriptions'] as $sDescription) {
 				$this->AddAttribute($sAttCode, $sDescription);
 			}
+		}
+		foreach ($oEntry->aHtmlComparisons as $sAttCode => $aComparison) {
+			$this->SetHtmlComparison($sAttCode, $aComparison);
 		}
 
 		return $this;

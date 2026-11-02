@@ -954,3 +954,6 @@ You can use in the OQL :this->attribute_code with an attribute code of the objec
 	'Class:ResourceSystemMenu' => 'Меню Система',
 	'Class:ResourceSystemMenu+' => '~~',
 ]);
+Dict::Add('RU RU', 'Russian', 'Русский', [
+	'Change:AttName_EntryEdited' => '%1$s modified, existing entry edited: %2$s~~',
+]);

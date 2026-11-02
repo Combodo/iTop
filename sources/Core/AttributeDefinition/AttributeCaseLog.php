@@ -408,10 +408,26 @@ class AttributeCaseLog extends AttributeLongText
 		return $oFormField;
 	}
 
+	/**
+	 * @throws \CoreException
+	 * @since 3.3.0 N°1365 - Persist indexed CaseLog edit versions in history
+	 */
 	protected function GetChangeRecordAdditionalData(CMDBChangeOp $oMyChangeOp, DBObject $oObject, $original, $value): void
 	{
 		/** @var ormCaseLog $value */
-		$oMyChangeOp->Set("lastentry", $value->GetLatestEntryIndex());
+		$iModifiedEntryIndex = $value->GetModifiedEntryIndex();
+		$bIsEdit = $value->WasModifiedEntryEdited();
+		$oMyChangeOp->Set("lastentry", $iModifiedEntryIndex ?? $value->GetLatestEntryIndex());
+		$oMyChangeOp->Set("is_edit", $bIsEdit);
+
+		if ($bIsEdit) {
+			if (($iModifiedEntryIndex === null) || !($original instanceof ormCaseLog)) {
+				throw new \CoreException('Unable to capture the CaseLog edit content snapshots');
+			}
+
+			$oMyChangeOp->Set("oldvalue", $original->GetEntryAt($iModifiedEntryIndex));
+			$oMyChangeOp->Set("newvalue", $value->GetEntryAt($iModifiedEntryIndex));
+		}
 	}
 
 	protected function GetChangeRecordClassName(): string

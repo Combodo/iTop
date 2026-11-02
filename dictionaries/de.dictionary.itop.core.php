@@ -963,3 +963,6 @@ Dieses Symbol wird im Tooltip des Schloss-Symbols an synchronisierten '.ITOP_APP
 	'Class:ResourceSystemMenu' => 'Ressource "System Menü"',
 	'Class:ResourceSystemMenu+' => '~~',
 ]);
+Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Change:AttName_EntryEdited' => '%1$s modified, existing entry edited: %2$s~~',
+]);

@@ -970,3 +970,6 @@ You can use in the OQL :this->attribute_code with an attribute code of the objec
 	'Class:ResourceSystemMenu' => '资源系统菜单',
 	'Class:ResourceSystemMenu+' => '~~',
 ]);
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Change:AttName_EntryEdited' => '%1$s modified, existing entry edited: %2$s~~',
+]);
