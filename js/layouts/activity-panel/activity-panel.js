@@ -35,6 +35,17 @@ $(function()
 					save_state_endpoint: null,
 					last_loaded_entries_ids: {},
 					load_more_entries_endpoint: null,
+					resizer_storage_key: 'itop.activityPanelWidth',
+					resizer_css_custom_property: '--ibo-activity-panel--custom-width',
+					resizer_desktop_breakpoint: 900, // Keep in sync with layout.html.twig and _activity-panel.scss
+					resizer_closed_width: 32, // Keep in sync with layout.html.twig and _activity-panel.scss
+					resizer_min_width: 360, // Keep in sync with layout.html.twig
+					resizer_main_content_min_width: 320, // Keep in sync with layout.html.twig
+					resizer_keyboard_step: 24,
+					resizer_reduced_preset_width: 480,
+					resizer_expanded_viewport_ratio: 0.6,
+					resizer_mode_switch_ratio: 0.25,
+					resizer_width_label: null,
 				},
 			css_classes:
 				{
@@ -47,14 +58,19 @@ $(function()
 					is_hidden: 'ibo-is-hidden',
 					is_draft: 'ibo-is-draft',
 					is_current_user: 'ibo-is-current-user',
+					is_resizing: 'ibo-is-user-resizing',
+					is_resizer_initializing: 'ibo-is-resizer-initializing',
+					has_custom_width: 'ibo-has-custom-width',
 				},
 			js_selectors:
 				{
 					panel_togglers: '[data-role="ibo-activity-panel--togglers"]',
 					panel_size_expand: '[data-role="ibo-activity-panel--expand-icon"]',
 					panel_size_reduce: '[data-role="ibo-activity-panel--reduce-icon"]',
+					panel_resize_reset: '[data-role="ibo-activity-panel--reset-width"]',
 					panel_size_close: '[data-role="ibo-activity-panel--close-icon"]',
 					panel_size_open: '[data-role="ibo-activity-panel--closed-cover"]',
+					panel_resizer: '[data-role="ibo-activity-panel--resizer"]',
 					tab_toggler: '[data-role="ibo-activity-panel--tab-toggler"]',
 					tab_title: '[data-role="ibo-activity-panel--tab-title"]',
 					tabs_toolbars: '[data-role="ibo-activity-panel--tabs-toolbars"]',
@@ -119,15 +135,21 @@ $(function()
 				},
 			},
 			release_lock_promise_resolve: null,	// N°4494 - Resolve callback of the Promise used for the action following the log entry send, which must be done only once the lock is released
+			panel_resize_state: null,
+			responsive_is_narrow: null,
+			tab_labels_observer: null,
+			panel_bounds_observer: null,
 
 			// the constructor
 			_create: function () {
 				this.element.addClass('ibo-activity-panel');
+				this.responsive_is_narrow = window.innerWidth <= this.options.resizer_desktop_breakpoint;
 
 				// Should be initialized globally, but as we don't actually do it
 				moment.locale(GetUserLanguage());
 
 				this._bindEvents();
+				this._InitializePanelResizer();
 
 				// Lock
 				if (null === this.options.lock_status) {
@@ -138,8 +160,10 @@ $(function()
 				}
 
 				this._InitializeCurrentTab();
+				this._UpdateTabAccessibility();
 				this._ApplyEntriesFilters();
 				this._UpdateMessagesCounters();
+				this._InitializeTabLabels();
 				this._UpdateFiltersCheckboxesFromOptions();
 				this._ReformatDateTimes();
 				this._PrepareEntriesSubmitConfirmationDialog();
@@ -149,6 +173,18 @@ $(function()
 			// events bound via _bind are removed automatically
 			// revert other modifications here
 			_destroy: function () {
+				this._FinishPanelResize();
+				if (this.tab_labels_observer !== null) {
+					this.tab_labels_observer.disconnect();
+				}
+				if (this.panel_bounds_observer !== null) {
+					this.panel_bounds_observer.disconnect();
+				}
+				$(window).off(this.eventNamespace);
+				this.element.off(this.eventNamespace);
+				this.element.find(this.js_selectors.panel_resizer).off(this.eventNamespace);
+				this.element.find(this.js_selectors.tab_title).off(this.eventNamespace);
+				this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
 				this.element.removeClass('ibo-activity-panel');
 			},
 			_bindEvents: function () {
@@ -160,13 +196,51 @@ $(function()
 				this.element.find(this.js_selectors.panel_size_expand+', '+this.js_selectors.panel_size_reduce).on('click', function (oEvent) {
 					me._onPanelSizeIconClick(oEvent);
 				});
+				this.element.find(this.js_selectors.panel_resize_reset).on('click', function (oEvent) {
+					me._onPanelResizeReset(oEvent);
+				});
 				// - Click on the panel close/open togglers
 				this.element.find(this.js_selectors.panel_size_close+', '+this.js_selectors.panel_size_open).on('click', function (oEvent) {
 					me._onPanelDisplayIconClick(oEvent);
 				});
+
+				// Mouse and keyboard resizing
+				const oPanelResizerElem = this.element.find(this.js_selectors.panel_resizer);
+				oPanelResizerElem.on('pointerdown'+this.eventNamespace, function (oEvent) {
+					me._onPanelResizePointerDown(oEvent);
+				});
+				oPanelResizerElem.on('dblclick'+this.eventNamespace, function (oEvent) {
+					me._onPanelDisplayIconClick(oEvent);
+				});
+				oPanelResizerElem.on('keydown'+this.eventNamespace, function (oEvent) {
+					me._onPanelResizeKeyDown(oEvent);
+				});
+				oPanelResizerElem.on('lostpointercapture'+this.eventNamespace, function () {
+					me._FinishPanelResize();
+				});
+				this.element.on('transitionend'+this.eventNamespace, function (oEvent) {
+					if (oEvent.target === this && oEvent.originalEvent.propertyName === 'width') {
+						me._UpdatePanelResizeAria(this.getBoundingClientRect().width);
+					}
+				});
+				$(window).on('pointermove'+this.eventNamespace, function (oEvent) {
+					me._onPanelResizePointerMove(oEvent);
+				});
+				$(window).on('pointerup'+this.eventNamespace+' pointercancel'+this.eventNamespace, function (oEvent) {
+					me._FinishPanelResize(me._GetPointerEvent(oEvent).pointerId);
+				});
+				$(window).on('resize'+this.eventNamespace, function () {
+					me._onWindowResize();
+				});
+				$(window).on('keydown'+this.eventNamespace, function (oEvent) {
+					me._onPanelToggleShortcut(oEvent);
+				});
 				// - Click on a tab title
 				this.element.find(this.js_selectors.tab_title).on('click', function (oEvent) {
 					me._onTabTitleClick(oEvent, $(this));
+				});
+				this.element.find(this.js_selectors.tab_title).on('keydown'+this.eventNamespace, function (oEvent) {
+					me._onTabTitleKeyDown(oEvent);
 				});
 
 				// Tabs toolbar
@@ -265,10 +339,27 @@ $(function()
 			_onPanelSizeIconClick: function (oEvent) {
 				// Avoid anchor glitch
 				oEvent.preventDefault();
+				const bHadFocus = this.element.find(this.js_selectors.panel_size_expand+', '+this.js_selectors.panel_size_reduce).is(':focus');
 
-				// Toggle menu
+				// Switch between each mode's saved width or its default preset.
 				this.element.toggleClass(this.css_classes.is_expanded);
+				this._SyncPanelResizeState();
+				if (bHadFocus) {
+					this.element.find(this.js_selectors.panel_size_expand+', '+this.js_selectors.panel_size_reduce).filter(':visible').trigger('focus');
+				}
 				this._SaveStatePreferences();
+			},
+			_onPanelResizeReset: function (oEvent) {
+				oEvent.preventDefault();
+				if (this.element.find(this.js_selectors.panel_resize_reset).is(':focus')) {
+					this.element.find(this.js_selectors.panel_size_expand+', '+this.js_selectors.panel_size_reduce).filter(':visible').trigger('focus');
+				}
+				try {
+					window.localStorage.removeItem(this._GetPanelWidthStorageKey());
+				} catch (oError) {
+					// Reset the current panel even when local storage is unavailable.
+				}
+				this._SyncPanelResizeState();
 			},
 			_onPanelDisplayIconClick: function (oEvent) {
 				// Avoid anchor glitch
@@ -276,7 +367,137 @@ $(function()
 
 				// Toggle menu
 				this.element.toggleClass(this.css_classes.is_closed);
-				this._SaveStatePreferences();
+				this._SyncPanelResizeState();
+				this._SavePanelDisplayPreference();
+			},
+			_onPanelToggleShortcut: function (oEvent) {
+				if (oEvent.key.toLowerCase() !== 'b' || oEvent.ctrlKey === oEvent.metaKey || !oEvent.shiftKey || oEvent.altKey || this.panel_resize_state !== null ||
+					$(oEvent.target).closest('input, textarea, select, [contenteditable]').length > 0) {
+					return;
+				}
+				oEvent.preventDefault();
+				if (!(oEvent.originalEvent || oEvent).repeat) {
+					this._onPanelDisplayIconClick(oEvent);
+				}
+			},
+			_onWindowResize: function () {
+				const oFocusedElement = document.activeElement;
+				const bNarrow = window.innerWidth <= this.options.resizer_desktop_breakpoint;
+				if (bNarrow !== this.responsive_is_narrow) {
+					this._FinishPanelResize();
+					this.responsive_is_narrow = bNarrow;
+					this.element.toggleClass(this.css_classes.is_closed, bNarrow || this.element[0].dataset.preferredClosed === 'true');
+				}
+				this._SyncPanelResizeState();
+				this._RestorePanelFocus(oFocusedElement);
+			},
+			_onPanelResizePointerDown: function (oEvent) {
+				const oPointerEvent = this._GetPointerEvent(oEvent);
+				if (oPointerEvent.button !== 0 || window.innerWidth <= this.options.resizer_desktop_breakpoint) {
+					return;
+				}
+
+				oEvent.preventDefault();
+				const iStartWidth = this.element[0].getBoundingClientRect().width;
+				this.panel_resize_state = {
+					pointer_id: oPointerEvent.pointerId,
+					start_x: oPointerEvent.clientX,
+					last_x: oPointerEvent.clientX,
+					start_width: iStartWidth,
+					start_expanded: this.element.hasClass(this.css_classes.is_expanded),
+					has_moved: false,
+				};
+				oEvent.currentTarget.setPointerCapture(oPointerEvent.pointerId);
+			},
+			_onPanelResizePointerMove: function (oEvent) {
+				if (this.panel_resize_state === null) {
+					return;
+				}
+
+				const oPointerEvent = this._GetPointerEvent(oEvent);
+				if (oPointerEvent.pointerId !== this.panel_resize_state.pointer_id) {
+					return;
+				}
+
+				this.panel_resize_state.last_x = oPointerEvent.clientX;
+				oEvent.preventDefault();
+				if (!this.panel_resize_state.has_moved) {
+					// Clicks, including both clicks of a double-click, must not resize or
+					// change the panel's size mode before the display toggle runs.
+					if (Math.abs(this.panel_resize_state.start_x - oPointerEvent.clientX) < 3) {
+						return;
+					}
+					this.panel_resize_state.has_moved = true;
+					this.element.addClass(this.css_classes.is_resizing);
+					this.element.removeClass(this.css_classes.is_closed);
+					$('body').addClass('ibo-is-resizing-activity-panel');
+				}
+				const iWidth = this.panel_resize_state.start_width + this.panel_resize_state.start_x - oPointerEvent.clientX;
+				const iAppliedWidth = this._SetPanelWidth(iWidth, true);
+				// Only snap closed when the gesture ends; keep the closed cover out
+				// of the way while the user is still dragging through narrow widths.
+				if (iAppliedWidth >= this._GetPanelResizeBounds().min) {
+					this._UpdatePanelSizeMode(iAppliedWidth);
+				}
+			},
+			_onPanelResizeKeyDown: function (oEvent) {
+				const bClosed = this.element.hasClass(this.css_classes.is_closed);
+				const iCurrentWidth = Math.min(this._GetPanelResizeBounds().max, this.element.hasClass(this.css_classes.has_custom_width)
+					? Number.parseFloat(this.element[0].style.getPropertyValue(this.options.resizer_css_custom_property))
+					: this._GetPanelPresetWidth());
+				let iNextWidth = null;
+
+				if (oEvent.key === 'Enter') {
+					this._onPanelDisplayIconClick(oEvent);
+					return;
+				} else if (oEvent.key === 'ArrowLeft') {
+					iNextWidth = bClosed ? this._GetPanelResizeBounds().min : iCurrentWidth + this.options.resizer_keyboard_step;
+				} else if (oEvent.key === 'ArrowRight') {
+					if (bClosed) {
+						return;
+					}
+					if (iCurrentWidth <= this._GetPanelResizeBounds().min) {
+						oEvent.preventDefault();
+						this._ClosePanelFromResize();
+						return;
+					}
+					iNextWidth = iCurrentWidth - this.options.resizer_keyboard_step;
+				} else if (oEvent.key === 'Home') {
+					oEvent.preventDefault();
+					this._ClosePanelFromResize();
+					return;
+				} else if (oEvent.key === 'End') {
+					iNextWidth = this._GetPanelResizeBounds().max;
+				}
+
+				if (iNextWidth !== null) {
+					oEvent.preventDefault();
+					this.element.removeClass(this.css_classes.is_closed);
+					const iAppliedWidth = this._SetPanelWidth(iNextWidth);
+					const bWasExpanded = this.element.hasClass(this.css_classes.is_expanded);
+					this._UpdatePanelSizeMode(iAppliedWidth);
+					this._StorePanelWidth(iAppliedWidth);
+					this._UpdatePanelResetControl();
+					if (bClosed || bWasExpanded !== this.element.hasClass(this.css_classes.is_expanded)) {
+						this._SavePanelDisplayPreference();
+					}
+				}
+			},
+			_onTabTitleKeyDown: function (oEvent) {
+				const oTabs = this.element.find(this.js_selectors.tab_title);
+				const iCurrent = oTabs.index(oEvent.currentTarget);
+				const aTargets = {
+					ArrowLeft: (iCurrent + oTabs.length - 1) % oTabs.length,
+					ArrowRight: (iCurrent + 1) % oTabs.length,
+					Home: 0,
+					End: oTabs.length - 1,
+					Enter: iCurrent,
+					' ': iCurrent,
+				};
+				if (Number.isInteger(aTargets[oEvent.key])) {
+					oEvent.preventDefault();
+					oTabs.eq(aTargets[oEvent.key]).trigger('focus').trigger('click');
+				}
 			},
 			_onTabTitleClick: function (oEvent, oTabTitleElem) {
 				// Avoid anchor glitch
@@ -307,6 +528,7 @@ $(function()
 				}
 
 				// Add current activity tab to url hash
+				this._UpdateTabAccessibility();
 				$.bbq.pushState(oState);
 			},
 			/**
@@ -591,6 +813,230 @@ $(function()
 				);
 			},
 
+			// - Helpers on panel resizing
+			_InitializePanelResizer: function () {
+				if (this.element.find(this.js_selectors.panel_resizer).length === 0) {
+					return;
+				}
+
+				this._MigrateLegacyPanelWidth();
+				this._SyncPanelResizeState();
+				this.element.removeClass(this.css_classes.is_resizer_initializing);
+				const oCenterContainer = this.element.closest('#ibo-center-container')[0];
+				if (oCenterContainer) {
+					this.panel_bounds_observer = new ResizeObserver(() => this._SyncPanelResizeState());
+					this.panel_bounds_observer.observe(oCenterContainer);
+				}
+			},
+			_GetPointerEvent: function (oEvent) {
+				return oEvent.originalEvent || oEvent;
+			},
+			_GetPanelResizeBounds: function () {
+				const oCenterContainer = this.element.closest('#ibo-center-container')[0];
+				const iAvailableWidth = oCenterContainer ? oCenterContainer.getBoundingClientRect().width : window.innerWidth;
+				const iMaxWidth = Math.max(this.options.resizer_closed_width, Math.floor(iAvailableWidth - this.options.resizer_main_content_min_width));
+				return {
+					min: Math.min(this.options.resizer_min_width, iMaxWidth),
+					max: iMaxWidth,
+				};
+			},
+			_GetPanelPresetWidth: function () {
+				return this.element.hasClass(this.css_classes.is_expanded)
+					? window.innerWidth * this.options.resizer_expanded_viewport_ratio
+					: this.options.resizer_reduced_preset_width;
+			},
+			_UpdatePanelSizeMode: function (iWidth) {
+				const iExpandedPresetWidth = window.innerWidth * this.options.resizer_expanded_viewport_ratio;
+				const iPresetWidthDifference = iExpandedPresetWidth - this.options.resizer_reduced_preset_width;
+				const iThreshold = this.options.resizer_reduced_preset_width + (iPresetWidthDifference * this.options.resizer_mode_switch_ratio);
+				this.element.toggleClass(this.css_classes.is_expanded, iWidth >= iThreshold);
+			},
+			_GetPanelWidthStorageKey: function () {
+				return this.options.resizer_storage_key + (this.element.hasClass(this.css_classes.is_expanded) ? '.expanded' : '.reduced');
+			},
+			_MigrateLegacyPanelWidth: function () {
+				try {
+					const sLegacyWidth = window.localStorage.getItem(this.options.resizer_storage_key);
+					if (sLegacyWidth === null) {
+						return;
+					}
+					const sModeKey = this._GetPanelWidthStorageKey();
+					if (Number.isFinite(Number.parseInt(sLegacyWidth, 10)) && window.localStorage.getItem(sModeKey) === null) {
+						window.localStorage.setItem(sModeKey, sLegacyWidth);
+					}
+					window.localStorage.removeItem(this.options.resizer_storage_key);
+				} catch (oError) {
+					// The panel still works when local storage is unavailable.
+				}
+			},
+			_GetStoredPanelWidth: function () {
+				try {
+					const iWidth = Number.parseInt(window.localStorage.getItem(this._GetPanelWidthStorageKey()), 10);
+					return Number.isFinite(iWidth) ? iWidth : null;
+				} catch (oError) {
+					return null;
+				}
+			},
+			_StorePanelWidth: function (iWidth) {
+				try {
+					window.localStorage.setItem(this._GetPanelWidthStorageKey(), String(Math.round(iWidth)));
+				} catch (oError) {
+					// Resizing still works when local storage is unavailable.
+				}
+			},
+			_ClosePanelFromResize: function () {
+				if (this.element.hasClass(this.css_classes.is_closed)) {
+					return;
+				}
+				this.element.addClass(this.css_classes.is_closed);
+				this._SyncPanelResizeState();
+				this._SavePanelDisplayPreference();
+			},
+			_SavePanelDisplayPreference: function () {
+				this.element[0].dataset.preferredClosed = String(this.element.hasClass(this.css_classes.is_closed));
+				this._SaveStatePreferences();
+			},
+			_UpdatePanelResetControl: function () {
+				this.element.find(this.js_selectors.panel_resize_reset).prop('hidden', this._GetStoredPanelWidth() === null);
+			},
+			_SetPanelWidth: function (iWidth, bAllowClosedRange) {
+				const oBounds = this._GetPanelResizeBounds();
+				const iMinimumWidth = bAllowClosedRange ? this.options.resizer_closed_width : oBounds.min;
+				const iNextWidth = Math.min(oBounds.max, Math.max(iMinimumWidth, iWidth));
+
+				this.element[0].style.setProperty(this.options.resizer_css_custom_property, iNextWidth+'px');
+				this.element.addClass(this.css_classes.has_custom_width);
+				this._UpdatePanelResizeAria(iNextWidth);
+				return iNextWidth;
+			},
+			_SyncPanelResizeState: function () {
+				const oHandleElem = this.element.find(this.js_selectors.panel_resizer);
+				if (oHandleElem.length === 0) {
+					return;
+				}
+				this._UpdatePanelResetControl();
+
+				const bDesktop = window.innerWidth > this.options.resizer_desktop_breakpoint;
+				if (!bDesktop && oHandleElem.is(':focus')) {
+					this.element.find(this.js_selectors.panel_size_open).trigger('focus');
+				}
+				oHandleElem.prop('hidden', !bDesktop);
+				if (!bDesktop) {
+					this._FinishPanelResize();
+					this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
+					this.element.removeClass(this.css_classes.has_custom_width);
+					this._UpdatePanelResizeAria(this.element[0].getBoundingClientRect().width);
+					return;
+				}
+				if (this.panel_resize_state !== null && this.panel_resize_state.has_moved) {
+					const oState = this.panel_resize_state;
+					this._SetPanelWidth(oState.start_width + oState.start_x - oState.last_x, true);
+					return;
+				}
+				if (this.element.hasClass(this.css_classes.is_closed)) {
+					this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
+					this.element.removeClass(this.css_classes.has_custom_width);
+					this._UpdatePanelResizeAria(this.options.resizer_closed_width);
+					return;
+				}
+
+				const iStoredWidth = this._GetStoredPanelWidth();
+				if (iStoredWidth !== null) {
+					this._SetPanelWidth(iStoredWidth);
+				} else {
+					this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
+					this.element.removeClass(this.css_classes.has_custom_width);
+					const iCurrentWidth = this.element[0].getBoundingClientRect().width;
+					const iMaxWidth = this._GetPanelResizeBounds().max;
+					if (this._GetPanelPresetWidth() > iMaxWidth) {
+						this._SetPanelWidth(iMaxWidth);
+					} else {
+						this._UpdatePanelResizeAria(iCurrentWidth);
+					}
+				}
+			},
+			_UpdatePanelResizeAria: function (iWidth) {
+				const oFocusedElement = document.activeElement;
+				const iRoundedWidth = Math.round(iWidth);
+				const oBounds = this._GetPanelResizeBounds();
+				const bClosed = this.element.hasClass(this.css_classes.is_closed);
+				this.element.find(this.js_selectors.panel_size_close+', '+this.js_selectors.panel_size_open).attr('aria-expanded', !bClosed);
+				this._RestorePanelFocus(oFocusedElement);
+				this.element.find(this.js_selectors.panel_resizer).attr({
+					'aria-valuemin': this.options.resizer_closed_width,
+					'aria-valuemax': Math.max(oBounds.max, iRoundedWidth),
+					'aria-valuenow': iRoundedWidth,
+					'aria-valuetext': this.options.resizer_width_label.replace('%1$s', iRoundedWidth),
+				});
+			},
+			_RestorePanelFocus: function (oFocusedElement) {
+				if (this.element[0].contains(oFocusedElement) && !$(oFocusedElement).is(':visible')) {
+					const bClosed = this.element.hasClass(this.css_classes.is_closed);
+					const sFocusTarget = bClosed && window.innerWidth > this.options.resizer_desktop_breakpoint ? this.js_selectors.panel_resizer
+						: (bClosed ? this.js_selectors.panel_size_open : this.js_selectors.panel_size_close);
+					this.element.find(sFocusTarget).trigger('focus');
+				}
+			},
+			_FinishPanelResize: function (iPointerId) {
+				if (this.panel_resize_state === null || (iPointerId !== undefined && iPointerId !== this.panel_resize_state.pointer_id)) {
+					return;
+				}
+
+				const oResizeState = this.panel_resize_state;
+				const iActivePointerId = oResizeState.pointer_id;
+				const iCurrentWidth = this.element[0].getBoundingClientRect().width;
+				const oBounds = this._GetPanelResizeBounds();
+				const bOpen = oBounds.max > this.options.resizer_closed_width && iCurrentWidth >= (this.options.resizer_closed_width + oBounds.min) / 2;
+				this.panel_resize_state = null;
+				const oHandle = this.element.find(this.js_selectors.panel_resizer)[0];
+				if (oHandle && oHandle.hasPointerCapture && oHandle.hasPointerCapture(iActivePointerId)) {
+					oHandle.releasePointerCapture(iActivePointerId);
+				}
+				if (!oResizeState.has_moved) {
+					return;
+				}
+				this.element.removeClass(this.css_classes.is_resizing);
+				$('body').removeClass('ibo-is-resizing-activity-panel');
+				if (bOpen) {
+					this.element.removeClass(this.css_classes.is_closed);
+					const iAppliedWidth = this._SetPanelWidth(iCurrentWidth);
+					this._UpdatePanelSizeMode(iAppliedWidth);
+					this._StorePanelWidth(iAppliedWidth);
+				} else {
+					this.element.toggleClass(this.css_classes.is_expanded, oResizeState.start_expanded);
+					this.element.addClass(this.css_classes.is_closed);
+					this.element[0].style.removeProperty(this.options.resizer_css_custom_property);
+					this.element.removeClass(this.css_classes.has_custom_width);
+					this._UpdatePanelResizeAria(this.options.resizer_closed_width);
+				}
+				this._UpdatePanelResetControl();
+				this._SavePanelDisplayPreference();
+			},
+
+			// Fit labels to the space left after the panel actions, including custom
+			// case logs, translated labels, message counts, and changing panel widths.
+			_InitializeTabLabels: function () {
+				const oTabs = this.element.find('[data-role="ibo-activity-panel--tabs-togglers"]')[0];
+				if (!oTabs) {
+					return;
+				}
+				this.tab_labels_observer = new ResizeObserver(() => {
+					if (oTabs.clientWidth === 0) {
+						return;
+					}
+					for (const sMode of ['full', 'compact', 'icons']) {
+						oTabs.dataset.labelMode = sMode;
+						for (const oLabel of oTabs.querySelectorAll('[data-compact-label]')) {
+							oLabel.textContent = sMode === 'full' ? oLabel.title : oLabel.dataset.compactLabel;
+						}
+						if (oTabs.scrollWidth <= oTabs.clientWidth + 1) {
+							break;
+						}
+					}
+				});
+				this.tab_labels_observer.observe(oTabs);
+			},
+
 			// - Helpers on dates
 			/**
 			 * Reformat date times to be relative (only if they are not too far in the past)
@@ -612,6 +1058,17 @@ $(function()
 			},
 
 			// - Helpers on tabs
+			_UpdateTabAccessibility: function () {
+				const me = this;
+				this.element.find(this.js_selectors.tab_toggler).each(function () {
+					const oTab = $(this).find(me.js_selectors.tab_title);
+					const bActive = $(this).hasClass(me.css_classes.is_active);
+					oTab.attr({'aria-selected': bActive, tabindex: bActive ? 0 : -1});
+					if (bActive) {
+						me.element.find(me.js_selectors.body).attr('aria-labelledby', oTab.attr('id'));
+					}
+				});
+			},
 			/**
 			 * @returns {Object} Data on the active tab:
 			 *
