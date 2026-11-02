@@ -7052,6 +7052,7 @@ abstract class MetaModel
 			'iLoginUIExtension',
 			'iPreferencesExtension',
 			'iApplicationUIExtension',
+			'iStimulusFormExtension',
 			'iPopupMenuExtension',
 			'iPageUIBlockExtension',
 			'iBackofficeLinkedScriptsExtension',
