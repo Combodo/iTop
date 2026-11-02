@@ -336,6 +336,11 @@ class InstallationFileService
 					$aUnselectableModules = [];
 					$bIsExtensionSelectable = true;
 					foreach ($oExtension->aModules as $sModuleId) {
+						// Conditional modules must be selected only by ProcessAutoSelectModules().
+						if (array_key_exists($sModuleId, $this->aAutoSelectModules)) {
+							continue;
+						}
+
 						if (array_key_exists($sModuleId, $this->aSelectedModules)) {
 							//already selected
 							continue;
