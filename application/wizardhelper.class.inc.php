@@ -61,8 +61,8 @@ class WizardHelper
 					// assumes this is handled as an array of objects
 					// thus encoded in json like: [ { name:'link1', 'id': 123}, { name:'link2', 'id': 124}...]
 					if (!is_array($value)) {
-						try{
-							$aData = json_decode($value, associative: true,  flags: JSON_THROW_ON_ERROR); // true means decode as a hash array (not an object)
+						try {
+							$aData = json_decode($value, associative: true, flags: JSON_THROW_ON_ERROR); // true means decode as a hash array (not an object)
 						} catch (JsonException $e) {
 							throw new CoreException('WizardHelper GetTargetObject: invalid data for linked set attribute '.$sAttCode.' of class '.$this->m_aData['m_sClass'], [
 								'att_code' => $sAttCode,

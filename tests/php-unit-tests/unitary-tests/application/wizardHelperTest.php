@@ -31,7 +31,6 @@ use CoreException;
  */
 class wizardHelperTest extends ItopDataTestCase
 {
-
 	public function testGetTargetObjectWithInvalidLinkSetDataValue()
 	{
 		// test case from N°9392 - [SECU] Stored XSS in subnets_list Parameter
