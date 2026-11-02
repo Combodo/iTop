@@ -350,7 +350,7 @@
         <method id="UpdateChildTicketLog">
           <comment><![CDATA[/**
             *
-            * Remove the current user associated Person from the contacts_list of this Ticket
+            * Remove the Person associated with the current user from the contacts_list of this Ticket
             * No error if there is no associated Person or if the Person is not in the list
             * @return bool Return true
              * @param string $sChildClass The class name of the child ticket (e.g. 'Incident', 'UserRequest', etc.)
@@ -383,7 +383,8 @@
 			if (MetaModel::IsValidAttCode($sParentClass, $sParentAttCode) && MetaModel::GetAttributeDef($sParentClass, $sParentAttCode) instanceof AttributeCaseLog
 			&& MetaModel::IsValidAttCode($sChildClass, $sChildAttCode) &&  MetaModel::GetAttributeDef($sChildClass, $sChildAttCode) instanceof AttributeCaseLog
 			&& (!utils::IsNullOrEmptyString($this->Get($sParentAttCode)->GetModifiedEntry('html')))) {
-			  $aChildEntries[$sChildAttCode] = Dict::Format('Class:'.$sParentClass.'/Method:UpdateChildTicketWith:'.$sParentAttCode, $this->GetKey(), $this->Get('ref')).$this->Get($sParentAttCode)->GetModifiedEntry('html');
+			  $sCleanedEntry = preg_replace('/<a\s*([^>]*)data-object-class="([^"]*)"\s.*data-object-key="([^"]*)"\s*([^>]*)>@/Ui','<a\1\4>',$this->Get($sParentAttCode)->GetModifiedEntry('html'));
+			  $aChildEntries[$sChildAttCode] = Dict::Format('Class:'.$sParentClass.'/Method:UpdateChildTicketWith:'.$sParentAttCode, $this->GetKey(), $this->Get('ref')).$sCleanedEntry;
 			}
 		}
 		if ($aChildEntries == []) {
