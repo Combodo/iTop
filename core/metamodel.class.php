@@ -117,6 +117,11 @@ define('MYSQL_ENGINE', 'innodb');
  */
 abstract class MetaModel
 {
+	/** Constants used for apply param function sanitization parameter */
+	public const APPLY_PARAMS_SANITIZE_AUTO = 'sanitize_auto';
+	public const APPLY_PARAMS_SANITIZE_HTML = 'sanitize_html';
+	public const APPLY_PARAMS_SANITIZE_NONE = 'sanitize_none';
+
 	///////////////////////////////////////////////////////////////////////////
 	//
 	// STATIC Members
@@ -6732,14 +6737,20 @@ abstract class MetaModel
 	 *   * foo->bar : Another static placeholder
 	 *   * foo->object() : Will be developed into a set of placeholders depending on the attribute of the given \DBObject and their corresponding transformation methods {@see \AttributeDefinition::GetForTemplate()}
 	 *                     Example: foo->hyperlink(), foo->name, foo->html(name), foo->head(log), foo->head_html(log), ...
+	 * @param string $sApplySanitizeMode Allowed values are one of {@see self::APPLY_PARAMS_SANITIZE_AUTO}, {@see self::APPLY_PARAMS_SANITIZE_HTML}, {@see self::APPLY_PARAMS_SANITIZE_NONE}. Default is {@see self::APPLY_PARAMS_SANITIZE_AUTO}, which means that the result will be sanitized if it is
+	 *     HTML and if the configuration option security.disable_apply_params_auto_sanitization is not set to true.
 	 *
 	 * @link https://www.itophub.io/wiki/page?id=latest:admin:placeholders
 	 * @return string
 	 *
 	 * @throws \Exception
 	 */
-	public static function ApplyParams($sInput, $aParams)
+	public static function ApplyParams($sInput, $aParams, string $sApplySanitizeMode = self::APPLY_PARAMS_SANITIZE_AUTO)
 	{
+		if (in_array($sApplySanitizeMode, [self::APPLY_PARAMS_SANITIZE_AUTO, self::APPLY_PARAMS_SANITIZE_HTML, self::APPLY_PARAMS_SANITIZE_NONE], true) === false) {
+			throw new CoreException('Invalid value for $sApplySanitizeMode parameter', ['value' => $sApplySanitizeMode]);
+		}
+
 		$aParams = static::AddMagicPlaceholders($aParams);
 
 		// Declare magic parameters
@@ -6827,7 +6838,58 @@ abstract class MetaModel
 			}
 		}
 
-		return str_replace($aSearches, $aReplacements, $sInput);
+		$sTemplate = str_replace($aSearches, $aReplacements, $sInput);
+
+		// HTML sanitization
+		if ($sApplySanitizeMode === self::APPLY_PARAMS_SANITIZE_HTML
+			|| ($sApplySanitizeMode === self::APPLY_PARAMS_SANITIZE_AUTO && !utils::GetConfig()->Get('security.disable_apply_params_auto_sanitization') && self::StartsWithHtmlDocumentMarkup($sTemplate))) {
+			$sTemplate = DOMSanitizer::Sanitize($sTemplate);
+		}
+
+		return $sTemplate;
+	}
+
+	/**
+	 * Test if a string start with DOCTYPE or HTML tag, to detect if the string is a HTML document markup
+	 *
+	 * @param string $sText
+	 *
+	 * @return bool
+	 */
+	private static function StartsWithHtmlDocumentMarkup(string $sText): bool
+	{
+		if (!preg_match('/^\s*(?:<!DOCTYPE\s+html\b|<\/?[a-z][a-z0-9:-]*(?:\s|\/?>))/i', $sText)) {
+			return false;
+		}
+
+		$bInitialUseInternalErrorsFlag = libxml_use_internal_errors(true);
+
+		$oDom = new DOMDocument();
+		$ok = $oDom->loadHTML(
+			'<!DOCTYPE html><html><body>'.$sText.'</body></html>',
+			LIBXML_NOWARNING | LIBXML_NOERROR
+		);
+
+		libxml_clear_errors();
+		libxml_use_internal_errors($bInitialUseInternalErrorsFlag);
+
+		if (!$ok) {
+			return false;
+		}
+
+		// Si on trouve des balises "réelles" dans le body, on considère qu'il y a du HTML
+		$body = $oDom->getElementsByTagName('body')->item(0);
+		if (!$body) {
+			return false;
+		}
+
+		foreach ($body->childNodes as $node) {
+			if ($node->nodeType === XML_ELEMENT_NODE) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
