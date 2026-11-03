@@ -10,6 +10,7 @@ namespace Combodo\iTop\Test\UnitTest\Core\AttributeDefinition;
 use Combodo\iTop\Core\AttributeDefinition\AttributeCaseLog;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreException;
+use Dict;
 use MetaModel;
 use ormCaseLog;
 
@@ -20,6 +21,8 @@ use ormCaseLog;
  */
 class AttributeCaseLogTest extends ItopDataTestCase
 {
+	public const CREATE_TEST_ORG = true;
+
 	/**
 	 * @covers \Combodo\iTop\Core\AttributeDefinition\AttributeCaseLog::GetChangeRecordAdditionalData
 	 * @since 3.3.0 N°1365 - Store edited CaseLog content snapshots
@@ -93,5 +96,39 @@ class AttributeCaseLogTest extends ItopDataTestCase
 			null,
 			$oEditedLog,
 		]);
+	}
+
+	/**
+	 * @covers \CMDBChangeOpSetAttributeCaseLog::GetDescription
+	 * @since 3.3.0 N°1365 - Distinguish edited CaseLog entries in native history
+	 */
+	public function testGetDescriptionDistinguishesEditedEntriesFromNewEntries(): void
+	{
+		$oObject = $this->CreateUserRequest('CaseLogEditDescription'.uniqid());
+		$oCaseLog = new ormCaseLog();
+		$oCaseLog->AddLogEntry('Edited entry');
+		$oObject->Set('private_log', $oCaseLog);
+		$oObject->DBUpdate();
+
+		$oChangeOp = MetaModel::NewObject('CMDBChangeOpSetAttributeCaseLog');
+		$oChangeOp->Set('objclass', 'UserRequest');
+		$oChangeOp->Set('objkey', $oObject->GetKey());
+		$oChangeOp->Set('attcode', 'private_log');
+		$oChangeOp->Set('lastentry', 0);
+
+		$sAttributeLabel = MetaModel::GetAttributeDef('UserRequest', 'private_log')->GetLabel();
+		$sEntryHtml = '<div class="history_entry history_entry_truncated"><div class="history_html_content">'.$oCaseLog->GetEntryAt(0).'</div></div>';
+
+		$oChangeOp->Set('is_edit', true);
+		$this->assertSame(
+			Dict::Format('Change:AttName_EntryEdited', $sAttributeLabel, $sEntryHtml),
+			$oChangeOp->GetDescription()
+		);
+
+		$oChangeOp->Set('is_edit', false);
+		$this->assertSame(
+			Dict::Format('Change:AttName_EntryAdded', $sAttributeLabel, $sEntryHtml),
+			$oChangeOp->GetDescription()
+		);
 	}
 }

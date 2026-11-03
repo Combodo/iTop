@@ -1602,7 +1602,7 @@ class Config
 		],
 		'caselog_edition.allowed_profiles' => [
 			'type' => 'array',
-			'description' => 'Profiles allowed to edit their own CaseLog entries. An empty array allows all enabled profiles.',
+			'description' => 'Profiles allowed to edit their own CaseLog entries. An empty array allows all enabled profiles, but users must still have modify rights on the object and attribute.',
 			'default' => [],
 			'value' => [],
 			'source_of_value' => '',

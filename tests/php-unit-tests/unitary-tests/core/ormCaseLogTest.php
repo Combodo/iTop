@@ -22,16 +22,17 @@ class ormCaseLogTest extends ItopDataTestCase
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
+	 * @since 3.3.0 N°1365 - Correct CaseLog entry count assertions
 	 */
 	public function testGetEntryCount()
 	{
 		// New log, with no entry
 		$oLog = new ormCaseLog();
-		$this->assertEquals($oLog->GetEntryCount(), 0, 'Should be no entry yet, returned '.$oLog->GetEntryCount());
+		$this->assertSame(0, $oLog->GetEntryCount(), 'Should be no entry yet, returned '.$oLog->GetEntryCount());
 
 		// Add an entry
 		$oLog->AddLogEntry('First entry');
-		$this->assertEquals($oLog->GetEntryCount(), 1, 'Should be 1 entry, returned '.$oLog->GetEntryCount());
+		$this->assertSame(1, $oLog->GetEntryCount(), 'Should be 1 entry, returned '.$oLog->GetEntryCount());
 	}
 
 	/**

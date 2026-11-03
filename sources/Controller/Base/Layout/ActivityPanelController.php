@@ -151,12 +151,12 @@ class ActivityPanelController extends AbstractController
 	public function EditCaseLogEntry(): array
 	{
 		$sObjectClass = utils::ReadPostedParam('object_class', '', utils::ENUM_SANITIZATION_FILTER_CLASS);
-		$iObjectId = utils::ReadPostedParam('object_id', 0, utils::ENUM_SANITIZATION_FILTER_INTEGER);
+		$iObjectId = (int)utils::ReadPostedParam('object_id', 0, utils::ENUM_SANITIZATION_FILTER_INTEGER);
 		$sAttCode = utils::ReadPostedParam('attribute_code', '', utils::ENUM_SANITIZATION_FILTER_FIELD_NAME);
-		$iEntryIndex = utils::ReadPostedParam('entry_index', -1, utils::ENUM_SANITIZATION_FILTER_INTEGER);
+		$iEntryIndex = (int)utils::ReadPostedParam('entry_index', -1, utils::ENUM_SANITIZATION_FILTER_INTEGER);
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '', utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
 		// CaseLog content is rich HTML; retain it here so HTMLSanitizer can apply iTop's configured allow-list.
-		$sContent = utils::ReadPostedParam('content', '', utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$sContent = utils::ReadPostedParam('content', null, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 
 		if (false === is_string($sContent)) {
 			throw new \CoreException(Dict::S('UI:CaseLog:Edition:ErrorRequest'));

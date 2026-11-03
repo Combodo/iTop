@@ -85,6 +85,21 @@ class CaseLogEditionServiceTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @covers \Config::GetDefault
+	 * @since 3.3.0 N°1365 - Verify CaseLog editing configuration defaults
+	 */
+	public function testCaseLogEditionConfigurationHasExpectedDefaults(): void
+	{
+		$oConfig = MetaModel::GetConfig();
+
+		$this->assertFalse($oConfig->GetDefault('caselog_edition.enabled'));
+		$this->assertSame(0, $oConfig->GetDefault('caselog_edition.modification_delay'));
+		$this->assertSame([], $oConfig->GetDefault('caselog_edition.allowed_profiles'));
+		$this->assertSame([], $oConfig->GetDefault('caselog_edition.allowed_classes'));
+		$this->assertSame([], $oConfig->GetDefault('caselog_edition.allowed_case_logs'));
+	}
+
+	/**
 	 * @covers \Combodo\iTop\Service\CaseLog\CaseLogEditionService::CanEditEntry
 	 * @since 3.3.0 N°1365 - Verify the edition feature switch and entry indexes
 	 */
@@ -198,6 +213,8 @@ class CaseLogEditionServiceTest extends ItopDataTestCase
 
 		$this->assertSame(UR_ALLOWED_NO, UserRights::IsActionAllowed('UserRequest', UR_ACTION_MODIFY));
 		$this->assertFalse($this->oService->CanEditEntry($this->oObject, 'private_log', $oCaseLog->GetLatestEntryIndex()));
+		MetaModel::GetConfig()->Set('caselog_edition.allowed_profiles', []);
+		$this->assertFalse($this->oService->CanEditEntry($this->oObject, 'private_log', $oCaseLog->GetLatestEntryIndex()));
 
 		UserRights::Logoff();
 		$this->assertFalse($this->oService->CanEditEntry($this->oObject, 'private_log', 0));
@@ -248,6 +265,14 @@ class CaseLogEditionServiceTest extends ItopDataTestCase
 		$this->assertTrue($this->InvokeNonPublicMethod(CaseLogEditionService::class, 'HasAllowedProfile', $this->oService, [['Administrator']]));
 		$this->assertFalse($this->InvokeNonPublicMethod(CaseLogEditionService::class, 'HasAllowedProfile', $this->oService, [['Portal user']]));
 		$this->assertFalse($this->InvokeNonPublicMethod(CaseLogEditionService::class, 'HasAllowedProfile', $this->oService, [42]));
+
+		$oPortalUser = $this->CreateContactlessUser('CaseLogPortal'.uniqid(), self::$aURP_Profiles['Portal user'], 'Password1!');
+		UserRights::Logoff();
+		$_SESSION = [];
+		UserRights::Login($oPortalUser->Get('login'));
+		$this->assertTrue($this->InvokeNonPublicMethod(CaseLogEditionService::class, 'HasAllowedProfile', $this->oService, [[]]));
+		$this->assertTrue($this->InvokeNonPublicMethod(CaseLogEditionService::class, 'HasAllowedProfile', $this->oService, [['Portal user']]));
+		$this->assertFalse($this->InvokeNonPublicMethod(CaseLogEditionService::class, 'HasAllowedProfile', $this->oService, [['Administrator']]));
 
 		UserRights::Logoff();
 		$this->assertFalse($this->InvokeNonPublicMethod(CaseLogEditionService::class, 'HasAllowedProfile', $this->oService, [[]]));
@@ -609,6 +634,45 @@ class CaseLogEditionServiceTest extends ItopDataTestCase
 
 	/**
 	 * @covers \Combodo\iTop\Controller\Base\Layout\ActivityPanelController::EditCaseLogEntry
+	 * @covers \Combodo\iTop\Service\CaseLog\CaseLogEditionService::EditEntry
+	 * @since 3.3.0 N°1365 - Preserve CaseLog content for invalid edit payloads
+	 */
+	public function testEditCaseLogEntryRejectsMissingOrUndefinedContentWithoutChangingEntry(): void
+	{
+		MetaModel::GetConfig()->Set('caselog_edition.enabled', true);
+		$sOriginalContent = $this->oObject->Get('private_log')->GetEntryAt(0);
+		$aBaseRequest = [
+			'object_class' => 'UserRequest',
+			'object_id' => (string)$this->oObject->GetKey(),
+			'attribute_code' => 'private_log',
+			'entry_index' => '0',
+		];
+		$aInvalidRequests = [
+			$aBaseRequest,
+			array_merge($aBaseRequest, ['content' => 'undefined']),
+		];
+
+		foreach ($aInvalidRequests as $aInvalidRequest) {
+			$aInvalidRequest['transaction_id'] = utils::GetNewTransactionId();
+			$_POST = $aInvalidRequest;
+			try {
+				(new ActivityPanelController())->EditCaseLogEntry();
+				$this->fail('Invalid CaseLog edit content must be rejected.');
+			} catch (CoreException $oException) {
+				$this->assertNotSame('', $oException->getMessage());
+			}
+
+			$oReloadedObject = MetaModel::GetObject('UserRequest', $this->oObject->GetKey());
+			$this->assertSame($sOriginalContent, $oReloadedObject->Get('private_log')->GetEntryAt(0));
+			$this->assertSame(
+				[],
+				ActivityPanelHelper::GetCaseLogEditEntries('UserRequest', (string)$this->oObject->GetKey(), 'private_log', 0)
+			);
+		}
+	}
+
+	/**
+	 * @covers \Combodo\iTop\Controller\Base\Layout\ActivityPanelController::EditCaseLogEntry
 	 * @since 3.3.0 N°1365 - Verify the CaseLog edit endpoint updates without Activity rows
 	 */
 	public function testEditCaseLogEntryReturnsUpdatedMarkupWithoutActivityRow(): void
@@ -616,9 +680,9 @@ class CaseLogEditionServiceTest extends ItopDataTestCase
 		MetaModel::GetConfig()->Set('caselog_edition.enabled', true);
 		$_POST = [
 			'object_class' => 'UserRequest',
-			'object_id' => $this->oObject->GetKey(),
+			'object_id' => (string)$this->oObject->GetKey(),
 			'attribute_code' => 'private_log',
-			'entry_index' => 0,
+			'entry_index' => '0',
 			'transaction_id' => utils::GetNewTransactionId(),
 			'content' => '<p>Edited through the endpoint</p>',
 		];
@@ -627,7 +691,20 @@ class CaseLogEditionServiceTest extends ItopDataTestCase
 
 		$this->assertTrue($aResult['success']);
 		$this->assertStringContainsString('Edited through the endpoint', $aResult['entry_html']);
+		$oReloadedObject = MetaModel::GetObject('UserRequest', $this->oObject->GetKey());
+		$this->assertStringContainsString('Edited through the endpoint', $oReloadedObject->Get('private_log')->GetEntryAt(0));
+		$this->assertStringContainsString('data-role="ibo-caselog-entry--history-toggle"', $aResult['entry_html']);
+		$this->assertStringContainsString('data-role="ibo-caselog-entry--edit-button"', $aResult['entry_html']);
 		$this->assertArrayNotHasKey('activity_entry_html', $aResult);
+
+		$_POST['transaction_id'] = utils::GetNewTransactionId();
+		$_POST['content'] = '<p>Edited a second time</p>';
+		$aSecondResult = (new ActivityPanelController())->EditCaseLogEntry();
+		$this->assertTrue($aSecondResult['success']);
+		$this->assertStringContainsString('Edited a second time', $aSecondResult['entry_html']);
+		$oReloadedObject = MetaModel::GetObject('UserRequest', $this->oObject->GetKey());
+		$this->assertStringContainsString('Edited a second time', $oReloadedObject->Get('private_log')->GetEntryAt(0));
+		$this->assertStringContainsString('data-role="ibo-caselog-entry--edit-button"', $aSecondResult['entry_html']);
 
 		$_POST['transaction_id'] = utils::GetNewTransactionId();
 		$aNoOpResult = (new ActivityPanelController())->EditCaseLogEntry();

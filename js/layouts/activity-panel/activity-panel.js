@@ -620,6 +620,11 @@ $(function()
 				const sAttCode = oEntryElem.attr('data-entry-caselog-attribute-code');
 				const sContent = oEditor.getData();
 				const oActionButtons = oFormElem.find(this.js_selectors.caselog_edition_save+', '+this.js_selectors.caselog_edition_cancel);
+				if ((typeof sContent !== 'string') || (sContent.trim() === 'undefined')) {
+					me._ShowCaseLogEditionError(oEntryElem);
+					return;
+				}
+
 				oActionButtons.prop('disabled', true);
 				oFormElem.find(this.js_selectors.caselog_edition_error).addClass(this.css_classes.is_hidden).text('');
 

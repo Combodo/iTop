@@ -12,6 +12,9 @@ $ibo-caselog-entry--edition-error--text-color: $ibo-color-red-600 !default;
 
 /* Main information */
 .ibo-caselog-entry{
+	.ibo-activity-entry--information{
+		min-width: 0;
+	}
 	.ibo-activity-entry--main-information{
 		padding-top: $ibo-caselog-entry--main-information--padding-y;
 		padding-bottom: $ibo-caselog-entry--main-information--padding-y;
@@ -146,8 +149,18 @@ $ibo-caselog-entry--edition-error--text-color: $ibo-color-red-600 !default;
 .ibo-rich-text-diff--version-content{
 	overflow-wrap: anywhere;
 }
-.ibo-rich-text-diff--version-content img{
+/* The rich-text styles add important margins that do not fit in the history columns. */
+.ibo-rich-text-diff--version-content figure,
+.ibo-rich-text-diff--version-content .image{
+	box-sizing: border-box;
+	min-width: 0;
 	max-width: 100%;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+.ibo-rich-text-diff--version-content img{
+	min-width: 0 !important;
+	max-width: 100% !important;
 	height: auto;
 }
 .ibo-rich-text-diff--removed{
@@ -162,6 +175,9 @@ $ibo-caselog-entry--edition-error--text-color: $ibo-color-red-600 !default;
 }
 .ibo-rich-text-diff--image{
 	display: inline-block;
+	min-width: 0;
+	max-width: 100%;
+	box-sizing: border-box;
 	padding: $ibo-spacing-100;
 }
 .ibo-rich-text-diff--image.ibo-rich-text-diff--removed{

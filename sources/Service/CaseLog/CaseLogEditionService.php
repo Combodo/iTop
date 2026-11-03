@@ -168,6 +168,9 @@ class CaseLogEditionService
 		if (false === $this->CanEditEntry($oObject, $sAttCode, $iEntryIndex)) {
 			throw new \CoreException(Dict::S('UI:CaseLog:Edition:ErrorNotAllowed'));
 		}
+		if (trim($sNewHtml) === 'undefined') {
+			throw new \CoreException(Dict::S('UI:CaseLog:Edition:ErrorRequest'));
+		}
 
 		$oCaseLog = $oObject->Get($sAttCode);
 		$iArrayIndex = $oCaseLog->GetLatestEntryIndex() - $iEntryIndex;
