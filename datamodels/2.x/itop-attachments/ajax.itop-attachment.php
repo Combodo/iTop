@@ -35,8 +35,8 @@ require_once(APPROOT.'/application/application.inc.php');
  */
 function RenderAttachments(AjaxPage $oPage, $iTransactionId)
 {
-	$sClass = utils::ReadPostedParam('objclass', '', false, 'class');
-	$sId = utils::ReadPostedParam('objkey', '');
+	$sClass = utils::ReadPostedParam('objclass', '', 'class');
+	$sId = utils::ReadPostedParam('objkey');
 	$oObject = MetaModel::GetObject($sClass, $sId, false);
 	$bEditMode = utils::ReadPostedParam('edit_mode', 0);
 	$aAttachmentsDeleted = utils::ReadPostedParam('attachments_deleted', []);
@@ -73,17 +73,20 @@ try {
 			$oPage->SetOutputDataOnly(true);
 
 			$aResult = [
-				'error'   => '',
-				'att_id'  => 0,
-				'preview' => 'false',
-				'msg'     => '',
+				'error'      => '',
+				'error_code' => 0,
+				'att_id'     => 0,
+				'preview'    => 'false',
+				'msg'        => '',
 			];
-			$sClass = stripslashes(utils::ReadPostedParam('obj_class', '', false, 'class'));
-			$sTempId = utils::ReadPostedParam('temp_id', '', false, 'transaction_id');
+			$sClass = stripslashes(utils::ReadPostedParam('obj_class', '', 'class'));
+			$sTempId = utils::ReadPostedParam('temp_id', '', 'transaction_id');
 			if (empty($sClass)) {
 				$aResult['error'] = "Missing argument 'obj_class'";
+				$aResult['error_code'] = 1;
 			} elseif (empty($sTempId)) {
 				$aResult['error'] = "Missing argument 'temp_id'";
+				$aResult['error_code'] = 2;
 			} else {
 				try {
 					$oDoc = utils::ReadPostedDocument('file');
@@ -106,19 +109,24 @@ try {
 					$aResult['icon'] = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($oDoc->GetFileName());
 					$aResult['att_id'] = $iAttId;
 					$aResult['preview'] = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
-				} catch (FileUploadException|SecurityException $e) {
+				} catch (FileUploadException $e) {
 					$aResult['error'] = $e->GetMessage();
+					$aResult['error_code'] = 10;
+				} catch (SecurityException $e) {
+					$aResult['error'] = $e->GetMessage();
+					$aResult['error_code'] = 20;
 				}
 			}
 			$oPage->SetData($aResult);
 			break;
 
 		case 'refresh_attachments_render':
-			$sTempId = utils::ReadPostedParam('temp_id', '', false, 'transaction_id');
+			$sTempId = utils::ReadPostedParam('temp_id');
 			RenderAttachments($oPage, $sTempId);
 			break;
 
 		default:
+			http_response_code(400);
 			$oPage->p("Missing argument 'operation'");
 	}
 
