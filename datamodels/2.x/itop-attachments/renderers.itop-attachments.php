@@ -217,6 +217,7 @@ abstract class AbstractAttachmentsRenderer
 		   	    objclass: '$sClass', 
 		   	    objkey: $sId, 
 		   	    temp_id: '$this->sTransactionId', 
+		   	    transaction_id: '$this->sTransactionId',
 		   	    edit_mode: 1, 
 		   	    attachments_deleted: aAttachmentsDeletedIds
 	        },
@@ -231,7 +232,12 @@ abstract class AbstractAttachmentsRenderer
 	
     $('#file').fileupload({
 		url: GetAbsoluteUrlModulesRoot()+'itop-attachments/ajax.itop-attachment.php',
-		formData: { operation: 'add', temp_id: '$this->sTransactionId', obj_class: '$sClass' },
+		formData: {
+			operation: 'add',
+			temp_id: '$this->sTransactionId',
+			obj_class: '$sClass',
+			transaction_id: '$this->sTransactionId'
+		},
         dataType: 'json',
 		pasteZone: null, // Don't accept files via Chrome's copy/paste
         done: function(e, data) {
@@ -437,12 +443,12 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		}
 
 		$aAttribs = [
-			'icon' => ['label' => $sThumbnail, 'description' => $sThumbnail],
-			'filename' => ['label' => $sFileName, 'description' => $sFileName],
-			'formatted-size' => ['label' => $sFileSize, 'description' => $sFileSize],
-			'upload-date' => ['label' => $sFileDate, 'description' => $sFileDate],
-			'uploader' => ['label' => $sFileUploader, 'description' => $sFileUploader],
-			'type' => ['label' => $sFileType, 'description' => $sFileType],
+			'icon'            => ['label' => $sThumbnail, 'description' => $sThumbnail],
+			'filename'        => ['label' => $sFileName, 'description' => $sFileName],
+			'formatted-size'  => ['label' => $sFileSize, 'description' => $sFileSize],
+			'upload-date'     => ['label' => $sFileDate, 'description' => $sFileDate],
+			'uploader'        => ['label' => $sFileUploader, 'description' => $sFileUploader],
+			'type'            => ['label' => $sFileType, 'description' => $sFileType],
 			'downloads-count' => ['label' => $sFileDownloadsCount, 'description' => $sFileDownloadsCount],
 		];
 
@@ -537,16 +543,16 @@ JS
 		}
 
 		$aAttachmentLine = [
-			'@id' => $sTrId,
-			'@meta' => 'data-file-type="'.utils::HtmlEntities($sFileType).'" data-file-size-raw="'.utils::HtmlEntities($iFileSize).'" data-file-size-formatted="'.utils::HtmlEntities($sFileFormattedSize).'" data-file-uploader="'.utils::HtmlEntities($sAttachmentUploader).'"',
-			'icon' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="'.$sIconClass.'"><img class="ibo-attachment--datatable--icon-preview '.$sIconClass.'" data-tooltip-content="'.$sPreviewMarkup.'" data-tooltip-html-enabled="true" src="'.$sAttachmentThumbUrl.'"></a>',
-			'filename' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="$sIconClass">'.$sFileName.'</a>'.$sAttachmentMeta,
-			'formatted-size' => $sFileFormattedSize,
-			'upload-date' => $sAttachmentDateFormatted,
-			'uploader' => $sAttachmentUploaderForHtml,
-			'type' => $sFileType,
+			'@id'             => $sTrId,
+			'@meta'           => 'data-file-type="'.utils::HtmlEntities($sFileType).'" data-file-size-raw="'.utils::HtmlEntities($iFileSize).'" data-file-size-formatted="'.utils::HtmlEntities($sFileFormattedSize).'" data-file-uploader="'.utils::HtmlEntities($sAttachmentUploader).'"',
+			'icon'            => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="'.$sIconClass.'"><img class="ibo-attachment--datatable--icon-preview '.$sIconClass.'" data-tooltip-content="'.$sPreviewMarkup.'" data-tooltip-html-enabled="true" src="'.$sAttachmentThumbUrl.'"></a>',
+			'filename'        => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="$sIconClass">'.$sFileName.'</a>'.$sAttachmentMeta,
+			'formatted-size'  => $sFileFormattedSize,
+			'upload-date'     => $sAttachmentDateFormatted,
+			'uploader'        => $sAttachmentUploaderForHtml,
+			'type'            => $sFileType,
 			'downloads-count' => $oDoc->GetDownloadsCount(),
-			'js' => '',
+			'js'              => '',
 		];
 
 		if ($bIsDeletedAttachment) {
@@ -561,6 +567,6 @@ JS
 			$aAttachmentLine['delete'] = $oBlockRenderer->RenderHtml();
 		}
 
-		return  $aAttachmentLine;
+		return $aAttachmentLine;
 	}
 }

@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\Helper\AjaxHelper;
 use Combodo\iTop\Application\WebPage\AjaxPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
 
@@ -34,11 +35,11 @@ require_once(APPROOT.'/application/application.inc.php');
  */
 function RenderAttachments(AjaxPage $oPage, $iTransactionId)
 {
-	$sClass = utils::ReadParam('objclass', '', false, 'class');
-	$sId = utils::ReadParam('objkey', '');
+	$sClass = utils::ReadPostedParam('objclass', '', false, 'class');
+	$sId = utils::ReadPostedParam('objkey', '');
 	$oObject = MetaModel::GetObject($sClass, $sId, false);
-	$bEditMode = utils::ReadParam('edit_mode', 0);
-	$aAttachmentsDeleted = utils::ReadParam('attachments_deleted', []);
+	$bEditMode = utils::ReadPostedParam('edit_mode', 0);
+	$aAttachmentsDeleted = utils::ReadPostedParam('attachments_deleted', []);
 
 	$oPage->SetContentType('text/html');
 	$oAttachmentsRenderer = AttachmentsRendererFactory::GetInstance($oPage, $sClass, $sId, $iTransactionId);
@@ -58,9 +59,13 @@ try {
 	require_once APPROOT.'/application/loginwebpage.class.inc.php';
 	LoginWebPage::DoLogin(); // No user portal should access this endpoint.
 
+	// check if header contains X-Combodo-Ajax for POST request (CSRF protection for ajax calls)
+	// check must be performed after DoLoginEx to be logged in and to be able to check the token (based on the transaction id)
+	AjaxHelper::RejectUnauthorizedAjaxRequest();
+
 	$oPage = new AjaxPage("");
 
-	$sOperation = utils::ReadParam('operation', '');
+	$sOperation = utils::ReadPostedParam('operation', '');
 
 	switch ($sOperation) {
 		case 'add':
@@ -68,13 +73,13 @@ try {
 			$oPage->SetOutputDataOnly(true);
 
 			$aResult = [
-				'error' => '',
-				'att_id' => 0,
+				'error'   => '',
+				'att_id'  => 0,
 				'preview' => 'false',
-				'msg' => '',
+				'msg'     => '',
 			];
-			$sClass = stripslashes(utils::ReadParam('obj_class', '', false, 'class'));
-			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
+			$sClass = stripslashes(utils::ReadPostedParam('obj_class', '', false, 'class'));
+			$sTempId = utils::ReadPostedParam('temp_id', '', false, 'transaction_id');
 			if (empty($sClass)) {
 				$aResult['error'] = "Missing argument 'obj_class'";
 			} elseif (empty($sTempId)) {
@@ -84,6 +89,9 @@ try {
 					$oDoc = utils::ReadPostedDocument('file');
 					if ($oDoc->IsEmpty()) {
 						throw new FileUploadException(Dict::S('Attachments:Error:UploadedFileEmpty'));
+					}
+					if (!UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY)) {
+						throw new SecurityException(Dict::S('UI:Error:ActionNotAllowed'));
 					}
 					/** @var Attachment $oAttachment */
 					$oAttachment = MetaModel::NewObject('Attachment');
@@ -98,7 +106,7 @@ try {
 					$aResult['icon'] = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($oDoc->GetFileName());
 					$aResult['att_id'] = $iAttId;
 					$aResult['preview'] = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
-				} catch (FileUploadException $e) {
+				} catch (FileUploadException|SecurityException $e) {
 					$aResult['error'] = $e->GetMessage();
 				}
 			}
@@ -106,7 +114,7 @@ try {
 			break;
 
 		case 'refresh_attachments_render':
-			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
+			$sTempId = utils::ReadPostedParam('temp_id', '', false, 'transaction_id');
 			RenderAttachments($oPage, $sTempId);
 			break;
 
@@ -116,7 +124,7 @@ try {
 
 	$oPage->output();
 } catch (Exception $e) {
-	// note: transform to cope with XSS attacks
-	echo utils::EscapeHtml($e->GetMessage());
 	IssueLog::Error($e->getMessage());
+	http_response_code(500);
+	die(Dict::S('UI:PageTitle:FatalError'));
 }
