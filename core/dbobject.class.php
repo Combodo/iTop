@@ -3191,46 +3191,52 @@ abstract class DBObject implements iDisplay
 	 */
 	public function DBInsertNoReload()
 	{
-		// Prevent DBUpdate at this point (reentrancy protection with temp id)
-		MetaModel::StartReentranceProtection($this);
-
 		$sClass = get_class($this);
 
 		$this->AddCurrentObjectInCrudStack('INSERT');
 
 		try {
-			if (MetaModel::DBIsReadOnly()) {
-				$sErrorMessage = "Cannot Insert object of class '$sClass' because of an ongoing maintenance: the database is in ReadOnly mode";
+			// Prevent DBUpdate at this point (reentrancy protection with temp id)
+			$bIsNewlyProtected = MetaModel::StartReentranceProtection($this);
+			try {
+				if (MetaModel::DBIsReadOnly()) {
+					$sErrorMessage = "Cannot Insert object of class '$sClass' because of an ongoing maintenance: the database is in ReadOnly mode";
 
-				IssueLog::Error("$sErrorMessage\n".MyHelpers::get_callstack_text(1));
-				throw new CoreException("$sErrorMessage (see the log for more information)");
-			}
-
-			if ($this->m_bIsInDB) {
-				throw new CoreException('The object already exists into the Database, you may want to use the clone function');
-			}
-
-			$sClass = get_class($this);
-			$sRootClass = MetaModel::GetRootClass($sClass);
-
-			// Ensure the update of the values (we are accessing the data directly)
-			$this->DoComputeValues();
-			$oKPI = new ExecutionKPI();
-			$this->OnInsert();
-			$oKPI->ComputeStatsForExtension($this, 'OnInsert');
-
-			$this->FireEventBeforeWrite(null);
-
-			// If not automatically computed, then check that the key is given by the caller
-			if (!MetaModel::IsAutoIncrementKey($sRootClass)) {
-				if (empty($this->m_iKey)) {
-					throw new CoreWarning('Missing key for the object to write - This class is supposed to have a user defined key, not an autonumber', ['class' => $sRootClass]);
+					IssueLog::Error("$sErrorMessage\n".MyHelpers::get_callstack_text(1));
+					throw new CoreException("$sErrorMessage (see the log for more information)");
 				}
-			}
 
-			[$bRes, $aIssues] = $this->CheckToWrite(false);
-			if (!$bRes) {
-				throw new CoreCannotSaveObjectException(['issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()]);
+				if ($this->m_bIsInDB) {
+					throw new CoreException('The object already exists into the Database, you may want to use the clone function');
+				}
+
+				$sClass = get_class($this);
+				$sRootClass = MetaModel::GetRootClass($sClass);
+
+				// Ensure the update of the values (we are accessing the data directly)
+				$this->DoComputeValues();
+				$oKPI = new ExecutionKPI();
+				$this->OnInsert();
+				$oKPI->ComputeStatsForExtension($this, 'OnInsert');
+
+				$this->FireEventBeforeWrite(null);
+
+				// If not automatically computed, then check that the key is given by the caller
+				if (!MetaModel::IsAutoIncrementKey($sRootClass)) {
+					if (empty($this->m_iKey)) {
+						throw new CoreWarning('Missing key for the object to write - This class is supposed to have a user defined key, not an autonumber', ['class' => $sRootClass]);
+					}
+				}
+
+				[$bRes, $aIssues] = $this->CheckToWrite(false);
+				if (!$bRes) {
+					throw new CoreCannotSaveObjectException(['issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()]);
+				}
+			} finally {
+				if ($bIsNewlyProtected) {
+					// The protection is registered with the temporary id: release it before this id is discarded below
+					MetaModel::StopReentranceProtection($this);
+				}
 			}
 
 			if ($this->m_iKey < 0) {
@@ -3240,8 +3246,6 @@ abstract class DBObject implements iDisplay
 			}
 
 			$this->ComputeStopWatchesDeadline(true);
-			// With temp id
-			MetaModel::StopReentranceProtection($this);
 
 			$iTransactionRetry = 1;
 			$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');

@@ -24,6 +24,7 @@ use Attachment;
 use AttributeDateTime;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use CoreCannotSaveObjectException;
 use CoreException;
 use DateTime;
 use DBObject;
@@ -1354,6 +1355,54 @@ class DBObjectTest extends ItopDataTestCase
 		$fTotalDuration = microtime(true) - $fStart;
 		echo 'Total duration: '.sprintf('%.3f s', $fTotalDuration)."\n\n";
 	}
+
+	/**
+	 * The reentrance protection set with the temporary key must be released, otherwise the object is kept in memory until the end of the process
+	 *
+	 * @covers DBObject::DBInsertNoReload
+	 */
+	public function testDBInsertReleasesReentranceProtection(): void
+	{
+		$oOrganization = MetaModel::NewObject(Organization::class, ['name' => 'testDBInsertReleasesReentranceProtection-'.uniqid('', true)]);
+
+		$oOrganization->DBInsert();
+
+		$this->AssertObjectIsNotInReentranceProtection($oOrganization);
+	}
+
+	/**
+	 * @covers DBObject::DBInsertNoReload
+	 */
+	public function testDBInsertReleasesReentranceProtectionWhenCheckToWriteFails(): void
+	{
+		// The name is mandatory: CheckToWrite() rejects the object
+		$oOrganization = MetaModel::NewObject(Organization::class);
+
+		try {
+			$oOrganization->DBInsert();
+			$this->fail('DBInsert() should have thrown a CoreCannotSaveObjectException');
+		} catch (CoreCannotSaveObjectException $e) {
+			// Expected: the reentrance protection is checked below
+		}
+
+		$this->AssertObjectIsNotInReentranceProtection($oOrganization);
+	}
+
+	private function AssertObjectIsNotInReentranceProtection(DBObject $oObject): void
+	{
+		$aReentranceProtection = $this->GetNonPublicStaticProperty(MetaModel::class, 'm_aReentranceProtection');
+		$aEntriesKeepingTheObject = [];
+		foreach ($aReentranceProtection as $sClass => $aProtectedObjects) {
+			foreach ($aProtectedObjects as $sKey => $oProtectedObject) {
+				if ($oProtectedObject === $oObject) {
+					$aEntriesKeepingTheObject[] = "$sClass::$sKey";
+				}
+			}
+		}
+
+		$this->assertSame([], $aEntriesKeepingTheObject, 'The object should not be kept in the reentrance protection');
+	}
+
 	/**
 	 * Data provider for test deletion
 	 *  N°5547 - Object deletion fails if friendlyname too long
