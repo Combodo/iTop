@@ -3188,6 +3188,8 @@ abstract class DBObject implements iDisplay
 	 * @throws \OQLException
 	 *
 	 * @see DBWrite
+	 *
+	 * @since 3.4.0 PR #1109 - Release the reentrance protection set with the temporary key (it was kept until the end of the process)
 	 */
 	public function DBInsertNoReload()
 	{
