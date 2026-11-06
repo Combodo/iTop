@@ -1367,7 +1367,7 @@ class DBObjectTest extends ItopDataTestCase
 
 		$oOrganization->DBInsert();
 
-		$this->AssertObjectIsNotInReentranceProtection($oOrganization);
+		$this->assertSame([], $this->ListReentranceProtectionEntriesOf($oOrganization), 'The object should not be kept in the reentrance protection');
 	}
 
 	/**
@@ -1385,22 +1385,51 @@ class DBObjectTest extends ItopDataTestCase
 			// Expected: the reentrance protection is checked below
 		}
 
-		$this->AssertObjectIsNotInReentranceProtection($oOrganization);
+		$this->assertSame([], $this->ListReentranceProtectionEntriesOf($oOrganization), 'The object should not be kept in the reentrance protection');
 	}
 
-	private function AssertObjectIsNotInReentranceProtection(DBObject $oObject): void
+	/**
+	 * A reentrance protection set by the caller belongs to the caller: DBInsert() must not release it
+	 *
+	 * @covers DBObject::DBInsertNoReload
+	 */
+	public function testDBInsertKeepsReentranceProtectionSetByTheCallerWhenCheckToWriteFails(): void
+	{
+		// The name is mandatory: CheckToWrite() rejects the object
+		$oOrganization = MetaModel::NewObject(Organization::class);
+		$sCallerEntry = Organization::class.'::'.$oOrganization->GetKey();
+
+		MetaModel::StartReentranceProtection($oOrganization);
+		try {
+			try {
+				$oOrganization->DBInsert();
+				$this->fail('DBInsert() should have thrown a CoreCannotSaveObjectException');
+			} catch (CoreCannotSaveObjectException $e) {
+				// Expected: the reentrance protection is checked below
+			}
+
+			$this->assertSame([$sCallerEntry], $this->ListReentranceProtectionEntriesOf($oOrganization), 'The reentrance protection set by the caller should be kept');
+		} finally {
+			MetaModel::StopReentranceProtection($oOrganization);
+		}
+	}
+
+	/**
+	 * @return string[] Entries of the reentrance protection referencing the object, as "<class>::<key>"
+	 */
+	private function ListReentranceProtectionEntriesOf(DBObject $oObject): array
 	{
 		$aReentranceProtection = $this->GetNonPublicStaticProperty(MetaModel::class, 'm_aReentranceProtection');
-		$aEntriesKeepingTheObject = [];
+		$aEntries = [];
 		foreach ($aReentranceProtection as $sClass => $aProtectedObjects) {
 			foreach ($aProtectedObjects as $sKey => $oProtectedObject) {
 				if ($oProtectedObject === $oObject) {
-					$aEntriesKeepingTheObject[] = "$sClass::$sKey";
+					$aEntries[] = "$sClass::$sKey";
 				}
 			}
 		}
 
-		$this->assertSame([], $aEntriesKeepingTheObject, 'The object should not be kept in the reentrance protection');
+		return $aEntries;
 	}
 
 	/**
