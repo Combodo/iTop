@@ -27,7 +27,7 @@ class AjaxHelper
 	public static function RejectUnauthorizedAjaxRequest(): void
 	{
 		if (!isset($_SERVER['HTTP_X_COMBODO_AJAX']) && $_SERVER['REQUEST_METHOD'] !== 'GET') {
-			$sTransactionId = utils::ReadPostedParam("transaction_id");
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
 			if (!utils::IsTransactionValid($sTransactionId, false)) { // if a form is submitted without header but contains a token... should be exceptional
 				$sErrorMsg = 'Unauthorized access. Please see https://www.itophub.io/wiki/page?id=3_2_0:release:developer#checking_for_the_presence_of_specific_header_in_the_post_to_enhance_protection_against_csrf_attacks';
 				IssueLog::Error("Unprotected ajax call : $sErrorMsg", LogChannels::SECURITY, [
