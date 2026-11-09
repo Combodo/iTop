@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Combodo\\iTop\\Attachments\\Enum\\AttachmentAjaxErrorEnum' => $baseDir . '/src/Enum/AttachmentAjaxErrorEnum.php',
     'Combodo\\iTop\\Attachments\\Hook\\EventListener' => $baseDir . '/src/Hook/EventListener.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
 );

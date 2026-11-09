@@ -21,6 +21,7 @@
 use Combodo\iTop\Application\Helper\AjaxHelper;
 use Combodo\iTop\Application\WebPage\AjaxPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
+use Combodo\iTop\Attachments\Enum\AttachmentAjaxErrorEnum;
 
 require_once('../../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -35,10 +36,10 @@ require_once(APPROOT.'/application/application.inc.php');
  */
 function RenderAttachments(AjaxPage $oPage, $iTransactionId)
 {
-	$sClass = utils::ReadPostedParam('objclass', '', 'class');
+	$sClass = utils::ReadPostedParam('objclass', '', utils::ENUM_SANITIZATION_FILTER_CLASS);
 	$sId = utils::ReadPostedParam('objkey');
 	$oObject = MetaModel::GetObject($sClass, $sId, false);
-	$bEditMode = utils::ReadPostedParam('edit_mode', 0);
+	$bEditMode = utils::ReadPostedParam('edit_mode', 0, utils::ENUM_SANITIZATION_FILTER_INTEGER);
 	$aAttachmentsDeleted = utils::ReadPostedParam('attachments_deleted', []);
 
 	$oPage->SetContentType('text/html');
@@ -65,7 +66,7 @@ try {
 
 	$oPage = new AjaxPage("");
 
-	$sOperation = utils::ReadPostedParam('operation', '');
+	$sOperation = utils::ReadPostedParam('operation', '', utils::ENUM_SANITIZATION_FILTER_OPERATION);
 
 	switch ($sOperation) {
 		case 'add':
@@ -79,14 +80,14 @@ try {
 				'preview'    => 'false',
 				'msg'        => '',
 			];
-			$sClass = stripslashes(utils::ReadPostedParam('obj_class', '', 'class'));
-			$sTempId = utils::ReadPostedParam('temp_id', '', 'transaction_id');
+			$sClass = stripslashes(utils::ReadPostedParam('obj_class', '', utils::ENUM_SANITIZATION_FILTER_CLASS));
+			$sTempId = utils::ReadPostedParam('temp_id', '', utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
 			if (empty($sClass)) {
 				$aResult['error'] = "Missing argument 'obj_class'";
-				$aResult['error_code'] = 1;
+				$aResult['error_code'] = AttachmentAjaxErrorEnum::MISSING_ARG_OBJ_CLASS;
 			} elseif (empty($sTempId)) {
 				$aResult['error'] = "Missing argument 'temp_id'";
-				$aResult['error_code'] = 2;
+				$aResult['error_code'] = AttachmentAjaxErrorEnum::MISSING_ARG_TEMP_ID;
 			} else {
 				try {
 					$oDoc = utils::ReadPostedDocument('file');
@@ -111,10 +112,10 @@ try {
 					$aResult['preview'] = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
 				} catch (FileUploadException $e) {
 					$aResult['error'] = $e->GetMessage();
-					$aResult['error_code'] = 10;
+					$aResult['error_code'] = AttachmentAjaxErrorEnum::UPLOAD_FILE_EMPTY;
 				} catch (SecurityException $e) {
 					$aResult['error'] = $e->GetMessage();
-					$aResult['error_code'] = 20;
+					$aResult['error_code'] = AttachmentAjaxErrorEnum::ACTION_NOT_ALLOWED;
 				}
 			}
 			$oPage->SetData($aResult);

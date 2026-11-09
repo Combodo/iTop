@@ -7,20 +7,21 @@ namespace Composer\Autoload;
 class ComposerStaticInitee10bebff75617dbf9d929ac6e40c19f
 {
     public static $prefixLengthsPsr4 = array (
-        'C' => 
+        'C' =>
         array (
             'Combodo\\iTop\\Attachments\\' => 25,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Combodo\\iTop\\Attachments\\' => 
+        'Combodo\\iTop\\Attachments\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
     );
 
     public static $classMap = array (
+        'Combodo\\iTop\\Attachments\\Enum\\AttachmentAjaxErrorEnum' => __DIR__ . '/../..' . '/src/Enum/AttachmentAjaxErrorEnum.php',
         'Combodo\\iTop\\Attachments\\Hook\\EventListener' => __DIR__ . '/../..' . '/src/Hook/EventListener.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );

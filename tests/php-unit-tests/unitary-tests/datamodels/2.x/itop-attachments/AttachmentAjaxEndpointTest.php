@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Combodo\iTop\Test\UnitTest\Module\ItopAttachment;
 
+use Combodo\iTop\Attachments\Enum\AttachmentAjaxErrorEnum;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use UserRequest;
 
@@ -47,6 +48,8 @@ class AttachmentAjaxEndpointTest extends ItopDataTestCase
 
 	public function AjaxEndpointAccessProvider(): array
 	{
+		$this->RequireOnceItopFile('datamodels/2.x/itop-attachments/src/Enum/AttachmentAjaxErrorEnum.php');
+
 		return [
 			'Service Desk Agent: missing obj_class' => [
 				'Service Desk Agent',
@@ -55,7 +58,7 @@ class AttachmentAjaxEndpointTest extends ItopDataTestCase
 				],
 				200,
 				[
-					'error_code' => 1,
+					'error_code' => AttachmentAjaxErrorEnum::MISSING_ARG_OBJ_CLASS->value,
 				],
 			],
 			'Service Desk Agent: missing temp_id'   => [
@@ -66,7 +69,7 @@ class AttachmentAjaxEndpointTest extends ItopDataTestCase
 				],
 				200,
 				[
-					'error_code' => 2,
+					'error_code' => AttachmentAjaxErrorEnum::MISSING_ARG_TEMP_ID->value,
 				],
 			],
 			'Service Desk Agent: empty file'        => [
@@ -78,7 +81,7 @@ class AttachmentAjaxEndpointTest extends ItopDataTestCase
 				],
 				200,
 				[
-					'error_code' => 10,
+					'error_code' => AttachmentAjaxErrorEnum::UPLOAD_FILE_EMPTY->value,
 				],
 			],
 			'Service Desk Agent: access restricted' => [
@@ -91,7 +94,7 @@ class AttachmentAjaxEndpointTest extends ItopDataTestCase
 				],
 				200,
 				[
-					'error_code' => 20,
+					'error_code' => AttachmentAjaxErrorEnum::ACTION_NOT_ALLOWED->value,
 				],
 			],
 			'portal user'                           => [
@@ -128,8 +131,6 @@ class AttachmentAjaxEndpointTest extends ItopDataTestCase
 			],
 			true
 		);
-
-		echo $sResponse;
 
 		return [
 			'code'     => $this->aLastCurlGetInfo['http_code'],

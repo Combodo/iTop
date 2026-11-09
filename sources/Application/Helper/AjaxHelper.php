@@ -33,6 +33,8 @@ class AjaxHelper
 				IssueLog::Error("Unprotected ajax call : $sErrorMsg", LogChannels::SECURITY, [
 					'request_method' => $_SERVER['REQUEST_METHOD'],
 					'request_uri'    => $_SERVER['REQUEST_URI'],
+				]);
+				IssueLog::Debug("Unprotected ajax call : $sErrorMsg", LogChannels::SECURITY, [
 					'http_referer'   => $_SERVER['HTTP_REFERER'] ?? 'unknown',
 					'transaction_id' => $sTransactionId,
 				]);
