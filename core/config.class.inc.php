@@ -113,7 +113,7 @@ class Config
 	 * @since 2.7.0 export_pdf_font param
 	 */
 	protected $m_aSettings = [
-		'log_level_min'                      => [
+		'log_level_min'                                               => [
 			'type'                => 'array',
 			'description'         => 'Optional min log level, per channel.',
 			'default'             => '',
@@ -121,7 +121,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_level_min.write_in_db'          => [
+		'log_level_min.write_in_db'                                   => [
 			'type'                => 'array',
 			'description'         => 'Optional min log level IN DB, per channel.',
 			'default'             => '',
@@ -129,7 +129,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_purge.enabled'       => [
+		'log_purge.enabled'                                           => [
 			'type'                => 'bool',
 			'description'         => 'Optional purge activation.',
 			'default'             => false,
@@ -137,7 +137,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_purge.max_keep_days'                       => [
+		'log_purge.max_keep_days'                                     => [
 			'type'                => 'integer',
 			'description'         => 'Optional purge number of days to keep logs.',
 			'default'             => 365,
@@ -145,7 +145,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'event_service.debug.filter_events'             => [
+		'event_service.debug.filter_events'                           => [
 			'type'                => 'array',
 			'description'         => 'List of events name to filter Event Service debug messages',
 			'default'             => [],
@@ -153,7 +153,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'event_service.debug.filter_sources'            => [
+		'event_service.debug.filter_sources'                          => [
 			'type'                => 'array',
 			'description'         => 'List of event sources to filter Event Service debug messages',
 			'default'             => '',
@@ -161,7 +161,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'temporary_object.force_creation'    => [
+		'temporary_object.force_creation'                             => [
 			'type'                => 'bool',
 			'description'         => 'If true, all the objects created by the external key are temporary',
 			'default'             => false,
@@ -169,7 +169,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'temporary_object.lifetime'          => [
+		'temporary_object.lifetime'                                   => [
 			'type'                => 'integer',
 			'description'         => 'Seconds for temporary objects created',
 			'default'             => 300,
@@ -177,7 +177,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'temporary_object.watchdog_interval' => [
+		'temporary_object.watchdog_interval'                          => [
 			'type'                => 'integer',
 			'description'         => 'Seconds between watchdog signals',
 			'default'             => 60,
@@ -185,7 +185,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'temporary_object.garbage_interval'  => [
+		'temporary_object.garbage_interval'                           => [
 			'type'                => 'integer',
 			'description'         => 'Seconds between garbage collections',
 			'default'             => 60,
@@ -193,7 +193,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'app_env_label'                      => [
+		'app_env_label'                                               => [
 			'type'                => 'string',
 			'description'         => 'Label displayed to describe the current application environment, defaults to the environment name (e.g. "production")',
 			'default'             => '',
@@ -201,7 +201,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'app_root_url'                       => [
+		'app_root_url'                                                => [
 			'type'                => 'string',
 			'description'         => 'Root URL used for navigating within the application, or from an email to the application (you can put $SERVER_NAME$ as a placeholder for the server\'s name)',
 			'default'             => '',
@@ -209,7 +209,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'app_icon_url'                       => [
+		'app_icon_url'                                                => [
 			'type'                => 'string',
 			'description'         => 'Hyperlink to redirect the user when clicking on the application icon (in the main window, or login/logoff pages)',
 			'default'             => 'http://www.combodo.com/itop',
@@ -217,179 +217,179 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'db_host'                                       => [
+		'db_host'                                                     => [
 			'type'                => 'string',
 			'default'             => null,
 			'value'               => '',
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'db_user'                            => [
-			'type' => 'string',
-			'default' => null,
-			'value' => '',
-			'source_of_value' => '',
+		'db_user'                                                     => [
+			'type'                => 'string',
+			'default'             => null,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'db_pwd' => [
-			'type' => 'string',
-			'default' => null,
-			'value' => '',
-			'source_of_value' => '',
+		'db_pwd'                                                      => [
+			'type'                => 'string',
+			'default'             => null,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'db_name' => [
-			'type' => 'string',
-			'default' => null,
-			'value' => '',
-			'source_of_value' => '',
+		'db_name'                                                     => [
+			'type'                => 'string',
+			'default'             => null,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'db_subname' => [
-			'type' => 'string',
-			'default' => null,
-			'value' => '',
-			'source_of_value' => '',
+		'db_subname'                                                  => [
+			'type'                => 'string',
+			'default'             => null,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'db_tls.enabled' => [
-			'type' => 'bool',
-			'description' => 'If true then the connection to the DB will be encrypted',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+		'db_tls.enabled'                                              => [
+			'type'                => 'bool',
+			'description'         => 'If true then the connection to the DB will be encrypted',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'db_tls.ca' => [
-			'type' => 'string',
-			'description' => 'Path to certificate authority file for SSL',
-			'default' => null,
-			'value' => '',
-			'source_of_value' => '',
+		'db_tls.ca'                                                   => [
+			'type'                => 'string',
+			'description'         => 'Path to certificate authority file for SSL',
+			'default'             => null,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'db_core_transactions_enabled' => [
-			'type' => 'bool',
-			'description' => 'If true, CRUD transactions in iTop core will be enabled',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
+		'db_core_transactions_enabled'                                => [
+			'type'                => 'bool',
+			'description'         => 'If true, CRUD transactions in iTop core will be enabled',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'db_core_transactions_retry_count' => [
-			'type' => 'integer',
-			'description' => 'Number of times the current transaction is tried',
-			'default' => 3,
-			'value' => 3,
-			'source_of_value' => '',
+		'db_core_transactions_retry_count'                            => [
+			'type'                => 'integer',
+			'description'         => 'Number of times the current transaction is tried',
+			'default'             => 3,
+			'value'               => 3,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'db_core_transactions_retry_delay_ms' => [
-			'type' => 'integer',
-			'description' => 'Base delay in milliseconds between transaction tries',
-			'default' => 500,
-			'value' => 500,
-			'source_of_value' => '',
+		'db_core_transactions_retry_delay_ms'                         => [
+			'type'                => 'integer',
+			'description'         => 'Base delay in milliseconds between transaction tries',
+			'default'             => 500,
+			'value'               => 500,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'skip_check_to_write' => [
-			'type' => 'bool',
-			'description' => 'Disable data format and integrity checks to boost up data load (insert or update)',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+		'skip_check_to_write'                                         => [
+			'type'                => 'bool',
+			'description'         => 'Disable data format and integrity checks to boost up data load (insert or update)',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'skip_check_ext_keys' => [
-			'type' => 'bool',
-			'description' => 'Disable external key check when checking the value of attributes',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+		'skip_check_ext_keys'                                         => [
+			'type'                => 'bool',
+			'description'         => 'Disable external key check when checking the value of attributes',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		// Deprecated in 3.0.0  N°2591 Will be removed in 3.1
-		'skip_strong_security' => [
-			'type' => 'bool',
-			'description' => 'Disable strong security - TEMPORARY: this flag should be removed when we are more confident in the recent change in security',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
+		'skip_strong_security'                                        => [
+			'type'                => 'bool',
+			'description'         => 'Disable strong security - TEMPORARY: this flag should be removed when we are more confident in the recent change in security',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'query_optimization_enabled' => [
-			'type' => 'bool',
-			'description' => 'The queries are optimized based on the assumption that the DB integrity has been preserved. By disabling the optimization one can ensure that the fetched data is clean... but this can be really slower or not usable at all (some queries will exceed the allowed number of joins in MySQL: 61!)',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
+		'query_optimization_enabled'                                  => [
+			'type'                => 'bool',
+			'description'         => 'The queries are optimized based on the assumption that the DB integrity has been preserved. By disabling the optimization one can ensure that the fetched data is clean... but this can be really slower or not usable at all (some queries will exceed the allowed number of joins in MySQL: 61!)',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'query_indentation_enabled' => [
-			'type' => 'bool',
-			'description' => 'For developers: format the SQL queries for human analysis',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+		'query_indentation_enabled'                                   => [
+			'type'                => 'bool',
+			'description'         => 'For developers: format the SQL queries for human analysis',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'disable_mandatory_ext_keys' => [
-			'type' => 'bool',
-			'description' => 'For developers: allow every external keys to be undefined',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+		'disable_mandatory_ext_keys'                                  => [
+			'type'                => 'bool',
+			'description'         => 'For developers: allow every external keys to be undefined',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'graphviz_path' => [
-			'type' => 'string',
-			'description' => 'Path to the Graphviz "dot" executable for graphing objects lifecycle',
-			'default' => '/usr/bin/dot',
-			'value' => '',
-			'source_of_value' => '',
+		'graphviz_path'                                               => [
+			'type'                => 'string',
+			'description'         => 'Path to the Graphviz "dot" executable for graphing objects lifecycle',
+			'default'             => '/usr/bin/dot',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'php_path' => [
-			'type' => 'string',
-			'description' => 'Path to the php executable in CLI mode',
-			'default' => 'php',
-			'value' => 'php',
-			'source_of_value' => '',
+		'php_path'                                                    => [
+			'type'                => 'string',
+			'description'         => 'Path to the php executable in CLI mode',
+			'default'             => 'php',
+			'value'               => 'php',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'session_name' => [
-			'type' => 'string',
-			'description' => 'The name of the cookie used to store the PHP session id',
-			'default' => 'iTop',
-			'value' => '',
-			'source_of_value' => '',
+		'session_name'                                                => [
+			'type'                => 'string',
+			'description'         => 'The name of the cookie used to store the PHP session id',
+			'default'             => 'iTop',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'max_combo_length' => [
-			'type' => 'integer',
-			'description' => 'The maximum number of elements in a drop-down list. If more then an autocomplete will be used',
-			'default' => 50,
-			'value' => 50,
-			'source_of_value' => '',
+		'max_combo_length'                                            => [
+			'type'                => 'integer',
+			'description'         => 'The maximum number of elements in a drop-down list. If more then an autocomplete will be used',
+			'default'             => 50,
+			'value'               => 50,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'min_autocomplete_chars' => [
-			'type' => 'integer',
-			'description' => 'The minimum number of characters to type in order to trigger the "autocomplete" behavior',
-			'default' => 2,
-			'value' => 2,
-			'source_of_value' => '',
+		'min_autocomplete_chars'                                      => [
+			'type'                => 'integer',
+			'description'         => 'The minimum number of characters to type in order to trigger the "autocomplete" behavior',
+			'default'             => 2,
+			'value'               => 2,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'max_autocomplete_results' => [
-			'type' => 'integer',
-			'description' => 'The maximum number of result elements to display, no matter the total number of results',
-			'default' => 150,
-			'value' => 150,
-			'source_of_value' => '',
+		'max_autocomplete_results'                                    => [
+			'type'                => 'integer',
+			'description'         => 'The maximum number of result elements to display, no matter the total number of results',
+			'default'             => 150,
+			'value'               => 150,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'allow_menu_on_linkset' => [
+		'allow_menu_on_linkset'                                       => [
 			'type'                => 'bool',
 			'description'         => 'Display Action menus in view mode on any LinkedSet with edit_mode != none',
 			'default'             => true,
@@ -397,106 +397,106 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'allow_target_creation' => [
-			'type' => 'bool',
-			'description' => 'Displays the + button on external keys to create target objects',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
+		'allow_target_creation'                                       => [
+			'type'                => 'bool',
+			'description'         => 'Displays the + button on external keys to create target objects',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		// Levels that trigger a confirmation in the CSV import/synchro wizard
-		'csv_import_min_object_confirmation' => [
-			'type' => 'integer',
-			'description' => 'Minimum number of objects to check for the confirmation percentages',
-			'default' => 3,
-			'value' => 3,
-			'source_of_value' => '',
+		'csv_import_min_object_confirmation'                          => [
+			'type'                => 'integer',
+			'description'         => 'Minimum number of objects to check for the confirmation percentages',
+			'default'             => 3,
+			'value'               => 3,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'csv_import_errors_percentage' => [
-			'type' => 'integer',
-			'description' => 'Percentage of errors that trigger a confirmation in the CSV import',
-			'default' => 50,
-			'value' => 50,
-			'source_of_value' => '',
+		'csv_import_errors_percentage'                                => [
+			'type'                => 'integer',
+			'description'         => 'Percentage of errors that trigger a confirmation in the CSV import',
+			'default'             => 50,
+			'value'               => 50,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'csv_import_modifications_percentage' => [
-			'type' => 'integer',
-			'description' => 'Percentage of modifications that trigger a confirmation in the CSV import',
-			'default' => 50,
-			'value' => 50,
-			'source_of_value' => '',
+		'csv_import_modifications_percentage'                         => [
+			'type'                => 'integer',
+			'description'         => 'Percentage of modifications that trigger a confirmation in the CSV import',
+			'default'             => 50,
+			'value'               => 50,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'csv_import_creations_percentage' => [
-			'type' => 'integer',
-			'description' => 'Percentage of creations that trigger a confirmation in the CSV import',
-			'default' => 50,
-			'value' => 50,
-			'source_of_value' => '',
+		'csv_import_creations_percentage'                             => [
+			'type'                => 'integer',
+			'description'         => 'Percentage of creations that trigger a confirmation in the CSV import',
+			'default'             => 50,
+			'value'               => 50,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'csv_import_history_display' => [
-			'type' => 'bool',
-			'description' => 'Display the history tab in the import wizard',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+		'csv_import_history_display'                                  => [
+			'type'                => 'bool',
+			'description'         => 'Display the history tab in the import wizard',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'export_pdf_font' => [ // @since 2.7.0 PR #49 / N°1947
-							   'type'                => 'string',
-							   'description'         => 'Font used when generating a PDF file',
-							   'default'             => 'DejaVuSans', // DejaVuSans is a UTF-8 Unicode font, embedded in the TCPPDF lib we're using
-							   // Standard PDF fonts like helvetica or times newroman are NOT Unicode
-							   // A new DroidSansFallback can be used to improve CJK support (se PR #49)
-							   'value'               => '',
-							   'source_of_value'     => '',
-							   'show_in_conf_sample' => false,
+		'export_pdf_font'                                             => [ // @since 2.7.0 PR #49 / N°1947
+																		   'type'                => 'string',
+																		   'description'         => 'Font used when generating a PDF file',
+																		   'default'             => 'DejaVuSans', // DejaVuSans is a UTF-8 Unicode font, embedded in the TCPPDF lib we're using
+																		   // Standard PDF fonts like helvetica or times newroman are NOT Unicode
+																		   // A new DroidSansFallback can be used to improve CJK support (se PR #49)
+																		   'value'               => '',
+																		   'source_of_value'     => '',
+																		   'show_in_conf_sample' => false,
 		],
-		'access_mode' => [
-			'type' => 'integer',
-			'description' => 'Access mode: ACCESS_READONLY = 0, ACCESS_ADMIN_WRITE = 2, ACCESS_FULL = 3',
-			'default' => ACCESS_FULL,
-			'value' => ACCESS_FULL,
-			'source_of_value' => '',
+		'access_mode'                                                 => [
+			'type'                => 'integer',
+			'description'         => 'Access mode: ACCESS_READONLY = 0, ACCESS_ADMIN_WRITE = 2, ACCESS_FULL = 3',
+			'default'             => ACCESS_FULL,
+			'value'               => ACCESS_FULL,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'access_message' => [
-			'type' => 'string',
-			'description' => 'Message displayed to the users when there is any access restriction',
-			'default' => 'iTop is temporarily frozen, please wait... (the admin team)',
-			'value' => '',
-			'source_of_value' => '',
+		'access_message'                                              => [
+			'type'                => 'string',
+			'description'         => 'Message displayed to the users when there is any access restriction',
+			'default'             => 'iTop is temporarily frozen, please wait... (the admin team)',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'online_help' => [
-			'type' => 'string',
-			'description' => 'Hyperlink to the online-help web page',
-			'default' => 'http://www.combodo.com/itop-help',
-			'value' => '',
-			'source_of_value' => '',
+		'online_help'                                                 => [
+			'type'                => 'string',
+			'description'         => 'Hyperlink to the online-help web page',
+			'default'             => 'http://www.combodo.com/itop-help',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'log_usage' => [
-			'type' => 'bool',
-			'description' => 'Log the usage of the application (i.e. the date/time and the user name of each login)',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+		'log_usage'                                                   => [
+			'type'                => 'bool',
+			'description'         => 'Log the usage of the application (i.e. the date/time and the user name of each login)',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_filename_builder_impl'             => [
-			'type' => 'string',
-			'description' => 'Name of the iLogFileNameBuilder to use',
-			'default' => 'MonthlyRotatingLogFileNameBuilder',
-			'value' => '',
-			'source_of_value' => '',
+		'log_filename_builder_impl'                                   => [
+			'type'                => 'string',
+			'description'         => 'Name of the iLogFileNameBuilder to use',
+			'default'             => 'MonthlyRotatingLogFileNameBuilder',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_rest_service'                      => [
+		'log_rest_service'                                            => [
 			'type'                => 'bool',
 			'description'         => 'Log the usage of the REST/JSON service',
 			'default'             => false,
@@ -504,7 +504,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'synchro_trace'                         => [
+		'synchro_trace'                                               => [
 			'type'                => 'string',
 			'description'         => 'Synchronization details: none, display, save (includes \'display\')',
 			'default'             => 'none',
@@ -512,7 +512,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'synchro_obsolete_replica_locks_object' => [
+		'synchro_obsolete_replica_locks_object'                       => [
 			'type'                => 'bool',
 			'description'         => 'Obsolete synchro replicas prevent object modification by any mean (eg. anonymization)',
 			'default'             => true,
@@ -520,7 +520,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'link_set_item_separator'               => [
+		'link_set_item_separator'                                     => [
 			'type'                => 'string',
 			'description'         => 'Link set from string: line separator',
 			'default'             => '|',
@@ -528,31 +528,31 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'link_set_attribute_separator'          => [
+		'link_set_attribute_separator'                                => [
 			'type'                => 'string',
-			'description' => 'Link set from string: attribute separator',
-			'default' => ';',
-			'value' => ';',
-			'source_of_value' => '',
+			'description'         => 'Link set from string: attribute separator',
+			'default'             => ';',
+			'value'               => ';',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'link_set_value_separator'              => [
-			'type' => 'string',
-			'description' => 'Link set from string: value separator (between the attcode and the value itself',
-			'default' => ':',
-			'value' => ':',
-			'source_of_value' => '',
+		'link_set_value_separator'                                    => [
+			'type'                => 'string',
+			'description'         => 'Link set from string: value separator (between the attcode and the value itself',
+			'default'             => ':',
+			'value'               => ':',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'link_set_attribute_qualifier' => [
-			'type' => 'string',
-			'description' => 'Link set from string: attribute qualifier (encloses both the attcode and the value)',
-			'default' => "'",
-			'value' => "'",
-			'source_of_value' => '',
+		'link_set_attribute_qualifier'                                => [
+			'type'                => 'string',
+			'description'         => 'Link set from string: attribute qualifier (encloses both the attcode and the value)',
+			'default'             => "'",
+			'value'               => "'",
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'link_set_max_edit_ext_key' => [
+		'link_set_max_edit_ext_key'                                   => [
 			'type'                => 'integer',
 			'description'         => 'Maximum number of items in the link that allow editing the remote external key. Above that limit, remote external key cannot be edited. Mind that setting this limit too high can have a negative impact on performances.',
 			'default'             => 50,
@@ -560,7 +560,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'list.highlight_abstract_class' => [
+		'list.highlight_abstract_class'                               => [
 			'type'                => 'bool',
 			'description'         => 'Compute highlight row colors for lists of abstract objects. Mind that setting this to true has a negative impact on performances.',
 			'default'             => false,
@@ -568,15 +568,15 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'tag_set_item_separator' => [
-			'type' => 'string',
-			'description' => 'Tag set from string: tag label separator',
-			'default' => '|',
-			'value' => '|',
-			'source_of_value' => '',
+		'tag_set_item_separator'                                      => [
+			'type'                => 'string',
+			'description'         => 'Tag set from string: tag label separator',
+			'default'             => '|',
+			'value'               => '|',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'cron_max_execution_time' => [
+		'cron_max_execution_time'                                     => [
 			'type'                => 'integer',
 			'description'         => 'Duration (seconds) of the cron.php script : if exceeded the script will exit even if there are remaining tasks to process. Must be shorter than php max_execution_time setting (note than when using CLI, this is set to 0 by default which means unlimited). If cron.php is ran via web, it must be shorter than the web server response timeout.',
 			'default'             => 600,
@@ -584,71 +584,71 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'cron_task_max_execution_time' => [
-			'type' => 'integer',
-			'description' => 'Background tasks will use this value (integer) multiplicated by its periodicity (in seconds) as max duration per cron execution. 0 is unlimited time',
-			'default' => 0,
-			'value' => 0,
-			'source_of_value' => '',
+		'cron_task_max_execution_time'                                => [
+			'type'                => 'integer',
+			'description'         => 'Background tasks will use this value (integer) multiplicated by its periodicity (in seconds) as max duration per cron execution. 0 is unlimited time',
+			'default'             => 0,
+			'value'               => 0,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'cron_sleep' => [
-			'type' => 'integer',
-			'description' => 'Duration (seconds) before cron.php checks again if something must be done',
-			'default' => 2,
-			'value' => 2,
-			'source_of_value' => '',
+		'cron_sleep'                                                  => [
+			'type'                => 'integer',
+			'description'         => 'Duration (seconds) before cron.php checks again if something must be done',
+			'default'             => 2,
+			'value'               => 2,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'async_task_retries' => [
-			'type' => 'array',
-			'description' => 'Automatic retries of asynchronous tasks in case of failure (per class)',
-			'default' => ['AsyncSendEmail' => ['max_retries' => 0, 'retry_delay' => 600]],
-			'value' => false,
-			'source_of_value' => '',
+		'async_task_retries'                                          => [
+			'type'                => 'array',
+			'description'         => 'Automatic retries of asynchronous tasks in case of failure (per class)',
+			'default'             => ['AsyncSendEmail' => ['max_retries' => 0, 'retry_delay' => 600]],
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_asynchronous' => [
-			'type' => 'bool',
-			'description' => 'If set, the emails are sent off line, which requires cron.php to be activated. Exception: some features like the email test utility will force the serialized mode',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+		'email_asynchronous'                                          => [
+			'type'                => 'bool',
+			'description'         => 'If set, the emails are sent off line, which requires cron.php to be activated. Exception: some features like the email test utility will force the serialized mode',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'email_transport' => [
-			'type' => 'string',
-			'description' => 'Mean to send emails: PHPMail (uses the function mail()), SMTP (implements the client protocol) or SMTP_OAuth (connect to the server using OAuth 2.0)',
-			'default' => "PHPMail",
-			'value' => "PHPMail",
-			'source_of_value' => '',
+		'email_transport'                                             => [
+			'type'                => 'string',
+			'description'         => 'Mean to send emails: PHPMail (uses the function mail()), SMTP (implements the client protocol) or SMTP_OAuth (connect to the server using OAuth 2.0)',
+			'default'             => "PHPMail",
+			'value'               => "PHPMail",
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'email_transport_smtp.host' => [
-			'type' => 'string',
-			'description' => 'host name or IP address (optional)',
-			'default' => "localhost",
-			'value' => "localhost",
-			'source_of_value' => '',
+		'email_transport_smtp.host'                                   => [
+			'type'                => 'string',
+			'description'         => 'host name or IP address (optional)',
+			'default'             => "localhost",
+			'value'               => "localhost",
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_transport_smtp.port' => [
-			'type' => 'integer',
-			'description' => 'port number (optional)',
-			'default' => 25,
-			'value' => 25,
-			'source_of_value' => '',
+		'email_transport_smtp.port'                                   => [
+			'type'                => 'integer',
+			'description'         => 'port number (optional)',
+			'default'             => 25,
+			'value'               => 25,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_transport_smtp.encryption'          => [
-			'type' => 'string',
-			'description' => 'tls or ssl (optional)',
-			'default' => "",
-			'value' => "",
-			'source_of_value' => '',
+		'email_transport_smtp.encryption'                             => [
+			'type'                => 'string',
+			'description'         => 'tls or ssl (optional)',
+			'default'             => "",
+			'value'               => "",
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_transport_smtp.username'            => [
+		'email_transport_smtp.username'                               => [
 			'type'                => 'string',
 			'description'         => 'Authentication user (optional)',
 			'default'             => "",
@@ -656,7 +656,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_transport_smtp.password'            => [
+		'email_transport_smtp.password'                               => [
 			'type'                => 'string',
 			'description'         => 'Authentication password (optional)',
 			'default'             => "",
@@ -664,7 +664,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_transport_smtp.allow_self_signed' => [
+		'email_transport_smtp.allow_self_signed'                      => [
 			'type'                => 'bool',
 			'description'         => 'Allow self signed peer certificates',
 			'default'             => false,
@@ -672,7 +672,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_transport_smtp.verify_peer' => [
+		'email_transport_smtp.verify_peer'                            => [
 			'type'                => 'bool',
 			'description'         => 'Verify peer certificate',
 			'default'             => true,
@@ -680,52 +680,52 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_css' => [
-			'type' => 'string',
-			'description' => 'CSS that will override the standard stylesheet used for the notifications',
-			'default' => "",
-			'value' => "",
-			'source_of_value' => '',
+		'email_css'                                                   => [
+			'type'                => 'string',
+			'description'         => 'CSS that will override the standard stylesheet used for the notifications',
+			'default'             => "",
+			'value'               => "",
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'email_default_sender_address' => [
-			'type' => 'string',
-			'description' => 'Default address provided in the email from header field.',
-			'default' => "",
-			'value' => "",
-			'source_of_value' => '',
+		'email_default_sender_address'                                => [
+			'type'                => 'string',
+			'description'         => 'Default address provided in the email from header field.',
+			'default'             => "",
+			'value'               => "",
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'email_default_sender_label' => [
-			'type' => 'string',
-			'description' => 'Default label provided in the email from header field.',
-			'default' => "",
-			'value' => "",
-			'source_of_value' => '',
+		'email_default_sender_label'                                  => [
+			'type'                => 'string',
+			'description'         => 'Default label provided in the email from header field.',
+			'default'             => "",
+			'value'               => "",
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'apc_cache.enabled' => [
-			'type' => 'bool',
-			'description' => 'If set, the APC cache is allowed (the PHP extension must also be active)',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
+		'apc_cache.enabled'                                           => [
+			'type'                => 'bool',
+			'description'         => 'If set, the APC cache is allowed (the PHP extension must also be active)',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'apc_cache.query_ttl' => [
-			'type' => 'integer',
-			'description' => 'Time to live set in APC for the prepared queries (seconds - 0 means no timeout)',
-			'default' => 3600,
-			'value' => 3600,
-			'source_of_value' => '',
+		'apc_cache.query_ttl'                                         => [
+			'type'                => 'integer',
+			'description'         => 'Time to live set in APC for the prepared queries (seconds - 0 means no timeout)',
+			'default'             => 3600,
+			'value'               => 3600,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'apc_cache_emulation.max_entries' => [
-			'type' => 'integer',
-			'description' => 'Maximum number of cache entries (0 means no limit)',
-			'default' => 1000,
-			'value' => 1000,
-			'source_of_value' => '',
+		'apc_cache_emulation.max_entries'                             => [
+			'type'                => 'integer',
+			'description'         => 'Maximum number of cache entries (0 means no limit)',
+			'default'             => 1000,
+			'value'               => 1000,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		/**
@@ -735,11 +735,11 @@ class Config
 		 *
 		 * @used-by utils::InitTimeZone()
 		 */
-		'timezone' => [
-			'type' => 'string',
-			'description' => 'Timezone (reference: http://php.net/manual/en/timezones.php). If empty, it will be left unchanged and MUST be explicitly configured in PHP',
+		'timezone'                                                    => [
+			'type'                => 'string',
+			'description'         => 'Timezone (reference: http://php.net/manual/en/timezones.php). If empty, it will be left unchanged and MUST be explicitly configured in PHP',
 			// examples... not used (nor 'description')
-			'examples' => [
+			'examples'            => [
 				'America/Sao_Paulo',
 				'America/New_York (standing for EDT)',
 				'America/Los_Angeles (standing for PDT)',
@@ -748,164 +748,164 @@ class Config
 				'Africa/Casablanca',
 				'Australia/Sydney',
 			],
-			'default' => 'Europe/Paris',
-			'value' => 'Europe/Paris',
-			'source_of_value' => '',
+			'default'             => 'Europe/Paris',
+			'value'               => 'Europe/Paris',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'cas_include_path' => [
-			'type' => 'string',
-			'description' => 'Deprecated, the lib is now included with iTop',
+		'cas_include_path'                                            => [
+			'type'                => 'string',
+			'description'         => 'Deprecated, the lib is now included with iTop',
 			// examples... not used (nor 'description')
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'cas_version' => [
-			'type' => 'string',
-			'description' => 'The CAS protocol version to use: "1.0" (CAS v1), "2.0" (CAS v2) or "S1" (SAML V1) )',
+		'cas_version'                                                 => [
+			'type'                => 'string',
+			'description'         => 'The CAS protocol version to use: "1.0" (CAS v1), "2.0" (CAS v2) or "S1" (SAML V1) )',
 			// examples... not used (nor 'description')
-			'default' => '2.0',
-			'value' => '',
-			'source_of_value' => '',
+			'default'             => '2.0',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'cas_host' => [
-			'type' => 'string',
-			'description' => 'The name of the CAS host',
+		'cas_host'                                                    => [
+			'type'                => 'string',
+			'description'         => 'The name of the CAS host',
 			// examples... not used (nor 'description')
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'cas_port' => [
-			'type' => 'integer',
-			'description' => 'The port used by the CAS server',
+		'cas_port'                                                    => [
+			'type'                => 'integer',
+			'description'         => 'The port used by the CAS server',
 			// examples... not used (nor 'description')
-			'default' => 443,
-			'value' => 443,
-			'source_of_value' => '',
+			'default'             => 443,
+			'value'               => 443,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'cas_context' => [
-			'type' => 'string',
-			'description' => 'The CAS context',
+		'cas_context'                                                 => [
+			'type'                => 'string',
+			'description'         => 'The CAS context',
 			// examples... not used (nor 'description')
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'cas_server_ca_cert_path' => [
-			'type' => 'string',
-			'description' => 'The path where to find the certificate of the CA for validating the certificate of the CAS server',
+		'cas_server_ca_cert_path'                                     => [
+			'type'                => 'string',
+			'description'         => 'The path where to find the certificate of the CA for validating the certificate of the CAS server',
 			// examples... not used (nor 'description')
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'cas_logout_redirect_service' => [
-			'type' => 'string',
-			'description' => 'The redirect service (URL) to use when logging-out with CAS',
+		'cas_logout_redirect_service'                                 => [
+			'type'                => 'string',
+			'description'         => 'The redirect service (URL) to use when logging-out with CAS',
 			// examples... not used (nor 'description')
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'cas_memberof' => [
-			'type' => 'string',
-			'description' => 'A semicolon separated list of group names that the user must be member of (works only with SAML - e.g. cas_version=> "S1")',
+		'cas_memberof'                                                => [
+			'type'                => 'string',
+			'description'         => 'A semicolon separated list of group names that the user must be member of (works only with SAML - e.g. cas_version=> "S1")',
 			// examples... not used (nor 'description')
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'cas_user_synchro' => [
-			'type' => 'bool',
-			'description' => 'Whether or not to synchronize users with CAS/LDAP',
+		'cas_user_synchro'                                            => [
+			'type'                => 'bool',
+			'description'         => 'Whether or not to synchronize users with CAS/LDAP',
 			// examples... not used (nor 'description')
-			'default' => 0,
-			'value' => 0,
-			'source_of_value' => '',
+			'default'             => 0,
+			'value'               => 0,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'cas_update_profiles' => [
-			'type' => 'bool',
-			'description' => 'Whether or not to update the profiles of an existing user from the CAS information',
+		'cas_update_profiles'                                         => [
+			'type'                => 'bool',
+			'description'         => 'Whether or not to update the profiles of an existing user from the CAS information',
 			// examples... not used (nor 'description')
-			'default' => 0,
-			'value' => 0,
-			'source_of_value' => '',
+			'default'             => 0,
+			'value'               => 0,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'cas_profile_pattern' => [
-			'type' => 'string',
-			'description' => 'A regular expression pattern to extract the name of the iTop profile from the name of an LDAP/CAS group',
+		'cas_profile_pattern'                                         => [
+			'type'                => 'string',
+			'description'         => 'A regular expression pattern to extract the name of the iTop profile from the name of an LDAP/CAS group',
 			// examples... not used (nor 'description')
-			'default' => '/^cn=([^,]+),/',
-			'value' => '/^cn=([^,]+),/',
-			'source_of_value' => '',
+			'default'             => '/^cn=([^,]+),/',
+			'value'               => '/^cn=([^,]+),/',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'cas_default_profiles' => [
-			'type' => 'string',
-			'description' => 'A semi-colon separated list of iTop Profiles to use when creating a new user if no profile is retrieved from CAS',
+		'cas_default_profiles'                                        => [
+			'type'                => 'string',
+			'description'         => 'A semi-colon separated list of iTop Profiles to use when creating a new user if no profile is retrieved from CAS',
 			// examples... not used (nor 'description')
-			'default' => 'Portal user',
-			'value' => 'Portal user',
-			'source_of_value' => '',
+			'default'             => 'Portal user',
+			'value'               => 'Portal user',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'cas_debug' => [
-			'type' => 'bool',
-			'description' => 'Activate the CAS debug',
+		'cas_debug'                                                   => [
+			'type'                => 'bool',
+			'description'         => 'Activate the CAS debug',
 			// examples... not used (nor 'description')
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'ext_auth_variable' => [
-			'type' => 'string',
-			'description' => 'External authentication expression (allowed: $_SERVER[\'key\'], $_COOKIE[\'key\'], $_REQUEST[\'key\'], getallheaders()[\'Header-Name\'])',
-			'default' => '$_SERVER[\'REMOTE_USER\']',
-			'value' => '$_SERVER[\'REMOTE_USER\']',
-			'source_of_value' => '',
+		'ext_auth_variable'                                           => [
+			'type'                => 'string',
+			'description'         => 'External authentication expression (allowed: $_SERVER[\'key\'], $_COOKIE[\'key\'], $_REQUEST[\'key\'], getallheaders()[\'Header-Name\'])',
+			'default'             => '$_SERVER[\'REMOTE_USER\']',
+			'value'               => '$_SERVER[\'REMOTE_USER\']',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'login_debug' => [
-			'type' => 'bool',
-			'description' => 'Activate the login FSM debug',
+		'login_debug'                                                 => [
+			'type'                => 'bool',
+			'description'         => 'Activate the login FSM debug',
 			// examples... not used (nor 'description')
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'forgot_password' => [
-			'type' => 'bool',
-			'description' => 'Enable the "Forgot password" feature',
+		'forgot_password'                                             => [
+			'type'                => 'bool',
+			'description'         => 'Enable the "Forgot password" feature',
 			// examples... not used (nor 'description')
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'forgot_password_from' => [
-			'type' => 'string',
-			'description' => 'Sender email address for the "forgot password" feature. If empty, defaults to the recipient\'s  email address.',
+		'forgot_password_from'                                        => [
+			'type'                => 'string',
+			'description'         => 'Sender email address for the "forgot password" feature. If empty, defaults to the recipient\'s  email address.',
 			// examples... not used (nor 'description')
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'forgot_password.url' => [
+		'forgot_password.url'                                         => [
 			'type'                => 'string',
 			'description'         => 'Set this value to your "forgot password" service URL if it should be handled out of '.ITOP_APPLICATION_SHORT.'. Note that it will apply to all users (iTop users, LDAP users, ...)',
 			'default'             => '',
@@ -913,88 +913,88 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'deadline_format' => [
-			'type' => 'string',
-			'description' => 'The format used for displaying "deadline" attributes: any string with the following placeholders: $date$, $difference$',
+		'deadline_format'                                             => [
+			'type'                => 'string',
+			'description'         => 'The format used for displaying "deadline" attributes: any string with the following placeholders: $date$, $difference$',
 			// examples... $date$ ($deadline$)
-			'default' => '$difference$',
-			'value' => '$difference$',
-			'source_of_value' => '',
+			'default'             => '$difference$',
+			'value'               => '$difference$',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'buttons_position' => [
-			'type' => 'string',
-			'description' => 'Deprecated since 3.0.0, buttons are now always on top of the form.',
+		'buttons_position'                                            => [
+			'type'                => 'string',
+			'description'         => 'Deprecated since 3.0.0, buttons are now always on top of the form.',
 			// examples... not used
-			'default' => 'both',
-			'value' => 'both',
-			'source_of_value' => '',
+			'default'             => 'both',
+			'value'               => 'both',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'shortcut_actions' => [
-			'type' => 'string',
-			'description' => 'Actions that are available as direct buttons next to the "Actions" menu',
+		'shortcut_actions'                                            => [
+			'type'                => 'string',
+			'description'         => 'Actions that are available as direct buttons next to the "Actions" menu',
 			// examples... not used
-			'default' => 'UI:Menu:Modify,UI:Menu:New',
-			'value' => 'UI:Menu:Modify',
-			'source_of_value' => '',
+			'default'             => 'UI:Menu:Modify,UI:Menu:New',
+			'value'               => 'UI:Menu:Modify',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'complex_actions_limit' => [
-			'type' => 'integer',
-			'description' => 'Display the "actions" menu items that require long computation only if the list of objects is contains less objects than this number (0 means no limit)',
+		'complex_actions_limit'                                       => [
+			'type'                => 'integer',
+			'description'         => 'Display the "actions" menu items that require long computation only if the list of objects is contains less objects than this number (0 means no limit)',
 			// examples... not used
-			'default' => 50,
-			'value' => 50,
-			'source_of_value' => '',
+			'default'             => 50,
+			'value'               => 50,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'synchro_prevent_delete_all' => [
-			'type' => 'bool',
-			'description' => 'Stop the synchro if all the replicas of a data source become obsolete at the same time.',
+		'synchro_prevent_delete_all'                                  => [
+			'type'                => 'bool',
+			'description'         => 'Stop the synchro if all the replicas of a data source become obsolete at the same time.',
 			// examples... not used
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'source_dir' => [
-			'type' => 'string',
-			'description' => 'Source directory for the datamodel files. (which gets compiled to env-production).',
+		'source_dir'                                                  => [
+			'type'                => 'string',
+			'description'         => 'Source directory for the datamodel files. (which gets compiled to env-production).',
 			// examples... not used
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'csv_file_default_charset' => [
-			'type' => 'string',
-			'description' => 'Character set used by default for downloading and uploading data as a CSV file. Warning: it is case sensitive (uppercase is preferable).',
+		'csv_file_default_charset'                                    => [
+			'type'                => 'string',
+			'description'         => 'Character set used by default for downloading and uploading data as a CSV file. Warning: it is case sensitive (uppercase is preferable).',
 			// examples... not used
-			'default' => 'ISO-8859-1',
-			'value' => '',
-			'source_of_value' => '',
+			'default'             => 'ISO-8859-1',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'debug_report_spurious_chars' => [
-			'type' => 'bool',
-			'description' => 'Report, in the error log, the characters found in the output buffer, echoed by mistake in the loaded modules, and potentially corrupting the output',
+		'debug_report_spurious_chars'                                 => [
+			'type'                => 'bool',
+			'description'         => 'Report, in the error log, the characters found in the output buffer, echoed by mistake in the loaded modules, and potentially corrupting the output',
 			// examples... not used
-			'default' => false,
-			'value' => '',
-			'source_of_value' => '',
+			'default'             => false,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'impact_analysis_first_tab' => [
-			'type' => 'string',
-			'description' => 'Which tab to display first in the impact analysis view: list or graphics. Graphics are nicer but slower to display when there are many objects',
+		'impact_analysis_first_tab'                                   => [
+			'type'                => 'string',
+			'description'         => 'Which tab to display first in the impact analysis view: list or graphics. Graphics are nicer but slower to display when there are many objects',
 			// examples... not used
-			'default' => 'graphics',
-			'value' => '',
-			'source_of_value' => '',
+			'default'             => 'graphics',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'impact_analysis_lazy_loading' => [
+		'impact_analysis_lazy_loading'                                => [
 			'type'                => 'bool',
 			'description'         => 'In the impact analysis view: display the analysis or filter before display',
 			'default'             => false,
@@ -1002,7 +1002,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'lifecycle.transitions_sort_type' => [
+		'lifecycle.transitions_sort_type'                             => [
 			'type'                => 'string',
 			'description'         => 'How transitions will be sorted in the GUI. Possible values are "xml", "alphabetical", "fixed" or "relative"',
 			'default'             => DBObject::DEFAULT_TRANSITIONS_SORT_TYPE,
@@ -1010,7 +1010,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'url_validation_pattern' => [
+		'url_validation_pattern'                                      => [
 			'type'                => 'string',
 			'description'         => 'Regular expression to validate/detect the format of an URL (URL attributes and Wiki formatting for Text attributes)',
 			'default'             => AttributeURL::DEFAULT_VALIDATION_PATTERN,
@@ -1018,270 +1018,270 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'email_validation_pattern' => [
-			'type' => 'string',
-			'description' => 'Regular expression to validate/detect the format of an eMail address',
-			'default' => "[a-zA-Z0-9._&'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9-]{2,}",
-			'value' => '',
-			'source_of_value' => '',
+		'email_validation_pattern'                                    => [
+			'type'                => 'string',
+			'description'         => 'Regular expression to validate/detect the format of an eMail address',
+			'default'             => "[a-zA-Z0-9._&'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9-]{2,}",
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'email_decoration_class' => [
-			'type' => 'string',
-			'description' => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fas fa-envelope" will put a mail icon.',
-			'default' => 'fas fa-envelope',
-			'value' => '',
-			'source_of_value' => '',
+		'email_decoration_class'                                      => [
+			'type'                => 'string',
+			'description'         => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fas fa-envelope" will put a mail icon.',
+			'default'             => 'fas fa-envelope',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'phone_number_validation_pattern' => [
-			'type' => 'string',
-			'description' => 'Regular expression to validate/detect the format of a phone number',
-			'default' => "[0-9.\-\ \+\(\)]+",
-			'value' => '',
-			'source_of_value' => '',
+		'phone_number_validation_pattern'                             => [
+			'type'                => 'string',
+			'description'         => 'Regular expression to validate/detect the format of a phone number',
+			'default'             => "[0-9.\-\ \+\(\)]+",
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'phone_number_url_pattern' => [
-			'type' => 'string',
-			'description' => 'Format for phone number url, use %1$s as a placeholder for the value. eg. "tel:%1$s" for regular phone applications or "callto:%1$s" for Skype. Default is "tel:%1$s".',
-			'default' => 'tel:%1$s',
-			'value' => '',
-			'source_of_value' => '',
+		'phone_number_url_pattern'                                    => [
+			'type'                => 'string',
+			'description'         => 'Format for phone number url, use %1$s as a placeholder for the value. eg. "tel:%1$s" for regular phone applications or "callto:%1$s" for Skype. Default is "tel:%1$s".',
+			'default'             => 'tel:%1$s',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'phone_number_decoration_class' => [
-			'type' => 'string',
-			'description' => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fas fa-phone" will put a phone icon.',
-			'default' => 'fas fa-phone',
-			'value' => '',
-			'source_of_value' => '',
+		'phone_number_decoration_class'                               => [
+			'type'                => 'string',
+			'description'         => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fas fa-phone" will put a phone icon.',
+			'default'             => 'fas fa-phone',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_kpi_duration' => [
-			'type' => 'integer',
-			'description' => 'Level of logging for troubleshooting performance issues (1 to enable, 2 +blame callers) new: add "log_kpi_slow_queries" to limit the stats',
+		'log_kpi_duration'                                            => [
+			'type'                => 'integer',
+			'description'         => 'Level of logging for troubleshooting performance issues (1 to enable, 2 +blame callers) new: add "log_kpi_slow_queries" to limit the stats',
 			// examples... not used
-			'default' => 0,
-			'value' => 0,
-			'source_of_value' => '',
+			'default'             => 0,
+			'value'               => 0,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_kpi_slow_queries' => [
-			'type' => 'float',
-			'description' => 'Log only KPI duration stats lasting more than this value in seconds (0 for all)',
-			'default' => 1,
-			'value' => 1,
-			'source_of_value' => '',
+		'log_kpi_slow_queries'                                        => [
+			'type'                => 'float',
+			'description'         => 'Log only KPI duration stats lasting more than this value in seconds (0 for all)',
+			'default'             => 1,
+			'value'               => 1,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_kpi_memory' => [
-			'type' => 'integer',
-			'description' => 'Level of logging for troubleshooting memory limit issues',
+		'log_kpi_memory'                                              => [
+			'type'                => 'integer',
+			'description'         => 'Level of logging for troubleshooting memory limit issues',
 			// examples... not used
-			'default' => 0,
-			'value' => 0,
-			'source_of_value' => '',
+			'default'             => 0,
+			'value'               => 0,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_kpi_user_id' => [
-			'type' => 'string',
-			'description' => 'Limit the scope of users to the given user id (* means no limit)',
+		'log_kpi_user_id'                                             => [
+			'type'                => 'string',
+			'description'         => 'Limit the scope of users to the given user id (* means no limit)',
 			// examples... not used
-			'default' => '*',
-			'value' => '*',
-			'source_of_value' => '',
+			'default'             => '*',
+			'value'               => '*',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_kpi_generate_legacy_report' => [
-			'type' => 'bool',
-			'description' => 'Generate the legacy KPI report (kpi.html)',
-			'default' => true,
-			'value' => '',
-			'source_of_value' => '',
+		'log_kpi_generate_legacy_report'                              => [
+			'type'                => 'bool',
+			'description'         => 'Generate the legacy KPI report (kpi.html)',
+			'default'             => true,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'max_linkset_output' => [
-			'type' => 'integer',
-			'description' => 'Maximum number of items shown when getting a list of related items in an email, using the form $this->some_list$. 0 means no limit.',
-			'default' => 100,
-			'value' => 100,
-			'source_of_value' => '',
+		'max_linkset_output'                                          => [
+			'type'                => 'integer',
+			'description'         => 'Maximum number of items shown when getting a list of related items in an email, using the form $this->some_list$. 0 means no limit.',
+			'default'             => 100,
+			'value'               => 100,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'demo_mode' => [
-			'type' => 'bool',
-			'description' => 'Set to true to prevent users from changing passwords/languages',
-			'default' => false,
-			'value' => '',
-			'source_of_value' => '',
+		'demo_mode'                                                   => [
+			'type'                => 'bool',
+			'description'         => 'Set to true to prevent users from changing passwords/languages',
+			'default'             => false,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'portal_dispatch_urls' => [
-			'type' => 'array',
-			'description' => 'Associative array of sPortalId => Home page URL (relatively to the application root)',
+		'portal_dispatch_urls'                                        => [
+			'type'                => 'array',
+			'description'         => 'Associative array of sPortalId => Home page URL (relatively to the application root)',
 			// examples... not used
-			'default' => [],
-			'value' => false,
-			'source_of_value' => '',
+			'default'             => [],
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'max_execution_time_per_loop' => [
-			'type' => 'integer',
-			'description' => 'Maximum execution time requested, per loop, during bulk operations. Zero means no limit.',
+		'max_execution_time_per_loop'                                 => [
+			'type'                => 'integer',
+			'description'         => 'Maximum execution time requested, per loop, during bulk operations. Zero means no limit.',
 			// examples... not used
-			'default' => 30,
-			'value' => 30,
-			'source_of_value' => '',
+			'default'             => 30,
+			'value'               => 30,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'purge_data.max_chunk_size' => [
-			'type' => 'integer',
-			'description' => 'Maximum number of items deleted per loop. Used in function MetaModel::PurgeData',
-			'default' => 1000,
-			'value' => 1000,
-			'source_of_value' => '',
+		'purge_data.max_chunk_size'                                   => [
+			'type'                => 'integer',
+			'description'         => 'Maximum number of items deleted per loop. Used in function MetaModel::PurgeData',
+			'default'             => 1000,
+			'value'               => 1000,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'max_history_length' => [
-			'type' => 'integer',
-			'description' => 'Maximum length of the history table (in the "History" tab on each object) before it gets truncated. Latest modifications are displayed first.',
+		'max_history_length'                                          => [
+			'type'                => 'integer',
+			'description'         => 'Maximum length of the history table (in the "History" tab on each object) before it gets truncated. Latest modifications are displayed first.',
 			// examples... not used
-			'default' => 200,
-			'value' => 200,
-			'source_of_value' => '',
+			'default'             => 200,
+			'value'               => 200,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'full_text_chunk_duration' => [
-			'type' => 'integer',
-			'description' => 'Delay after which the results are displayed.',
+		'full_text_chunk_duration'                                    => [
+			'type'                => 'integer',
+			'description'         => 'Delay after which the results are displayed.',
 			// examples... not used
-			'default' => 2,
-			'value' => 2,
-			'source_of_value' => '',
+			'default'             => 2,
+			'value'               => 2,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'full_text_accelerators' => [
-			'type' => 'array',
-			'description' => 'Specifies classes to be searched at first (and the subset of data) when running the full text search.',
-			'default' => [],
-			'value' => false,
-			'source_of_value' => '',
+		'full_text_accelerators'                                      => [
+			'type'                => 'array',
+			'description'         => 'Specifies classes to be searched at first (and the subset of data) when running the full text search.',
+			'default'             => [],
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'full_text_needle_min' => [
-			'type' => 'integer',
-			'description' => 'Minimum size of the full text needle.',
-			'default' => 3,
-			'value' => 3,
-			'source_of_value' => '',
+		'full_text_needle_min'                                        => [
+			'type'                => 'integer',
+			'description'         => 'Minimum size of the full text needle.',
+			'default'             => 3,
+			'value'               => 3,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'tracking_level_linked_set_default' => [
-			'type' => 'integer',
-			'description' => 'Default tracking level if not explicitly set at the attribute level, for AttributeLinkedSet (defaults to NONE in case of a fresh install, LIST otherwise - this to preserve backward compatibility while upgrading from a version older than 2.0.3 - see TRAC #936)',
-			'default' => LINKSET_TRACKING_LIST,
-			'value' => LINKSET_TRACKING_LIST,
-			'source_of_value' => '',
+		'tracking_level_linked_set_default'                           => [
+			'type'                => 'integer',
+			'description'         => 'Default tracking level if not explicitly set at the attribute level, for AttributeLinkedSet (defaults to NONE in case of a fresh install, LIST otherwise - this to preserve backward compatibility while upgrading from a version older than 2.0.3 - see TRAC #936)',
+			'default'             => LINKSET_TRACKING_LIST,
+			'value'               => LINKSET_TRACKING_LIST,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'tracking_level_linked_set_indirect_default' => [
-			'type' => 'integer',
-			'description' => 'Default tracking level if not explicitly set at the attribute level, for AttributeLinkedSetIndirect',
-			'default' => LINKSET_TRACKING_ALL,
-			'value' => LINKSET_TRACKING_ALL,
-			'source_of_value' => '',
+		'tracking_level_linked_set_indirect_default'                  => [
+			'type'                => 'integer',
+			'description'         => 'Default tracking level if not explicitly set at the attribute level, for AttributeLinkedSetIndirect',
+			'default'             => LINKSET_TRACKING_ALL,
+			'value'               => LINKSET_TRACKING_ALL,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'user_rights_legacy' => [
-			'type' => 'bool',
-			'description' => 'Set to true to restore the buggy algorithm for the computation of user rights (within the same profile, ALLOW on the class itself has precedence on DENY of a parent class)',
-			'default' => false,
-			'value' => '',
-			'source_of_value' => '',
+		'user_rights_legacy'                                          => [
+			'type'                => 'bool',
+			'description'         => 'Set to true to restore the buggy algorithm for the computation of user rights (within the same profile, ALLOW on the class itself has precedence on DENY of a parent class)',
+			'default'             => false,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'xlsx_exporter_memory_limit' => [
-			'type' => 'string',
-			'description' => 'Memory limit to use when (interactively) exporting data to Excel',
-			'default' => '2048M', // Huuuuuuge 2GB!
-			'value' => '',
-			'source_of_value' => '',
+		'xlsx_exporter_memory_limit'                                  => [
+			'type'                => 'string',
+			'description'         => 'Memory limit to use when (interactively) exporting data to Excel',
+			'default'             => '2048M', // Huuuuuuge 2GB!
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'min_reload_interval' => [
-			'type' => 'integer',
-			'description' => 'Minimum refresh interval (seconds) for dashboards, shortcuts, etc. Even if the interval is set programmatically, it is forced to that minimum',
-			'default' => 5, // In iTop 2.0.3, this was the hardcoded value
-			'value' => '',
-			'source_of_value' => '',
+		'min_reload_interval'                                         => [
+			'type'                => 'integer',
+			'description'         => 'Minimum refresh interval (seconds) for dashboards, shortcuts, etc. Even if the interval is set programmatically, it is forced to that minimum',
+			'default'             => 5, // In iTop 2.0.3, this was the hardcoded value
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'relations_max_depth' => [
-			'type' => 'integer',
-			'description' => 'Maximum number of successive levels (depth) to explore when displaying the impact/depends on relations.',
-			'default' => 20, // In iTop 2.0.3, this was the hardcoded value
-			'value' => '',
-			'source_of_value' => '',
+		'relations_max_depth'                                         => [
+			'type'                => 'integer',
+			'description'         => 'Maximum number of successive levels (depth) to explore when displaying the impact/depends on relations.',
+			'default'             => 20, // In iTop 2.0.3, this was the hardcoded value
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'relations.complete_analysis' => [
-			'type' => 'bool',
-			'description' => 'Continue the impact/depends analysis even if a step is not visible to the user',
-			'default' => false,
-			'value' => '',
-			'source_of_value' => '',
+		'relations.complete_analysis'                                 => [
+			'type'                => 'bool',
+			'description'         => 'Continue the impact/depends analysis even if a step is not visible to the user',
+			'default'             => false,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'sessions_tracking.enabled' => [
-			'type' => 'bool',
-			'description' => 'Whether or not the whole mechanism to track active sessions is enabled. See PHP session.gc_maxlifetime setting to configure session expiration.',
-			'default' => false,
-			'value' => '',
-			'source_of_value' => '',
+		'sessions_tracking.enabled'                                   => [
+			'type'                => 'bool',
+			'description'         => 'Whether or not the whole mechanism to track active sessions is enabled. See PHP session.gc_maxlifetime setting to configure session expiration.',
+			'default'             => false,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'sessions_tracking.session_handler_extension' => [
-			'type' => 'string',
-			'description' => 'to store more data in itop session files, set your own iSessionHandlerExtension implementation class in this variable',
-			'default' => '',
-			'value' => '',
-			'source_of_value' => '',
+		'sessions_tracking.session_handler_extension'                 => [
+			'type'                => 'string',
+			'description'         => 'to store more data in itop session files, set your own iSessionHandlerExtension implementation class in this variable',
+			'default'             => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'sessions_tracking.gc_threshold' => [
-			'type' => 'integer',
+		'sessions_tracking.gc_threshold'                              => [
+			'type'                => 'integer',
 			'description'         => 'fallback in case cron is not active: probability in percent that session files are cleanup during any itop request (100 means always)',
 			'default'             => 1,
-			'value' => '',
-			'source_of_value' => '',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'sessions_tracking.gc_duration_in_seconds' => [
-			'type' => 'integer',
-			'description' => 'fallback in case cron is not active: when a cleanup is triggered cleanup duration will not exceed this duration (in seconds).',
-			'default' => 1,
-			'value' => '',
-			'source_of_value' => '',
+		'sessions_tracking.gc_duration_in_seconds'                    => [
+			'type'                => 'integer',
+			'description'         => 'fallback in case cron is not active: when a cleanup is triggered cleanup duration will not exceed this duration (in seconds).',
+			'default'             => 1,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'transaction_storage' => [
-			'type' => 'string',
-			'description' => 'The type of mechanism to use for storing the unique identifiers for transactions (Session|File).',
-			'default' => 'File',
-			'value' => '',
-			'source_of_value' => '',
+		'transaction_storage'                                         => [
+			'type'                => 'string',
+			'description'         => 'The type of mechanism to use for storing the unique identifiers for transactions (Session|File).',
+			'default'             => 'File',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'transactions_enabled' => [
-			'type' => 'bool',
-			'description' => 'Whether or not the whole mechanism to prevent multiple submissions of a page is enabled.',
-			'default' => true,
-			'value' => '',
-			'source_of_value' => '',
+		'transactions_enabled'                                        => [
+			'type'                => 'bool',
+			'description'         => 'Whether or not the whole mechanism to prevent multiple submissions of a page is enabled.',
+			'default'             => true,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'transactions_gc_threshold' => [
+		'transactions_gc_threshold'                                   => [
 			'type'                => 'integer',
 			'description'         => 'probability in percent for the garbage collector to be triggered (100 mean always)',
 			'default'             => 10, // added in itop 2.7.4, before the GC was always called
@@ -1289,7 +1289,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'transactions_file_lifetime' => [
+		'transactions_file_lifetime'                                  => [
 			'type'                => 'integer',
 			'description'         => 'Value in seconds for the lifetime of a transaction file (after this duration, the transaction will be invalid and the garbage collector could delete it). This only works if the "transaction_storage" parameter is set to "File".',
 			'default'             => 3600,
@@ -1297,7 +1297,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'log_transactions' => [
+		'log_transactions'                                            => [
 			'type'                => 'bool',
 			'description'         => 'Whether or not to enable the debug log for the transactions.',
 			'default'             => false,
@@ -1305,7 +1305,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'concurrent_lock_enabled' => [
+		'concurrent_lock_enabled'                                     => [
 			'type'                => 'bool',
 			'description'         => 'Whether or not to activate the locking mechanism in order to prevent concurrent edition of the same object.',
 			'default'             => false,
@@ -1313,7 +1313,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'concurrent_lock_expiration_delay' => [
+		'concurrent_lock_expiration_delay'                            => [
 			'type'                => 'integer',
 			'description'         => 'Delay (in seconds) for a concurrent lock to expire',
 			'default'             => 120,
@@ -1321,7 +1321,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'concurrent_lock_override_profiles' => [
+		'concurrent_lock_override_profiles'                           => [
 			'type'                => 'array',
 			'description'         => 'The list of profiles allowed to "kill" a lock',
 			'default'             => ['Administrator'],
@@ -1329,7 +1329,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'force_transition_confirmation' => [
+		'force_transition_confirmation'                               => [
 			'type'                => 'bool',
 			'description'         => 'If set to true force confirmation in all transition even if there is no field to complete',
 			'default'             => false,
@@ -1337,7 +1337,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'html_sanitizer' => [
+		'html_sanitizer'                                              => [
 			'type'                => 'string',
 			'description'         => 'The class to use for HTML sanitization: HTMLDOMSanitizer, HTMLPurifierSanitizer or HTMLNullSanitizer',
 			'default'             => 'HTMLDOMSanitizer',
@@ -1345,15 +1345,15 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'svg_sanitizer' => [
-			'type' => 'string',
-			'description' => 'The class to use for SVG sanitization : allow to provide a custom made sanitizer',
-			'default' => 'SVGDOMSanitizer',
-			'value' => '',
-			'source_of_value' => '',
+		'svg_sanitizer'                                               => [
+			'type'                => 'string',
+			'description'         => 'The class to use for SVG sanitization : allow to provide a custom made sanitizer',
+			'default'             => 'SVGDOMSanitizer',
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'inline_image_max_display_width' => [
+		'inline_image_max_display_width'                              => [
 			'type'                => 'integer',
 			'description'         => 'The maximum width (in pixels) when displaying images inside an HTML formatted attribute. Images will be displayed using this this maximum width.',
 			'default'             => '250',
@@ -1361,7 +1361,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'inline_image_max_storage_width' => [
+		'inline_image_max_storage_width'                              => [
 			'type'                => 'integer',
 			'description'         => 'The maximum width (in pixels) when uploading images to be used inside an HTML formatted attribute. Images larger than the given size will be downsampled before storing them in the database.',
 			'default'             => '1600',
@@ -1369,7 +1369,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'draft_attachments_lifetime' => [
+		'draft_attachments_lifetime'                                  => [
 			'type'                => 'integer',
 			'description'         => 'Lifetime (in seconds) of drafts\' attachments and inline images: after this duration, the garbage collector will delete them.',
 			'default'             => 86400,
@@ -1377,385 +1377,385 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'date_and_time_format' => [
-			'type' => 'array',
-			'description' => 'Format for date and time display (per language)',
-			'default' => ['default' => ['date' => 'Y-m-d', 'time' => 'H:i:s', 'date_time' => '$date $time']],
-			'value' => false,
-			'source_of_value' => '',
+		'date_and_time_format'                                        => [
+			'type'                => 'array',
+			'description'         => 'Format for date and time display (per language)',
+			'default'             => ['default' => ['date' => 'Y-m-d', 'time' => 'H:i:s', 'date_time' => '$date $time']],
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'compatibility.include_moved_js_files' => [
-			'type' => 'bool',
-			'description' => 'Include back JS files which are now only included when necessary to ease usage of not migrated extensions',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'compatibility.include_deprecated_js_files' => [
-			'type' => 'bool',
-			'description' => 'Include the deprecated JS files (in iTop previous version) to ease usage of not migrated extensions',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'compatibility.include_moved_css_files' => [
-			'type' => 'bool',
-			'description' => 'Include back CSS files which are now only included when necessary to ease usage of not migrated extensions',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'compatibility.include_deprecated_css_files' => [
-			'type' => 'bool',
-			'description' => 'Include the deprecated CSS files (in iTop previous version) to ease usage of not migrated extensions',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'navigation_menu.show_menus_count' => [
-			'type' => 'bool',
-			'description' => 'Display count badges for OQL menu entries',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'navigation_menu.show_organization_filter' => [
-			'type' => 'bool',
-			'description' => 'Display organization filter in menu',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'quick_create.enabled' => [
-			'type' => 'bool',
-			'description' => 'Whether or not the quick create is enabled',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'quick_create.max_autocomplete_results' => [
-			'type' => 'integer',
-			'description' => 'Max. number of elements returned by the autocomplete',
-			'default' => 10,
-			'value' => 10,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'quick_create.show_history' => [
-			'type' => 'bool',
-			'description' => 'Whether or not to display the elements in the history',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'quick_create.max_history_results' => [
-			'type' => 'integer',
-			'description' => 'Max. number of elements in the history',
-			'default' => 10,
-			'value' => 10,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'global_search.enabled' => [
-			'type' => 'bool',
-			'description' => 'Whether or not the global search is enabled',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'global_search.show_history' => [
-			'type' => 'bool',
-			'description' => 'Whether or not to display the elements in the history',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'global_search.max_history_results' => [
-			'type' => 'integer',
-			'description' => 'Max. number of elements in the history.',
-			'default' => 10,
-			'value' => 10,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'breadcrumb.enabled' => [
-			'type' => 'bool',
-			'description' => 'Whether or not the breadcrumbs is enabled',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'breadcrumb.max_count' => [
-			'type' => 'integer',
-			'description' => 'Maximum number of items kept in the history breadcrumb. Set it to 0 to entirely disable the breadcrumb.',
-			'default' => 8,
-			'value' => 8,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'activity_panel.datetimes_reformat_limit' => [
-			'type' => 'integer',
-			'description' => 'Limit (in days) for the dates / times to be displayed in a relative format (eg. "2 days ago") instead of in absolute format (eg. "2021-05-01 10:00"). After that limit, they will all be displayed in absolute format using the "date_and_time_format" parameter.',
-			'default' => 7,
-			'value' => 7,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'activity_panel.prefilter_only_current_log' => [
-			'type' => 'bool',
-			'description' => 'Whether the "Logs" filter should only be set to the log from the current tab or to all of them.',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'activity_panel.prefilter_state_changes_on_logs' => [
-			'type' => 'bool',
-			'description' => 'Whether the "State changes" filter should be set by default on all log tabs.',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'activity_panel.prefilter_edits_on_logs' => [
-			'type' => 'bool',
-			'description' => 'Whether the "Edits" filter should be set by default on all log tabs.',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'activity_panel.hide_avatars' => [
-			'type' => 'array',
-			'description' => 'GUIs IDs ("backoffice", "itop-portal" for the standard end-users portal, ...) in which the user avatars should be hidden and replaced if possible by their initials (eg. array("backoffice", "itop-portal", "another-portal-id"))',
-			'default' => [],
-			'value' => [],
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'activity_panel.show_author_name_below_entries' => [
-			'type' => 'bool',
-			'description' => 'Whether or not to show the author friendlyname next to the date on the last entry.',
-			'default' => false,
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => true,
-		],
-		'activity_panel.lock_watcher_period' => [
-			'type' => 'integer',
-			'description' => 'Period (in second) between lock status update.',
-			'default' => 30,
-			'value' => 30,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'activity_panel.entry_form_opened_by_default' => [
-			'type' => 'bool',
-			'description' => 'Whether or not the new entry form will be automatically opened when viewing an object.',
-			'default' => false,
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => true,
-		],
-		'mentions.allowed_classes' => [
-			'type' => 'array',
-			'description' => 'Classes which can be mentioned through the autocomplete in the caselogs. Key of the array must be a single character that will trigger the autocomplete, value must be a DM class (eg. "@" => "Person", "?" => "FAQ")',
-			'default' => [
-				'@' => 'Person',
-			],
-			'value' => false,
-			'source_of_value' => '',
-			'show_in_conf_sample' => true,
-		],
-		'obsolescence.show_obsolete_data' => [
-			'type' => 'bool',
-			'description' => 'Default value for the user preference "show obsolete data"',
-			'default' => false,
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'obsolescence.date_update_interval' => [
-			'type' => 'integer',
-			'description' => 'Delay in seconds between two refreshes of the obsolescence dates.',
-			'default' => 600,
-			'value' => 600,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'user_preferences.allow_backoffice_theme_override' => [
-			'type' => 'bool',
-			'description' => 'Whether the user can choose which theme to use in the backoffice. If set to false, all users will have the theme defined in "backoffice_default_theme"',
-			'default' => true,
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'secure_rest_services' => [
-			'type' => 'bool',
-			'description' => 'When set to true, only the users with the profile "REST Services User" are allowed to use the REST web services.',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'allow_rest_services_via_tokens' => [
-			'type' => 'bool',
-			'description' => 'When set to true, REST endpoint token authorization works even with secure_rest_services set.',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'search_manual_submit' => [
-			'type' => 'bool',
-			'description' => 'Force manual submit of search all requests',
-			'default' => false,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => true,
-		],
-		'optimize_requests_for_join_count' => [
-			'type' => 'bool',
-			'description' => 'Optimize request joins to minimize the count (default is true, try to set it to false in case of performance issues)',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => true,
-		],
-		'high_cardinality_classes' => [
-			'type' => 'array',
-			'description' => 'List of classes with high cardinality (Force manual submit of search)',
-			'default' => [],
-			'value' => [],
-			'source_of_value' => '',
-			'show_in_conf_sample' => true,
-		],
-		'newsroom_enabled' => [
-			'type' => 'bool',
-			'description' => 'Whether or not the whole newsroom is enabled',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'notifications.itop.read_notification_retention' => [
-			'type' => 'integer',
-			'description' => 'Duration in days after which iTop read notifications will be deleted',
-			'default' => 182,
-			'value' => 182,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'notifications.itop.send_asynchronously' => [
-			'type' => 'bool',
-			'description' => 'If true then iTop notifications will be sent asynchronously',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'notifications.itop.newsroom_cache_time' => [
-			'type' => 'integer',
-			'description' => 'Duration in min between each fetch for notifications in newsroom',
-			'default' => 5,
-			'value' => 5,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'notifications.last_executions_days' => [
-			'type' => 'integer',
-			'description' => 'Number of days to display in the Action\'s last executions tab (0 means no limit)',
-			'default' => 30 + 31, // 2 months
-			'value' => 61,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'regenerate_session_id_enabled' => [
-			'type' => 'bool',
-			'description' => 'If true then session id will be regenerated on each login, to prevent session fixation.',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'query_cache_enabled' => [
-			'type' => 'bool',
-			'description' => 'If set, DBSearch will use cache for query generation',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'expression_cache_enabled' => [
-			'type' => 'bool',
-			'description' => 'If set, DBSearch will use cache for query expression generation',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'log_kpi_record_oql' => [
-			'type' => 'integer',
-			'description' => '1 => Record OQL requests and parameters',
-			'default' => 0,
-			'value' => 0,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'backoffice_default_theme' => [
-			'type' => 'string',
-			'description' => 'Default theme used for '.ITOP_APPLICATION_SHORT.'\'s console',
-			'default' => 'fullmoon',
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'security_header_xframe' => [
-			'type' => 'string',
-			'description' => 'Value of the X-Frame-Options HTTP header sent by iTop. Possible values : DENY, SAMEORIGIN, or empty string.',
-			'default' => 'SAMEORIGIN',
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'security.enable_header_xcontent_type_options' => [
-			'type' => 'bool',
-			'description' => 'If set to false, iTop will stop sending the X-Content-Type-Options HTTP header. This header could trigger CORB protection on certain resources (JSON, XML, HTML, text) therefore blocking them.',
-			'default' => true,
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'security.disable_inline_documents_sandbox' => [
-			'type' => 'bool',
-			'description' => 'If true then the sandbox for documents displayed in a browser tab will be disabled; enabling scripts and other interactive content. Note that setting this to true will open the application to potential XSS attacks!',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
-		'security.disable_mandatory_authentication_for_inline_images' => [
+		'compatibility.include_moved_js_files'                        => [
 			'type'                => 'bool',
-			'description' => 'If true then image access does not require user authentication, provided the image\'s secret is valid. Note that setting this to true gives a less secure access to inline images!',
+			'description'         => 'Include back JS files which are now only included when necessary to ease usage of not migrated extensions',
 			'default'             => false,
 			'value'               => false,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'security.disable_joined_classes_filter' => [
+		'compatibility.include_deprecated_js_files'                   => [
+			'type'                => 'bool',
+			'description'         => 'Include the deprecated JS files (in iTop previous version) to ease usage of not migrated extensions',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'compatibility.include_moved_css_files'                       => [
+			'type'                => 'bool',
+			'description'         => 'Include back CSS files which are now only included when necessary to ease usage of not migrated extensions',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'compatibility.include_deprecated_css_files'                  => [
+			'type'                => 'bool',
+			'description'         => 'Include the deprecated CSS files (in iTop previous version) to ease usage of not migrated extensions',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'navigation_menu.show_menus_count'                            => [
+			'type'                => 'bool',
+			'description'         => 'Display count badges for OQL menu entries',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'navigation_menu.show_organization_filter'                    => [
+			'type'                => 'bool',
+			'description'         => 'Display organization filter in menu',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'quick_create.enabled'                                        => [
+			'type'                => 'bool',
+			'description'         => 'Whether or not the quick create is enabled',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'quick_create.max_autocomplete_results'                       => [
+			'type'                => 'integer',
+			'description'         => 'Max. number of elements returned by the autocomplete',
+			'default'             => 10,
+			'value'               => 10,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'quick_create.show_history'                                   => [
+			'type'                => 'bool',
+			'description'         => 'Whether or not to display the elements in the history',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'quick_create.max_history_results'                            => [
+			'type'                => 'integer',
+			'description'         => 'Max. number of elements in the history',
+			'default'             => 10,
+			'value'               => 10,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'global_search.enabled'                                       => [
+			'type'                => 'bool',
+			'description'         => 'Whether or not the global search is enabled',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'global_search.show_history'                                  => [
+			'type'                => 'bool',
+			'description'         => 'Whether or not to display the elements in the history',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'global_search.max_history_results'                           => [
+			'type'                => 'integer',
+			'description'         => 'Max. number of elements in the history.',
+			'default'             => 10,
+			'value'               => 10,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'breadcrumb.enabled'                                          => [
+			'type'                => 'bool',
+			'description'         => 'Whether or not the breadcrumbs is enabled',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'breadcrumb.max_count'                                        => [
+			'type'                => 'integer',
+			'description'         => 'Maximum number of items kept in the history breadcrumb. Set it to 0 to entirely disable the breadcrumb.',
+			'default'             => 8,
+			'value'               => 8,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'activity_panel.datetimes_reformat_limit'                     => [
+			'type'                => 'integer',
+			'description'         => 'Limit (in days) for the dates / times to be displayed in a relative format (eg. "2 days ago") instead of in absolute format (eg. "2021-05-01 10:00"). After that limit, they will all be displayed in absolute format using the "date_and_time_format" parameter.',
+			'default'             => 7,
+			'value'               => 7,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'activity_panel.prefilter_only_current_log'                   => [
+			'type'                => 'bool',
+			'description'         => 'Whether the "Logs" filter should only be set to the log from the current tab or to all of them.',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'activity_panel.prefilter_state_changes_on_logs'              => [
+			'type'                => 'bool',
+			'description'         => 'Whether the "State changes" filter should be set by default on all log tabs.',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'activity_panel.prefilter_edits_on_logs'                      => [
+			'type'                => 'bool',
+			'description'         => 'Whether the "Edits" filter should be set by default on all log tabs.',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'activity_panel.hide_avatars'                                 => [
+			'type'                => 'array',
+			'description'         => 'GUIs IDs ("backoffice", "itop-portal" for the standard end-users portal, ...) in which the user avatars should be hidden and replaced if possible by their initials (eg. array("backoffice", "itop-portal", "another-portal-id"))',
+			'default'             => [],
+			'value'               => [],
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'activity_panel.show_author_name_below_entries'               => [
+			'type'                => 'bool',
+			'description'         => 'Whether or not to show the author friendlyname next to the date on the last entry.',
+			'default'             => false,
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
+		'activity_panel.lock_watcher_period'                          => [
+			'type'                => 'integer',
+			'description'         => 'Period (in second) between lock status update.',
+			'default'             => 30,
+			'value'               => 30,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'activity_panel.entry_form_opened_by_default'                 => [
+			'type'                => 'bool',
+			'description'         => 'Whether or not the new entry form will be automatically opened when viewing an object.',
+			'default'             => false,
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
+		'mentions.allowed_classes'                                    => [
+			'type'                => 'array',
+			'description'         => 'Classes which can be mentioned through the autocomplete in the caselogs. Key of the array must be a single character that will trigger the autocomplete, value must be a DM class (eg. "@" => "Person", "?" => "FAQ")',
+			'default'             => [
+				'@' => 'Person',
+			],
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
+		'obsolescence.show_obsolete_data'                             => [
+			'type'                => 'bool',
+			'description'         => 'Default value for the user preference "show obsolete data"',
+			'default'             => false,
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'obsolescence.date_update_interval'                           => [
+			'type'                => 'integer',
+			'description'         => 'Delay in seconds between two refreshes of the obsolescence dates.',
+			'default'             => 600,
+			'value'               => 600,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'user_preferences.allow_backoffice_theme_override'            => [
+			'type'                => 'bool',
+			'description'         => 'Whether the user can choose which theme to use in the backoffice. If set to false, all users will have the theme defined in "backoffice_default_theme"',
+			'default'             => true,
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'secure_rest_services'                                        => [
+			'type'                => 'bool',
+			'description'         => 'When set to true, only the users with the profile "REST Services User" are allowed to use the REST web services.',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'allow_rest_services_via_tokens'                              => [
+			'type'                => 'bool',
+			'description'         => 'When set to true, REST endpoint token authorization works even with secure_rest_services set.',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'search_manual_submit'                                        => [
+			'type'                => 'bool',
+			'description'         => 'Force manual submit of search all requests',
+			'default'             => false,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
+		'optimize_requests_for_join_count'                            => [
+			'type'                => 'bool',
+			'description'         => 'Optimize request joins to minimize the count (default is true, try to set it to false in case of performance issues)',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
+		'high_cardinality_classes'                                    => [
+			'type'                => 'array',
+			'description'         => 'List of classes with high cardinality (Force manual submit of search)',
+			'default'             => [],
+			'value'               => [],
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
+		'newsroom_enabled'                                            => [
+			'type'                => 'bool',
+			'description'         => 'Whether or not the whole newsroom is enabled',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'notifications.itop.read_notification_retention'              => [
+			'type'                => 'integer',
+			'description'         => 'Duration in days after which iTop read notifications will be deleted',
+			'default'             => 182,
+			'value'               => 182,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'notifications.itop.send_asynchronously'                      => [
+			'type'                => 'bool',
+			'description'         => 'If true then iTop notifications will be sent asynchronously',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'notifications.itop.newsroom_cache_time'                      => [
+			'type'                => 'integer',
+			'description'         => 'Duration in min between each fetch for notifications in newsroom',
+			'default'             => 5,
+			'value'               => 5,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'notifications.last_executions_days'                          => [
+			'type'                => 'integer',
+			'description'         => 'Number of days to display in the Action\'s last executions tab (0 means no limit)',
+			'default'             => 30 + 31, // 2 months
+			'value'               => 61,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'regenerate_session_id_enabled'                               => [
+			'type'                => 'bool',
+			'description'         => 'If true then session id will be regenerated on each login, to prevent session fixation.',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'query_cache_enabled'                                         => [
+			'type'                => 'bool',
+			'description'         => 'If set, DBSearch will use cache for query generation',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'expression_cache_enabled'                                    => [
+			'type'                => 'bool',
+			'description'         => 'If set, DBSearch will use cache for query expression generation',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'log_kpi_record_oql'                                          => [
+			'type'                => 'integer',
+			'description'         => '1 => Record OQL requests and parameters',
+			'default'             => 0,
+			'value'               => 0,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'backoffice_default_theme'                                    => [
+			'type'                => 'string',
+			'description'         => 'Default theme used for '.ITOP_APPLICATION_SHORT.'\'s console',
+			'default'             => 'fullmoon',
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'security_header_xframe'                                      => [
+			'type'                => 'string',
+			'description'         => 'Value of the X-Frame-Options HTTP header sent by iTop. Possible values : DENY, SAMEORIGIN, or empty string.',
+			'default'             => 'SAMEORIGIN',
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'security.enable_header_xcontent_type_options'                => [
+			'type'                => 'bool',
+			'description'         => 'If set to false, iTop will stop sending the X-Content-Type-Options HTTP header. This header could trigger CORB protection on certain resources (JSON, XML, HTML, text) therefore blocking them.',
+			'default'             => true,
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'security.disable_inline_documents_sandbox'                   => [
+			'type'                => 'bool',
+			'description'         => 'If true then the sandbox for documents displayed in a browser tab will be disabled; enabling scripts and other interactive content. Note that setting this to true will open the application to potential XSS attacks!',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'security.disable_mandatory_authentication_for_inline_images' => [
+			'type'                => 'bool',
+			'description'         => 'If true then image access does not require user authentication, provided the image\'s secret is valid. Note that setting this to true gives a less secure access to inline images!',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
+		'security.disable_joined_classes_filter'                      => [
 			'type'                => 'bool',
 			'description'         => 'If true, scope filters aren\'t applied to joined classes or union classes not directly listed in the SELECT clause.',
 			'default'             => false,
@@ -1763,7 +1763,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'security.hide_administrators' => [
+		'security.hide_administrators'                                => [
 			'type'                => 'bool',
 			'description'         => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',
 			'default'             => true,
@@ -1771,7 +1771,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'security.disable_exec_forced_login_for_all_enpoints' => [
+		'security.disable_exec_forced_login_for_all_enpoints'         => [
 			'type'                => 'bool',
 			'description'         => 'If true, when no delegated authentication module is defined, no login will be forced on modules exec endpoints',
 			'default'             => false,
@@ -1779,7 +1779,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'security.post_requests.allowed_protocols' => [
+		'security.post_requests.allowed_protocols'                    => [
 			'type'                => 'string',
 			'description'         => 'List of allowed protocols that will be used for post requests. Allowed values: dict, file, ftp, ftps, gopher, http, https, imap, imaps, ldap, ldaps, mqtt, pop3, pop3s, rtsp, scp, sftp, smtp, smtps, telnet, tftp',
 			'default'             => 'http,https,ftp,ftps,sftp',
@@ -1787,15 +1787,15 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'behind_reverse_proxy' => [
-			'type' => 'bool',
-			'description' => 'If true, then proxies custom header (X-Forwarded-*) are taken into account. Use only if the webserver is not publicly accessible (reachable only by the reverse proxy)',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+		'behind_reverse_proxy'                                        => [
+			'type'                => 'bool',
+			'description'         => 'If true, then proxies custom header (X-Forwarded-*) are taken into account. Use only if the webserver is not publicly accessible (reachable only by the reverse proxy)',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'developer_mode.enabled' => [
+		'developer_mode.enabled'                                      => [
 			'type'                => 'bool',
 			'description'         => 'If true then unlocks dev env functionalities, see \utils::IsDevelopmentEnvironment',
 			'default'             => null,
@@ -1803,7 +1803,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'developer_mode.interface_cache.enabled' => [
+		'developer_mode.interface_cache.enabled'                      => [
 			'type'                => 'bool',
 			'description'         => 'If true then InterfaceDiscovery uses dynamic cache (in developer_mode)',
 			'default'             => false,
@@ -1811,23 +1811,23 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'theme.enable_precompilation' => [
-			'type' => 'bool',
-			'description' => 'If false, theme compilation will not use any precompiled file setup optimization.)',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
+		'theme.enable_precompilation'                                 => [
+			'type'                => 'bool',
+			'description'         => 'If false, theme compilation will not use any precompiled file setup optimization.)',
+			'default'             => true,
+			'value'               => true,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'theme.force_signature_check_at_runtime' => [
-			'type' => 'bool',
-			'description' => 'If true, checking that the current theme signature matches the compiled file -to recompile it if necessary- will be done for each page. This can slow the application, only use it if you are experiencing issues while customizing a theme.)',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+		'theme.force_signature_check_at_runtime'                      => [
+			'type'                => 'bool',
+			'description'         => 'If true, checking that the current theme signature matches the compiled file -to recompile it if necessary- will be done for each page. This can slow the application, only use it if you are experiencing issues while customizing a theme.)',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'setup.launch_button.enabled' => [
+		'setup.launch_button.enabled'                                 => [
 			'type'                => 'bool',
 			'description'         => 'If true displays in the Application Upgrade screen a button allowing to launch the setup in a single click (no more manual config file permission change needed)',
 			'default'             => null,
@@ -1835,7 +1835,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'audit.enable_selection_landing_page' => [
+		'audit.enable_selection_landing_page'                         => [
 			'type'                => 'bool',
 			'description'         => 'If true audit categories must be selected before results are computed (use this setting in case of a lot of audit categories)',
 			'default'             => true,
@@ -1843,7 +1843,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'application.secret' => [
+		'application.secret'                                          => [
 			'type'                => 'string',
 			'description'         => 'Application secret, uses this value for encrypting the cookies used in the remember me functionality and for creating signed URIs when using ESI (Edge Side Includes).',
 			'default'             => '',
@@ -2404,19 +2404,22 @@ class Config
 				if (!is_array($aHeaders)) {
 					return false;
 				}
+
 				return $aHeaders[$sKey] ?? false;
 		}
+
 		return false;
 	}
 
 	/**
 	 * @param $sExpression
+	 *
 	 * @return array|null
 	 */
 	private function ParseExternalAuthVariableExpression($sExpression)
 	{
 		// If it's a configuration parameter it's probably already trimmed, but just in case
-		$sExpression = trim((string) $sExpression);
+		$sExpression = trim((string)$sExpression);
 		if ($sExpression === '') {
 			return null;
 		}
@@ -2425,9 +2428,10 @@ class Config
 		if (preg_match('/^\$_(SERVER|COOKIE|REQUEST)\s*\[\s*(["\'])\s*([^"\']+)\2\s*\]\s*$/', $sExpression, $aMatches) === 1) {
 			$sContext = strtoupper($aMatches[1]);
 			$sKey = $aMatches[3];
+
 			return [
-				'type' => strtolower($sContext),
-				'key' => $sKey,
+				'type'       => strtolower($sContext),
+				'key'        => $sKey,
 				'normalized' => '$_'.$sContext.'[\''.$sKey.'\']',
 			];
 		}
@@ -2435,9 +2439,10 @@ class Config
 		// Match getallheaders()['Header-Name'] in a case-insensitive way.
 		if (preg_match('/^getallheaders\(\)\s*\[\s*(["\'])\s*([^"\']+)\1\s*\]\s*$/i', $sExpression, $aMatches) === 1) {
 			$sKey = $aMatches[2];
+
 			return [
-				'type' => 'header',
-				'key' => $sKey,
+				'type'       => 'header',
+				'key'        => $sKey,
 				'normalized' => 'getallheaders()[\''.$sKey.'\']',
 			];
 		}
@@ -2519,11 +2524,11 @@ class Config
 	}
 
 	/**
-	 * @since 2.7.11 N°7085
-	 * Add login mode if not configured already
 	 * @param string $sLoginMode
 	 *
 	 * @return void
+	 * @since 2.7.11 N°7085
+	 * Add login mode if not configured already
 	 */
 	public function AddAllowedLoginTypes($sLoginMode)
 	{
@@ -2664,17 +2669,17 @@ class Config
 
 			// Old fashioned boolean settings
 			$aBoolValues = [
-				'log_global' => $this->m_bLogGlobal,
-				'log_notification' => $this->m_bLogNotification,
-				'log_issue' => $this->m_bLogIssue,
-				'log_web_service' => $this->m_bLogWebService,
+				'log_global'                 => $this->m_bLogGlobal,
+				'log_notification'           => $this->m_bLogNotification,
+				'log_issue'                  => $this->m_bLogIssue,
+				'log_web_service'            => $this->m_bLogWebService,
 				'secure_connection_required' => $this->m_bSecureConnectionRequired,
 			];
 			foreach ($aBoolValues as $sKey => $bValue) {
 				$aConfigSettings[$sKey] = [
 					'show_in_conf_sample' => true,
-					'type' => 'bool',
-					'value' => $bValue,
+					'type'                => 'bool',
+					'value'               => $bValue,
 				];
 			}
 
@@ -2688,26 +2693,26 @@ class Config
 			foreach ($aIntValues as $sKey => $iValue) {
 				$aConfigSettings[$sKey] = [
 					'show_in_conf_sample' => true,
-					'type' => 'integer',
-					'value' => $iValue,
+					'type'                => 'integer',
+					'value'               => $iValue,
 				];
 			}
 
 			// Old fashioned remaining values
 			$aOtherValues = [
-				'default_language' => $this->m_sDefaultLanguage,
+				'default_language'    => $this->m_sDefaultLanguage,
 				'allowed_login_types' => $this->m_sAllowedLoginTypes,
-				'encryption_key' => $this->m_sEncryptionKey,
-				'encryption_library' => $this->m_sEncryptionLibrary,
+				'encryption_key'      => $this->m_sEncryptionKey,
+				'encryption_library'  => $this->m_sEncryptionLibrary,
 				'csv_import_charsets' => $this->m_aCharsets,
-				'password_hash_algo' => $this->m_iPasswordHashAlgo,
-				'application.secret' => $this->m_sAppSecret,
+				'password_hash_algo'  => $this->m_iPasswordHashAlgo,
+				'application.secret'  => $this->m_sAppSecret,
 			];
 			foreach ($aOtherValues as $sKey => $value) {
 				$aConfigSettings[$sKey] = [
 					'show_in_conf_sample' => true,
-					'type' => is_string($value) ? 'string' : 'mixed',
-					'value' => $value,
+					'type'                => is_string($value) ? 'string' : 'mixed',
+					'value'               => $value,
 				];
 			}
 
@@ -2742,10 +2747,12 @@ class Config
 			fwrite($hFile, "/**\n *\n * Modules specific settings\n *\n */\n");
 			fwrite($hFile, "\$MyModuleSettings = array(\n");
 			foreach ($this->m_aModuleSettings as $sModule => $aProperties) {
-				fwrite($hFile, "\t'$sModule' => array (\n");
+				$sModuleVarExported = var_export($sModule, true);
+				fwrite($hFile, "\t$sModuleVarExported => array (\n");
 				foreach ($aProperties as $sProperty => $value) {
 					$sNiceExport = self::PrettyVarExport($this->oItopConfigParser->GetVarValue('MyModuleSettings', $sProperty), $value, "\t\t");
-					fwrite($hFile, "\t\t'$sProperty' => $sNiceExport,\n");
+					$sPropertyVarExported = var_export($sProperty, true);
+					fwrite($hFile, "\t\t$sPropertyVarExported => $sNiceExport,\n");
 				}
 				fwrite($hFile, "\t),\n");
 			}
@@ -3002,7 +3009,7 @@ class ConfigPlaceholdersResolver
 
 		$sPattern = '/\%(env|server)\((\w+)\)(?:\?:(\w*))?\%/'; //3 capturing groups, ie `%env(HTTP_PORT)?:8080%` produce: `env` `HTTP_PORT` and `8080`.
 
-		if (! preg_match_all($sPattern, $rawValue, $aMatchesCollection, PREG_SET_ORDER)) {
+		if (!preg_match_all($sPattern, $rawValue, $aMatchesCollection, PREG_SET_ORDER)) {
 			return $rawValue;
 		}
 
