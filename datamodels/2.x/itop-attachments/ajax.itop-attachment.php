@@ -19,6 +19,7 @@
  */
 
 use Combodo\iTop\Application\Helper\AjaxHelper;
+use Combodo\iTop\Application\Helper\RequestParamDTO;
 use Combodo\iTop\Application\WebPage\AjaxPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
 use Combodo\iTop\Attachments\Enum\AttachmentAjaxErrorEnum;
@@ -36,18 +37,19 @@ require_once(APPROOT.'/application/application.inc.php');
  */
 function RenderAttachments(AjaxPage $oPage, $iTransactionId)
 {
-	$sClass = utils::ReadPostedParam('objclass', '', utils::ENUM_SANITIZATION_FILTER_CLASS);
-	$sId = utils::ReadPostedParam('objkey');
-	$oObject = MetaModel::GetObject($sClass, $sId, false);
-	$bEditMode = utils::ReadPostedParam('edit_mode', 0, utils::ENUM_SANITIZATION_FILTER_INTEGER);
-	$aAttachmentsDeleted = utils::ReadPostedParam('attachments_deleted', []);
+	[$sClass, $sKey, $bEditMode, $aAttachmentsDeleted] = AjaxHelper::HandleRequestPostedParam(
+		RequestParamDTO::Create('objclass', utils::ENUM_SANITIZATION_FILTER_CLASS, bIsMandatory: true),
+		RequestParamDTO::Create('objkey', bIsMandatory: true),
+		RequestParamDTO::Create('edit_mode', utils::ENUM_SANITIZATION_FILTER_INTEGER, oDefaultValue: 0),
+		RequestParamDTO::Create('attachments_deleted', oDefaultValue: []),
+	);
+
+	$oObject = MetaModel::GetObject($sClass, $sKey, false);
 
 	$oPage->SetContentType('text/html');
-	$oAttachmentsRenderer = AttachmentsRendererFactory::GetInstance($oPage, $sClass, $sId, $iTransactionId);
+	$oAttachmentsRenderer = AttachmentsRendererFactory::GetInstance($oPage, $sClass, $sKey, $iTransactionId);
 
-	$bIsReadOnlyState = (is_null($oObject))
-		? false
-		: AttachmentPlugIn::IsReadonlyState($oObject, $oObject->GetState(), AttachmentPlugIn::ENUM_GUI_BACKOFFICE);
+	$bIsReadOnlyState = !(is_null($oObject)) && AttachmentPlugIn::IsReadonlyState($oObject, $oObject->GetState(), AttachmentPlugIn::ENUM_GUI_BACKOFFICE);
 	if ($bEditMode && !$bIsReadOnlyState) {
 		$oAttachmentsRenderer->AddAttachmentsListContent(true, $aAttachmentsDeleted);
 	} else {
@@ -60,63 +62,62 @@ try {
 	require_once APPROOT.'/application/loginwebpage.class.inc.php';
 	LoginWebPage::DoLogin(); // No user portal should access this endpoint.
 
+	$oPage = new AjaxPage("");
+
 	// check if header contains X-Combodo-Ajax for POST request (CSRF protection for ajax calls)
 	// check must be performed after DoLoginEx to be logged in and to be able to check the token (based on the transaction id)
 	AjaxHelper::RejectUnauthorizedAjaxRequest();
 
-	$oPage = new AjaxPage("");
+	// reads operation
+	[$sOperation] = AjaxHelper::HandleRequestPostedParam(
+		RequestParamDTO::Create('operation', utils::ENUM_SANITIZATION_FILTER_OPERATION, true)
+	);
 
-	$sOperation = utils::ReadPostedParam('operation', '', utils::ENUM_SANITIZATION_FILTER_OPERATION);
+	$aResult = [
+		'error'   => '',
+		'att_id'  => 0,
+		'preview' => 'false',
+		'msg'     => '',
+	];
 
 	switch ($sOperation) {
 		case 'add':
 			$oPage = new JsonPage();
 			$oPage->SetOutputDataOnly(true);
 
-			$aResult = [
-				'error'      => '',
-				'error_code' => 0,
-				'att_id'     => 0,
-				'preview'    => 'false',
-				'msg'        => '',
-			];
-			$sClass = stripslashes(utils::ReadPostedParam('obj_class', '', utils::ENUM_SANITIZATION_FILTER_CLASS));
-			$sTempId = utils::ReadPostedParam('temp_id', '', utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
-			if (empty($sClass)) {
-				$aResult['error'] = "Missing argument 'obj_class'";
-				$aResult['error_code'] = AttachmentAjaxErrorEnum::MISSING_ARG_OBJ_CLASS;
-			} elseif (empty($sTempId)) {
-				$aResult['error'] = "Missing argument 'temp_id'";
-				$aResult['error_code'] = AttachmentAjaxErrorEnum::MISSING_ARG_TEMP_ID;
-			} else {
-				try {
-					$oDoc = utils::ReadPostedDocument('file');
-					if ($oDoc->IsEmpty()) {
-						throw new FileUploadException(Dict::S('Attachments:Error:UploadedFileEmpty'));
-					}
-					if (!UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY)) {
-						throw new SecurityException(Dict::S('UI:Error:ActionNotAllowed'));
-					}
-					/** @var Attachment $oAttachment */
-					$oAttachment = MetaModel::NewObject('Attachment');
-					$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime'));
-					$oAttachment->Set('temp_id', $sTempId);
-					$oAttachment->Set('item_class', $sClass);
-					$oAttachment->SetDefaultOrgId();
-					$oAttachment->Set('contents', $oDoc);
-					$iAttId = $oAttachment->DBInsert();
+			// reads add parameters
+			[$sClass, $sTempId] = AjaxHelper::HandleRequestPostedParam(
+				RequestParamDTO::Create('obj_class', utils::ENUM_SANITIZATION_FILTER_CLASS, true),
+				RequestParamDTO::Create('temp_id', utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID, true)
+			);
 
-					$aResult['msg'] = utils::EscapeHtml($oDoc->GetFileName());
-					$aResult['icon'] = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($oDoc->GetFileName());
-					$aResult['att_id'] = $iAttId;
-					$aResult['preview'] = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
-				} catch (FileUploadException $e) {
-					$aResult['error'] = $e->GetMessage();
-					$aResult['error_code'] = AttachmentAjaxErrorEnum::UPLOAD_FILE_EMPTY;
-				} catch (SecurityException $e) {
-					$aResult['error'] = $e->GetMessage();
-					$aResult['error_code'] = AttachmentAjaxErrorEnum::ACTION_NOT_ALLOWED;
+			try {
+				$oDoc = utils::ReadPostedDocument('file');
+				if ($oDoc->IsEmpty()) {
+					throw new FileUploadException(Dict::S('Attachments:Error:UploadedFileEmpty'));
 				}
+				if (!UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY)) {
+					throw new SecurityException(Dict::S('UI:Error:ActionNotAllowed'));
+				}
+				/** @var Attachment $oAttachment */
+				$oAttachment = MetaModel::NewObject('Attachment');
+				$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime'));
+				$oAttachment->Set('temp_id', $sTempId);
+				$oAttachment->Set('item_class', $sClass);
+				$oAttachment->SetDefaultOrgId();
+				$oAttachment->Set('contents', $oDoc);
+				$iAttId = $oAttachment->DBInsert();
+
+				$aResult['msg'] = utils::EscapeHtml($oDoc->GetFileName());
+				$aResult['icon'] = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($oDoc->GetFileName());
+				$aResult['att_id'] = $iAttId;
+				$aResult['preview'] = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
+			} catch (FileUploadException $e) {
+				$aResult['error'] = $e->GetMessage();
+				$aResult['error_code'] = AttachmentAjaxErrorEnum::UPLOAD_FILE_EMPTY;
+			} catch (SecurityException $e) {
+				$aResult['error'] = $e->GetMessage();
+				$aResult['error_code'] = AttachmentAjaxErrorEnum::ACTION_NOT_ALLOWED;
 			}
 			$oPage->SetData($aResult);
 			break;
@@ -125,10 +126,6 @@ try {
 			$sTempId = utils::ReadPostedParam('temp_id');
 			RenderAttachments($oPage, $sTempId);
 			break;
-
-		default:
-			http_response_code(400);
-			$oPage->p("Missing argument 'operation'");
 	}
 
 	$oPage->output();

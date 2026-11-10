@@ -7,6 +7,7 @@
 
 namespace Combodo\iTop\Application\Helper;
 
+use Dict;
 use IssueLog;
 use LogChannels;
 use utils;
@@ -42,5 +43,22 @@ class AjaxHelper
 				die($sErrorMsg);
 			}
 		}
+	}
+
+	public static function HandleRequestPostedParam(RequestParamDTO...$aParam): array
+	{
+		$aResult = [];
+
+		foreach ($aParam as $oParam) {
+			$oValue = utils::ReadPostedParam($oParam->sName, $oParam->oDefaultValue, $oParam->sSanitizationFilter);
+			if ($oParam->bIsMandatory && is_null($oValue)) {
+				http_response_code(400);
+				IssueLog::Error('HandleRequestPostedParam');
+				die(Dict::S('Error:HTTP:400'));
+			}
+			$aResult[] = $oValue;
+		}
+
+		return $aResult;
 	}
 }

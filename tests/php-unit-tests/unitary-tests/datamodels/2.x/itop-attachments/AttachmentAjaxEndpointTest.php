@@ -19,9 +19,6 @@ class AttachmentAjaxEndpointTest extends ItopDataTestCase
 
 		$this->BackupConfiguration();
 		$this->AddLoginModeAndSaveConfiguration('url');
-
-		$this->CreateTestOrganization();
-		$this->CreateUserRequest(101);
 	}
 
 	/**
@@ -51,15 +48,23 @@ class AttachmentAjaxEndpointTest extends ItopDataTestCase
 		$this->RequireOnceItopFile('datamodels/2.x/itop-attachments/src/Enum/AttachmentAjaxErrorEnum.php');
 
 		return [
+			'Service Desk Agent: missing operation' => [
+				'Service Desk Agent',
+				[
+					'obj_class' => UserRequest::class,
+					'temp_id'   => '123456',
+				],
+				400,
+				'Bad request',
+			],
 			'Service Desk Agent: missing obj_class' => [
 				'Service Desk Agent',
 				[
 					'operation' => 'add',
+					'temp_id'   => '123456',
 				],
-				200,
-				[
-					'error_code' => AttachmentAjaxErrorEnum::MISSING_ARG_OBJ_CLASS->value,
-				],
+				400,
+				'Bad request',
 			],
 			'Service Desk Agent: missing temp_id'   => [
 				'Service Desk Agent',
@@ -67,10 +72,8 @@ class AttachmentAjaxEndpointTest extends ItopDataTestCase
 					'operation' => 'add',
 					'obj_class' => UserRequest::class,
 				],
-				200,
-				[
-					'error_code' => AttachmentAjaxErrorEnum::MISSING_ARG_TEMP_ID->value,
-				],
+				400,
+				'Bad request',
 			],
 			'Service Desk Agent: empty file'        => [
 				'Service Desk Agent',
