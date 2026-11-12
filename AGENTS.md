@@ -93,7 +93,8 @@ These rules apply to every change. In code review, a violation is a P1 issue.
 ### Translations
 - No hard-coded UI text: use `Dict::S()`, `Dict::Format()`, or `|dict_s` / `|dict_format` in Twig.
 - Add new entries in English in the `en` dictionary file (`dictionaries/en.dictionary.itop.*.php` or `datamodels/2.x/<module>/dictionaries/en.dict.<module>.php`).
-- Add new entries in other existing languages as well.
+- Add new entries in every other language file next to the `en` one (same folder). When creating a new dictionary file, create it for every language listed in `tests/php-unit-tests/integration-tests/DictionariesConsistencyTest.php` (`GetLanguagesData()`).
+- When adding a new language, also declare it in `GetLanguagesData()`, otherwise `DictionariesConsistencyTest` fails.
 - In other languages, a ~~ suffix marks an untranslated entry: never remove it without translating.
 
 ### Commits
