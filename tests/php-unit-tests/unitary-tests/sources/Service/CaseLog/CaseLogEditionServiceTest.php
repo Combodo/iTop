@@ -584,6 +584,40 @@ class CaseLogEditionServiceTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @covers \Combodo\iTop\Controller\Base\Layout\ActivityPanelController::AddCaseLogsEntries
+	 * @since 3.3.0 N°1365 - Keep newly added CaseLog entries editable
+	 */
+	public function testAddCaseLogsEntriesReturnsEditableMarkup(): void
+	{
+		MetaModel::GetConfig()->Set('caselog_edition.enabled', true);
+		$aOriginalPost = $_POST;
+		try {
+			$_POST = [
+				'object_class' => 'UserRequest',
+				'object_id' => (string)$this->oObject->GetKey(),
+				'transaction_id' => utils::GetNewTransactionId(),
+				'entries' => [
+					'private_log' => [
+						'value' => '<p>Added through the activity panel</p>',
+						'rank' => 1,
+					],
+				],
+			];
+
+			$aResult = (new ActivityPanelController())->AddCaseLogsEntries();
+
+			$this->assertTrue($aResult['success']);
+			$this->assertArrayHasKey('private_log', $aResult['entries']);
+			$sEntryHtml = $aResult['entries']['private_log']['html_rendering'];
+			$this->assertStringContainsString('Added through the activity panel', $sEntryHtml);
+			$this->assertStringContainsString('data-entry-caselog-index="1"', $sEntryHtml);
+			$this->assertStringContainsString('data-role="ibo-caselog-entry--edit-button"', $sEntryHtml);
+		} finally {
+			$_POST = $aOriginalPost;
+		}
+	}
+
+	/**
 	 * @covers \Combodo\iTop\Controller\Base\Layout\ActivityPanelController::EditCaseLogEntry
 	 * @since 3.3.0 N°1365 - Verify the CaseLog edit endpoint checks transaction tokens
 	 */

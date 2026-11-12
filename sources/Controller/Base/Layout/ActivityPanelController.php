@@ -76,6 +76,7 @@ class ActivityPanelController extends AbstractController
 	 * @throws \Twig\Error\LoaderError
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
+	 * @since 3.3.0 N°1365 - Render new CaseLog entries with edit permissions
 	 */
 	public function AddCaseLogsEntries(): array
 	{
@@ -110,8 +111,10 @@ class ActivityPanelController extends AbstractController
 			$oObject->Set($sAttCode, $aData['value']);
 
 			// Make entry rendering to send back to the front
-			$aEntryAsArray = $oObject->Get($sAttCode)->GetAsArray()[0];
-			$oEntryBlock = ActivityEntryFactory::MakeFromCaseLogEntryArray($sAttCode, $aEntryAsArray);
+			$oCaseLog = $oObject->Get($sAttCode);
+			$iEntryInternalIndex = $oCaseLog->GetLatestEntryIndex();
+			$aEntryAsArray = $oCaseLog->GetAsArray()[0];
+			$oEntryBlock = ActivityEntryFactory::MakeFromCaseLogEntryArray($sAttCode, $aEntryAsArray, $iEntryInternalIndex, $oObject);
 			$oEntryBlock->SetCaseLogRank((int)$aData['rank']);
 			$sEntryAsHtml = BlockRenderer::RenderBlockTemplates($oEntryBlock);
 
