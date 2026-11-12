@@ -45,18 +45,31 @@ class AjaxHelper
 		}
 	}
 
+	/**
+	 * Reads posted parameters and returns an array of values. If a mandatory parameter is missing, it will return a 400 error.
+	 *
+	 * @param RequestParamDTO ...$aParam
+	 *
+	 * @return array
+	 */
 	public static function HandleRequestPostedParam(RequestParamDTO...$aParam): array
 	{
 		$aResult = [];
 
 		foreach ($aParam as $oParam) {
-			$oValue = utils::ReadPostedParam($oParam->sName, $oParam->oDefaultValue, $oParam->sSanitizationFilter);
-			if ($oParam->bIsMandatory && is_null($oValue)) {
+			$mValue = utils::ReadPostedParam($oParam->sName, $oParam->oDefaultValue, $oParam->sSanitizationFilter);
+			if ($oParam->bIsMandatory && is_null($mValue)) {
 				http_response_code(400);
-				IssueLog::Error('HandleRequestPostedParam');
+				IssueLog::Error('Bad request: Missing mandatory parameter', LogChannels::WEB_REQUEST, [
+					'request_method' => $_SERVER['REQUEST_METHOD'],
+					'request_uri'    => $_SERVER['REQUEST_URI'],
+				]);
+				IssueLog::Debug('Bar POST request: Missing mandatory parameter', LogChannels::WEB_REQUEST, [
+					'parameter' => $oParam->sName,
+				]);
 				die(Dict::S('Error:HTTP:400'));
 			}
-			$aResult[] = $oValue;
+			$aResult[] = $mValue;
 		}
 
 		return $aResult;

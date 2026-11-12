@@ -6,6 +6,7 @@ namespace Combodo\iTop\Test\UnitTest\Module\ItopAttachment;
 
 use Combodo\iTop\Attachments\Enum\AttachmentAjaxErrorEnum;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use MetaModel;
 use UserRequest;
 
 class AttachmentAjaxEndpointTest extends ItopDataTestCase
@@ -19,6 +20,26 @@ class AttachmentAjaxEndpointTest extends ItopDataTestCase
 
 		$this->BackupConfiguration();
 		$this->AddLoginModeAndSaveConfiguration('url');
+	}
+
+	public function testSuccessfullyAddAttachment(): void
+	{
+		$sLogin = 'user-'.uniqid();
+		$this->CreateUser($sLogin, self::$aURP_Profiles['Service Desk Agent'], self::AUTHENTICATION_PASSWORD);
+
+		$sTempId = uniqid();
+
+		$aResponse = $this->CallAttachmentEndpointAs($sLogin, [
+			'operation' => 'add',
+			'obj_class' => UserRequest::class,
+			'temp_id'   => $sTempId,
+			'file'      => curl_file_create(__FILE__, 'text/plain', 'test.txt'),
+		]);
+
+		$oAttachment = MetaModel::GetObjectByColumn('Attachment', 'temp_id', $sTempId, false);
+
+		$this->assertNotNull($oAttachment, 'Attachment should have been created in the database');
+		$this->assertSame(200, $aResponse['code'], 'Expected HTTP code 200 for successful attachment addition');
 	}
 
 	/**
