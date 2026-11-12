@@ -26,5 +26,6 @@ For automated reviewers (GitHub Copilot code review, Greptile, ...). Project con
 - Third-party code in `lib/` and `node_modules/`, and generated code in `env-*/`. Only check whether `lib/composer/autoload_*.php` should have changed.
 - Code the PR does not touch, unless the change breaks it or it needs to be adjusted accordingly.
 
-## Vulnerability fixes
-This repository is public. If a change seems to fix an existing vulnerability, never describe the vulnerability, how to exploit it, or which versions are affected: neither in comments nor in the PR summary. Review it as an ordinary change. If the fix looks incomplete, describe only the missing check in neutral technical terms (for example "this value is not escaped here").
+## Vulnerabilities
+- A vulnerability introduced by the PR is always a `[P1-Security]` comment: explain the risk and how to fix it.
+- This repository is public. If the PR seems to fix an existing vulnerability, review it as an ordinary change: never call it a security fix, never describe the vulnerability, how to exploit it, or the affected versions, in comments or in the PR overview. If the fix looks incomplete, describe only the missing check in neutral technical terms (for example "this value is not escaped here").
