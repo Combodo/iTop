@@ -17,9 +17,13 @@ use Combodo\iTop\Service\Base\ObjectRepository;
 use Combodo\iTop\Service\Router\Router;
 use CoreException;
 use DBObject;
+use DBObjectSet;
 use Dict;
 use Exception;
+use IssueLog;
+use LogChannels;
 use MetaModel;
+use SecurityException;
 use UserRights;
 use utils;
 
@@ -58,12 +62,21 @@ class LinkSetController extends AbstractController
 		// check transaction id
 		if (utils::IsTransactionValid($sTransactionId, false)) {
 			try {
-				$oDeletionPlan = MetaModel::GetObject($sLinkedObjectClass, $sLinkedObjectObjectKey)->DBDelete();
+				$oLinkedObject = MetaModel::GetObject($sLinkedObjectClass, $sLinkedObjectObjectKey);
+				if (UserRights::IsActionAllowed(get_class($oLinkedObject), UR_ACTION_DELETE, DBObjectSet::FromObject($oLinkedObject)) !== UR_ALLOWED_YES) {
+					throw new SecurityException(Dict::S('UI:Delete:NotAllowedToDelete'), ['class' => get_class($oLinkedObject), 'key' => $oLinkedObject->GetKey()]);
+				}
+				$oDeletionPlan = $oLinkedObject->DBDelete();
 				$bOperationSuccess = (count($oDeletionPlan->GetIssues()) === 0);
 				if (!$bOperationSuccess) {
 					$sErrorMessage = json_encode($oDeletionPlan->GetIssues());
 				}
 			} catch (Exception $e) {
+				IssueLog::Error(
+					$e->getMessage(),
+					$e instanceof SecurityException ? LogChannels::SECURITY : LogChannels::CORE,
+					$e instanceof CoreException ? $e->getContextData() : null
+				);
 				$sErrorMessage = $e->getMessage();
 			}
 		} else {
@@ -103,10 +116,18 @@ class LinkSetController extends AbstractController
 		if (utils::IsTransactionValid($sTransactionId, false)) {
 			try {
 				$oLinkedObject = MetaModel::GetObject($sLinkedObjectClass, $sLinkedObjectKey);
+				if (UserRights::IsActionAllowed(get_class($oLinkedObject), UR_ACTION_MODIFY, DBObjectSet::FromObject($oLinkedObject)) !== UR_ALLOWED_YES) {
+					throw new SecurityException(Dict::S('UI:Error:ActionNotAllowed'), ['class' => get_class($oLinkedObject), 'key' => $sLinkedObjectKey]);
+				}
 				$oLinkedObject->Set($sExternalKeyAttCode, null);
 				$oLinkedObject->DBWrite();
 				$bOperationSuccess = true;
 			} catch (Exception $e) {
+				IssueLog::Error(
+					$e->getMessage(),
+					$e instanceof SecurityException ? LogChannels::SECURITY : LogChannels::CORE,
+					$e instanceof CoreException ? $e->getContextData() : null
+				);
 				$sErrorMessage = $e->getMessage();
 			}
 		} else {
@@ -238,9 +259,10 @@ JS
 			// - When the user submit, redo the same request but with a real class
 
 			$sCurrentParameters = json_encode([
-				'att_code' => $sAttCode,
+				'att_code'   => $sAttCode,
 				'host_class' => $sClass,
-				'host_id' => $sId]);
+				'host_id'    => $sId,
+			]);
 			$sCurrentUrl = $oRouter->GenerateUrl('linkset.create_linked_object');
 			$oClassForm->SetOnSubmitJsCode(
 				<<<JS
