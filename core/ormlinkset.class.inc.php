@@ -779,6 +779,30 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	}
 
 	/**
+	 * List the objects by name
+	 * @return array of linked object friendly-names
+	 * @throws \CoreException
+	 */
+	public function GetLabels()
+	{
+		/** @var \AttributeLinkedSet|\AttributeLinkedSetIndirect $oAttDef */
+		$oAttDef = MetaModel::GetAttributeDef($this->sHostClass, $this->sAttCode);
+		$sNameField = ($oAttDef->IsIndirect() ? $oAttDef->GetExtKeyToRemote().'_' : '').'friendlyname';
+
+		$aLabels = array();
+		foreach ($this->aPreserved as $oLink) {
+			$aLabels[] = $oLink->Get($sNameField);
+		}
+		foreach ($this->aAdded as $oLink) {
+			$aLabels[] = $oLink->Get($sNameField);
+		}
+
+		sort($aLabels);
+
+		return $aLabels;
+	}
+
+	/**
 	 * @return \DBObjectSet|null
 	 */
 	public function GetOriginalSet(): ?DBObjectSet
