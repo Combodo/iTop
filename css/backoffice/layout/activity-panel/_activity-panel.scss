@@ -21,7 +21,7 @@ $ibo-activity-panel--actions--elements-spacing: 0.75rem !default;
 $ibo-activity-panel--actions-padding-right: $ibo-activity-panel--padding-x !default;
 
 /* - Tabs togglers*/
-$ibo-activity-panel--tabs-togglers--padding-x: $ibo-activity-panel--padding-x * 3 !default; /* We need to increase this so the size toggler which will be set in abs. pos. can overlap it nicely */
+$ibo-activity-panel--tabs-togglers--padding-x: $ibo-activity-panel--padding-x !default;
 $ibo-activity-panel--tab-toolbar-action--color: $ibo-color-grey-900 !default;
 
 $ibo-activity-panel--tab-toolbar-info--color: $ibo-activity-panel--tab-toolbar-action--color !default;
@@ -109,18 +109,32 @@ $ibo-activity-panel--closed-cover--z-index: 2 !default;
 $ibo-activity-panel--closed-cover--background-color: $ibo-activity-panel--header--background-color !default;
 $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 
+/* - Resizer */
+$ibo-activity-panel--resizer--hit-area-width: 12px !default;
+$ibo-activity-panel--resizer--line-width: 2px !default;
+$ibo-activity-panel--resizer--line-color: $ibo-color-grey-300 !default;
+$ibo-activity-panel--resizer--line-color--on-hover: $ibo-color-primary-500 !default;
+$ibo-activity-panel--resizer--desktop-breakpoint: 900px !default;
+
 /* Whole layout */
 .ibo-activity-panel {
   position: relative;
   display: flex;
   flex-direction: column;
-  width: $ibo-activity-panel--width;
+  width: var(--ibo-activity-panel--custom-width, #{$ibo-activity-panel--width});
   height: $ibo-activity-panel--height;
   transition: width 0.2s ease-in-out;
 
-  &.ibo-is-expanded {
-    width: $ibo-activity-panel--is-expanded--width;
+  &.ibo-is-user-resizing,
+  &.ibo-is-resizer-initializing {
+    transition: none;
+  }
 
+  &.ibo-is-expanded:not(.ibo-has-custom-width):not(.ibo-is-closed) {
+    width: $ibo-activity-panel--is-expanded--width;
+  }
+
+  &.ibo-is-expanded {
     .ibo-activity-panel--expand-icon {
       display: none;
     }
@@ -146,6 +160,72 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
       display: inherit;
     }
   }
+
+  /* Clip the contents while dragging through narrow widths. */
+  &.ibo-is-user-resizing {
+    overflow: clip;
+  }
+}
+
+/* Mouse and keyboard resize handle on the panel's left edge */
+.ibo-activity-panel--resizer {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  bottom: 0;
+  left: -($ibo-activity-panel--resizer--hit-area-width / 2);
+  width: $ibo-activity-panel--resizer--hit-area-width;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: ew-resize;
+  touch-action: none;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: $ibo-activity-panel--resizer--line-width;
+    transform: translateX(-50%);
+    background-color: $ibo-activity-panel--resizer--line-color;
+    transition: background-color 0.15s ease-in-out;
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    background-color: $ibo-activity-panel--resizer--line-color--on-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $ibo-activity-panel--resizer--line-color--on-hover;
+    outline-offset: -2px;
+  }
+}
+
+.ibo-activity-panel.ibo-is-user-resizing .ibo-activity-panel--resizer::after {
+  background-color: $ibo-activity-panel--resizer--line-color--on-hover;
+}
+
+body.ibo-is-resizing-activity-panel {
+  cursor: ew-resize;
+  user-select: none;
+}
+
+/* Let the activity panel width drive its flex column without overflowing the page. */
+#ibo-center-container.ibo-center-container--with-side-content {
+  #ibo-main-content {
+    min-width: 0;
+  }
+
+  #ibo-side-content {
+    flex: 0 0 auto;
+  }
+}
+
+.ibo-activity-panel--resizer[hidden] {
+  display: none;
 }
 
 /* Header */
@@ -154,7 +234,8 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 	background-color: $ibo-activity-panel--header--background-color;
 
 	/* Remove hyperlinks default color */
-  .ibo-activity-panel--togglers a{
+  .ibo-activity-panel--togglers a,
+  .ibo-activity-panel--togglers button{
 		color: $ibo-activity-panel--tab-toolbar--text-color;
 	}
 }
@@ -166,15 +247,29 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 }
 
 /* Size/display togglers */
+.ibo-activity-panel--actions button,
+.ibo-activity-panel--closed-cover {
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
 .ibo-activity-panel--actions {
   display: flex;
   align-items: center;
   flex-grow: 0;
+  flex-shrink: 0;
   position: sticky;
   padding-right: $ibo-activity-panel--actions-padding-right;
 
   background-color: $ibo-activity-panel--header--background-color;
   color: $ibo-activity-panel--actions--color;
+
+  button {
+    background: transparent;
+  }
 
   &:hover {
     color: $ibo-activity-panel--actions--on-hover--color;
@@ -185,16 +280,22 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
   }
 }
 
+.ibo-activity-panel--reset-width[hidden] {
+  display: none;
+}
+
 /* Tabs togglers */
 .ibo-activity-panel--tabs-togglers{
   display: flex;
   align-items: center;
   justify-content: safe center;
-  flex-grow: 1;
+  flex: 1 1 0;
+  min-width: 0;
 	padding-left: $ibo-activity-panel--tabs-togglers--padding-x;
   overflow-x: auto;
 }
 .ibo-activity-panel--tab-toggler{
+  flex-shrink: 0;
 	&.ibo-is-active{
 		.ibo-activity-panel--tab-title{
 			background-color: $ibo-activity-panel--tab-title--is-active--background-color;
@@ -220,6 +321,7 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 
 /* Tab title */
 .ibo-activity-panel--tab-title{
+  white-space: nowrap;
 	padding: $ibo-activity-panel--tab-title--padding-y $ibo-activity-panel--tab-title--padding-x;
 	@extend %ibo-fully-centered-content;
 
@@ -254,6 +356,27 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 .ibo-activity-panel--tab-title-text{
 	max-width: $ibo-activity-panel--tab-title-text--max-width;
 	@extend %ibo-text-truncated-with-ellipsis;
+}
+
+.ibo-activity-panel--tab-title-icon {
+  display: none;
+}
+
+.ibo-activity-panel--tabs-togglers[data-label-mode="icons"] {
+  .ibo-activity-panel--tab-title {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .ibo-activity-panel--tab-title-text,
+  .ibo-activity-panel--tab-title-messages-count {
+    display: none;
+  }
+  .ibo-activity-panel--tab-title-icon {
+    display: inline-block;
+  }
+  .ibo-activity-panel--tab-title-decoration {
+    margin-right: 0;
+  }
 }
 
 /* Tab toolbar */
@@ -451,6 +574,8 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
   bottom: 0;
   left: 0;
   right: 0;
+  width: 100%;
+  height: 100%;
   @extend %ibo-fully-centered-content;
   background-color: $ibo-activity-panel--closed-cover--background-color;
   cursor: pointer;
@@ -459,6 +584,17 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 .ibo-activity-panel--closed-content-container {
   transform: rotateZ(-90deg);
   white-space: nowrap;
+  opacity: 0;
+}
+
+.ibo-activity-panel.ibo-is-closed:not(.ibo-is-user-resizing) .ibo-activity-panel--closed-content-container {
+  // Reveal the label only after the panel has finished shrinking to its rail.
+  animation: ibo-activity-panel-reveal-closed-label 0.2s step-end both;
+}
+
+@keyframes ibo-activity-panel-reveal-closed-label {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .ibo-activity-panel--open-icon {
