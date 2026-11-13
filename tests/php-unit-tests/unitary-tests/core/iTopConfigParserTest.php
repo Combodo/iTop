@@ -224,38 +224,20 @@ CONF;
 	{
 		$sFixturesDir = __DIR__.'/Fixtures/SysAdminConfig';
 		$sTestConfDir = APPCONF.'php-unit-tests';
-		$sItopConfFile = $sTestConfDir.'/config-itop.sysadmin-test.php';
-		$sTestSysAdminConfFile = $sTestConfDir.'/conf.sysadmin-test.yml';
-		$sSysAdminConfFile = APPCONF.'production/conf.yml';
 
-		// conf/ is not versioned: build the local configuration files from the fixtures
+		// conf/ is not versioned: build the configuration files from the fixtures, they will be removed by tearDown()
 		if (!is_dir($sTestConfDir)) {
 			mkdir($sTestConfDir, 0770, true);
 		}
+		$sItopConfFile = $sTestConfDir.'/config-itop.itopadmin-test.php';
+		$sSysAdminConfFile = $sTestConfDir.'/conf.sysadmin-test.yml';
+		$this->aFileToClean[] = $sItopConfFile;
+		$this->aFileToClean[] = $sSysAdminConfFile;
 		copy($sFixturesDir.'/config-itop.php', $sItopConfFile);
-		copy($sFixturesDir.'/conf.yml', $sTestSysAdminConfFile);
+		copy($sFixturesDir.'/conf.yml', $sSysAdminConfFile);
 
-		// Config::Load() reads the system administrator configuration from a fixed location: install the fake one there
-		$sSysAdminConfBackup = null;
-		if (is_file($sSysAdminConfFile)) {
-			$sSysAdminConfBackup = tempnam(sys_get_temp_dir(), 'conf-yml');
-			copy($sSysAdminConfFile, $sSysAdminConfBackup);
-		} elseif (!is_dir(dirname($sSysAdminConfFile))) {
-			mkdir(dirname($sSysAdminConfFile), 0770, true);
-		}
-		copy($sTestSysAdminConfFile, $sSysAdminConfFile);
-
-		try {
-			$oConfig = new Config($sItopConfFile);
-		} finally {
-			if (is_null($sSysAdminConfBackup)) {
-				unlink($sSysAdminConfFile);
-			} else {
-				rename($sSysAdminConfBackup, $sSysAdminConfFile);
-			}
-			unlink($sItopConfFile);
-			unlink($sTestSysAdminConfFile);
-		}
+		$oConfig = new Config($sItopConfFile, false);
+		$this->InvokeNonPublicMethod(Config::class, 'Load', $oConfig, [$sItopConfFile, $sSysAdminConfFile]);
 
 		// Settings
 		$this->assertSame('itop-admin-db-host', $oConfig->Get('db_host'), 'iTop admin only setting must be kept');
