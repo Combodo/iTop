@@ -62,7 +62,7 @@ class LinkSetController extends AbstractController
 			try {
 				$oLinkedObject = MetaModel::GetObject($sLinkedObjectClass, $sLinkedObjectObjectKey);
 				if (UserRights::IsActionAllowed(get_class($oLinkedObject), UR_ACTION_DELETE, DBObjectSet::FromObject($oLinkedObject)) !== UR_ALLOWED_YES) {
-					throw new SecurityException(Dict::S('UI:Delete:NotAllowedToDelete'));
+					throw new SecurityException(Dict::S('UI:Delete:NotAllowedToDelete'), ['class' => get_class($oLinkedObject), 'key' => $oLinkedObject->GetKey()]);
 				}
 				$oDeletionPlan = $oLinkedObject->DBDelete();
 				$bOperationSuccess = (count($oDeletionPlan->GetIssues()) === 0);
