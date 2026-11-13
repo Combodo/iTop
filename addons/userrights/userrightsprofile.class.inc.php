@@ -591,9 +591,17 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		return $aRet;
 	}
 
+	/**
+	 * Restrict results by the read grants of both the queried class and each concrete class.
+	 * The concrete class restriction can be disabled with the `security.disable_final_classes_filter` configuration parameter.
+	 *
+	 * @since 3.2.3
+	 */
 	public function GetSelectFilter($oUser, $sClass, $aSettings = [])
 	{
 		$this->LoadCache();
+
+		$aConditions = [];
 
 		// Let us pass an administrator for bypassing the grant matrix check in order to test this method without the need to set up a complex profile
 		// In the nominal case Administrators never end up here (since they completely bypass GetSelectFilter)
@@ -603,10 +611,34 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			if ($aObjectPermissions['permission'] == UR_ALLOWED_NO) {
 				return false;
 			}
+
+			$aAllowedClasses = [];
+			$bHasDeniedClass = false;
+			$aConcreteClasses = MetaModel::GetConfig()->Get('security.disable_final_classes_filter') === true ? [] : MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL);
+			foreach ($aConcreteClasses as $sConcreteClass) {
+				if (MetaModel::IsAbstract($sConcreteClass)) {
+					continue;
+				}
+				$aPermissions = $this->GetUserActionGrant($oUser, $sConcreteClass, UR_ACTION_READ);
+				if ($aPermissions['permission'] === UR_ALLOWED_YES) {
+					$aAllowedClasses[] = $sConcreteClass;
+				} else {
+					$bHasDeniedClass = true;
+				}
+			}
+			if ($bHasDeniedClass) {
+				if (count($aAllowedClasses) === 0) {
+					return false;
+				}
+				$aConditions[] = new BinaryExpression(
+					new FieldExpression('finalclass', $sClass),
+					'IN',
+					ListExpression::FromScalars($aAllowedClasses)
+				);
+			}
 		}
 
 		$oFilter = true;
-		$aConditions =  [];
 
 		// Determine if this class is part of a silo and build the filter for it
 		$sAttCode = self::GetOwnerOrganizationAttCode($sClass);
