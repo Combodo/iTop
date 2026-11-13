@@ -8,8 +8,21 @@
 
 <div id="{{ sFormId }}">
 	{#<div class="form_alerts"></div>#}
+    {% if bHasSubClasses %}
+    <div class="form_filter_container">
+        <div class="form_filter_class dataTables_filter">
+                <label class="dataTables_filter">{{ 'UI:SearchFor_Class'|dict_format('') }}</label>
+                <select id="finalclass{{ sFormId }}">
+                    <option value="">{{ sParentClassName }}</option>
+                    {% for key, sClassName in aSubClasses %}
+                        <option value="{{ key }}">{{ sClassName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    {% endif %}
 	<div class="form_fields">
-		<table id="{{ sTableId }}" class="object-list table table-striped responsive" cellspacing="0" width="100%">
+		<table id="{{ sTableId }}" class="object-list table table-striped responsive">
 			<tbody>
 			</tbody>
 		</table>
@@ -26,13 +39,13 @@
 
 <script type="text/javascript">
 	var oColumnProperties = {{ aColumnProperties|raw }};
-	var oRawDatas = {{ aResults.aItems|raw }};
 	var oTable;
 	// Used for ajax throttling
 	var iSearchThrottle = 600;
 	var oKeyTimeout;
 	var aKeyTimeoutFilteredKeys = [9, 16, 17, 18, 19, 27, 33, 34, 35, 36, 37, 38, 39, 40]; // Tab, Shift, Ctrl, Alt, Pause, Esc, Page Up/Down, Home, End, Left/Up/Right/Down arrows
 	// Used for form
+
 	var oSelectedItems = {};
 
 	// Show a loader inside the table
@@ -102,8 +115,8 @@
 
 		return aColumnsDefinition;
 	};
-	
-	$(document).ready(function(){
+
+    var createDatatable = function (sUrl) {
 		showTableLoader();
 		// Note : Those options should be externalized in an library so we can use them on any DataTables for the portal.
 		// We would just have to override / complete the necessary elements
@@ -176,7 +189,7 @@
 			"processing": true,
 			"serverSide": true,
 			"ajax": {
-				"url": "{{ app.url_generator.generate('p_object_search_from_attribute', {'sTargetAttCode': sTargetAttCode, 'sHostObjectClass': sHostObjectClass, 'sHostObjectId': sHostObjectId, 'ar_token': sActionRulesToken})|raw }}",
+				"url": sUrl,
 				"type": "POST",
 				"data": function(d){
 					d.sFormPath = '{{ aSource.sFormPath }}';
@@ -271,8 +284,15 @@
 				}, iSearchThrottle);
 			}
 		});
-		
-		// Shows a loader in the table when processing
+        return oTable;
+    }
+
+    $(document).ready(function () {
+        sUrl = "{{ app.url_generator.generate('p_object_search_from_attribute', {'sTargetAttCode': sTargetAttCode, 'sHostObjectClass': sHostObjectClass, 'sHostObjectId': sHostObjectId, 'ar_token': sActionRulesToken})|raw }}";
+        aColumnsDefinition = getColumnsDefinition();
+        oTable = createDatatable(sUrl);
+        showTableLoader();
+        // Shows a loader in the table when processing
 		$('#{{ sTableId }}').on('processing.dt', function(event, settings, processing){
 			if(processing === true)
 			{
@@ -306,4 +326,18 @@
 			$('#{{ sFormId }}').closest('.modal').find('.modal-footer').hide();
 		{% endif %}
 	});
+
+    ///start of personalisation
+    {% if bHasSubClasses %}
+    $('#finalclass{{ sFormId }}').on('change', function () {
+        oTable.clear().destroy();
+        $('#{{ sTableId }}').empty();
+        sUrlAjax = "{{ app.url_generator.generate('p_object_search_from_attribute', {'sTargetAttCode': sTargetAttCode, 'sHostObjectClass': sHostObjectClass, 'sHostObjectId': sHostObjectId, 'ar_token': sActionRulesToken})|raw }}&finalclass=" + $('#finalclass{{ sFormId }}').val();
+        sUrlColumns = "{{ app.url_generator.generate('p_columns_from_attribute_with_class', {'sTargetAttCode': sTargetAttCode, 'sHostObjectClass': sHostObjectClass, 'sHostObjectId': sHostObjectId, 'ar_token': sActionRulesToken})|raw }}&finalclass=" + $('#finalclass{{ sFormId }}').val();
+        $.post(sUrlColumns, function (aResult) {
+            oColumnProperties = aResult.levelsProperties;
+            oTable = createDatatable(sUrlAjax);
+        });
+    });
+    {% endif %}
 </script>
