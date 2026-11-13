@@ -109,7 +109,7 @@ class LinkSetController extends AbstractController
 		if (utils::IsTransactionValid($sTransactionId, false)) {
 			try {
 				$oLinkedObject = MetaModel::GetObject($sLinkedObjectClass, $sLinkedObjectKey);
-				if (UserRights::IsActionAllowed($sLinkedObjectClass, UR_ACTION_MODIFY, DBObjectSet::FromObject($oLinkedObject)) !== UR_ALLOWED_YES) {
+				if (UserRights::IsActionAllowed(get_class($oLinkedObject), UR_ACTION_MODIFY, DBObjectSet::FromObject($oLinkedObject)) !== UR_ALLOWED_YES) {
 					throw new SecurityException('User not allowed to modify this object');
 				}
 				$oLinkedObject->Set($sExternalKeyAttCode, null);
