@@ -24,6 +24,7 @@ use Attachment;
 use AttributeDateTime;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use CoreCannotSaveObjectException;
 use CoreException;
 use DateTime;
 use DBObject;
@@ -1354,6 +1355,83 @@ class DBObjectTest extends ItopDataTestCase
 		$fTotalDuration = microtime(true) - $fStart;
 		echo 'Total duration: '.sprintf('%.3f s', $fTotalDuration)."\n\n";
 	}
+
+	/**
+	 * The reentrance protection set with the temporary key must be released, otherwise the object is kept in memory until the end of the process
+	 *
+	 * @covers DBObject::DBInsertNoReload
+	 */
+	public function testDBInsertReleasesReentranceProtection(): void
+	{
+		$oOrganization = MetaModel::NewObject(Organization::class, ['name' => 'testDBInsertReleasesReentranceProtection-'.uniqid('', true)]);
+
+		$oOrganization->DBInsert();
+
+		$this->assertSame([], $this->ListReentranceProtectionEntriesOf($oOrganization), 'The object should not be kept in the reentrance protection');
+	}
+
+	/**
+	 * @covers DBObject::DBInsertNoReload
+	 */
+	public function testDBInsertReleasesReentranceProtectionWhenCheckToWriteFails(): void
+	{
+		// The name is mandatory: CheckToWrite() rejects the object
+		$oOrganization = MetaModel::NewObject(Organization::class);
+
+		try {
+			$oOrganization->DBInsert();
+			$this->fail('DBInsert() should have thrown a CoreCannotSaveObjectException');
+		} catch (CoreCannotSaveObjectException $e) {
+			// Expected: the reentrance protection is checked below
+		}
+
+		$this->assertSame([], $this->ListReentranceProtectionEntriesOf($oOrganization), 'The object should not be kept in the reentrance protection');
+	}
+
+	/**
+	 * A reentrance protection set by the caller belongs to the caller: DBInsert() must not release it
+	 *
+	 * @covers DBObject::DBInsertNoReload
+	 */
+	public function testDBInsertKeepsReentranceProtectionSetByTheCallerWhenCheckToWriteFails(): void
+	{
+		// The name is mandatory: CheckToWrite() rejects the object
+		$oOrganization = MetaModel::NewObject(Organization::class);
+		$sCallerEntry = Organization::class.'::'.$oOrganization->GetKey();
+
+		MetaModel::StartReentranceProtection($oOrganization);
+		try {
+			try {
+				$oOrganization->DBInsert();
+				$this->fail('DBInsert() should have thrown a CoreCannotSaveObjectException');
+			} catch (CoreCannotSaveObjectException $e) {
+				// Expected: the reentrance protection is checked below
+			}
+
+			$this->assertSame([$sCallerEntry], $this->ListReentranceProtectionEntriesOf($oOrganization), 'The reentrance protection set by the caller should be kept');
+		} finally {
+			MetaModel::StopReentranceProtection($oOrganization);
+		}
+	}
+
+	/**
+	 * @return string[] Entries of the reentrance protection referencing the object, as "<class>::<key>"
+	 */
+	private function ListReentranceProtectionEntriesOf(DBObject $oObject): array
+	{
+		$aReentranceProtection = $this->GetNonPublicStaticProperty(MetaModel::class, 'm_aReentranceProtection');
+		$aEntries = [];
+		foreach ($aReentranceProtection as $sClass => $aProtectedObjects) {
+			foreach ($aProtectedObjects as $sKey => $oProtectedObject) {
+				if ($oProtectedObject === $oObject) {
+					$aEntries[] = "$sClass::$sKey";
+				}
+			}
+		}
+
+		return $aEntries;
+	}
+
 	/**
 	 * Data provider for test deletion
 	 *  N°5547 - Object deletion fails if friendlyname too long
