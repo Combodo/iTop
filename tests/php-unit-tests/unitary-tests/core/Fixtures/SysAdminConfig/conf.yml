@@ -1,0 +1,17 @@
+# Fake system administrator configuration, used by iTopConfigParserTest::testSysAdminConfigComputation()
+settings:
+  db_pwd: 'sys-admin-db-password'
+  email_transport_smtp.password: 'sys-admin-smtp-password'
+  encryption_key: 'sys-admin-encryption-key'
+  log_level_min:
+    DeadLock: 'Error'
+    Security: 'Warning'
+module_settings:
+  authent-ldap:
+    default_pwd: 'sys-admin-ldap-password'
+  test-module:
+    options:
+      override: 'sys-admin-value'
+      added: 'sys-admin-value'
+  sys-admin-only-module:
+    api_key: 'sys-admin-api-key'

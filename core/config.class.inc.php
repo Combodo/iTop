@@ -20,6 +20,8 @@
  *
  */
 
+use Symfony\Component\Yaml\Parser;
+
 define('ITOP_APPLICATION', 'iTop');
 define('ITOP_APPLICATION_SHORT', 'iTop');
 
@@ -2129,8 +2131,15 @@ class Config
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
-	protected function Load($sConfigFile)
+	protected function Load($sConfigFile, $sSysAdminConfFile = null)
 	{
+		$sSysAdminConfFile = $sSysAdminConfFile ?? APPCONF.'production/conf.yml';
+		$sSysAdminConfFileContent = trim(file_get_contents($sSysAdminConfFile));
+		$oYmlLoader = new Parser();
+		$aSysAdminConfValues = $oYmlLoader->parse($sSysAdminConfFileContent);
+		$aMySysAdminSettings = $aSysAdminConfValues['settings'] ?? [];
+		$aMySysAdminModuleSettings = $aSysAdminConfValues['module_settings'] ?? [];
+
 		$this->CheckFile('configuration', $sConfigFile);
 
 		$sConfigCode = trim(file_get_contents($sConfigFile));
@@ -2192,6 +2201,9 @@ class Config
 		}
 
 		$this->m_aAddons = $MyModules['addons'];
+
+		$MySettings = array_replace_recursive($MySettings, $aMySysAdminSettings);
+		$MyModuleSettings = array_replace_recursive($MyModuleSettings ?? [], $aMySysAdminModuleSettings);
 
 		foreach ($MySettings as $sPropCode => $rawvalue) {
 			if ($this->IsProperty($sPropCode)) {

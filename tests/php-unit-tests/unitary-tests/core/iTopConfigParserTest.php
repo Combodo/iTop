@@ -219,4 +219,64 @@ CONF;
 		$oTestEnv->WriteConfigFileSafe($oConfig);
 		$this->assertTrue(true, "Config file was written");
 	}
+
+	public function testSysAdminConfigComputation()
+	{
+		$sFixturesDir = __DIR__.'/Fixtures/SysAdminConfig';
+		$sTestConfDir = APPCONF.'php-unit-tests';
+		$sItopConfFile = $sTestConfDir.'/config-itop.sysadmin-test.php';
+		$sTestSysAdminConfFile = $sTestConfDir.'/conf.sysadmin-test.yml';
+		$sSysAdminConfFile = APPCONF.'production/conf.yml';
+
+		// conf/ is not versioned: build the local configuration files from the fixtures
+		if (!is_dir($sTestConfDir)) {
+			mkdir($sTestConfDir, 0770, true);
+		}
+		copy($sFixturesDir.'/config-itop.php', $sItopConfFile);
+		copy($sFixturesDir.'/conf.yml', $sTestSysAdminConfFile);
+
+		// Config::Load() reads the system administrator configuration from a fixed location: install the fake one there
+		$sSysAdminConfBackup = null;
+		if (is_file($sSysAdminConfFile)) {
+			$sSysAdminConfBackup = tempnam(sys_get_temp_dir(), 'conf-yml');
+			copy($sSysAdminConfFile, $sSysAdminConfBackup);
+		} elseif (!is_dir(dirname($sSysAdminConfFile))) {
+			mkdir(dirname($sSysAdminConfFile), 0770, true);
+		}
+		copy($sTestSysAdminConfFile, $sSysAdminConfFile);
+
+		try {
+			$oConfig = new Config($sItopConfFile);
+		} finally {
+			if (is_null($sSysAdminConfBackup)) {
+				unlink($sSysAdminConfFile);
+			} else {
+				rename($sSysAdminConfBackup, $sSysAdminConfFile);
+			}
+			unlink($sItopConfFile);
+			unlink($sTestSysAdminConfFile);
+		}
+
+		// Settings
+		$this->assertSame('itop-admin-db-host', $oConfig->Get('db_host'), 'iTop admin only setting must be kept');
+		$this->assertSame('http://itop-admin.example.org/', $oConfig->Get('app_root_url'), 'iTop admin only setting must be kept');
+		$this->assertSame('sys-admin-db-password', $oConfig->Get('db_pwd'), 'System admin setting must override iTop admin setting');
+		$this->assertSame('sys-admin-smtp-password', $oConfig->Get('email_transport_smtp.password'), 'System admin only setting must be added');
+		$this->assertSame('sys-admin-encryption-key', $oConfig->GetEncryptionKey(), 'Settings stored in dedicated members must use the system admin value');
+		$this->assertEquals(
+			['' => 'Error', 'DeadLock' => 'Error', 'Security' => 'Warning'],
+			$oConfig->Get('log_level_min'),
+			'Array settings must be merged recursively, with system admin values taking precedence'
+		);
+
+		// Module settings
+		$this->assertSame('itop-admin-ldap-host', $oConfig->GetModuleSetting('authent-ldap', 'host'), 'iTop admin only module setting must be kept');
+		$this->assertSame('sys-admin-ldap-password', $oConfig->GetModuleSetting('authent-ldap', 'default_pwd'), 'System admin module setting must override iTop admin module setting');
+		$this->assertEquals(
+			['keep' => 'itop-admin-value', 'override' => 'sys-admin-value', 'added' => 'sys-admin-value'],
+			$oConfig->GetModuleSetting('test-module', 'options'),
+			'Module settings must be merged recursively, with system admin values taking precedence'
+		);
+		$this->assertSame('sys-admin-api-key', $oConfig->GetModuleSetting('sys-admin-only-module', 'api_key'), 'System admin only module must be added');
+	}
 }
