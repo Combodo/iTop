@@ -365,6 +365,9 @@ class ObjectFormManager extends FormManager
 			}
 
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this->oObject), $sAttCode);
+			if ($oAttDef instanceof \AttributeLinkedSet && array_key_exists($sAttCode, $this->aExtraData) && array_key_exists('ignore_scopes', $this->aExtraData[$sAttCode])) {
+				$oAttDef->AllowAllData();
+			}
 
 			/** @var Field $oField */
 			$oField = null;
@@ -572,7 +575,11 @@ class ObjectFormManager extends FormManager
 						$aLimitedAccessItemIDs = [];
 
 						/** @var \ormLinkSet $oFieldOriginalSet */
+
 						$oFieldOriginalSet = $oField->GetCurrentValue();
+						if (array_key_exists($sAttCode, $this->aExtraData) && array_key_exists('ignore_scopes', $this->aExtraData[$sAttCode])) {
+							$oFieldOriginalSet->AllowAllData();
+						}
 						foreach ($oFieldOriginalSet as $oLink) {
 							if ($oField->IsIndirect()) {
 								$iRemoteKey = $oLink->Get($oAttDef->GetExtKeyToRemote());
