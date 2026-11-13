@@ -1763,6 +1763,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+		'security.disable_final_classes_filter' => [
+			'type'                => 'bool',
+			'description'         => 'If true, read rights on the final classes are not checked when querying a parent class: users allowed to read a parent class can see objects of child classes they are not allowed to read.',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 		'security.hide_administrators' => [
 			'type'                => 'bool',
 			'description'         => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',
