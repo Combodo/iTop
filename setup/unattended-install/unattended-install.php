@@ -341,6 +341,7 @@ if (! $bFoundIssues) {
 
 	if ($bUseItopConfig && is_file("$sConfigFile.backup")) {
 		echo "\nuse config file provided by backup in $sConfigFile.";
+		chmod($sConfigFile, 0660);
 		copy("$sConfigFile.backup", $sConfigFile);
 	}
 
