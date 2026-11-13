@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Combodo\iTop\Test\UnitTest\Module\ItopAttachment;
 
+use Combodo\iTop\Attachments\Enum\AttachmentAjaxErrorEnum;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use MetaModel;
+use UserRequest;
 
 class AttachmentAjaxEndpointTest extends ItopDataTestCase
 {
-	public const USE_TRANSACTION = false;
+	public const  USE_TRANSACTION         = false;
 	private const AUTHENTICATION_PASSWORD = 'tagada-Secret,007';
 
 	protected function setUp(): void
@@ -19,42 +22,143 @@ class AttachmentAjaxEndpointTest extends ItopDataTestCase
 		$this->AddLoginModeAndSaveConfiguration('url');
 	}
 
+	public function testSuccessfullyAddAttachment(): void
+	{
+		$sLogin = 'user-'.uniqid();
+		$this->CreateUser($sLogin, self::$aURP_Profiles['Service Desk Agent'], self::AUTHENTICATION_PASSWORD);
+
+		$sTempId = uniqid();
+
+		$aResponse = $this->CallAttachmentEndpointAs($sLogin, [
+			'operation' => 'add',
+			'obj_class' => UserRequest::class,
+			'temp_id'   => $sTempId,
+			'file'      => curl_file_create(__FILE__, 'text/plain', 'test.txt'),
+		]);
+
+		$oAttachment = MetaModel::GetObjectByColumn('Attachment', 'temp_id', $sTempId, false);
+
+		$this->assertNotNull($oAttachment, 'Attachment should have been created in the database');
+		$this->assertSame(200, $aResponse['code'], 'Expected HTTP code 200 for successful attachment addition');
+	}
+
 	/**
 	 * @dataProvider AjaxEndpointAccessProvider
 	 */
-	public function testAjaxEndpointAccess(string $sProfile, int $iExpectedHttpCode): void
+	public function testAjaxEndpointAccess(string $sProfile, array $aQueryParams, int $iExpectedHttpCode, mixed $oExpectedResponse = ''): void
 	{
 		$sLogin = 'user-'.uniqid();
 		$this->CreateUser($sLogin, self::$aURP_Profiles[$sProfile], self::AUTHENTICATION_PASSWORD);
 
-		$iHttpCode = $this->CallAttachmentEndpointAs($sLogin);
+		$aResponse = $this->CallAttachmentEndpointAs($sLogin, $aQueryParams);
 
-		$this->assertSame($iExpectedHttpCode, $iHttpCode);
+		if (is_array($oExpectedResponse)) {
+			$aJson = json_decode($aResponse['response'], true);
+			foreach ($oExpectedResponse as $sKey => $sValue) {
+				$this->assertEquals($oExpectedResponse[$sKey], $aJson[$sKey], "Expected JSON key '$sKey' to contain '$sValue'");
+			}
+		} else {
+			$this->assertEquals($oExpectedResponse, $aResponse['response']);
+		}
+
+		$this->assertSame($iExpectedHttpCode, $aResponse['code']);
 	}
 
 	public function AjaxEndpointAccessProvider(): array
 	{
+		$this->RequireOnceItopFile('datamodels/2.x/itop-attachments/src/Enum/AttachmentAjaxErrorEnum.php');
+
 		return [
-			'console user' => ['Service Desk Agent', 200],
-			'portal user' => ['Portal user', 302], // redirect to portal
+			'Service Desk Agent: missing operation' => [
+				'Service Desk Agent',
+				[
+					'obj_class' => UserRequest::class,
+					'temp_id'   => '123456',
+				],
+				400,
+				'Bad request',
+			],
+			'Service Desk Agent: missing obj_class' => [
+				'Service Desk Agent',
+				[
+					'operation' => 'add',
+					'temp_id'   => '123456',
+				],
+				400,
+				'Bad request',
+			],
+			'Service Desk Agent: missing temp_id'   => [
+				'Service Desk Agent',
+				[
+					'operation' => 'add',
+					'obj_class' => UserRequest::class,
+				],
+				400,
+				'Bad request',
+			],
+			'Service Desk Agent: empty file'        => [
+				'Service Desk Agent',
+				[
+					'operation' => 'add',
+					'obj_class' => UserRequest::class,
+					'temp_id'   => '123456',
+				],
+				200,
+				[
+					'error_code' => AttachmentAjaxErrorEnum::UPLOAD_FILE_EMPTY->value,
+				],
+			],
+			'Service Desk Agent: access restricted' => [
+				'Document author',
+				[
+					'operation' => 'add',
+					'obj_class' => UserRequest::class,
+					'temp_id'   => '123456',
+					'file'      => curl_file_create(__FILE__, 'text/plain', 'test.txt'),
+				],
+				200,
+				[
+					'error_code' => AttachmentAjaxErrorEnum::ACTION_NOT_ALLOWED->value,
+				],
+			],
+			'portal user'                           => [
+				'Portal user',
+				[],
+				302, // redirect to portal
+				[],
+			],
+			'Service Desk Agent: preview'           => [
+				'Service Desk Agent',
+				[
+					'operation' => 'refresh_attachments_render',
+					'objclass'  => 'UserRequest',
+					'objkey'    => 101,
+					'temp_id'   => '123456',
+				],
+				200,
+				'No attachment.',
+			],
 		];
 	}
 
-	private function CallAttachmentEndpointAs(string $sLogin): int
+	private function CallAttachmentEndpointAs(string $sLogin, array $aQueryParams = []): array
 	{
-		$this->CallItopUri(
-			'env-production/itop-attachments/ajax.itop-attachment.php?operation=add&'.http_build_query([
+		$sResponse = $this->CallItopUri(
+			'env-production/itop-attachments/ajax.itop-attachment.php',
+			array_merge($aQueryParams, [
 				'auth_user' => $sLogin,
-				'auth_pwd' => self::AUTHENTICATION_PASSWORD,
+				'auth_pwd'  => self::AUTHENTICATION_PASSWORD,
 			]),
-			[],
 			[
 				CURLOPT_HTTPHEADER => ['X-Combodo-Ajax:1'],
-				CURLOPT_POST => 0,
+				CURLOPT_POST       => 0,
 			],
 			true
 		);
 
-		return $this->aLastCurlGetInfo['http_code'];
+		return [
+			'code'     => $this->aLastCurlGetInfo['http_code'],
+			'response' => $sResponse,
+		];
 	}
 }
