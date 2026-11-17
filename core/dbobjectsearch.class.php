@@ -990,11 +990,13 @@ class DBObjectSearch extends DBSearch
 	 *
 	 * @return DBSearch The filtered search
 	 * @throws \CoreException
+	 * @since 3.2.4 Only intersect the first joined alias when it is the requested alias.
 	 */
 	public function Filter($sClassAlias, DBSearch $oFilter)
 	{
 		// If the conditions are the correct ones for Intersect
-		if (MetaModel::IsParentClass($oFilter->GetFirstJoinedClass(), $this->GetFirstJoinedClass())) {
+		if (($sClassAlias === $this->GetFirstJoinedClassAlias()) &&
+			MetaModel::IsParentClass($oFilter->GetFirstJoinedClass(), $this->GetFirstJoinedClass())) {
 			return $this->Intersect($oFilter);
 		}
 
