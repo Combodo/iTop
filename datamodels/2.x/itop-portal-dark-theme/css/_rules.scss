@@ -1,0 +1,1076 @@
+/*
+ * Portal dark theme - rules
+ *
+ * Imported as-is (forced dark mode) or nested in a `prefers-color-scheme: dark` media query (auto mode).
+ * Palette based on Nord, to stay consistent with the "darkmoon" back-office theme.
+ *
+ * Every component rule is scoped under `html:root body.ipb-body` so it wins over the portal's own
+ * (sometimes quite specific) selectors without having to use !important everywhere. !important is
+ * only used where the portal itself uses it (buttons).
+ */
+
+@import "palette";
+
+/* Lists of button variants, used to leave the colored buttons untouched */
+$pdt-colored-buttons: ".btn-primary, .btn-success, .btn-info, .btn-warning, .btn-danger, .ipb-is-primary, .ipb-is-success, .ipb-is-info, .ipb-is-warning, .ipb-is-danger";
+
+/* ---------------------------------------------------------------------------
+ * Base
+ * ------------------------------------------------------------------------ */
+:root {
+  color-scheme: dark;
+}
+
+html,
+body.ipb-body {
+  background-color: $pdt-bg;
+  color: $pdt-text;
+}
+
+/* Element-level defaults: kept at low specificity so the portal's component colors still win */
+* {
+  scrollbar-color: $pdt-border-strong $pdt-bg;
+}
+
+::selection {
+  background-color: rgba($pdt-accent, 0.45);
+  color: $pdt-heading;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  color: $pdt-heading;
+}
+
+small, .small, .text-muted, .help-block {
+  color: $pdt-text-muted;
+}
+
+label, legend {
+  color: $pdt-text;
+}
+
+hr {
+  border-color: $pdt-border;
+}
+
+a {
+  color: $pdt-link;
+}
+
+a:hover, a:focus {
+  color: $pdt-link-hover;
+}
+
+code, kbd, pre, samp {
+  background-color: $pdt-surface-2;
+  color: $pdt-heading;
+  border-color: $pdt-border;
+}
+
+mark, .mark {
+  background-color: #ebcb8b;
+  color: $pdt-nord0;
+}
+
+blockquote {
+  border-color: $pdt-border;
+}
+
+footer, #footer {
+  color: $pdt-text-muted;
+}
+
+/* Component overrides, scoped to beat the portal's own selectors */
+html:root body.ipb-body {
+
+  /* -----------------------------------------------------------------------
+   * Misc. utilities
+   * -------------------------------------------------------------------- */
+  .bg-success { background-color: mix($pdt-success, $pdt-surface, 22%); }
+  .bg-info { background-color: mix($pdt-info, $pdt-surface, 22%); }
+  .bg-warning { background-color: mix(#ebcb8b, $pdt-surface, 22%); }
+  .bg-danger { background-color: mix($pdt-danger, $pdt-surface, 22%); }
+
+  .img-thumbnail {
+    background-color: $pdt-surface;
+    border-color: $pdt-border;
+  }
+
+  .label,
+  .label-default,
+  .attribute-set-item,
+  .selectize-control.multi .selectize-input .attribute-set-item[data-value] {
+    background-color: $pdt-surface-3;
+    border-color: $pdt-border-strong;
+    color: $pdt-heading;
+  }
+
+  .datatables_overlay,
+  .content_loader {
+    background-color: $pdt-surface;
+    color: $pdt-text;
+  }
+
+  th, legend, .pager a,
+  .form_field_label {
+    color: $pdt-heading;
+  }
+
+  /* -----------------------------------------------------------------------
+   * Browse brick: list / tree / mosaic modes
+   * -------------------------------------------------------------------- */
+  a.list-group-item,
+  button.list-group-item,
+  .list-group-item .list-group-item-text,
+  .tree-item,
+  .mosaic-group-item,
+  .mosaic-item {
+    color: $pdt-text;
+  }
+
+  a.list-group-item .list-group-item-heading,
+  button.list-group-item .list-group-item-heading {
+    color: $pdt-heading;
+  }
+
+  .list-group.tree .list-group-item .list-group-item-description,
+  .list-group-item .tree-item-wrapper .tree-item-filter-data,
+  .list-group-item .tree-item-wrapper .tree-item-filter-data a,
+  .mosaic-item-text .mosaic-item-description,
+  #mosaic-breadcrumb .active {
+    color: $pdt-text-muted;
+  }
+
+  #mosaic-breadcrumb a {
+    color: $pdt-link;
+  }
+
+  .mosaic-item:hover,
+  .mosaic-item:focus,
+  #brick_content_tree .list-group-item:hover > .tree-item-wrapper {
+    background-color: $pdt-surface-2;
+  }
+
+  .home .tile.tile_communication {
+    background-color: $pdt-surface-2;
+  }
+
+  /* -----------------------------------------------------------------------
+   * Page header
+   * -------------------------------------------------------------------- */
+  .ipb-page--main-header--information,
+  .ipb-page--main-header--information--title,
+  .ipb-page--main-header--information--subtitle {
+    color: $pdt-heading;
+  }
+
+  .ipb-browse-brick--no-item--text,
+  .ipb-manage-brick--no-result--text,
+  .ipb-manage-brick--export-action {
+    color: $pdt-text-muted;
+  }
+
+  /* -----------------------------------------------------------------------
+   * Navigation menu (sidebar)
+   * -------------------------------------------------------------------- */
+  .ipb-navigation-menu {
+    background-color: $pdt-sidebar;
+  }
+
+  .ipb-navigation-menu--user-part {
+    background-color: $pdt-surface-2;
+  }
+
+  .ipb-navigation-menu--menu-entry--wrapper.active .ipb-navigation-menu--menu-entry {
+    background-color: $pdt-surface-3;
+    color: $pdt-heading;
+  }
+
+  .ipb-navigation-menu-overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  /* -----------------------------------------------------------------------
+   * Tiles (home page)
+   * -------------------------------------------------------------------- */
+  .ipb-tile {
+    background-color: $pdt-surface;
+    border-color: $pdt-border;
+    color: $pdt-text;
+  }
+
+  .ipb-tile:hover,
+  .ipb-tile:focus-within {
+    background-color: $pdt-surface-2;
+    border-color: $pdt-border-strong;
+  }
+
+  .ipb-tile--decoration {
+    background-color: rgba($pdt-accent, 0.15);
+  }
+
+  .ipb-tile--decoration--icon,
+  .mosaic-item-image .glyphicon {
+    color: $pdt-nord8;
+  }
+
+  .ipb-tile--title {
+    color: $pdt-heading;
+  }
+
+  .ipb-tile--description {
+    color: $pdt-text-muted;
+  }
+
+  /* -----------------------------------------------------------------------
+   * Panels, wells, list groups
+   * -------------------------------------------------------------------- */
+  .panel,
+  .ipb-panel,
+  .well,
+  .jumbotron,
+  .thumbnail,
+  .list-group-item,
+  .list-group.tree,
+  #brick_content_tree .list-group-item,
+  .mosaic-group-item,
+  .mosaic-item {
+    background-color: $pdt-surface;
+    border-color: $pdt-border;
+    color: $pdt-text;
+  }
+
+  .list-group-item.disabled,
+  .list-group-item.disabled:hover {
+    background-color: $pdt-surface-2;
+    color: $pdt-text-disabled;
+  }
+
+  .list-group-item-success { background-color: mix($pdt-success, $pdt-surface, 22%); color: lighten($pdt-success, 25%); }
+  .list-group-item-info { background-color: mix($pdt-info, $pdt-surface, 22%); color: lighten($pdt-info, 25%); }
+  .list-group-item-warning { background-color: mix(#ebcb8b, $pdt-surface, 22%); color: #ebcb8b; }
+  .list-group-item-danger { background-color: mix($pdt-danger, $pdt-surface, 22%); color: lighten($pdt-danger, 25%); }
+
+  .panel .panel-heading,
+  .ipb-panel .panel-heading,
+  .panel.panel-default .panel-heading,
+  .ipb-panel.panel-default .panel-heading {
+    background-color: $pdt-surface-2;
+    border-color: $pdt-border;
+    color: $pdt-heading;
+  }
+
+  .panel .panel-footer {
+    background-color: $pdt-surface-2;
+    border-color: $pdt-border;
+    color: $pdt-text;
+  }
+
+  .panel-default,
+  .panel-group .panel-heading + .panel-collapse > .panel-body {
+    border-color: $pdt-border;
+  }
+
+  .panel-title,
+  .panel-title > a {
+    color: $pdt-heading;
+  }
+
+  a.list-group-item:hover, a.list-group-item:focus,
+  button.list-group-item:hover, button.list-group-item:focus {
+    background-color: $pdt-surface-2;
+    color: $pdt-heading;
+  }
+
+  /* -----------------------------------------------------------------------
+   * Tabs, navs, pagination, badges
+   * -------------------------------------------------------------------- */
+  .nav-tabs {
+    border-bottom-color: $pdt-border;
+  }
+
+  .nav-tabs > li > a {
+    color: $pdt-text-muted;
+    background-color: $pdt-surface-2;
+    border-color: $pdt-border;
+  }
+
+  .nav-tabs > li > a:hover,
+  .nav-tabs > li > a:focus {
+    background-color: $pdt-surface-3;
+    border-color: $pdt-border;
+    color: $pdt-heading;
+  }
+
+  .nav-tabs > li.active > a,
+  .nav-tabs > li.active > a:hover,
+  .nav-tabs > li.active > a:focus {
+    background-color: $pdt-surface;
+    border-color: $pdt-border;
+    border-bottom-color: transparent;
+    color: $pdt-heading;
+  }
+
+  .nav .open > a,
+  .nav .open > a:hover,
+  .nav .open > a:focus {
+    background-color: $pdt-surface-3;
+  }
+
+  .nav .nav-divider {
+    background-color: $pdt-border;
+  }
+
+  .ipb-tabs.nav-pills > li > a {
+    background-color: $pdt-surface-2;
+    color: $pdt-text;
+  }
+
+  .ipb-tabs.nav-pills > li.active > a {
+    background-color: $pdt-surface;
+    color: $pdt-heading;
+  }
+
+  .ipb-tabs.nav-pills > li:hover > a,
+  .ipb-tabs.nav-pills > li > a:focus {
+    background-color: $pdt-surface-3;
+    color: $pdt-heading;
+  }
+
+  .ipb-tabs.nav-pills > li > a > .badge,
+  .ipb-tabs.nav-pills > li.active > a > .badge,
+  .ipb-tabs.nav-pills > li:hover > a > .badge {
+    background-color: $pdt-surface-3;
+    color: $pdt-heading;
+  }
+
+  .ipb-tabs.nav-pills > li.active > a > .badge {
+    background-color: $pdt-border-strong;
+  }
+
+  .breadcrumb {
+    background-color: $pdt-surface;
+    color: $pdt-text-muted;
+  }
+
+  .breadcrumb > .active {
+    color: $pdt-text;
+  }
+
+  .pagination > li > a,
+  .pagination > li > span,
+  .pager li > a,
+  .pager li > span {
+    background-color: $pdt-surface;
+    border-color: $pdt-border;
+    color: $pdt-text;
+  }
+
+  .pagination > li > a:hover,
+  .pagination > li > a:focus,
+  .pagination > li > span:hover,
+  .pager li > a:hover {
+    background-color: $pdt-surface-3;
+    border-color: $pdt-border;
+    color: $pdt-heading;
+  }
+
+  .pagination > .active > a,
+  .pagination > .active > span {
+    background-color: $pdt-accent-strong;
+    border-color: $pdt-accent-strong;
+    color: #fff;
+  }
+
+  .pagination > .disabled > a,
+  .pagination > .disabled > span {
+    background-color: $pdt-surface;
+    border-color: $pdt-border;
+    color: $pdt-text-disabled;
+  }
+
+  .badge {
+    background-color: $pdt-surface-3;
+    color: $pdt-heading;
+  }
+
+  .label-default {
+    background-color: $pdt-surface-3;
+  }
+
+  .progress,
+  .ipb-progress {
+    background-color: $pdt-surface-2;
+  }
+
+  /* -----------------------------------------------------------------------
+   * Dropdowns, popovers, tooltips
+   * -------------------------------------------------------------------- */
+  .dropdown-menu,
+  ipb-dropdown,
+  .popover,
+  .tt-menu {
+    background-color: $pdt-surface-2;
+    border-color: $pdt-border;
+    color: $pdt-text;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  }
+
+  ipb-dropdown li {
+    background-color: transparent;
+  }
+
+  ipb-dropdown li a,
+  .dropdown-menu > li > a {
+    color: $pdt-text;
+  }
+
+  ipb-dropdown li:hover,
+  .dropdown-menu > li > a:hover,
+  .dropdown-menu > li > a:focus {
+    background: $pdt-surface-3;
+  }
+
+  ipb-dropdown li:hover a,
+  .dropdown-menu > li > a:hover,
+  .dropdown-menu > li > a:focus {
+    color: $pdt-heading;
+  }
+
+  .dropdown-menu .divider {
+    background-color: $pdt-border;
+  }
+
+  .dropdown-header {
+    color: $pdt-text-muted;
+  }
+
+  .popover-title {
+    background-color: $pdt-surface-3;
+    border-bottom-color: $pdt-border;
+    color: $pdt-heading;
+  }
+
+  .popover.top > .arrow:after { border-top-color: $pdt-surface-2; }
+  .popover.bottom > .arrow:after { border-bottom-color: $pdt-surface-2; }
+  .popover.left > .arrow:after { border-left-color: $pdt-surface-2; }
+  .popover.right > .arrow:after { border-right-color: $pdt-surface-2; }
+
+  .tt-suggestion {
+    color: $pdt-text;
+  }
+
+  .tt-suggestion:hover,
+  .tt-suggestion.tt-cursor {
+    background-color: $pdt-surface-3;
+    color: $pdt-heading;
+  }
+
+  /* -----------------------------------------------------------------------
+   * Modals
+   * -------------------------------------------------------------------- */
+  .modal-content {
+    background-color: $pdt-surface;
+    border-color: $pdt-border;
+    color: $pdt-text;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  .modal-header,
+  .modal-footer,
+  .modal .modal-dialog .modal-header {
+    background-color: $pdt-surface;
+    border-color: $pdt-border;
+    color: $pdt-heading;
+  }
+
+  .modal-title {
+    color: $pdt-heading !important;
+  }
+
+  .modal-backdrop.in {
+    opacity: 0.7;
+  }
+
+  .close,
+  .modal-header .close {
+    color: $pdt-heading;
+    text-shadow: none;
+    opacity: 0.6;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: $pdt-heading;
+    opacity: 1;
+  }
+
+  /* -----------------------------------------------------------------------
+   * Alerts
+   * -------------------------------------------------------------------- */
+  .ipb-alert,
+  .alert {
+    background-color: $pdt-surface-2;
+    border-color: $pdt-border;
+    color: $pdt-text;
+  }
+
+  .alert-info, .ipb-alert.alert-info, .ipb-alert.ipb-is-info {
+    background-color: mix($pdt-info, $pdt-surface, 18%);
+    border-color: mix($pdt-info, $pdt-surface, 50%);
+    color: lighten($pdt-info, 25%);
+  }
+
+  .alert-success, .ipb-alert.alert-success, .ipb-alert.ipb-is-success {
+    background-color: mix($pdt-success, $pdt-surface, 18%);
+    border-color: mix($pdt-success, $pdt-surface, 50%);
+    color: lighten($pdt-success, 25%);
+  }
+
+  .alert-warning, .ipb-alert.alert-warning, .ipb-alert.ipb-is-warning {
+    background-color: mix($pdt-warning, $pdt-surface, 18%);
+    border-color: mix($pdt-warning, $pdt-surface, 50%);
+    color: lighten($pdt-warning, 20%);
+  }
+
+  .alert-danger, .ipb-alert.alert-danger, .ipb-alert.ipb-is-danger {
+    background-color: mix($pdt-danger, $pdt-surface, 18%);
+    border-color: mix($pdt-danger, $pdt-surface, 50%);
+    color: lighten($pdt-danger, 25%);
+  }
+
+  .ipb-alert.alert-danger:before,
+  .ipb-alert.ipb-is-danger:before {
+    color: $pdt-danger;
+  }
+
+  /* -----------------------------------------------------------------------
+   * Forms
+   * -------------------------------------------------------------------- */
+  .control-label, .form-control-static,
+  .form_field_control,
+  .form_field_control .ipb-is-html-content {
+    color: $pdt-text;
+  }
+
+  legend, fieldset {
+    border-color: $pdt-border;
+  }
+
+  form fieldset,
+  .form_fields fieldset {
+    background-color: $pdt-surface-alt;
+    border-color: $pdt-border;
+  }
+
+  .form_fields fieldset fieldset {
+    background-color: $pdt-surface-2;
+  }
+
+  /* Floating "Cancel / Submit" buttons on long forms */
+  .form_btn_regular.sticky {
+    background-color: $pdt-surface-2;
+    border-color: $pdt-border;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  }
+
+  .btn-group.btn_group_explicit .btn.active {
+    background-color: $pdt-border-strong !important;
+  }
+
+  .form-control,
+  input[type="text"], input[type="password"], input[type="email"], input[type="number"],
+  input[type="search"], input[type="tel"], input[type="url"], input[type="date"], input[type="datetime-local"],
+  textarea, select,
+  .selectize-input,
+  .selectize-control.single .selectize-input,
+  .selectize-control.single .selectize-input.input-active,
+  .input-group-addon {
+    background: $pdt-input-bg;
+    border-color: $pdt-border-strong;
+    color: $pdt-heading;
+    box-shadow: none;
+  }
+
+  .form-control::placeholder,
+  input::placeholder,
+  textarea::placeholder,
+  .selectize-input > input::placeholder {
+    color: $pdt-text-disabled;
+  }
+
+  .form-control:focus,
+  input:focus, textarea:focus, select:focus,
+  .selectize-input.focus {
+    border-color: $pdt-accent;
+    box-shadow: 0 0 0 2px rgba($pdt-accent, 0.35);
+  }
+
+  .form-control[disabled],
+  .form-control[readonly],
+  fieldset[disabled] .form-control,
+  .selectize-control .selectize-input.disabled {
+    background-color: $pdt-surface-2;
+    color: $pdt-text-muted;
+    opacity: 1;
+  }
+
+  select option,
+  select optgroup {
+    background-color: $pdt-surface-2;
+    color: $pdt-heading;
+  }
+
+  .selectize-dropdown,
+  .selectize-dropdown.form-control {
+    background-color: $pdt-surface-2;
+    border-color: $pdt-border;
+    color: $pdt-text;
+  }
+
+  .selectize-dropdown .option,
+  .selectize-dropdown .optgroup-header {
+    background-color: transparent;
+    color: $pdt-text;
+  }
+
+  .selectize-dropdown .active {
+    background-color: $pdt-surface-3;
+    color: $pdt-heading;
+  }
+
+  .selectize-control.multi .selectize-input > div {
+    background-color: $pdt-surface-3;
+    color: $pdt-heading;
+    border-color: $pdt-border;
+  }
+
+  .selectize-input.dropdown-active::before {
+    background-color: $pdt-border;
+  }
+
+  .has-error .form-control { border-color: $pdt-danger; }
+  .has-success .form-control { border-color: $pdt-success; }
+  .has-warning .form-control { border-color: $pdt-warning; }
+
+  .has-error .help-block,
+  .has-error .control-label {
+    color: lighten($pdt-danger, 10%);
+  }
+
+  /* Datetime picker */
+  .bootstrap-datetimepicker-widget.dropdown-menu {
+    background-color: $pdt-surface-2;
+  }
+
+  .bootstrap-datetimepicker-widget table td,
+  .bootstrap-datetimepicker-widget table th {
+    color: $pdt-text;
+  }
+
+  .bootstrap-datetimepicker-widget table td.day:hover,
+  .bootstrap-datetimepicker-widget table td.hour:hover,
+  .bootstrap-datetimepicker-widget table td.minute:hover,
+  .bootstrap-datetimepicker-widget table td span:hover,
+  .bootstrap-datetimepicker-widget table thead tr:first-child th:hover {
+    background-color: $pdt-surface-3;
+  }
+
+  .bootstrap-datetimepicker-widget table td.old,
+  .bootstrap-datetimepicker-widget table td.new,
+  .bootstrap-datetimepicker-widget table td.disabled {
+    color: $pdt-text-disabled;
+  }
+
+  .bootstrap-datetimepicker-widget.dropdown-menu.bottom:after { border-bottom-color: $pdt-surface-2; }
+  .bootstrap-datetimepicker-widget.dropdown-menu.top:after { border-top-color: $pdt-surface-2; }
+
+  /* -----------------------------------------------------------------------
+   * Buttons (the portal uses !important on buttons, so do we)
+   * -------------------------------------------------------------------- */
+  .btn:not(#{$pdt-colored-buttons}),
+  .ipb-button:not(#{$pdt-colored-buttons}) {
+    background-color: $pdt-surface-2 !important;
+    border-color: $pdt-border-strong !important;
+    color: $pdt-heading !important;
+  }
+
+  .btn:not(#{$pdt-colored-buttons}):hover,
+  .btn:not(#{$pdt-colored-buttons}):focus,
+  .ipb-button:not(#{$pdt-colored-buttons}):hover,
+  .ipb-button:not(#{$pdt-colored-buttons}):focus {
+    background-color: $pdt-surface-3 !important;
+    color: $pdt-heading !important;
+  }
+
+  .btn:not(#{$pdt-colored-buttons}):active,
+  .btn:not(#{$pdt-colored-buttons}).active,
+  .ipb-button:not(#{$pdt-colored-buttons}):active {
+    background-color: $pdt-border-strong !important;
+  }
+
+  /* "alternative" (ghost) buttons */
+  .btn.alternative,
+  .btn.ipb-is-alternative,
+  .ipb-button.alternative,
+  .ipb-button.ipb-is-alternative {
+    background-color: transparent !important;
+    border-color: transparent !important;
+  }
+
+  .btn.btn-default.alternative, .btn.ipb-is-default.ipb-is-alternative { color: $pdt-text !important; }
+  .btn.btn-primary.alternative, .btn.ipb-is-primary.ipb-is-alternative,
+  .btn.btn-info.alternative, .btn.ipb-is-info.ipb-is-alternative { color: $pdt-accent !important; }
+  .btn.btn-success.alternative, .btn.ipb-is-success.ipb-is-alternative { color: $pdt-success !important; }
+  .btn.btn-warning.alternative, .btn.ipb-is-warning.ipb-is-alternative { color: #ebcb8b !important; }
+  .btn.btn-danger.alternative, .btn.ipb-is-danger.ipb-is-alternative { color: $pdt-danger !important; }
+
+  .btn.alternative:hover, .btn.ipb-is-alternative:hover,
+  .btn.alternative:focus, .btn.ipb-is-alternative:focus {
+    background-color: $pdt-surface-3 !important;
+    border-color: $pdt-surface-3 !important;
+  }
+
+  .btn.alternative:active, .btn.ipb-is-alternative:active {
+    background-color: $pdt-border-strong !important;
+    border-color: $pdt-border-strong !important;
+  }
+
+  /* Disabled buttons, whatever their variant */
+  .btn:disabled, .btn.disabled, .btn[disabled],
+  .ipb-button:disabled {
+    background-color: $pdt-surface-2 !important;
+    border-color: $pdt-border !important;
+    color: $pdt-text-disabled !important;
+  }
+
+  .btn-link {
+    color: $pdt-link;
+  }
+
+  /* -----------------------------------------------------------------------
+   * Tables & DataTables
+   * -------------------------------------------------------------------- */
+  .table,
+  table.dataTable {
+    color: $pdt-text;
+    background-color: transparent;
+    border-color: $pdt-border;
+  }
+
+  .table > thead > tr > th,
+  .table > tbody > tr > th,
+  .table > tfoot > tr > th,
+  .table > thead > tr > td,
+  .table > tbody > tr > td,
+  .table > tfoot > tr > td,
+  table.dataTable thead th,
+  table.dataTable tbody td,
+  table.dataTable.no-footer {
+    border-color: $pdt-border;
+  }
+
+  .table > thead > tr > th,
+  table.dataTable thead th {
+    color: $pdt-heading;
+    border-bottom-color: $pdt-border-strong;
+  }
+
+  .table-bordered,
+  .table-bordered > thead > tr > th,
+  .table-bordered > tbody > tr > td {
+    border-color: $pdt-border;
+  }
+
+  .table > tbody > tr,
+  .table .table,
+  table.dataTable tbody tr,
+  table.dataTable tbody tr.odd,
+  .table-striped > tbody > tr:nth-of-type(2n+1) {
+    background-color: $pdt-surface;
+  }
+
+  table.dataTable tbody tr.even,
+  table.dataTable.stripe tbody tr.odd,
+  table.dataTable.display tbody tr.odd,
+  .table-striped > tbody > tr {
+    background-color: $pdt-surface-alt;
+  }
+
+  .table-hover > tbody > tr:hover,
+  .table-striped > tbody > tr:hover,
+  table.dataTable tbody tr:hover,
+  table.dataTable.hover tbody tr:hover,
+  table.dataTable.display tbody tr:hover {
+    background-color: $pdt-row-hover;
+  }
+
+  table.dataTable tbody tr.selected,
+  table.dataTable tbody > tr > .selected,
+  table.dataTable > thead > tr.selected,
+  table.dataTable tfoot > tr.selected {
+    background-color: mix($pdt-accent, $pdt-surface, 35%);
+    color: $pdt-heading;
+  }
+
+  table.dataTable tbody > tr.selected:hover,
+  table.dataTable > thead > tr.selected:hover {
+    background-color: mix($pdt-accent, $pdt-surface, 45%);
+  }
+
+  .pagination > .paginate_button > a {
+    background-color: $pdt-surface;
+    border-color: $pdt-border;
+    color: $pdt-text;
+  }
+
+  .pagination > .paginate_button > a:hover,
+  .pagination > .paginate_button > a:focus {
+    background-color: $pdt-surface-3;
+    color: $pdt-heading;
+  }
+
+  .pagination > .paginate_button.active > a {
+    background-color: $pdt-accent-strong;
+    border-color: $pdt-accent-strong;
+    color: #fff;
+  }
+
+  .pagination > .paginate_button.disabled > a {
+    background-color: $pdt-surface-2;
+    color: $pdt-text-disabled;
+  }
+
+  .table > tbody > tr.active > td,
+  .table > tbody > tr > td.active {
+    background-color: $pdt-surface-3;
+  }
+
+  /* Highlighted rows (SLA / priority colors) */
+  .table-striped > tbody > tr.ipb-is-red td, .table-striped > tbody > tr.red td,
+  .table-striped > tbody > tr.ipb-is-danger td, .table-striped > tbody > tr.danger td,
+  .table-striped > tbody > tr.ipb-is-alert td, .table-striped > tbody > tr.alert td {
+    background-color: mix($pdt-danger, $pdt-surface, 22%);
+  }
+
+  .table-striped > tbody > tr.ipb-is-orange td, .table-striped > tbody > tr.orange td,
+  .table-striped > tbody > tr.ipb-is-warning td, .table-striped > tbody > tr.warning td {
+    background-color: mix(#d08770, $pdt-surface, 22%);
+  }
+
+  .table-striped > tbody > tr.ipb-is-blue td, .table-striped > tbody > tr.blue td,
+  .table-striped > tbody > tr.ipb-is-info td, .table-striped > tbody > tr.info td {
+    background-color: mix($pdt-info, $pdt-surface, 22%);
+  }
+
+  .table-striped > tbody > tr.ipb-is-green td, .table-striped > tbody > tr.green td,
+  .table-striped > tbody > tr.ipb-is-success td, .table-striped > tbody > tr.success td {
+    background-color: mix($pdt-success, $pdt-surface, 22%);
+  }
+
+  .table-striped > tbody > tr[class*="ipb-is-"]:hover td {
+    filter: brightness(1.15);
+  }
+
+  .dataTables_wrapper,
+  .dataTables_wrapper .dataTables_length,
+  .dataTables_wrapper .dataTables_filter,
+  .dataTables_wrapper .dataTables_info,
+  .dataTables_wrapper .dataTables_paginate {
+    color: $pdt-text;
+  }
+
+  .dataTables_wrapper .dataTables_processing {
+    background: $pdt-surface-2;
+    border-color: $pdt-border;
+    color: $pdt-text;
+  }
+
+  table.dataTable.fixedHeader-floating,
+  table.dataTable.fixedHeader-locked {
+    background-color: $pdt-surface;
+  }
+
+  /* -----------------------------------------------------------------------
+   * Case log (ticket discussion thread)
+   * -------------------------------------------------------------------- */
+  .ipb-caselog-thread {
+    border-color: $pdt-border;
+  }
+
+  .ipb-caselog-thread--header {
+    background-color: $pdt-surface;
+  }
+
+  .ipb-caselog-thread--header span,
+  .ipb-caselog-thread--date {
+    color: $pdt-text-muted;
+  }
+
+  .ipb-caselog-thread--content {
+    background-color: $pdt-bg;
+  }
+
+  .ipb-caselog-thread--block-medallion,
+  .ipb-caselog-thread--block-entries {
+    border-color: $pdt-border;
+  }
+
+  .ipb-caselog-thread--block-entry {
+    border-bottom-color: $pdt-border;
+  }
+
+  /* My own messages */
+  .ipb-caselog-thread--block-medallion,
+  .ipb-caselog-thread--block-entries,
+  .ipb-caselog-thread--block-entry-toggler {
+    background-color: $pdt-caselog-me-bg;
+    color: $pdt-caselog-me-text;
+  }
+
+  .ipb-caselog-thread--block-user {
+    color: $pdt-caselog-me-text;
+  }
+
+  .ipb-caselog-thread--block-me .ipb-caselog-thread--block-entries .ipb-caselog-thread--block-entry:first-child .ipb-caselog-thread--block-entry-content:before {
+    border-left-color: $pdt-caselog-me-bg;
+  }
+
+  /* Other people's messages */
+  @for $i from 1 through 5 {
+    .ipb-caselog-thread--block-color-#{$i} .ipb-caselog-thread--block-medallion,
+    .ipb-caselog-thread--block-color-#{$i} .ipb-caselog-thread--block-entries,
+    .ipb-caselog-thread--block-color-#{$i} .ipb-caselog-thread--block-entries .ipb-caselog-thread--block-entry .ipb-caselog-thread--block-entry-toggler {
+      background-color: $pdt-surface-2;
+      color: $pdt-text;
+    }
+
+    .ipb-caselog-thread--block-color-#{$i} .ipb-caselog-thread--block-user {
+      color: $pdt-text-muted;
+    }
+
+    .ipb-caselog-thread--block-color-#{$i} .ipb-caselog-thread--block-entries .ipb-caselog-thread--block-entry:first-child .ipb-caselog-thread--block-entry-content:before {
+      border-top-color: $pdt-surface-2;
+      border-right-color: $pdt-surface-2;
+    }
+  }
+
+  /* -----------------------------------------------------------------------
+   * Rich text (CKEditor & rendered HTML attributes)
+   * -------------------------------------------------------------------- */
+  .ck-content,
+  .ipb-is-html-content {
+    color: $pdt-text;
+  }
+
+  .ck-content pre,
+  .ipb-is-html-content pre {
+    color: $pdt-heading;
+  }
+
+  .ck-content hr,
+  .ipb-is-html-content hr {
+    background: $pdt-border;
+  }
+
+  .ck-content .table table th,
+  .ipb-is-html-content .table table th {
+    background-color: $pdt-surface-2;
+  }
+
+  .ck-content .page-break__label,
+  .ipb-is-html-content .page-break__label {
+    color: $pdt-text;
+    background: $pdt-surface-2;
+  }
+
+  .ck-content .marker-yellow, .ipb-is-html-content .marker-yellow,
+  .ck-content .marker-green, .ipb-is-html-content .marker-green,
+  .ck-content .marker-blue, .ipb-is-html-content .marker-blue {
+    color: $pdt-nord0;
+  }
+
+  .ck.ck-editor__main > .ck-editor__editable,
+  .ck.ck-editor__main > .ck-editor__editable:not(.ck-focused) {
+    background-color: $pdt-input-bg;
+    border-color: $pdt-border-strong;
+    color: $pdt-heading;
+  }
+
+  .ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-focused {
+    border-color: $pdt-accent;
+  }
+
+  .ck.ck-toolbar,
+  .ck.ck-editor__top .ck-sticky-panel .ck-toolbar,
+  .ck.ck-editor__top .ck-sticky-panel .ck-sticky-panel__content {
+    background-color: $pdt-surface-2;
+    border-color: $pdt-border-strong;
+  }
+
+  .ck.ck-button,
+  a.ck.ck-button {
+    color: $pdt-text;
+  }
+
+  .ck.ck-toolbar .ck-toolbar__separator {
+    background-color: $pdt-border-strong;
+  }
+
+  .ck.ck-button:not(.ck-disabled):hover,
+  a.ck.ck-button:not(.ck-disabled):hover,
+  .ck.ck-button.ck-on,
+  a.ck.ck-button.ck-on {
+    background-color: $pdt-surface-3;
+    color: $pdt-heading;
+  }
+
+  .ck.ck-dropdown__panel,
+  .ck.ck-balloon-panel,
+  .ck.ck-list {
+    background-color: $pdt-surface-2;
+    border-color: $pdt-border;
+  }
+
+  .ck.ck-list__item .ck-button:hover:not(.ck-disabled) {
+    background-color: $pdt-surface-3;
+  }
+
+  .ck.ck-input {
+    background-color: $pdt-input-bg;
+    border-color: $pdt-border;
+    color: $pdt-heading;
+  }
+
+  /* -----------------------------------------------------------------------
+   * Third-party: Magnific popup, c3 charts, tippy
+   * -------------------------------------------------------------------- */
+  .c3 text {
+    fill: $pdt-text;
+  }
+
+  .c3 path.domain,
+  .c3 .tick line {
+    stroke: $pdt-border-strong;
+  }
+
+  .c3-tooltip {
+    background-color: $pdt-surface-2;
+    color: $pdt-text;
+  }
+
+  .c3-tooltip th {
+    background-color: $pdt-surface-3;
+  }
+
+  .c3-tooltip td {
+    background-color: $pdt-surface-2;
+    border-color: $pdt-border;
+  }
+}
+
+/* Elements appended outside of body.ipb-body content flow but still in body */
+.mfp-bg {
+  background: #000;
+}

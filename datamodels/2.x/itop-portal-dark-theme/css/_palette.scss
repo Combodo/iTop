@@ -1,0 +1,51 @@
+/*
+ * Portal dark theme - palette (Nord based, like the "darkmoon" back-office theme)
+ * Tweak these values to adjust the whole dark theme.
+ */
+
+$pdt-nord0: #2e3440;
+$pdt-nord1: #3b4252;
+$pdt-nord2: #434c5e;
+$pdt-nord3: #4c566a;
+$pdt-nord4: #d8dee9;
+$pdt-nord5: #e5e9f0;
+$pdt-nord6: #eceff4;
+$pdt-nord8: #88c0d0;
+$pdt-nord9: #81a1c1;
+$pdt-nord10: #5e81ac;
+
+/* Surfaces, from the deepest to the most elevated */
+$pdt-bg: darken($pdt-nord0, 5%);
+$pdt-sidebar: darken($pdt-nord0, 9%);
+$pdt-surface: $pdt-nord0;
+$pdt-surface-alt: lighten($pdt-nord0, 2.5%);
+$pdt-surface-2: $pdt-nord1;
+$pdt-surface-3: $pdt-nord2;
+$pdt-input-bg: darken($pdt-nord0, 2%);
+$pdt-row-hover: mix($pdt-nord1, $pdt-nord2, 50%);
+
+/* Borders */
+$pdt-border: $pdt-nord2;
+$pdt-border-strong: $pdt-nord3;
+
+/* Text */
+$pdt-heading: $pdt-nord6;
+$pdt-text: $pdt-nord4;
+$pdt-text-muted: darken($pdt-nord4, 22%);
+$pdt-text-disabled: darken($pdt-nord4, 30%);
+
+/* Accents */
+$pdt-accent: $pdt-nord9;
+$pdt-accent-strong: $pdt-nord10;
+$pdt-link: #f0a463;
+$pdt-link-hover: lighten($pdt-link, 10%);
+
+/* Semantic */
+$pdt-info: #5e9fd0;
+$pdt-success: #8fbc6a;
+$pdt-warning: #c597c8;
+$pdt-danger: #e07b6a;
+
+/* Case log: current user's messages */
+$pdt-caselog-me-bg: mix($pdt-nord10, $pdt-nord0, 45%);
+$pdt-caselog-me-text: $pdt-nord6;

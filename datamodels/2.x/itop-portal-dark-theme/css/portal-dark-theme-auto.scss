@@ -1,0 +1,4 @@
+/* Portal dark theme - applied when the browser / OS prefers a dark color scheme */
+@media (prefers-color-scheme: dark) {
+  @import "rules";
+}
