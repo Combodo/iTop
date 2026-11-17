@@ -32,6 +32,7 @@ class DBSearchIntersectTest extends ItopTestCase
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \OQLException
+	 * @since 3.2.4 Cover independent aliases of the same hierarchy.
 	 */
 	public function testFilter($sLeftSelect, $sRightSelect, $sClassAlias, $sResult)
 	{
@@ -43,6 +44,7 @@ class DBSearchIntersectTest extends ItopTestCase
 		$this->assertEquals($sResult, $oResultSearch->ToOQL());
 	}
 
+	/** @since 3.2.4 Cover independent aliases and union branch alias translation. */
 	public function FilterProvider()
 	{
 		$aTests = [];
@@ -88,6 +90,20 @@ class DBSearchIntersectTest extends ItopTestCase
 			'right' => "SELECT Contact AS CC WHERE CC.org_id = 3",
 			'alias' => "C",
 			'result' => "SELECT `C` FROM Contact AS `C` WHERE ((`C`.`name` = 'Christie') AND (`C`.`org_id` = 3))"];
+
+		$aTests['Same hierarchy second alias'] = [
+			'left' => 'SELECT P, M FROM Person AS P JOIN Person AS M ON P.manager_id = M.id',
+			'right' => 'SELECT Contact WHERE org_id = 3',
+			'alias' => 'M',
+			'result' => 'SELECT `P`, `M` FROM Person AS `P` JOIN Person AS `M` ON `P`.manager_id = `M`.id WHERE (`M`.`org_id` = 3)',
+		];
+
+		$aTests['Same hierarchy second alias across union branches'] = [
+			'left' => 'SELECT P, M FROM Person AS P JOIN Person AS M ON P.manager_id = M.id UNION SELECT P2, M2 FROM Person AS P2 JOIN Person AS M2 ON P2.manager_id = M2.id',
+			'right' => 'SELECT Contact WHERE org_id = 3',
+			'alias' => 'M',
+			'result' => 'SELECT `P`, `M` FROM Person AS `P` JOIN Person AS `M` ON `P`.manager_id = `M`.id WHERE (`M`.`org_id` = 3) UNION SELECT `P2`, `M2` FROM Person AS `P2` JOIN Person AS `M2` ON `P2`.manager_id = `M2`.id WHERE (`M2`.`org_id` = 3)',
+		];
 
 		$aTests['Multiple selected classes'] = [
 			'left' => "SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE 1",
