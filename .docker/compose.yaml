@@ -1,0 +1,46 @@
+# Docker development environment for iTop
+# See README.md in this folder for usage.
+name: ${COMPOSE_PROJECT_NAME:-itop}
+
+services:
+  db:
+    image: mariadb:11.4
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${MARIADB_DATABASE:-itop}
+      MARIADB_USER: ${MARIADB_USER:-itop}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:?Set MARIADB_PASSWORD in .docker/.env}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:?Set MARIADB_ROOT_PASSWORD in .docker/.env}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --max_allowed_packet=64M
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  web:
+    build:
+      context: .
+      args:
+        HOST_UID: ${HOST_UID:-1000}
+        HOST_GID: ${HOST_GID:-1000}
+    image: itop-web:dev
+    restart: unless-stopped
+    # Used by render-setup-params.php (database and administrator settings of the installation)
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${HTTP_PORT:-8080}:80"
+    volumes:
+      # The repository root is the web root
+      - ..:/var/www/html
+
+volumes:
+  db-data:
