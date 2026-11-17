@@ -142,8 +142,25 @@ html:root body.ipb-body {
     color: $pdt-text-muted;
   }
 
-  #mosaic-breadcrumb a {
+  #mosaic-breadcrumb a,
+  .list-group-item .list-group-item-text a,
+  .tree-item a,
+  .list-group.tree .list-group-item .list-group-item-description a,
+  .mosaic-item-text .mosaic-item-description a {
     color: $pdt-link;
+  }
+
+  #mosaic-breadcrumb a:hover,
+  #mosaic-breadcrumb a:focus,
+  .list-group-item .list-group-item-text a:hover,
+  .list-group-item .list-group-item-text a:focus,
+  .tree-item a:hover,
+  .tree-item a:focus,
+  .list-group.tree .list-group-item .list-group-item-description a:hover,
+  .list-group.tree .list-group-item .list-group-item-description a:focus,
+  .mosaic-item-text .mosaic-item-description a:hover,
+  .mosaic-item-text .mosaic-item-description a:focus {
+    color: $pdt-link-hover;
   }
 
   .mosaic-item:hover,

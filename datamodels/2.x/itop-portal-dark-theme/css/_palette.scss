@@ -36,7 +36,8 @@ $pdt-text-disabled: darken($pdt-nord4, 30%);
 
 /* Accents */
 $pdt-accent: $pdt-nord9;
-$pdt-accent-strong: $pdt-nord10;
+/* Background of active elements with white text (active page...): at least 4.5:1 contrast with white */
+$pdt-accent-strong: darken($pdt-nord10, 5%);
 $pdt-link: #f0a463;
 $pdt-link-hover: lighten($pdt-link, 10%);
 
