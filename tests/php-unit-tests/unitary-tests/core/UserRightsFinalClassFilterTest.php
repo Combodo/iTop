@@ -19,24 +19,24 @@ use UserRights;
 use UserRightsProfile;
 
 /**
- * @since 3.2.3
+ * @since 3.2.4
  */
 class UserRightsFinalClassFilterTest extends ItopDataTestCase
 {
 	public const CREATE_TEST_ORG = true;
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	private array $aOriginalGrants;
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	private array $aOriginalSettings = [];
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	private int $iProfileId;
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	private array $aCIIds;
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	private string $sLogin;
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -63,7 +63,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 		];
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	protected function tearDown(): void
 	{
 		$this->SetNonPublicStaticProperty(ProfilesConfig::class, 'aGRANTS', $this->aOriginalGrants);
@@ -75,7 +75,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 		parent::tearDown();
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	private function LoginWithGrants(array $aGrants, array $aAdditionalProfileGrants = []): void
 	{
 		$aConfiguredGrants = array_replace($this->aOriginalGrants, $aAdditionalProfileGrants);
@@ -89,7 +89,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 
 	/**
 	 * @dataProvider ReadGrantsProvider
-	 * @since 3.2.3
+	 * @since 3.2.4
 	 */
 	public function testReadGrants(array $aGrants, string $sClass, array $aExpectedClasses): void
 	{
@@ -100,7 +100,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 		$this->AssertVisibleClasses($oSearch, $aExpectedClasses);
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	public function ReadGrantsProvider(): array
 	{
 		return [
@@ -128,14 +128,14 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 		];
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	public function testAllAllowedDoesNotAddAFilter(): void
 	{
 		$this->LoginWithGrants(['*' => true]);
 		$this->assertTrue(UserRights::GetSelectFilter('FunctionalCI'));
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	public function testGroupedCountsExcludeDeniedClasses(): void
 	{
 		$this->LoginWithGrants(['*' => true, 'NetworkDevice' => false]);
@@ -149,7 +149,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 		$this->assertSame(1, (int) $aRows[0]['_itop_count_']);
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	public function testAnotherHierarchyIsFiltered(): void
 	{
 		$iPerson = $this->GivenObjectInDB('Person', ['name' => 'Allowed contact', 'first_name' => 'Test']);
@@ -162,7 +162,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 		$this->assertSame([(int) $iPerson => 'Person'], $oSet->GetColumnAsArray('finalclass'));
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	public function testConcreteParentRetainsItsOwnObjects(): void
 	{
 		$aEventValues = ['message' => 'Final class filter test event', 'date' => '2026-01-01 12:00:00'];
@@ -179,14 +179,14 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 		$this->assertSame([(int) $iEvent => 'Event'], $oSet->GetColumnAsArray('finalclass'));
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	public function testFilterCategoryKeepsItsReadException(): void
 	{
 		$this->LoginWithGrants([]);
 		$this->assertNotFalse(UserRights::GetSelectFilter('URP_Profiles'));
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	public function testUnionSelectFilterStillAppliesClassRestrictions(): void
 	{
 		$this->LoginWithGrants(['*' => true, 'NetworkDevice' => false]);
@@ -212,7 +212,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 		}
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	public function testExplicitDenyFromAnotherProfileWins(): void
 	{
 		$iDenyProfile = $this->GivenObjectInDB('URP_Profiles', [
@@ -232,7 +232,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 
 	/**
 	 * @dataProvider JoinedAliasesProvider
-	 * @since 3.2.3
+	 * @since 3.2.4
 	 */
 	public function testJoinedAliases(bool $bDisableJoinFilter, bool $bSelectBoth, string $sLeftClass, string $sRightClass, bool $bVisible): void
 	{
@@ -259,7 +259,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 		}
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	public function JoinedAliasesProvider(): array
 	{
 		return [
@@ -275,7 +275,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 
 	/**
 	 * @dataProvider CompoundQueriesProvider
-	 * @since 3.2.3
+	 * @since 3.2.4
 	 */
 	public function testCompoundQueries(string $sOQL): void
 	{
@@ -288,7 +288,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 		$this->AssertVisibleClasses($oSearch, ['Server']);
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	public function CompoundQueriesProvider(): array
 	{
 		return [
@@ -301,7 +301,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 		];
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	public function testOrganizationScopeStillApplies(): void
 	{
 		$iOtherOrg = $this->GivenObjectInDB('Organization', ['name' => 'Other final class test organization']);
@@ -322,7 +322,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 	 * Placeholders {allowed_org_1}, {allowed_org_2} and {denied_org} are replaced by test organization ids.
 	 *
 	 * @dataProvider SourceOQLProvider
-	 * @since 3.2.3
+	 * @since 3.2.4
 	 */
 	public function testSourceOQLReturnsOnlyAllowedClassesAndOrganizations(array $aGrants, string $sSourceOQL, array $aExpectedVisibleObjects, array $aSettings = []): void
 	{
@@ -364,7 +364,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 		$this->assertSame(count($aExpectedVisibleObjects), $oSet->Count(), 'No other object visible for the user');
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	public function SourceOQLProvider(): array
 	{
 		$aContactWithoutTeam = ['*' => true, 'Team' => false];
@@ -463,7 +463,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 			],
 		];
 	}
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	public function testAllowAllDataStillBypassesRestrictions(): void
 	{
 		$this->LoginWithGrants(['*' => true, 'NetworkDevice' => false]);
@@ -474,7 +474,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 		$this->AssertVisibleClasses($oSearch, ['Server', 'NetworkDevice']);
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	public function testAdministratorStillBypassesRestrictions(): void
 	{
 		$sAdminLogin = 'final-class-admin-'.uniqid();
@@ -488,7 +488,7 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 		$this->AssertVisibleClasses($oSearch, ['Server', 'NetworkDevice']);
 	}
 
-	/** @since 3.2.3 */
+	/** @since 3.2.4 */
 	private function AssertVisibleClasses(\DBSearch $oSearch, array $aExpectedClasses): void
 	{
 		$oSet = new DBObjectSet($oSearch);
