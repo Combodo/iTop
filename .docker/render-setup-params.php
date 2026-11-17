@@ -71,7 +71,9 @@ if ($sMode === 'install') {
 	$SetValue('admin_account/pwd', $GetEnv('ITOP_ADMIN_PASSWORD'));
 	$SetValue('admin_account/language', $GetEnv('ITOP_LANGUAGE', 'EN US'));
 	$SetValue('language', $GetEnv('ITOP_LANGUAGE', 'EN US'));
-	$SetValue('sample_data', $GetEnv('ITOP_SAMPLE_DATA', '1') === '1' ? '1' : '0');
 }
+
+// Both modes: on upgrade, it controls whether the sample data of newly added modules are loaded
+$SetValue('sample_data', $GetEnv('ITOP_SAMPLE_DATA', '1') === '1' ? '1' : '0');
 
 echo $oDoc->saveXML();

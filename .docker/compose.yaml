@@ -1,6 +1,6 @@
 # Docker development environment for iTop
-# See README.md in this folder for usage.
-name: ${COMPOSE_PROJECT_NAME:-itop}
+# See README.md in this folder for usage. Settings come from .docker/.env (see .env.dist).
+name: itop
 
 services:
   db:
@@ -31,13 +31,23 @@ services:
         HOST_GID: ${HOST_GID:-1000}
     image: itop-web:dev
     restart: unless-stopped
-    # Used by render-setup-params.php (database and administrator settings of the installation)
-    env_file: .env
+    # Used by render-setup-params.php. Interpolated (not env_file) so that the values always match
+    # the ones given to the db service and to the port mapping, even when overridden by the shell.
+    environment:
+      MARIADB_DATABASE: ${MARIADB_DATABASE:-itop}
+      MARIADB_USER: ${MARIADB_USER:-itop}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:?Set MARIADB_PASSWORD in .docker/.env}
+      HTTP_PORT: ${HTTP_PORT:-8080}
+      ITOP_ADMIN_LOGIN: ${ITOP_ADMIN_LOGIN:-admin}
+      ITOP_ADMIN_PASSWORD: ${ITOP_ADMIN_PASSWORD:-}
+      ITOP_LANGUAGE: ${ITOP_LANGUAGE:-EN US}
+      ITOP_SAMPLE_DATA: ${ITOP_SAMPLE_DATA:-1}
     depends_on:
       db:
         condition: service_healthy
     ports:
-      - "${HTTP_PORT:-8080}:80"
+      # Only reachable from this computer by default: set HTTP_BIND_ADDRESS=0.0.0.0 to expose it on the network
+      - "${HTTP_BIND_ADDRESS:-127.0.0.1}:${HTTP_PORT:-8080}:80"
     volumes:
       # The repository root is the web root
       - ..:/var/www/html

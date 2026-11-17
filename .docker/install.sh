@@ -38,5 +38,4 @@ docker compose exec -T -u www-data web sh -c '
 ' | tail -n 5
 
 docker compose restart web > /dev/null
-PORT=$(grep -E '^HTTP_PORT=' .env | cut -d= -f2)
-echo "Done: http://localhost:${PORT:-8080}/"
+echo "Done: http://$(docker compose port web 80 | sed 's/^0\.0\.0\.0:/localhost:/')/"

@@ -35,6 +35,15 @@ RUN cp "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" \
 RUN a2enmod rewrite headers \
     && sed -ri 's!AllowOverride None!AllowOverride All!g' /etc/apache2/apache2.conf
 
+# The repository root is the web root: never serve Git metadata
+# (.git folder, or .git file of a worktree / submodule)
+RUN { \
+        echo '<LocationMatch "/\.git(/|$)">'; \
+        echo '    Require all denied'; \
+        echo '</LocationMatch>'; \
+    } > /etc/apache2/conf-available/itop-dev.conf \
+    && a2enconf itop-dev
+
 # Run Apache as the host user so the bind-mounted checkout is writable
 # (conf/, data/, env-production/, log/) without chmod-ing the repo.
 RUN usermod -o -u "${HOST_UID}" www-data \

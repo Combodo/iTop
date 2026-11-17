@@ -1,0 +1,7 @@
+# Docker development environment for iTop: lets you run `docker compose ...` from the repository root.
+# The stack itself and its documentation are in .docker/ (see .docker/README.md).
+name: itop
+
+include:
+  - path: .docker/compose.yaml
+    env_file: .docker/.env

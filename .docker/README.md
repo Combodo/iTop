@@ -20,18 +20,20 @@ cp .docker/.env.dist .docker/.env   # then edit it: passwords, port, `id -u` / `
 ```
 
 iTop is then available on `http://localhost:8080/` (or the `HTTP_PORT` you chose), with the administrator account
-defined in `.docker/.env`.
+defined in `.docker/.env`. By default the port is only published on `127.0.0.1`: set `HTTP_BIND_ADDRESS=0.0.0.0` to
+reach iTop from other machines.
 
 ## Everyday commands
 
-Run them from the `.docker/` folder:
+`docker compose` commands work from the repository root (thanks to the root `compose.yaml`, which includes
+`.docker/compose.yaml`) as well as from the `.docker/` folder:
 
 ```bash
 docker compose up -d          # start
 docker compose down           # stop (the database is kept in the db-data volume)
 docker compose logs -f web    # Apache / PHP logs
-./upgrade.sh                  # run the setup again after a datamodel change or a new extension (dumps the DB first)
-./install.sh --force          # reinstall from scratch: deletes the configuration, env-production/ and the database
+.docker/upgrade.sh            # run the setup again after a datamodel change or a new extension (dumps the DB first)
+.docker/install.sh --force    # reinstall from scratch: deletes the configuration, env-production/ and the database
 ```
 
 ## Files
@@ -39,9 +41,10 @@ docker compose logs -f web    # Apache / PHP logs
 | File | Purpose |
 |---|---|
 | `.env.dist` | Template of `.env` (ignored by Git): port, UID / GID, database and administrator credentials |
-| `compose.yaml`, `Dockerfile` | The stack |
+| `compose.yaml`, `Dockerfile` | The stack (`../compose.yaml` only includes it, for use from the repository root) |
 | `install.sh`, `upgrade.sh` | Wrappers around `setup/unattended-install/unattended-install.php` |
 | `render-setup-params.php` | Builds the setup response file from `setup/unattended-install/xml_setup/itil-*.xml` and `.env` |
 | `backups/` | Database dumps made by `upgrade.sh` (ignored by Git) |
 
-The folder holds a `.htaccess` / `web.config` denying web access, as the repository root is also the web root.
+As the repository root is also the web root, the folder holds a `.htaccess` / `web.config` denying web access, and
+Apache is configured never to serve Git metadata (`.git`).
