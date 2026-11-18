@@ -6,7 +6,6 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreException;
 use DBObjectSearch;
 use MetaModel;
-use utils;
 
 /**
  * Class MetaModelTest
@@ -542,7 +541,6 @@ class MetaModelTest extends ItopDataTestCase
 			'Purge 10 items with a max_chunk_size of 1000 (default value) should be perfomed in 1 step' => [1000, 3],
 		];
 	}
-
 }
 
 abstract class Wizzard
