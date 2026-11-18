@@ -1280,7 +1280,7 @@ class DeprecatedCallsLog extends LogAPI
 	 *
 	 * @param string|null $sAdditionalMessage Explain which arguments should be passed instead
 	 *
-	 * @since 3.2.0
+	 * @since 3.2.4 3.3.1 3.4.0 N°9436
 	 */
 	public static function NotifyDeprecatedPhpMethodSignature(?string $sAdditionalMessage = null): void
 	{

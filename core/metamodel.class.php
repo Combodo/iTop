@@ -118,7 +118,9 @@ define('MYSQL_ENGINE', 'innodb');
 abstract class MetaModel
 {
 	/** Constants used for apply param function sanitization parameter */
+	/** @since 3.2.4 3.3.1 3.4.0 N°9436 */
 	public const APPLY_PARAMS_SANITIZE_HTML = 'sanitize_html';
+	/** @since 3.2.4 3.3.1 3.4.0 N°9436 */
 	public const APPLY_PARAMS_SANITIZE_NONE = 'sanitize_none';
 
 	///////////////////////////////////////////////////////////////////////////
