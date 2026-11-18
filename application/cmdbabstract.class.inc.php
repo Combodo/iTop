@@ -754,8 +754,7 @@ HTML
 
 			$bReadOnly = ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) || !$bIsEditableBasedOnEditWhen;
 			// A large linkset is not loaded entirely in the edition form: it is displayed as in the object details (paginated, with its actions)
-			$iMaxItemsInEditForm = (int)MetaModel::GetConfig()->Get('max_linkset_items_in_edit_form');
-			$bIsTooLargeForEditForm = $bEditMode && ($iMaxItemsInEditForm > 0) && ($iCount > $iMaxItemsInEditForm);
+			$bIsTooLargeForEditForm = $bEditMode && $this->IsLinkSetTooLargeForEditForm($oAttDef, $oOrmLinkSet, $iCount);
 			if ($bEditMode && (!$bReadOnly) && (!$bIsTooLargeForEditForm)) {
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
 				$sDisplayValue = ''; // not used
@@ -857,6 +856,36 @@ HTML
 		// add hidden input for linkset transactions
 		$oInputHidden = InputUIBlockFactory::MakeForHidden('linkset_transactions_id', utils::GetNewTransactionId(), 'linkset_transactions_id');
 		$oPage->AddUiBlock($oInputHidden);
+	}
+
+	/**
+	 * Whether a linkset is too large to be loaded entirely in the modification form of this object.
+	 * Such a linkset is displayed as in the object details instead (paginated, with its actions), which is only done when:
+	 * - the object already exists and the linkset has no pending change, as the details table only shows what is in the database,
+	 * - the details table offers the same edition features: a 1:n linkset in "add_remove" mode is excluded,
+	 *   as attaching existing objects is only possible from the form.
+	 *
+	 * @param \AttributeLinkedSet $oAttDef
+	 * @param \ormLinkSet $oOrmLinkSet
+	 * @param int $iCount Number of items of the linkset in the database
+	 *
+	 * @return bool
+	 * @since 3.4.0
+	 */
+	protected function IsLinkSetTooLargeForEditForm($oAttDef, $oOrmLinkSet, int $iCount): bool
+	{
+		$iMaxItems = (int)MetaModel::GetConfig()->Get('max_linkset_items_in_edit_form');
+		if (($iMaxItems <= 0) || ($iCount <= $iMaxItems)) {
+			return false;
+		}
+		if ($this->IsNew() || $oOrmLinkSet->HasDelta()) {
+			return false;
+		}
+		if (!$oAttDef->IsIndirect() && ($oAttDef->GetEditMode() == LINKSET_EDITMODE_ADDREMOVE)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
