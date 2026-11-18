@@ -29,13 +29,17 @@ class AttachmentAjaxEndpointTest extends ItopDataTestCase
 		$sLogin = 'user-'.uniqid();
 		$this->CreateUser($sLogin, self::$aURP_Profiles['Service Desk Agent'], self::AUTHENTICATION_PASSWORD);
 
+		// log user to get a valid transaction id for the request (otherwise the request will be rejected by the CSRF protection)
+		UserRights::Login($sLogin);
+
 		$sTempId = uniqid();
 
 		$aResponse = $this->CallAttachmentEndpointAs($sLogin, [
-			'operation' => 'add',
-			'obj_class' => UserRequest::class,
-			'temp_id'   => $sTempId,
-			'file'      => curl_file_create(__FILE__, 'text/plain', 'test.txt'),
+			'operation'      => 'add',
+			'obj_class'      => UserRequest::class,
+			'temp_id'        => $sTempId,
+			'file'           => curl_file_create(__FILE__, 'text/plain', 'test.txt'),
+			'transaction_id' => utils::GetNewTransactionId(),
 		]);
 
 		$oAttachment = MetaModel::GetObjectByColumn('Attachment', 'temp_id', $sTempId, false);
