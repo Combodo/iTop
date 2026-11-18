@@ -7,6 +7,8 @@
 
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\Http\HttpRequest;
+use Combodo\iTop\Application\Http\HttpResponse;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
@@ -61,15 +63,10 @@ try {
 
 	// check if header contains X-Combodo-Ajax for POST request (CSRF protection for ajax calls)
 	// check must be performed after DoLoginEx to be logged in and to be able to check the token (based on the transaction id)
-	if (!isset($_SERVER['HTTP_X_COMBODO_AJAX']) && $_SERVER['REQUEST_METHOD'] !== 'GET') {
-		$sTransactionId = utils::ReadPostedParam("transaction_id");
-		if (!utils::IsTransactionValid($sTransactionId, false)) { // if a form is submitted without header but contains a token... should be exceptional
-			$sReferer = $_SERVER['HTTP_REFERER'];
-			$sErrorMsg = 'Unauthorized access. Please see https://www.itophub.io/wiki/page?id=3_2_0:release:developer#checking_for_the_presence_of_specific_header_in_the_post_to_enhance_protection_against_csrf_attacks';
-			IssueLog::Error("Unprotected ajax call : $sErrorMsg", LogChannels::SECURITY, ['referer' => $sReferer]);
-			header('HTTP/1.1 401 Unauthorized');
-			die($sErrorMsg);
-		}
+	try {
+		HttpRequest::CheckAjaxEndpoint('GET');
+	} catch (SecurityException $e) {
+		HttpResponse::SendTextPlainUnauthorizedResponseAndExit();
 	}
 
 	$oKPI->ComputeAndReport('User login');
@@ -100,8 +97,7 @@ try {
 
 		// Response is a WebPage, let's handle it like legacy operations
 		$oPage = $mResponse;
-	}
-	// Otherwise, use legacy operation
+	} // Otherwise, use legacy operation
 	else {
 		// Default for most operations, but can be switch to a JsonPage, DownloadPage or else if the operation requires it
 		$oPage = new AjaxPage("");
