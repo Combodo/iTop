@@ -5,9 +5,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\Helper\AjaxHelper;
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\Http\HttpRequest;
+use Combodo\iTop\Application\Http\HttpResponse;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
@@ -62,7 +63,11 @@ try {
 
 	// check if header contains X-Combodo-Ajax for POST request (CSRF protection for ajax calls)
 	// check must be performed after DoLoginEx to be logged in and to be able to check the token (based on the transaction id)
-	AjaxHelper::RejectUnauthorizedAjaxRequest();
+	try {
+		HttpRequest::CheckAjaxEndpoint('GET');
+	} catch (SecurityException $e) {
+		HttpResponse::SendTextPlainUnauthorizedResponseAndExit();
+	}
 
 	$oKPI->ComputeAndReport('User login');
 

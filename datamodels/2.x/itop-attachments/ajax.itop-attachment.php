@@ -18,8 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\Helper\AjaxHelper;
-use Combodo\iTop\Application\Helper\RequestParamDTO;
+use Combodo\iTop\Application\Http\HttpBadRequestException;
+use Combodo\iTop\Application\Http\HttpRequest;
+use Combodo\iTop\Application\Http\RequestParamDTO;
+use Combodo\iTop\Application\Http\HttpResponse;
 use Combodo\iTop\Application\WebPage\AjaxPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
 use Combodo\iTop\Attachments\Enum\AttachmentAjaxErrorEnum;
@@ -45,9 +47,9 @@ function AddAttachment(): void
 	$oPage->SetOutputDataOnly(true);
 
 	// reads request add parameters
-	[$sClass, $sTempId] = AjaxHelper::HandleRequestPostedParam(
-		RequestParamDTO::Create('obj_class', utils::ENUM_SANITIZATION_FILTER_CLASS, true),
-		RequestParamDTO::Create('temp_id', utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID, true)
+	[$sClass, $sTempId] = HttpRequest::HandleRequestParam(
+		RequestParamDTO::Post('obj_class', utils::ENUM_SANITIZATION_FILTER_CLASS, true),
+		RequestParamDTO::Post('temp_id', utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID, true)
 	);
 
 	$aResult = [
@@ -101,12 +103,12 @@ function RenderAttachments(): void
 	$oPage = new AjaxPage("");
 
 	// reads request render parameters
-	[$sClass, $sKey, $sTempId, $bEditMode, $aAttachmentsDeleted] = AjaxHelper::HandleRequestPostedParam(
-		RequestParamDTO::Create('objclass', utils::ENUM_SANITIZATION_FILTER_CLASS, bIsMandatory: true),
-		RequestParamDTO::Create('objkey', bIsMandatory: true),
-		RequestParamDTO::Create('temp_id', utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID, bIsMandatory: true),
-		RequestParamDTO::Create('edit_mode', utils::ENUM_SANITIZATION_FILTER_INTEGER, oDefaultValue: 0),
-		RequestParamDTO::Create('attachments_deleted', oDefaultValue: []),
+	[$sClass, $sKey, $sTempId, $bEditMode, $aAttachmentsDeleted] = HttpRequest::HandleRequestParam(
+		RequestParamDTO::Post('objclass', utils::ENUM_SANITIZATION_FILTER_CLASS, bIsMandatory: true),
+		RequestParamDTO::Post('objkey', utils::ENUM_SANITIZATION_FILTER_PARAMETER, bIsMandatory: true),
+		RequestParamDTO::Post('temp_id', utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID, bIsMandatory: true),
+		RequestParamDTO::Post('edit_mode', utils::ENUM_SANITIZATION_FILTER_INTEGER, oDefaultValue: 0),
+		RequestParamDTO::Post('attachments_deleted', utils::ENUM_SANITIZATION_FILTER_PARAMETER, oDefaultValue: []),
 	);
 
 	$oObject = MetaModel::GetObject($sClass, $sKey, false);
@@ -133,11 +135,11 @@ try {
 
 	// check if header contains X-Combodo-Ajax for POST request (CSRF protection for ajax calls)
 	// check must be performed after DoLoginEx to be logged in and to be able to check the token (based on the transaction id)
-	AjaxHelper::RejectUnauthorizedAjaxRequest();
+	HttpRequest::CheckAjaxEndpoint();
 
 	// reads request operation
-	[$sOperation] = AjaxHelper::HandleRequestPostedParam(
-		RequestParamDTO::Create('operation', utils::ENUM_SANITIZATION_FILTER_OPERATION, true)
+	[$sOperation] = HttpRequest::HandleRequestParam(
+		RequestParamDTO::Post('operation', utils::ENUM_SANITIZATION_FILTER_OPERATION, true)
 	);
 
 	switch ($sOperation) {
@@ -151,8 +153,11 @@ try {
 			break;
 	}
 
+} catch (SecurityException $e) {
+	HttpResponse::SendTextPlainUnauthorizedResponseAndExit();
+} catch (HttpBadRequestException $e) {
+	HttpResponse::SendTextPlainBadRequestResponseAndExit();
 } catch (Exception $e) {
 	IssueLog::Error($e->getMessage());
-	http_response_code(500);
-	die(Dict::S('UI:PageTitle:FatalError'));
+	HttpResponse::SendTextPlainFatalResponseAndExit();
 }

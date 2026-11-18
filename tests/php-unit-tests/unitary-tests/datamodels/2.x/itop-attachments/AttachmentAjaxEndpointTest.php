@@ -8,6 +8,8 @@ use Combodo\iTop\Attachments\Enum\AttachmentAjaxErrorEnum;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 use UserRequest;
+use UserRights;
+use utils;
 
 class AttachmentAjaxEndpointTest extends ItopDataTestCase
 {
@@ -47,9 +49,17 @@ class AttachmentAjaxEndpointTest extends ItopDataTestCase
 	 */
 	public function testAjaxEndpointAccess(string $sProfile, array $aQueryParams, int $iExpectedHttpCode, mixed $oExpectedResponse = ''): void
 	{
+		$this->RequireOnceItopFile('core/userrights.class.inc.php');
+
+		// create a user with the given profile
 		$sLogin = 'user-'.uniqid();
 		$this->CreateUser($sLogin, self::$aURP_Profiles[$sProfile], self::AUTHENTICATION_PASSWORD);
 
+		// log user to get a valid transaction id for the request (otherwise the request will be rejected by the CSRF protection)
+		UserRights::Login($sLogin);
+		$aQueryParams['transaction_id'] = utils::GetNewTransactionId();
+
+		// call the endpoint with the given parameters and check the response
 		$aResponse = $this->CallAttachmentEndpointAs($sLogin, $aQueryParams);
 
 		if (is_array($oExpectedResponse)) {
@@ -150,8 +160,6 @@ class AttachmentAjaxEndpointTest extends ItopDataTestCase
 				'auth_pwd'  => self::AUTHENTICATION_PASSWORD,
 			]),
 			[
-				CURLOPT_HTTPHEADER => ['X-Combodo-Ajax:1'],
-				CURLOPT_POST       => 0,
 			],
 			true
 		);
