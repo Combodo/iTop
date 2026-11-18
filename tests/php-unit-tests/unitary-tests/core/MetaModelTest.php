@@ -21,25 +21,16 @@ class MetaModelTest extends ItopDataTestCase
 	protected static $sDefaultUserRequestTitle = 'Unit test title';
 	protected static $sDefaultUserRequestDescription = 'Unit test description';
 	protected static $sDefaultUserRequestDescriptionAsHtml = '<p>Unit test description</p>';
-	private bool $bInitialSecurityFlagDisabled = false;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->RequireOnceItopFile('/core/metamodel.class.php');
-
-		// save the initial security flag as it will be modified in some tests and we want to restore it to its initial value at the end of the test
-		$this->bInitialSecurityFlagDisabled = utils::GetConfig()->Get('security.disable_apply_params_auto_sanitization');
-
 	}
 
 	protected function tearDown(): void
 	{
 		$this->InvokeNonPublicStaticMethod('PluginManager', 'ResetPlugins');
-
-		// restore the initial security flag value
-		utils::GetConfig()->Set('security.disable_apply_params_auto_sanitization', $this->bInitialSecurityFlagDisabled);
-
 		parent::tearDown();
 	}
 
@@ -91,7 +82,7 @@ class MetaModelTest extends ItopDataTestCase
 
 		$aParams['this->object()'] = $oUserRequest;
 
-		$sGeneratedOutput = MetaModel::ApplyParams($sInput, $aParams);
+		$sGeneratedOutput = MetaModel::ApplyParams($sInput, $aParams, MetaModel::APPLY_PARAMS_SANITIZE_NONE);
 
 		$this->assertEquals($sExpectedOutput, $sGeneratedOutput, "ApplyParams test returned $sGeneratedOutput");
 	}
@@ -154,7 +145,7 @@ class MetaModelTest extends ItopDataTestCase
 			'Placeholder for an object HTML attribute as HTML' => [
 				'$this->html(description)$',
 				$aParams,
-				'<div class="HTML ibo-is-html-content"><p>Unit test description</p></div>', // As the AttributeText::GetForHTML() called by AttributeDefinition::GetForTemplate() adds this markup, we have to mock it here as well
+				'<div class="HTML ibo-is-html-content" ><p>Unit test description</p></div>', // As the AttributeText::GetForHTML() called by AttributeDefinition::GetForTemplate() adds this markup, we have to mock it here as well
 			],
 		];
 	}
@@ -171,10 +162,8 @@ class MetaModelTest extends ItopDataTestCase
 	 *
 	 * @throws \Exception
 	 */
-	public function testApplyParamsSanitization($sInput, $aParams, $sExpectedOutput, string $sApplySanitizeMode = MetaModel::APPLY_PARAMS_SANITIZE_AUTO, bool $bSecurityFlagDisabled = true)
+	public function testApplyParamsSanitization($sInput, $aParams, $sExpectedOutput, string $sApplySanitizeMode = MetaModel::APPLY_PARAMS_SANITIZE_NONE)
 	{
-		utils::GetConfig()->Set('security.disable_apply_params_auto_sanitization', $bSecurityFlagDisabled);
-
 		$sGeneratedOutput = MetaModel::ApplyParams($sInput, $aParams, $sApplySanitizeMode);
 
 		$this->assertEquals($sExpectedOutput, $sGeneratedOutput, "ApplyParams test returned $sGeneratedOutput");
@@ -187,20 +176,6 @@ class MetaModelTest extends ItopDataTestCase
 		];
 
 		return [
-			'Placeholder with malicious javascript injection (sanitization auto)' => [
-				'<a href="$foo->javascript_injection$">Hyperlink</a>',
-				$aParams,
-				'<a>Hyperlink</a>',
-				'sanitize_auto',
-				false,
-			],
-			'Placeholder with malicious javascript injection (sanitization auto but security flag disabled)' => [
-				'<a href="$foo->javascript_injection$">Hyperlink</a>',
-				$aParams,
-				'<a href="javascript:alert(1)/*https://example.com*/">Hyperlink</a>',
-				'sanitize_auto',
-				true,
-			],
 			'Placeholder with malicious javascript injection (sanitization html)' => [
 				'<a href="$foo->javascript_injection$">Hyperlink</a>',
 				$aParams,
@@ -208,7 +183,7 @@ class MetaModelTest extends ItopDataTestCase
 				'sanitize_html',
 				false,
 			],
-			'Placeholder with malicious javascript injection (sanitization off)' => [
+			'Placeholder with malicious javascript injection (sanitization none)' => [
 				'<a href="$foo->javascript_injection$">Hyperlink</a>',
 				$aParams,
 				'<a href="javascript:alert(1)/*https://example.com*/">Hyperlink</a>',
@@ -568,29 +543,6 @@ class MetaModelTest extends ItopDataTestCase
 		];
 	}
 
-	/**
-	 * @dataProvider StartsWithHtmlDocumentMarkupProvider
-	 */
-	public function testStartsWithHtmlDocumentMarkup(string $sInput, bool $bExpected)
-	{
-		$bTested = $this->InvokeNonPublicStaticMethod('MetaModel', 'StartsWithHtmlDocumentMarkup', [$sInput]);
-		self::assertSame($bExpected, $bTested);
-	}
-
-	public static function StartsWithHtmlDocumentMarkupProvider()
-	{
-		return [
-			"CONTENT_EMPTY" => ['', false],
-			"CONTENT_WITH_DOCTYPE" => ['<!DOCTYPE html><html><head><title>Title</title></head><body>Content</body></html>', true],
-			"CONTENT_WITH_FULL_HTML" => ['<html><head><title>Title</title></head><body>Content</body></html>', true],
-			"CONTENT_WITH_SIMPLE_TAG" => ['<a href="https://www.itop.com">link</a>', true],
-			"CONTENT_WITH_UNKNOWN_TAG" => ['<unknown></unknown>', true],
-			"CONTENT_WITH_UNCLOSED_TAG" => ['<unknown>', true],
-			"CONTENT_WITH_RAW_TEXT" => ['raw text', false],
-			"CONTENT_WITH_LEADING_WHITESPACE" => [" <p>this paragraph</p>", true],
-			"CONTENT_WITH_RAW_TEXTWITH_NESTED_HTML" => ['raw text <p>this paragraph</p>', false],
-		];
-	}
 }
 
 abstract class Wizzard

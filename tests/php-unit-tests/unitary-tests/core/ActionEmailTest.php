@@ -46,12 +46,11 @@ class ActionEmailTest extends ItopDataTestCase
 		$sHtml =
 <<<HTML
 <body>
-	<table>
+	<table data-something-that-would-be-removed-by-the-sanitizer-through-ckeditor-but-that-will-stay-with-the-template="bar">
 		<tr><td>Formatted eMail</td></tr>
 		<tr><td>\$content\$</td></tr>
 </body>
-HTML
-		;
+HTML;
 
 		static::$oActionEmail->DBInsert();
 		static::$oDocument = new \ormDocument($sHtml, 'text/html', 'sample.html');
@@ -180,7 +179,12 @@ HTML
 				['subject' => 'This is a test'],
 				['subject' => 'This is a test'],
 			],
-			'subject-with-placeholder' => [
+			'subject-is-plain-text' => [
+				'EN US',
+				['subject' => 'Ticket <created> & assigned'],
+				['subject' => 'Ticket <created> & assigned'],
+			],
+			'subject-with-placeholder'                                => [
 				'EN US',
 				['subject' => 'Ticket "$this->title$" created'],
 				['subject' => 'Ticket "Test UserRequest" created'],
@@ -260,13 +264,13 @@ HTML
 				['body' => '<p>Ticket "$this->title$" created.</p>', 'html_template' => true],
 				['body' =>
 <<<HTML
-
-	<table>
+<body>
+	<table data-something-that-would-be-removed-by-the-sanitizer-through-ckeditor-but-that-will-stay-with-the-template="bar">
 		<tr><td>Formatted eMail</td></tr>
 		<tr><td><div class="email-is-html-content">
 	<p>Ticket "Test UserRequest" created.</p>
 </div></td></tr>
-</table>
+</body>
 HTML
 				],
 			],

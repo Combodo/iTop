@@ -118,7 +118,6 @@ define('MYSQL_ENGINE', 'innodb');
 abstract class MetaModel
 {
 	/** Constants used for apply param function sanitization parameter */
-	public const APPLY_PARAMS_SANITIZE_AUTO = 'sanitize_auto';
 	public const APPLY_PARAMS_SANITIZE_HTML = 'sanitize_html';
 	public const APPLY_PARAMS_SANITIZE_NONE = 'sanitize_none';
 
@@ -6737,17 +6736,20 @@ abstract class MetaModel
 	 *   * foo->bar : Another static placeholder
 	 *   * foo->object() : Will be developed into a set of placeholders depending on the attribute of the given \DBObject and their corresponding transformation methods {@see \AttributeDefinition::GetForTemplate()}
 	 *                     Example: foo->hyperlink(), foo->name, foo->html(name), foo->head(log), foo->head_html(log), ...
-	 * @param string $sApplySanitizeMode Allowed values are one of {@see self::APPLY_PARAMS_SANITIZE_AUTO}, {@see self::APPLY_PARAMS_SANITIZE_HTML}, {@see self::APPLY_PARAMS_SANITIZE_NONE}. Default is {@see self::APPLY_PARAMS_SANITIZE_AUTO}, which means that the result will be sanitized if it is
-	 *     HTML and if the configuration option security.disable_apply_params_auto_sanitization is not set to true.
+	 * @param string|null $sApplySanitizeMode Allowed values are one of {@see self::APPLY_PARAMS_SANITIZE_HTML}, {@see self::APPLY_PARAMS_SANITIZE_NONE}. Default is null to keep compatibility with previous versions of iTop. @since 3.2.4 N°9436
 	 *
 	 * @link https://www.itophub.io/wiki/page?id=latest:admin:placeholders
 	 * @return string
 	 *
 	 * @throws \Exception
 	 */
-	public static function ApplyParams($sInput, $aParams, string $sApplySanitizeMode = self::APPLY_PARAMS_SANITIZE_AUTO)
+	public static function ApplyParams($sInput, $aParams, string $sApplySanitizeMode = null)
 	{
-		if (in_array($sApplySanitizeMode, [self::APPLY_PARAMS_SANITIZE_AUTO, self::APPLY_PARAMS_SANITIZE_HTML, self::APPLY_PARAMS_SANITIZE_NONE], true) === false) {
+		if ($sApplySanitizeMode === null) {
+			DeprecatedCallsLog::NotifyDeprecatedPhpMethodSignature('Pass an explicit $sApplySanitizeMode parameter.');
+			$sApplySanitizeMode = self::APPLY_PARAMS_SANITIZE_NONE;
+		}
+		if (in_array($sApplySanitizeMode, [self::APPLY_PARAMS_SANITIZE_HTML, self::APPLY_PARAMS_SANITIZE_NONE], true) === false) {
 			throw new CoreException('Invalid value for $sApplySanitizeMode parameter', ['value' => $sApplySanitizeMode]);
 		}
 
@@ -6841,8 +6843,7 @@ abstract class MetaModel
 		$sTemplate = str_replace($aSearches, $aReplacements, $sInput);
 
 		// HTML sanitization
-		if ($sApplySanitizeMode === self::APPLY_PARAMS_SANITIZE_HTML
-			|| ($sApplySanitizeMode === self::APPLY_PARAMS_SANITIZE_AUTO && !utils::GetConfig()->Get('security.disable_apply_params_auto_sanitization') && self::StartsWithHtmlDocumentMarkup($sTemplate))) {
+		if ($sApplySanitizeMode === self::APPLY_PARAMS_SANITIZE_HTML) {
 			$sTemplate = DOMSanitizer::Sanitize($sTemplate);
 		}
 
