@@ -753,7 +753,10 @@ HTML
 				($bEditMode ? $sEditWhen === LINKSET_EDITWHEN_ON_HOST_EDITION : $sEditWhen === LINKSET_EDITWHEN_ON_HOST_DISPLAY);
 
 			$bReadOnly = ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) || !$bIsEditableBasedOnEditWhen;
-			if ($bEditMode && (!$bReadOnly)) {
+			// A large linkset is not loaded entirely in the edition form: it is displayed as in the object details (paginated, with its actions)
+			$iMaxItemsInEditForm = (int)MetaModel::GetConfig()->Get('max_linkset_items_in_edit_form');
+			$bIsTooLargeForEditForm = $bEditMode && ($iMaxItemsInEditForm > 0) && ($iCount > $iMaxItemsInEditForm);
+			if ($bEditMode && (!$bReadOnly) && (!$bIsTooLargeForEditForm)) {
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
 				$sDisplayValue = ''; // not used
 				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField(
