@@ -8,7 +8,6 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use CMDBChangeOpSetAttributeHTML;
-use CMDBObject;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
 use DBObjectSet;
@@ -25,7 +24,6 @@ class CMDBChangeOpSetAttributeHTMLTest extends ItopDataTestCase
 	 */
 	public function testGetDescription_PreviousValueIsWrapped()
 	{
-		CMDBObject::SetTrackInfo('Unit test');
 		$oTicket = $this->CreateUserRequest(1, ['description' => '<div><li>x</li></div>']);
 		$oTicket->Set('description', '<p>y</p>');
 		$oTicket->DBUpdate();
