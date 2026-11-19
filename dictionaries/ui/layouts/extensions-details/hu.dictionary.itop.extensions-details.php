@@ -23,6 +23,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI:Layout:ExtensionsDetails:BadgeToBeUninstalled+' => 'This extension will be uninstalled during the setup.~~',
 	'UI:Layout:ExtensionsDetails:BadgeNotUninstallable' => 'cannot be uninstalled~~',
 	'UI:Layout:ExtensionsDetails:BadgeNotUninstallable+' => 'Once this extension has been installed, it should not be uninstalled.~~',
+	'UI:Layout:ExtensionsDetails:BadgeAlreadyPartOfITop' => 'already part of iTop~~',
+	'UI:Layout:ExtensionsDetails:BadgeAlreadyPartOfITop+' => 'All modules in this extension are already part of the iTop package. To uninstall this extension, you have to delete its folder.~~',
 	'UI:Layout:ExtensionsDetails:BadgeMissingFromDisk' => 'missing from disk~~',
 	'UI:Layout:ExtensionsDetails:BadgeMissingFromDisk+' => 'The local extension folder has been removed from the disk. This will force the uninstallation of this extension.~~',
 	'UI:Layout:ExtensionsDetails:MenuAboutTitle' => 'About %1$s~~',

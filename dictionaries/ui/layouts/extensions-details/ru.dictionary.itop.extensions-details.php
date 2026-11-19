@@ -23,6 +23,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Layout:ExtensionsDetails:BadgeToBeUninstalled+' => 'Это расширение будет удалено в ходе установки.',
 	'UI:Layout:ExtensionsDetails:BadgeNotUninstallable' => 'нельзя удалить',
 	'UI:Layout:ExtensionsDetails:BadgeNotUninstallable+' => 'После установки это расширение не должно удаляться.',
+	'UI:Layout:ExtensionsDetails:BadgeAlreadyPartOfITop' => 'already part of iTop~~',
+	'UI:Layout:ExtensionsDetails:BadgeAlreadyPartOfITop+' => 'All modules in this extension are already part of the iTop package. To uninstall this extension, you have to delete its folder.~~',
 	'UI:Layout:ExtensionsDetails:BadgeMissingFromDisk' => 'отсутствует на диске',
 	'UI:Layout:ExtensionsDetails:BadgeMissingFromDisk+' => 'Локальная папка расширения удалена с диска. Это приведёт к принудительному удалению расширения.',
 	'UI:Layout:ExtensionsDetails:MenuAboutTitle' => 'О расширении %1$s',
