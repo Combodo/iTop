@@ -704,14 +704,14 @@ class ActionEmail extends ActionNotification
 			$aMessageContent['cc'] = $this->FindRecipients('cc', $aContextArgs);
 			$aMessageContent['bcc'] = $this->FindRecipients('bcc', $aContextArgs);
 
-			$aMessageContent['from'] = MetaModel::ApplyParams($this->Get('from'), $aContextArgs);
-			$aMessageContent['from_label'] = MetaModel::ApplyParams($this->Get('from_label'), $aContextArgs);
-			$aMessageContent['reply_to'] = MetaModel::ApplyParams($this->Get('reply_to'), $aContextArgs);
-			$aMessageContent['reply_to_label'] = MetaModel::ApplyParams($this->Get('reply_to_label'), $aContextArgs);
+			$aMessageContent['from'] = MetaModel::ApplyParams($this->Get('from'), $aContextArgs, MetaModel::APPLY_PARAMS_SANITIZE_NONE);
+			$aMessageContent['from_label'] = MetaModel::ApplyParams($this->Get('from_label'), $aContextArgs, MetaModel::APPLY_PARAMS_SANITIZE_NONE);
+			$aMessageContent['reply_to'] = MetaModel::ApplyParams($this->Get('reply_to'), $aContextArgs, MetaModel::APPLY_PARAMS_SANITIZE_NONE);
+			$aMessageContent['reply_to_label'] = MetaModel::ApplyParams($this->Get('reply_to_label'), $aContextArgs, MetaModel::APPLY_PARAMS_SANITIZE_NONE);
 
-			$aMessageContent['subject'] = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
-			$sBody = $this->BuildMessageBody(false);
-			$aMessageContent['body'] = MetaModel::ApplyParams($sBody, $aContextArgs);
+			$aMessageContent['subject'] = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs, MetaModel::APPLY_PARAMS_SANITIZE_NONE);
+			$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs, MetaModel::APPLY_PARAMS_SANITIZE_HTML);
+			$aMessageContent['body'] = $this->BuildMessageBody(false, $sBody);
 
 			$oObj = $aContextArgs['this->object()'];
 			$aMessageContent['message_id'] = $this->GenerateIdentifierForHeaders($oObj, static::ENUM_HEADER_NAME_MESSAGE_ID);
@@ -832,14 +832,16 @@ class ActionEmail extends ActionNotification
 	 * Compose the body of the message from the 'body' attribute and the HTML template (if any)
 	 * @since 3.1.0 N°4849
 	 * @param bool $bHighlightPlaceholders If true add some extra HTML around placeholders to highlight them
+	 * @param string|null $sBody The body of the message to be wrapped in the HTML template (if any). If null, the 'body' attribute will be used. @since 3.2.4 N°9436
 	 * @return string
 	 */
-	protected function BuildMessageBody(bool $bHighlightPlaceholders = false): string
+	protected function BuildMessageBody(bool $bHighlightPlaceholders = false, ?string $sBody = null): string
 	{
+		$sBody = $sBody ?? $this->Get('body');
 		// Wrap content with a specific class in order to apply styles of HTML fields through the emogrifier (see `css/email.scss`)
 		$sBody = <<<HTML
 <div class="email-is-html-content">
-	{$this->Get('body')}
+	{$sBody}
 </div>
 HTML;
 
