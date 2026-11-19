@@ -2413,7 +2413,6 @@ class Config
 
 	/**
 	 * @param $sExpression
-	 *
 	 * @return array|null
 	 */
 	private function ParseExternalAuthVariableExpression($sExpression)
@@ -2524,11 +2523,11 @@ class Config
 	}
 
 	/**
+	 * @since 2.7.11 N°7085
+	 * Add login mode if not configured already
 	 * @param string $sLoginMode
 	 *
 	 * @return void
-	 * @since 2.7.11 N°7085
-	 * Add login mode if not configured already
 	 */
 	public function AddAllowedLoginTypes($sLoginMode)
 	{
