@@ -782,7 +782,9 @@ class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
 				// The attribute was renamed or removed from the object ?
 				$sAttName = $this->Get('attcode');
 			}
-			$sTextView = $this->Get('prevdata');
+			// Displayed inside an <li> of the activity panel: sanitize to balance the tags, and wrap in a <blockquote> so an <li> in
+			// the value (even inside a <div>) doesn't close the enclosing <li> and break the rest of the panel
+			$sTextView = '<blockquote>'.HTMLSanitizer::Sanitize((string) $this->Get('prevdata')).'</blockquote>';
 
 			//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
 			$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sTextView);
