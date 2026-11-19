@@ -272,6 +272,7 @@ class apcFile
 			return;
 		}
 		if (!self::$aFilesByTime) {
+			self::$aFilesByTime = [];
 			self::ListFilesByTime();
 			self::$iFileCount = count(self::$aFilesByTime);
 			if ($iMaxFiles !== 0) {
