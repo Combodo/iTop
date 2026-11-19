@@ -117,6 +117,12 @@ define('MYSQL_ENGINE', 'innodb');
  */
 abstract class MetaModel
 {
+	/** Constants used for apply param function sanitization parameter */
+	/** @since 3.2.4 3.3.1 3.4.0 N°9436 */
+	public const APPLY_PARAMS_SANITIZE_HTML = 'sanitize_html';
+	/** @since 3.2.4 3.3.1 3.4.0 N°9436 */
+	public const APPLY_PARAMS_SANITIZE_NONE = 'sanitize_none';
+
 	///////////////////////////////////////////////////////////////////////////
 	//
 	// STATIC Members
@@ -6732,14 +6738,23 @@ abstract class MetaModel
 	 *   * foo->bar : Another static placeholder
 	 *   * foo->object() : Will be developed into a set of placeholders depending on the attribute of the given \DBObject and their corresponding transformation methods {@see \AttributeDefinition::GetForTemplate()}
 	 *                     Example: foo->hyperlink(), foo->name, foo->html(name), foo->head(log), foo->head_html(log), ...
+	 * @param string|null $sApplySanitizeMode Allowed values are one of {@see self::APPLY_PARAMS_SANITIZE_HTML}, {@see self::APPLY_PARAMS_SANITIZE_NONE}. Default is null to keep compatibility with previous versions of iTop. @since 3.2.4 N°9436
 	 *
 	 * @link https://www.itophub.io/wiki/page?id=latest:admin:placeholders
 	 * @return string
 	 *
 	 * @throws \Exception
 	 */
-	public static function ApplyParams($sInput, $aParams)
+	public static function ApplyParams($sInput, $aParams, string $sApplySanitizeMode = null)
 	{
+		if ($sApplySanitizeMode === null) {
+			DeprecatedCallsLog::NotifyDeprecatedPhpMethodSignature('Pass an explicit $sApplySanitizeMode parameter.');
+			$sApplySanitizeMode = self::APPLY_PARAMS_SANITIZE_NONE;
+		}
+		if (in_array($sApplySanitizeMode, [self::APPLY_PARAMS_SANITIZE_HTML, self::APPLY_PARAMS_SANITIZE_NONE], true) === false) {
+			throw new CoreException('Invalid value for $sApplySanitizeMode parameter', ['value' => $sApplySanitizeMode]);
+		}
+
 		$aParams = static::AddMagicPlaceholders($aParams);
 
 		// Declare magic parameters
@@ -6827,7 +6842,14 @@ abstract class MetaModel
 			}
 		}
 
-		return str_replace($aSearches, $aReplacements, $sInput);
+		$sTemplate = str_replace($aSearches, $aReplacements, $sInput);
+
+		// HTML sanitization
+		if ($sApplySanitizeMode === self::APPLY_PARAMS_SANITIZE_HTML) {
+			$sTemplate = DOMSanitizer::Sanitize($sTemplate);
+		}
+
+		return $sTemplate;
 	}
 
 	/**

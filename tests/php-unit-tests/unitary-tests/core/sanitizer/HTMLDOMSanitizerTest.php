@@ -218,6 +218,54 @@ class HTMLDOMSanitizerTest extends AbstractDOMSanitizerTest
 				'expected' => '<ol start="100" reversed="reversed" type="I"><li value="101">Some list item</li></ol>',
 			],
 
+			'link href url' => [
+				'html' => '<a href="https://www.itop.com">Hyperlink</a>',
+				'expected' => '<a href="https://www.itop.com">Hyperlink</a>',
+			],
+			'link href short url without protocol' => [
+				'html' => '<a href="www.itop.com">Hyperlink</a>',
+				'expected' => '<a>Hyperlink</a>',
+			],
+			'link href javascript injection' => [
+				'html' => '<a href="javascript:alert(1)/*https://example.com*/">Hyperlink</a>',
+				'expected' => '<a>Hyperlink</a>',
+			],
+			'link href with placeholder' => [
+				'html' => '<a href="https://www.itop.com/$this->link$">Hyperlink</a>',
+				'expected' => '<a href="https://www.itop.com/%24this-&gt;link%24">Hyperlink</a>',
+			],
+			'link href with placeholders combinaison' => [
+				'html' => '<a href="https://www.itop.com/$this->link$/$this->ref$">Hyperlink</a>',
+				'expected' => '<a href="https://www.itop.com/%24this-&gt;link%24/%24this-&gt;ref%24">Hyperlink</a>',
+			],
+			'link href with placeholder as base ref' => [
+				'html' => '<a href="$this->link$/$this->ref$">Hyperlink</a>',
+				'expected' => '<a href="%24this-&gt;link%24/%24this-&gt;ref%24">Hyperlink</a>',
+			],
+			'link href with placeholder constant' => [
+				'html' => '<a href="$APPLICATION_URL$">Hyperlink</a>',
+				'expected' => '<a href="%24APPLICATION_URL%24">Hyperlink</a>',
+			],
+			'link href with placeholder mixed' => [
+				'html' => '<a href="$APPLICATION_URL$/$this->link$/$this->ref$">Hyperlink</a>',
+				'expected' => '<a href="%24APPLICATION_URL%24/%24this-&gt;link%24/%24this-&gt;ref%24">Hyperlink</a>',
+			],
+			'link href with javascript injection and placeholder' => [
+				'html' => '<a href="javascript:alert(1)/*$APPLICATION_URL$*">Hyperlink</a>',
+				'expected' => '<a>Hyperlink</a>',
+			],
+			'link href with vbscript injection and placeholder' => [
+				'html' => '<a href="vbscript:alert(1)/*$APPLICATION_URL$*">Hyperlink</a>',
+				'expected' => '<a>Hyperlink</a>',
+			],
+			'link href with data injection and placeholder' => [
+				'html' => '<a href="data:alert(1)/*$APPLICATION_URL$*">Hyperlink</a>',
+				'expected' => '<a>Hyperlink</a>',
+			],
+			'link href with toto injection and placeholder' => [
+				'html' => '<a href="toto:alert(1)/*$APPLICATION_URL$*">Hyperlink</a>',
+				'expected' => '<a>Hyperlink</a>',
+			],
 		];
 	}
 

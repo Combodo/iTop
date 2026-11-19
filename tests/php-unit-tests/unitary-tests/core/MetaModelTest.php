@@ -81,7 +81,7 @@ class MetaModelTest extends ItopDataTestCase
 
 		$aParams['this->object()'] = $oUserRequest;
 
-		$sGeneratedOutput = MetaModel::ApplyParams($sInput, $aParams);
+		$sGeneratedOutput = MetaModel::ApplyParams($sInput, $aParams, MetaModel::APPLY_PARAMS_SANITIZE_NONE);
 
 		$this->assertEquals($sExpectedOutput, $sGeneratedOutput, "ApplyParams test returned $sGeneratedOutput");
 	}
@@ -145,6 +145,49 @@ class MetaModelTest extends ItopDataTestCase
 				'$this->html(description)$',
 				$aParams,
 				'<div class="HTML ibo-is-html-content" ><p>Unit test description</p></div>', // As the AttributeText::GetForHTML() called by AttributeDefinition::GetForTemplate() adds this markup, we have to mock it here as well
+			],
+		];
+	}
+
+	/**
+	 * @group itopRequestMgmt
+	 * @covers       MetaModel::ApplyParams()
+	 * @dataProvider ApplyParamsSanitizationProvider
+	 *
+	 * @param string $sInput
+	 * @param array $aParams
+	 * @param string $sExpectedOutput
+	 * @param string $sApplySanitizeMode
+	 *
+	 * @throws \Exception
+	 */
+	public function testApplyParamsSanitization($sInput, $aParams, $sExpectedOutput, string $sApplySanitizeMode = MetaModel::APPLY_PARAMS_SANITIZE_NONE)
+	{
+		$sGeneratedOutput = MetaModel::ApplyParams($sInput, $aParams, $sApplySanitizeMode);
+
+		$this->assertEquals($sExpectedOutput, $sGeneratedOutput, "ApplyParams test returned $sGeneratedOutput");
+	}
+
+	public function ApplyParamsSanitizationProvider()
+	{
+		$aParams = [
+			'foo->javascript_injection' => 'javascript:alert(1)/*https://example.com*/',
+		];
+
+		return [
+			'Placeholder with malicious javascript injection (sanitization html)' => [
+				'<a href="$foo->javascript_injection$">Hyperlink</a>',
+				$aParams,
+				'<a>Hyperlink</a>',
+				'sanitize_html',
+				false,
+			],
+			'Placeholder with malicious javascript injection (sanitization none)' => [
+				'<a href="$foo->javascript_injection$">Hyperlink</a>',
+				$aParams,
+				'<a href="javascript:alert(1)/*https://example.com*/">Hyperlink</a>',
+				'sanitize_none',
+				false,
 			],
 		];
 	}

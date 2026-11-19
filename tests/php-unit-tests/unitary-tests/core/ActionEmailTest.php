@@ -50,8 +50,7 @@ class ActionEmailTest extends ItopDataTestCase
 		<tr><td>Formatted eMail</td></tr>
 		<tr><td>\$content\$</td></tr>
 </body>
-HTML
-		;
+HTML;
 
 		static::$oActionEmail->DBInsert();
 		static::$oDocument = new \ormDocument($sHtml, 'text/html', 'sample.html');
@@ -180,7 +179,12 @@ HTML
 				['subject' => 'This is a test'],
 				['subject' => 'This is a test'],
 			],
-			'subject-with-placeholder' => [
+			'subject-is-plain-text' => [
+				'EN US',
+				['subject' => 'Ticket <created> & assigned'],
+				['subject' => 'Ticket <created> & assigned'],
+			],
+			'subject-with-placeholder'                                => [
 				'EN US',
 				['subject' => 'Ticket "$this->title$" created'],
 				['subject' => 'Ticket "Test UserRequest" created'],

@@ -320,9 +320,9 @@
 		$bIsAsync = $this->IsAsynchronous();
 		[$sPreviousLanguage, $aPreviousPluginProperties] = $this->SetNotificationLanguage();
 
-		$sMessage = MetaModel::ApplyParams($this->Get('message'), $aContextArgs);
-		$sTitle = MetaModel::ApplyParams($this->Get('title'), $aContextArgs);
-		$sUrl = MetaModel::ApplyParams($this->Get('url'), $aContextArgs);
+		$sMessage = MetaModel::ApplyParams($this->Get('message'), $aContextArgs, MetaModel::APPLY_PARAMS_SANITIZE_NONE);
+		$sTitle = MetaModel::ApplyParams($this->Get('title'), $aContextArgs, MetaModel::APPLY_PARAMS_SANITIZE_NONE);
+		$sUrl = MetaModel::ApplyParams($this->Get('url'), $aContextArgs, MetaModel::APPLY_PARAMS_SANITIZE_NONE);
     $iObjectId = 0;
     $sObjectClass = null;
 		if (array_key_exists('this->object()', $aContextArgs)) {
