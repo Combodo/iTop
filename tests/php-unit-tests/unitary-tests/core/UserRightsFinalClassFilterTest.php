@@ -488,6 +488,84 @@ class UserRightsFinalClassFilterTest extends ItopDataTestCase
 		$this->AssertVisibleClasses($oSearch, ['Server', 'NetworkDevice']);
 	}
 
+	/**
+	 * @dataProvider ParameterizedAliasProvider
+	 * @since 3.2.4
+	 */
+	public function testParameterizedAliasFilter(array $aSourceParams, bool $bReferencedBy): void
+	{
+		$iManagerOrg = (int) $this->GivenObjectInDB('Organization', ['name' => 'Manager organization']);
+		$iManager = (int) $this->GivenObjectInDB('Person', ['name' => 'Manager', 'first_name' => 'Test', 'org_id' => $iManagerOrg]);
+		$iPerson = (int) $this->GivenObjectInDB('Person', ['name' => 'Employee', 'first_name' => 'Test', 'manager_id' => $iManager, 'org_id' => $iManagerOrg]);
+		$iOtherManager = (int) $this->GivenObjectInDB('Person', ['name' => 'Other manager', 'first_name' => 'Test']);
+		$iOtherPerson = (int) $this->GivenObjectInDB('Person', ['name' => 'Other employee', 'first_name' => 'Test', 'manager_id' => $iOtherManager]);
+		$oSearch = DBObjectSearch::FromOQL($bReferencedBy
+			? 'SELECT M FROM Person AS M JOIN Person AS P ON P.manager_id = M.id'
+			: 'SELECT P FROM Person AS P JOIN Person AS M ON P.manager_id = M.id');
+		$oSearch->AddCondition('id', $bReferencedBy ? [$iManager, $iOtherManager] : [$iPerson, $iOtherPerson], 'IN');
+		foreach ($aSourceParams as $sParam => $iValue) {
+			$oSearch->AddInternalParam($sParam, $iValue);
+			$oSearch->AddConditionExpression(new \BinaryExpression(new \ScalarExpression($iValue), '=', new \VariableExpression($sParam)));
+		}
+		$oFilter = new DBObjectSearch('Contact');
+		$oFilter->AddCondition('org_id', $iManagerOrg, '=');
+		$aOriginalFilterParams = $oFilter->GetInternalParams();
+		$oResult = $oSearch->Filter($bReferencedBy ? 'P' : 'M', $oFilter);
+		$oSet = new DBObjectSet($oResult);
+		$this->assertSame([$bReferencedBy ? $iManager : $iPerson], array_map('intval', array_keys($oSet->GetColumnAsArray('id'))));
+		foreach ($aSourceParams as $sParam => $iValue) {
+			$this->assertSame($iValue, $oResult->GetInternalParams()[$sParam]);
+		}
+		$this->assertSame($aSourceParams, $oSearch->GetInternalParams());
+		$this->assertSame($aOriginalFilterParams, $oFilter->GetInternalParams());
+	}
+
+	/** @since 3.2.4 */
+	public function ParameterizedAliasProvider(): array
+	{
+		return [
+			'pointing to, no source parameter' => [[], false],
+			'pointing to, conflicting source parameter' => [['org_id' => -1], false],
+			'pointing to, generated parameter name already used' => [['org_id' => -1, 'org_id1' => -2], false],
+			'referenced by, no source parameter' => [[], true],
+			'referenced by, conflicting source parameter' => [['org_id' => -1], true],
+			'referenced by, generated parameter name already used' => [['org_id' => -1, 'org_id1' => -2], true],
+		];
+	}
+
+	/**
+	 * @dataProvider RenamedUnionAliasProvider
+	 * @since 3.2.4
+	 */
+	public function testFilteringRenamedUnionAlias(bool $bNamespaceRename, bool $bSelectManager): void
+	{
+		$iManager = (int) $this->GivenObjectInDB('Person', ['name' => 'Union manager', 'first_name' => 'Test']);
+		$iPerson = (int) $this->GivenObjectInDB('Person', ['name' => 'Union employee', 'first_name' => 'Test', 'manager_id' => $iManager]);
+		$sAlias = $bSelectManager ? 'M' : 'P';
+		$sBranchAlias = $sAlias.'2';
+		$iExpectedId = $bSelectManager ? $iManager : $iPerson;
+		$oSearch = \DBSearch::FromOQL("SELECT $sAlias FROM Person AS P JOIN Person AS M ON P.manager_id = M.id UNION SELECT $sBranchAlias FROM Person AS P2 JOIN Person AS M2 ON P2.manager_id = M2.id");
+		if ($bNamespaceRename) {
+			$oSearch->RenameAliasesInNameSpace([$sBranchAlias => 'Person']);
+		} else {
+			$oSearch->RenameAlias($sBranchAlias, 'RenamedPerson');
+		}
+		$oFilter = new DBObjectSearch('Contact');
+		$oFilter->AddCondition('id', $iExpectedId, '=');
+		$oSet = new DBObjectSet($oSearch->Filter($sAlias, $oFilter));
+		$this->assertSame([$iExpectedId], array_map('intval', array_keys($oSet->GetColumnAsArray('id'))));
+	}
+
+	/** @since 3.2.4 */
+	public function RenamedUnionAliasProvider(): array
+	{
+		return [
+			'explicit rename, first joined alias selected' => [false, false],
+			'namespace collision rename, first joined alias selected' => [true, false],
+			'explicit rename, second joined alias selected' => [false, true],
+		];
+	}
+
 	/** @since 3.2.4 */
 	private function AssertVisibleClasses(\DBSearch $oSearch, array $aExpectedClasses): void
 	{

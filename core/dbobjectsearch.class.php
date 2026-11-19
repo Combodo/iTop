@@ -301,6 +301,7 @@ class DBObjectSearch extends DBSearch
 	 * Move conditions from $oFilter to $this
 	 * @param \DBSearch $oFilter
 	 * @param $aTranslation
+	 * @since 3.2.4 Avoid parameter names already used by either search.
 	 */
 	protected function TransferConditionExpression($oFilter, $aTranslation)
 	{
@@ -309,7 +310,7 @@ class DBObjectSearch extends DBSearch
 			if (array_key_exists($sParam, $oFilter->m_aParams) && ($value != $oFilter->m_aParams[$sParam])) {
 				// Generate a new and unique name for the collinding parameter
 				$index = 1;
-				while (array_key_exists($sParam.$index, $oFilter->m_aParams)) {
+				while (array_key_exists($sParam.$index, $oFilter->m_aParams) || array_key_exists($sParam.$index, $this->m_aParams)) {
 					$index++;
 				}
 				$secondValue = $oFilter->m_aParams[$sParam];
@@ -1010,12 +1011,10 @@ class DBObjectSearch extends DBSearch
 		foreach ($aFilters as $oRightFilter) {
 			/** @var \DBObjectSearch $oFilteredSearch */
 			$oFilteredSearch = $this->DeepClone();
-			$oFilterExpression = self::FilterSubClass($oFilteredSearch, $sClassAlias, $oRightFilter, $this->m_aClasses);
-			if ($oFilterExpression === false) {
+			if (self::FilterSubClass($oFilteredSearch, $sClassAlias, $oRightFilter, $this->m_aClasses) === false) {
 				throw new CoreException("Limitation: cannot filter search");
 			}
 
-			$oFilteredSearch->AddConditionExpression($oFilterExpression);
 			$aSearches[] = $oFilteredSearch;
 		}
 
@@ -1038,25 +1037,25 @@ class DBObjectSearch extends DBSearch
 	 * @param string $sClassAlias class to filter
 	 * @param \DBSearch $oFilter Filter to apply
 	 *
-	 * @return \Expression|false
+	 * @return bool Whether the requested alias was found and filtered.
 	 * @throws \CoreException
+	 * @since 3.2.4 Transfer criteria and their parameter bindings together to the root search.
 	 */
 	private static function FilterSubClass(DBObjectSearch &$oSearch, $sClassAlias, DBSearch $oFilter, $aRootClasses)
 	{
 		if (($oSearch->GetFirstJoinedClassAlias() == $sClassAlias)) {
 			$oSearch = $oSearch->IntersectSubClass($oFilter, $aRootClasses);
-			return $oSearch->GetCriteria();
+			return true;
 		}
 
-		/** @var Expression $oFilterExpression */
 		// Search in the filter tree where is the correct DBSearch
 		foreach ($oSearch->m_aPointingTo as $sExtKey => $aPointingTo) {
 			foreach ($aPointingTo as $iOperatorCode => $aFilters) {
 				foreach ($aFilters as $index => $oExtFilter) {
-					$oFilterExpression = self::FilterSubClass($oExtFilter, $sClassAlias, $oFilter, $aRootClasses);
-					if ($oFilterExpression !== false) {
+					if (self::FilterSubClass($oExtFilter, $sClassAlias, $oFilter, $aRootClasses)) {
+						$oSearch->TransferConditionExpression($oExtFilter, []);
 						$oSearch->m_aPointingTo[$sExtKey][$iOperatorCode][$index] = $oExtFilter;
-						return $oFilterExpression;
+						return true;
 					}
 				}
 			}
@@ -1066,10 +1065,10 @@ class DBObjectSearch extends DBSearch
 			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
 				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters) {
 					foreach ($aFilters as $index => $oForeignFilter) {
-						$oFilterExpression = self::FilterSubClass($oForeignFilter, $sClassAlias, $oFilter, $aRootClasses);
-						if ($oFilterExpression !== false) {
+						if (self::FilterSubClass($oForeignFilter, $sClassAlias, $oFilter, $aRootClasses)) {
+							$oSearch->TransferConditionExpression($oForeignFilter, []);
 							$oSearch->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode][$index] = $oForeignFilter;
-							return $oFilterExpression;
+							return true;
 						}
 					}
 				}
