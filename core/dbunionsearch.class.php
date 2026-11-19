@@ -397,12 +397,18 @@ class DBUnionSearch extends DBSearch
 		}
 	}
 
+	/**
+	 * @inheritDoc
+	 * @since 3.2.4 Map selected aliases to their current alias in each union branch, including after renaming.
+	 */
 	public function Filter($sClassAlias, DBSearch $oFilter)
 	{
 		$aSearches = [];
+		$iColumn = array_search($sClassAlias, array_keys($this->aSelectedClasses), true);
 		foreach ($this->aSearches as $oSearch) {
 			if (!$oSearch->IsAllDataAllowed()) {
-				$aSearches[] = $oSearch->Filter($sClassAlias, $oFilter);
+				$sQueryAlias = ($iColumn === false) ? $sClassAlias : array_keys($oSearch->GetSelectedClasses())[$iColumn];
+				$aSearches[] = $oSearch->Filter($sQueryAlias, $oFilter);
 			} else {
 				$aSearches[] = $oSearch;
 			}
