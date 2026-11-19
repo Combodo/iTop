@@ -1116,6 +1116,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		],
+		'max_linkset_items_in_edit_form' => [
+			'type' => 'integer',
+			'description' => 'Maximum number of items of a linkset (1:n or n:n) edited directly in the modification form of the host object. Above this number, the linkset is displayed as in the object details (paginated, with its actions) instead of being entirely loaded in the form. 0 means no limit.',
+			'default' => 500,
+			'value' => 500,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'demo_mode' => [
 			'type' => 'bool',
 			'description' => 'Set to true to prevent users from changing passwords/languages',
