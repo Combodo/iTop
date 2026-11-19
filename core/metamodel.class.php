@@ -6714,7 +6714,7 @@ abstract class MetaModel
 	 *
 	 * @throws \Exception
 	 */
-	public static function ApplyParams($sInput, $aParams, string $sApplySanitizeMode = null)
+	public static function ApplyParams($sInput, $aParams, ?string $sApplySanitizeMode = null)
 	{
 		if ($sApplySanitizeMode === null) {
 			DeprecatedCallsLog::NotifyDeprecatedPhpMethodSignature('Pass an explicit $sApplySanitizeMode parameter.');
