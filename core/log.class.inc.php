@@ -1304,6 +1304,40 @@ class DeprecatedCallsLog extends LogAPI
 	}
 
 	/**
+	 * Call this helper when a method receives arguments matching a deprecated signature.
+	 * The method itself remains supported.
+	 *
+	 * @param string|null $sAdditionalMessage Explain which arguments should be passed instead
+	 *
+	 * @since 3.2.4 3.3.1 3.4.0 N°9436
+	 */
+	public static function NotifyDeprecatedPhpMethodSignature(?string $sAdditionalMessage = null): void
+	{
+		try {
+			if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_METHOD)) {
+				return;
+			}
+		} catch (ConfigException $oException) {
+			// Deprecation reporting must not interrupt the caller when logging is misconfigured.
+			return;
+		}
+
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+		$sFunctionDesc = isset($aStack[1]['class'])
+			? $aStack[1]['class'].$aStack[1]['type'].$aStack[1]['function']
+			: $aStack[1]['function'];
+
+		$sMessage = "Calling $sFunctionDesc() with this signature is deprecated";
+		if ($sAdditionalMessage !== null) {
+			$sMessage .= ': '.$sAdditionalMessage;
+		}
+		$sMessage .= '. Caller: '.self::SummarizeCallStack(array_slice($aStack, 1));
+
+		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_METHOD);
+		static::ForwardToTriggerError($sMessage);
+	}
+
+	/**
 	 * Call this helper within deprecated methods
 	 *
 	 * @param string|null $sAdditionalMessage

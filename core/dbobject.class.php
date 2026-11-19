@@ -5615,7 +5615,7 @@ abstract class DBObject implements iDisplay
 				$aContext['current_contact_friendlyname'] = UserRights::GetUserFriendlyName();
 				$aContext['current_date'] = date(AttributeDate::GetSQLFormat());
 				$aContext['current_time'] = date(AttributeDateTime::GetSQLTimeFormat());
-				$sValue = MetaModel::ApplyParams($sRawValue, $aContext);
+				$sValue = MetaModel::ApplyParams($sRawValue, $aContext, MetaModel::APPLY_PARAMS_SANITIZE_NONE);
 				$this->Set($sAttCode, $sValue);
 				break;
 
@@ -5639,7 +5639,7 @@ abstract class DBObject implements iDisplay
 				$aContext['current_contact_friendlyname'] = UserRights::GetUserFriendlyName();
 				$aContext['current_date'] = date(AttributeDate::GetSQLFormat());
 				$aContext['current_time'] = date(AttributeDateTime::GetSQLTimeFormat());
-				$sAddendum = MetaModel::ApplyParams($sRawAddendum, $aContext);
+				$sAddendum = MetaModel::ApplyParams($sRawAddendum, $aContext, MetaModel::APPLY_PARAMS_SANITIZE_NONE);
 				$this->Set($sAttCode, $this->Get($sAttCode).$sAddendum);
 				break;
 
