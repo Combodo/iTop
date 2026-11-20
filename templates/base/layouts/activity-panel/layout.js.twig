@@ -8,4 +8,5 @@ $('#{{ oUIBlock.GetId() }}').activity_panel({
     save_state_endpoint: {{ oUIBlock.GetSaveStateEndpoint()|var_export|raw }},
     last_loaded_entries_ids: {{ oUIBlock.GetLastEntryIds()|json_encode|raw }},
     load_more_entries_endpoint: {{ oUIBlock.GetLoadMoreEntriesEndpoint()|var_export|raw }},
+    resizer_width_label: {{ 'UI:Layout:ActivityPanel:Resizer:Width'|dict_s|json_encode|raw }},
 });

@@ -11,12 +11,18 @@
  *
  */
 Dict::Add('EN GB', 'British English', 'British English', [
+	'UI:Layout:ActivityPanel:Resizer:Label' => 'Resize the log and activity panel',
+	'UI:Layout:ActivityPanel:Resizer:Tooltip' => 'Drag to resize. Double-click to open or close.',
+	'UI:Layout:ActivityPanel:Resizer:Width' => '%1$s pixels wide',
+	'UI:Layout:ActivityPanel:Resizer:Reset:Tooltip' => 'Reset activity panel width',
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduce',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Close',
 	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Load more entries',
 	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Load all previous entries',
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activity',
+	'UI:Layout:ActivityPanel:Tab:Log:public_log:CompactTitle' => 'Public',
+	'UI:Layout:ActivityPanel:Tab:Log:private_log:CompactTitle' => 'Private',
 	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Draft entry',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Show / hide log entries on this tab',

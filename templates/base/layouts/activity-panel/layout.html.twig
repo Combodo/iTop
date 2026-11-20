@@ -1,12 +1,52 @@
 <div id="{{ oUIBlock.GetId() }}"
-     class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsExpanded() %}ibo-is-expanded{% endif %} {% if oUIBlock.IsClosed() %}ibo-is-closed{% endif %}"
+     class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-is-resizer-initializing {% if oUIBlock.IsExpanded() %}ibo-is-expanded{% endif %} {% if oUIBlock.IsClosed() %}ibo-is-closed{% endif %}"
      data-role="ibo-activity-panel"
      data-object-class="{{ oUIBlock.GetObjectClass() }}"
      data-object-id="{{ oUIBlock.GetObjectId() }}"
      data-object-mode="{{ oUIBlock.GetObjectMode() }}">
+    <script>
+        (function (oPanel) {
+            const bPreferredClosed = oPanel.classList.contains('ibo-is-closed');
+            oPanel.dataset.preferredClosed = String(bPreferredClosed);
+            if (window.innerWidth <= 900) {
+                oPanel.classList.add('ibo-is-closed');
+                return;
+            }
+            if (bPreferredClosed) {
+                return;
+            }
+
+            try {
+                const sModeKey = 'itop.activityPanelWidth.' + (oPanel.classList.contains('ibo-is-expanded') ? 'expanded' : 'reduced');
+                const sStoredWidth = window.localStorage.getItem(sModeKey) ?? window.localStorage.getItem('itop.activityPanelWidth');
+                const iStoredWidth = Number.parseInt(sStoredWidth, 10);
+                if (!Number.isFinite(iStoredWidth)) {
+                    return;
+                }
+
+                const oCenterContainer = oPanel.closest('#ibo-center-container');
+                const iAvailableWidth = oCenterContainer ? oCenterContainer.getBoundingClientRect().width : window.innerWidth;
+                const iMaxWidth = Math.max(32, Math.floor(iAvailableWidth - 320));
+                const iWidth = Math.min(iMaxWidth, Math.max(Math.min(360, iMaxWidth), iStoredWidth));
+                oPanel.style.setProperty('--ibo-activity-panel--custom-width', iWidth+'px');
+                oPanel.classList.add('ibo-has-custom-width');
+            } catch (oError) {
+                // The widget will use the fixed preset when local storage is unavailable.
+            }
+        })(document.currentScript.parentElement);
+    </script>
+    <button type="button" hidden
+            class="ibo-activity-panel--resizer"
+            data-role="ibo-activity-panel--resizer"
+            role="separator"
+            aria-label="{{ 'UI:Layout:ActivityPanel:Resizer:Label'|dict_s }}"
+            aria-orientation="vertical"
+            aria-controls="{{ oUIBlock.GetId() }}--content"
+            aria-keyshortcuts="Control+Shift+B Meta+Shift+B"
+            title="{{ 'UI:Layout:ActivityPanel:Resizer:Tooltip'|dict_s }}"></button>
     <div class="ibo-activity-panel--header" data-role="ibo-activity-panel--header">
         <div class="ibo-activity-panel--togglers" data-role="ibo-activity-panel--togglers">
-            <div class="ibo-activity-panel--tabs-togglers" data-role="ibo-activity-panel--tabs-togglers">
+            <div class="ibo-activity-panel--tabs-togglers" data-role="ibo-activity-panel--tabs-togglers" role="tablist" aria-label="{{ 'UI:Layout:ActivityPanel:ClosedCover:Title'|dict_s }}">
             {% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
                 {% set sExtraCSSClass = (loop.index == 1) ? 'ibo-is-active' : '' %}
                 <div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-caselog ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }} {{ sExtraCSSClass }}"
@@ -15,9 +55,9 @@
                      data-caselog-attribute-code="{{ sCaseLogAttCode }}"
                      data-caselog-attribute-label="{{ aCaseLogData.title }}"
                      data-caselog-rank="{{ loop.index }}">
-                    <a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
-                        <span class="ibo-activity-panel--tab-title-decoration" data-role="ibo-activity-panel--tab-title-decoration"></span>
-                        <span class="ibo-activity-panel--tab-title-text" data-role="ibo-activity-panel--tab-title-text" title="{{ aCaseLogData.title }}">{{ aCaseLogData.title }}</span>
+                    <a href="#" id="{{ oUIBlock.GetId() }}--tab-{{ sCaseLogAttCode }}" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title" role="tab" aria-controls="{{ oUIBlock.GetId() }}--content" aria-selected="{{ loop.first ? 'true' : 'false' }}" tabindex="{{ loop.first ? '0' : '-1' }}" title="{{ aCaseLogData.title }}" aria-label="{{ aCaseLogData.title }}">
+                        <span class="ibo-activity-panel--tab-title-decoration" data-role="ibo-activity-panel--tab-title-decoration" aria-hidden="true"></span>
+                        <span class="ibo-activity-panel--tab-title-text" data-role="ibo-activity-panel--tab-title-text" title="{{ aCaseLogData.title }}" data-compact-label="{{ ('UI:Layout:ActivityPanel:Tab:Log:' ~ sCaseLogAttCode ~ ':CompactTitle')|dict_s(aCaseLogData.title) }}">{{ aCaseLogData.title }}</span>
                         <span class="ibo-activity-panel--tab-title-messages-count" data-role="ibo-activity-panel--tab-title-messages-count" data-messages-count="{{ aCaseLogData.total_messages_count }}">{{ aCaseLogData.total_messages_count }}</span>
                         <span class="ibo-activity-panel--tab-title-draft-indicator"
                               data-role="ibo-activity-panel--tab-title-draft-indicator"
@@ -31,30 +71,40 @@
             <div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-activity {{ sExtraCSSClass }}"
                  data-role="ibo-activity-panel--tab-toggler"
                  data-tab-type="activity">
-                <a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
+                <a href="#" id="{{ oUIBlock.GetId() }}--tab-activity" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title" role="tab" aria-controls="{{ oUIBlock.GetId() }}--content" aria-selected="{{ oUIBlock.GetCaseLogTabs() is empty ? 'true' : 'false' }}" tabindex="{{ oUIBlock.GetCaseLogTabs() is empty ? '0' : '-1' }}" title="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}" aria-label="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}">
+                    <span class="fas fa-history ibo-activity-panel--tab-title-icon" aria-hidden="true"></span>
                     <span class="ibo-activity-panel--tab-title-text" title="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}">{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}</span>
                 </a>
             </div>
         </div>
             <div class="ibo-activity-panel--actions" data-role="ibo-activity-panel--actions">
-                <a href="#" class="ibo-activity-panel--expand-icon"
+                <button type="button" class="ibo-activity-panel--reset-width" hidden
+                   data-role="ibo-activity-panel--reset-width"
+                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Resizer:Reset:Tooltip'|dict_s }}"
+                   aria-label="{{ 'UI:Layout:ActivityPanel:Resizer:Reset:Tooltip'|dict_s }}">
+                    <span class="fas fa-fw fa-undo" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="ibo-activity-panel--expand-icon"
                    data-role="ibo-activity-panel--expand-icon"
                    data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip'|dict_s }}"
                    aria-label="{{ 'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip'|dict_s }}">
-                    <span class="fas fa-fw fa-expand-alt"></span>
-                </a>
-                <a href="#" class="ibo-activity-panel--reduce-icon"
+                    <span class="fas fa-fw fa-expand-alt" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="ibo-activity-panel--reduce-icon"
                    data-role="ibo-activity-panel--reduce-icon"
                    data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip'|dict_s }}"
                    aria-label="{{ 'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip'|dict_s }}">
-                    <span class="fas fa-fw fa-compress-alt"></span>
-                </a>
-                <a href="#" class="ibo-activity-panel--close-icon"
+                    <span class="fas fa-fw fa-compress-alt" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="ibo-activity-panel--close-icon"
                    data-role="ibo-activity-panel--close-icon"
+                   aria-controls="{{ oUIBlock.GetId() }}--content"
+                   aria-expanded="{{ oUIBlock.IsClosed() ? 'false' : 'true' }}"
+                   aria-keyshortcuts="Control+Shift+B Meta+Shift+B"
                    data-tooltip-content="{{ 'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip'|dict_s }}"
                    aria-label="{{ 'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip'|dict_s }}">
-                    <span class="fas fa-fw fa-chevron-right"></span>
-                </a>
+                    <span class="fas fa-fw fa-chevron-right" aria-hidden="true"></span>
+                </button>
             </div>
         </div>
         <div class="ibo-activity-panel--tabs-toolbars" data-role="ibo-activity-panel--tabs-toolbars">
@@ -91,7 +141,7 @@
             {{ render_block(oUIBlock.GetComposeMenu()) }}
         {% endif %}
     {% endif %}
-    <div class="ibo-activity-panel--body" data-role="ibo-activity-panel--body">
+    <div id="{{ oUIBlock.GetId() }}--content" class="ibo-activity-panel--body" data-role="ibo-activity-panel--body" role="tabpanel" tabindex="0" aria-labelledby="{{ oUIBlock.GetId() }}--tab-{{ oUIBlock.GetCaseLogTabs() is empty ? 'activity' : (oUIBlock.GetCaseLogTabs()|keys|first) }}">
         {% if oUIBlock.GetGroupedEntries()|length > 0 %}
             {% for aEntryGroup in oUIBlock.GetGroupedEntries() %}
                 {{ include('base/layouts/activity-panel/entry-group.html.twig', {aEntryGroup: aEntryGroup}) }}
@@ -117,12 +167,12 @@
             </div>
         {% endif %}
     </div>
-    <div class="ibo-activity-panel--closed-cover" data-role="ibo-activity-panel--closed-cover" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:ClosedCover:Tooltip'|dict_s }}" data-tooltip-placement="left">
+    <button type="button" class="ibo-activity-panel--closed-cover" data-role="ibo-activity-panel--closed-cover" aria-label="{{ 'UI:Layout:ActivityPanel:ClosedCover:Tooltip'|dict_s }}" aria-controls="{{ oUIBlock.GetId() }}--content" aria-expanded="{{ oUIBlock.IsClosed() ? 'false' : 'true' }}" aria-keyshortcuts="Control+Shift+B Meta+Shift+B" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:ClosedCover:Tooltip'|dict_s }}" data-tooltip-placement="left">
         <span class="ibo-activity-panel--closed-content-container" data-role="ibo-activity-panel--closed-content-container">
             <span class="ibo-activity-panel--closed-title" data-role="ibo-activity-panel--closed-title">{{ 'UI:Layout:ActivityPanel:ClosedCover:Title'|dict_s }}</span>
-            <span class="ibo-activity-panel--open-icon" data-role="ibo-activity-panel--open-icon">
+            <span class="ibo-activity-panel--open-icon" data-role="ibo-activity-panel--open-icon" aria-hidden="true">
                 <span class="fas fa-fw fa-chevron-up"></span>
             </span>
         </span>
-    </div>
+    </button>
 </div>
