@@ -227,7 +227,6 @@ EOF
 								url : '{$sEndpoint}',
 								prepare: function(query, settings){
 									settings.type = "POST";
-									settings.contentType = "application/json; charset=UTF-8";
 									settings.data = {
 											sQuery: query,
 											sFormPath: '{$this->oField->GetFormPath()}',
