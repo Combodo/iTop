@@ -73,7 +73,7 @@ class CaseLogEditionService
 	 * @return bool
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
-	 * @since 3.3.0 N°1365 - Check whether a CaseLog entry can be edited
+	 * @since 3.3.0 N°1365 - Apply the configured CaseLog edit window in minutes
 	 */
 	public function CanEditEntry(DBObject $oObject, string $sAttCode, int $iEntryIndex): bool
 	{
@@ -133,13 +133,13 @@ class CaseLogEditionService
 			return false;
 		}
 
-		$iModificationDelayHours = (int)$oConfig->Get('caselog_edition.modification_delay');
-		if ($iModificationDelayHours < 0) {
+		$iModificationDelayMinutes = (int)$oConfig->Get('caselog_edition.modification_delay');
+		if ($iModificationDelayMinutes < 0) {
 			return false;
 		}
-		if ($iModificationDelayHours > 0) {
+		if ($iModificationDelayMinutes > 0) {
 			$iEntryTimestamp = strtotime($aEntry['date']);
-			if (($iEntryTimestamp === false) || ((time() - $iEntryTimestamp) > ($iModificationDelayHours * 3600))) {
+			if (($iEntryTimestamp === false) || ((time() - $iEntryTimestamp) > ($iModificationDelayMinutes * 60))) {
 				return false;
 			}
 		}

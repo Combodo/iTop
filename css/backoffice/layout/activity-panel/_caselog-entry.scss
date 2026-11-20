@@ -134,13 +134,9 @@ $ibo-caselog-entry--edition-error--text-color: $ibo-color-red-600 !default;
 }
 .ibo-rich-text-diff--version--previous{
 	border-left: 3px solid $ibo-color-red-600;
-	background-color: $ibo-color-red-100;
-	color: $ibo-color-red-800;
 }
 .ibo-rich-text-diff--version--new{
 	border-left: 3px solid $ibo-color-green-600;
-	background-color: $ibo-color-green-100;
-	color: $ibo-color-green-800;
 }
 .ibo-rich-text-diff--version-title{
 	margin-bottom: $ibo-spacing-100;

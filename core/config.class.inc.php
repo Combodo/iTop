@@ -1594,7 +1594,7 @@ class Config
 		],
 		'caselog_edition.modification_delay' => [
 			'type' => 'integer',
-			'description' => 'Maximum age in hours of a CaseLog entry that can be edited. A value of 0, an empty value, or an unset value allows editing indefinitely.',
+			'description' => 'Maximum age in minutes of a CaseLog entry that can be edited. A value of 0, an empty value, or an unset value allows editing indefinitely.',
 			'default' => 0,
 			'value' => 0,
 			'source_of_value' => '',

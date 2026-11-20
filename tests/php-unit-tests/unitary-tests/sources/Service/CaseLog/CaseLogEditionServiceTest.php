@@ -124,7 +124,7 @@ class CaseLogEditionServiceTest extends ItopDataTestCase
 
 	/**
 	 * @covers \Combodo\iTop\Service\CaseLog\CaseLogEditionService::CanEditEntry
-	 * @since 3.3.0 N°1365 - Verify CaseLog authorship and modification windows
+	 * @since 3.3.0 N°1365 - Verify CaseLog authorship and minute-based modification windows
 	 */
 	public function testCanEditEntryChecksAuthorAndModificationDelay(): void
 	{
@@ -133,7 +133,7 @@ class CaseLogEditionServiceTest extends ItopDataTestCase
 		$oCaseLog = $this->oObject->Get('private_log');
 		$oCaseLog->AddLogEntry('Another user entry', '', $oOtherUser->GetKey());
 		$oCaseLog->AddLogEntryFromJSON((object)[
-			'date' => date('Y-m-d H:i:s', time() - 7200),
+			'date' => date('Y-m-d H:i:s', time() - 120),
 			'message' => '<p>Expired entry</p>',
 			'user_id' => UserRights::GetUserId(),
 		]);
