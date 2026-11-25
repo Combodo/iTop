@@ -58,7 +58,12 @@ $(document).ready(function()
 		$(this).find('.tooltip.in').tooltip('hide');
 
 		// Set the z-index of the modal and its backdrop in case we have several modals opened
-		let zIndex = 1050 + (10 * $('.modal:visible').length);
+		// Note: The modal is put above the highest visible one rather than computing its z-index from the number of visible modals, as a modal can still be visible
+		// while closing, which would put the next one too high (eg. the "Modify" button of a view modal closes it and opens the edit modal at the same time)
+		let zIndex = 1050;
+		$('.modal:visible').not(this).each(function () {
+			zIndex = Math.max(zIndex, (parseInt($(this).css('z-index'), 10) || 1050) + 10);
+		});
 		$(this).css('z-index', zIndex);
 		// Set the z-index of the backdrop later because it is created after the modal
 		setTimeout(function() {
