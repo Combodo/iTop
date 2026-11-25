@@ -346,7 +346,7 @@ class DBBackup
 		$this->LogInfo("Starting backup of $this->sDBHost/$this->sDBName(suffix:'$this->sDBSubName')");
 		$sMySQLBinDir = utils::ReadParam('mysql_bindir', $this->sMySQLBinDir, true);
 
-		$sMySQLDump = $this->MakeSafeMySQLCommand($sMySQLBinDir, 'mysqldump');
+		$sMySQLDump = $this->MakeSafeMySQLCommand($sMySQLBinDir, DBBackup::GetDumpFunction());
 
 		// Store the results in a temporary file
 		$sTmpFileName = self::EscapeShellArg($sBackupFileName);
@@ -602,6 +602,16 @@ EOF;
 		}
 
 		return '"'.$sMySQLCommand.'"';
+	}
+
+	public static function GetDumpFunction(): string
+	{
+		$sVersion = CMDBSource::GetDBVersion();
+		if (stripos($sVersion, 'MariaDB') !== false) {
+			return 'mariadb-dump';
+		}
+
+		return 'mysqldump';
 	}
 }
 
