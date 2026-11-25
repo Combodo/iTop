@@ -634,11 +634,12 @@ HTML;
 	 * @throws CoreException
 	 * @throws CoreUnexpectedValue
 	 * @throws Exception
+	 * @since 3.4.0 Accept decoded arrays of tag codes.
 	 */
 	public function FromJSONToValue($json)
 	{
 		$oSet = new ormTagSet($this->GetHostClass(), $this->GetCode(), $this->GetMaxItems());
-		$oSet->SetValues(json_decode($json, true));
+		$oSet->SetValues(is_array($json) ? $json : json_decode($json, true));
 
 		return $oSet;
 	}

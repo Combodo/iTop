@@ -10,6 +10,45 @@ use UserRequest;
 
 class RestUtilsTest extends ItopDataTestCase
 {
+	/**
+	 * @group itopFaqLight
+	 * @since 3.4.0
+	 */
+	public function testUpdateObjectFromFieldsReplacesAndClearsTagSet(): void
+	{
+		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'First');
+		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag2', 'Second');
+		$oFaq = $this->CreateObjectWithTagSet();
+		$oAttDef = MetaModel::GetAttributeDef(TAG_CLASS, TAG_ATTCODE);
+
+		foreach ([['tag1'], ['tag1', 'tag2'], []] as $aCodes) {
+			RestUtils::UpdateObjectFromFields($oFaq, [TAG_ATTCODE => $aCodes]);
+			$this->assertSame($aCodes, $oAttDef->GetForJSON($oFaq->Get(TAG_ATTCODE)));
+		}
+	}
+
+	/**
+	 * @group itopFaqLight
+	 * @since 3.4.0
+	 */
+	public function testMakeValueRejectsUnknownTagCode(): void
+	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('domains: missing_tag is not defined as a valid tag for FAQ:domains');
+		RestUtils::MakeValue(TAG_CLASS, TAG_ATTCODE, ['missing_tag']);
+	}
+
+	/**
+	 * @group itopFaqLight
+	 * @since 3.4.0
+	 */
+	public function testMakeValueRequiresArrayForTagSet(): void
+	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('domains: A tag set must be defined by an array of tag codes');
+		RestUtils::MakeValue(TAG_CLASS, TAG_ATTCODE, '["tag1"]');
+	}
+
 	public function testGetFieldListForSingleClass(): void
 	{
 		$aList = RestUtils::GetFieldList(Ticket::class, (object) ['output_fields' => 'ref,start_date,end_date'], 'output_fields');
