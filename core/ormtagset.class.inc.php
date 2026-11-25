@@ -444,9 +444,14 @@ final class ormTagSet extends ormSet
 	 * @return DBObject tag
 	 * @throws \CoreUnexpectedValue
 	 * @throws \CoreException
+	 * @since 3.4.0 Check the type of the tag code before looking it up.
 	 */
 	private function GetTagFromCode($sTagCode)
 	{
+		if (!is_string($sTagCode)) {
+			throw new CoreUnexpectedValue('A tag code must be a string');
+		}
+
 		$aAllowedTags = $this->GetAllowedTags();
 		foreach ($aAllowedTags as $oAllowedTag) {
 			if ($oAllowedTag->Get('code') === $sTagCode) {
