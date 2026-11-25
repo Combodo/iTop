@@ -2619,9 +2619,11 @@ class Config
 	 * Write the configuration to a file (php format) that can be reloaded later
 	 * By default write to the same file that was specified when constructing the object
 	 *
+	 * @since 3.2.3-2 3.2.4 3.3.0 N°9728
+	 *
 	 * @param string $sFileName string Name of the file to write to (emtpy to write to the same file)
 	 *
-	 * @return boolean True otherwise throws an Exception
+	 * @return bool True otherwise throws an Exception
 	 *
 	 * @throws \ConfigException
 	 */
@@ -2735,7 +2737,7 @@ class Config
 						$aParserValue = null;
 					}
 					$sSeenAs = self::PrettyVarExport($aParserValue, $aSettingInfo['value'], "\t");
-					fwrite($hFile, "\t'$sPropCode' => $sSeenAs,\n");
+					fwrite($hFile, "\t".var_export((string) $sPropCode, true)." => $sSeenAs,\n");
 				}
 			}
 			fwrite($hFile, ");\n");
@@ -2744,10 +2746,10 @@ class Config
 			fwrite($hFile, "/**\n *\n * Modules specific settings\n *\n */\n");
 			fwrite($hFile, "\$MyModuleSettings = array(\n");
 			foreach ($this->m_aModuleSettings as $sModule => $aProperties) {
-				fwrite($hFile, "\t'$sModule' => array (\n");
+				fwrite($hFile, "\t".var_export((string) $sModule, true)." => array (\n");
 				foreach ($aProperties as $sProperty => $value) {
 					$sNiceExport = self::PrettyVarExport($this->oItopConfigParser->GetVarValue('MyModuleSettings', $sProperty), $value, "\t\t");
-					fwrite($hFile, "\t\t'$sProperty' => $sNiceExport,\n");
+					fwrite($hFile, "\t\t".var_export((string) $sProperty, true)." => $sNiceExport,\n");
 				}
 				fwrite($hFile, "\t),\n");
 			}

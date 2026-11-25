@@ -24,6 +24,10 @@ namespace Combodo\iTop\Test\UnitTest\Module\iTopConfig;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Config;
+use PhpParser\ConstExprEvaluator;
+use PhpParser\Node;
+use PhpParser\ParserFactory;
+use utils;
 
 class ConfigTest extends ItopTestCase
 {
@@ -90,5 +94,141 @@ class ConfigTest extends ItopTestCase
 				'aChanges' => ['app_root_url' => 'foo'],
 			],
 		];
+	}
+
+	/**
+	 * @since 3.2.3
+	 * @dataProvider ProviderArrayKeys
+	 */
+	public function testWriteToFilePreservesModuleKeys(int|string $key): void
+	{
+		$oConfig = new Config();
+		$oConfig->SetModuleSetting('existing-module', 'existing.property', true);
+		$oConfig->SetModuleSetting($key, 'sample.property', 'value');
+
+		$this->AssertWriteToFilePreservesSettings($oConfig, [
+			'existing-module' => ['existing.property' => true],
+			$key => ['sample.property' => 'value'],
+		], $oConfig->GetAddons());
+	}
+
+	/**
+	 * @since 3.2.3
+	 * @dataProvider ProviderArrayKeys
+	 */
+	public function testWriteToFilePreservesPropertyKeys(int|string $key): void
+	{
+		$oConfig = new Config();
+		$oConfig->SetModuleSetting('sample-module', 'existing.property', true);
+		$oConfig->SetModuleSetting('sample-module', $key, [$key => 'value']);
+
+		$this->AssertWriteToFilePreservesSettings($oConfig, [
+			'sample-module' => [
+				'existing.property' => true,
+				$key => [$key => 'value'],
+			],
+		], $oConfig->GetAddons());
+	}
+
+	/**
+	 * @since 3.2.3
+	 * @dataProvider ProviderArrayKeys
+	 */
+	public function testWriteToFilePreservesAddons(int|string $key): void
+	{
+		$oConfig = new Config();
+		$aAddons = $oConfig->GetAddons();
+		$aAddons[$key] = 'addons/'.$key.'/module.php';
+		$oConfig->SetAddons($aAddons);
+
+		$this->AssertWriteToFilePreservesSettings($oConfig, [], $aAddons);
+	}
+
+	/**
+	 * @since 3.2.3
+	 * @dataProvider ProviderArrayKeys
+	 */
+	public function testWriteToFilePreservesIncrementalAddons(int|string $key): void
+	{
+		$aAddons = (new Config())->GetAddons();
+		$aAddons[$key] = 'addons/'.$key.'/module.php';
+		$sSourceFile = tempnam(sys_get_temp_dir(), 'config-source');
+		$this->aFileToClean[] = $sSourceFile;
+		$this->assertNotFalse(file_put_contents($sSourceFile, "<?php\n"
+			."\$MySettings = [];\n"
+			."\$MyModuleSettings = [];\n"
+			."\$MyModules = [];\n"
+			."\$MyModules['addons'] = ".var_export($aAddons, true).";\n"));
+
+		$this->AssertWriteToFilePreservesSettings(new Config($sSourceFile), [], $aAddons);
+	}
+
+	/**
+	 * @since 3.2.3
+	 * @return array<string, array{int|string}>
+	 */
+	public static function ProviderArrayKeys(): array
+	{
+		return [
+			'module and property separators' => ['sample-module.setting_1'],
+			'apostrophe' => ["O'Reilly"],
+			'double quote' => ['a"b'],
+			'backslash' => ['a\\b'],
+			'repeated backslashes' => ['a\\\\b'],
+			'trailing backslash' => ['trailing\\'],
+			'backslash before apostrophe' => ["a\\'b"],
+			'unicode' => ["caf\u{00E9}-\u{65E5}\u{672C}"],
+			'line breaks' => ["first\nsecond\rthird"],
+			'dollar sign' => ['$value'],
+			'empty string' => [''],
+			'zero' => [0],
+			'integer' => [7],
+			'negative integer' => [-7],
+			'numeric string' => ['7'],
+			'leading zero' => ['07'],
+		];
+	}
+
+	/**
+	 * @since 3.2.3
+	 * @param array<int|string, array<int|string, mixed>> $aModuleSettings
+	 * @param array<int|string, string> $aAddons
+	 */
+	private function AssertWriteToFilePreservesSettings(Config $oConfig, array $aModuleSettings, array $aAddons): void
+	{
+		$oOriginalConfig = utils::GetConfig();
+		$oParser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+		$oEvaluator = new ConstExprEvaluator();
+
+		try {
+			for ($i = 0; $i < 2; $i++) {
+				$sTargetFile = tempnam(sys_get_temp_dir(), 'config-target');
+				$this->aFileToClean[] = $sTargetFile;
+				$this->assertTrue($oConfig->WriteToFile($sTargetFile));
+
+				$aNodes = $oParser->parse(file_get_contents($sTargetFile));
+				$this->assertCount(3, $aNodes);
+				$aValues = [];
+				foreach ($aNodes as $oNode) {
+					$this->assertInstanceOf(Node\Stmt\Expression::class, $oNode);
+					$this->assertInstanceOf(Node\Expr\Assign::class, $oNode->expr);
+					$this->assertInstanceOf(Node\Expr\Variable::class, $oNode->expr->var);
+					$aValues[$oNode->expr->var->name] = $oEvaluator->evaluateDirectly($oNode->expr->expr);
+				}
+				$this->assertSame(['MySettings', 'MyModuleSettings', 'MyModules'], array_keys($aValues));
+				$this->assertSame($aModuleSettings, $aValues['MyModuleSettings']);
+				$this->assertSame(['addons' => $aAddons], $aValues['MyModules']);
+
+				$oConfig = new Config($sTargetFile);
+				$this->assertSame($aAddons, $oConfig->GetAddons());
+				foreach ($aModuleSettings as $sModule => $aProperties) {
+					foreach ($aProperties as $sProperty => $value) {
+						$this->assertSame($value, $oConfig->GetModuleSetting($sModule, $sProperty));
+					}
+				}
+			}
+		} finally {
+			utils::SetConfig($oOriginalConfig);
+		}
 	}
 }
