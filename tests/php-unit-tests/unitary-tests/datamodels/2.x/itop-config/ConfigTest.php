@@ -109,7 +109,7 @@ class ConfigTest extends ItopTestCase
 		$this->AssertWriteToFilePreservesSettings($oConfig, [
 			'existing-module' => ['existing.property' => true],
 			$key => ['sample.property' => 'value'],
-		], $oConfig->GetAddons());
+		]);
 	}
 
 	/**
@@ -127,40 +127,7 @@ class ConfigTest extends ItopTestCase
 				'existing.property' => true,
 				$key => [$key => 'value'],
 			],
-		], $oConfig->GetAddons());
-	}
-
-	/**
-	 * @since 3.2.3
-	 * @dataProvider ProviderArrayKeys
-	 */
-	public function testWriteToFilePreservesAddons(int|string $key): void
-	{
-		$oConfig = new Config();
-		$aAddons = $oConfig->GetAddons();
-		$aAddons[$key] = 'addons/'.$key.'/module.php';
-		$oConfig->SetAddons($aAddons);
-
-		$this->AssertWriteToFilePreservesSettings($oConfig, [], $aAddons);
-	}
-
-	/**
-	 * @since 3.2.3
-	 * @dataProvider ProviderArrayKeys
-	 */
-	public function testWriteToFilePreservesIncrementalAddons(int|string $key): void
-	{
-		$aAddons = (new Config())->GetAddons();
-		$aAddons[$key] = 'addons/'.$key.'/module.php';
-		$sSourceFile = tempnam(sys_get_temp_dir(), 'config-source');
-		$this->aFileToClean[] = $sSourceFile;
-		$this->assertNotFalse(file_put_contents($sSourceFile, "<?php\n"
-			."\$MySettings = [];\n"
-			."\$MyModuleSettings = [];\n"
-			."\$MyModules = [];\n"
-			."\$MyModules['addons'] = ".var_export($aAddons, true).";\n"));
-
-		$this->AssertWriteToFilePreservesSettings(new Config($sSourceFile), [], $aAddons);
+		]);
 	}
 
 	/**
@@ -192,12 +159,11 @@ class ConfigTest extends ItopTestCase
 	/**
 	 * @since 3.2.3
 	 * @param array<int|string, array<int|string, mixed>> $aModuleSettings
-	 * @param array<int|string, string> $aAddons
 	 */
-	private function AssertWriteToFilePreservesSettings(Config $oConfig, array $aModuleSettings, array $aAddons): void
+	private function AssertWriteToFilePreservesSettings(Config $oConfig, array $aModuleSettings): void
 	{
 		$oOriginalConfig = utils::GetConfig();
-		$oParser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+		$oParser = (new ParserFactory())->createForNewestSupportedVersion();
 		$oEvaluator = new ConstExprEvaluator();
 
 		try {
@@ -217,10 +183,9 @@ class ConfigTest extends ItopTestCase
 				}
 				$this->assertSame(['MySettings', 'MyModuleSettings', 'MyModules'], array_keys($aValues));
 				$this->assertSame($aModuleSettings, $aValues['MyModuleSettings']);
-				$this->assertSame(['addons' => $aAddons], $aValues['MyModules']);
+				$this->assertSame([], $aValues['MyModules']);
 
 				$oConfig = new Config($sTargetFile);
-				$this->assertSame($aAddons, $oConfig->GetAddons());
 				foreach ($aModuleSettings as $sModule => $aProperties) {
 					foreach ($aProperties as $sProperty => $value) {
 						$this->assertSame($value, $oConfig->GetModuleSetting($sModule, $sProperty));
