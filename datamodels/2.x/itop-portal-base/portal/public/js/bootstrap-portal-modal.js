@@ -55,11 +55,22 @@ $(document).ready(function()
 	// Hide tooltips when a modal is opening, otherwise it might be overlapping it
 	oBodyElem.on('show.bs.modal', '.modal', function ()
 	{
-		$(this).find('.tooltip.in').tooltip('hide');
-
+		var $this = $(this);
+		$this.find('.tooltip.in').tooltip('hide');
 		// Set the z-index of the modal and its backdrop in case we have several modals opened
 		let zIndex = 1050 + (10 * $('.modal:visible').length);
-		$(this).css('z-index', zIndex);
+
+		$('.modal:visible').each(function (index) {
+			let current_zIndex = $(this).css('z-index');
+			if (current_zIndex >= zIndex) {
+				zIndex = parseInt(current_zIndex)+10;
+			}
+		});
+		$this.css('z-index', zIndex);
+		//Add the ability to drag and drop the pop-up
+		$this.find('.modal-dialog').draggable({
+			handle: ".modal-header"
+		});
 		// Set the z-index of the backdrop later because it is created after the modal
 		setTimeout(function() {
 			$('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
