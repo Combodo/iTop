@@ -166,8 +166,10 @@ class AttributeImage extends AttributeBlob
 			return null;
 		}
 
-		$bExistingImageModified = ($oHostObject->IsModified() && (array_key_exists($this->GetCode(), $oHostObject->ListChanges())));
-		if ($oHostObject->IsNew() || ($bExistingImageModified)) {
+		if (is_null($oHostObject)
+			|| $oHostObject->IsNew()
+			|| ($oHostObject->IsModified() && array_key_exists($this->GetCode(), $oHostObject->ListChanges())) //$bExistingImageModified
+		) {
 			// If the object is modified (or not yet stored in the database) we must serve the content of the image directly inline
 			// otherwise (if we just give an URL) the browser will be given the wrong content... and may cache it
 			return 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
