@@ -10,6 +10,94 @@ use UserRequest;
 
 class RestUtilsTest extends ItopDataTestCase
 {
+	/**
+	 * @group itopFaqLight
+	 * @since 3.4.0
+	 */
+	public function testMakeObjectFromFieldsPersistsInitialTagSet(): void
+	{
+		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'First');
+		$oCategory = $this->createObject('FAQCategory', ['name' => 'Test category']);
+		$oFaq = RestUtils::MakeObjectFromFields(TAG_CLASS, [
+			'title' => 'Test FAQ',
+			'category_id' => $oCategory->GetKey(),
+			TAG_ATTCODE => ['tag1'],
+		]);
+		$oFaq->DBInsert();
+		$oFaq->Reload();
+
+		$oAttDef = MetaModel::GetAttributeDef(TAG_CLASS, TAG_ATTCODE);
+		$this->assertSame(['tag1'], $oAttDef->GetForJSON($oFaq->Get(TAG_ATTCODE)));
+	}
+
+	/**
+	 * @group itopFaqLight
+	 * @since 3.4.0
+	 */
+	public function testUpdateObjectFromFieldsReplacesAndClearsTagSet(): void
+	{
+		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'First');
+		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag2', 'Second');
+		$oFaq = $this->CreateObjectWithTagSet();
+		$oAttDef = MetaModel::GetAttributeDef(TAG_CLASS, TAG_ATTCODE);
+
+		foreach ([['tag1'], ['tag1', 'tag2'], ['tag2'], []] as $aCodes) {
+			RestUtils::UpdateObjectFromFields($oFaq, [TAG_ATTCODE => $aCodes]);
+			$oFaq->DBUpdate();
+			$oFaq->Reload();
+			$this->assertSame($aCodes, $oAttDef->GetForJSON($oFaq->Get(TAG_ATTCODE)));
+		}
+	}
+
+	/**
+	 * @group itopFaqLight
+	 * @since 3.4.0
+	 */
+	public function testMakeValueRejectsUnknownTagCode(): void
+	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('domains: missing_tag is not defined as a valid tag for FAQ:domains');
+		RestUtils::MakeValue(TAG_CLASS, TAG_ATTCODE, ['missing_tag']);
+	}
+
+	/**
+	 * @since 3.4.0
+	 */
+	public static function ProvideNonStringTagCodes(): array
+	{
+		return [
+			'object' => [new \stdClass()],
+			'array' => [[]],
+			'integer' => [1],
+			'float' => [1.5],
+			'boolean' => [true],
+			'null' => [null],
+		];
+	}
+
+	/**
+	 * @dataProvider ProvideNonStringTagCodes
+	 * @group itopFaqLight
+	 * @since 3.4.0
+	 */
+	public function testMakeValueRejectsNonStringTagCode(mixed $value): void
+	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('domains: A tag code must be a string');
+		RestUtils::MakeValue(TAG_CLASS, TAG_ATTCODE, [$value]);
+	}
+
+	/**
+	 * @group itopFaqLight
+	 * @since 3.4.0
+	 */
+	public function testMakeValueRequiresArrayForTagSet(): void
+	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('domains: A tag set must be defined by an array of tag codes');
+		RestUtils::MakeValue(TAG_CLASS, TAG_ATTCODE, '["tag1"]');
+	}
+
 	public function testGetFieldListForSingleClass(): void
 	{
 		$aList = RestUtils::GetFieldList(Ticket::class, (object) ['output_fields' => 'ref,start_date,end_date'], 'output_fields');
