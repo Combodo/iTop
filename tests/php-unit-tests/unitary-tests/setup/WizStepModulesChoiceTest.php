@@ -55,6 +55,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node1 - A missing extension should always be disabled and unchecked, even a mandatory extension included in package' => [
@@ -81,6 +82,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => true,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node2 - A mandatory extension included in package should be checked and disabled even if the "disable uninstallation check" flag is set' => [
@@ -106,6 +108,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => true,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node3 - An installed non uninstallable sub extension should force its parent to be checked and disabled' => [
@@ -140,6 +143,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node3 - An installed remote sub extension should force its parent to be checked and disabled' => [
@@ -175,6 +179,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node4 - An installed uninstallable sub extension should force its parent to be checked but not disabled' => [
@@ -209,6 +214,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node4 - An installed non uninstallable sub extension should force its parent to be checked but not disabled if the "disable uninstallation check" flag is set' => [
@@ -243,6 +249,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node4 - An installed remote sub extension should force its parent to be checked but not disabled if the "disable uninstallation check" flag is set' => [
@@ -278,6 +285,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node5 - A non installed extension with missing dependencies should be not checked and disabled' => [
@@ -305,6 +313,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => true,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node5 - A non installed extension with missing dependencies should be not checked and disabled even with force uninstall' => [
@@ -332,6 +341,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => true,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node6 - An installed extension with missing dependencies and without force uninstall should be checked and disabled' => [
@@ -359,6 +369,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => true,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node7 - An installed extension with missing dependencies and with force uninstall should be checked and enabled' => [
@@ -386,6 +397,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => true,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node8 - An installed but not selected extension with missing dependencies and with force uninstall should be unchecked and enabled' => [
@@ -413,6 +425,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => true,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node9 - A not selected, not installed extension should not be checked and be enabled' => [
@@ -436,6 +449,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node10 - A selected but not installed extension should be checked and enabled' => [
@@ -459,6 +473,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node11 - An installed but not selected extension should not be checked and be enabled' => [
@@ -482,6 +497,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node12 - An installed and selected extension should be checked and enabled' => [
@@ -506,6 +522,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node13 - An installed non uninstallable extension should be checked and disabled' => [
@@ -529,6 +546,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node13 - An installed remote extension should be checked and disabled' => [
@@ -553,6 +571,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => true,
+					'already_included' => false,
 				],
 			],
 			'#node14 - An installed but not selected non uninstallable extension should be checked and enabled if the "disable uninstallation check" flag is set' => [
@@ -576,6 +595,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node14 - An installed but not selected remote extension should be checked and enabled if the "disable uninstallation check" flag is set' => [
@@ -600,6 +620,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => true,
+					'already_included' => false,
 				],
 			],
 			'#node15 - An installed non uninstallable extension should be checked and enabled if the "disable uninstallation check" flag is set' => [
@@ -623,6 +644,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node15 - An installed remote extension should be checked and enabled if the "disable uninstallation check" flag is set' => [
@@ -647,9 +669,10 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => true,
+					'already_included' => false,
 				],
 			],
-			'#node16 - A non installed non uninstallable sub extension should not force its parent flags' => [
+			'#node16 - A non installed sub extension should not force its parent flags' => [
 				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => true,
@@ -681,6 +704,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node16 - A non installed remote sub extension should not force its parent flags' => [
@@ -716,6 +740,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node13 - An installed non uninstallable extension should be checked and disabled when the "disable uninstallation check" flag is not set, even if it is not selected' => [
@@ -739,6 +764,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => false,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 			'#node6 - An installed extension with missing dependencies without force uninstall should be checked and disabled, even if it is not selected' => [
@@ -766,6 +792,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'dependency_issue' => true,
 					'mandatory' => false,
 					'remote' => false,
+					'already_included' => false,
 				],
 			],
 		];
@@ -778,6 +805,52 @@ class WizStepModulesChoiceTest extends ItopTestCase
 	{
 		$this->oWizStepModulesChoiceFake->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
 		$aFlags = $this->oWizStepModulesChoiceFake->ComputeChoiceFlags($aWizardStepDefinition, '_0', $aSelectedComponents, false, $bDisableUninstallChecks);
+		$this->assertEquals($aExpectedFlags, $aFlags);
+	}
+
+	/**
+	 * #node17 an extension with all of its modules already selected in previous steps should be checked and disabled, with the "already_included" flag set to true
+	 */
+	public function testComputeChoiceFlagsShouldReturnAlreadyIncludedWhenAllModulesAreInPreviousSteps(): void
+	{
+		$this->oWizard->SetParameter('source_dir', __DIR__.'/ressources');
+		$this->oWizard->SetParameter('selected_components', json_encode([
+			['_0' => '_0'],//Selecting itop-config-mgmt-core
+		]));
+
+		$oWizStepModulesChoice = new WizStepModulesChoiceFake($this->oWizard, '1');
+		$oWizStepModulesChoice->setExtensionMap(iTopExtensionsMapFake::createFromArray([
+			'itop-ext1' => [
+				'installed' => false,
+				'modules' => [
+					'itop-config-mgmt',
+					'itop-attachments',
+				],
+			],
+		]));
+
+		$aFlags = $oWizStepModulesChoice->ComputeChoiceFlags(
+			[
+				'extension_code' => 'itop-ext1',
+				'uninstallable' => true,
+			],
+			'_0',
+			[],
+			false,
+			false
+		);
+
+		$aExpectedFlags = [
+			'uninstallable' => true,
+			'missing' => false,
+			'installed' => false,
+			'disabled' => true,
+			'checked' => true,
+			'dependency_issue' => false,
+			'mandatory' => false,
+			'remote' => false,
+			'already_included' => true,
+		];
 		$this->assertEquals($aExpectedFlags, $aFlags);
 	}
 

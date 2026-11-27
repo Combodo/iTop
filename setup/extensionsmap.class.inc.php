@@ -743,7 +743,7 @@ class iTopExtensionsMap
 * @param string[] $aRemovedExtensions
 * @return string[] :
 	 */
-	public function GetSelectedExtensions(Config $oConfig, array $aAddedExtensions, array $aRemovedExtensions): array
+	public function GetSelectedExtensions(Config $oConfig, array $aAddedExtensions = [], array $aRemovedExtensions = []): array
 	{
 		$aDbChoices = $this->GetChoicesFromDatabase($oConfig);
 		foreach ($aDbChoices as $i => $sChoice) {
