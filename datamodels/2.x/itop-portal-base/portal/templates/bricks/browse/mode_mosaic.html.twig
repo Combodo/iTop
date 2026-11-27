@@ -7,6 +7,13 @@
 {% endblock %}
 
 {% block bBrowseMainContent %}
+	{# Filter Input for Mosaïc  #}
+	<div class="row" id="brick_content_toolbar">
+        <div class="col-xs-4 col-sm-2 col-lg-1"></div>
+        <div class="col-xs-8 col-sm-10 col-lg-11 filter-center">
+            <label>{{'Portal:Datatables:Language:Search'|dict_s}}<input type="search" class="form-control input-sm" id="search" placeholder="" aria-controls="brick_main_table" value=""></label>
+        </div>
+    </div>
 	<div id="brick_content_mosaic">
 		{% block bBrowseMosaicContent %}
 			<div class="mosaic-group ipb-is-visible" data-level-id="L">
@@ -32,6 +39,36 @@
 	{{ parent() }}
 	
 	<script type="text/javascript">
+		// Filter Triggering on change of the input
+    	$("#search").on("input", function () {
+			// Managing insensitive Casing
+    	    var searchValue = $(this).val().toLowerCase();
+    	    $(".mosaic-group-item").each(function () {
+    	      if (!$(this).hasClass("mosaic-group-back")) {
+				//Taking into account description
+    	        var nameElement = $(this).find(".mosaic-item-name");
+    	        var descriptionElement = $(this).find(".mosaic-item-description");
+    	        var dataTitleElement = $(this).find("a");
+
+    	        var name = nameElement.length ? nameElement.text().toLowerCase() : "";
+    	        var description = descriptionElement.length ? descriptionElement.text().toLowerCase() : "";
+    	        var dataTitle = dataTitleElement.length && dataTitleElement.attr("data-original-title") ? dataTitleElement.attr("data-original-title").toLowerCase() : "";
+
+				// Filtering are operating for name, title and description
+				// Note this work for all the level at once therefore it will keep showing a service if there is subcategory with the filter keyword in it.
+    	        if (name.indexOf(searchValue) === -1 && description.indexOf(searchValue) === -1 && dataTitle.indexOf(searchValue) === -1) {
+    	            $(this).hide();
+    	        } else {
+    	            $(this).show();
+    	        }
+    	      }
+    	  });
+		  // Reseting Filter value on Family and Service service selection
+     	  $(".mosaic-group-item").on("click", function () {
+    	    $("#search").val('');
+    	    $(".mosaic-group-item").show();
+    	  });
+    	});
 		var sBrowseMode = '{{ sBrowseMode }}';
 		var oLevelsProperties = {{ aLevelsProperties|raw }};
 		var oRawDatas = {{ aItems|raw }};
