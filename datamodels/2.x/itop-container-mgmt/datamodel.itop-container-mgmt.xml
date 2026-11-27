@@ -719,9 +719,6 @@
                 </item>
                 <item id="fieldset:Container:moreinfo">
                   <items>
-                    <item id="system_id">
-                      <rank>10</rank>
-                    </item>
                     <item id="containertype_id">
                       <rank>20</rank>
                     </item>
